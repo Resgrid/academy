@@ -1,0 +1,682 @@
+{
+  "Version": "2026.09.25.2",
+  "Areas": [
+    {
+      "Id": "people",
+      "LabelKey": "Area.people",
+      "PurposeKey": "AreaPurpose.people",
+      "Order": 0,
+      "Archetypes": [],
+      "Tier": "Core",
+      "Addon": null,
+      "Global": false,
+      "ValueKey": "AreaValue.people",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "ModuleAdoption.people",
+      "MinimumMinutes": 30,
+      "MaximumMinutes": 90,
+      "DocsPath": "/web-app/personnel/"
+    }
+  ],
+  "Settings": [
+    {
+      "Id": "setting.DisabledAutoAvailable",
+      "AreaId": "people",
+      "LabelKey": "Setting.DisabledAutoAvailable",
+      "HelpKey": "SettingHelp.DisabledAutoAvailable",
+      "Binding": "DepartmentSettingTypes.DisabledAutoAvailable",
+      "ValueType": "boolean",
+      "Classification": "Internal",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": "DisabledAutoAvailable"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.DisabledAutoAvailable",
+      "DefaultValue": "false",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "setting.PersonnelSortOrder",
+      "AreaId": "people",
+      "LabelKey": "Setting.PersonnelSortOrder",
+      "HelpKey": "SettingHelp.PersonnelSortOrder",
+      "Binding": "DepartmentSettingTypes.PersonnelSortOrder",
+      "ValueType": "enum",
+      "Classification": "Internal",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": "PersonnelSortOrder"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.PersonnelSortOrder",
+      "DefaultValue": "owning view default",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "setting.PersonnelListStatusSortOrder",
+      "AreaId": "people",
+      "LabelKey": "Setting.PersonnelListStatusSortOrder",
+      "HelpKey": "SettingHelp.PersonnelListStatusSortOrder",
+      "Binding": "DepartmentSettingTypes.PersonnelListStatusSortOrder",
+      "ValueType": "protobuf",
+      "Classification": "Restricted",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": "PersonnelListStatusSortOrder"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.PersonnelListStatusSortOrder",
+      "DefaultValue": "empty ordering",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "setting.StaffingSuppressStaffingLevels",
+      "AreaId": "people",
+      "LabelKey": "Setting.StaffingSuppressStaffingLevels",
+      "HelpKey": "SettingHelp.StaffingSuppressStaffingLevels",
+      "Binding": "DepartmentSettingTypes.StaffingSuppressStaffingLevels",
+      "ValueType": "protobuf",
+      "Classification": "Restricted",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": "StaffingSuppressStaffingLevels"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.StaffingSuppressStaffingLevels",
+      "DefaultValue": "empty suppression list",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "field.PersonnelListStatusOrderSetting.Orders",
+      "AreaId": "people",
+      "LabelKey": "Field.PersonnelListStatusOrderSetting.Orders",
+      "HelpKey": "FieldHelp.PersonnelListStatusOrderSetting.Orders",
+      "Binding": "PersonnelListStatusOrderSetting.Orders",
+      "ValueType": "list",
+      "Classification": "Restricted",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": null
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.PersonnelListStatusSortOrder"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "field.PersonnelListStatusOrderSetting.Orders",
+      "DefaultValue": "empty",
+      "AllowedValues": "Validated by the owning configuration workflow",
+      "EvidenceSource": "PersonnelListStatusOrderSetting",
+      "Availability": "reference-only"
+    },
+    {
+      "Id": "field.PersonnelListStatusOrder.Weight",
+      "AreaId": "people",
+      "LabelKey": "Field.PersonnelListStatusOrder.Weight",
+      "HelpKey": "FieldHelp.PersonnelListStatusOrder.Weight",
+      "Binding": "PersonnelListStatusOrder.Weight",
+      "ValueType": "integer",
+      "Classification": "Internal",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": null
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.PersonnelListStatusSortOrder"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "field.PersonnelListStatusOrder.Weight",
+      "DefaultValue": "0",
+      "AllowedValues": "Validated by the owning configuration workflow",
+      "EvidenceSource": "PersonnelListStatusOrder",
+      "Availability": "reference-only"
+    },
+    {
+      "Id": "field.PersonnelListStatusOrder.StatusId",
+      "AreaId": "people",
+      "LabelKey": "Field.PersonnelListStatusOrder.StatusId",
+      "HelpKey": "FieldHelp.PersonnelListStatusOrder.StatusId",
+      "Binding": "PersonnelListStatusOrder.StatusId",
+      "ValueType": "reference",
+      "Classification": "Restricted",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": null
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.PersonnelListStatusSortOrder"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "field.PersonnelListStatusOrder.StatusId",
+      "DefaultValue": "unset",
+      "AllowedValues": "Validated by the owning configuration workflow",
+      "EvidenceSource": "PersonnelListStatusOrder",
+      "Availability": "reference-only"
+    },
+    {
+      "Id": "field.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "AreaId": "people",
+      "LabelKey": "Field.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "HelpKey": "FieldHelp.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "Binding": "DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "ValueType": "boolean",
+      "Classification": "Internal",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": null
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.StaffingSuppressStaffingLevels"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "field.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "DefaultValue": "false",
+      "AllowedValues": "Validated by the owning configuration workflow",
+      "EvidenceSource": "DepartmentSuppressStaffingInfo",
+      "Availability": "reference-only"
+    },
+    {
+      "Id": "field.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "AreaId": "people",
+      "LabelKey": "Field.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "HelpKey": "FieldHelp.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "Binding": "DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "ValueType": "reference-list",
+      "Classification": "Restricted",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings",
+        "Field": null
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.people",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.StaffingSuppressStaffingLevels"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "field.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "DefaultValue": "empty",
+      "AllowedValues": "Validated by the owning configuration workflow",
+      "EvidenceSource": "DepartmentSuppressStaffingInfo",
+      "Availability": "reference-only"
+    }
+  ],
+  "Capabilities": [
+    {
+      "Id": "personnel",
+      "AreaId": "people",
+      "LabelKey": "Feature.personnel",
+      "PurposeKey": "FeaturePurpose.personnel",
+      "ValueKey": "AreaValue.people",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "FeatureSetup.personnel",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Personnel",
+        "Action": "Index"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [
+        "notification-profiles"
+      ],
+      "Setup": {
+        "EvidenceId": "activePersonnelCount",
+        "Minimum": 1,
+        "RuleIds": [],
+        "GuidanceKey": "SetupEvidence.personnel"
+      },
+      "Prominence": "Key",
+      "DocsPath": "/web-app/personnel/"
+    },
+    {
+      "Id": "invites",
+      "AreaId": "people",
+      "LabelKey": "Feature.invites",
+      "PurposeKey": "FeaturePurpose.invites",
+      "ValueKey": "AreaValue.people",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "FeatureSetup.invites",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Department",
+        "Action": "Invites"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/department-settings/#invites"
+    },
+    {
+      "Id": "groups",
+      "AreaId": "people",
+      "LabelKey": "Feature.groups",
+      "PurposeKey": "FeaturePurpose.groups",
+      "ValueKey": "AreaValue.people",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "FeatureSetup.groups",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Groups",
+        "Action": "Index"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [
+        "empty-groups",
+        "station-address"
+      ],
+      "Setup": {
+        "EvidenceId": "groupCount",
+        "Minimum": 1,
+        "RuleIds": [
+          "empty-groups",
+          "station-address"
+        ],
+        "GuidanceKey": "SetupEvidence.groups"
+      },
+      "Prominence": "Key",
+      "DocsPath": "/web-app/groups-stations/"
+    },
+    {
+      "Id": "personnel-roles",
+      "AreaId": "people",
+      "LabelKey": "Feature.personnel-roles",
+      "PurposeKey": "FeaturePurpose.personnel-roles",
+      "ValueKey": "FeatureValue.personnel-roles",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "FeatureSetup.personnel-roles",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Personnel",
+        "Action": "Roles"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Setup": {
+        "EvidenceId": "personnelRoleCount",
+        "Minimum": 1,
+        "RuleIds": [],
+        "GuidanceKey": "SetupEvidence.personnel-roles"
+      },
+      "Prominence": "Key",
+      "DocsPath": "/configuration/personnel-roles/"
+    },
+    {
+      "Id": "add-person",
+      "AreaId": "people",
+      "LabelKey": "Feature.add-person",
+      "PurposeKey": "FeaturePurpose.add-person",
+      "ValueKey": "AreaValue.people",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "ModuleAdoption.people",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Personnel",
+        "Action": "AddPerson"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/configuration/adding-personnel/"
+    },
+    {
+      "Id": "new-group",
+      "AreaId": "people",
+      "LabelKey": "Feature.new-group",
+      "PurposeKey": "FeaturePurpose.new-group",
+      "ValueKey": "AreaValue.people",
+      "ExampleKey": "AreaExample.people",
+      "AdoptionKey": "ModuleAdoption.people",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Groups",
+        "Action": "NewGroup"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/groups-stations/"
+    }
+  ],
+  "Rules": [
+    {
+      "Id": "empty-groups",
+      "AreaId": "people",
+      "Severity": "Warning",
+      "TitleKey": "Rule.empty-groups",
+      "ExplanationKey": "RuleWhy.empty-groups",
+      "NextActionKey": "RuleNext.empty-groups",
+      "Location": {
+        "Controller": "Groups",
+        "Action": "Index"
+      },
+      "AppliesWhen": [],
+      "FailsWhen": [
+        {
+          "EvidenceId": "emptyGroupCount",
+          "Comparison": "Greater",
+          "Number": 0
+        }
+      ]
+    },
+    {
+      "Id": "station-address",
+      "AreaId": "people",
+      "Severity": "Warning",
+      "TitleKey": "Rule.station-address",
+      "ExplanationKey": "RuleWhy.station-address",
+      "NextActionKey": "RuleNext.station-address",
+      "Location": {
+        "Controller": "Groups",
+        "Action": "Index"
+      },
+      "AppliesWhen": [],
+      "FailsWhen": [
+        {
+          "EvidenceId": "stationsWithoutLocation",
+          "Comparison": "Greater",
+          "Number": 0
+        }
+      ]
+    }
+  ],
+  "Packs": [],
+  "Articles": [
+    {
+      "Id": "setting.DisabledAutoAvailable",
+      "Locale": "en",
+      "TitleKey": "Setting.DisabledAutoAvailable",
+      "Body": "Disabled Auto Available. Disables automatic availability behavior. Review staffing/status reset interactions before changing it.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-disabledautoavailable",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "setting.PersonnelSortOrder",
+      "Locale": "en",
+      "TitleKey": "Setting.PersonnelSortOrder",
+      "Body": "Personnel Sort Order. Sort order for personnel lists; does not change availability, access or dispatch priority.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-personnelsortorder",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "setting.PersonnelListStatusSortOrder",
+      "Locale": "en",
+      "TitleKey": "Setting.PersonnelListStatusSortOrder",
+      "Body": "Personnel List Status Sort Order. Custom ordering of personnel statuses in lists. Review all configured statuses before replacing the order.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-personnelliststatussortorder",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "setting.StaffingSuppressStaffingLevels",
+      "Locale": "en",
+      "TitleKey": "Setting.StaffingSuppressStaffingLevels",
+      "Body": "Staffing Suppress Staffing Levels. Staffing levels suppressed in supported notifications. Suppression can change who hears an alert and is not evidence of delivery.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-staffingsuppressstaffinglevels",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "field.PersonnelListStatusOrderSetting.Orders",
+      "Locale": "en",
+      "TitleKey": "Field.PersonnelListStatusOrderSetting.Orders",
+      "Body": "Personnel List Status Order Setting / Orders. Ordered status weights for supported personnel lists. This does not set availability or dispatch priority.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "field-personnelliststatusordersetting-orders",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "field.PersonnelListStatusOrder.Weight",
+      "Locale": "en",
+      "TitleKey": "Field.PersonnelListStatusOrder.Weight",
+      "Body": "Personnel List Status Order / Weight. Relative list order for this status. Confirm all configured statuses remain represented.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "field-personnelliststatusorder-weight",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "field.PersonnelListStatusOrder.StatusId",
+      "Locale": "en",
+      "TitleKey": "Field.PersonnelListStatusOrder.StatusId",
+      "Body": "Personnel List Status Order / Status ID. Existing personnel-status identifier whose list position is being configured.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "field-personnelliststatusorder-statusid",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "field.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "Locale": "en",
+      "TitleKey": "Field.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+      "Body": "Department Suppress Staffing Info / Enable Suppress Staffing. Enables the configured staffing-level suppression in supported notification consumers; review reachability before changing it.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "field-departmentsuppressstaffinginfo-enablesupressstaffing",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "field.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "Locale": "en",
+      "TitleKey": "Field.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+      "Body": "Department Suppress Staffing Info / Staffing Levels To Suppress. Existing staffing levels to suppress. A suppressed level is not proof that another channel reaches the member.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "field-departmentsuppressstaffinginfo-staffinglevelstosupress",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "personnel",
+      "Locale": "en",
+      "TitleKey": "Feature.personnel",
+      "Body": "Personnel Member accounts, contact details and status. Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first. A volunteer department creates Station 1 and Station 2 groups, invites 24 members and assigns Engineer and Firefighter roles. Invite members or add them directly, then check that each has a mobile number or email address.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "personnel",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "invites",
+      "Locale": "en",
+      "TitleKey": "Feature.invites",
+      "Body": "Manage Invites Email invitations for new members to join the department. Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first. A volunteer department creates Station 1 and Station 2 groups, invites 24 members and assigns Engineer and Firefighter roles. Send invitations and follow up on any that have not been accepted.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "invites",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "groups",
+      "Locale": "en",
+      "TitleKey": "Feature.groups",
+      "Body": "Groups & Stations Stations and groups that organize members and units. Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first. A volunteer department creates Station 1 and Station 2 groups, invites 24 members and assigns Engineer and Firefighter roles. Create a station group for each station with its address, and organizational groups for teams, then add members.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "groups",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "personnel-roles",
+      "Locale": "en",
+      "TitleKey": "Feature.personnel-roles",
+      "Body": "Personnel roles Roles such as Firefighter, EMT or Officer. Describe responsibility consistently without assuming that a role proves qualification. A volunteer department creates Station 1 and Station 2 groups, invites 24 members and assigns Engineer and Firefighter roles. Create the roles you dispatch or report on, and assign them to members.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "personnel-roles",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "add-person",
+      "Locale": "en",
+      "TitleKey": "Feature.add-person",
+      "Body": "Add Person Create a member account directly instead of sending an invitation. Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first. A volunteer department creates Station 1 and Station 2 groups, invites 24 members and assigns Engineer and Firefighter roles. Have your member list with email addresses or mobile numbers, and decide how stations or teams are grouped.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "add-person",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "new-group",
+      "Locale": "en",
+      "TitleKey": "Feature.new-group",
+      "Body": "New Group Create a station or group. Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first. A volunteer department creates Station 1 and Station 2 groups, invites 24 members and assigns Engineer and Firefighter roles. Have your member list with email addresses or mobile numbers, and decide how stations or teams are grouped.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "new-group",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,359 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using System.Threading.Tasks;
+using Resgrid.Web.Services.Helpers;
+using Resgrid.Model;
+using System;
+using System.Net.Mime;
+using System.Threading;
+using Resgrid.Web.Services.Models.v4.PersonnelStatuses;
+using Resgrid.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using Resgrid.Model.Helpers;
+using Resgrid.Web.ServicesCore.Helpers;
+
+namespace Resgrid.Web.Services.Controllers.v4
+{
+	/// <summary>
+	/// Operations to perform against personnel in a department
+	/// </summary>
+	[Route("api/v{VersionId:apiVersion}/[controller]")]
+	[ApiVersion("4.0")]
+	[ApiExplorerSettings(GroupName = "v4")]
+	public class PersonnelStatusesController : V4AuthenticatedApiControllerbase
+	{
+		#region Members and Constructors
+		private readonly IUsersService _usersService;
+		private readonly IActionLogsService _actionLogsService;
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IUserStateService _userStateService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly ICallsService _callsService;
+		private readonly IMappingService _mappingService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IIncidentCommandService _incidentCommandService;
+		private readonly IDispatchScopeService _dispatchScopeService;
+
+		public PersonnelStatusesController(
+			IUsersService usersService,
+			IActionLogsService actionLogsService,
+			IDepartmentsService departmentsService,
+			IUserProfileService userProfileService,
+			IUserStateService userStateService,
+			IDepartmentGroupsService departmentGroupsService,
+			ICallsService callsService,
+			IMappingService mappingService,
+			IPersonnelRolesService personnelRolesService,
+			IDepartmentSettingsService departmentSettingsService,
+			Model.Services.IAuthorizationService authorizationService,
+			IIncidentCommandService incidentCommandService,
+			IDispatchScopeService dispatchScopeService)
+		{
+			_dispatchScopeService = dispatchScopeService;
+			_usersService = usersService;
+			_actionLogsService = actionLogsService;
+			_departmentsService = departmentsService;
+			_userProfileService = userProfileService;
+			_userStateService = userStateService;
+			_departmentGroupsService = departmentGroupsService;
+			_callsService = callsService;
+			_mappingService = mappingService;
+			_incidentCommandService = incidentCommandService;
+			_personnelRolesService = personnelRolesService;
+			_departmentSettingsService = departmentSettingsService;
+			_authorizationService = authorizationService;
+		}
+		#endregion Members and Constructors
+
+		/// <summary>
+		/// Gets the current status for a user
+		/// </summary>
+		/// <param name="userId">UserId to get the status for</param>
+		/// <returns></returns>
+		[HttpGet("GetCurrentStatus")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<ActionResult<GetCurrentStatusResult>> GetCurrentStatus(string userId)
+		{
+			var result = new GetCurrentStatusResult();
+
+			if (string.IsNullOrEmpty(userId))
+				userId = UserId;
+
+			var action = await _actionLogsService.GetLastActionLogForUserAsync(userId, DepartmentId);
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var activeCalls = await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId);
+			var stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+			var pois = await _mappingService.GetPOIsForDepartmentAsync(DepartmentId);
+
+			if (action != null)
+			{
+				result.Data = ConvertPersonStatus(action, department, userId, activeCalls, stations, pois);
+				result.PageSize = 1;
+				result.Status = ResponseHelper.Success;
+			}
+			else
+			{
+				result.Data = null;
+				result.PageSize = 0;
+				result.Status = ResponseHelper.NotFound;
+			}
+
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Saves a status for a person
+		/// </summary>
+		/// <param name="input">Status and related data</param>
+		/// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>ActionResult.</returns>
+		[HttpPost("SavePersonStatus")]
+		[Consumes(MediaTypeNames.Application.Json)]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<ActionResult<SavePersonStatusResult>> SavePersonStatus(SavePersonStatusInput input, CancellationToken cancellationToken)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest();
+
+			var result = new SavePersonStatusResult();
+
+			try
+			{
+				var userToSetStatusFor = await _departmentsService.GetDepartmentMemberAsync(input.UserId, DepartmentId);
+
+				if (userToSetStatusFor == null)
+				{
+					ResponseHelper.PopulateV4ResponseNotFound(result);
+					return Ok(result);
+				}
+
+				if (!await _authorizationService.IsUserValidWithinLimitsAsync(UserId, DepartmentId))
+					return Unauthorized();
+
+				if (!await _authorizationService.IsUserValidWithinLimitsAsync(userToSetStatusFor.UserId, DepartmentId))
+					return Unauthorized();
+
+				if (DepartmentId != userToSetStatusFor.DepartmentId)
+					return Unauthorized();
+
+				if (input.UserId != UserId && !ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+					return Unauthorized();
+
+				string geolocation = null;
+				if (!String.IsNullOrWhiteSpace(input.Latitude) && !String.IsNullOrWhiteSpace(input.Longitude))
+					geolocation = $"{input.Latitude},{input.Longitude}";
+
+				if (!int.TryParse(input.Type, out var statusType))
+					return BadRequest();
+
+				ActionLog log = null;
+				if (String.IsNullOrWhiteSpace(input.RespondingTo) || input.RespondingTo == "0")
+					log = await SavePersonStatusAsync(input.UserId, statusType, geolocation, null, null, input.Note, input.TimestampUtc, input.Timestamp, cancellationToken);
+				else
+				{
+					if (!int.TryParse(input.RespondingTo, out var destinationId))
+						return BadRequest();
+
+					var destinationType = input.RespondingToType ?? (int)DestinationEntityTypes.Call;
+
+					if (!await IsValidDestinationAsync(destinationId, destinationType))
+						return BadRequest();
+
+					log = await SavePersonStatusAsync(input.UserId, statusType, geolocation, destinationId, destinationType, input.Note, input.TimestampUtc, input.Timestamp, cancellationToken);
+
+					// Entity-need response: a member that command requested answering the call lands on the
+					// incident log. Best-effort — never blocks the status save.
+					if (destinationType == (int)DestinationEntityTypes.Call)
+					{
+						try
+						{
+							var actionLabel = int.TryParse(input.Type, out var actionType) && Enum.IsDefined(typeof(ActionTypes), actionType) ? ((ActionTypes)actionType).ToString() : $"status {input.Type}";
+							await _incidentCommandService.RecordNeedEntityStatusAsync(DepartmentId, destinationId, NeedEntityKind.User, input.UserId, actionLabel, UserId, cancellationToken);
+						}
+						catch (Exception ex)
+						{
+							Resgrid.Framework.Logging.LogException(ex, $"RecordNeedEntityStatusAsync failed for DepartmentId {DepartmentId}, DestinationId {destinationId}, UserId {input.UserId}");
+						}
+					}
+				}
+
+				result.Id = log.ActionLogId.ToString();
+				result.PageSize = 0;
+				result.Status = ResponseHelper.Created;
+				ResponseHelper.PopulateV4ResponseData(result);
+
+				return Created($"{Config.SystemBehaviorConfig.ResgridApiBaseUrl}/api/v4/Statuses/GetAllStatusesForPersonnel", result);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex);
+				return BadRequest();
+			}
+		}
+
+		/// <summary>
+		/// Saves a status for multiple personnel
+		/// </summary>
+		/// <param name="input">Status and related data</param>
+		/// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>ActionResult.</returns>
+		[HttpPost("SavePersonsStatuses")]
+		[Consumes(MediaTypeNames.Application.Json)]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<ActionResult<SavePersonsStatusesResult>> SavePersonsStatuses(SavePersonsStatusesInput input, CancellationToken cancellationToken)
+		{
+			var result = new SavePersonsStatusesResult();
+
+			if (!ModelState.IsValid)
+				return BadRequest();
+
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin() && input.UserIds.Any(x => x != UserId))
+				return Unauthorized();
+
+			if (!int.TryParse(input.Type, out var statusType))
+				return BadRequest();
+
+			List<string> logIds = new List<string>();
+			foreach (var userId in input.UserIds)
+			{
+				var userToSetStatusFor = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId);
+
+				if (userToSetStatusFor == null)
+					continue;
+
+				if (!await _authorizationService.IsUserValidWithinLimitsAsync(UserId, DepartmentId))
+					continue;
+
+				if (!await _authorizationService.IsUserValidWithinLimitsAsync(userToSetStatusFor.UserId, DepartmentId))
+					continue;
+
+				if (DepartmentId != userToSetStatusFor.DepartmentId)
+					continue;
+
+				string geolocation = null;
+				if (!String.IsNullOrWhiteSpace(input.Latitude) && !String.IsNullOrWhiteSpace(input.Longitude))
+					geolocation = $"{input.Latitude},{input.Longitude}";
+
+				ActionLog log = null;
+				if (String.IsNullOrWhiteSpace(input.RespondingTo) || input.RespondingTo == "0")
+					log = await SavePersonStatusAsync(userId, statusType, geolocation, null, null, input.Note, input.TimestampUtc, input.Timestamp, cancellationToken);
+				else
+				{
+					if (!int.TryParse(input.RespondingTo, out var destinationId))
+						continue;
+
+					var destinationType = input.RespondingToType ?? (int)DestinationEntityTypes.Call;
+
+					if (!await IsValidDestinationAsync(destinationId, destinationType))
+						continue;
+
+					log = await SavePersonStatusAsync(userId, statusType, geolocation, destinationId, destinationType, input.Note, input.TimestampUtc, input.Timestamp, cancellationToken);
+				}
+
+				logIds.Add(log.ActionLogId.ToString());
+			}
+
+			result.Ids = logIds;
+			result.PageSize = 0;
+			result.Status = ResponseHelper.Created;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Created($"{Config.SystemBehaviorConfig.ResgridApiBaseUrl}/api/v4/Statuses/GetAllStatusesForPersonnel", result);
+		}
+
+		public static GetCurrentStatusResultData ConvertPersonStatus(ActionLog actionLog, Department department, string userId, List<Call> activeCalls, List<DepartmentGroup> stations, List<Poi> pois)
+		{
+			var statusResult = new GetCurrentStatusResultData
+			{
+				StatusType = (int)ActionTypes.StandingBy,
+				UserId = userId,
+				DepartmentId = department.DepartmentId.ToString()
+			};
+
+			if (actionLog == null)
+			{
+				statusResult.TimestampUtc = DateTime.UtcNow;
+				statusResult.Timestamp = DateTime.UtcNow.TimeConverter(department);
+			}
+			else
+			{
+				statusResult.StatusType = actionLog.ActionTypeId;
+				statusResult.TimestampUtc = actionLog.Timestamp;
+				statusResult.Timestamp = actionLog.Timestamp.TimeConverter(department);
+				statusResult.GeoLocationData = actionLog.GeoLocationData;
+				statusResult.Note = actionLog.Note;
+
+				if (actionLog.DestinationId.HasValue)
+				{
+					var destinationType = actionLog.GetEffectiveDestinationType();
+					var destination = DestinationResolutionHelper.Resolve(actionLog.DestinationId, actionLog.DestinationType, null, activeCalls, stations, pois);
+					statusResult.DestinationId = destination.DestinationId;
+					statusResult.DestinationType = destination.DestinationType;
+					statusResult.DestinationName = destination.Name;
+					statusResult.DestinationAddress = destination.Address;
+					statusResult.DestinationTypeName = destination.TypeName;
+				}
+			}
+
+			return statusResult;
+		}
+
+		/// <summary>
+		/// Writes a personnel status. The note is kept whether or not a destination was picked, and the status is
+		/// stamped with the time the member set it (so an offline-queued status replayed later keeps its real
+		/// time), falling back to now when the client time is missing or implausible.
+		/// </summary>
+		private async Task<ActionLog> SavePersonStatusAsync(string userId, int statusType, string geolocation, int? destinationId, int? destinationType,
+			string note, DateTime? timestampUtc, DateTime? timestamp, CancellationToken cancellationToken)
+		{
+			var log = new ActionLog
+			{
+				UserId = userId,
+				DepartmentId = DepartmentId,
+				ActionTypeId = statusType,
+				GeoLocationData = geolocation,
+				DestinationId = destinationId,
+				DestinationType = destinationType,
+				Note = note,
+				Timestamp = StatusTimestampHelper.ResolveStatusTimeUtc(timestampUtc, timestamp, DateTime.UtcNow)
+			};
+
+			return await _actionLogsService.SaveActionLogAsync(log, cancellationToken);
+		}
+
+		private async Task<bool> IsValidDestinationAsync(int destinationId, int destinationType)
+		{
+			var entityType = (DestinationEntityTypes)destinationType;
+
+			switch (entityType)
+			{
+				case DestinationEntityTypes.Station:
+					var station = await _departmentGroupsService.GetGroupByIdAsync(destinationId);
+					return station != null && station.DepartmentId == DepartmentId;
+				case DestinationEntityTypes.Call:
+					var call = await _callsService.GetCallByIdAsync(destinationId);
+					// Group-scoped dispatch (off by default): a call outside the caller's area can't be picked by id either.
+					return call != null && call.DepartmentId == DepartmentId
+						&& await _dispatchScopeService.CanUserAccessCallAsync(DepartmentId, UserId, call);
+				case DestinationEntityTypes.Poi:
+					return await _mappingService.GetDestinationPOIByIdAsync(DepartmentId, destinationId) != null;
+				default:
+					return false;
+			}
+		}
+	}
+}

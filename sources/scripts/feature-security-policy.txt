@@ -1,0 +1,36 @@
+Security and session policy
+Production status: source-backed recording brief; capture pending
+Problem / impact: Review lockout and recovery risks with an enrolled administrator.
+What it does: Two-factor requirements, password rules and session limits.
+Prerequisites: []
+Release: available
+
+CAPTURE SCRIPT
+1. Open Security and session policy as the intended administrators.
+2. Require two-factor sign-in for administrators and review password and session rules.
+3. Demonstrate one controlled sample through the owning screen.
+4. Use separate administrator and member accounts to check allowed actions and resource visibility. Test recovery before enforcing stricter sign-in rules.
+5. Show one common issue and the evidence used to diagnose it.
+
+FIELDS FOUND IN THE OWNING VIEW: AcceptRecentLoginMfaForAdp, AcceptRecentUnlockMfaForAdp, AllowFederatedMfaForAdp, AllowFederatedMfaForLoginMfa, AllowPasskeysForAdp, AllowPasskeysForLoginMfa, AllowResponderApproval, AllowedIpRanges, DataClassificationLevel, MaxConcurrentSessions, MinPasswordLength, PasswordExpirationDays, RequireMfa, RequireSharedModeForCommand, RequireSharedModeForDispatch, RequireSharedModeForUnit, RequireSso, SessionTimeoutMinutes, SharedIdleLockMinutes, SharedShiftHours
+Screen locator for the editor: {"Controller": "Security", "Action": "SecurityPolicy"}
+Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/security.yaml", "sha256": "685f6893ead4337d15ff991064e76fbe6742e6df84446fdb4ff4f222637081f9", "line": 5473}
+Documentation reference: https://docs.resgrid.com/enterprise/security-policies/
+
+Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+
+
+ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
+Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
+
+Community paramedicine and mental health response: Security and session policy: Set the local time zone for scheduled outreach visits; review whether a daily reset would incorrectly mark an occupied response team available.
+
+Search and rescue: Security and session policy: Choose availability reset rules that suit volunteers and overnight searches; avoid implying that a remote volunteer has arrived at staging.
+
+Security companies and departments: Security and session policy: Set patrol-day boundaries and display order; review staffing suppression before excluding an off-duty patrol member from alerts.
+
+Wildland contractors: Security and session policy: Review reset times across overnight assignments and the deployment time zone before changing contractor crew availability.
+
+Industrial emergency response teams: Security and session policy: Align display time with plant shifts and review automatic resets before overwriting a team engaged in an extended incident.
+
+Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.

@@ -1,0 +1,54 @@
+{
+  "result": "passed",
+  "browser_visual_playback": {
+    "result": "passed",
+    "browser": "Codex In-app Browser",
+    "page": "/captures/firehouse51/",
+    "captions": "enabled and visibly rendered",
+    "observations": [
+      {
+        "time_seconds": 0.019,
+        "picture": "Firehouse 51 dashboard",
+        "playing": true
+      },
+      {
+        "time_seconds": 91.178,
+        "picture": "Saved Medical call details",
+        "playing": true
+      },
+      {
+        "time_seconds": 160.582,
+        "picture": "Saved training record draft",
+        "playing": true
+      }
+    ],
+    "seekable_seconds": [
+      0,
+      185.28
+    ],
+    "proof": "production/playback-verified.jpg"
+  },
+  "playback_repair": {
+    "observed_problem": "Blank picture with advancing captions; chapter selection returned to zero",
+    "server_before": "Python http.server returned HTTP 200 and the entire file for byte-range requests; browser seekable range [0,0]",
+    "server_after": "Loopback Academy server returns HTTP 206 with exact Content-Range and bytes; browser seekable range [0,185.28]",
+    "server_checks": [
+      "first 64 bytes",
+      "middle range",
+      "suffix range",
+      "HEAD",
+      "invalid range rejected",
+      "private stack directory blocked"
+    ],
+    "player_changes": [
+      "SHA-256 versioned media URL",
+      "video aspect ratio and actual frame poster",
+      "eight chapter controls",
+      "Reload video control"
+    ],
+    "renderer_changes": "Publish completed movie atomically after decode and audio checks",
+    "movie_reencoded": false,
+    "movie_sha256": "dff6d87d74c48bf4e29b1415b0435b5ab6bbb27796b5d525f007e50d681ff8f6",
+    "voice_changed": false
+  }
+}

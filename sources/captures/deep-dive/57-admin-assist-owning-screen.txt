@@ -1,0 +1,503 @@
+Browser tab: 6, Title: "Resgrid | Call & Dispatch Settings", URL: "/User/Department/DispatchSettings?aaReturn=report".
+1 AXWebArea Resgrid | Call & Dispatch Settings, URL: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report
+	2 container wrapper
+		3 container
+			4 image
+			5 link Description: Wallace Boden, Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#
+			6 content list side-menu
+				7 link Description:  Home, Value: 127.0.0.1:18767/User/Home/Dashboard
+				8 link Description:  Calls, Value: 127.0.0.1:18767/User/Dispatch/Dashboard
+				9 link Description:  Personnel, Value: 127.0.0.1:18767/User/Personnel
+				10 link Description:  Units, Value: 127.0.0.1:18767/User/Units
+				11 link Description:  Contacts, Value: 127.0.0.1:18767/User/Contacts
+				12 link Description:  Mapping, Value: 127.0.0.1:18767/User/Mapping
+				13 link Description:  Shifts, Value: 127.0.0.1:18767/User/Shifts
+				14 link (collapsed) Description: Records, Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#, Secondary Actions: Expand
+				15 link Description:  Reports, Value: 127.0.0.1:18767/User/Reports
+				16 link Description:  Documents, Value: 127.0.0.1:18767/User/Documents
+				17 link Description:  Calendar, Value: 127.0.0.1:18767/User/Calendar
+				18 link Description:  Notes, Value: 127.0.0.1:18767/User/Notes
+				19 link Description:  Trainings, Value: 127.0.0.1:18767/User/Trainings
+				20 link Description:  Inventory, Value: 127.0.0.1:18767/User/Inventory
+				21 link (collapsed) Description: Readiness, Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#, Secondary Actions: Expand
+				22 link (collapsed) Description: Workforce & Business Ops, Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#, Secondary Actions: Expand
+		23 container page-wrapper
+			24 content list
+				25 link Description: Firehouse 51 — Training Department , Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#
+				26 link Description: Help , Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#
+				27 link (collapsed) Description: Language, Value: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report#, ID: languageDropdown, Secondary Actions: Expand
+				28 button Log out
+			29 container Return to setup and verify
+				30 text Save changes on this screen first, then return to setup and verify the current evidence. The return link does not save this form.
+				31 link Description: Return to setup and verify, Value: 127.0.0.1:18767/User/Help/SetupReport
+			32 container
+				33 heading Call & Dispatch Settings, Value: 2
+					34 text Call & Dispatch Settings
+				35 content list
+					36 link Description: Home, Value: 127.0.0.1:18767/User/Home/Dashboard
+					37 container
+						38 text / 
+						39 link Description: Department Settings, Value: 127.0.0.1:18767/User/Department/Settings
+					40 container
+						41 text /  Call & Dispatch Settings
+			42 container
+				43 heading Group Dispatch Settings, Value: 3
+					44 text Group Dispatch Settings
+				45 text Use Shift for Group Dispatch
+				46 container
+					47 checkbox (settable, integer) Value: 1, ID: DispatchShiftInsteadOfGroup
+					48 text Expand dispatched groups using the resolved on-duty roster. An empty shift result falls back to group members; preview both cases.
+				49 text Set Status for Shift Personnel On Dispatch
+				50 container
+					51 checkbox (settable, integer) Value: 1, ID: AutoSetStatusForShiftPersonnel
+					52 text Apply the configured status to shift-dispatched personnel. This only takes effect with shift dispatch enabled.
+				53 text Person Call Dispatch Status
+				54 pop up button (collapsed, settable) Value: Responding, ID: ShiftDispatchStatus, Secondary Actions: Expand
+					55 menu
+						56 Default
+						57 StandingBy
+						58 NotResponding
+						59 (selected) Responding
+						60 OnScene
+						61 AvailableStation
+						62 RespondingToStation
+						63 RespondingToScene
+						64 OnUnit
+				65 text Person Call Release Status
+				66 pop up button (collapsed, settable) Value: StandingBy, ID: ShiftClearStatus, Secondary Actions: Expand
+					67 menu
+						68 Default
+						69 (selected) StandingBy
+						70 NotResponding
+						71 Responding
+						72 OnScene
+						73 AvailableStation
+						74 RespondingToStation
+						75 RespondingToScene
+						76 OnUnit
+				77 heading Group-Scoped Dispatch, Value: 4
+					78 text Group-Scoped Dispatch
+				79 text Scope Dispatch to Group Areas
+				80 container
+					81 checkbox (settable, integer) Value: 0, ID: GroupDispatchScopeEnabled
+					82 text Group-subtree dispatch visibility with explicit role exceptions. Preview each actor and target scope before changing it.
+					83 text When on, each member's active call lists, maps and nearest unit board show only their own group and the groups beneath it: calls inside those groups' boundaries or dispatched to them, plus any call the member reported or was dispatched to. Department admins and the roles below keep a department-wide view. Nothing is copied or moved, so handing dispatch to another desk at shift change is only a change of role.
+				84 text Department-Wide Dispatch Roles
+				85 container
+					86 checkbox (settable, integer) Description: Chief, Value: 0
+					87 checkbox (settable, integer) Description: Officer, Value: 0
+					88 checkbox (settable, integer) Description: Rescue Technician, Value: 0
+					89 checkbox (settable, integer) Description: Paramedic, Value: 0
+					90 checkbox (settable, integer) Description: Firefighter, Value: 0
+					91 checkbox (settable, integer) Description: Driver / Operator, Value: 0
+					92 text Members holding any of these roles (for example a central dispatch center) see every area while scoping is on. Assign or remove the role to hand dispatch over; it takes effect on their next page load.
+				93 heading Unit Dispatch Settings, Value: 3
+					94 text Unit Dispatch Settings
+				95 text Also Dispatch To Assigned Personnel
+				96 container
+					97 checkbox (settable, integer) Value: 1, ID: UnitDispatchAlsoDispatchToAssignedPersonnel
+					98 text Expand unit dispatch to its assigned crew. Review duplicate routes, current assignments and recipient permissions.
+				99 text Also Dispatch To Entire Group
+				100 container
+					101 checkbox (settable, integer) Value: 0, ID: UnitDispatchAlsoDispatchToGroup
+					102 text Expand unit dispatch to the station group. This can substantially increase the recipient audience.
+				103 text Unit Call Dispatch Status
+				104 container
+					105 pop up button (collapsed, settable) Value: Responding, ID: UnitDispatchStatus, Secondary Actions: Expand
+						106 menu
+							107 Default
+							108 Available
+							109 Delayed
+							110 Unavailable
+							111 Committed
+							112 Out Of Service
+							113 (selected) Responding
+							114 On Scene
+							115 Staging
+							116 Returning
+							117 Cancelled
+							118 Released
+							119 Manual
+							120 Enroute
+					121 text These default unit statuses only use the built-in unit state types. Use the unit type override table below when a unit type needs one of its own custom statuses.
+				122 text Unit Call Release Status
+				123 pop up button (collapsed, settable) Value: Released, ID: UnitClearStatus, Secondary Actions: Expand
+					124 menu
+						125 Default
+						126 Available
+						127 Delayed
+						128 Unavailable
+						129 Committed
+						130 Out Of Service
+						131 Responding
+						132 On Scene
+						133 Staging
+						134 Returning
+						135 Cancelled
+						136 (selected) Released
+						137 Manual
+						138 Enroute
+				139 container
+					140 heading Unit Type Status Overrides, Value: 4
+						141 text Unit Type Status Overrides
+					142 text Only unit types with custom unit statuses appear here. Leave a value on Default to use the department-wide built-in status above.
+					143 table
+						144 row
+							145 cell
+								146 text Unit Type
+							147 cell
+								148 text Unit Call Dispatch Status
+							149 cell
+								150 text Unit Call Release Status
+						151 row
+							152 cell
+								153 text Rescue
+							154 cell
+								155 pop up button (collapsed, settable) Value: Responding to assignment, ID: UnitTypeStatusOverrides_0__DispatchStatus, Secondary Actions: Expand
+									156 menu
+										157 Default
+										158 Ready for assignment
+										159 (selected) Responding to assignment
+										160 Searching assigned area
+										161 Unavailable — maintenance
+							162 cell
+								163 pop up button (collapsed, settable) Value: Ready for assignment, ID: UnitTypeStatusOverrides_0__ReleaseStatus, Secondary Actions: Expand
+									164 menu
+										165 Default
+										166 (selected) Ready for assignment
+										167 Responding to assignment
+										168 Searching assigned area
+										169 Unavailable — maintenance
+				170 text Personnel on Unit Set Unit Status
+				171 container
+					172 checkbox (settable, integer) Value: 0, ID: PersonnelOnUnitSetUnitStatus
+					173 text Allow personnel status updates to influence their assigned unit status. Review automation and crew assignment together.
+					174 text When a unit submits a status and users are setup on roles, the users status will be set to On Unit.
+				175 heading Check-In Timer Settings, Value: 3
+					176 text Check-In Timer Settings
+				177 text Auto-Enable Check-In Timers for New Calls
+				178 container
+					179 checkbox (settable, integer) Value: 0, ID: AutoEnableCheckInTimers
+					180 text Automatically start configured check-in timers for new calls. Review timer targets and escalation before enabling it.
+					181 text When enabled, all new calls will automatically have check-in timers turned on.
+				182 heading Run Cards & Automatic Dispatch, Value: 3
+					183 text Run Cards & Automatic Dispatch
+				184 text Automatic resource selection mode
+				185 container
+					186 pop up button (collapsed, settable) Value: Off (Manual Dispatch), ID: DispatchRecommendationMode, Secondary Actions: Expand
+						187 menu
+							188 (selected) Off (Manual Dispatch)
+							189 Station Based Dispatching
+							190 Closest Unit Response
+					191 text How the system selects units and personnel to fill a run card: by the station response area containing the call (cascading to the next nearest station on shortfall) or by the closest available resources.
+				192 text Automatically dispatch recommended resources
+				193 container
+					194 checkbox (settable, integer) Value: 0, ID: DispatchRecommendationAutoDispatch
+					195 text Allow the recommendation path to dispatch automatically where enabled. Preview recipients and verify local procedures first.
+					196 text When on, matched run cards dispatch resources immediately on call creation. When off, recommendations pre-populate the New Call page for dispatcher review.
+				197 text Rest period (minutes)
+				198 container
+					199 stepper (settable, integer) Value: 0, ID: RecommendationRestPeriodMinutes
+					200 text After a unit or person is dispatched, deprioritize them for this many minutes so the same resources are not dispatched back to back. 0 disables.
+				201 text Minimum unit staffing to dispatch
+				202 container
+					203 pop up button (collapsed, settable) Value: Off (No Staffing Gate), ID: RecommendationUnitMinimumStaffingLevel, Secondary Actions: Expand
+						204 menu
+							205 (selected) Off (No Staffing Gate)
+							206 At Least Partially Staffed
+							207 At Least Degraded
+							208 Fully Staffed Only
+					209 text Units staffed below this level are not selected even when their status matches. Units without defined roles always pass.
+				210 text Enable move-up / backfill recommendations
+				211 container
+					212 checkbox (settable, integer) Value: 0, ID: RecommendationMoveUpEnabled
+					213 text After dispatch selection, check station coverage minimums and recommend relocating resources to depleted stations.
+				214 heading Closest Unit Response Tuning, Value: 4
+					215 text Closest Unit Response Tuning
+				216 text Maximum unit location age (seconds)
+				217 stepper (settable, integer) Value: 1800, ID: RecommendationMaxLocationAgeSeconds
+				218 text Maximum personnel location age (seconds)
+				219 stepper (settable, integer) Value: 1800, ID: RecommendationPersonnelMaxLocationAgeSeconds
+				220 text Maximum response radius (meters)
+				221 stepper (settable, integer) Value: 0, ID: RecommendationMaxRadiusMeters
+				222 text Include stale locations
+				223 checkbox (settable, integer) Value: 0, ID: RecommendationIncludeStaleLocations
+				224 text Order by driving ETA
+				225 container
+					226 checkbox (settable, integer) Value: 0, ID: RecommendationUseRoutedEta
+					227 text Re-rank the closest candidates using routed drive time instead of straight-line distance. Uses the mapping provider and may add cost and latency.
+				228 text ETA shortlist size
+				229 stepper (settable, integer) Value: 5, ID: RecommendationEtaShortlistSize
+				230 heading New Call Form Fields, Value: 3
+					231 text New Call Form Fields
+				232 container
+					233 text Choose which built-in fields appear on the new call form and which must be completed before a call can be created and sent to the field. Name, nature, priority and type are always shown and always required.
+					234 table
+						235 row
+							236 cell
+								237 text Field
+							238 cell
+								239 text Visible
+							240 cell
+								241 text Required
+						242 row
+							243 cell
+								244 text Address
+							245 cell
+								246 checkbox (settable, integer) Value: 1, ID: NewCallFields_0__Visible
+							247 cell
+								248 checkbox (settable, integer) Value: 0, ID: NewCallFields_0__Required
+						249 row
+							250 cell
+								251 text GPS Coordinates
+							252 cell
+								253 checkbox (settable, integer) Value: 1, ID: NewCallFields_1__Visible
+							254 cell
+								255 checkbox (settable, integer) Value: 0, ID: NewCallFields_1__Required
+						256 row
+							257 cell
+								258 text what3words
+							259 cell
+								260 checkbox (settable, integer) Value: 1, ID: NewCallFields_2__Visible
+							261 cell
+								262 checkbox (settable, integer) Value: 0, ID: NewCallFields_2__Required
+						263 row
+							264 cell
+								265 text Plus Code
+							266 cell
+								267 checkbox (settable, integer) Value: 1, ID: NewCallFields_3__Visible
+							268 cell
+								269 checkbox (settable, integer) Value: 0, ID: NewCallFields_3__Required
+						270 row
+							271 cell
+								272 text Destination
+							273 cell
+								274 checkbox (settable, integer) Value: 1, ID: NewCallFields_4__Visible
+							275 cell
+								276 checkbox (settable, integer) Value: 0, ID: NewCallFields_4__Required
+						277 row
+							278 cell
+								279 text Indoor Location
+							280 cell
+								281 checkbox (settable, integer) Value: 1, ID: NewCallFields_5__Visible
+							282 cell
+								283 checkbox (settable, integer) Value: 0, ID: NewCallFields_5__Required
+						284 row
+							285 cell
+								286 text Note
+							287 cell
+								288 checkbox (settable, integer) Value: 1, ID: NewCallFields_6__Visible
+							289 cell
+								290 checkbox (settable, integer) Value: 1, ID: NewCallFields_6__Required
+						291 row
+							292 cell
+								293 text Primary Contact
+							294 cell
+								295 checkbox (settable, integer) Value: 1, ID: NewCallFields_7__Visible
+							296 cell
+								297 checkbox (settable, integer) Value: 0, ID: NewCallFields_7__Required
+						298 row
+							299 cell
+								300 text Reporter Contact Info
+							301 cell
+								302 checkbox (settable, integer) Value: 1, ID: NewCallFields_8__Visible
+							303 cell
+								304 checkbox (settable, integer) Value: 0, ID: NewCallFields_8__Required
+						305 row
+							306 cell
+								307 text External Call ID
+							308 cell
+								309 checkbox (settable, integer) Value: 1, ID: NewCallFields_9__Visible
+							310 cell
+								311 checkbox (settable, integer) Value: 0, ID: NewCallFields_9__Required
+						312 row
+							313 cell
+								314 text Incident ID
+							315 cell
+								316 checkbox (settable, integer) Value: 1, ID: NewCallFields_10__Visible
+							317 cell
+								318 checkbox (settable, integer) Value: 0, ID: NewCallFields_10__Required
+						319 row
+							320 cell
+								321 text Reference ID
+							322 cell
+								323 checkbox (settable, integer) Value: 1, ID: NewCallFields_11__Visible
+							324 cell
+								325 checkbox (settable, integer) Value: 0, ID: NewCallFields_11__Required
+						326 row
+							327 cell
+								328 text Protocols
+							329 cell
+								330 checkbox (settable, integer) Value: 1, ID: NewCallFields_12__Visible
+							331 cell
+								332 checkbox (settable, integer) Value: 0, ID: NewCallFields_12__Required
+						333 row
+							334 cell
+								335 text Linked Call
+							336 cell
+								337 checkbox (settable, integer) Value: 1, ID: NewCallFields_13__Visible
+							338 cell
+								339 checkbox (settable, integer) Value: 0, ID: NewCallFields_13__Required
+						340 row
+							341 cell
+								342 text Scheduled Dispatch
+							343 cell
+								344 checkbox (settable, integer) Value: 1, ID: NewCallFields_14__Visible
+							345 cell
+								346 checkbox (settable, integer) Value: 0, ID: NewCallFields_14__Required
+						347 row
+							348 cell
+								349 text Dispatch Recipients
+							350 cell
+								351 checkbox (settable, integer) Value: 1, ID: NewCallFields_15__Visible
+							352 cell
+								353 checkbox (settable, integer) Value: 0, ID: NewCallFields_15__Required
+				354 container
+					355 link Description: Cancel, Value: 127.0.0.1:18767/User/Home/Dashboard
+					356 button Save
+				357 heading Station Coverage Minimums, Value: 5
+					358 text Station Coverage Minimums
+				359 text Define the minimum number of each unit type or personnel role that should remain available at a station. When a dispatch would drop coverage below a minimum, the system recommends move-ups.
+				360 table stationCoverageTable
+					361 row
+						362 cell
+							363 text Station
+						364 cell
+							365 text Unit Type / Role
+						366 cell
+							367 text Minimum Available
+						368 cell
+							369 text Radius (meters, closest-unit mode)
+						370 cell
+							371 text Enabled
+				372 container newCoverageForm
+					373 pop up button (collapsed, settable) Value: Firehouse 51, ID: coverageStation, Secondary Actions: Expand
+						374 menu
+							375 (selected) Firehouse 51
+					376 pop up button (collapsed, settable) Value: Engine, ID: coverageTarget, Secondary Actions: Expand
+						377 menu
+							378 (selected) Engine
+							379 Aerial
+							380 Ambulance
+							381 Command
+							382 Rescue
+							383 Chief
+							384 Officer
+							385 Rescue Technician
+							386 Paramedic
+							387 Firefighter
+							388 Driver / Operator
+					389 stepper (settable, integer) Description: Minimum Available, Value: 1, ID: coverageMinCount
+					390 stepper (settable, integer) Description: Radius (meters, closest-unit mode), Value: 0, ID: coverageRadius
+					391 button Save, ID: addCoverageButton
+				392 heading Default Timer Configurations, Value: 5
+					393 text Default Timer Configurations
+				394 text These define the default check-in intervals for each target type. They apply to all calls unless overridden by call type/priority rules below.
+				395 table
+					396 row
+						397 cell
+							398 text Target Type
+						399 cell
+							400 text Unit Type
+						401 cell
+							402 text Duration (minutes)
+						403 cell
+							404 text Warning Threshold (minutes)
+						405 cell
+							406 text Enabled
+						407 cell
+							408 text Active States
+				409 heading Add New Default Timer, Value: 4
+					410 text Add New Default Timer
+				411 text Target Type
+				412 pop up button (collapsed, settable) Value: Personnel, Secondary Actions: Expand
+					413 menu
+						414 (selected) Personnel
+						415 Unit Type
+						416 IC (Incident Commander)
+						417 PAR (Personnel Accountability)
+						418 Hazmat Exposure
+						419 Sector Rotation
+						420 Rehab
+				421 text Duration (minutes)
+				422 stepper (settable, integer) 30
+				423 text Warning Threshold (minutes)
+				424 stepper (settable, integer) 5
+				425 text Enabled
+				426 checkbox (settable, integer) 1
+				427 text Active States
+				428 container
+					429 combo box (collapsed) Value: Active States, Secondary Actions: Expand
+						430 content list
+							431 search text field (settable)
+					432 text Leave empty for "All States".
+				433 button Add Timer Config
+				434 heading Call Type / Priority Overrides, Value: 5
+					435 text Call Type / Priority Overrides
+				436 text Overrides take precedence over default timers when a call matches the specified type and/or priority.
+				437 table
+					438 row
+						439 cell
+							440 text Call Type ID
+						441 cell
+							442 text Call Priority
+						443 cell
+							444 text Target Type
+						445 cell
+							446 text Unit Type
+						447 cell
+							448 text Duration (minutes)
+						449 cell
+							450 text Warning Threshold (minutes)
+						451 cell
+							452 text Enabled
+						453 cell
+							454 text Active States
+				455 heading Add New Override, Value: 4
+					456 text Add New Override
+				457 text Call Type ID
+				458 pop up button (collapsed, settable) Value: -- Any --, Secondary Actions: Expand
+					459 menu
+						460 (selected) -- Any --
+						461 Structure Fire
+						462 Medical
+						463 Rescue
+						464 Investigation
+				465 text Call Priority
+				466 pop up button (collapsed, settable) Value: -- Any --, Secondary Actions: Expand
+					467 menu
+						468 (selected) -- Any --
+						469 Low
+						470 Medium
+						471 High
+						472 Emergency
+				473 text Target Type
+				474 pop up button (collapsed, settable) Value: Personnel, Secondary Actions: Expand
+					475 menu
+						476 (selected) Personnel
+						477 Unit Type
+						478 IC (Incident Commander)
+						479 PAR (Personnel Accountability)
+						480 Hazmat Exposure
+						481 Sector Rotation
+						482 Rehab
+				483 text Duration (minutes)
+				484 stepper (settable, integer) 30
+				485 text Warning Threshold (minutes)
+				486 stepper (settable, integer) 5
+				487 text Enabled
+				488 checkbox (settable, integer) 1
+				489 text Active States
+				490 container
+					491 combo box (collapsed) Value: Active States, Secondary Actions: Expand
+						492 content list
+							493 search text field (settable)
+					494 text Leave empty for "All States".
+				495 button Add Override
+			496 container
+				497 button Assistant
+				498 button Chat
+				499 text Copyright
+				500 text  Resgrid, LLC © 2026 All Rights Reserved.  Version 3.0.0.0
+
+The focused UI element is 1 AXWebArea Resgrid | Call & Dispatch Settings, URL: 127.0.0.1:18767/User/Department/DispatchSettings?aaReturn=report

@@ -1,0 +1,641 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Resgrid.Model;
+using Resgrid.Model.Helpers;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using Resgrid.Web.Areas.User.Models;
+using Resgrid.Web.Areas.User.Models.Messages;
+using Resgrid.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Localization;
+using System.Threading;
+using Resgrid.Framework;
+using Resgrid.Model.Messages;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	public class MessagesController : SecureBaseController
+	{
+		#region Private Members and Constructors
+		private readonly IMessageService _messageService;
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUsersService _usersService;
+		private readonly ICommunicationService _communicationService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+		private readonly IShiftsService _shiftsService;
+		private readonly ICalendarService _calendarService;
+		private readonly IModerationService _moderationService;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Moderation.Moderation> _moderationLocalizer;
+
+		public MessagesController(IMessageService messageService, IDepartmentsService departmentsService, IUsersService usersService,
+			ICommunicationService communicationService, Model.Services.IAuthorizationService authorizationService, IDepartmentGroupsService departmentGroupsService,
+			IPersonnelRolesService personnelRolesService, IShiftsService shiftsService, ICalendarService calendarService,
+			IModerationService moderationService,
+			IStringLocalizer<Resgrid.Localization.Areas.User.Moderation.Moderation> moderationLocalizer,
+			IProtectedReadService protectedReadService)
+		{
+			_messageService = messageService;
+			_departmentsService = departmentsService;
+			_usersService = usersService;
+			_communicationService = communicationService;
+			_authorizationService = authorizationService;
+			_departmentGroupsService = departmentGroupsService;
+			_personnelRolesService = personnelRolesService;
+			_shiftsService = shiftsService;
+			_calendarService = calendarService;
+			_moderationService = moderationService;
+			_moderationLocalizer = moderationLocalizer;
+			_protectedReadService = protectedReadService;
+		}
+		#endregion Private Members and Constructors
+
+		/// <summary>
+		/// Resolves protected message fields against the department that OWNS each message, not the
+		/// caller's ambient one. An inbox is keyed by user, and a member of more than one department
+		/// sees messages from all of them; resolving those under the ambient department asks the
+		/// wrong policy whether protection is enforced and hands the broker a key the envelopes were
+		/// never bound to (the AAD carries the owning department).
+		///
+		/// A message with no recorded owner is left exactly as it is. Ownership was added by M0137
+		/// and backfilled; anything it could not resolve is historic, and guessing the ambient
+		/// department for it would be the same mistake in a quieter form.
+		/// </summary>
+		private async Task<ProtectedReadResult> ResolveMessagesByOwningDepartmentAsync(
+			IEnumerable<Message> messages, string grantToken)
+		{
+			var combined = new ProtectedReadResult();
+
+			var groups = (messages ?? Enumerable.Empty<Message>())
+				.Where(m => m != null && m.DepartmentId.HasValue && m.DepartmentId.Value > 0)
+				.GroupBy(m => m.DepartmentId.Value);
+
+			foreach (var group in groups)
+			{
+				var resolved = await _protectedReadService.ResolveMessagesForReadAsync(group.Key,
+					group.ToList(), grantToken, UserId);
+
+				if (resolved == null)
+					continue;
+
+				// Any protected department in the set makes the page protected, and the first real
+				// reason is the one the client needs to act on (an expired grant must re-prompt).
+				if (resolved.IsProtected)
+					combined.IsProtected = true;
+
+				if (combined.ProtectedReason == null && resolved.ProtectedReason != null)
+					combined.ProtectedReason = resolved.ProtectedReason;
+			}
+
+			return combined;
+		}
+
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> Inbox()
+		{
+			MessagesInboxModel model = new MessagesInboxModel();
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			
+			model.User = _usersService.GetUserById(UserId);
+			model.Messages = await _messageService.GetInboxMessagesByUserIdAsync(UserId);
+
+			// ADP (catalog v7): server-rendered pages always render protected values as REDACTED - a
+			// grant lives only in the browser, never in the server session.
+			await ResolveMessagesByOwningDepartmentAsync(model.Messages, null);
+
+			model.UnreadMessages = await _messageService.GetUnreadMessagesCountByUserIdAsync(UserId);
+			
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> Outbox()
+		{
+			MessagesOutboxModel model = new MessagesOutboxModel();
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			
+			model.User = _usersService.GetUserById(UserId);
+			model.Messages = await _messageService.GetSentMessagesByUserIdAsync(UserId);
+
+			// ADP: the sender sees placeholders too - the row is encrypted under the department key.
+			await ResolveMessagesByOwningDepartmentAsync(model.Messages, null);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Messages_Create)]
+		public async Task<IActionResult> Compose()
+		{
+			ComposeMessageModel model = new ComposeMessageModel();
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+			model.Types = model.MessageType.ToSelectList();
+
+			var shifts = await _shiftsService.GetAllShiftsByDepartmentAsync(DepartmentId);
+			model.Shifts = new SelectList(shifts, "ShiftId", "Name");
+
+			model.Message = new Message();
+
+			return View(await FillComposeMessageModel(model));
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Messages_Create)]
+		public async Task<IActionResult> Compose(ComposeMessageModel model, IFormCollection collection, CancellationToken cancellationToken)
+		{
+			var roles = new List<string>();
+			var groups = new List<string>();
+			var users = new List<string>();
+			var shifts = new List<string>();
+
+			if (collection.ContainsKey("roles"))
+				roles.AddRange(collection["roles"].ToString().Split(char.Parse(",")));
+
+			if (collection.ContainsKey("groups"))
+				groups.AddRange(collection["groups"].ToString().Split(char.Parse(",")));
+
+			if (collection.ContainsKey("users"))
+				users.AddRange(collection["users"].ToString().Split(char.Parse(",")));
+
+			if (collection.ContainsKey("exludedShifts"))
+				shifts.AddRange(collection["exludedShifts"].ToString().Split(char.Parse(",")));
+
+			if (!model.SendToAll && (roles.Count + groups.Count + users.Count) == 0)
+				ModelState.AddModelError("", "You must specify at least one Recipient.");
+
+			if (model.SendToMatchOnly && (roles.Count + groups.Count) == 0)
+				ModelState.AddModelError("", "You must specify at least one Group or Role to send to.");
+
+			if (ModelState.IsValid)
+			{
+				var excludedUsers = new List<string>();
+
+				if (shifts.Any())
+				{
+					foreach (var shiftId in shifts)
+					{
+						var shift = await _shiftsService.GetShiftByIdAsync(int.Parse(shiftId));
+						excludedUsers.AddRange(shift.Personnel.Select(x => x.UserId));
+					}
+				}
+				
+				model.Message.Type = (int)model.MessageType;
+				if (model.SendToAll)
+				{
+					var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId, true, true);
+					foreach (var user in allUsers)
+					{
+						if (user.UserId != UserId && (!excludedUsers.Any() || !excludedUsers.Contains(user.UserId)))
+							model.Message.AddRecipient(user.UserId);
+					}
+				}
+				else if (model.SendToMatchOnly)
+				{
+					var usersInRoles = new Dictionary<int, List<string>>();
+
+					foreach (var role in roles)
+					{
+						var roleMembers = await _personnelRolesService.GetAllMembersOfRoleAsync(int.Parse(role));
+						usersInRoles.Add(int.Parse(role), roleMembers.Select(x => x.UserId).ToList());
+					}
+
+					foreach (var group in groups)
+					{
+						var members = await _departmentGroupsService.GetAllMembersForGroupAsync(int.Parse(group));
+
+						foreach (var member in members)
+						{
+							bool isInRoles = false;
+							if (model.Message.GetRecipients().All(x => x != member.UserId) && member.UserId != UserId &&
+							    (!excludedUsers.Any() || !excludedUsers.Contains(member.UserId)))
+							{
+								foreach (var key in usersInRoles)
+								{
+									if (key.Value.Any(x => x == member.UserId))
+									{
+										isInRoles = true;
+										break;
+									}
+								}
+
+								if (isInRoles)
+									model.Message.AddRecipient(member.UserId);
+							}
+								
+						}
+					}
+				}
+				else
+				{
+					foreach (var user in users)
+					{
+						var member = await _departmentsService.GetDepartmentMemberAsync(user, DepartmentId, false);
+						if (member == null || member.IsDisabled.GetValueOrDefault() || member.IsDeleted)
+							continue;
+
+						model.Message.AddRecipient(user);
+					}
+
+					// Add all members of the group
+					foreach (var group in groups)
+					{
+						var members = await _departmentGroupsService.GetAllMembersForGroupAsync(int.Parse(group));
+
+						foreach (var member in members)
+						{
+							if (model.Message.GetRecipients().All(x => x != member.UserId) && member.UserId != UserId && (!excludedUsers.Any() || !excludedUsers.Contains(member.UserId)))
+								model.Message.AddRecipient(member.UserId);
+						}
+					}
+
+					// Add all the users of a specific role
+					foreach (var role in roles)
+					{
+						var roleMembers = await _personnelRolesService.GetAllMembersOfRoleAsync(int.Parse(role));
+
+						foreach (var member in roleMembers)
+						{
+							if (model.Message.GetRecipients().All(x => x != member.UserId) && member.UserId != UserId && (!excludedUsers.Any() || !excludedUsers.Contains(member.UserId)))
+								model.Message.AddRecipient(member.UserId);
+						}
+					}
+				}
+				
+				model.Message.SentOn = DateTime.UtcNow;
+				model.Message.SendingUserId = UserId;
+				model.Message.Body = System.Net.WebUtility.HtmlDecode(model.Message.Body);
+				model.Message.IsBroadcast = true;
+
+				var savedMessage = await _messageService.SaveMessageAsync(model.Message, cancellationToken);
+				await _messageService.SendMessageAsync(savedMessage, "", DepartmentId, false, cancellationToken);
+
+				return RedirectToAction("Inbox");
+			}
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.User = _usersService.GetUserById(UserId);
+			model.Types = model.MessageType.ToSelectList();
+
+			var savedShifts = await _shiftsService.GetAllShiftsByDepartmentAsync(DepartmentId);
+			model.Shifts = new SelectList(savedShifts, "ShiftId", "Name");
+			model.Message.Body = System.Net.WebUtility.HtmlDecode(model.Message.Body);
+
+			return View(await FillComposeMessageModel(model));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> ViewMessage(int messageId, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewMessageAsync(UserId, messageId))
+				return Unauthorized();
+
+			ViewMessageView model = new ViewMessageView();
+			model.User = _usersService.GetUserById(UserId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.Message = await _messageService.GetMessageByIdAsync(messageId);
+			if (model.Message == null || (model.Message.ExpireOn.HasValue && model.Message.ExpireOn.Value <= DateTime.UtcNow))
+				return RedirectToAction("Inbox");
+
+			model.UnreadMessages = await _messageService.GetUnreadMessagesCountByUserIdAsync(UserId);
+			model.UserGroupsAndRoles = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, true, true, true);
+			var moderationRequest = await _moderationService.GetReporterRequestAsync(DepartmentId, UserId,
+				ModerationItemType.Message, messageId.ToString());
+			model.HasModerationReport = moderationRequest != null;
+			model.ModerationStatus = moderationRequest?.Status;
+			model.ModerationAdminNote = moderationRequest?.AdminNote;
+			model.ModerationMessage = TempData["ModerationMessage"] as string;
+
+			if (model.Message.Type == (int)MessageTypes.CalendarRsvp)
+			{
+				var recipient = model.Message.MessageRecipients?.FirstOrDefault(x => x.UserId == UserId && !x.IsDeleted);
+				if (recipient != null
+					&& TextResponsePromptMetadata.TryGetCalendarItemId(recipient.PromptMetadata, out var calendarItemId))
+				{
+					var calendarItem = await _calendarService.GetCalendarItemByIdAsync(calendarItemId);
+					if (calendarItem != null && calendarItem.DepartmentId == DepartmentId
+						&& calendarItem.SignupType == (int)CalendarItemSignupTypes.RSVP)
+					{
+						model.CanRespondToCalendarRsvp =
+							await _authorizationService.CanUserCheckInToCalendarEventAsync(UserId, calendarItemId);
+						var attendee = await _calendarService.GetCalendarItemAttendeeByUserAsync(calendarItemId, UserId);
+						model.CalendarRsvpAttendeeType = attendee?.AttendeeType;
+					}
+				}
+			}
+
+			await _messageService.ReadMessageRecipientAsync(messageId, UserId, cancellationToken);
+
+			// ADP (catalog v7): REDACTED on the server, revealed client-side through RevealMessage.
+			var protectedRead = await ResolveMessagesByOwningDepartmentAsync(
+				new List<Message> { model.Message }, null);
+			model.IsProtectedMessage = protectedRead.IsProtected;
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// ADP client-side reveal (plan 7.2). A grant proves the CALLER stepped up; it is never an
+		/// authorization decision about the target, so the message is authorized exactly as the page
+		/// hosting the reveal authorizes it.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> RevealMessage([FromForm] int messageId)
+		{
+			if (!await _authorizationService.CanUserViewMessageAsync(UserId, messageId))
+				return Unauthorized();
+
+			var message = await _messageService.GetMessageByIdAsync(messageId);
+			if (message == null)
+				return NotFound();
+
+			string grantToken = Request.Headers["X-Resgrid-Protected-Grant"];
+			var resolved = await ResolveMessagesByOwningDepartmentAsync(
+				new List<Message> { message }, grantToken);
+
+			if (resolved.IsProtected && resolved.ProtectedReason != null)
+				return Json(new { success = false, error = resolved.ProtectedReason });
+
+			var fields = Resgrid.Services.ProtectedReadService.MessageFieldAccessors
+				.ToDictionary(a => a.Key, a => a.Value.Get(message));
+
+			return Json(new { success = true, fields });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> FlagMessage(int messageId, string note, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewMessageAsync(UserId, messageId))
+				return Unauthorized();
+
+			var message = await _messageService.GetMessageByIdAsync(messageId);
+			if (message == null || message.SystemGenerated ||
+				string.Equals(message.SendingUserId, UserId, StringComparison.OrdinalIgnoreCase))
+				return Unauthorized();
+
+			await _moderationService.FlagAsync(DepartmentId, UserId, ModerationItemType.Message,
+				messageId.ToString(), ModerationReason.Other, note, BuildModerationContext("Reporter"),
+				cancellationToken);
+			TempData["ModerationMessage"] = _moderationLocalizer["ModerationReportSubmitted"].Value;
+			return RedirectToAction(nameof(ViewMessage), new { messageId });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> CalendarRsvp(int messageId, bool attending, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewMessageAsync(UserId, messageId))
+				return Unauthorized();
+
+			var message = await _messageService.GetMessageByIdAsync(messageId);
+			if (message == null || message.Type != (int)MessageTypes.CalendarRsvp
+				|| (message.ExpireOn.HasValue && message.ExpireOn.Value <= DateTime.UtcNow))
+				return RedirectToAction("Inbox");
+
+			var recipient = message.MessageRecipients?.FirstOrDefault(x => x.UserId == UserId && !x.IsDeleted);
+			if (recipient == null
+				|| !TextResponsePromptMetadata.TryGetCalendarItemId(recipient.PromptMetadata, out var calendarItemId))
+				return Unauthorized();
+
+			var calendarItem = await _calendarService.GetCalendarItemByIdAsync(calendarItemId);
+			if (calendarItem == null || calendarItem.DepartmentId != DepartmentId
+				|| calendarItem.SignupType != (int)CalendarItemSignupTypes.RSVP
+				|| !await _authorizationService.CanUserCheckInToCalendarEventAsync(UserId, calendarItemId))
+				return Unauthorized();
+
+			var normalizedResponse = attending ? "Yes" : "No";
+			var attendeeType = attending
+				? (int)CalendarItemAttendeeTypes.RSVP
+				: (int)CalendarItemAttendeeTypes.NotAttending;
+
+			try
+			{
+				await _calendarService.SignupForEventAndUpdateMessageRecipientAsync(calendarItemId, UserId,
+					normalizedResponse, attendeeType, recipient, cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex,
+					$"CalendarRsvp response transaction failed. messageId={messageId}, calendarItemId={calendarItemId}, UserId={UserId}.");
+				return StatusCode(StatusCodes.Status500InternalServerError,
+					"Unable to update your attendance. Please try again.");
+			}
+
+			return RedirectToAction("ViewMessage", new { messageId });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Messages_View)]
+		public async Task<IActionResult> MessageResponse(int recipientId, int response, string note, CancellationToken cancellationToken)
+		{
+			var messageRecipient = await _messageService.GetMessageRecipientByIdAsync(recipientId);
+
+			if (messageRecipient != null)
+			{
+				if (messageRecipient.UserId != UserId)
+					return Unauthorized();
+
+				messageRecipient.Response = response.ToString();
+				messageRecipient.ReadOn = DateTime.UtcNow;
+				messageRecipient.Note = HttpUtility.UrlDecode(note);
+
+				await _messageService.SaveMessageRecipientAsync(messageRecipient, cancellationToken);
+			}
+
+			return RedirectToAction("Inbox");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Messages_Delete)]
+		public async Task<IActionResult> DeleteMessage(int messageId, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewMessageAsync(UserId, messageId))
+				return Unauthorized();
+
+			await _messageService.MarkMessagesAsDeletedAsync(UserId, new List<string>() { messageId.ToString() }, cancellationToken);
+
+			return RedirectToAction("Inbox");
+		}
+
+		[HttpDelete]
+		[Authorize(Policy = ResgridResources.Messages_Delete)]
+		public async Task<IActionResult> DeleteMessages(string messageIds, CancellationToken cancellationToken)
+		{
+			var messages = messageIds.Split(char.Parse(","));
+
+			foreach (var messageId in messages)
+			{
+				var id = int.Parse(messageId);
+
+				if (!await _authorizationService.CanUserViewMessageAsync(UserId, id))
+					return Unauthorized();
+			}
+
+			await _messageService.MarkMessagesAsDeletedAsync(UserId, messages.ToList(), cancellationToken);
+
+			return RedirectToAction("Inbox");
+		}
+
+		[HttpPut]
+		[Authorize(Policy = ResgridResources.Messages_Update)]
+		public async Task<IActionResult> MarkMessagesAsRead(string messageIds, CancellationToken cancellationToken)
+		{
+			var messages = messageIds.Split(char.Parse(","));
+
+			foreach (var messageId in messages)
+			{
+				var id = int.Parse(messageId);
+
+				if (!await _authorizationService.CanUserViewMessageAsync(UserId, id))
+					return Unauthorized();
+			}
+
+			await _messageService.MarkMessagesAsReadAsync(UserId, messages.ToList(), cancellationToken);
+
+			return RedirectToAction("Inbox");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Messages_Delete)]
+		public async Task<IActionResult> DeleteOutboxMessage(int messageId)
+		{
+			if (!await _authorizationService.CanUserViewMessageAsync(UserId, messageId))
+				return Unauthorized();
+
+			await _messageService.MarkMessageAsDeletedAsync(messageId);
+
+			return RedirectToAction("Outbox");
+		}
+
+		[HttpDelete]
+		[Authorize(Policy = ResgridResources.Messages_Delete)]
+		public async Task<IActionResult> DeleteOutboxMessages(string messageIds, CancellationToken cancellationToken)
+		{
+			var messages = messageIds.Split(char.Parse(","));
+
+			foreach (var messageId in messages)
+			{
+				var id = int.Parse(messageId);
+
+				if (!await _authorizationService.CanUserViewMessageAsync(UserId, id))
+					return Unauthorized();
+
+				await _messageService.MarkMessageAsDeletedAsync(id, cancellationToken);
+			}
+
+			return RedirectToAction("Outbox");
+		}
+
+		public async Task<IActionResult> GetTopUnreadMessages()
+		{
+			var model = new TopUnreadMessagesView();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.UnreadMessages = await _messageService.GetUnreadInboxMessagesByUserIdAsync(UserId);
+
+			return PartialView("_UnreadTopMessagesPartial", model);
+		}
+
+		private async Task<ComposeMessageModel> FillComposeMessageModel(ComposeMessageModel model)
+		{
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+			
+			//model.Users = _departmentsService.GetAllUsersForDepartment(model.Department.DepartmentId);
+
+			return model;
+		}
+
+		[HttpGet]
+		
+		public async Task<IActionResult> GetInboxMessageList()
+		{
+			var messagesJson = new List<MessageJson>();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var messages = await _messageService.GetInboxMessagesByUserIdAsync(UserId);
+
+			foreach (var message in messages)
+			{
+				var json = new MessageJson();
+				json.MessageId = message.MessageId;
+				json.Subject = message.Subject;
+				json.SystemGenerated = message.SystemGenerated;
+				json.Body = message.Body;
+				json.SentOn = message.SentOn.FormatForDepartment(department);
+				json.IsDeleted = message.IsDeleted;
+				json.ReadOn = message.ReadOn;
+				json.Type = message.Type;
+				json.ExpireOn = message.ExpireOn;
+				json.Read = message.HasUserRead(UserId);
+
+				if (message.SystemGenerated)
+					json.SentBy = "System";
+				else if (!String.IsNullOrWhiteSpace(message.SendingUserId))
+					json.SentBy = await UserHelper.GetFullNameForUser(message.SendingUserId);
+				else
+					json.SentBy = "System";
+
+				messagesJson.Add(json);
+			}
+
+			return Json(messagesJson);
+		}
+
+		[HttpGet]
+		
+		public async Task<IActionResult> GetOutboxMessageList()
+		{
+			var messagesJson = new List<MessageJson>();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var messages = await _messageService.GetSentMessagesByUserIdAsync(UserId);
+
+			foreach (var message in messages)
+			{
+				var json = new MessageJson();
+				json.MessageId = message.MessageId;
+				json.Subject = message.Subject;
+				json.SystemGenerated = message.SystemGenerated;
+				json.Body = message.Body;
+				json.SentOn = message.SentOn.FormatForDepartment(department);
+				json.IsDeleted = message.IsDeleted;
+				json.ReadOn = message.ReadOn;
+				json.Type = message.Type;
+				json.ExpireOn = message.ExpireOn;
+
+				messagesJson.Add(json);
+			}
+
+			return Json(messagesJson);
+		}
+
+		private ChatModerationContext BuildModerationContext(string actorRole)
+		{
+			return new ChatModerationContext
+			{
+				IpAddress = HttpContext?.Connection?.RemoteIpAddress?.ToString(),
+				UserAgent = Request?.Headers["User-Agent"].ToString(),
+				TraceId = HttpContext?.TraceIdentifier,
+				ActorRole = actorRole
+			};
+		}
+	}
+}

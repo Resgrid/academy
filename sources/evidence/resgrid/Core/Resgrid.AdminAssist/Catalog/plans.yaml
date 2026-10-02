@@ -1,0 +1,285 @@
+{
+  "Version": "2026.09.25.2",
+  "Areas": [
+    {
+      "Id": "plans",
+      "LabelKey": "Area.plans",
+      "PurposeKey": "AreaPurpose.plans",
+      "Order": 6,
+      "Archetypes": [],
+      "Tier": "Core",
+      "Addon": null,
+      "Global": false,
+      "ValueKey": "AreaValue.plans",
+      "ExampleKey": "AreaExample.plans",
+      "AdoptionKey": "ModuleAdoption.plans",
+      "MinimumMinutes": 5,
+      "MaximumMinutes": 15,
+      "DocsPath": "/web-app/subscription-billing/"
+    }
+  ],
+  "Settings": [
+    {
+      "Id": "setting.StripeCustomerId",
+      "AreaId": "plans",
+      "LabelKey": "Setting.StripeCustomerId",
+      "HelpKey": "SettingHelp.StripeCustomerId",
+      "Binding": "DepartmentSettingTypes.StripeCustomerId",
+      "ValueType": "provider-reference",
+      "Classification": "Restricted",
+      "Secret": true,
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index",
+        "Field": "StripeCustomerId"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.plans",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.StripeCustomerId",
+      "DefaultValue": "unset",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "setting.BrainTreeCustomerId",
+      "AreaId": "plans",
+      "LabelKey": "Setting.BrainTreeCustomerId",
+      "HelpKey": "SettingHelp.BrainTreeCustomerId",
+      "Binding": "DepartmentSettingTypes.BrainTreeCustomerId",
+      "ValueType": "provider-reference",
+      "Classification": "Restricted",
+      "Secret": true,
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index",
+        "Field": "BrainTreeCustomerId"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.plans",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.BrainTreeCustomerId",
+      "DefaultValue": "unset",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "setting.PaddleCustomerId",
+      "AreaId": "plans",
+      "LabelKey": "Setting.PaddleCustomerId",
+      "HelpKey": "SettingHelp.PaddleCustomerId",
+      "Binding": "DepartmentSettingTypes.PaddleCustomerId",
+      "ValueType": "provider-reference",
+      "Classification": "Restricted",
+      "Secret": true,
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index",
+        "Field": "PaddleCustomerId"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "Medium",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.plans",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "setting.PaddleCustomerId",
+      "DefaultValue": "unset",
+      "AllowedValues": "Validated by the owning editor and service; Admin Assist never saves a proposed value.",
+      "EvidenceSource": "DepartmentSettings",
+      "Availability": "available"
+    },
+    {
+      "Id": "module.AiDisabled",
+      "AreaId": "plans",
+      "LabelKey": "Module.AiDisabled",
+      "HelpKey": "ModuleHelp.AiDisabled",
+      "Binding": "DepartmentModuleSettings.AiDisabled",
+      "ValueType": "boolean",
+      "Classification": "Internal",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "ModuleSettings",
+        "Field": "AiEnabled"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "High",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.plans",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.ModuleSettings"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "module.AiDisabled",
+      "DefaultValue": "false",
+      "AllowedValues": "true or false",
+      "EvidenceSource": "DepartmentSettingsService.GetDepartmentModuleSettingsAsync",
+      "Availability": "available"
+    }
+  ],
+  "Capabilities": [
+    {
+      "Id": "subscription",
+      "AreaId": "plans",
+      "LabelKey": "Feature.subscription",
+      "PurposeKey": "FeaturePurpose.subscription",
+      "ValueKey": "FeatureValue.subscription",
+      "ExampleKey": "AreaExample.plans",
+      "AdoptionKey": "FeatureSetup.subscription",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index"
+      },
+      "Requirements": [],
+      "SettingIds": [
+        "setting.BrainTreeCustomerId",
+        "setting.PaddleCustomerId",
+        "setting.StripeCustomerId"
+      ],
+      "RuleIds": [
+        "personnel-limit",
+        "unit-limit"
+      ],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/subscription-billing/"
+    }
+  ],
+  "Rules": [
+    {
+      "Id": "personnel-limit",
+      "AreaId": "plans",
+      "Severity": "Warning",
+      "TitleKey": "Rule.personnel-limit",
+      "ExplanationKey": "RuleWhy.personnel-limit",
+      "NextActionKey": "RuleNext.personnel-limit",
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index"
+      },
+      "AppliesWhen": [],
+      "FailsWhen": [
+        {
+          "EvidenceId": "personnelUtilization",
+          "Comparison": "GreaterOrEqual",
+          "Number": 0.9
+        }
+      ]
+    },
+    {
+      "Id": "unit-limit",
+      "AreaId": "plans",
+      "Severity": "Warning",
+      "TitleKey": "Rule.unit-limit",
+      "ExplanationKey": "RuleWhy.unit-limit",
+      "NextActionKey": "RuleNext.unit-limit",
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index"
+      },
+      "AppliesWhen": [],
+      "FailsWhen": [
+        {
+          "EvidenceId": "unitUtilization",
+          "Comparison": "GreaterOrEqual",
+          "Number": 0.9
+        }
+      ]
+    }
+  ],
+  "Packs": [],
+  "Articles": [
+    {
+      "Id": "setting.StripeCustomerId",
+      "Locale": "en",
+      "TitleKey": "Setting.StripeCustomerId",
+      "Body": "Stripe Customer Id. Billing-provider customer reference managed by subscription workflows; never edit this as an ordinary department setting.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-stripecustomerid",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "setting.BrainTreeCustomerId",
+      "Locale": "en",
+      "TitleKey": "Setting.BrainTreeCustomerId",
+      "Body": "Brain Tree Customer Id. Legacy billing reference. Use the subscription provider workflow, not a direct settings edit.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-braintreecustomerid",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "setting.PaddleCustomerId",
+      "Locale": "en",
+      "TitleKey": "Setting.PaddleCustomerId",
+      "Body": "Paddle Customer Id. Billing-provider customer reference. Managed by authorized billing flows and never returned in assistant evidence.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "setting-paddlecustomerid",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "module.AiDisabled",
+      "Locale": "en",
+      "TitleKey": "Module.AiDisabled",
+      "Body": "AI availability. Controls availability of optional AI assistance. Disabling this module can remove navigation and block module operations; it does not delete its records. Turning it on still requires the applicable subscription, rollout and permissions.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "module-aidisabled",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "subscription",
+      "Locale": "en",
+      "TitleKey": "Feature.subscription",
+      "Body": "Base plans and capacity Your plan, its personnel and unit limits, and your add-ons. Choose capacity for actual department needs without inferring prices or terms. Before inviting 40 new members, an administrator confirms the plan has room or asks the managing member to change it. Check the remaining room before adding many members or units.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "subscription",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    }
+  ]
+}

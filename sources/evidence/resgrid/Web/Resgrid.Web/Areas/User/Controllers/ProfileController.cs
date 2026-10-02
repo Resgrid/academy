@@ -1,0 +1,2082 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Resgrid.Model;
+using Resgrid.Model.Helpers;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using Resgrid.Framework;
+using Resgrid.Web.Areas.User.Models;
+using Resgrid.Web.Areas.User.Models.Profile;
+using Resgrid.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using System.Threading;
+using Microsoft.Extensions.Options;
+using Resgrid.Web.Options;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Resgrid.Web.Areas.User.Models.Personnel;
+using IdentityUser = Resgrid.Model.Identity.IdentityUser;
+using SixLabors.ImageSharp.Formats;
+using Microsoft.Extensions.Localization;
+using Resgrid.Model.Security;
+using Newtonsoft.Json;
+using Resgrid.Model.Events;
+using Resgrid.Model.Providers;
+using Resgrid.Web.Attributes;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	public class ProfileController : SecureBaseController
+	{
+		#region Private Members and Constructors
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUsersService _usersService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IScheduledTasksService _scheduledTasksService;
+		private readonly ICertificationService _certificationService;
+		private readonly ICustomStateService _customStateService;
+		private readonly IImageService _imageService;
+		private readonly IOptions<AppOptions> _appOptionsAccessor;
+		private readonly IEmailService _emailService;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly IDepartmentSsoService _departmentSsoService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Security.Security> _secLocalizer;
+		private readonly IDeleteService _deleteService;
+		private readonly IExternalIdentityLinkService _externalIdentityLinkService;
+		private readonly IUserSessionService _userSessionService;
+		private readonly ISystemAuditsService _systemAuditsService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly IPasswordRecoveryService _passwordRecoveryService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly IBusinessOperationsAccessService _businessOperationsAccess;
+		private readonly ILimitsService _limitsService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Profile.Profile> _profileLocalizer;
+		private readonly IMfaPolicyService _mfaPolicyService;
+		private readonly IMfaEvidenceService _mfaEvidenceService;
+
+		public ProfileController(IDepartmentsService departmentsService, IUsersService usersService, Model.Services.IAuthorizationService authorizationService,
+			IUserProfileService userProfileService, IScheduledTasksService scheduledTasksService, ICertificationService certificationService,
+			ICustomStateService customStateService, IImageService imageService, IOptions<AppOptions> appOptionsAccessor,
+			IEmailService emailService, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+			IDepartmentSsoService departmentSsoService,
+			IStringLocalizer<Resgrid.Localization.Areas.User.Security.Security> secLocalizer, IDeleteService deleteService,
+			IExternalIdentityLinkService externalIdentityLinkService, IUserSessionService userSessionService,
+			ISystemAuditsService systemAuditsService, IDepartmentGroupsService departmentGroupsService,
+			IDepartmentSettingsService departmentSettingsService, IPasswordRecoveryService passwordRecoveryService,
+			IEventAggregator eventAggregator, IProtectedReadService protectedReadService, IBusinessOperationsAccessService businessOperationsAccess,
+			ILimitsService limitsService, IStringLocalizer<Resgrid.Localization.Areas.User.Profile.Profile> profileLocalizer,
+			IMfaPolicyService mfaPolicyService, IMfaEvidenceService mfaEvidenceService, ISsoBrokerService ssoBroker,
+			ISsoReturnTargetRegistry ssoReturnTargets)
+		{
+			_ssoBroker = ssoBroker;
+			_ssoReturnTargets = ssoReturnTargets;
+			_departmentsService = departmentsService;
+			_usersService = usersService;
+			_authorizationService = authorizationService;
+			_userProfileService = userProfileService;
+			_scheduledTasksService = scheduledTasksService;
+			_certificationService = certificationService;
+			_customStateService = customStateService;
+			_imageService = imageService;
+			_appOptionsAccessor = appOptionsAccessor;
+			_emailService = emailService;
+			_userManager = userManager;
+			_signInManager = signInManager;
+			_departmentSsoService = departmentSsoService;
+			_secLocalizer = secLocalizer;
+			_deleteService = deleteService;
+			_externalIdentityLinkService = externalIdentityLinkService;
+			_userSessionService = userSessionService;
+			_systemAuditsService = systemAuditsService;
+			_departmentGroupsService = departmentGroupsService;
+			_departmentSettingsService = departmentSettingsService;
+			_passwordRecoveryService = passwordRecoveryService;
+			_eventAggregator = eventAggregator;
+			_protectedReadService = protectedReadService;
+			_businessOperationsAccess = businessOperationsAccess;
+			_limitsService = limitsService;
+			_profileLocalizer = profileLocalizer;
+			_mfaPolicyService = mfaPolicyService;
+			_mfaEvidenceService = mfaEvidenceService;
+		}
+		#endregion Private Members and Constructors
+
+		/// <summary>Resolves a password-error key returned by ValidatePasswordAgainstPolicyAsync into a localised message.</summary>
+		private string ResolvePwdError(string key)
+		{
+			if (string.IsNullOrEmpty(key)) return key;
+			// PwdErrorTooShort carries the min-length as "PwdErrorTooShort:N"
+			if (key.StartsWith("PwdErrorTooShort:", StringComparison.Ordinal))
+			{
+				var minLen = key.Substring("PwdErrorTooShort:".Length);
+				return string.Format(_secLocalizer["PwdErrorTooShort"], minLen);
+			}
+			return _secLocalizer[key];
+		}
+
+		#region Reporting
+		private static string ChecklistReportName(ReportTypes type) => (int)type >= 6 && (int)type <= 13 ? Resgrid.Services.InventoryReportDocuments.Title((Resgrid.Model.Inventories.InventoryReportKind)((int)type - 6)) : type == ReportTypes.ChecklistCompliance ? Resgrid.Services.ChecklistReportDocuments.Text("ChecklistComplianceReport") : type == ReportTypes.ChecklistMissed ? Resgrid.Services.ChecklistReportDocuments.Text("ChecklistMissedReport") : type == ReportTypes.CertificationCompliance ? "Certification Compliance" : type.ToString();
+		private async Task<SelectList> ChecklistReportTypesAsync(ReportTypes selected)
+		{
+			var businessOperationsEnabled = await _businessOperationsAccess.IsEnabledAsync(DepartmentId);
+			return new SelectList(Enum.GetValues<ReportTypes>()
+				.Where(t => !businessOperationsEnabled || t != ReportTypes.Certifications)
+				.Select(t => new { Value = (int)t, Text = ChecklistReportName(t) }), "Value", "Text", (int)selected);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult>  Reporting()
+		{
+			var model = new ReportingView();
+			model.Department= await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User= _usersService.GetUserById(UserId);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult>  GetScheduledReportingForGrid()
+		{
+			var scheduleJson = new List<ScheduledTasksForJson>();
+
+			var dep= await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			var tasks= await _scheduledTasksService.GetScheduledReportingTasksForUserAsync(UserId);
+
+			foreach (var task in tasks)
+			{
+				ScheduledTasksForJson st = new ScheduledTasksForJson();
+				st.ScheduleId = task.ScheduledTaskId;
+				if (task.ScheduleType == (int)ScheduleTypes.Weekly)
+					st.ScheduleType = "Weekly";
+				else
+					st.ScheduleType = "Specific Date";
+
+				if (task.SpecifcDate.HasValue)
+					st.SpecifcDate = TimeConverterHelper.TimeConverter(task.SpecifcDate.Value, dep);
+
+				st.IsActive = task.Active;
+
+				StringBuilder days = new StringBuilder();
+
+				if (task.Monday)
+					days.Append("M");
+
+				if (task.Tuesday)
+					days.Append("T");
+
+				if (task.Wednesday)
+					days.Append("W");
+
+				if (task.Thursday)
+					days.Append("Th");
+
+				if (task.Friday)
+					days.Append("F");
+
+				if (task.Saturday)
+					days.Append("S");
+
+				if (task.Sunday)
+					days.Append("Su");
+
+				days.Append(" @ " + task.Time);
+
+				if (task.ScheduleType == (int)ScheduleTypes.Weekly)
+					st.DaysOfWeek = days.ToString();
+
+				st.Data = ChecklistReportName((ReportTypes)int.Parse(task.Data));
+
+				scheduleJson.Add(st);
+			}
+
+			return Json(scheduleJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult>  AddNewScheduledReport()
+		{
+			var model = new NewScheduledReportView();
+			model.ReportTypes = await ChecklistReportTypesAsync(model.ReportType);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  AddNewScheduledReport(NewScheduledReportView model, CancellationToken cancellationToken)
+		{
+			if (!Enum.IsDefined(model.ReportType)) return BadRequest();
+			if (model.ReportType == ReportTypes.Certifications && await _businessOperationsAccess.IsEnabledAsync(DepartmentId))
+				return NotFound();
+			model.ReportTypes = await ChecklistReportTypesAsync(model.ReportType);
+
+			if (!model.SpecificDatetime)
+			{
+				int daysCount = 0;
+
+				if (model.Sunday)
+					daysCount++;
+
+				if (model.Monday)
+					daysCount++;
+
+				if (model.Tuesday)
+					daysCount++;
+
+				if (model.Wednesday)
+					daysCount++;
+
+				if (model.Thursday)
+					daysCount++;
+
+				if (model.Friday)
+					daysCount++;
+
+				if (model.Saturday)
+					daysCount++;
+
+				if (daysCount == 0)
+					ModelState.AddModelError("", "You need to select at least one day for a days of the week schedule.");
+
+				if (String.IsNullOrWhiteSpace(model.Time))
+					ModelState.AddModelError("", "You need to supply a time of day that the report will run.");
+			}
+			else
+			{
+				if (String.IsNullOrWhiteSpace(model.SpecifcDate))
+					ModelState.AddModelError("", "You need to supply a date and time that the report will run.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				ScheduledTask task = new ScheduledTask();
+				task.UserId = UserId;
+
+				if (model.SpecificDatetime)
+				{
+					task.ScheduleType = (int)ScheduleTypes.SpecifcDateTime;
+					task.SpecifcDate = DateTime.Parse(model.SpecifcDate).ToUniversalTime();
+				}
+				else
+				{
+					task.ScheduleType = (int)ScheduleTypes.Weekly;
+					task.Time = model.Time;
+				}
+
+				task.Sunday = model.Sunday;
+				task.Monday = model.Monday;
+				task.Tuesday = model.Tuesday;
+				task.Wednesday = model.Wednesday;
+				task.Thursday = model.Thursday;
+				task.Friday = model.Friday;
+				task.Saturday = model.Saturday;
+				task.AddedOn = DateTime.UtcNow;
+				task.Active = true;
+				task.Data = ((int)model.ReportType).ToString();
+				task.TaskType = (int)TaskTypes.ReportDelivery;
+				task.DepartmentId = DepartmentId;
+
+				await _scheduledTasksService.SaveScheduledTaskAsync(task, cancellationToken);
+
+				ViewBag.EditProfile_TabProfileActiveCSS = "";
+				ViewBag.EditProfile_TabScheduleActiveCSS = "active";
+
+				return RedirectToAction("Reporting", "Profile", new { area = "User" });
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult>  EditScheduledReport(int scheduleId)
+		{
+			var schedule= await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (schedule == null || schedule.DepartmentId != DepartmentId || schedule.UserId != UserId || schedule.TaskType != (int)TaskTypes.ReportDelivery) return NotFound();
+			// A retired legacy certification schedule has no option in the selector; opening the form would post
+			// the first remaining report type over it. It can only be deactivated or deleted.
+			if (schedule.Data == ((int)ReportTypes.Certifications).ToString() && await _businessOperationsAccess.IsEnabledAsync(DepartmentId))
+				return NotFound();
+
+			var model = new EditScheduledReportView();
+			model.ReportType = (ReportTypes)int.Parse(schedule.Data);
+			model.ReportTypes = await ChecklistReportTypesAsync(model.ReportType);
+			if (schedule.ScheduleType == (int)ScheduleTypes.SpecifcDateTime)
+			{
+				model.SpecificDatetime = true;
+				model.SpecifcDate = schedule.SpecifcDate.Value.ToString("g");
+			}
+			else
+			{
+				model.Time = schedule.Time;
+			}
+
+			model.ScheduleId = scheduleId;
+			model.Sunday = schedule.Sunday;
+			model.Monday = schedule.Monday;
+			model.Tuesday = schedule.Tuesday;
+			model.Wednesday = schedule.Wednesday;
+			model.Thursday = schedule.Thursday;
+			model.Friday = schedule.Friday;
+			model.Saturday = schedule.Saturday;
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  EditScheduledReport(EditScheduledReportView model, CancellationToken cancellationToken)
+		{
+			if (!Enum.IsDefined(model.ReportType)) return BadRequest();
+			if (model.ReportType == ReportTypes.Certifications && await _businessOperationsAccess.IsEnabledAsync(DepartmentId))
+				return NotFound();
+			model.ReportTypes = await ChecklistReportTypesAsync(model.ReportType);
+
+
+			if (!model.SpecificDatetime)
+			{
+				int daysCount = 0;
+
+				if (model.Sunday)
+					daysCount++;
+
+				if (model.Monday)
+					daysCount++;
+
+				if (model.Tuesday)
+					daysCount++;
+
+				if (model.Wednesday)
+					daysCount++;
+
+				if (model.Thursday)
+					daysCount++;
+
+				if (model.Friday)
+					daysCount++;
+
+				if (model.Saturday)
+					daysCount++;
+
+				if (daysCount == 0)
+					ModelState.AddModelError("", "You need to select at least one day for a days of the week schedule.");
+
+				if (String.IsNullOrWhiteSpace(model.Time))
+					ModelState.AddModelError("", "You need to supply a time of day that the report will run.");
+			}
+			else
+			{
+				if (String.IsNullOrWhiteSpace(model.SpecifcDate))
+					ModelState.AddModelError("", "You need to supply a date and time that the report will run.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				ScheduledTask task= await _scheduledTasksService.GetScheduledTaskByIdAsync(model.ScheduleId);
+				if (task == null || task.DepartmentId != DepartmentId || task.UserId != UserId || task.TaskType != (int)TaskTypes.ReportDelivery) return NotFound();
+				task.UserId = UserId;
+
+				if (model.SpecificDatetime)
+				{
+					task.ScheduleType = (int)ScheduleTypes.SpecifcDateTime;
+					task.SpecifcDate = DateTime.Parse(model.SpecifcDate);
+
+				}
+				else
+				{
+					task.ScheduleType = (int)ScheduleTypes.Weekly;
+					task.Time = model.Time;
+				}
+
+				task.Sunday = model.Sunday;
+				task.Monday = model.Monday;
+				task.Tuesday = model.Tuesday;
+				task.Wednesday = model.Wednesday;
+				task.Thursday = model.Thursday;
+				task.Friday = model.Friday;
+				task.Saturday = model.Saturday;
+				task.Active = true;
+				task.Data = ((int)model.ReportType).ToString();
+				task.TaskType = (int)TaskTypes.ReportDelivery;
+				task.DepartmentId = DepartmentId;
+
+				await _scheduledTasksService.SaveScheduledTaskAsync(task, cancellationToken);
+
+				ViewBag.EditProfile_TabProfileActiveCSS = "";
+				ViewBag.EditProfile_TabScheduleActiveCSS = "active";
+
+				return RedirectToAction("Reporting", "Profile", new { area = "User" });
+			}
+
+			return View(model);
+		}
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ActivateScheduledReport(int scheduleId, CancellationToken cancellationToken)
+		{
+			var task = await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (task == null || task.DepartmentId != DepartmentId || task.UserId != UserId || task.TaskType != (int)TaskTypes.ReportDelivery) return NotFound();
+			if (task.Data == ((int)ReportTypes.Certifications).ToString() && await _businessOperationsAccess.IsEnabledAsync(DepartmentId))
+				return NotFound();
+			await _scheduledTasksService.EnableScheduledTaskByIdAsync(scheduleId, cancellationToken);
+			return new EmptyResult();
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeactivateScheduledReport(int scheduleId, CancellationToken cancellationToken)
+		{
+			var task = await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (task == null || task.DepartmentId != DepartmentId || task.UserId != UserId || task.TaskType != (int)TaskTypes.ReportDelivery) return NotFound();
+			await _scheduledTasksService.DisabledScheduledTaskByIdAsync(scheduleId, cancellationToken);
+			return new EmptyResult();
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteScheduledReport(int scheduleId, CancellationToken cancellationToken)
+		{
+			var task = await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (task == null || task.DepartmentId != DepartmentId || task.UserId != UserId || task.TaskType != (int)TaskTypes.ReportDelivery) return NotFound();
+			await _scheduledTasksService.DeleteScheduledTask(scheduleId, cancellationToken);
+			return new EmptyResult();
+		}
+		#endregion Reporting
+
+		#region Staffing Schedules
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult> AddNewStaffingSchedule(string userId)
+		{
+			string userToGet = StaffingScheduleSubject(userId);
+			if (!await CanManageStaffingSchedulesForAsync(userToGet)) return Unauthorized();
+
+			var model = new NewStaffingLevelView();
+
+			var staffingLevels= await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+			if (staffingLevels == null)
+			{
+				model.StaffingLevels = model.StaffingLevelEnum.ToSelectListInt();
+			}
+			else
+			{
+				model.StaffingLevels = new SelectList(staffingLevels.GetActiveDetails(), "CustomStateDetailId", "ButtonText");
+			}
+
+			model.UserId = userToGet;
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult> ViewSchedules(string userId)
+		{
+			string userToGet = StaffingScheduleSubject(userId);
+			if (!await CanManageStaffingSchedulesForAsync(userToGet)) return Unauthorized();
+
+			var model = new EditProfileModel();
+			model.Department= await _departmentsService.GetDepartmentByUserIdAsync(userToGet);
+			model.User = _usersService.GetUserById(userToGet);
+
+			if (userToGet == UserId)
+				model.Self = true;
+			else
+				model.Name = await UserHelper.GetFullNameForUser(userToGet);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  AddNewStaffingSchedule(NewStaffingLevelView model, CancellationToken cancellationToken)
+		{
+			// The subject comes from a hidden form field, so it is checked before anything is read or written.
+			if (model == null) return BadRequest();
+			model.UserId = StaffingScheduleSubject(model.UserId);
+			if (!await CanManageStaffingSchedulesForAsync(model.UserId)) return Unauthorized();
+
+			var staffingLevels= await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+			if (staffingLevels == null)
+			{
+				model.StaffingLevels = model.StaffingLevelEnum.ToSelectListInt();
+			}
+			else
+			{
+				model.StaffingLevels = new SelectList(staffingLevels.GetActiveDetails(), "CustomStateDetailId", "ButtonText");
+			}
+
+			if (!model.SpecificDatetime)
+			{
+				int daysCount = 0;
+
+				if (model.Sunday)
+					daysCount++;
+
+				if (model.Monday)
+					daysCount++;
+
+				if (model.Tuesday)
+					daysCount++;
+
+				if (model.Wednesday)
+					daysCount++;
+
+				if (model.Thursday)
+					daysCount++;
+
+				if (model.Friday)
+					daysCount++;
+
+				if (model.Saturday)
+					daysCount++;
+
+				if (daysCount == 0)
+					ModelState.AddModelError("", "You need to select at least one day for a days of the week schedule.");
+
+				if (String.IsNullOrWhiteSpace(model.Time))
+					ModelState.AddModelError("", "You need to supply a time of day that the staffing level will change.");
+			}
+			else
+			{
+				if (String.IsNullOrWhiteSpace(model.SpecifcDate))
+					ModelState.AddModelError("", "You need to supply a date and time that the staffing level will change.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				var task = new ScheduledTask();
+				task.UserId = model.UserId;
+
+				if (model.SpecificDatetime)
+				{
+					task.ScheduleType = (int)ScheduleTypes.SpecifcDateTime;
+					task.SpecifcDate = DateTime.Parse(model.SpecifcDate).ToUniversalTime();
+				}
+				else
+				{
+					task.ScheduleType = (int)ScheduleTypes.Weekly;
+					task.Time = model.Time;
+				}
+
+				task.Sunday = model.Sunday;
+				task.Monday = model.Monday;
+				task.Tuesday = model.Tuesday;
+				task.Wednesday = model.Wednesday;
+				task.Thursday = model.Thursday;
+				task.Friday = model.Friday;
+				task.Saturday = model.Saturday;
+				task.AddedOn = DateTime.UtcNow;
+				task.Active = true;
+				task.Data = model.StaffingLevel.ToString();
+				task.TaskType = (int)TaskTypes.UserStaffingLevel;
+				task.DepartmentId = DepartmentId;
+
+				await _scheduledTasksService.SaveScheduledTaskAsync(task, cancellationToken);
+
+				ViewBag.EditProfile_TabProfileActiveCSS = "";
+				ViewBag.EditProfile_TabScheduleActiveCSS = "active";
+
+				if (model.UserId == UserId)
+					return RedirectToAction("ViewSchedules", "Profile", new { area = "User" });
+				else
+					return RedirectToAction("ViewSchedules", "Profile", new { area = "User", userId = model.UserId });
+			}
+
+			return View(model);
+		}
+
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult>  GetScheduledStaffingTasksForGrid(string userId)
+		{
+			string userToGet = StaffingScheduleSubject(userId);
+			// Called by the grid's ajax loader, so deny like the other ajax schedule actions instead of redirecting.
+			if (!await CanManageStaffingSchedulesForAsync(userToGet)) return NotFound();
+
+			var scheduleJson = new List<ScheduledTasksForJson>();
+
+			var dep= await _departmentsService.GetDepartmentByUserIdAsync(userToGet);
+			var tasks= await _scheduledTasksService.GetScheduledStaffingTasksForUserAsync(userToGet);
+
+			foreach (var task in tasks)
+			{
+				var st = new ScheduledTasksForJson();
+				st.ScheduleId = task.ScheduledTaskId;
+				if (task.ScheduleType == (int)ScheduleTypes.Weekly)
+					st.ScheduleType = "Weekly";
+				else
+					st.ScheduleType = "Specific Date";
+
+				if (task.SpecifcDate.HasValue)
+					st.SpecifcDate = TimeConverterHelper.TimeConverter(task.SpecifcDate.Value, dep);
+
+				st.IsActive = task.Active;
+
+				var days = new StringBuilder();
+
+				if (task.Monday)
+					days.Append("M");
+
+				if (task.Tuesday)
+					days.Append("T");
+
+				if (task.Wednesday)
+					days.Append("W");
+
+				if (task.Thursday)
+					days.Append("Th");
+
+				if (task.Friday)
+					days.Append("F");
+
+				if (task.Saturday)
+					days.Append("S");
+
+				if (task.Sunday)
+					days.Append("Su");
+
+				days.Append(" @ " + task.Time);
+
+				if (task.ScheduleType == (int)ScheduleTypes.Weekly)
+					st.DaysOfWeek = days.ToString();
+
+				var state = int.Parse(task.Data);
+				if (state <= 25)
+				{
+					st.Data = ((UserStateTypes)int.Parse(task.Data)).ToString();
+				}
+				else
+				{
+					var stateDetail= await _customStateService.GetCustomDetailForDepartmentAsync(DepartmentId, state);
+
+					st.Data = stateDetail.ButtonText;
+				}
+
+				scheduleJson.Add(st);
+			}
+
+			return Json(scheduleJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult>  EditStaffingSchedule(int scheduleId)
+		{
+			// A stale grid row or old link can point at a deleted schedule, and the id is caller-supplied.
+			var schedule= await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (!await CanManageStaffingScheduleAsync(schedule)) return NotFound();
+
+			var model = new EditStaffingLevelView();
+
+			var staffingLevels= await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+			if (staffingLevels == null)
+			{
+				model.StaffingLevels = model.StaffingLevelEnum.ToSelectListInt();
+			}
+			else
+			{
+				model.StaffingLevels = new SelectList(staffingLevels.GetActiveDetails(), "CustomStateDetailId", "ButtonText");
+			}
+
+			if (schedule.ScheduleType == (int)ScheduleTypes.SpecifcDateTime)
+			{
+				model.SpecificDatetime = true;
+				model.SpecifcDate = schedule.SpecifcDate.Value.ToString("g");
+			}
+			else
+			{
+				model.Time = schedule.Time;
+			}
+
+			model.ScheduleId = scheduleId;
+			model.Sunday = schedule.Sunday;
+			model.Monday = schedule.Monday;
+			model.Tuesday = schedule.Tuesday;
+			model.Wednesday = schedule.Wednesday;
+			model.Thursday = schedule.Thursday;
+			model.Friday = schedule.Friday;
+			model.Saturday = schedule.Saturday;
+			model.StaffingLevel = int.Parse(schedule.Data);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  EditStaffingSchedule(EditStaffingLevelView model, CancellationToken cancellationToken)
+		{
+			var staffingLevels= await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+			if (staffingLevels == null)
+			{
+				model.StaffingLevels = model.StaffingLevelEnum.ToSelectListInt();
+			}
+			else
+			{
+				model.StaffingLevels = new SelectList(staffingLevels.GetActiveDetails(), "CustomStateDetailId", "ButtonText");
+			}
+
+			if (!model.SpecificDatetime)
+			{
+				int daysCount = 0;
+
+				if (model.Sunday)
+					daysCount++;
+
+				if (model.Monday)
+					daysCount++;
+
+				if (model.Tuesday)
+					daysCount++;
+
+				if (model.Wednesday)
+					daysCount++;
+
+				if (model.Thursday)
+					daysCount++;
+
+				if (model.Friday)
+					daysCount++;
+
+				if (model.Saturday)
+					daysCount++;
+
+				if (daysCount == 0)
+					ModelState.AddModelError("", "You need to select at least one day for a days of the week schedule.");
+
+				if (String.IsNullOrWhiteSpace(model.Time))
+					ModelState.AddModelError("", "You need to supply a time of day that the staffing level will change.");
+			}
+			else
+			{
+				if (String.IsNullOrWhiteSpace(model.SpecifcDate))
+					ModelState.AddModelError("", "You need to supply a date and time that the staffing level will change.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				ScheduledTask task= await _scheduledTasksService.GetScheduledTaskByIdAsync(model.ScheduleId);
+				if (!await CanManageStaffingScheduleAsync(task)) return NotFound();
+
+				if (model.SpecificDatetime)
+				{
+					task.ScheduleType = (int)ScheduleTypes.SpecifcDateTime;
+					task.SpecifcDate = DateTime.Parse(model.SpecifcDate);
+				}
+				else
+				{
+					task.ScheduleType = (int)ScheduleTypes.Weekly;
+					task.Time = model.Time;
+				}
+
+				task.Sunday = model.Sunday;
+				task.Monday = model.Monday;
+				task.Tuesday = model.Tuesday;
+				task.Wednesday = model.Wednesday;
+				task.Thursday = model.Thursday;
+				task.Friday = model.Friday;
+				task.Saturday = model.Saturday;
+				task.Active = true;
+				task.Data = model.StaffingLevel.ToString();
+				task.TaskType = (int)TaskTypes.UserStaffingLevel;
+				task.DepartmentId = DepartmentId;
+
+				await _scheduledTasksService.SaveScheduledTaskAsync(task, cancellationToken);
+
+				ViewBag.EditProfile_TabProfileActiveCSS = "";
+				ViewBag.EditProfile_TabScheduleActiveCSS = "active";
+
+				if (task.UserId == UserId)
+					return RedirectToAction("ViewSchedules", "Profile", new { area = "User" });
+				else
+					return RedirectToAction("ViewSchedules", "Profile", new { area = "User", userId = task.UserId });
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult>  DeactivateSchedule(int scheduleId, CancellationToken cancellationToken)
+		{
+			var task = await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (!await CanManageStaffingScheduleAsync(task)) return NotFound();
+			await _scheduledTasksService.DisabledScheduledTaskByIdAsync(scheduleId, cancellationToken);
+			return new EmptyResult();
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult>  ActivateSchedule(int scheduleId, CancellationToken cancellationToken)
+		{
+			var task = await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (!await CanManageStaffingScheduleAsync(task)) return NotFound();
+			await _scheduledTasksService.EnableScheduledTaskByIdAsync(scheduleId, cancellationToken);
+			return new EmptyResult();
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> DeleteSchedule(int scheduleId, CancellationToken cancellationToken)
+		{
+			var task = await _scheduledTasksService.GetScheduledTaskByIdAsync(scheduleId);
+			if (!await CanManageStaffingScheduleAsync(task)) return NotFound();
+			await _scheduledTasksService.DeleteScheduledTask(scheduleId, cancellationToken);
+			return new EmptyResult();
+		}
+		private Task<bool> CanManageStaffingScheduleAsync(ScheduledTask task)
+		{
+			if (task == null || task.DepartmentId != DepartmentId || task.TaskType != (int)TaskTypes.UserStaffingLevel || string.IsNullOrWhiteSpace(task.UserId))
+				return Task.FromResult(false);
+			return CanManageStaffingSchedulesForAsync(task.UserId);
+		}
+
+		/// <summary>The member a staffing schedule request is about; no user id means the caller's own schedules.</summary>
+		private string StaffingScheduleSubject(string userId) => !String.IsNullOrWhiteSpace(userId) ? userId : UserId;
+
+		/// <summary>
+		/// Listing, creating and editing a member's staffing schedules is profile management, so it follows the
+		/// same rule as EditUserProfile (the only page that links to another member's schedules).
+		/// </summary>
+		private Task<bool> CanManageStaffingSchedulesForAsync(string subjectUserId) =>
+			_authorizationService.CanUserEditProfileAsync(UserId, DepartmentId, subjectUserId);
+		#endregion Staffing Schedules
+
+		#region Certifications
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult> Certifications(string userId)
+		{
+			string userToGet = !String.IsNullOrWhiteSpace(userId) ? userId : UserId;
+
+			if (!await CanReachCertificationsForAsync(userToGet))
+				return Unauthorized();
+
+			if (await _businessOperationsAccess.IsEnabledAsync(DepartmentId))
+				return RedirectToAction("Person", "Certifications", new { area = "User", userId = userToGet });
+
+			var model = new CertificationsView();
+			model.Certifications= await _certificationService.GetCertificationsByUserIdAsync(userToGet);
+			model.Department= await _departmentsService.GetDepartmentByUserIdAsync(userToGet);
+			model.UserId = userToGet;
+
+			// Attended protected read (plan 7.1). Metadata only: the document bytes are stripped
+			// here and re-fetched by the download endpoint, which opts into decryption. Without a
+			// grant the text renders as the REDACTED placeholder and the page offers a step-up.
+			var protectedRead = await _protectedReadService.ResolveCertificationsForReadAsync(DepartmentId,
+				model.Certifications, Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+			model.IsProtected = protectedRead.IsProtected;
+
+			var user= _usersService.GetUserById(userToGet);
+			if (userToGet == UserId)
+				model.Self = true;
+			else
+				model.Name = await UserHelper.GetFullNameForUser(userToGet);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult> AddCertification(string userId)
+		{
+			string userToGet = !String.IsNullOrWhiteSpace(userId) ? userId : UserId;
+
+			if (!await CanReachCertificationsForAsync(userToGet))
+				return Unauthorized();
+
+			var model = new AddCertificationView();
+			model.UserId = userToGet;
+			var types = await PersonCertificationTypesAsync();
+			model.CertificationTypes = new SelectList(types, "Type", "Type");
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult> AddCertification(AddCertificationView model, IFormFile fileToUpload, CancellationToken cancellationToken)
+		{
+			// The subject comes from the form, so it is checked before anything is read or written.
+			if (model == null || !await CanReachCertificationsForAsync(model.UserId))
+				return Unauthorized();
+
+			if (fileToUpload != null && fileToUpload.Length > 0)
+			{
+				var extenion = FileHelper.GetFileExtensionWithoutDot(fileToUpload.FileName);
+
+				if (extenion != "jpg" && extenion != "jpeg" && extenion != "png" && extenion != "gif" && extenion != "gif" && extenion != "pdf" && extenion != "doc"
+					&& extenion != "docx" && extenion != "ppt" && extenion != "pptx" && extenion != "pps" && extenion != "ppsx" && extenion != "odt"
+					&& extenion != "xls" && extenion != "xlsx" && extenion != "txt")
+					ModelState.AddModelError("fileToUpload", string.Format("File type ({0}) is not importable.", extenion));
+
+				if (fileToUpload.Length > 10000000)
+					ModelState.AddModelError("fileToUpload", "Document is too large, must be smaller then 10MB.");
+			}
+
+			var types = await PersonCertificationTypesAsync();
+			model.CertificationTypes = new SelectList(types, "Type", "Type");
+
+			if (ModelState.IsValid)
+			{
+				var cert = new PersonnelCertification();
+				cert.DepartmentId = DepartmentId;
+				cert.UserId = model.UserId;
+				cert.Name = model.Name;
+				cert.Number = model.Number;
+				cert.Area = model.Area;
+				cert.IssuedBy = model.IssuedBy;
+				cert.ExpiresOn = model.ExpiresOn;
+				cert.RecievedOn = model.RecievedOn;
+				cert.Type = model.Type;
+				// Phase D: a catalog match types the record; free text stays an untyped legacy record.
+				cert.DepartmentCertificationTypeId = types.FirstOrDefault(t => t.Type == (model.Type ?? string.Empty).Trim())?.DepartmentCertificationTypeId;
+
+				if (fileToUpload != null && fileToUpload.Length > 0)
+				{
+					cert.Filetype = String.IsNullOrWhiteSpace(fileToUpload.ContentType) ? "application/octet-stream" : fileToUpload.ContentType;
+					cert.Filename = FileHelper.GetSafeFileName(fileToUpload.FileName);
+
+					using (var uploadStream = fileToUpload.OpenReadStream())
+					{
+						cert.Data = await FileHelper.ReadAllBytesAsync(uploadStream, cancellationToken);
+					}
+				}
+
+				await _certificationService.SaveCertificationAsync(cert, cancellationToken);
+
+				if (model.UserId == UserId)
+					return RedirectToAction("Certifications", "Profile", new { area = "User" });
+				else
+					return RedirectToAction("Certifications", "Profile", new { area = "User", userId = model.UserId });
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> DeleteCertification(int certId, CancellationToken cancellationToken)
+		{
+			var cert = await GetAuthorizedCertificationAsync(certId);
+
+			if (cert == null)
+				return Unauthorized();
+
+			string userId = cert.UserId;
+
+			await _certificationService.DeleteCertification(cert, cancellationToken);
+
+			if (userId == UserId)
+				return RedirectToAction("Certifications", "Profile", new { area = "User" });
+			else
+				return RedirectToAction("Certifications", "Profile", new { area = "User", userId = userId });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> EditCertification(EditCertificationView model, IFormFile fileToUpload, CancellationToken cancellationToken)
+		{
+			var cert = await GetAuthorizedCertificationAsync(model?.CertificationId ?? 0);
+
+			if (cert == null)
+				return Unauthorized();
+
+			if (fileToUpload != null && fileToUpload.Length > 0)
+			{
+				var extenion = FileHelper.GetFileExtensionWithoutDot(fileToUpload.FileName);
+
+				if (extenion != "jpg" && extenion != "jpeg" && extenion != "png" && extenion != "gif" && extenion != "gif" && extenion != "pdf" && extenion != "doc"
+					&& extenion != "docx" && extenion != "ppt" && extenion != "pptx" && extenion != "pps" && extenion != "ppsx" && extenion != "odt"
+					&& extenion != "xls" && extenion != "xlsx" && extenion != "txt")
+					ModelState.AddModelError("fileToUpload", string.Format("File type ({0}) is not importable.", extenion));
+
+				if (fileToUpload.Length > 10000000)
+					ModelState.AddModelError("fileToUpload", "Document is too large, must be smaller then 10MB.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				cert.DepartmentId = DepartmentId;
+				cert.Name = model.Name;
+				cert.Number = model.Number;
+				cert.Area = model.Area;
+				cert.IssuedBy = model.IssuedBy;
+				cert.ExpiresOn = model.ExpiresOn;
+				cert.RecievedOn = model.RecievedOn;
+				// Phase D: re-link the catalog type from the picked name. An unchanged name keeps its link (the type may have
+				// been retired since); a name the picker no longer offers drops the stale link rather than saving a record
+				// whose name and catalog type disagree; an untyped legacy record stays untyped.
+				var pickedType = (model.Type ?? string.Empty).Trim();
+				var personTypes = await PersonCertificationTypesAsync();
+				var pickedCatalogType = personTypes.FirstOrDefault(t => t.Type == pickedType);
+				if (pickedCatalogType != null)
+					cert.DepartmentCertificationTypeId = pickedCatalogType.DepartmentCertificationTypeId;
+				else if (!string.Equals((cert.Type ?? string.Empty).Trim(), pickedType, StringComparison.Ordinal))
+					cert.DepartmentCertificationTypeId = null;
+				cert.Type = model.Type;
+
+				if (fileToUpload != null && fileToUpload.Length > 0)
+				{
+					cert.Filetype = String.IsNullOrWhiteSpace(fileToUpload.ContentType) ? "application/octet-stream" : fileToUpload.ContentType;
+					cert.Filename = FileHelper.GetSafeFileName(fileToUpload.FileName);
+
+					using (var uploadStream = fileToUpload.OpenReadStream())
+					{
+						cert.Data = await FileHelper.ReadAllBytesAsync(uploadStream, cancellationToken);
+					}
+				}
+
+				await _certificationService.SaveCertificationAsync(cert, cancellationToken);
+
+				if (cert.UserId == UserId)
+					return RedirectToAction("Certifications", "Profile", new { area = "User" });
+				else
+					return RedirectToAction("Certifications", "Profile", new { area = "User", userId = cert.UserId });
+			}
+
+			var certificationTypes = await PersonCertificationTypesAsync();
+			model.CertificationTypes = new SelectList(certificationTypes, "Type", "Type");
+			return View(model);
+		}
+
+		/// <summary>Person-scoped, active, non-deleted catalog types for the certification pickers (plan D9).</summary>
+		private async Task<List<DepartmentCertificationType>> PersonCertificationTypesAsync()
+		{
+			return (await _certificationService.GetAllCertificationTypesByDepartmentAsync(DepartmentId))
+				.Where(t => !t.IsDeleted && t.IsActive && !t.IsUnitScoped).OrderBy(t => t.Type).ToList();
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> EditCertification(int certId)
+		{
+			var cert = await GetAuthorizedCertificationAsync(certId);
+
+			if (cert == null)
+				return Unauthorized();
+
+			// Resolved so the form is populated with real values for a caller holding a grant, and
+			// with the REDACTED placeholder otherwise — which the save path recognises and restores
+			// rather than writing over the stored value.
+			await _protectedReadService.ResolveCertificationsForReadAsync(DepartmentId,
+				new List<PersonnelCertification> { cert },
+				Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+
+			var model = new EditCertificationView();
+			model.CertificationId = cert.PersonnelCertificationId;
+			model.Name = cert.Name;
+			model.Number = cert.Number;
+			model.Area = cert.Area;
+			model.IssuedBy = cert.IssuedBy;
+			model.ExpiresOn = cert.ExpiresOn;
+			model.RecievedOn = cert.RecievedOn;
+			model.Type = cert.Type;
+
+			// The record's own type stays selectable even when the catalog has since retired it.
+			var typeNames = (await PersonCertificationTypesAsync()).Select(t => t.Type).ToList();
+			if (!string.IsNullOrWhiteSpace(cert.Type) && !typeNames.Contains(cert.Type))
+				typeNames.Insert(0, cert.Type);
+			model.CertificationTypes = new SelectList(typeNames, cert.Type);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+
+		public async Task<IActionResult> GetCertificationData(int certId)
+		{
+			// This endpoint serves the document itself — a scan carrying the member's name, licence
+			// number and often their signature. It needs the subject check most of all.
+			var cert = await GetAuthorizedCertificationAsync(certId);
+
+			if (cert == null)
+				return Unauthorized();
+
+			// The one endpoint that opts into decrypting the document itself. A concealed payload
+			// comes back null rather than as ciphertext bytes, so a caller without a grant gets a
+			// refusal instead of a file full of envelope. The page requests this through the reveal
+			// module, which puts the grant on the request; a plain link cannot carry a header.
+			await _protectedReadService.ResolveCertificationsForReadAsync(DepartmentId,
+				new List<PersonnelCertification> { cert },
+				Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId, includeData: true);
+
+			if (cert.Data == null || cert.Data.Length == 0)
+				return NotFound();
+
+			return new FileContentResult(cert.Data, cert.Filetype)
+			{
+				FileDownloadName = ProtectedDataEnvelope.SafeDisplay(cert.Filename)
+			};
+		}
+
+		/// <summary>
+		/// Certifications carry licence numbers and scanned documents — protected personnel data
+		/// (plan 5.1, catalog v6). Department scoping alone is not authorization: it only proves the
+		/// row belongs to this tenant, not that the caller may see THIS member's record. Every
+		/// certification action resolves the subject and runs the same rule the rest of the
+		/// department-scoped member data uses — your own record, or an admin over that member.
+		/// </summary>
+		private async Task<bool> CanReachCertificationsForAsync(string subjectUserId)
+		{
+			if (string.IsNullOrWhiteSpace(subjectUserId))
+				return false;
+
+			return await _authorizationService.CanUserEditProfileAsync(UserId, DepartmentId, subjectUserId);
+		}
+
+		/// <summary>
+		/// Loads a certification and confirms the caller may reach it. Returns null when the id does
+		/// not exist, belongs to another department, or belongs to a member this caller has no
+		/// business reading — all three are indistinguishable to the caller on purpose.
+		/// </summary>
+		private async Task<PersonnelCertification> GetAuthorizedCertificationAsync(int certId)
+		{
+			var certification = await _certificationService.GetCertificationByIdAsync(certId);
+
+			if (certification == null || certification.DepartmentId != DepartmentId)
+				return null;
+
+			return await CanReachCertificationsForAsync(certification.UserId) ? certification : null;
+		}
+
+		/// <summary>
+		/// Reveals a member's certification values to a caller holding a valid grant (plan 7.2).
+		/// Keys are catalog field ids suffixed with the row id, because this page shows many rows
+		/// and a flat field map could not tell them apart.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		public async Task<IActionResult> RevealCertifications([FromForm] string userId)
+		{
+			var userToGet = !String.IsNullOrWhiteSpace(userId) ? userId : UserId;
+
+			// The grant proves the CALLER stepped up; it says nothing about whose data they may
+			// step up to. Without this, any member holding Profile_View could post another
+			// member's id and decrypt their licence numbers.
+			if (!await CanReachCertificationsForAsync(userToGet))
+				return Unauthorized();
+
+			var certifications = await _certificationService.GetCertificationsByUserIdAsync(userToGet);
+			if (certifications == null || !certifications.Any())
+				return Json(new { success = true, fields = new Dictionary<string, string>() });
+
+			// Rows are keyed by user, so a caller cannot reach another department's certifications
+			// through this endpoint even if the ids were guessed.
+			certifications = certifications.Where(c => c.DepartmentId == DepartmentId).ToList();
+
+			var resolved = await _protectedReadService.ResolveCertificationsForReadAsync(DepartmentId,
+				certifications, Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+
+			if (resolved.IsProtected && resolved.ProtectedReason != null)
+				return Json(new { success = false, error = resolved.ProtectedReason });
+
+			var fields = new Dictionary<string, string>();
+			foreach (var certification in certifications)
+			{
+				foreach (var accessor in Resgrid.Services.ProtectedReadService.CertificationFieldAccessors)
+					fields[$"{accessor.Key}:{certification.PersonnelCertificationId}"] = accessor.Value.Get(certification);
+			}
+
+			return Json(new { success = true, fields });
+		}
+
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		[HttpGet]
+		public async Task<IActionResult> GetDepartmentCertificationTypes()
+		{
+			return Json(_certificationService.GetDepartmentCertificationTypesAsync(DepartmentId));
+		}
+		#endregion Certifications
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5)]
+		public async Task<IActionResult> ResetPasswordForUser(string userId)
+		{
+			var member = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId);
+			if (member == null)
+				return NotFound();
+			if (!await CanAdministratorResetPasswordAsync(userId, member))
+				return Unauthorized();
+
+			var user = await _userManager.FindByIdAsync(userId);
+			if (user == null)
+				return NotFound();
+
+			var model = new ResetPasswordForUserView
+			{
+				UserId = userId,
+				MustChangePasswordOnLogin = true
+			};
+			await PopulatePasswordResetModelAsync(model, user, member);
+			model.Message = TempData["PasswordResetMessage"] as string;
+
+			if (model.IsSsoManaged)
+				return Forbid();
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_View)]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ResetPasswordForUser(ResetPasswordForUserView model, CancellationToken cancellationToken)
+		{
+			var user = await _userManager.FindByIdAsync(model.UserId);
+			if (user == null)
+				return NotFound();
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(model.UserId, DepartmentId);
+			if (member == null)
+				return NotFound();
+			if (!await CanAdministratorResetPasswordAsync(model.UserId, member))
+				return Unauthorized();
+
+			await PopulatePasswordResetModelAsync(model, user, member);
+			if (model.IsSsoManaged)
+				return Forbid();
+			if (!TryGetMfaVerifiedAtUtc(out var mfaVerifiedAtUtc))
+				return Forbid();
+
+			if (model.UseEmailResetLink)
+			{
+				// The mode is derived from durable department policy. Ignore any password fields or
+				// mode value supplied by the browser so a direct POST cannot bypass the setting.
+				ModelState.Remove(nameof(model.Password));
+				ModelState.Remove(nameof(model.ConfirmPassword));
+				model.Password = null;
+				model.ConfirmPassword = null;
+
+				if (string.IsNullOrWhiteSpace(user.Email) || !await _userManager.IsEmailConfirmedAsync(user))
+				{
+					ModelState.AddModelError(string.Empty,
+						"A reset link cannot be sent until this user has a confirmed email address.");
+					return View(model);
+				}
+
+				return await SendAdministratorPasswordResetLinkAsync(model, user, mfaVerifiedAtUtc, cancellationToken);
+			}
+
+			if (!ModelState.IsValid)
+				return View(model);
+
+			// Validate new password against system-enforced complexity and department min-length policy
+			var policyError = await _departmentSsoService.ValidatePasswordAgainstPolicyAsync(DepartmentId, model.Password);
+			if (policyError != null)
+			{
+				ModelState.AddModelError("Password", ResolvePwdError(policyError));
+				return View(model);
+			}
+
+			var now = DateTime.UtcNow;
+			user.AuthenticationGeneration++;
+			user.CredentialsValidAfterUtc = now;
+			user.AuthenticationStateChangedOn = now;
+			var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+			var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
+			var auditData = BuildPasswordResetAuditData(model.UserId, "direct", mfaVerifiedAtUtc,
+				result.Succeeded, result.Succeeded, model.MustChangePasswordOnLogin);
+
+			if (result.Succeeded)
+			{
+				var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+				await _departmentSsoService.RecordPasswordChangedAsync(DepartmentId, model.UserId);
+
+				member.MustChangePassword = model.MustChangePasswordOnLogin;
+				await _departmentsService.SaveDepartmentMemberAsync(member, cancellationToken);
+
+				await _userSessionService.RevokeAllAfterCredentialChangeAsync(UserId, model.UserId,
+					UserSessionRevocationReason.PasswordReset, now, cancellationToken);
+
+				await _systemAuditsService.SaveSystemAuditAsync(new SystemAudit
+				{
+					System = (int)SystemAuditSystems.Website,
+					Type = (int)SystemAuditTypes.PasswordResetByAdministrator,
+					DepartmentId = DepartmentId,
+					UserId = UserId,
+					TargetUserId = model.UserId,
+					Username = User.Identity?.Name,
+					IpAddress = IpAddressHelper.GetRequestIP(Request, true),
+					CorrelationId = HttpContext.TraceIdentifier,
+					ServerName = Environment.MachineName,
+					Successful = true,
+					Data = auditData
+				}, cancellationToken);
+				PublishPasswordResetAudit(model.UserId, auditData, true);
+
+				if (model.EmailUser)
+					await _emailService.SendPasswordChangedByAdministratorEmail(model.Email, model.Name,
+						user.UserName, department?.Name ?? "Resgrid");
+
+				return RedirectToAction("Index", "Personnel", new { Area = "User" });
+			}
+
+			foreach (var error in result.Errors)
+			{
+				model.Message += error.Description + " ";
+			}
+
+			await _systemAuditsService.SaveSystemAuditAsync(new SystemAudit
+			{
+				System = (int)SystemAuditSystems.Website,
+				Type = (int)SystemAuditTypes.PasswordResetByAdministrator,
+				DepartmentId = DepartmentId,
+				UserId = UserId,
+				TargetUserId = model.UserId,
+				Username = User.Identity?.Name,
+				IpAddress = IpAddressHelper.GetRequestIP(Request, true),
+				CorrelationId = HttpContext.TraceIdentifier,
+				ServerName = Environment.MachineName,
+				Successful = false,
+				Data = auditData
+			}, cancellationToken);
+			PublishPasswordResetAudit(model.UserId, auditData, false);
+
+			return View(model);
+		}
+
+		private async Task PopulatePasswordResetModelAsync(ResetPasswordForUserView model, IdentityUser user,
+			DepartmentMember member)
+		{
+			model.Name = await UserHelper.GetFullNameForUser(user.Id);
+			model.Email = user.Email;
+			model.Username = user.UserName;
+			model.MinPasswordLength = await _departmentSsoService.GetEffectiveMinPasswordLengthAsync(DepartmentId);
+			model.IsSsoManaged = await IsSsoManagedAsync(user.Id, member);
+			model.UseEmailResetLink = await _departmentSettingsService.GetRequirePasswordResetViaEmailAsync(DepartmentId);
+		}
+
+		private async Task<bool> CanAdministratorResetPasswordAsync(string targetUserId, DepartmentMember targetMember)
+		{
+			if (string.IsNullOrWhiteSpace(targetUserId) || targetUserId == UserId || targetMember == null)
+				return false;
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			if (department == null || targetUserId == department.ManagingUserId)
+				return false;
+
+			if (department.IsUserAnAdmin(UserId))
+				return true;
+
+			// Group administrators may manage only non-department-admin users in the group they
+			// administer. Target group membership is resolved server-side on every request.
+			if (department.IsUserAnAdmin(targetUserId))
+				return false;
+
+			var targetGroup = await _departmentGroupsService.GetGroupForUserAsync(targetUserId, DepartmentId);
+			return targetGroup != null && targetGroup.IsUserGroupAdmin(UserId);
+		}
+
+		private async Task<IActionResult> SendAdministratorPasswordResetLinkAsync(ResetPasswordForUserView model,
+			IdentityUser user, DateTime mfaVerifiedAtUtc, CancellationToken cancellationToken)
+		{
+			var requestedOn = DateTime.UtcNow;
+			var ipAddress = IpAddressHelper.GetRequestIP(Request, true);
+			var issued = false;
+			var emailSent = false;
+			string issuedToken = null;
+
+			try
+			{
+				var issue = await _passwordRecoveryService.IssueAsync(user.Id, user.Email, ipAddress,
+					user.AuthenticationGeneration, user.SecurityStamp, cancellationToken);
+				issued = issue.Issued && !issue.RateLimited;
+				issuedToken = issue.Token;
+
+				if (issued)
+				{
+					var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+					var profile = await _userProfileService.GetProfileByUserIdAsync(user.Id);
+					var resetPageUrl = Url.Action("ResetPassword", "Account", new { area = "" }, Request.Scheme);
+					if (string.IsNullOrWhiteSpace(resetPageUrl))
+						throw new InvalidOperationException("The password reset URL could not be generated.");
+
+					var resetUrl = $"{resetPageUrl}#token={Uri.EscapeDataString(issue.Token)}";
+					emailSent = await _emailService.SendPasswordRecoveryEmail(user.Email,
+						profile?.FullName.AsFirstNameLastName ?? model.Name ?? "Resgrid user",
+						department?.Name ?? "Resgrid", resetUrl, ipAddress,
+						BoundSecurityContext(Request.Headers.UserAgent.ToString(), 512), requestedOn, false);
+
+					if (!emailSent)
+						await TryRemovePasswordRecoveryTokenAsync(issue.Token, cancellationToken);
+				}
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, "Administrator password reset link processing failed.");
+				if (!string.IsNullOrWhiteSpace(issuedToken))
+					await TryRemovePasswordRecoveryTokenAsync(issuedToken, cancellationToken);
+			}
+
+			var successful = issued && emailSent;
+			var auditData = BuildPasswordResetAuditData(user.Id, "email_link", mfaVerifiedAtUtc,
+				successful, false, null);
+			await _systemAuditsService.SaveSystemAuditAsync(new SystemAudit
+			{
+				System = (int)SystemAuditSystems.Website,
+				Type = (int)SystemAuditTypes.PasswordResetLinkSentByAdministrator,
+				DepartmentId = DepartmentId,
+				UserId = UserId,
+				TargetUserId = user.Id,
+				Username = User.Identity?.Name,
+				IpAddress = ipAddress,
+				CorrelationId = HttpContext.TraceIdentifier,
+				ServerName = Environment.MachineName,
+				Successful = successful,
+				Data = auditData
+			}, cancellationToken);
+			PublishPasswordResetAudit(user.Id, auditData, successful);
+
+			if (!issued || !emailSent)
+			{
+				ModelState.AddModelError(string.Empty,
+					"The password reset email could not be sent. Wait before trying again or verify the user's email configuration.");
+				return View(model);
+			}
+
+			TempData["PasswordResetMessage"] =
+				"A short-lived, single-use password reset link was sent to the user's confirmed email address.";
+			return RedirectToAction(nameof(ResetPasswordForUser), new { userId = user.Id });
+		}
+
+		private bool TryGetMfaVerifiedAtUtc(out DateTime verifiedAtUtc)
+		{
+			verifiedAtUtc = default;
+			if (!HttpContext.Items.TryGetValue(RequiresRecentTwoFactorAttribute.MfaVerifiedAtHttpContextItemKey,
+				out var rawValue) || rawValue is not DateTime value)
+				return false;
+
+			verifiedAtUtc = value.Kind == DateTimeKind.Utc ? value : value.ToUniversalTime();
+			var age = DateTime.UtcNow - verifiedAtUtc;
+			return age >= TimeSpan.Zero && age <= TimeSpan.FromMinutes(5);
+		}
+
+		private static string BuildPasswordResetAuditData(string targetUserId, string resetMode,
+			DateTime mfaVerifiedAtUtc, bool successful, bool sessionsRevoked, bool? mustChangePasswordOnLogin)
+		{
+			return JsonConvert.SerializeObject(new
+			{
+				target_user_id = targetUserId,
+				reset_mode = resetMode,
+				mfa_verified_at = mfaVerifiedAtUtc.ToString("O"),
+				successful,
+				sessions_revoked = sessionsRevoked,
+				must_change_password_on_login = mustChangePasswordOnLogin
+			});
+		}
+
+		private void PublishPasswordResetAudit(string targetUserId, string auditData, bool successful)
+		{
+			_eventAggregator.SendMessage(new AuditEvent
+			{
+				DepartmentId = DepartmentId,
+				UserId = UserId,
+				TargetUserId = targetUserId,
+				Type = AuditLogTypes.PasswordResetByAdministrator,
+				After = auditData,
+				IpAddress = IpAddressHelper.GetRequestIP(Request, true),
+				UserAgent = BoundSecurityContext(Request.Headers.UserAgent.ToString(), 512),
+				ServerName = Environment.MachineName,
+				Successful = successful
+			});
+		}
+
+		private async Task TryRemovePasswordRecoveryTokenAsync(string token, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await _passwordRecoveryService.RemoveAsync(token, cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, "Unable to remove an undelivered administrator password recovery token.");
+			}
+		}
+
+		private static string BoundSecurityContext(string value, int maximumLength)
+		{
+			if (string.IsNullOrWhiteSpace(value))
+				return "unknown";
+
+			var normalized = value.Replace('\r', ' ').Replace('\n', ' ').Trim();
+			return normalized.Length <= maximumLength ? normalized : normalized.Substring(0, maximumLength);
+		}
+
+		private async Task<bool> IsSsoManagedAsync(string userId, DepartmentMember member = null)
+		{
+			var state = await _externalIdentityLinkService.GetSsoManagementStateAsync(userId);
+			if (state == null || state.IsSsoManaged)
+				return true;
+
+			member ??= await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId);
+			return member != null && (!string.IsNullOrWhiteSpace(member.ExternalSsoId) || member.SsoLinkedOn.HasValue);
+		}
+
+		#region Your Departments
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult>  YourDepartments()
+		{
+			YourDepartmentsView model = new YourDepartmentsView();
+			model.Members = await _departmentsService.GetAllDepartmentsForUserAsync(UserId);
+			model.UserId = UserId;
+
+			var user = await _userManager.FindByIdAsync(UserId);
+			_departmentsService.InvalidateDepartmentUserInCache(UserId, user);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<string> JoinDepartment(int id, string code)
+		{
+			if (id == 0 || String.IsNullOrWhiteSpace(code))
+				return "Department Id and Code are required.";
+
+			var department= await _departmentsService.GetDepartmentByIdAsync(id);
+
+			if (department == null)
+				return "Unknown department id or department code. Please reach out to an administrator of the department you want to join and ensure the values are correct.";
+
+			if (department.Code != code)
+				return "Unknown department id or department code. Please reach out to an administrator of the department you want to join and ensure the values are correct.";
+
+			if (await _departmentsService.IsMemberOfDepartmentAsync(id, UserId))
+				return "You are already a member of this department and cannot join it again.";
+
+			if (!await _limitsService.CanDepartmentAddNewUserAsync(id, true))
+				return _profileLocalizer["JoinDepartmentFull"];
+
+			return null;
+		}
+
+		private const string JoinDepartmentErrorTempDataKey = "JoinDepartmentError"; // read by YourDepartments.cshtml
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  JoinDepartment(IFormCollection form)
+		{
+			var departmentId = form["deparmentId"];
+			var departmentCode = form["departmentCode"];
+
+			var department= await _departmentsService.GetDepartmentByIdAsync(int.Parse(departmentId));
+
+			if (department == null)
+				return RedirectToAction("YourDepartments");
+
+			if (department.Code != departmentCode)
+				return RedirectToAction("YourDepartments");
+
+			if (!await _departmentsService.IsMemberOfDepartmentAsync(int.Parse(departmentId), UserId))
+			{
+				// Joining takes a personnel seat; the pre-check normally says so first, this covers a race or a direct post.
+				if (!await _limitsService.CanDepartmentAddNewUserAsync(int.Parse(departmentId), true))
+				{
+					TempData[JoinDepartmentErrorTempDataKey] = _profileLocalizer["JoinDepartmentFull"].Value;
+					return RedirectToAction("YourDepartments");
+				}
+
+				await _departmentsService.JoinDepartmentAsync(int.Parse(departmentId), UserId);
+			}
+
+			return RedirectToAction("YourDepartments");
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  SetActiveDepartment([FromBody]ChangeActiveDepartmentModel model,
+			CancellationToken cancellationToken)
+		{
+			if (await _departmentsService.IsMemberOfDepartmentAsync(model.DepartmentId, UserId))
+			{
+				var entry = await CheckDepartmentEntryAsync(model.DepartmentId, cancellationToken);
+				if (entry == DepartmentEntry.StepUpRequired)
+					return StatusCode(StatusCodes.Status403Forbidden, new { error = "step_up_required", redirectUrl = StepUpThenYourDepartmentsUrl(model.DepartmentId) });
+				if (entry == DepartmentEntry.SsoRequired && await SsoSignInForDepartmentUrlAsync(model.DepartmentId) is string ssoUrl)
+					return StatusCode(StatusCodes.Status403Forbidden, new { error = "sso_required", redirectUrl = ssoUrl });
+				if (entry != DepartmentEntry.Allowed)
+					return Forbid();
+
+				var user = await _userManager.FindByIdAsync(UserId);
+				await _departmentsService.SetActiveDepartmentForUserAsync(UserId, model.DepartmentId, user,
+					cancellationToken);
+				if (!await RenewPrincipalForDepartmentAsync(user, model.DepartmentId, cancellationToken))
+					return Unauthorized();
+
+				return RedirectToAction("Dashboard", "Home", new { Area = "User" });
+			}
+
+			return RedirectToAction("YourDepartments");
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult>  SetDefaultDepartment(int departmentId, CancellationToken cancellationToken)
+		{
+			if (await _departmentsService.IsMemberOfDepartmentAsync(departmentId, UserId))
+			{
+				var entry = await CheckDepartmentEntryAsync(departmentId, cancellationToken);
+				if (entry == DepartmentEntry.StepUpRequired)
+					return Redirect(StepUpThenYourDepartmentsUrl(departmentId));
+				if (entry == DepartmentEntry.SsoRequired && await SsoSignInForDepartmentUrlAsync(departmentId) is string ssoUrl)
+					return Redirect(ssoUrl);
+				if (entry != DepartmentEntry.Allowed)
+					return Forbid();
+
+				var user = await _userManager.FindByIdAsync(UserId);
+
+				await _departmentsService.SetActiveDepartmentForUserAsync(UserId, departmentId, user, cancellationToken);
+				await _departmentsService.SetDefaultDepartmentForUserAsync(UserId, departmentId, user, cancellationToken);
+
+				if (!await RenewPrincipalForDepartmentAsync(user, departmentId, cancellationToken))
+					return Unauthorized();
+
+				return RedirectToAction("Dashboard", "Home", new { Area = "User" });
+			}
+
+			return RedirectToAction("YourDepartments");
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteDepartmentLink(int departmentId, CancellationToken cancellationToken)
+		{
+			if (!await _departmentsService.IsMemberOfDepartmentAsync(departmentId, UserId))
+				return RedirectToAction("YourDepartments");
+
+			var departmentLinks = await _departmentsService.GetAllDepartmentsForUserAsync(UserId);
+			var departmentToRemove = departmentLinks.FirstOrDefault(x => x.DepartmentId == departmentId);
+			if (departmentToRemove == null || departmentLinks.Count <= 1 ||
+				departmentToRemove.Department?.ManagingUserId == UserId)
+				return RedirectToAction("YourDepartments");
+
+			var user = await _userManager.FindByIdAsync(UserId);
+			var remainingDepartment = departmentLinks
+				.Where(x => x.DepartmentId != departmentToRemove.DepartmentId)
+				.OrderByDescending(x => x.IsDefault)
+				.FirstOrDefault();
+			var switchesDepartment = departmentToRemove.IsActive;
+			// Leaving the active department moves the session to the remaining one; if this session may not enter it
+			// (its SSO, or MFA it has not completed), the user signs in again there instead.
+			var canKeepCurrentSession = !switchesDepartment ||
+				await CheckDepartmentEntryAsync(remainingDepartment.DepartmentId, cancellationToken) == DepartmentEntry.Allowed;
+
+			if (switchesDepartment)
+			{
+				await _departmentsService.SetActiveDepartmentForUserAsync(UserId, remainingDepartment.DepartmentId,
+					user, cancellationToken);
+				if (canKeepCurrentSession &&
+					!await RenewPrincipalForDepartmentAsync(user, remainingDepartment.DepartmentId, cancellationToken))
+				{
+					// The active department has already moved but this principal still describes the old
+					// one. Sign out rather than leave the two disagreeing; the next sign-in rebuilds both.
+					await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+					return Unauthorized();
+				}
+			}
+
+			if (departmentToRemove.IsDefault)
+				await _departmentsService.SetDefaultDepartmentForUserAsync(UserId, remainingDepartment.DepartmentId,
+					user, cancellationToken);
+
+			var revoked = await _deleteService.RevokeDepartmentAccessAsync(UserId,
+				departmentToRemove.DepartmentId, UserId, cancellationToken);
+			if (!revoked)
+			{
+				Resgrid.Framework.Logging.LogError($"DeleteDepartmentLink: failed to revoke department {departmentToRemove.DepartmentId} access for user {UserId}");
+				return RedirectToAction("YourDepartments");
+			}
+
+			if (switchesDepartment && !canKeepCurrentSession)
+			{
+				await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+				return RedirectToAction("LogOn", "Account", new {Area = ""});
+			}
+
+			return switchesDepartment
+				? RedirectToAction("Dashboard", "Home", new {Area = "User"})
+				: RedirectToAction("YourDepartments");
+		}
+
+		private enum DepartmentEntry
+		{
+			Allowed,
+
+			/// <summary>The department requires its own SSO sign-in.</summary>
+			SsoRequired,
+
+			/// <summary>The department requires MFA and this session has not completed it (passkey plan section 7.6 row 5).</summary>
+			StepUpRequired
+		}
+
+		private async Task<DepartmentEntry> CheckDepartmentEntryAsync(int departmentId, CancellationToken cancellationToken)
+		{
+			if (!await CanContinueCurrentAuthenticationInDepartmentAsync(departmentId, cancellationToken))
+				return DepartmentEntry.SsoRequired;
+
+			// A RequireMfa department accepts only a session that has completed an actual second factor. An unenrolled
+			// member may enter, and the enrollment middleware then confines them to setup until they enroll.
+			if (!await _mfaPolicyService.IsRequireMfaEnforcedAsync(departmentId, cancellationToken))
+				return DepartmentEntry.Allowed;
+
+			var user = await _userManager.FindByIdAsync(UserId);
+			if (user == null || !await _userManager.GetTwoFactorEnabledAsync(user))
+				return DepartmentEntry.Allowed;
+
+			return await StepUpEvidence.GetLatestSecondFactorUtcAsync(_mfaEvidenceService, user, HttpContext, _mfaPolicyService, departmentId,
+					MfaMethodScope.Login, cancellationToken) == null
+				? DepartmentEntry.StepUpRequired
+				: DepartmentEntry.Allowed;
+		}
+
+		private string StepUpThenYourDepartmentsUrl(int departmentId) =>
+			Url.Action("Verify2FA", "TwoFactor", new { area = "User", returnUrl = Url.Action("YourDepartments", "Profile", new { area = "User" }),
+				entry = departmentId });
+
+		private readonly ISsoBrokerService _ssoBroker;
+		private readonly ISsoReturnTargetRegistry _ssoReturnTargets;
+
+		/// <summary>
+		/// A department that requires its own SSO is entered by signing in through its provider (plan section 7.6 row 5): the Web SSO
+		/// sign-in for that department, when this deployment offers it; null otherwise.
+		/// </summary>
+		private async Task<string> SsoSignInForDepartmentUrlAsync(int departmentId)
+		{
+			if (!Resgrid.Config.TwoFactorConfig.WebLoginMfaTransactionEnabled || !Resgrid.Config.TwoFactorConfig.LoginMfaTransactionEnabled ||
+				!WebSsoRoundTrip.IsAvailable(_ssoBroker, _ssoReturnTargets))
+				return null;
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(departmentId);
+			return string.IsNullOrWhiteSpace(department?.Code)
+				? null
+				: Url.Action("SsoLogOn", "Account", new { area = "", departmentCode = department.Code, returnUrl = Url.Action("Dashboard", "Home", new { area = "User" }) });
+		}
+
+		private async Task<bool> CanContinueCurrentAuthenticationInDepartmentAsync(int departmentId,
+			CancellationToken cancellationToken)
+		{
+			var requiresSso = await _departmentSsoService.IsRequireSsoPolicyActiveAsync(departmentId,
+				cancellationToken) && await _departmentSsoService.IsSsoEnabledForDepartmentAsync(departmentId,
+				cancellationToken);
+			var localLoginAllowed = await _externalIdentityLinkService.IsLocalLoginAllowedAsync(UserId,
+				departmentId, cancellationToken);
+			if (!requiresSso && localLoginAllowed)
+				return true;
+
+			// An authentication established for another department cannot be used to enter a
+			// department that requires its own SSO policy. The user must authenticate at that IdP.
+			var currentSessionId = User.FindFirstValue(SessionClaimTypes.SessionId);
+			var current = (await _userSessionService.GetActiveForUserAsync(UserId, cancellationToken))
+				.FirstOrDefault(session => session.UserSessionId == currentSessionId);
+			return current?.DepartmentId == departmentId &&
+				(current.AuthenticationMethod == UserSessionAuthenticationMethod.OidcSso ||
+				 current.AuthenticationMethod == UserSessionAuthenticationMethod.SamlSso);
+		}
+
+		private async Task<bool> RenewPrincipalForDepartmentAsync(IdentityUser user, int departmentId,
+			CancellationToken cancellationToken)
+		{
+			var authentication = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			var currentSessionId = User.FindFirstValue(SessionClaimTypes.SessionId);
+			if (!string.IsNullOrWhiteSpace(currentSessionId) &&
+				!await _userSessionService.MoveSessionToDepartmentAsync(UserId, currentSessionId, departmentId,
+					cancellationToken))
+				return false;
+
+			var principal = await _signInManager.CreateUserPrincipalAsync(user);
+			if (!string.IsNullOrWhiteSpace(currentSessionId) && principal.Identity is ClaimsIdentity identity)
+				identity.AddClaim(new Claim(SessionClaimTypes.SessionId, currentSessionId));
+
+			var properties = authentication.Properties ?? new AuthenticationProperties
+			{
+				IssuedUtc = DateTimeOffset.UtcNow,
+				ExpiresUtc = DateTimeOffset.UtcNow.AddHours(4),
+				IsPersistent = false,
+				AllowRefresh = false
+			};
+			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+			HttpContext.User = principal;
+			return true;
+		}
+
+		#endregion Your Departments
+
+
+		#region Avatar
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> GetAvatar(string id, int? type)
+		{
+			if (type == null)
+			{ // User profile images (will have a null type) are by Guid
+				Guid newId;
+				if (!Guid.TryParse(id, out newId))
+					return StatusCode(404);
+			}
+			else if (type != null && type == 1)
+			{ // User profile images (will have a 1 type) are by Guid
+				Guid newId;
+				if (!Guid.TryParse(id, out newId))
+					return StatusCode(404);
+			}
+			else if (type != null && type == 2)
+			{ // Department Profiles are by Int
+				int newId;
+				if (!int.TryParse(id, out newId))
+					return StatusCode(404);
+			}
+
+
+			byte[] data = null;
+			if (type == null)
+				data= await _imageService.GetImageAsync(ImageTypes.Avatar, id);
+			else
+				data= await _imageService.GetImageAsync((ImageTypes)type.Value, id);
+
+			if (data == null || data.Length <= 0)
+				return StatusCode(404);
+
+			return File(data, "image/jpeg");
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> Upload(string id, int? type, CancellationToken cancellationToken)
+		{
+			if (Request.Form.Files == null || !Request.Form.Files.Any()) { return BadRequest(); }
+
+			var file = Request.Form.Files[0];
+
+			// check for a valid mediatype
+			if (!file.ContentType.StartsWith("image/"))
+				return StatusCode(400);
+
+			var extension = Path.GetExtension(file.FileName);
+			byte[] imgArray = null;
+			int width = 0;
+			int height = 0;
+
+			using (Image image = Image.Load(file.OpenReadStream()))
+			{
+				using (MemoryStream stream = new MemoryStream())
+				{
+					IImageFormat imageFormat;
+
+					if (Configuration.Default.ImageFormatsManager.TryFindFormatByFileExtension("png", out imageFormat))
+					{
+						image.Save(stream, imageFormat);
+
+						width = image.Width;
+						height = image.Height;
+
+						stream.Position = 0;
+						imgArray = stream.ToArray();
+					}
+				}
+			}
+
+			if (type == null)
+				await _imageService.SaveImageAsync(ImageTypes.Avatar, id, imgArray, cancellationToken);
+			else
+				await _imageService.SaveImageAsync((ImageTypes)type.Value, id, imgArray, cancellationToken);
+
+			string url;
+
+			if (type == null)
+				url = $"{Request.Scheme}://{Request.Host}/User/Profile/GetAvatar?id=" + id;
+			else
+				url = $"{Request.Scheme}://{Request.Host}/User/Profile/GetAvatar?id=" + id + "?type=" + type.Value;
+
+			var obj = new
+			{
+				status = CroppicStatuses.Success,
+				url = url,
+				width = width,
+				height = height
+			};
+
+			return Json(obj);
+		}
+
+		[HttpPut]
+		[Authorize(Policy = ResgridResources.Profile_Update)]
+		public async Task<IActionResult> Crop([FromBody]CropRequest model, CancellationToken cancellationToken)
+		{
+			// extract original image ID and generate a new filename for the cropped result
+			var originalUri = new Uri(model.imgUrl);
+			var originalId = originalUri.Query.Replace("?id=", "");
+			byte[] imgArray = null;
+
+			try
+			{
+				var ms = new MemoryStream(await _imageService.GetImageAsync(ImageTypes.Avatar, originalId));
+
+				using (Image image = Image.Load(ms))
+				{
+					using (MemoryStream stream = new MemoryStream())
+					{
+						IImageFormat imageFormat;
+
+						if (Configuration.Default.ImageFormatsManager.TryFindFormatByFileExtension("png", out imageFormat))
+						{
+							image.Mutate(x => x
+							 .Resize((int)model.imgW, (int)model.imgH));
+
+							Rectangle rectangle = new Rectangle(model.imgX1, model.imgY1, model.cropW, model.cropH);
+							image.Mutate(ctx => ctx.Crop(rectangle));
+
+							image.Save(stream, imageFormat);
+
+							stream.Position = 0;
+							imgArray = stream.ToArray();
+						}
+					}
+				}
+
+				await _imageService.SaveImageAsync(ImageTypes.Avatar, originalId, imgArray, cancellationToken);
+			}
+			catch (Exception e)
+			{
+				return StatusCode(500);
+			}
+
+			var obj = new
+			{
+				status = CroppicStatuses.Success,
+				url = model.imgUrl
+			};
+
+			return Json(obj);
+		}
+
+		internal static class CroppicStatuses
+		{
+			public const string Success = "success";
+			public const string Error = "error";
+		}
+
+		private const int AvatarStoredWidth = 100;  // ToDo - Change the size of the stored avatar image
+		private const int AvatarStoredHeight = 100; // ToDo - Change the size of the stored avatar image
+		private const int AvatarScreenWidth = 400;  // ToDo - Change the value of the width of the image on the screen
+		private readonly string[] _imageFileExtensions = { ".jpg", ".png", ".gif", ".jpeg" };
+
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> _Upload(ICollection<IFormFile> files)
+		{
+			if (files == null || !files.Any()) return Json(new { success = false, errorMessage = "No file uploaded." });
+
+			var file = files.FirstOrDefault();  // get ONE only
+
+			if (file == null || !IsImage(file)) return Json(new { success = false, errorMessage = "File is of wrong format." });
+
+			if (file.Length <= 0) return Json(new { success = false, errorMessage = "File cannot be zero length." });
+
+			return Json(new { success = true }); // success
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> SaveAvatar(string t, string l, string h, string w, IFormFile file, CancellationToken cancellationToken)
+		{
+			try
+			{
+				//var img = new WebImage(file.InputStream);
+				//var ratio = img.Height / (double)img.Width;
+				//img.Resize(AvatarScreenWidth, (int)(AvatarScreenWidth * ratio));
+
+				// Calculate dimensions
+				var top = Convert.ToInt32(t.Replace("-", "").Replace("px", ""));
+				var left = Convert.ToInt32(l.Replace("-", "").Replace("px", ""));
+				var height = Convert.ToInt32(h.Replace("-", "").Replace("px", ""));
+				var width = Convert.ToInt32(w.Replace("-", "").Replace("px", ""));
+
+				//var img = new WebImage(file.InputStream);
+
+				//img.Resize(width, height);
+				// ... crop the part the user selected, ...
+				//img.Crop(top, left, img.Height - top - AvatarStoredHeight, img.Width - left - AvatarStoredWidth);
+
+				var profile= await _userProfileService.GetProfileByUserIdAsync(UserId);
+
+				if (profile != null)
+				{
+					//profile.Image = img.GetBytes();
+				}
+				else
+				{
+					profile = new UserProfile();
+
+					var user= _usersService.GetUserById(UserId);
+
+					profile.UserId = UserId;
+					//profile.Image = img.GetBytes();
+					profile.FirstName = await UserHelper.GetFullNameForUser(UserId);
+					profile.MobileCarrier = (int)MobileCarriers.None;
+					profile.SendEmail = true;
+					profile.SendPush = true;
+					profile.SendMessageEmail = true;
+					profile.SendMessagePush = true;
+					profile.SendNotificationEmail = true;
+					profile.SendNotificationPush = true;
+
+
+				}
+
+				profile.LastUpdated = DateTime.Now;
+				await _userProfileService.SaveProfileAsync(DepartmentId, profile, cancellationToken);
+
+				return Json(new { success = true });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { success = false, errorMessage = "Unable to upload file.\nERRORINFO: " + ex.Message });
+			}
+		}
+
+		private bool IsImage(IFormFile file)
+		{
+			if (file == null) return false;
+			return file.ContentType.Contains("image") ||
+					_imageFileExtensions.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
+		}
+		#endregion Avatar
+	}
+}

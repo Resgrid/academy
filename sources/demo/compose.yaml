@@ -1,0 +1,152 @@
+name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: resgrid_academy
+      POSTGRES_USER: academy
+      POSTGRES_PASSWORD: ${ACADEMY_DB_PASSWORD}
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U academy -d resgrid_academy"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    networks: [training]
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redis-data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [training]
+  rabbit:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: academy
+      RABBITMQ_DEFAULT_PASS: ${ACADEMY_RABBIT_PASSWORD}
+    volumes: ["rabbit-data:/var/lib/rabbitmq"]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks: [training]
+  mail:
+    image: axllent/mailpit:latest
+    networks: [training]
+  web:
+    image: mcr.microsoft.com/dotnet/aspnet:9.0
+    user: "1654:1654"
+    working_dir: /app
+    command: ["dotnet", "Resgrid.Web.dll"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      AppOptions__ConfigPath: /config/ResgridConfig.json
+      DOTNET_EnableDiagnostics: "0"
+    volumes:
+      - web-publish:/app:ro
+      - config:/config:ro
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      rabbit: {condition: service_healthy}
+    networks: [training]
+  gateway:
+    image: nginx:1.27-alpine
+    ports: ["127.0.0.1:${ACADEMY_WEB_PORT:-18867}:8080", "127.0.0.1:${ACADEMY_API_PORT:-18868}:8081", "127.0.0.1:${ACADEMY_EVENTING_PORT:-18869}:8082", "127.0.0.1:${ACADEMY_MAIL_PORT:-18026}:8025", "127.0.0.1:${ACADEMY_RABBIT_PORT:-15674}:8083"]
+    volumes: ["gateway-config:/etc/nginx/conf.d:ro"]
+    networks:
+      training:
+      ingress:
+        gw_priority: 1
+  billing:
+    image: python:3.13-alpine
+    user: "1654:1654"
+    working_dir: /stack/_services/billing
+    command: ["python", "billing_fixture.py"]
+    volumes: ["web-publish:/stack:ro", "config:/config:ro"]
+    networks: [training]
+  api:
+    image: mcr.microsoft.com/dotnet/aspnet:9.0
+    user: "1654:1654"
+    working_dir: /stack/_services/api
+    command: ["dotnet", "Resgrid.Web.Services.dll"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "http://+:8080;https://+:8443"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /config/api-tls.pfx
+      AppOptions__ConfigPath: /config/ResgridConfig.json
+      DOTNET_EnableDiagnostics: "0"
+    volumes: ["web-publish:/stack:ro", "config:/config:ro"]
+    networks: [training]
+  loopback:
+    image: nginx:1.27-alpine
+    network_mode: "service:web"
+    command: ["nginx", "-c", "/config/loopback.conf", "-g", "daemon off;"]
+    volumes: ["config:/config:ro"]
+    depends_on: [web, api]
+  eventing:
+    image: mcr.microsoft.com/dotnet/aspnet:9.0
+    user: "1654:1654"
+    working_dir: /stack/_services/eventing
+    command: ["dotnet", "Resgrid.Web.Eventing.dll"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      AppOptions__ConfigPath: /config/EventingConfig.json
+      SSL_CERT_FILE: /config/academy-ca.crt
+      DOTNET_EnableDiagnostics: "0"
+    volumes: ["web-publish:/stack:ro", "config:/config:ro"]
+    networks: [training]
+  worker:
+    image: mcr.microsoft.com/dotnet/aspnet:9.0
+    user: "1654:1654"
+    working_dir: /stack/_services/worker
+    command: ["dotnet", "Resgrid.Workers.Console.dll"]
+    environment:
+      AppOptions__ConfigPath: /config/ResgridConfig.json
+      DOTNET_EnableDiagnostics: "0"
+    volumes: ["web-publish:/stack:ro", "config:/config:ro"]
+    networks: [training]
+  migrate:
+    profiles: ["tools"]
+    image: mcr.microsoft.com/dotnet/aspnet:9.0
+    user: "1654:1654"
+    working_dir: /app
+    command: ["dotnet", "Resgrid.Console.dll", "--DbUpdate"]
+    environment:
+      AppOptions__ConfigPath: /config/ResgridConfig.json
+      DOTNET_EnableDiagnostics: "0"
+    volumes:
+      - console-publish:/app:ro
+      - config:/config:ro
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      rabbit: {condition: service_healthy}
+    networks: [training]
+networks:
+  ingress:
+  training:
+    internal: true
+volumes:
+  postgres-data:
+  redis-data:
+  rabbit-data:
+  web-publish:
+    external: true
+    name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}_web-publish
+  console-publish:
+    external: true
+    name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}_console-publish
+  config:
+    external: true
+    name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}_config
+  gateway-config:
+    external: true
+    name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}_gateway-config

@@ -1,0 +1,107 @@
+using System;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
+using Resgrid.Model.Checklists;
+using Resgrid.Model.Services;
+using Resgrid.Model.WorkOrders;
+using Resgrid.Web.Areas.User.Models.WorkOrders;
+using Resgrid.Web.Helpers;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[WorkOrderFormCulture]
+	[Area("User"), Authorize, ResponseCache(NoStore = true, Location = ResponseCacheLocation.None), RequestSizeLimit(1024 * 1024)]
+	[Resgrid.Web.Helpers.DepartmentLocalTime]
+	public sealed partial class WorkOrdersController : SecureBaseController
+	{
+		private readonly IWorkOrdersService _orders;
+		private readonly IWorkOrderMaintenanceService _maintenance;
+		private readonly IWorkOrderReportingService _reports;
+		private IWorkOrderOperationsService OperationsService => _orders as IWorkOrderOperationsService ?? throw new WorkOrderException(503, "MaintenanceUnavailable");
+		private readonly IWorkOrderAuthorizationService _authorization;
+		private readonly IReadinessAccessService _access;
+		private readonly IProtectedGrantContext _grant;
+		private readonly IDepartmentDataProtectionService _protection;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.WorkOrders.WorkOrders> _strings;
+		public WorkOrdersController(IWorkOrdersService orders, IWorkOrderAuthorizationService authorization, IReadinessAccessService access, IProtectedGrantContext grant,
+			IDepartmentDataProtectionService protection, IStringLocalizer<Resgrid.Localization.Areas.User.WorkOrders.WorkOrders> strings, IWorkOrderMaintenanceService maintenance = null, IWorkOrderReportingService reports = null)
+		{ _orders = orders; _authorization = authorization; _access = access; _grant = grant; _protection = protection; _strings = strings; _maintenance = maintenance; _reports = reports; }
+		private ChecklistActor Actor => new ChecklistActor { DepartmentId = DepartmentId, UserId = UserId, GrantToken = _grant.GrantToken };
+		public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+		{
+			Response.Headers["Cache-Control"] = "no-store";
+			try { await _authorization.RequireMemberAsync(Actor); } catch (WorkOrderException membershipError) { context.Result = StatusCode(membershipError.StatusCode, new { message = _strings[membershipError.Code].Value }); return; }
+			ViewBag.ProtectionEnforced = await _protection.IsProtectionEnforcedAsync(DepartmentId); ViewBag.ProtectedGrant = _grant.GrantToken; ViewBag.GrantExpiresOn = HttpProtectedGrantContext.ReadExpiry(Request);
+			if (!ModelState.IsValid) { context.Result = StatusCode(400, new { message = _strings["InvalidInput"].Value }); return; }
+			var executed = await next();
+			if (executed.Exception is WorkOrderException ex)
+			{
+				executed.ExceptionHandled = true;
+				if (HttpMethods.IsGet(Request.Method) && ex.Code == "ProtectedDataRequired")
+				{
+					var orderId = Request.Query["id"].ToString() is { Length: > 0 } id ? id : context.RouteData.Values["id"]?.ToString();
+					executed.Result = View("Locked", new WorkOrderLockedView { Query = context.ActionArguments.TryGetValue("query", out var reportQuery) && reportQuery is WorkOrderReportQuery rq ? rq : new WorkOrderReportQuery(), Page = context.RouteData.Values["action"]?.ToString(), Id = orderId, Filter = context.ActionArguments.TryGetValue("filter", out var filters) && filters is WorkOrderFilter workOrderFilter ? workOrderFilter : new WorkOrderFilter() });
+				}
+				else executed.Result = StatusCode(ex.StatusCode, new { message = _strings[ex.Code].Value, code = ex.Code });
+			}
+		}
+		[HttpGet]
+		public async Task<IActionResult> Index(WorkOrderFilter filter) => View("Index", new WorkOrderIndexView { Orders = await _orders.ListAsync(Actor, filter), Filter = filter, Choices = await _orders.ChoicesAsync(Actor) });
+		[HttpGet]
+		public async Task<IActionResult> New()
+		{
+			if (!await _access.CanUseMaintenanceAsync(DepartmentId)) throw new WorkOrderException(402, "ReadinessProRequired");
+			var choices = await _orders.ChoicesAsync(Actor);
+			return View("Edit", new WorkOrderEditView { Input = new WorkOrderInput { RequestId = Guid.NewGuid().ToString("D"), Content = new WorkOrderContent { Currency = choices.Currency } }, Choices = choices, CanManage = await _authorization.CanManageAsync(Actor, null) });
+		}
+		[HttpGet]
+		public async Task<IActionResult> Detail(string id) { var detail = await _orders.GetAsync(Actor, id); return View("Detail", new WorkOrderDetailView { Detail = detail, Choices = await _orders.ChoicesAsync(Actor), Holds = _maintenance == null ? new() : await _maintenance.HoldsAsync(Actor, id), CanRelease = await _authorization.CanManageAsync(Actor, detail.Order.GroupId) }); }
+		[HttpGet]
+		public async Task<IActionResult> Edit(string id)
+		{
+			var detail = await _orders.GetAsync(Actor, id); if (!detail.CanEdit) throw new WorkOrderException(403, "PermissionRequired");
+			return View("Edit", new WorkOrderEditView { Id = id, Input = detail.Input, Choices = await _orders.ChoicesAsync(Actor), CanManage = detail.CanManage });
+		}
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Save(string id, WorkOrderInput input)
+		{
+			input.DueOn = Resgrid.Web.Helpers.DepartmentTime.From(ViewData).ToUtc(input.DueOn);
+			if (id == null) id = (await _orders.CreateAsync(Actor, input)).Order.Id; else await _orders.UpdateAsync(Actor, id, input); return Json(new { id });
+		}
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Transition(string id, WorkOrderTransition input) { await _orders.TransitionAsync(Actor, id, input); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Assign(string id, WorkOrderAssignment input) { await _orders.AssignAsync(Actor, id, input); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Accept(string id, int revision) { await _orders.AcceptAssignmentAsync(Actor, id, revision); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Comment(string id, int revision, string note) { await _orders.CommentAsync(Actor, id, revision, note); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Labor(string id, WorkOrderLaborInput input) { await _orders.AddLaborAsync(Actor, id, input); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Part(string id, WorkOrderPartInput input) { await _orders.AddPartAsync(Actor, id, input); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> VoidPart(string id, string partId, int revision, string reason) { await _orders.VoidPartAsync(Actor, id, partId, revision, reason); return Json(new { id }); }
+		[HttpPost, ValidateAntiForgeryToken, RequestSizeLimit(11 * 1024 * 1024)]
+		public async Task<IActionResult> Upload(string id, int revision, IFormFile file)
+		{
+			if (file == null || file.Length > 10 * 1024 * 1024) throw new WorkOrderException(400, "InvalidFile");
+			using var buffer = new MemoryStream(); await file.CopyToAsync(buffer); await _orders.AddFileAsync(Actor, id, revision, file.FileName, file.ContentType, buffer.ToArray()); return Json(new { id });
+		}
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> WithdrawFile(string id, string fileId, int revision, string reason) { await _orders.WithdrawFileAsync(Actor, id, fileId, revision, reason); return Json(new { id }); }
+		[HttpGet]
+		public async Task<IActionResult> Evidence(string id) { var file = await _orders.GetFileAsync(Actor, id); Response.Headers["X-Content-Type-Options"] = "nosniff"; return File(file.Data, file.ContentType, file.Content); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public async Task<IActionResult> Export(string id) { var detail = await _orders.GetAsync(Actor, id); return File(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(detail, Formatting.Indented)), "application/json", "work-order-" + id + ".json"); }
+		[HttpPost, ValidateAntiForgeryToken]
+		public Task<IActionResult> Reopen(string destination, string id, WorkOrderFilter filter, WorkOrderReportQuery query = null) => destination switch { "Operations" => Operations(id), "Policy" => Policy(), "Settings" => Settings(), "Bulk" => Bulk(filter?.Page ?? 0), "Reports" => Reports(query ?? new WorkOrderReportQuery()), "History" => History(query ?? new WorkOrderReportQuery()), "ExportCsv" => ExportCsv(query ?? new WorkOrderReportQuery()), "Detail" => Detail(id), "Edit" => Edit(id), "New" => New(), "Recurrence" => Recurrence(id), "EditRecurrence" => EditRecurrence(id), "NewRecurrence" => NewRecurrence(), "Recurrences" => Recurrences(filter?.Page ?? 0), "Index" => Index(filter ?? new WorkOrderFilter()), _ => Task.FromResult<IActionResult>(BadRequest()) };
+	}
+}

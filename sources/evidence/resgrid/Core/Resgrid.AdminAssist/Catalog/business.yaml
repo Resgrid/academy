@@ -1,0 +1,1154 @@
+{
+  "Version": "2026.09.25.2",
+  "Areas": [
+    {
+      "Id": "business",
+      "LabelKey": "Area.business",
+      "PurposeKey": "AreaPurpose.business",
+      "Order": 17,
+      "Archetypes": [],
+      "Tier": "AddOn",
+      "Addon": "BusinessOperations",
+      "Global": false,
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "MinimumMinutes": 60,
+      "MaximumMinutes": 240,
+      "DocsPath": "/web-app/business-ops/overview/"
+    }
+  ],
+  "Settings": [
+    {
+      "Id": "module.BusinessOperationsDisabled",
+      "AreaId": "business",
+      "LabelKey": "Module.BusinessOperationsDisabled",
+      "HelpKey": "ModuleHelp.BusinessOperationsDisabled",
+      "Binding": "DepartmentModuleSettings.BusinessOperationsDisabled",
+      "ValueType": "boolean",
+      "Classification": "Internal",
+      "Secret": false,
+      "Location": {
+        "Controller": "Department",
+        "Action": "ModuleSettings",
+        "Field": "BusinessOperationsEnabled"
+      },
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z",
+      "Impact": {
+        "Risk": "High",
+        "AudienceKey": "Impact.Audience",
+        "OperationKey": "Area.business",
+        "TimingKey": "Impact.Timing",
+        "ReversibilityKey": "Impact.Reversal",
+        "VerificationKey": "Impact.Verify"
+      },
+      "Requires": [
+        "setting.ModuleSettings"
+      ],
+      "Affects": [],
+      "Conflicts": [],
+      "DocumentationId": "module.BusinessOperationsDisabled",
+      "DefaultValue": "false",
+      "AllowedValues": "true or false",
+      "EvidenceSource": "DepartmentSettingsService.GetDepartmentModuleSettingsAsync",
+      "Availability": "available"
+    }
+  ],
+  "Capabilities": [
+    {
+      "Id": "invoices",
+      "AreaId": "business",
+      "LabelKey": "Feature.invoices",
+      "PurposeKey": "FeaturePurpose.invoices",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "FeatureSetup.invoices",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Invoicing",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.CustomerInvoicing"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/business-ops/invoicing/"
+    },
+    {
+      "Id": "contracts",
+      "AreaId": "business",
+      "LabelKey": "Feature.contracts",
+      "PurposeKey": "FeaturePurpose.contracts",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "FeatureSetup.contracts",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Contracts",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.ContractorBilling"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/business-ops/contracts-and-compliance/"
+    },
+    {
+      "Id": "cal-oes-mars",
+      "AreaId": "business",
+      "LabelKey": "Feature.cal-oes-mars",
+      "PurposeKey": "FeaturePurpose.cal-oes-mars",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "FeatureSetup.cal-oes-mars",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "CalOesMars",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "CostRecovery.CalOesMars"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/business-ops/cal-oes-mars/"
+    },
+    {
+      "Id": "workforce",
+      "AreaId": "business",
+      "LabelKey": "Feature.workforce",
+      "PurposeKey": "FeaturePurpose.workforce",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "FeatureSetup.workforce",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Workforce.InternalCosting"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/business-ops/workforce/"
+    },
+    {
+      "Id": "new-invoice",
+      "AreaId": "business",
+      "LabelKey": "Feature.new-invoice",
+      "PurposeKey": "FeaturePurpose.new-invoice",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Invoicing",
+        "Action": "New"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.CustomerInvoicing"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/invoicing/"
+    },
+    {
+      "Id": "rate-cards",
+      "AreaId": "business",
+      "LabelKey": "Feature.rate-cards",
+      "PurposeKey": "FeaturePurpose.rate-cards",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Invoicing",
+        "Action": "RateCards"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.CustomerInvoicing"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/invoicing/"
+    },
+    {
+      "Id": "invoice-aging",
+      "AreaId": "business",
+      "LabelKey": "Feature.invoice-aging",
+      "PurposeKey": "FeaturePurpose.invoice-aging",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Invoicing",
+        "Action": "Aging"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.CustomerInvoicing"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/invoicing/"
+    },
+    {
+      "Id": "billing-settings",
+      "AreaId": "business",
+      "LabelKey": "Feature.billing-settings",
+      "PurposeKey": "FeaturePurpose.billing-settings",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Invoicing",
+        "Action": "Settings"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.CustomerInvoicing"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/invoicing/"
+    },
+    {
+      "Id": "online-payment-settings",
+      "AreaId": "business",
+      "LabelKey": "Feature.online-payment-settings",
+      "PurposeKey": "FeaturePurpose.online-payment-settings",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Invoicing",
+        "Action": "Settings"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.OnlinePayments"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/online-payments/"
+    },
+    {
+      "Id": "bids",
+      "AreaId": "business",
+      "LabelKey": "Feature.bids",
+      "PurposeKey": "FeaturePurpose.bids",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Bids",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.ContractorBilling"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/bids-and-deployment-wizard/"
+    },
+    {
+      "Id": "new-bid",
+      "AreaId": "business",
+      "LabelKey": "Feature.new-bid",
+      "PurposeKey": "FeaturePurpose.new-bid",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Bids",
+        "Action": "New"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.ContractorBilling"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/bids-and-deployment-wizard/"
+    },
+    {
+      "Id": "new-contract",
+      "AreaId": "business",
+      "LabelKey": "Feature.new-contract",
+      "PurposeKey": "FeaturePurpose.new-contract",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Contracts",
+        "Action": "New"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.ContractorBilling"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/contracts-and-compliance/"
+    },
+    {
+      "Id": "compliance-documents",
+      "AreaId": "business",
+      "LabelKey": "Feature.compliance-documents",
+      "PurposeKey": "FeaturePurpose.compliance-documents",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Contracts",
+        "Action": "Compliance"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.ContractorBilling"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/contracts-and-compliance/"
+    },
+    {
+      "Id": "rate-schedules",
+      "AreaId": "business",
+      "LabelKey": "Feature.rate-schedules",
+      "PurposeKey": "FeaturePurpose.rate-schedules",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "RateSchedules",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Invoicing.ContractorBilling"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/rate-schedules/"
+    },
+    {
+      "Id": "cal-oes-mars-queue",
+      "AreaId": "business",
+      "LabelKey": "Feature.cal-oes-mars-queue",
+      "PurposeKey": "FeaturePurpose.cal-oes-mars-queue",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "CalOesMars",
+        "Action": "Queue"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "CostRecovery.CalOesMars"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/cal-oes-mars/"
+    },
+    {
+      "Id": "cal-oes-mars-rates",
+      "AreaId": "business",
+      "LabelKey": "Feature.cal-oes-mars-rates",
+      "PurposeKey": "FeaturePurpose.cal-oes-mars-rates",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "CalOesMars",
+        "Action": "Rates"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "CostRecovery.CalOesMars"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/cal-oes-mars/"
+    },
+    {
+      "Id": "cal-oes-mars-reconciliation",
+      "AreaId": "business",
+      "LabelKey": "Feature.cal-oes-mars-reconciliation",
+      "PurposeKey": "FeaturePurpose.cal-oes-mars-reconciliation",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "CalOesMars",
+        "Action": "Reconciliation"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "CostRecovery.CalOesMars"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/cal-oes-mars/"
+    },
+    {
+      "Id": "workforce-compensation",
+      "AreaId": "business",
+      "LabelKey": "Feature.workforce-compensation",
+      "PurposeKey": "FeaturePurpose.workforce-compensation",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "Compensation"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Workforce.InternalCosting"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/workforce/"
+    },
+    {
+      "Id": "workforce-annual-facts",
+      "AreaId": "business",
+      "LabelKey": "Feature.workforce-annual-facts",
+      "PurposeKey": "FeaturePurpose.workforce-annual-facts",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "AnnualFacts"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Workforce.InternalCosting"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/workforce/"
+    },
+    {
+      "Id": "resource-costs",
+      "AreaId": "business",
+      "LabelKey": "Feature.resource-costs",
+      "PurposeKey": "FeaturePurpose.resource-costs",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "ResourceCosts"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Workforce.InternalCosting"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/field-costing/"
+    },
+    {
+      "Id": "cost-runs",
+      "AreaId": "business",
+      "LabelKey": "Feature.cost-runs",
+      "PurposeKey": "FeaturePurpose.cost-runs",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "CostRuns"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Workforce.InternalCosting"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/field-costing/"
+    },
+    {
+      "Id": "pay-data-reporting",
+      "AreaId": "business",
+      "LabelKey": "Feature.pay-data-reporting",
+      "PurposeKey": "FeaturePurpose.pay-data-reporting",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "PayData"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Compliance.CaliforniaPayDataReporting"
+        },
+        {
+          "Kind": "module",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        },
+        {
+          "Kind": "addon",
+          "Id": "ADP"
+        },
+        {
+          "Kind": "protection",
+          "Id": "Enabled"
+        }
+      ],
+      "SettingIds": [
+        "module.BusinessOperationsDisabled"
+      ],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/pay-data-reporting/"
+    },
+    {
+      "Id": "my-demographics",
+      "AreaId": "business",
+      "LabelKey": "Feature.my-demographics",
+      "PurposeKey": "FeaturePurpose.my-demographics",
+      "ValueKey": "AreaValue.business",
+      "ExampleKey": "AreaExample.business",
+      "AdoptionKey": "ModuleAdoption.business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workforce",
+        "Action": "MyDemographics"
+      },
+      "Requirements": [
+        {
+          "Kind": "flag",
+          "Id": "Compliance.CaliforniaPayDataReporting"
+        },
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/pay-data-reporting/"
+    },
+    {
+      "Id": "addon-business",
+      "AreaId": "business",
+      "LabelKey": "Feature.addon-business",
+      "PurposeKey": "FeaturePurpose.addon-business",
+      "ValueKey": "FeatureValue.addon-business",
+      "ExampleKey": "FeatureExample.addon-business",
+      "AdoptionKey": "FeatureAdoption.addon-business",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Subscription",
+        "Action": "Index"
+      },
+      "Requirements": [
+        {
+          "Kind": "addon",
+          "Id": "BusinessOperations"
+        }
+      ],
+      "SettingIds": [
+        "setting.BrainTreeCustomerId",
+        "setting.PaddleCustomerId",
+        "setting.StripeCustomerId"
+      ],
+      "RuleIds": [
+        "personnel-limit",
+        "unit-limit"
+      ],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/business-ops/overview/"
+    }
+  ],
+  "Rules": [],
+  "Packs": [],
+  "Articles": [
+    {
+      "Id": "module.BusinessOperationsDisabled",
+      "Locale": "en",
+      "TitleKey": "Module.BusinessOperationsDisabled",
+      "Body": "Business Operations availability. Controls availability of business operations. Disabling this module can remove navigation and block module operations; it does not delete its records. Turning it on still requires the applicable subscription, rollout and permissions.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "module-businessoperationsdisabled",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "invoices",
+      "Locale": "en",
+      "TitleKey": "Feature.invoices",
+      "Body": "Invoices Customer invoices and payments. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Set up billing settings and rate cards, then create invoices.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "invoices",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "contracts",
+      "Locale": "en",
+      "TitleKey": "Feature.contracts",
+      "Body": "Contracts Contracts, bids and rate schedules. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Add your service contracts and their rates.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "contracts",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "cal-oes-mars",
+      "Locale": "en",
+      "TitleKey": "Feature.cal-oes-mars",
+      "Body": "Cal OES MARS Cal OES MARS reimbursement claims. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Enter your annual rates, then work the MARS action queue after deployments.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "cal-oes-mars",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "workforce",
+      "Locale": "en",
+      "TitleKey": "Feature.workforce",
+      "Body": "Workforce Workforce compensation and field cost runs. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Add compensation profiles, then run field costs for deployments.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "workforce",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "new-invoice",
+      "Locale": "en",
+      "TitleKey": "Feature.new-invoice",
+      "Body": "New Invoice Create an invoice for a customer. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "new-invoice",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "rate-cards",
+      "Locale": "en",
+      "TitleKey": "Feature.rate-cards",
+      "Body": "Rate Cards Rates for units, personnel and fees used on invoices. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "rate-cards",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "invoice-aging",
+      "Locale": "en",
+      "TitleKey": "Feature.invoice-aging",
+      "Body": "Accounts Receivable Aging Unpaid invoices grouped by how overdue they are. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "invoice-aging",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "billing-settings",
+      "Locale": "en",
+      "TitleKey": "Feature.billing-settings",
+      "Body": "Billing Settings The legal name, remit-to address and tax details printed on invoices. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "billing-settings",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "online-payment-settings",
+      "Locale": "en",
+      "TitleKey": "Feature.online-payment-settings",
+      "Body": "Online Payment Settings Connect your Stripe account to take invoice payments online. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "online-payment-settings",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "bids",
+      "Locale": "en",
+      "TitleKey": "Feature.bids",
+      "Body": "Bids Priced estimates for customers. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "bids",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "new-bid",
+      "Locale": "en",
+      "TitleKey": "Feature.new-bid",
+      "Body": "New Bid Create a bid for a customer. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "new-bid",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "new-contract",
+      "Locale": "en",
+      "TitleKey": "Feature.new-contract",
+      "Body": "New Contract Create a service contract for a customer. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "new-contract",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "compliance-documents",
+      "Locale": "en",
+      "TitleKey": "Feature.compliance-documents",
+      "Body": "Compliance Documents Insurance, licences and bonds, with expiry reminders. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "compliance-documents",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "rate-schedules",
+      "Locale": "en",
+      "TitleKey": "Feature.rate-schedules",
+      "Body": "Rate Schedules Contractor rates for crews, vehicles and equipment. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "rate-schedules",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "cal-oes-mars-queue",
+      "Locale": "en",
+      "TitleKey": "Feature.cal-oes-mars-queue",
+      "Body": "MARS Action Queue MARS claims waiting to be prepared and submitted. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "cal-oes-mars-queue",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "cal-oes-mars-rates",
+      "Locale": "en",
+      "TitleKey": "Feature.cal-oes-mars-rates",
+      "Body": "MARS Annual Rates Annual MARS salary and equipment rates. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "cal-oes-mars-rates",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "cal-oes-mars-reconciliation",
+      "Locale": "en",
+      "TitleKey": "Feature.cal-oes-mars-reconciliation",
+      "Body": "MARS Reconciliation Match MARS payments to the claims you submitted. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "cal-oes-mars-reconciliation",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "workforce-compensation",
+      "Locale": "en",
+      "TitleKey": "Feature.workforce-compensation",
+      "Body": "Compensation Profiles Pay rates and employer costs for staff. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "workforce-compensation",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "workforce-annual-facts",
+      "Locale": "en",
+      "TitleKey": "Feature.workforce-annual-facts",
+      "Body": "Annual Pay Facts Annual earnings and hours used for pay data reporting. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "workforce-annual-facts",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "resource-costs",
+      "Locale": "en",
+      "TitleKey": "Feature.resource-costs",
+      "Body": "Resource Cost Profiles Running costs for units and equipment. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "resource-costs",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "cost-runs",
+      "Locale": "en",
+      "TitleKey": "Feature.cost-runs",
+      "Body": "Field Cost Runs Work out the full cost of a bid, call or deployment. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "cost-runs",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "pay-data-reporting",
+      "Locale": "en",
+      "TitleKey": "Feature.pay-data-reporting",
+      "Body": "California Pay Data Reporting Prepare California pay data reports. Also requires Advanced Data Protection. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "pay-data-reporting",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "my-demographics",
+      "Locale": "en",
+      "TitleKey": "Feature.my-demographics",
+      "Body": "My Demographic Response Your voluntary answers for California pay data reporting. Bill for standby and contract services and prepare reimbursement claims from records you already keep. An event standby is invoiced from its deployment record, and a mutual-aid claim is prepared for MARS reimbursement. Requires the Workforce and Business Operations add-on. Online payments also need your own payment-provider account.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "my-demographics",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "addon-business",
+      "Locale": "en",
+      "TitleKey": "Feature.addon-business",
+      "Body": "Business Operations The Workforce and Business Operations add-on: invoicing, payments, contracts, bids, MARS reimbursement and workforce costing. Connect administrative commercial work to the department activities it supports. Prepare an event standby invoice or review documented mutual-aid costs. Certifications and Deployment Finance do not require this add-on. Pay-data reporting additionally needs ADP Enabled; online payments require provider setup. No reimbursement or savings are guaranteed.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "addon-business",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    }
+  ]
+}

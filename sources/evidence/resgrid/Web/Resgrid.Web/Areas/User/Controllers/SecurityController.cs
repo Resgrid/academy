@@ -1,0 +1,1614 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Events;
+using Resgrid.Model.Helpers;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Bus;
+using Resgrid.Web.Areas.User.Models.Security;
+using Resgrid.Web.Helpers;
+using Resgrid.Web.Attributes;
+using IdentityUser = Resgrid.Model.Identity.IdentityUser;
+using Microsoft.Extensions.Localization;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	// Department security settings, SSO/SCIM configuration and audit logs. Individual actions still
+	// check IsUserDepartmentAdmin; this sends an anonymous caller to sign-in rather than leaving the
+	// controller reachable with no identity at all.
+	[Area("User")]
+	[Authorize]
+	public class SecurityController : SecureBaseController
+	{
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IAuditService _auditService;
+		private readonly IPermissionsService _permissionsService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly ISystemAuditsService _systemAuditsService;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Security.Security> _secLocalizer;
+		private readonly IDepartmentSsoService _ssoService;
+		private readonly IEncryptionService _encryptionService;
+		private readonly IRecordsCutoverService _recordsCutoverService;
+
+		private readonly IPasskeyFeatureGates _passkeyGates;
+		private readonly IMfaEvidenceService _mfaEvidence;
+		private readonly IMfaPolicyService _mfaPolicy;
+
+		public SecurityController(IDepartmentsService departmentsService, IAuditService auditService,
+			IPermissionsService permissionsService, IEventAggregator eventAggregator,
+			IDepartmentSettingsService departmentSettingsService, ISystemAuditsService systemAuditsService,
+			UserManager<IdentityUser> userManager,
+			IStringLocalizer<Resgrid.Localization.Areas.User.Security.Security> secLocalizer,
+			IDepartmentSsoService ssoService,
+			IEncryptionService encryptionService,
+			IRecordsCutoverService recordsCutoverService,
+			IPasskeyFeatureGates passkeyGates,
+			IMfaEvidenceService mfaEvidence,
+			IMfaPolicyService mfaPolicy)
+		{
+			_mfaEvidence = mfaEvidence;
+			_mfaPolicy = mfaPolicy;
+			_passkeyGates = passkeyGates;
+			_departmentsService = departmentsService;
+			_auditService = auditService;
+			_permissionsService = permissionsService;
+			_eventAggregator = eventAggregator;
+			_departmentSettingsService = departmentSettingsService;
+			_systemAuditsService = systemAuditsService;
+			_userManager = userManager;
+			_secLocalizer = secLocalizer;
+			_ssoService = ssoService;
+			_encryptionService = encryptionService;
+			_recordsCutoverService = recordsCutoverService;
+		}
+
+		public async Task<IActionResult> Index()
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return Unauthorized();
+
+			var model = new PermissionsView();
+
+			var permissions = await _permissionsService.GetAllPermissionsForDepartmentAsync(DepartmentId);
+
+			int val = (int)PermissionTypes.AddPersonnel;
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.AddPersonnel))
+				model.AddUsers = permissions.First(x => x.PermissionType == (int)PermissionTypes.AddPersonnel).Action;
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.RemovePersonnel))
+				model.RemoveUsers = permissions.First(x => x.PermissionType == (int)PermissionTypes.RemovePersonnel).Action;
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateCall))
+				model.CreateCall = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateCall).Action;
+			else
+				model.CreateCall = 3;
+
+			// Option text is localized: the permission notes refer to these options by name in each language.
+			var optionLabels = PermissionOptionLabels.From(_secLocalizer);
+
+			var userAddPermissions = new List<dynamic>();
+			userAddPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			userAddPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			model.AddUserPermissions = new SelectList(userAddPermissions, "Id", "Name");
+
+			var userDeletePermissions = new List<dynamic>();
+			userDeletePermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			userDeletePermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			model.RemoveUserPermissions = new SelectList(userDeletePermissions, "Id", "Name");
+
+			var createCallPermissions = new List<dynamic>();
+			createCallPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			createCallPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createCallPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createCallPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateCallPermissions = new SelectList(createCallPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateTraining))
+				model.CreateTraining = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateTraining).Action;
+
+			var createTrainingPermissions = new List<dynamic>();
+			createTrainingPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createTrainingPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createTrainingPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateTrainingPermissions = new SelectList(createTrainingPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateDocument))
+				model.CreateDocument = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateDocument).Action;
+			else
+				model.CreateDocument = 3;
+
+			var createDocumentPermissions = new List<dynamic>();
+			createDocumentPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			createDocumentPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createDocumentPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createDocumentPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateDocumentPermissions = new SelectList(createDocumentPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateCalendarEntry))
+				model.CreateCalendarEntry = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateCalendarEntry).Action;
+			else
+				model.CreateCalendarEntry = 3;
+
+			var createCalendarEntryPermissions = new List<dynamic>();
+			createCalendarEntryPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			createCalendarEntryPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createCalendarEntryPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createCalendarEntryPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateCalendarEntryPermissions = new SelectList(createCalendarEntryPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateNote))
+				model.CreateNote = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateNote).Action;
+			else
+				model.CreateNote = 3;
+
+			var createNotePermissions = new List<dynamic>();
+			createNotePermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			createNotePermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createNotePermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createNotePermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateNotePermissions = new SelectList(createNotePermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateLog))
+				model.CreateLog = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateLog).Action;
+			else
+				model.CreateLog = 3;
+
+			var createLogPermissions = new List<dynamic>();
+			createLogPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			createLogPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createLogPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createLogPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateLogPermissions = new SelectList(createLogPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.DeleteLog))
+				model.DeleteLog = permissions.First(x => x.PermissionType == (int)PermissionTypes.DeleteLog).Action;
+			else
+				model.DeleteLog = 3;
+
+			var deleteLogPermissions = new List<dynamic>();
+			deleteLogPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			deleteLogPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			deleteLogPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			deleteLogPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.DeleteLogPermissions = new SelectList(deleteLogPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateShift))
+				model.CreateShift = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateShift).Action;
+
+			var createShiftPermissions = new List<dynamic>();
+			createShiftPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createShiftPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createShiftPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateShiftPermissions = new SelectList(createShiftPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ViewPersonalInfo))
+				model.ViewPersonalInfo = permissions.First(x => x.PermissionType == (int)PermissionTypes.ViewPersonalInfo).Action;
+			else
+				model.ViewPersonalInfo = 3;
+
+			var viewPersonalInfoPermissions = new List<dynamic>();
+			viewPersonalInfoPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			viewPersonalInfoPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewPersonalInfoPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewPersonalInfoPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ViewPersonalInfoPermissions = new SelectList(viewPersonalInfoPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.AdjustInventory))
+				model.AdjustInventory = permissions.First(x => x.PermissionType == (int)PermissionTypes.AdjustInventory).Action;
+			else
+				model.AdjustInventory = 3;
+
+			var adjustInventoryPermissions = new List<dynamic>();
+			adjustInventoryPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			adjustInventoryPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			adjustInventoryPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			adjustInventoryPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.AdjustInventoryPermissions = new SelectList(adjustInventoryPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CanSeePersonnelLocations))
+			{
+				model.ViewPersonnelLocation = permissions.First(x => x.PermissionType == (int)PermissionTypes.CanSeePersonnelLocations).Action;
+				model.LockViewPersonneLocationToGroup = permissions.First(x => x.PermissionType == (int)PermissionTypes.CanSeePersonnelLocations).LockToGroup;
+			}
+			else
+				model.ViewPersonnelLocation = 3;
+
+			var viewPersonnelLocationPermissions = new List<dynamic>();
+			viewPersonnelLocationPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			viewPersonnelLocationPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewPersonnelLocationPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewPersonnelLocationPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ViewPersonnelLocationPermissions = new SelectList(viewPersonnelLocationPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CanSeeUnitLocations))
+			{
+				model.ViewUnitLocation = permissions.First(x => x.PermissionType == (int)PermissionTypes.CanSeeUnitLocations).Action;
+				model.LockViewUnitLocationToGroup = permissions.First(x => x.PermissionType == (int)PermissionTypes.CanSeeUnitLocations).LockToGroup;
+			}
+			else
+				model.ViewUnitLocation = 3;
+
+			var viewUnitLocationPermissions = new List<dynamic>();
+			viewUnitLocationPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			viewUnitLocationPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewUnitLocationPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewUnitLocationPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ViewUnitLocationPermissions = new SelectList(viewUnitLocationPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateMessage))
+				model.CreateMessage = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateMessage).Action;
+			else
+				model.CreateMessage = 3;
+
+			var createMessagePermissions = new List<dynamic>();
+			createMessagePermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			createMessagePermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createMessagePermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createMessagePermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateMessagePermissions = new SelectList(createMessagePermissions, "Id", "Name");
+
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ViewGroupUsers))
+			{
+				model.ViewGroupsUsers = permissions.First(x => x.PermissionType == (int)PermissionTypes.ViewGroupUsers).Action;
+				model.LockViewGroupsUsersToGroup = permissions.First(x => x.PermissionType == (int)PermissionTypes.ViewGroupUsers).LockToGroup;
+			}
+			else
+				model.ViewGroupsUsers = 3;
+
+			var viewGroupUsersPermissions = new List<dynamic>();
+			viewGroupUsersPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			viewGroupUsersPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewGroupUsersPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewGroupUsersPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ViewGroupUsersPermissions = new SelectList(viewGroupUsersPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.DeleteCall))
+				model.DeleteCall = permissions.First(x => x.PermissionType == (int)PermissionTypes.DeleteCall).Action;
+			else
+				model.DeleteCall = 3;
+
+			var deleteCallPermissions = new List<dynamic>();
+			deleteCallPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			deleteCallPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			deleteCallPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			deleteCallPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.DeleteCallPermissions = new SelectList(deleteCallPermissions, "Id", "Name");
+
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CloseCall))
+				model.CloseCall = permissions.First(x => x.PermissionType == (int)PermissionTypes.CloseCall).Action;
+			else
+				model.CloseCall = 3;
+
+			var closeCallPermissions = new List<dynamic>();
+			closeCallPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			closeCallPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			closeCallPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			closeCallPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CloseCallPermissions = new SelectList(closeCallPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.AddCallData))
+				model.AddCallData = permissions.First(x => x.PermissionType == (int)PermissionTypes.AddCallData).Action;
+			else
+				model.AddCallData = 3;
+
+			var addCallDataPermissions = new List<dynamic>();
+			addCallDataPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			addCallDataPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			addCallDataPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			addCallDataPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.AddCallDataPermissions = new SelectList(addCallDataPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ViewGroupUnits))
+			{
+				model.ViewGroupsUnits = permissions.First(x => x.PermissionType == (int)PermissionTypes.ViewGroupUnits).Action;
+				model.LockViewGroupsUnitsToGroup = permissions.First(x => x.PermissionType == (int)PermissionTypes.ViewGroupUnits).LockToGroup;
+			}
+			else
+				model.ViewGroupsUnits = 3;
+
+			var viewGroupUnitsPermissions = new List<dynamic>();
+			viewGroupUnitsPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			viewGroupUnitsPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewGroupUnitsPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewGroupUnitsPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ViewGrouUnitsPermissions = new SelectList(viewGroupUnitsPermissions, "Id", "Name");
+
+			var viewContactsPermissions = new List<dynamic>();
+			viewContactsPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			viewContactsPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewContactsPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewContactsPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ViewContactsPermissions = new SelectList(viewContactsPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ContactView))
+				model.ViewContacts = permissions.First(x => x.PermissionType == (int)PermissionTypes.ContactView).Action;
+			else
+				model.ViewContacts = 3;
+
+			var editContactsPermissions = new List<dynamic>();
+			editContactsPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			editContactsPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			editContactsPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			editContactsPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.EditContactsPermissions = new SelectList(editContactsPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ContactEdit))
+				model.EditContacts = permissions.First(x => x.PermissionType == (int)PermissionTypes.ContactEdit).Action;
+			else
+				model.EditContacts = 3;
+
+			var deleteContactsPermissions = new List<dynamic>();
+			deleteContactsPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			deleteContactsPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			deleteContactsPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			deleteContactsPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.DeleteContactsPermissions = new SelectList(deleteContactsPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ContactDelete))
+				model.DeleteContacts = permissions.First(x => x.PermissionType == (int)PermissionTypes.ContactDelete).Action;
+			else
+				model.DeleteContacts = 3;
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CreateWorkflow))
+				model.CreateWorkflow = permissions.First(x => x.PermissionType == (int)PermissionTypes.CreateWorkflow).Action;
+
+			var createWorkflowPermissions = new List<dynamic>();
+			createWorkflowPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			createWorkflowPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			createWorkflowPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CreateWorkflowPermissions = new SelectList(createWorkflowPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ManageWorkflowCredentials))
+				model.ManageWorkflowCredentials = permissions.First(x => x.PermissionType == (int)PermissionTypes.ManageWorkflowCredentials).Action;
+
+			var manageWorkflowCredentialsPermissions = new List<dynamic>();
+			manageWorkflowCredentialsPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			manageWorkflowCredentialsPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			manageWorkflowCredentialsPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.ManageWorkflowCredentialsPermissions = new SelectList(manageWorkflowCredentialsPermissions, "Id", "Name");
+
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.ViewWorkflowRuns))
+				model.ViewWorkflowRuns = permissions.First(x => x.PermissionType == (int)PermissionTypes.ViewWorkflowRuns).Action;
+
+			var viewWorkflowRunsPermissions = new List<dynamic>();
+			viewWorkflowRunsPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			viewWorkflowRunsPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			viewWorkflowRunsPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			viewWorkflowRunsPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			model.ViewWorkflowRunsPermissions = new SelectList(viewWorkflowRunsPermissions, "Id", "Name");
+
+			// 2FA enforcement scope � only managingUser can change this
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.UseCalendarSync))
+				model.UseCalendarSync = permissions.First(x => x.PermissionType == (int)PermissionTypes.UseCalendarSync).Action;
+			else
+				model.UseCalendarSync = 3;
+
+			var useCalendarSyncPermissions = new List<dynamic>();
+			useCalendarSyncPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			useCalendarSyncPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			useCalendarSyncPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			useCalendarSyncPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.UseCalendarSyncPermissions = new SelectList(useCalendarSyncPermissions, "Id", "Name");
+
+			// Dispatch app login: defaults to Everyone so departments that never configure it are unaffected.
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.DispatchAppLogin))
+				model.DispatchAppLogin = permissions.First(x => x.PermissionType == (int)PermissionTypes.DispatchAppLogin).Action;
+			else
+				model.DispatchAppLogin = 3;
+
+			var dispatchAppLoginPermissions = new List<dynamic>();
+			dispatchAppLoginPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			dispatchAppLoginPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			dispatchAppLoginPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			dispatchAppLoginPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.DispatchAppLoginPermissions = new SelectList(dispatchAppLoginPermissions, "Id", "Name");
+
+			// Commander access: defaults to Everyone so departments that never configure it are unaffected.
+			if (permissions.Any(x => x.PermissionType == (int)PermissionTypes.CommandAppLogin))
+				model.CommandAppLogin = permissions.First(x => x.PermissionType == (int)PermissionTypes.CommandAppLogin).Action;
+			else
+				model.CommandAppLogin = 3;
+
+			var commandAppLoginPermissions = new List<dynamic>();
+			commandAppLoginPermissions.Add(new { Id = 3, Name = optionLabels.Everyone });
+			commandAppLoginPermissions.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+			commandAppLoginPermissions.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+			commandAppLoginPermissions.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+			model.CommandAppLoginPermissions = new SelectList(commandAppLoginPermissions, "Id", "Name");
+
+			// ── Advanced Data Protection (ADP) permissions ─────────────────────────────
+			// Missing rows resolve through AdpPermissionDefaults, NOT the wide-open no-row
+			// convention — the preselected value here is exactly what enforcement will use.
+			int AdpValue(PermissionTypes type) =>
+				permissions.Any(x => x.PermissionType == (int)type)
+					? permissions.First(x => x.PermissionType == (int)type).Action
+					: (int)AdpPermissionDefaults.For(type);
+
+			SelectList AdpOptions(bool includeEveryone)
+			{
+				var options = new List<dynamic>();
+				if (includeEveryone)
+					options.Add(new { Id = 3, Name = optionLabels.Everyone });
+				options.Add(new { Id = 0, Name = optionLabels.DepartmentAdmins });
+				options.Add(new { Id = 1, Name = optionLabels.DepartmentAndGroupAdmins });
+				options.Add(new { Id = 2, Name = optionLabels.DepartmentAdminsAndSelectRoles });
+				return new SelectList(options, "Id", "Name");
+			}
+
+			model.ManageDataProtection = AdpValue(PermissionTypes.ManageDepartmentDataProtection);
+			model.ManageDataProtectionPermissions = AdpOptions(includeEveryone: false);
+
+			model.ViewProtectedCallData = AdpValue(PermissionTypes.ViewProtectedCallData);
+			model.ViewProtectedCallDataPermissions = AdpOptions(includeEveryone: true);
+
+			model.EditProtectedCallData = AdpValue(PermissionTypes.EditProtectedCallData);
+			model.EditProtectedCallDataPermissions = AdpOptions(includeEveryone: true);
+
+			model.ViewProtectedPersonnelData = AdpValue(PermissionTypes.ViewProtectedPersonnelData);
+			model.ViewProtectedPersonnelDataPermissions = AdpOptions(includeEveryone: true);
+
+			model.ViewProtectedContactData = AdpValue(PermissionTypes.ViewProtectedContactData);
+			model.ViewProtectedContactDataPermissions = AdpOptions(includeEveryone: true);
+
+			model.ViewProtectedOperationalData = AdpValue(PermissionTypes.ViewProtectedOperationalData);
+			model.ViewProtectedOperationalDataPermissions = AdpOptions(includeEveryone: true);
+
+			// Export, egress and break-glass never offer "Everyone": exports leave the system,
+			// egress reconfiguration widens disclosure, and break-glass is an audited emergency
+			// path that additionally requires the department policy to enable it at all.
+			model.ExportProtectedData = AdpValue(PermissionTypes.ExportProtectedData);
+			model.ExportProtectedDataPermissions = AdpOptions(includeEveryone: false);
+
+			model.ConfigureProtectedDataEgress = AdpValue(PermissionTypes.ConfigureProtectedDataEgress);
+			model.ConfigureProtectedDataEgressPermissions = AdpOptions(includeEveryone: false);
+
+			model.BreakGlassProtectedData = AdpValue(PermissionTypes.BreakGlassProtectedData);
+			model.BreakGlassProtectedDataPermissions = AdpOptions(includeEveryone: false);
+
+			// ── Records (RMS) permissions, PermissionTypes 50–67 ──────────────────────────────
+			// Rows come from RecordPermissionCatalog so this screen, ClaimsLogic.AddRecordClaims and the
+			// activation-time row migration share one set of no-row defaults. A missing row preselects that
+			// default, which for the Logs-parity types equals today's CreateLog/DeleteLog fall-through.
+			model.RecordsPermissions = new[]
+				{
+					RecordPermissionCatalog.All, ChecklistPermissionCatalog.All, WorkOrderPermissionCatalog.All, InventoryPermissionCatalog.All,
+					InvoicingPermissionCatalog.All, CertificationPermissionCatalog.All, DeploymentPermissionCatalog.All, WorkforcePermissionCatalog.All
+				}.SelectMany(catalog => RecordsPermissionRows.Build(permissions, catalog, optionLabels)).ToList();
+			var recordsState = await _recordsCutoverService.GetModuleStateAsync(DepartmentId);
+			model.RecordsFlagEnabled = recordsState != null && recordsState.FlagEnabled;
+			model.RecordsActivated = recordsState != null && recordsState.RecordsUsable;
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.IsManagingUser = department.ManagingUserId == UserId;
+			model.Require2FAForAdmins = await _departmentSettingsService.GetRequire2FAForAdminsAsync(DepartmentId);
+
+			// Guard: check whether managing user and current user have 2FA enabled
+			var managingIdentityUser = await _userManager.FindByIdAsync(department.ManagingUserId);
+			var currentIdentityUser = await _userManager.FindByIdAsync(UserId);
+			model.ManagingUserHas2FAEnabled = managingIdentityUser != null && await _userManager.GetTwoFactorEnabledAsync(managingIdentityUser);
+			model.CurrentUserHas2FAEnabled = currentIdentityUser != null && await _userManager.GetTwoFactorEnabledAsync(currentIdentityUser);
+
+			var require2FAOptions = new List<dynamic>();
+			require2FAOptions.Add(new { Id = 0, Name = _secLocalizer["Require2FADisabled"].Value });
+			require2FAOptions.Add(new { Id = 1, Name = _secLocalizer["Require2FADeptAdmins"].Value });
+			require2FAOptions.Add(new { Id = 2, Name = _secLocalizer["Require2FAAllAdmins"].Value });
+			model.Require2FAForAdminsOptions = new SelectList(require2FAOptions, "Id", "Name");
+
+			return View(model);
+		}
+
+		public async Task<IActionResult> Audits()
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return Unauthorized();
+
+			return View();
+		}
+
+		public async Task<IActionResult> GetAuditLogsList()
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return Unauthorized();
+
+			var auditLogsJson = new List<AuditLogJson>();
+			var auditLogs = await _auditService.GetAllAuditLogsForDepartmentAsync(DepartmentId);
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+			var users = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId, true);
+			var personnelNamesByUserId = personnelNames
+				.Where(x => x != null && !String.IsNullOrWhiteSpace(x.UserId))
+				.GroupBy(x => x.UserId, StringComparer.OrdinalIgnoreCase)
+				.ToDictionary(x => x.Key, x => x.First(), StringComparer.OrdinalIgnoreCase);
+			var usersByUserId = users
+				.Where(x => x != null && !String.IsNullOrWhiteSpace(x.UserId))
+				.GroupBy(x => x.UserId, StringComparer.OrdinalIgnoreCase)
+				.ToDictionary(x => x.Key, x => x.First(), StringComparer.OrdinalIgnoreCase);
+			var systemActor = _secLocalizer["AuditLogsSystemActor"].Value;
+			var unknownTime = _secLocalizer["AuditLogsUnknownTime"].Value;
+
+			foreach (var auditLog in auditLogs)
+			{
+				var auditJson = new AuditLogJson();
+				auditJson.AuditLogId = auditLog.AuditLogId;
+				personnelNamesByUserId.TryGetValue(auditLog.UserId ?? String.Empty, out var personName);
+				usersByUserId.TryGetValue(auditLog.UserId ?? String.Empty, out var user);
+				auditJson.Name = personName != null && !String.IsNullOrWhiteSpace(personName.Name)
+					? personName.Name
+					: (!String.IsNullOrWhiteSpace(auditLog.UserId) ? auditLog.UserId : systemActor);
+				auditJson.Message = auditLog.Message;
+				auditJson.Successful = auditLog.Successful;
+
+				if (auditLog.LoggedOn.HasValue)
+				{
+					auditJson.Timestamp = auditLog.LoggedOn.Value.TimeConverterToString(department);
+					auditJson.TimestampSort = auditLog.LoggedOn.Value.Ticks / TimeSpan.TicksPerMillisecond;
+				}
+				else
+					auditJson.Timestamp = unknownTime;
+
+				auditJson.Type = GetAuditLogTypeDisplayName((AuditLogTypes)auditLog.LogType);
+				auditJson.SearchTerms = String.Join(" ", new[]
+				{
+					auditJson.Name,
+					auditLog.UserId,
+					user?.UserName,
+					user?.Email,
+					auditLog.AuditLogId.ToString(CultureInfo.InvariantCulture),
+					auditLog.DepartmentId.ToString(CultureInfo.InvariantCulture),
+					auditLog.LogType.ToString(CultureInfo.InvariantCulture),
+					auditLog.ObjectId,
+					auditLog.ObjectDepartmentId.ToString(CultureInfo.InvariantCulture),
+					auditLog.IpAddress,
+					auditLog.ServerName,
+					auditJson.Timestamp,
+					auditLog.LoggedOn?.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
+					auditJson.Type,
+					((AuditLogTypes)auditLog.LogType).ToString()
+				}.Where(x => !String.IsNullOrWhiteSpace(x)));
+
+				auditLogsJson.Add(auditJson);
+			}
+
+			return Json(auditLogsJson);
+		}
+
+		/// <summary>
+		/// The audit type as shown on the audit log list and detail pages, in the viewer's language. A type with no Security
+		/// resource yet (a newly added AuditLogTypes value) falls back to the audit service's English name
+		/// rather than showing the raw resource key.
+		/// </summary>
+		private string GetAuditLogTypeDisplayName(AuditLogTypes type)
+		{
+			var localized = _secLocalizer["AuditLogType" + type];
+			return localized.ResourceNotFound ? _auditService.GetAuditLogTypeString(type) : localized.Value;
+		}
+
+		public async Task<IActionResult> ViewAudit(int auditLogId)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return Unauthorized();
+
+			var auditLog = await _auditService.GetAuditLogByIdAsync(auditLogId);
+			if (auditLog == null)
+				return NotFound();
+
+			if (auditLog.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			var model = new ViewAuditLogView
+			{
+				AuditLog = auditLog,
+				Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId),
+				Type = (AuditLogTypes)auditLog.LogType,
+				TypeName = GetAuditLogTypeDisplayName((AuditLogTypes)auditLog.LogType)
+			};
+
+			return View(model);
+		}
+
+		#region Async
+
+		/// <summary>
+		/// Sets the department-level 2FA enforcement scope. Only the managing user (owner) may change this.
+		/// scope: 0=disabled, 1=dept admins+managing user, 2=also group admins
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> Set2FARequirement(int scope, CancellationToken cancellationToken)
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			if (department.ManagingUserId != UserId)
+				return new StatusCodeResult((int)HttpStatusCode.Forbidden);
+
+			if (scope < 0 || scope > 2)
+				return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+
+			// Guard: if enabling enforcement (scope > 0), both managing user and current admin must have 2FA enabled
+			if (scope > 0)
+			{
+				var managingUser = await _userManager.FindByIdAsync(department.ManagingUserId);
+				var currentUser = await _userManager.FindByIdAsync(UserId);
+
+				bool managingHas2FA = managingUser != null && await _userManager.GetTwoFactorEnabledAsync(managingUser);
+				bool currentHas2FA = currentUser != null && await _userManager.GetTwoFactorEnabledAsync(currentUser);
+
+				if (!managingHas2FA || !currentHas2FA)
+					return new StatusCodeResult((int)HttpStatusCode.PreconditionFailed);
+			}
+
+			await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, scope.ToString(), DepartmentSettingTypes.Require2FAForAdmins, cancellationToken);
+
+			var auditEvent = new AuditEvent();
+			auditEvent.DepartmentId = DepartmentId;
+			auditEvent.UserId = UserId;
+			auditEvent.Type = AuditLogTypes.PermissionsChanged;
+			auditEvent.Before = string.Empty;
+			auditEvent.After = $"Require2FAForAdmins={scope}";
+			auditEvent.Successful = true;
+			auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+			auditEvent.ServerName = Environment.MachineName;
+			auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+			_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+
+			return new StatusCodeResult((int)HttpStatusCode.OK);
+		}
+
+		// POST + antiforgery: permission changes are state-changing and must never be reachable by a
+		// cross-site top-level GET navigation riding the SameSite=Lax auth cookie.
+		// Permissions are a security change (passkey plan section 7.6 row 13): the sign-in methods count, Responder approval does not.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SetPermission(int type, int perm, bool? lockToGroup)
+		{
+			if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+			{
+				var before = await _permissionsService.GetPermissionByDepartmentTypeAsync(DepartmentId, (PermissionTypes)type);
+				var result = await _permissionsService.SetPermissionForDepartmentAsync(DepartmentId, UserId, (PermissionTypes)type, (PermissionActions)perm, null, lockToGroup.GetValueOrDefault());
+
+				var auditEvent = new AuditEvent();
+				auditEvent.DepartmentId = DepartmentId;
+				auditEvent.UserId = UserId;
+				auditEvent.Type = AuditLogTypes.PermissionsChanged;
+				auditEvent.Before = before.CloneJsonToString();
+				auditEvent.After = result.CloneJsonToString();
+				auditEvent.Successful = true;
+				auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+				auditEvent.ServerName = Environment.MachineName;
+				auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+				_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+
+				if (type == (int)PermissionTypes.CanSeePersonnelLocations)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewPersonnelLocations;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+				else if (type == (int)PermissionTypes.CanSeeUnitLocations)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewUnitLocations;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+				else if (type == (int)PermissionTypes.ViewGroupUnits)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewUnits;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+				else if (type == (int)PermissionTypes.ViewGroupUsers)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewPersonnel;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+
+				return new StatusCodeResult((int)HttpStatusCode.OK);
+			}
+
+			return new StatusCodeResult((int)HttpStatusCode.NotModified);
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SetPermissionData(int type, string data, bool? lockToGroup)
+		{
+			if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+			{
+				var before = await _permissionsService.GetPermissionByDepartmentTypeAsync(DepartmentId, (PermissionTypes)type);
+				var result = await _permissionsService.SetPermissionForDepartmentAsync(DepartmentId, UserId, (PermissionTypes)type, (PermissionActions)before.Action, data, lockToGroup.GetValueOrDefault());
+
+				var auditEvent = new AuditEvent();
+				auditEvent.DepartmentId = DepartmentId;
+				auditEvent.UserId = UserId;
+				auditEvent.Type = AuditLogTypes.PermissionsChanged;
+				auditEvent.Before = before.CloneJsonToString();
+				auditEvent.After = result.CloneJsonToString();
+				auditEvent.Successful = true;
+				auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+				auditEvent.ServerName = Environment.MachineName;
+				auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+				_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+
+				if (type == (int)PermissionTypes.CanSeePersonnelLocations)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewPersonnelLocations;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+				else if (type == (int)PermissionTypes.CanSeeUnitLocations)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewUnitLocations;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+				else if (type == (int)PermissionTypes.ViewGroupUnits)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewUnits;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+				else if (type == (int)PermissionTypes.ViewGroupUsers)
+				{
+					var securityEvent = new SecurityRefreshEvent();
+					securityEvent.DepartmentId = DepartmentId;
+					securityEvent.Type = SecurityCacheTypes.WhoCanViewPersonnel;
+					_eventAggregator.SendMessage<SecurityRefreshEvent>(securityEvent);
+				}
+
+				return new StatusCodeResult((int)HttpStatusCode.OK);
+			}
+
+			return new StatusCodeResult((int)HttpStatusCode.NotModified);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetRolesForPermission(int type)
+		{
+			var before = await _permissionsService.GetPermissionByDepartmentTypeAsync(DepartmentId, (PermissionTypes)type);
+			if (before == null && (type == (int)PermissionTypes.TransferInventory || type == (int)PermissionTypes.IssueInventory))
+				before = await _permissionsService.GetPermissionByDepartmentTypeAsync(DepartmentId, PermissionTypes.AdjustInventory);
+
+			if (before != null)
+				return Json(before.Data);
+
+			return Json("");
+		}
+		#endregion Async
+
+		#region SSO / SCIM Management
+
+		// -- SSO Index --------------------------------------------------------
+
+		[HttpGet]
+		public async Task<IActionResult> Sso(CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var configList = configs?.ToList() ?? new System.Collections.Generic.List<DepartmentSsoConfig>();
+
+			// Build an encrypted token carrying departmentId:departmentCode so it can
+			// be passed safely over the public internet without exposing either value.
+			var plainToken = $"{department.DepartmentId}:{department.Code}";
+			var encryptedToken = _encryptionService.Encrypt(plainToken);
+
+			var apiBase = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+
+			var model = new SsoIndexView
+			{
+				IsAdmin = true,
+				DepartmentId = department.DepartmentId,
+				Configs = configList.Select(c => new SsoConfigRowView
+				{
+					DepartmentSsoConfigId = c.DepartmentSsoConfigId,
+					ProviderType = ((SsoProviderType)c.SsoProviderType).ToString().ToLowerInvariant(),
+					IsEnabled = c.IsEnabled,
+					Identifier = c.SsoProviderType == (int)SsoProviderType.Oidc ? c.ClientId : c.EntityId,
+					EndpointUrl = c.SsoProviderType == (int)SsoProviderType.Oidc ? c.Authority : c.MetadataUrl,
+					AllowLocalLogin = c.AllowLocalLogin,
+					AutoProvisionUsers = c.AutoProvisionUsers,
+					ScimEnabled = c.ScimEnabled,
+					HasScimBearerToken = !string.IsNullOrWhiteSpace(c.EncryptedScimBearerToken),
+					CreatedOn = c.CreatedOn
+				}).ToList(),
+				HasOidcConfig = configList.Any(c => c.SsoProviderType == (int)SsoProviderType.Oidc),
+				HasSamlConfig = configList.Any(c => c.SsoProviderType == (int)SsoProviderType.Saml2),
+				EncryptedDepartmentToken = Uri.EscapeDataString(encryptedToken),
+				ScimBaseUrl = $"{apiBase}{Config.SsoConfig.ScimBasePath}",
+				ApiBaseUrl = apiBase,
+				SsoDiscoveryUrl = $"{apiBase}{Config.SsoConfig.SsoDiscoveryPath}?departmentToken={Uri.EscapeDataString(encryptedToken)}"
+			};
+
+			return View(model);
+		}
+
+		// -- Create SSO config ------------------------------------------------
+
+		[HttpGet]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SsoNew(string providerType, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var apiBase = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+			var configId = Guid.NewGuid().ToString();
+			var plainToken = $"{department.DepartmentId}:{department.Code}";
+
+			var model = new SsoConfigEditView
+			{
+				IsNew = true,
+				DepartmentSsoConfigId = configId,
+				ProviderType = providerType ?? "oidc",
+				EntityId = string.Equals(providerType, "saml2", StringComparison.OrdinalIgnoreCase)
+					? $"{apiBase}{Config.SsoConfig.SamlEntityIdBasePath}{configId}"
+					: null,
+				IsEnabled = true,
+				AllowLocalLogin = true,
+				ProviderTypes = BuildProviderTypeList(providerType ?? "oidc"),
+				RankList = await BuildRankListAsync(null),
+				AcsUrl = $"{apiBase}{Config.SsoConfig.SamlAcsPath}?departmentToken={Uri.EscapeDataString(_encryptionService.Encrypt(plainToken))}",
+				ApiBaseUrl = apiBase,
+				OidcBrokerRedirectUri = OidcBrokerRedirectUri(apiBase)
+			};
+
+			return View("SsoEdit", model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SsoNew(SsoConfigEditView model, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			if (!ModelState.IsValid)
+			{
+				await PopulateSsoEditViewContextAsync(model);
+				return View("SsoEdit", model);
+			}
+
+			if (!System.Enum.TryParse<SsoProviderType>(model.ProviderType, ignoreCase: true, out var providerType) || !System.Enum.IsDefined(providerType))
+			{
+				ModelState.AddModelError("ProviderType", _secLocalizer["SsoErrorInvalidProviderType"].Value);
+				await PopulateSsoEditViewContextAsync(model);
+				return View("SsoEdit", model);
+			}
+
+			ValidateSsoProviderConfiguration(model, providerType, hasStoredIdpCertificate: false);
+			if (!ModelState.IsValid)
+			{
+				await PopulateSsoEditViewContextAsync(model);
+				return View("SsoEdit", model);
+			}
+
+			var existing = await _ssoService.GetSsoConfigForDepartmentAsync(DepartmentId, providerType, cancellationToken);
+			if (existing != null)
+			{
+				ModelState.AddModelError("", string.Format(_secLocalizer["SsoErrorConfigAlreadyExists"].Value, model.ProviderType.ToUpperInvariant()));
+				await PopulateSsoEditViewContextAsync(model);
+				return View("SsoEdit", model);
+			}
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var configId = Guid.TryParse(model.DepartmentSsoConfigId, out var parsedConfigId)
+				? parsedConfigId.ToString()
+				: Guid.NewGuid().ToString();
+			var apiBase = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+			var encryptedDepartmentToken = _encryptionService.Encrypt($"{department.DepartmentId}:{department.Code}");
+			var config = new DepartmentSsoConfig
+			{
+				DepartmentSsoConfigId = configId,
+				DepartmentId = DepartmentId,
+				SsoProviderType = (int)providerType,
+				IsEnabled = model.IsEnabled,
+				ClientId = model.ClientId,
+				EncryptedClientSecret = model.ClientSecret,
+				Authority = model.Authority,
+				MetadataUrl = model.MetadataUrl,
+				EntityId = providerType == SsoProviderType.Saml2 && string.IsNullOrWhiteSpace(model.EntityId)
+					? $"{apiBase}{Config.SsoConfig.SamlEntityIdBasePath}{configId}"
+					: model.EntityId,
+				AssertionConsumerServiceUrl = providerType == SsoProviderType.Saml2 && string.IsNullOrWhiteSpace(model.AssertionConsumerServiceUrl)
+					? $"{apiBase}{Config.SsoConfig.SamlAcsPath}?departmentToken={Uri.EscapeDataString(encryptedDepartmentToken)}"
+					: model.AssertionConsumerServiceUrl,
+				IdpSsoUrl = model.IdpSsoUrl,
+				EncryptedIdpCertificate = model.IdpCertificate,
+				EncryptedSigningCertificate = model.SigningCertificate,
+				AttributeMappingJson = model.AttributeMappingJson,
+				AllowLocalLogin = model.AllowLocalLogin,
+				AutoProvisionUsers = model.AutoProvisionUsers,
+				DefaultRankId = model.DefaultRankId,
+				ScimEnabled = model.ScimEnabled,
+				CreatedByUserId = UserId,
+				CreatedOn = DateTime.UtcNow
+			};
+
+			await _ssoService.SaveSsoConfigAsync(config, department.Code, cancellationToken);
+			TempData["SsoSuccess"] = string.Format(_secLocalizer["SsoConfigCreatedSuccess"].Value, model.ProviderType.ToUpperInvariant());
+			return RedirectToAction("Sso");
+		}
+
+		// -- Edit SSO config --------------------------------------------------
+
+		[HttpGet]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SsoEdit(string id, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var config = configs?.FirstOrDefault(c => c.DepartmentSsoConfigId == id);
+			if (config == null)
+				return NotFound();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var apiBase = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+
+			var model = new SsoConfigEditView
+			{
+				IsNew = false,
+				DepartmentSsoConfigId = config.DepartmentSsoConfigId,
+				ProviderType = ((SsoProviderType)config.SsoProviderType).ToString().ToLowerInvariant(),
+				IsEnabled = config.IsEnabled,
+				ClientId = config.ClientId,
+				Authority = config.Authority,
+				MetadataUrl = config.MetadataUrl,
+				EntityId = config.EntityId,
+				AssertionConsumerServiceUrl = config.AssertionConsumerServiceUrl,
+				IdpSsoUrl = config.IdpSsoUrl,
+				AttributeMappingJson = config.AttributeMappingJson,
+				AllowLocalLogin = config.AllowLocalLogin,
+				AutoProvisionUsers = config.AutoProvisionUsers,
+				DefaultRankId = config.DefaultRankId,
+				ScimEnabled = config.ScimEnabled,
+				HasClientSecret = !string.IsNullOrWhiteSpace(config.EncryptedClientSecret),
+				HasIdpCertificate = !string.IsNullOrWhiteSpace(config.EncryptedIdpCertificate),
+				HasSigningCertificate = !string.IsNullOrWhiteSpace(config.EncryptedSigningCertificate),
+				ProviderTypes = BuildProviderTypeList(((SsoProviderType)config.SsoProviderType).ToString().ToLowerInvariant()),
+				RankList = await BuildRankListAsync(config.DefaultRankId),
+				AcsUrl = $"{apiBase}{Config.SsoConfig.SamlAcsPath}?departmentToken={Uri.EscapeDataString(_encryptionService.Encrypt($"{department.DepartmentId}:{department.Code}"))}",
+				ApiBaseUrl = apiBase,
+				OidcBrokerRedirectUri = OidcBrokerRedirectUri(apiBase)
+			};
+
+			return View("SsoEdit", model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SsoEdit(SsoConfigEditView model, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			if (!ModelState.IsValid)
+			{
+				await PopulateSsoEditViewContextAsync(model);
+				return View("SsoEdit", model);
+			}
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var config = configs?.FirstOrDefault(c => c.DepartmentSsoConfigId == model.DepartmentSsoConfigId);
+			if (config == null)
+				return NotFound();
+
+			var providerType = (SsoProviderType)config.SsoProviderType;
+			ValidateSsoProviderConfiguration(model, providerType, !string.IsNullOrWhiteSpace(config.EncryptedIdpCertificate));
+			if (!ModelState.IsValid)
+			{
+				model.HasClientSecret = !string.IsNullOrWhiteSpace(config.EncryptedClientSecret);
+				model.HasIdpCertificate = !string.IsNullOrWhiteSpace(config.EncryptedIdpCertificate);
+				model.HasSigningCertificate = !string.IsNullOrWhiteSpace(config.EncryptedSigningCertificate);
+				await PopulateSsoEditViewContextAsync(model);
+				return View("SsoEdit", model);
+			}
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			config.IsEnabled = model.IsEnabled;
+			config.ClientId = model.ClientId ?? config.ClientId;
+			config.Authority = model.Authority ?? config.Authority;
+			config.MetadataUrl = model.MetadataUrl ?? config.MetadataUrl;
+			config.EntityId = model.EntityId ?? config.EntityId;
+			config.AssertionConsumerServiceUrl = model.AssertionConsumerServiceUrl ?? config.AssertionConsumerServiceUrl;
+			config.IdpSsoUrl = model.IdpSsoUrl ?? config.IdpSsoUrl;
+			config.AttributeMappingJson = model.AttributeMappingJson ?? config.AttributeMappingJson;
+			config.AllowLocalLogin = model.AllowLocalLogin;
+			config.AutoProvisionUsers = model.AutoProvisionUsers;
+			config.DefaultRankId = model.DefaultRankId ?? config.DefaultRankId;
+			config.ScimEnabled = model.ScimEnabled;
+			config.UpdatedByUserId = UserId;
+
+			// Only overwrite secrets when a new plaintext value is supplied
+			config.EncryptedClientSecret = !string.IsNullOrWhiteSpace(model.ClientSecret) ? model.ClientSecret : null;
+			config.EncryptedIdpCertificate = !string.IsNullOrWhiteSpace(model.IdpCertificate) ? model.IdpCertificate : null;
+			config.EncryptedSigningCertificate = !string.IsNullOrWhiteSpace(model.SigningCertificate) ? model.SigningCertificate : null;
+
+			await _ssoService.SaveSsoConfigAsync(config, department.Code, cancellationToken);
+			TempData["SsoSuccess"] = _secLocalizer["SsoConfigUpdatedSuccess"].Value;
+			return RedirectToAction("Sso");
+		}
+
+		// -- Delete SSO config ------------------------------------------------
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SsoDelete(string id, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var config = configs?.FirstOrDefault(c => c.DepartmentSsoConfigId == id);
+			if (config == null)
+				return NotFound();
+
+			var providerType = (SsoProviderType)config.SsoProviderType;
+			await _ssoService.DeleteSsoConfigAsync(DepartmentId, providerType, cancellationToken);
+
+			TempData["SsoSuccess"] = string.Format(_secLocalizer["SsoConfigDeletedSuccess"].Value, providerType.ToString().ToUpperInvariant());
+			return RedirectToAction("Sso");
+		}
+
+		// -- Inline SCIM token generation (from SSO index page) ---------------
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> GenerateScimTokenFromSso(string id, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var config = configs?.FirstOrDefault(c => c.DepartmentSsoConfigId == id);
+			if (config == null)
+				return NotFound();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			var tokenBytes = new byte[Config.SsoConfig.ScimBearerTokenByteLength];
+			System.Security.Cryptography.RandomNumberGenerator.Fill(tokenBytes);
+			var newToken = Convert.ToBase64String(tokenBytes);
+
+			var hadExistingToken = !string.IsNullOrWhiteSpace(config.EncryptedScimBearerToken);
+
+			config.EncryptedScimBearerToken = newToken;
+			config.ScimEnabled = true;
+			config.UpdatedByUserId = UserId;
+			config.EncryptedClientSecret = null;
+			config.EncryptedIdpCertificate = null;
+			config.EncryptedSigningCertificate = null;
+
+			await _ssoService.SaveSsoConfigAsync(config, department.Code, cancellationToken);
+
+			var scimTokenAuditEvent = new AuditEvent();
+			scimTokenAuditEvent.DepartmentId = DepartmentId;
+			scimTokenAuditEvent.UserId = UserId;
+			scimTokenAuditEvent.Type = hadExistingToken ? AuditLogTypes.ScimBearerTokenRotated : AuditLogTypes.ScimBearerTokenProvisioned;
+			scimTokenAuditEvent.Successful = true;
+			scimTokenAuditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+			scimTokenAuditEvent.ServerName = Environment.MachineName;
+			scimTokenAuditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+			scimTokenAuditEvent.After = System.Text.Json.JsonSerializer.Serialize(new
+			{
+				DepartmentSsoConfigId = id,
+				DepartmentId,
+				DepartmentCode = department.Code,
+				Action = hadExistingToken ? "ScimBearerTokenRotated" : "ScimBearerTokenProvisioned"
+			});
+			_eventAggregator.SendMessage<AuditEvent>(scimTokenAuditEvent);
+
+			// Reload all configs so the page is fully up-to-date
+			configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var configList = configs?.ToList() ?? new System.Collections.Generic.List<DepartmentSsoConfig>();
+
+			var plainToken = $"{department.DepartmentId}:{department.Code}";
+			var encryptedToken = _encryptionService.Encrypt(plainToken);
+			var apiBase = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+
+			var model = new SsoIndexView
+			{
+				IsAdmin = true,
+				DepartmentId = department.DepartmentId,
+				NewScimBearerToken = newToken,
+				NewScimConfigId = id,
+				Configs = configList.Select(c => new SsoConfigRowView
+				{
+					DepartmentSsoConfigId = c.DepartmentSsoConfigId,
+					ProviderType = ((SsoProviderType)c.SsoProviderType).ToString().ToLowerInvariant(),
+					IsEnabled = c.IsEnabled,
+					Identifier = c.SsoProviderType == (int)SsoProviderType.Oidc ? c.ClientId : c.EntityId,
+					EndpointUrl = c.SsoProviderType == (int)SsoProviderType.Oidc ? c.Authority : c.MetadataUrl,
+					AllowLocalLogin = c.AllowLocalLogin,
+					AutoProvisionUsers = c.AutoProvisionUsers,
+					ScimEnabled = c.ScimEnabled,
+					HasScimBearerToken = !string.IsNullOrWhiteSpace(c.EncryptedScimBearerToken),
+					CreatedOn = c.CreatedOn
+				}).ToList(),
+				HasOidcConfig = configList.Any(c => c.SsoProviderType == (int)SsoProviderType.Oidc),
+				HasSamlConfig = configList.Any(c => c.SsoProviderType == (int)SsoProviderType.Saml2),
+				EncryptedDepartmentToken = Uri.EscapeDataString(encryptedToken),
+				ScimBaseUrl = $"{apiBase}{Config.SsoConfig.ScimBasePath}",
+				ApiBaseUrl = apiBase,
+				SsoDiscoveryUrl = $"{apiBase}{Config.SsoConfig.SsoDiscoveryPath}?departmentToken={Uri.EscapeDataString(encryptedToken)}"
+			};
+
+			return View("Sso", model);
+		}
+
+		// -- SCIM setup -------------------------------------------------------
+
+		[HttpGet]
+		public async Task<IActionResult> ScimSetup(string id, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var config = configs?.FirstOrDefault(c => c.DepartmentSsoConfigId == id);
+			if (config == null)
+				return NotFound();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var encryptedToken = _encryptionService.Encrypt($"{department.DepartmentId}:{department.Code}");
+
+			var model = new ScimSetupView
+			{
+				DepartmentSsoConfigId = config.DepartmentSsoConfigId,
+				ProviderType = ((SsoProviderType)config.SsoProviderType).ToString().ToLowerInvariant(),
+				ScimEnabled = config.ScimEnabled,
+				HasScimBearerToken = !string.IsNullOrWhiteSpace(config.EncryptedScimBearerToken),
+				ScimBaseUrl = $"{Config.SystemBehaviorConfig.ResgridApiBaseUrl}{Config.SsoConfig.ScimBasePath}",
+				EncryptedDepartmentToken = Uri.EscapeDataString(encryptedToken),
+				DepartmentId = department.DepartmentId
+			};
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> RotateScimToken(string id, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var config = configs?.FirstOrDefault(c => c.DepartmentSsoConfigId == id);
+			if (config == null)
+				return NotFound();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			// Generate a cryptographically random bearer token using the configured byte length
+			var tokenBytes = new byte[Config.SsoConfig.ScimBearerTokenByteLength];
+			System.Security.Cryptography.RandomNumberGenerator.Fill(tokenBytes);
+			var newToken = Convert.ToBase64String(tokenBytes);
+
+			config.EncryptedScimBearerToken = newToken; // SaveSsoConfigAsync encrypts it
+			config.ScimEnabled = true;
+			config.UpdatedByUserId = UserId;
+			// Null out other secrets so they are not overwritten
+			config.EncryptedClientSecret = null;
+			config.EncryptedIdpCertificate = null;
+			config.EncryptedSigningCertificate = null;
+
+			await _ssoService.SaveSsoConfigAsync(config, department.Code, cancellationToken);
+
+			var encryptedToken = _encryptionService.Encrypt($"{department.DepartmentId}:{department.Code}");
+
+			var model = new ScimSetupView
+			{
+				DepartmentSsoConfigId = config.DepartmentSsoConfigId,
+				ProviderType = ((SsoProviderType)config.SsoProviderType).ToString().ToLowerInvariant(),
+				ScimEnabled = true,
+				HasScimBearerToken = true,
+				NewScimBearerToken = newToken, // one-time plaintext exposure
+				ScimBaseUrl = $"{Config.SystemBehaviorConfig.ResgridApiBaseUrl}{Config.SsoConfig.ScimBasePath}",
+				EncryptedDepartmentToken = Uri.EscapeDataString(encryptedToken),
+				DepartmentId = department.DepartmentId
+			};
+
+			return View("ScimSetup", model);
+		}
+
+		// -- Security policy --------------------------------------------------
+
+		[HttpGet]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SecurityPolicy(CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var policy = await _ssoService.GetSecurityPolicyForDepartmentAsync(DepartmentId, cancellationToken);
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var hasActiveConfig = configs?.Any(c => c.IsEnabled) ?? false;
+
+			var model = new SecurityPolicyEditView
+			{
+				HasActiveSsoConfig = hasActiveConfig,
+				DataClassificationLevels = BuildDataClassificationList(policy?.DataClassificationLevel ?? 0)
+			};
+
+			if (policy != null)
+			{
+				model.DepartmentSecurityPolicyId = policy.DepartmentSecurityPolicyId;
+				model.RequireMfa = policy.RequireMfa;
+				model.RequireSso = policy.RequireSso;
+				model.SessionTimeoutMinutes = policy.SessionTimeoutMinutes;
+				model.MaxConcurrentSessions = policy.MaxConcurrentSessions;
+				model.AllowedIpRanges = policy.AllowedIpRanges;
+				model.PasswordExpirationDays = policy.PasswordExpirationDays;
+				model.MinPasswordLength = policy.MinPasswordLength >= 8 ? policy.MinPasswordLength : 8;
+				model.DataClassificationLevel = policy.DataClassificationLevel;
+			}
+			else
+			{
+				model.MinPasswordLength = 8;
+			}
+
+			CopyMethodSwitches(policy ?? new DepartmentSecurityPolicy(), model);
+			await DescribeMethodSwitchesAsync(model);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> SecurityPolicy(SecurityPolicyEditView model, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var configs = await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken);
+			var hasActiveConfig = configs?.Any(c => c.IsEnabled) ?? false;
+			model.HasActiveSsoConfig = hasActiveConfig;
+			await DescribeMethodSwitchesAsync(model);
+			model.DataClassificationLevels = BuildDataClassificationList(model.DataClassificationLevel);
+
+			if (!ModelState.IsValid)
+				return View(model);
+
+			if (model.RequireSso && !hasActiveConfig)
+			{
+				ModelState.AddModelError("RequireSso", _secLocalizer["SecurityPolicyCannotEnableRequireSso"].Value);
+				return View(model);
+			}
+
+			// Enforce system minimum — department policies cannot be weaker than 8 chars.
+			if (model.MinPasswordLength > 0 && model.MinPasswordLength < 8)
+			{
+				ModelState.AddModelError("MinPasswordLength", _secLocalizer["PwdMinLengthTooLow"].Value);
+				return View(model);
+			}
+
+			var existing = await _ssoService.GetSecurityPolicyForDepartmentAsync(DepartmentId, cancellationToken);
+			var policy = existing ?? new DepartmentSecurityPolicy
+			{
+				DepartmentId = DepartmentId,
+				CreatedOn = DateTime.UtcNow
+			};
+			var before = DepartmentSecurityPolicyDecisions.SnapshotMfaRules(policy);
+
+			policy.RequireMfa = model.RequireMfa;
+			policy.RequireSso = model.RequireSso;
+			policy.SessionTimeoutMinutes = model.SessionTimeoutMinutes;
+			policy.MaxConcurrentSessions = model.MaxConcurrentSessions;
+			policy.AllowedIpRanges = model.AllowedIpRanges;
+			policy.PasswordExpirationDays = model.PasswordExpirationDays;
+			// Ensure stored value is never below the system minimum of 8.
+			policy.MinPasswordLength = model.MinPasswordLength >= 8 ? model.MinPasswordLength : 8;
+			// Complexity is always system-enforced (digit + uppercase + lowercase); do not store a weaker override.
+			policy.RequirePasswordComplexity = true;
+			policy.DataClassificationLevel = model.DataClassificationLevel;
+
+			// Which second factors are accepted is the managing member's decision (passkey plan section 10.1). Other
+			// administrators see the switches read-only, and whatever their form posts for them is ignored: a disabled
+			// checkbox still posts its hidden "false", which must never switch a method off.
+			if (model.CanChangeMethodSwitches)
+			{
+				policy.AllowPasskeysForLoginMfa = model.AllowPasskeysForLoginMfa;
+				policy.AllowPasskeysForAdp = model.AllowPasskeysForAdp;
+				policy.AllowFederatedMfaForLoginMfa = model.AllowFederatedMfaForLoginMfa;
+				policy.AllowFederatedMfaForAdp = model.AllowFederatedMfaForAdp;
+				policy.AllowResponderApproval = model.AllowResponderApproval;
+				policy.AcceptRecentLoginMfaForAdp = model.AcceptRecentLoginMfaForAdp;
+				policy.AcceptRecentUnlockMfaForAdp = model.AcceptRecentUnlockMfaForAdp;
+
+				// The shared-device policy is the managing member's too (plan section 10.5). Stricter values reach running
+				// sessions at their next request; a new app requirement needs the deployment to offer shared mode.
+				policy.SharedIdleLockMinutes = model.SharedIdleLockMinutes;
+				policy.SharedShiftHours = model.SharedShiftHours;
+				policy.SharedModeRequiredApps = model.SharedModeRequiredApps;
+				if (policy.SharedIdleLockMinutes < 1 || policy.SharedIdleLockMinutes > SharedSessionRules.MaxIdleLockMinutes)
+				{
+					ModelState.AddModelError("SharedIdleLockMinutes", string.Format(_secLocalizer["SecurityPolicySharedIdleOutOfRange"].Value,
+						SharedSessionRules.MaxIdleLockMinutes));
+					return View(model);
+				}
+				if (policy.SharedShiftHours < 1 || policy.SharedShiftHours > SharedSessionRules.MaxShiftHours)
+				{
+					ModelState.AddModelError("SharedShiftHours", string.Format(_secLocalizer["SecurityPolicySharedShiftOutOfRange"].Value,
+						SharedSessionRules.MaxShiftHours));
+					return View(model);
+				}
+				if (!_passkeyGates.SharedDeviceModeEnabled && DepartmentSecurityPolicyDecisions.AddsSharedRequirement(before, policy))
+				{
+					ModelState.AddModelError(string.Empty, _secLocalizer["SecurityPolicySharedRequirementUnavailable"].Value);
+					return View(model);
+				}
+			}
+
+			// Turning provider step-up on needs a mapping that passed its test, and cannot be authorized by provider step-up
+			// itself: the 5-minute proof above must be a Resgrid factor (plan section 7.8).
+			if (DepartmentSecurityPolicyDecisions.EnablesFederatedMfa(before, policy))
+			{
+				if (await _ssoService.GetTestedFederatedMfaConfigAsync(DepartmentId, cancellationToken) == null)
+				{
+					ModelState.AddModelError(string.Empty, _secLocalizer["SecurityPolicyFederatedMappingUntested"].Value);
+					return View(model);
+				}
+
+				var user = await _userManager.GetUserAsync(User);
+				if (await StepUpEvidence.GetLatestSecondFactorUtcAsync(_mfaEvidence, user, HttpContext, _mfaPolicy, DepartmentId,
+						Resgrid.Model.Security.MfaMethodScope.SecurityChange, cancellationToken, excludeFederated: true) == null)
+				{
+					ModelState.AddModelError(string.Empty, _secLocalizer["SecurityPolicyFederatedNeedsResgridMfa"].Value);
+					return View(model);
+				}
+			}
+
+			await _ssoService.SaveSecurityPolicyAsync(policy, UserId, cancellationToken);
+			TempData["PolicySuccess"] = _secLocalizer["SecurityPolicySaveSuccess"].Value;
+			return RedirectToAction("SecurityPolicy");
+		}
+
+		// -- Provider step-up mapping (passkey plan section 7.8) --------------
+
+		[HttpGet]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> FederatedMfa(CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			var config = await ActiveSsoConfigAsync(cancellationToken);
+			var model = new FederatedMfaEditView();
+			model.CopyFrom(Resgrid.Model.Security.FederatedMfaMapping.Parse(config?.FederatedMfaMappingJson));
+			await DescribeFederatedMfaAsync(model, config);
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// Saves, or with <paramref name="command"/> "remove" removes, the active SSO configuration's provider step-up mapping.
+		/// Managing member only. Every change advances the mapping version, so the new mapping counts only after its own test,
+		/// and provider step-up cannot approve a change to what counts as provider step-up.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[RequiresRecentTwoFactor(RequireForOperation = true, VerificationWindowMinutes = 5, MethodScope = Resgrid.Model.Security.MfaMethodScope.SecurityChange)]
+		public async Task<IActionResult> FederatedMfa(FederatedMfaEditView model, string command, CancellationToken cancellationToken)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return RedirectToAction("Index");
+
+			model ??= new FederatedMfaEditView();
+			var config = await ActiveSsoConfigAsync(cancellationToken);
+			await DescribeFederatedMfaAsync(model, config);
+			if (config == null)
+				return View(model);
+
+			if (!model.CanChange)
+			{
+				ModelState.AddModelError(string.Empty, _secLocalizer["SecurityPolicyMfaMethodsManagingMemberOnly"].Value);
+				return View(model);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+			if (await StepUpEvidence.GetLatestSecondFactorUtcAsync(_mfaEvidence, user, HttpContext, _mfaPolicy, DepartmentId,
+					Resgrid.Model.Security.MfaMethodScope.SecurityChange, cancellationToken, excludeFederated: true) == null)
+			{
+				ModelState.AddModelError(string.Empty, _secLocalizer["FederatedMfaNeedsResgridMfa"].Value);
+				return View(model);
+			}
+
+			var removing = string.Equals(command, "remove", StringComparison.Ordinal);
+			string mappingJson = null;
+			if (!removing)
+			{
+				var mapping = model.ToMapping();
+				var problem = Resgrid.Model.Security.FederatedMfaMapping.Validate(mapping, (SsoProviderType)config.SsoProviderType);
+				if (problem != null)
+				{
+					ModelState.AddModelError(string.Empty, string.Format(_secLocalizer["FederatedMfaInvalid"].Value, problem));
+					return View(model);
+				}
+				mappingJson = mapping.Serialize();
+			}
+
+			if (!string.Equals(config.FederatedMfaMappingJson ?? string.Empty, mappingJson ?? string.Empty, StringComparison.Ordinal))
+			{
+				var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+				config.FederatedMfaMappingJson = mappingJson;
+				config.UpdatedByUserId = UserId;
+				var saved = await _ssoService.SaveSsoConfigAsync(config, department.Code, cancellationToken);
+
+				await _systemAuditsService.SaveSystemAuditAsync(new SystemAudit
+				{
+					System = (int)SystemAuditSystems.Website,
+					Type = (int)SystemAuditTypes.FederatedMfaMappingChanged,
+					UserId = UserId,
+					Username = UserName,
+					Successful = true,
+					IpAddress = IpAddressHelper.GetRequestIP(Request, true),
+					ServerName = Environment.MachineName,
+					Data = removing
+						? $"Provider step-up mapping for SSO configuration {config.DepartmentSsoConfigId} removed (now version {saved?.FederatedMfaMappingVersion})."
+						: $"Provider step-up mapping for SSO configuration {config.DepartmentSsoConfigId} saved as version {saved?.FederatedMfaMappingVersion}; " +
+						  "it counts once it passes its test."
+				}, cancellationToken);
+			}
+
+			TempData["FederatedMfaSuccess"] = _secLocalizer[removing ? "FederatedMfaRemoved" : "FederatedMfaSaved"].Value;
+			return RedirectToAction("FederatedMfa");
+		}
+
+		// -- Private helpers --------------------------------------------------
+
+		private async Task<DepartmentSsoConfig> ActiveSsoConfigAsync(CancellationToken cancellationToken) =>
+			(await _ssoService.GetSsoConfigsForDepartmentAsync(DepartmentId, cancellationToken))?.FirstOrDefault(c => c.IsEnabled);
+
+		/// <summary>The stored mapping's state and who may change it, always from the server.</summary>
+		private async Task DescribeFederatedMfaAsync(FederatedMfaEditView model, DepartmentSsoConfig config)
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.CanChange = department != null && department.ManagingUserId == UserId;
+			model.ProviderStepUpAvailable = _passkeyGates.ProviderStepUpEnabled;
+			model.HasActiveSsoConfig = config != null;
+			model.IsOidc = config?.SsoProviderType == (int)SsoProviderType.Oidc;
+			model.HasMapping = !string.IsNullOrWhiteSpace(config?.FederatedMfaMappingJson);
+			model.MappingVersion = config?.FederatedMfaMappingVersion ?? 0;
+			model.Effective = Resgrid.Model.Security.FederatedMfaMapping.IsTested(config);
+			model.TestedOnUtc = model.Effective ? config.FederatedMfaTestedOnUtc : null;
+		}
+
+		/// <summary>Who may change the method switches, and which methods this deployment offers yet (never from the client).</summary>
+		private async Task DescribeMethodSwitchesAsync(SecurityPolicyEditView model)
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.CanChangeMethodSwitches = department != null && department.ManagingUserId == UserId;
+			model.PasskeysAvailable = _passkeyGates.LoginAcceptanceEnabled || _passkeyGates.AdpAcceptanceEnabled;
+			model.ResponderApprovalAvailable = _passkeyGates.ResponderApprovalEnabled;
+			model.ProviderStepUpAvailable = _passkeyGates.ProviderStepUpEnabled;
+			model.SharedDeviceModeAvailable = _passkeyGates.SharedDeviceModeEnabled;
+			model.MaxSharedIdleLockMinutes = SharedSessionRules.MaxIdleLockMinutes;
+			model.MaxSharedShiftHours = SharedSessionRules.MaxShiftHours;
+		}
+
+		private static void CopyMethodSwitches(DepartmentSecurityPolicy policy, SecurityPolicyEditView model)
+		{
+			model.AllowPasskeysForLoginMfa = policy.AllowPasskeysForLoginMfa;
+			model.AllowPasskeysForAdp = policy.AllowPasskeysForAdp;
+			model.AllowFederatedMfaForLoginMfa = policy.AllowFederatedMfaForLoginMfa;
+			model.AllowFederatedMfaForAdp = policy.AllowFederatedMfaForAdp;
+			model.AllowResponderApproval = policy.AllowResponderApproval;
+			model.AcceptRecentLoginMfaForAdp = policy.AcceptRecentLoginMfaForAdp;
+			model.AcceptRecentUnlockMfaForAdp = policy.AcceptRecentUnlockMfaForAdp;
+			model.SharedIdleLockMinutes = policy.SharedIdleLockMinutes;
+			model.SharedShiftHours = policy.SharedShiftHours;
+			var required = (SharedModeApps)policy.SharedModeRequiredApps;
+			model.RequireSharedModeForUnit = required.HasFlag(SharedModeApps.Unit);
+			model.RequireSharedModeForCommand = required.HasFlag(SharedModeApps.Command);
+			model.RequireSharedModeForDispatch = required.HasFlag(SharedModeApps.Dispatch);
+		}
+
+		private SelectList BuildDataClassificationList(int selected) =>
+			new SelectList(new[]
+			{
+				new { Id = 0, Name = _secLocalizer["SecurityPolicyDataClassUnclassified"].Value },
+				new { Id = 1, Name = _secLocalizer["SecurityPolicyDataClassCui"].Value },
+				new { Id = 2, Name = _secLocalizer["SecurityPolicyDataClassConfidential"].Value }
+			}, "Id", "Name", selected);
+
+		private SelectList BuildProviderTypeList(string selected) =>
+			new SelectList(new[]
+			{
+				new { Id = "oidc", Name = _secLocalizer["SsoEditProviderTypeOidcOption"].Value },
+				new { Id = "saml2", Name = _secLocalizer["SsoEditProviderTypeSamlOption"].Value }
+			}, "Id", "Name", selected);
+
+		private void ValidateSsoProviderConfiguration(SsoConfigEditView model, SsoProviderType providerType, bool hasStoredIdpCertificate)
+		{
+			if (providerType == SsoProviderType.Oidc)
+			{
+				if (string.IsNullOrWhiteSpace(model.ClientId))
+					ModelState.AddModelError("ClientId", _secLocalizer["SsoErrorOidcClientIdRequired"].Value);
+
+				if (!Uri.TryCreate(model.Authority, UriKind.Absolute, out var authority) || authority.Scheme != Uri.UriSchemeHttps)
+					ModelState.AddModelError("Authority", _secLocalizer["SsoErrorOidcAuthorityInvalid"].Value);
+
+				return;
+			}
+
+			if (!hasStoredIdpCertificate && string.IsNullOrWhiteSpace(model.IdpCertificate))
+				ModelState.AddModelError("IdpCertificate", _secLocalizer["SsoErrorSamlCertificateRequired"].Value);
+
+			if (!string.IsNullOrWhiteSpace(model.IdpSsoUrl) &&
+				(!Uri.TryCreate(model.IdpSsoUrl, UriKind.Absolute, out var idpSsoUrl) || idpSsoUrl.Scheme != Uri.UriSchemeHttps))
+				ModelState.AddModelError("IdpSsoUrl", _secLocalizer["SsoErrorIdpSsoUrlInvalid"].Value);
+		}
+
+		/// <summary>The redirect URI a department registers with its OIDC IdP for brokered sign-in (plan section 7.7.2 item 7).</summary>
+		private static string OidcBrokerRedirectUri(string apiBase) => $"{apiBase?.TrimEnd('/')}{Config.SsoConfig.OidcCallbackPath}";
+
+		private async Task PopulateSsoEditViewContextAsync(SsoConfigEditView model)
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var apiBase = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+			model.ProviderTypes = BuildProviderTypeList(model.ProviderType);
+			model.RankList = await BuildRankListAsync(model.DefaultRankId);
+			model.ApiBaseUrl = apiBase;
+			model.OidcBrokerRedirectUri = OidcBrokerRedirectUri(apiBase);
+			model.AcsUrl = $"{apiBase}{Config.SsoConfig.SamlAcsPath}?departmentToken={Uri.EscapeDataString(_encryptionService.Encrypt($"{department.DepartmentId}:{department.Code}"))}";
+		}
+
+		private async Task<SelectList> BuildRankListAsync(int? selectedRankId)
+		{
+			// Ranks are not currently implemented as a standalone service � return empty with placeholder
+			await Task.CompletedTask;
+			return new SelectList(
+				new[] { new { Id = (int?)null, Name = _secLocalizer["SsoEditDefaultRankNone"].Value } },
+				"Id", "Name", selectedRankId);
+		}
+
+		#endregion SSO / SCIM Management
+	}
+}

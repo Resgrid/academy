@@ -1,0 +1,272 @@
+{
+  "Version": "2026.09.25.2",
+  "Areas": [
+    {
+      "Id": "automation",
+      "LabelKey": "Area.automation",
+      "PurposeKey": "AreaPurpose.automation",
+      "Order": 15,
+      "Archetypes": [],
+      "Tier": "Optional",
+      "Addon": null,
+      "Global": false,
+      "ValueKey": "AreaValue.automation",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "ModuleAdoption.automation",
+      "MinimumMinutes": 30,
+      "MaximumMinutes": 90,
+      "DocsPath": "/web-app/workflows/"
+    }
+  ],
+  "Settings": [],
+  "Capabilities": [
+    {
+      "Id": "workflows",
+      "AreaId": "automation",
+      "LabelKey": "Feature.workflows",
+      "PurposeKey": "FeaturePurpose.workflows",
+      "ValueKey": "AreaValue.automation",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "FeatureSetup.workflows",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workflows",
+        "Action": "Index"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [
+        "workflow-failures"
+      ],
+      "Setup": {
+        "EvidenceId": "workflowCount",
+        "Minimum": 1,
+        "RuleIds": [
+          "workflow-failures"
+        ],
+        "GuidanceKey": "SetupEvidence.workflows"
+      },
+      "Prominence": "Key",
+      "DocsPath": "/web-app/workflows/"
+    },
+    {
+      "Id": "user-defined-fields",
+      "AreaId": "automation",
+      "LabelKey": "Feature.user-defined-fields",
+      "PurposeKey": "FeaturePurpose.user-defined-fields",
+      "ValueKey": "FeatureValue.user-defined-fields",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "FeatureSetup.user-defined-fields",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "UserDefinedFields",
+        "Action": "Index"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Key",
+      "DocsPath": "/web-app/user-defined-fields/"
+    },
+    {
+      "Id": "api-mcp",
+      "AreaId": "automation",
+      "LabelKey": "Feature.api-mcp",
+      "PurposeKey": "FeaturePurpose.api-mcp",
+      "ValueKey": "FeatureValue.api-mcp",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "FeatureSetup.api-mcp",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Department",
+        "Action": "Settings"
+      },
+      "Requirements": [],
+      "SettingIds": [
+        "field.DepartmentSuppressStaffingInfo.EnableSupressStaffing",
+        "field.DepartmentSuppressStaffingInfo.StaffingLevelsToSupress",
+        "field.PersonnelListStatusOrder.StatusId",
+        "field.PersonnelListStatusOrder.Weight",
+        "field.PersonnelListStatusOrderSetting.Orders",
+        "setting.BigBoardHideUnavailable",
+        "setting.BigBoardMapCenterAddress",
+        "setting.BigBoardMapCenterGpsCoordinates",
+        "setting.BigBoardMapZoomLevel",
+        "setting.BigBoardPageRefresh",
+        "setting.CallsSortOrder",
+        "setting.DisabledAutoAvailable",
+        "setting.EnableModernNotifications",
+        "setting.ForceChatbotSecurityPin",
+        "setting.PersonnelListStatusSortOrder",
+        "setting.PersonnelSortOrder",
+        "setting.RequirePasswordResetViaEmail",
+        "setting.StaffingSuppressStaffingLevels",
+        "setting.TestEnabled",
+        "setting.UnitsSortOrder",
+        "setting.UpdateTimestamp",
+        "table.Department.ApiKey",
+        "table.Department.Code",
+        "table.Department.LinkCode",
+        "table.Department.ManagingUserId",
+        "table.Department.PublicApiKey",
+        "table.Department.SharedSecret",
+        "table.Department.ShowWelcome",
+        "table.Department.TimeZone",
+        "table.Department.Use24HourTime"
+      ],
+      "RuleIds": [
+        "password-recovery"
+      ],
+      "Prominence": "Key",
+      "DocsPath": "/api/information/"
+    },
+    {
+      "Id": "new-workflow",
+      "AreaId": "automation",
+      "LabelKey": "Feature.new-workflow",
+      "PurposeKey": "FeaturePurpose.new-workflow",
+      "ValueKey": "AreaValue.automation",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "ModuleAdoption.automation",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workflows",
+        "Action": "New"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/workflows/"
+    },
+    {
+      "Id": "workflow-runs",
+      "AreaId": "automation",
+      "LabelKey": "Feature.workflow-runs",
+      "PurposeKey": "FeaturePurpose.workflow-runs",
+      "ValueKey": "AreaValue.automation",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "ModuleAdoption.automation",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Workflows",
+        "Action": "Runs"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/workflows/"
+    },
+    {
+      "Id": "import-migration",
+      "AreaId": "automation",
+      "LabelKey": "Feature.import-migration",
+      "PurposeKey": "FeaturePurpose.import-migration",
+      "ValueKey": "FeatureValue.import-migration",
+      "ExampleKey": "AreaExample.automation",
+      "AdoptionKey": "ModuleAdoption.automation",
+      "ReleaseStatus": "available",
+      "Location": {
+        "Controller": "Department",
+        "Action": "SetupWizard"
+      },
+      "Requirements": [],
+      "SettingIds": [],
+      "RuleIds": [],
+      "Prominence": "Detail",
+      "DocsPath": "/web-app/help-setup/"
+    }
+  ],
+  "Rules": [
+    {
+      "Id": "workflow-failures",
+      "AreaId": "automation",
+      "Severity": "Warning",
+      "TitleKey": "Rule.workflow-failures",
+      "ExplanationKey": "RuleWhy.workflow-failures",
+      "NextActionKey": "RuleNext.workflow-failures",
+      "Location": {
+        "Controller": "Workflows",
+        "Action": "Index"
+      },
+      "AppliesWhen": [],
+      "FailsWhen": [
+        {
+          "EvidenceId": "failedWorkflowCount",
+          "Comparison": "Greater",
+          "Number": 0
+        }
+      ]
+    }
+  ],
+  "Packs": [],
+  "Articles": [
+    {
+      "Id": "workflows",
+      "Locale": "en",
+      "TitleKey": "Feature.workflows",
+      "Body": "Workflows Automations triggered by department events. Automate repeated administrative steps and connect Resgrid to the other systems you use. A workflow posts new calls to a team channel, and a custom field records the fire district on each call. Start with one workflow for a task you repeat, and review its runs.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "workflows",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "user-defined-fields",
+      "Locale": "en",
+      "TitleKey": "Feature.user-defined-fields",
+      "Body": "User-defined fields Custom fields on calls, personnel and other records. Collect the information the department actually needs with appropriate classification. A workflow posts new calls to a team channel, and a custom field records the fire district on each call. Add only the fields you must capture.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "user-defined-fields",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "api-mcp",
+      "Locale": "en",
+      "TitleKey": "Feature.api-mcp",
+      "Body": "API and MCP integrations API and MCP access for other systems. Connect approved systems without placing credentials in setup examples. A workflow posts new calls to a team channel, and a custom field records the fire district on each call. Create credentials for each integration and limit what they can access.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "api-mcp",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "new-workflow",
+      "Locale": "en",
+      "TitleKey": "Feature.new-workflow",
+      "Body": "New Workflow Create an automation workflow. Automate repeated administrative steps and connect Resgrid to the other systems you use. A workflow posts new calls to a team channel, and a custom field records the fire district on each call. Have the destination systems and credentials ready, and decide who owns each automation.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "new-workflow",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "workflow-runs",
+      "Locale": "en",
+      "TitleKey": "Feature.workflow-runs",
+      "Body": "Workflow Runs The history of workflow runs, including failures. Automate repeated administrative steps and connect Resgrid to the other systems you use. A workflow posts new calls to a team channel, and a custom field records the fire district on each call. Have the destination systems and credentials ready, and decide who owns each automation.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "workflow-runs",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    },
+    {
+      "Id": "import-migration",
+      "Locale": "en",
+      "TitleKey": "Feature.import-migration",
+      "Body": "Import and migration planning Plan moving your data from another system into Resgrid. Avoid duplicate resources and verify resulting configuration in Setup Report. A workflow posts new calls to a team channel, and a custom field records the fire district on each call. Have the destination systems and credentials ready, and decide who owns each automation.",
+      "SourcePath": "docs/admin-assist/settings-reference.md",
+      "Anchor": "import-migration",
+      "PackVersion": "2026.09.25.2",
+      "Owner": "Resgrid.Core",
+      "ReviewedOn": "2026-09-24T00:00:00Z"
+    }
+  ]
+}

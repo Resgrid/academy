@@ -1,0 +1,2514 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Events;
+using Resgrid.Model.Helpers;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Bus;
+using Resgrid.Providers.Claims;
+using Resgrid.Web.Areas.User.Models;
+using Resgrid.Web.Areas.User.Models.Personnel;
+using Resgrid.Web.Areas.User.Models.Reports.Personnel;
+using Resgrid.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
+using Resgrid.Model.Identity;
+using Resgrid.WebCore.Areas.User.Models.Personnel;
+using IdentityUser = Resgrid.Model.Identity.IdentityUser;
+using Resgrid.WebCore.Areas.User.Models;
+using System.Web;
+using Resgrid.Web.Attributes;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	public class PersonnelController : SecureBaseController
+	{
+		#region Private Members and Constructors
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUsersService _usersService;
+		private readonly ILimitsService _limitsService;
+		private readonly IActionLogsService _actionLogsService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IEmailService _emailService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IDeleteService _deleteService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly IUserStateService _userStateService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly IEmailMarketingProvider _emailMarketingProvider;
+		private readonly ICertificationService _certificationService;
+		private readonly ICustomStateService _customStateService;
+		private readonly IGeoService _geoService;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly ICallsService _callsService;
+		private readonly IGeoLocationProvider _geoLocationProvider;
+		private readonly IMappingService _mappingService;
+		private readonly IUserDefinedFieldsService _userDefinedFieldsService;
+		private readonly IUdfRenderingService _udfRenderingService;
+		private readonly IRecordsService _recordsService;
+		private readonly IDispatchScopeService _dispatchScopeService;
+		private readonly IStringLocalizer<Resgrid.Localization.Common> _localizer;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Certifications.Certifications> _certificationLocalizer;
+		private readonly IPhoneNumberProcesserProvider _phoneNumberProcesser;
+		private readonly IExternalIdentityLinkService _externalIdentityLinkService;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly IDepartmentMemberSensitiveDataService _memberSensitiveDataService;
+
+		public PersonnelController(IDepartmentsService departmentsService, IUsersService usersService, IActionLogsService actionLogsService,
+			IEmailService emailService, IUserProfileService userProfileService, IDeleteService deleteService, Model.Services.IAuthorizationService authorizationService,
+			ILimitsService limitsService, IPersonnelRolesService personnelRolesService, IDepartmentGroupsService departmentGroupsService, IUserStateService userStateService,
+			IEventAggregator eventAggregator, IEmailMarketingProvider emailMarketingProvider, ICertificationService certificationService, ICustomStateService customStateService,
+			IGeoService geoService, UserManager<IdentityUser> userManager, IDepartmentSettingsService departmentSettingsService, ICallsService callsService,
+			IGeoLocationProvider geoLocationProvider, IMappingService mappingService, IUserDefinedFieldsService userDefinedFieldsService, IUdfRenderingService udfRenderingService,
+			IStringLocalizer<Resgrid.Localization.Common> localizer, IPhoneNumberProcesserProvider phoneNumberProcesser,
+			IExternalIdentityLinkService externalIdentityLinkService, IProtectedReadService protectedReadService,
+			IDepartmentMemberSensitiveDataService memberSensitiveDataService, IRecordsService recordsService,
+			IDispatchScopeService dispatchScopeService,
+			IStringLocalizer<Resgrid.Localization.Areas.User.Certifications.Certifications> certificationLocalizer = null)
+		{
+			_dispatchScopeService = dispatchScopeService;
+			_certificationLocalizer = certificationLocalizer;
+			_departmentsService = departmentsService;
+			_usersService = usersService;
+			_actionLogsService = actionLogsService;
+			_emailService = emailService;
+			_userProfileService = userProfileService;
+			_deleteService = deleteService;
+			_authorizationService = authorizationService;
+			_limitsService = limitsService;
+			_personnelRolesService = personnelRolesService;
+			_departmentGroupsService = departmentGroupsService;
+			_userStateService = userStateService;
+			_eventAggregator = eventAggregator;
+			_emailMarketingProvider = emailMarketingProvider;
+			_certificationService = certificationService;
+			_customStateService = customStateService;
+			_geoService = geoService;
+			_userManager = userManager;
+			_departmentSettingsService = departmentSettingsService;
+			_callsService = callsService;
+			_geoLocationProvider = geoLocationProvider;
+			_mappingService = mappingService;
+			_userDefinedFieldsService = userDefinedFieldsService;
+			_udfRenderingService = udfRenderingService;
+			_recordsService = recordsService;
+			_localizer = localizer;
+			_phoneNumberProcesser = phoneNumberProcesser;
+			_externalIdentityLinkService = externalIdentityLinkService;
+			_protectedReadService = protectedReadService;
+			_memberSensitiveDataService = memberSensitiveDataService;
+		}
+		#endregion Private Members and Constructors
+
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> Index()
+		{
+			PersonnelModel model = new PersonnelModel();
+			model.LastActivityDates = new Dictionary<Guid, string>();
+			model.States = new Dictionary<Guid, string>();
+			model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId); //new Dictionary<Guid, DepartmentGroup>();
+
+			model.CanAddNewUser = await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId);
+			model.CanGroupAdminsAdd = await _authorizationService.CanGroupAdminsAddUsersAsync(DepartmentId);
+			model.RequirePasswordResetViaEmail = await _departmentSettingsService.GetRequirePasswordResetViaEmailAsync(DepartmentId);
+
+			var personnelStates = await _customStateService.GetActivePersonnelStateForDepartmentAsync(DepartmentId);
+			var personnelStaffing = await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+
+			if (personnelStates != null)
+			{
+				model.PersonnelCustomStatusesId = personnelStates.CustomStateId;
+				model.PersonnelStates = personnelStates.Details.ToList();
+			}
+			else
+				model.PersonnelStates = _customStateService.GetDefaultPersonStatuses();
+
+			if (personnelStaffing != null)
+			{
+				model.PersonnelCustomStaffingId = personnelStaffing.CustomStateId;
+				model.PersonnelStaffings = personnelStaffing.Details.ToList();
+			}
+			else
+				model.PersonnelStaffings = _customStateService.GetDefaultPersonStaffings();
+
+			List<PersonnelForListJson> personnelJson = new List<PersonnelForListJson>();
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedAsync(DepartmentId);
+			var departmentMembers = await _departmentsService.GetAllMembersForDepartmentUnlimitedAsync(DepartmentId);
+			List<ActionLog> actionLogs;
+
+			try
+			{
+				actionLogs = await _actionLogsService.GetLastActionLogsForDepartmentAsync(DepartmentId, includeHiddenAndDisabled: true);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, $"Failed to get the last action logs for the personnel list. DepartmentId: {DepartmentId}");
+				throw;
+			}
+
+			var staffings = await _userStateService.GetLatestStatesForDepartmentAsync(DepartmentId);
+			var canGroupAdminsDelete = await _authorizationService.CanGroupAdminsRemoveUsersAsync(DepartmentId);
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentIncDisabledDeletedAsync(DepartmentId);
+			var userGroupRoles = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, true, true, false);
+
+			var sortOrder = await _departmentSettingsService.GetDepartmentPersonnelSortOrderAsync(DepartmentId);
+
+			foreach (var user in users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(user.UserId, UserId, DepartmentId))
+					continue;
+
+				var person = new PersonnelForListJson();
+				person.UserId = user.UserId.ToString();
+
+				var member = departmentMembers.FirstOrDefault(x => x.UserId == user.UserId);
+				var externalState = await _externalIdentityLinkService.GetSsoManagementStateAsync(user.UserId);
+				person.IsSsoManaged = externalState.IsSsoManaged ||
+					(member != null && (!string.IsNullOrWhiteSpace(member.ExternalSsoId) || member.SsoLinkedOn.HasValue));
+
+				// Skip hidden/disabled users unless current user is dept admin or group admin of their group
+				if (member != null && ((member.IsDisabled.HasValue && member.IsDisabled.Value) || (member.IsHidden.HasValue && member.IsHidden.Value)))
+				{
+					if (!department.IsUserAnAdmin(UserId))
+					{
+						var userGroup = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+						if (userGroup == null || !userGroup.IsUserGroupAdmin(UserId))
+							continue;
+					}
+				}
+
+				var actionLog = actionLogs.FirstOrDefault(x => x.UserId == user.UserId);
+				var staffing = staffings.FirstOrDefault(x => x.UserId == user.UserId);
+
+				if (!profiles.ContainsKey(user.UserId))
+				{
+					person.Name = "Unknown User";
+				}
+				else
+				{
+					var userProfile = profiles[user.UserId];
+					person.Name = userProfile.FullName.AsFirstNameLastName;
+					person.FirstName = userProfile.FirstName;
+					person.LastName = userProfile.LastName;
+				}
+
+				if (ClaimsAuthorizationHelper.CanViewPII())
+					person.EmailAddress = user.Email;
+				else
+					person.EmailAddress = "";
+
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				if (group != null)
+				{
+					person.Group = group.Name;
+
+					if (department.IsUserAnAdmin(UserId) || (canGroupAdminsDelete && group.IsUserGroupAdmin(UserId) && !department.IsUserAnAdmin(user.UserId)))
+						person.CanRemoveUser = true;
+
+					if (group.IsUserGroupAdmin(UserId) || department.IsUserAnAdmin(UserId))
+						person.CanEditUser = true;
+
+					person.GroupId = group.DepartmentGroupId;
+				}
+				else
+				{
+					if (department.IsUserAnAdmin(UserId))
+					{
+						person.CanRemoveUser = true;
+						person.CanEditUser = true;
+					}
+				}
+
+				person.CanResetPassword = user.UserId != UserId &&
+					user.UserId != department.ManagingUserId &&
+					(department.IsUserAnAdmin(UserId) ||
+					 (group != null && group.IsUserGroupAdmin(UserId) && !department.IsUserAnAdmin(user.UserId)));
+
+				var userGroupRole = userGroupRoles.FirstOrDefault(x => x.UserId == user.UserId);
+				if (userGroupRole != null)
+					person.Roles = userGroupRole.RoleNames;
+				else
+					person.Roles = "";
+
+				StringBuilder sb = new StringBuilder();
+
+				if (member != null)
+				{
+					if (member.IsAdmin.HasValue && member.IsAdmin.Value ||
+							department.ManagingUserId == user.UserId)
+						sb.Append("Admin");
+					else
+						sb.Append("Normal");
+
+					if (member.IsDisabled.HasValue && member.IsDisabled.Value)
+						sb.Append(sb.Length > 0 ? ", Disabled" : "Disabled");
+
+					if (member.IsHidden.HasValue && member.IsHidden.Value)
+						sb.Append(sb.Length > 0 ? ", Hidden" : "Hidden");
+
+					person.State = sb.ToString();
+				}
+				else
+				{
+					person.State = "Normal";
+				}
+
+				if (actionLog != null)
+				{
+					person.StatusId = actionLog.ActionTypeId;
+				}
+
+				if (staffing != null)
+				{
+					person.StaffingId = staffing.State;
+				}
+
+				//if (actionLog != null)
+				//{
+				//	person.LastActivityDate = actionLog.Timestamp.TimeConverterToString(department);
+				//}
+				//else
+				//{
+				//	person.LastActivityDate = "Never";
+				//}
+
+				personnelJson.Add(person);
+			}
+
+			switch (sortOrder)
+			{
+				case PersonnelSortOrders.Default:
+					model.Persons = personnelJson;
+					break;
+				case PersonnelSortOrders.FirstName:
+					model.Persons = personnelJson.OrderBy(x => x.FirstName).ToList();
+					break;
+				case PersonnelSortOrders.LastName:
+					model.Persons = personnelJson.OrderBy(x => x.LastName).ToList();
+					break;
+				case PersonnelSortOrders.Group:
+					model.Persons = personnelJson.OrderBy(x => x.GroupId).ToList();
+					break;
+				default:
+					model.Persons = personnelJson;
+					break;
+			}
+
+			List<BSTreeModel> trees = new List<BSTreeModel>();
+			var tree0 = new BSTreeModel();
+			tree0.id = "TreeGroup_-1";
+			tree0.text = "All Personnel";
+			tree0.icon = "";
+			trees.Add(tree0);
+
+			var tree1 = new BSTreeModel();
+			tree1.id = "TreeGroup_0";
+			tree1.text = "Ungrouped Personnel";
+			tree1.icon = "";
+			trees.Add(tree1);
+
+			trees.AddRange(BSTreeModel.ForDepartmentGroups(model.Groups));
+			model.TreeData = Newtonsoft.Json.JsonConvert.SerializeObject(trees);
+
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_Create)]
+		public async Task<IActionResult> AddPerson()
+		{
+			if (!await _authorizationService.CanUserAddNewUserAsync(DepartmentId, UserId))
+				return Unauthorized();
+
+			var model = new AddPersonModel();
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+			model.Profile = new UserProfile();
+			model.SendAccountCreationNotification = true;
+			model.PersonnelLimitReached = !await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId, true);
+
+			ViewBag.Carriers = model.Carrier.ToSelectList();
+			ViewBag.Countries = new SelectList(Countries.CountryNames);
+			ViewBag.TimeZones = new SelectList(TimeZones.Zones, "Key", "Value");
+
+			var groups = new List<DepartmentGroup>();
+			var defaultGroup = new DepartmentGroup();
+			defaultGroup.Name = "No Group";
+			groups.Add(defaultGroup);
+			groups.AddRange(await  _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId));
+
+			var isUserGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+			if (isUserGroupAdmin && !ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+			{
+				var group = await _departmentGroupsService.GetGroupForUserAsync(UserId, DepartmentId);
+				model.Groups = new SelectList(groups.Where(x => x.DepartmentGroupId == group.DepartmentGroupId), "DepartmentGroupId", "Name");
+			}
+			else
+			{
+				model.Groups = new SelectList(groups, "DepartmentGroupId", "Name");
+			}
+
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin() && isUserGroupAdmin)
+			{
+				model.GroupAdmin = true;
+				var group = await _departmentGroupsService.GetGroupForUserAsync(UserId, DepartmentId);
+
+				model.UserGroup = group.DepartmentGroupId;
+				model.GroupName = group.Name;
+			}
+
+			var udfDefinition = await _userDefinedFieldsService.GetActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Personnel);
+			if (udfDefinition != null)
+			{
+				bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+				bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+				var udfFields = await _userDefinedFieldsService.GetVisibleFieldsForActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Personnel, isDeptAdmin, isGroupAdmin);
+				model.UdfFormHtml = _udfRenderingService.GenerateHtmlFormFields(udfDefinition, udfFields, new List<UdfFieldValue>());
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> ViewPerson(string userId)
+		{
+			if (!await _authorizationService.CanUserViewUserAsync(UserId, userId))
+				return Unauthorized();
+
+			ViewPersonView model = new ViewPersonView();
+			model.Profile = await _userProfileService.GetProfileByUserIdAsync(userId, true);
+			model.User = _usersService.GetUserById(userId);
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId);
+			if (member != null)
+				model.Department = await _departmentsService.GetDepartmentByIdAsync(member.DepartmentId);
+			else
+				model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Group = await _departmentGroupsService.GetGroupForUserAsync(userId, DepartmentId);
+			var roles = await _personnelRolesService.GetRolesForUserAsync(userId, DepartmentId);
+
+			if (roles != null && roles.Count > 0)
+			{
+				foreach (var role in roles)
+				{
+					if (string.IsNullOrWhiteSpace(model.Roles))
+						model.Roles = role.Name;
+					else
+						model.Roles += string.Format(", {0}", role.Name);
+				}
+			}
+			else
+			{
+				model.Roles = "None";
+			}
+
+			StringBuilder sb = new StringBuilder();
+			if (member != null)
+			{
+				if (member.IsAdmin.HasValue && member.IsAdmin.Value ||
+						model.Department.ManagingUserId == userId)
+					sb.Append("Admin");
+				else
+					sb.Append("Normal");
+
+				if (member.IsDisabled.HasValue && member.IsDisabled.Value)
+					sb.Append(sb.Length > 0 ? ", Disabled" : "Disabled");
+
+				if (member.IsHidden.HasValue && member.IsHidden.Value)
+					sb.Append(sb.Length > 0 ? ", Hidden" : "Hidden");
+
+				model.State = sb.ToString();
+			}
+
+			model.UserState = await _userStateService.GetLastUserStateByUserIdAsync(userId);
+			model.ActionLog = await _actionLogsService.GetLastActionLogForUserAsync(userId, DepartmentId);
+
+			var udfDefinition = await _userDefinedFieldsService.GetActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Personnel);
+			if (udfDefinition != null)
+			{
+				bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+				bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+				var udfFields = await _userDefinedFieldsService.GetVisibleFieldsForActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Personnel, isDeptAdmin, isGroupAdmin);
+				var udfValues = await _userDefinedFieldsService.GetFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Personnel, userId);
+				var visibleFieldIds = udfFields.Select(f => f.UdfFieldId).ToHashSet();
+				var filteredValues = (udfValues ?? new List<UdfFieldValue>()).Where(v => visibleFieldIds.Contains(v.UdfFieldId)).ToList();
+
+				// ADP: the renderer turns an envelope into the REDACTED placeholder, so an enveloped
+				// value here is exactly "this page has something a grant could reveal". Asking the
+				// values costs nothing extra - they are already loaded.
+				model.IsProtectedRecord = filteredValues.Any(v => ProtectedDataEnvelope.HasEnvelopePrefix(v.Value));
+
+				model.UdfReadOnlyHtml = _udfRenderingService.GenerateReadOnlyHtml(udfDefinition, udfFields, filteredValues);
+			}
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// ADP client-side reveal (plan 7.2). A grant proves the CALLER stepped up; it is never an
+		/// authorization decision about the target, so the subject is authorized exactly as the page
+		/// that hosts the reveal authorizes it.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> RevealPerson([FromForm] string userId)
+		{
+			if (String.IsNullOrWhiteSpace(userId))
+				return BadRequest();
+
+			if (!await _authorizationService.CanUserViewUserAsync(UserId, userId))
+				return Unauthorized();
+
+			var fields = new Dictionary<string, string>();
+
+			// The reveal must hide exactly what the hosting page hides: a grant is step-up proof,
+			// never a field-visibility decision.
+			bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+			bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+
+			var resolved = await ProtectedUdfRevealHelper.AddUdfValuesAsync(fields, _userDefinedFieldsService,
+				_protectedReadService, DepartmentId, UdfEntityType.Personnel, userId,
+				Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId, isDeptAdmin, isGroupAdmin);
+
+			if (resolved != null && resolved.IsProtected && resolved.ProtectedReason != null)
+				return Json(new { success = false, error = resolved.ProtectedReason });
+
+			return Json(new { success = true, fields });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Personnel_Create)]
+		[RequiresRecentTwoFactor]
+		public async Task<IActionResult> AddPerson(AddPersonModel model, IFormCollection form, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserAddNewUserAsync(DepartmentId, UserId))
+				return Unauthorized();
+
+			ModelState.Remove("Profile.UserId");
+
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+
+			var groups = new List<DepartmentGroup>();
+			var defaultGroup = new DepartmentGroup();
+			defaultGroup.Name = "No Group";
+			groups.Add(defaultGroup);
+			groups.AddRange(await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId));
+
+			ViewBag.Carriers = model.Carrier.ToSelectList();
+			ViewBag.Countries = new SelectList(Countries.CountryNames);
+			ViewBag.TimeZones = new SelectList(TimeZones.Zones, "Key", "Value");
+
+			model.IsUserGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+			if (model.IsUserGroupAdmin)
+			{
+				var group = await _departmentGroupsService.GetGroupForUserAsync(UserId, DepartmentId);
+				model.Groups = new SelectList(groups.Where(x => x.DepartmentGroupId == group.DepartmentGroupId), "DepartmentGroupId", "Name");
+			}
+			else
+			{
+				model.Groups = new SelectList(groups, "DepartmentGroupId", "Name");
+			}
+
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin() && model.IsUserGroupAdmin)
+			{
+				model.GroupAdmin = true;
+				var group = await _departmentGroupsService.GetGroupForUserAsync(UserId, DepartmentId);
+
+				model.UserGroup = group.DepartmentGroupId;
+				model.GroupName = group.Name;
+			}
+
+			if (!String.IsNullOrEmpty(model.Profile.MobileNumber))
+			{
+				if (model.Carrier == MobileCarriers.None)
+					ModelState.AddModelError("Carrier", "If you entered a mobile phone, you need to select your mobile carrier. If you carrier is not listed select one and contact us to have your carrier added.");
+				else
+				{
+					if (model.Carrier == MobileCarriers.VirginMobileUk && !model.Profile.MobileNumber.StartsWith("0"))
+						ModelState.AddModelError("Profile.MobileNumber", "Virgin Mobile Uk requires your phone number to start with 0.");
+
+					if (model.Carrier == MobileCarriers.O2 && !model.Profile.MobileNumber.StartsWith("44"))
+						ModelState.AddModelError("Profile.MobileNumber", "O2 requires your phone number to start with 44.");
+
+					if (model.Carrier == MobileCarriers.Orange && !model.Profile.MobileNumber.StartsWith("0"))
+						ModelState.AddModelError("Profile.MobileNumber", "Orange requires your phone number to start with 0.");
+
+					if (model.Carrier == MobileCarriers.TMobileUk && !model.Profile.MobileNumber.StartsWith("0"))
+						ModelState.AddModelError("Profile.MobileNumber", "T-Mobile Uk requires your phone number to start with 0.");
+
+					if (model.Carrier == MobileCarriers.Vodafone && !model.Profile.MobileNumber.StartsWith("0"))
+						ModelState.AddModelError("Profile.MobileNumber", "Vodafone requires your phone number to start with 0.");
+				}
+			}
+
+			if ((model.Profile.SendSms || model.Profile.SendMessageSms) && String.IsNullOrEmpty(model.Profile.MobileNumber))
+			{
+				ModelState.AddModelError("Profile.MobileNumber", "You have selected you want SMS/Text notifications but have not supplied a mobile number.");
+			}
+
+			// Server-side phone backstop: validate + normalize to E.164 so the saved number is Twilio-sendable
+			// (mirrors EditUserProfile). AddPerson has no country field, so the validator uses its default region.
+			model.Profile.MobileNumber = PhoneValidationHelper.ValidateAndNormalize(_phoneNumberProcesser, ModelState, "Profile.MobileNumber", "mobile number", model.Profile.MobileNumber, null);
+
+			var deletedUserId = await _departmentsService.GetUserIdForDeletedUserInDepartmentAsync(DepartmentId, model.Email);
+			if (deletedUserId != null)
+			{
+				return RedirectToAction("ReactivateUser", "Personnel", new { area = "User", id = deletedUserId });
+			}
+
+			var existingEmailAddress = _usersService.GetUserByEmail(model.Email);
+			if (existingEmailAddress != null)
+			{
+				return RedirectToAction("AddExistingUser", "Personnel", new { area = "User", id = existingEmailAddress.Id });
+			}
+
+			var existingUsername = await _usersService.GetUserByNameAsync(model.Username);
+			if (existingUsername != null)
+			{
+				ModelState.AddModelError("Username", $"The username {model.Username} has already been taken, please try another.");
+			}
+
+			// The plan's personnel limit is enforced here, not only by hiding the Add button (fresh counts: the cached ones live 14 days).
+			model.PersonnelLimitReached = !await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId, true);
+
+			if (ModelState.IsValid && !model.PersonnelLimitReached)
+			{
+				var user = new IdentityUser { UserName = model.Username, Email = model.Email, SecurityStamp = Guid.NewGuid().ToString().ToUpper() };
+				var result = await _userManager.CreateAsync(user, model.NewPassword);
+				if (result.Succeeded)
+				{
+					// IdentificationNumber is department-issued. Keep it off the new global profile
+					// row even while the legacy columns remain available as relocation sources.
+					var identificationNumber = model.Profile.IdentificationNumber;
+					model.Profile.IdentificationNumber = null;
+					model.Profile.HomeAddressId = null;
+					model.Profile.MailingAddressId = null;
+					model.Profile.UserId = user.UserId;
+					model.Profile.MobileCarrier = (int)model.Carrier;
+					model.Profile.FirstName = model.FirstName;
+					model.Profile.LastName = model.LastName;
+					await _userProfileService.SaveProfileAsync(DepartmentId, model.Profile, cancellationToken);
+
+					_usersService.AddUserToUserRole(user.Id);
+
+					// Don't know why this is still erroring out.
+					try
+					{
+						_usersService.InitUserExtInfo(user.Id);
+					}
+					catch { }
+
+					await _departmentsService.AddUserToDepartmentAsync(DepartmentId, user.UserId, false, cancellationToken);
+
+					if (!string.IsNullOrWhiteSpace(identificationNumber))
+					{
+						try
+						{
+							await _memberSensitiveDataService.SaveAsync(new DepartmentMemberSensitiveData
+							{
+								DepartmentId = DepartmentId,
+								UserId = user.UserId,
+								IdentificationNumber = identificationNumber,
+								// This is a brand-new profile with no legacy data to relocate. Stamping it
+								// prevents a later sweep from treating the row as an incomplete move.
+								LegacyProfileRelocatedOn = DateTime.UtcNow
+							}, cancellationToken);
+						}
+						catch (InvalidOperationException ex)
+						{
+							Logging.LogException(ex);
+						}
+					}
+
+					if (model.MustChangePasswordOnLogin)
+					{
+						var member = await _departmentsService.GetDepartmentMemberAsync(user.UserId, DepartmentId);
+						if (member != null)
+						{
+							member.MustChangePassword = true;
+							await _departmentsService.SaveDepartmentMemberAsync(member, cancellationToken);
+						}
+					}
+
+					var userObject = _usersService.GetUserById(user.UserId);
+
+					_eventAggregator.SendMessage<UserCreatedEvent>(new UserCreatedEvent() { DepartmentId = DepartmentId, Name = string.Format("{0} {1}", model.FirstName, model.LastName), User = userObject });
+
+					var auditEvent = new AuditEvent();
+					auditEvent.DepartmentId = DepartmentId;
+					auditEvent.UserId = UserId;
+					auditEvent.Type = AuditLogTypes.UserAdded;
+					auditEvent.After = userObject.CloneJsonToString();
+					auditEvent.Successful = true;
+					auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+					auditEvent.ServerName = Environment.MachineName;
+					auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+					_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+
+					if (model.UserGroup != 0)
+						await _departmentGroupsService.MoveUserIntoGroupAsync(user.UserId, model.UserGroup, model.IsGroupAdminAdding, DepartmentId, cancellationToken);
+
+					if (form.ContainsKey("roles"))
+					{
+						var roles = form["roles"].ToString().Split(char.Parse(","));
+
+						if (roles.Any())
+						{
+							try { await _personnelRolesService.SetRolesForUserAsync(DepartmentId, user.UserId, roles, cancellationToken, UserId); }
+							catch (InvalidOperationException ex) when (ex.Message == "certifications_role_requirements_unmet")
+							{
+								// Phase D4 Enforce: the member exists; the roles they are not yet certified for were not applied.
+								TempData["RoleMembersWarning"] = _certificationLocalizer["RoleAssignmentBlocked"].Value;
+							}
+						}
+					}
+
+					_userProfileService.ClearAllUserProfilesFromCache(DepartmentId);
+					_departmentsService.InvalidateDepartmentUsersInCache(DepartmentId);
+					_departmentsService.InvalidatePersonnelNamesInCache(DepartmentId);
+					_departmentsService.InvalidateDepartmentMembers();
+					_usersService.ClearCacheForDepartment(DepartmentId);
+
+					if (model.SendAccountCreationNotification)
+						await _emailService.SendWelcomeEmail(model.Department.Name, model.FirstName + " " + model.LastName, user.Email, user.UserName, DepartmentId);
+
+					await _emailMarketingProvider.SubscribeUserToUsersList(model.FirstName, model.LastName, user.Email);
+
+					// Save UDF field values for the new personnel
+					var udfValues = form.Keys
+						.Where(k => k.StartsWith("udf_") && !k.EndsWith("_exists"))
+						.Select(k => new UdfFieldValue
+						{
+							UdfFieldId = k.Substring(4),
+							Value = form[k]
+						}).ToList();
+
+					if (udfValues.Any())
+					{
+						bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+						bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+						await _userDefinedFieldsService.SaveFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Personnel, user.UserId, udfValues, UserId, isDeptAdmin, isGroupAdmin, cancellationToken);
+					}
+
+					return RedirectToAction("Index", "Personnel", new { area = "User" });
+				}
+				else
+				{
+					ModelState.AddModelError("", "Unable to create user, please check the form and try again");
+				}
+			}
+
+			// If we got this far, something failed, redisplay form
+			var udfDefinitionOnError = await _userDefinedFieldsService.GetActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Personnel);
+			if (udfDefinitionOnError != null)
+			{
+				bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+				bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+				var udfFields = await _userDefinedFieldsService.GetVisibleFieldsForActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Personnel, isDeptAdmin, isGroupAdmin);
+				var postedUdfValues = form.Keys
+					.Where(k => k.StartsWith("udf_") && !k.EndsWith("_exists"))
+					.Select(k => new UdfFieldValue
+					{
+						UdfFieldId = k.Substring(4),
+						Value = form[k]
+					}).ToList();
+				model.UdfFormHtml = _udfRenderingService.GenerateHtmlFormFields(udfDefinitionOnError, udfFields, postedUdfValues);
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_Delete)]
+		public async Task<IActionResult> DeletePerson(string userId)
+		{
+			if (string.IsNullOrWhiteSpace(userId))
+				return RedirectToAction("Index", "Personnel", new { area = "User" });
+
+			if (!await _authorizationService.CanUserDeleteUserAsync(DepartmentId, UserId, userId))
+				return Unauthorized();
+
+			DeletePersonModel model = new DeletePersonModel();
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(userId);
+			model.UserId = userId;
+
+			// Draft ownership transfer (RMS plan 4.7): a member's unfinished Records are shown before the deletion
+			// completes so they can be reassigned rather than stranded. A Records failure never blocks this page.
+			try
+			{
+				model.OutstandingRecords = await _recordsService.GetOutstandingForOwnerAsync(DepartmentId, userId);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex);
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Personnel_Delete)]
+		[RequiresRecentTwoFactor]
+		public async Task<IActionResult> DeletePerson(DeletePersonModel model, CancellationToken cancellationToken)
+		{
+			if (string.IsNullOrWhiteSpace(model?.UserId))
+				return RedirectToAction("Index", "Personnel", new { area = "User" });
+
+			if (!await _authorizationService.CanUserDeleteUserAsync(DepartmentId, UserId, model.UserId))
+				return Unauthorized();
+
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(model.UserId);
+
+			if (model.Department.ManagingUserId == model.UserId)
+				ModelState.AddModelError("", "Cannot delete the Managing User");
+
+			if (ModelState.IsValid)
+			{
+				if (model.AreYouSure)
+				{
+					var result = await _deleteService.DeleteUserAsync(DepartmentId, UserId, model.UserId, cancellationToken);
+
+					_userProfileService.ClearUserProfileFromCache(model.UserId);
+					_userProfileService.ClearAllUserProfilesFromCache(model.Department.DepartmentId);
+					_departmentsService.InvalidateDepartmentUsersInCache(model.Department.DepartmentId);
+					_departmentsService.InvalidatePersonnelNamesInCache(DepartmentId);
+					_departmentsService.InvalidateDepartmentMembers();
+					_usersService.ClearCacheForDepartment(DepartmentId);
+
+					_eventAggregator.SendMessage<DepartmentSettingsChangedEvent>(new DepartmentSettingsChangedEvent() { DepartmentId = DepartmentId });
+
+					if (result == DeleteUserResults.NoFailure)
+					{
+						return RedirectToAction("Index", "Personnel", new { area = "User" });
+					}
+
+					if (result == DeleteUserResults.UserIsManagingDepartmentAdmin)
+						ModelState.AddModelError("", "Cannot delete the Managing User");
+					else
+						ModelState.AddModelError("", "Error while trying to delete this person, please try again later.");
+				}
+				else
+				{
+					ModelState.AddModelError("AreYouSure", "You need to confirm the delete.");
+				}
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelForGrid()
+		{
+			List<PersonnelForJson> personnelJson = new List<PersonnelForJson>();
+			//var dep = await _departmentsService.GetDepartmentByUserId(UserId);
+			//var users = await _departmentsService.GetAllUsersForDepartment(DepartmentId);//.GetAllUsersForDepartmentUnlimitedMinusDisabled(DepartmentId);
+			//var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartment(DepartmentId);
+
+			var personGroupRoles = await _usersService.GetUserGroupAndRolesByDepartmentIdInLimitAsync(DepartmentId, false, false, false);
+			var personnelSortOrder = await _departmentSettingsService.GetDepartmentPersonnelSortOrderAsync(DepartmentId);
+
+			foreach (var user in personGroupRoles)
+			{
+				PersonnelForJson person = new PersonnelForJson();
+				person.UserId = user.UserId;
+				//person.Name = UserHelper.GetFullNameForUser(personnelNames, null, user.UserId);
+				person.Name = user.Name;
+				person.FirstName = user.FirstName;
+				person.LastName = user.LastName;
+
+				//var group = await _departmentGroupsService.GetGroupForUser(user.UserId);
+				//if (group != null)
+				//	person.Group = group.Name;
+				person.Group = user.DepartmentGroupName;
+				person.GroupId = user.DepartmentGroupId.GetValueOrDefault();
+
+				//var roles = await _personnelRolesService.GetRolesForUser(user.UserId);
+				person.Roles = new List<string>();
+				foreach (var role in user.RoleNamesList)
+				{
+					person.Roles.Add(role);
+				}
+
+				personnelJson.Add(person);
+			}
+
+			switch (personnelSortOrder)
+			{
+				case PersonnelSortOrders.FirstName:
+					personnelJson = personnelJson.OrderBy(x => x.FirstName).ToList();
+					break;
+				case PersonnelSortOrders.LastName:
+					personnelJson = personnelJson.OrderBy(x => x.LastName).ToList();
+					break;
+				case PersonnelSortOrders.Group:
+					personnelJson = personnelJson.OrderBy(x => x.GroupId).ToList();
+					break;
+			}
+
+			return Json(personnelJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelForCallGrid(string callLat, string callLong)
+		{
+			List<PersonnelForJson> personnelJson = new List<PersonnelForJson>();
+			var users = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);//.GetAllUsersForDepartmentUnlimitedMinusDisabled(DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			var lastUserActionlogs = await _actionLogsService.GetLastActionLogsForDepartmentAsync(DepartmentId);
+			var userStates = await _userStateService.GetLatestStatesForDepartmentAsync(DepartmentId);
+
+			var personnelSortOrder = await _departmentSettingsService.GetDepartmentPersonnelSortOrderAsync(DepartmentId);
+			var personnelStatusSortOrder = await _departmentSettingsService.GetDepartmentPersonnelListStatusSortOrderAsync(DepartmentId);
+
+			foreach (var user in users)
+			{
+				PersonnelForJson person = new PersonnelForJson();
+				person.UserId = user.UserId;
+				person.Name = await UserHelper.GetFullNameForUser(personnelNames, user.UserName, user.UserId);
+
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				if (group != null)
+					person.Group = group.Name;
+
+				var roles = await _personnelRolesService.GetRolesForUserAsync(user.UserId, DepartmentId);
+				person.Roles = new List<string>();
+				foreach (var role in roles)
+				{
+					person.Roles.Add(role.Name);
+				}
+
+				var currentStaffing = userStates.FirstOrDefault(x => x.UserId == user.UserId);
+				if (currentStaffing != null)
+				{
+					var staffing = await CustomStatesHelper.GetCustomPersonnelStaffing(DepartmentId, currentStaffing);
+
+					if (staffing != null)
+					{
+						person.Staffing = staffing.ButtonText;
+						person.StaffingColor = staffing.ButtonClassToColor();
+					}
+				}
+				else
+				{
+					person.Staffing = "Available";
+					person.StaffingColor = "#000";
+				}
+
+				var currentStatus = lastUserActionlogs.FirstOrDefault(x => x.UserId == user.UserId);
+				if (currentStatus != null)
+				{
+					var status = await CustomStatesHelper.GetCustomPersonnelStatus(DepartmentId, currentStatus);
+					if (status != null)
+					{
+						person.Status = status.ButtonText;
+						person.StatusColor = status.ButtonClassToColor();
+					}
+				}
+				else
+				{
+					person.Status = "Standing By";
+					person.StatusColor = "#000";
+				}
+
+				if (String.IsNullOrWhiteSpace(callLat) || String.IsNullOrWhiteSpace(callLong) || currentStatus == null || String.IsNullOrWhiteSpace(currentStatus.GeoLocationData))
+					person.Eta = "N/A";
+				else
+				{
+					var eta = await _geoService.GetEtaInSecondsAsync(currentStatus.GeoLocationData, String.Format("{0},{1}", callLat, callLong));
+
+					if (eta > 0)
+						person.Eta = $"{Math.Round(eta / 60, MidpointRounding.AwayFromZero)}m";
+					else
+						person.Eta = "N/A";
+				}
+
+				if (currentStatus != null)
+				{
+					if (personnelStatusSortOrder != null && personnelStatusSortOrder.Any())
+					{
+						var statusSorting = personnelStatusSortOrder.FirstOrDefault(x => x.StatusId == currentStatus.ActionTypeId);
+						if (statusSorting != null)
+							person.Weight = statusSorting.Weight;
+						else
+							person.Weight = 9000;
+					}
+					else
+					{
+						person.Weight = 9000;
+					}
+				}
+				else
+					person.Weight = 9000;
+
+				personnelJson.Add(person);
+			}
+
+			switch (personnelSortOrder)
+			{
+				case PersonnelSortOrders.Default:
+					personnelJson = personnelJson.OrderBy(x => x.Weight).ToList();
+					break;
+				case PersonnelSortOrders.FirstName:
+					personnelJson = personnelJson.OrderBy(x => x.Weight).ThenBy(x => x.FirstName).ToList();
+					break;
+				case PersonnelSortOrders.LastName:
+					personnelJson = personnelJson.OrderBy(x => x.Weight).ThenBy(x => x.LastName).ToList();
+					break;
+				case PersonnelSortOrders.Group:
+					personnelJson = personnelJson.OrderBy(x => x.Weight).ThenBy(x => x.GroupId).ToList();
+					break;
+				default:
+					personnelJson = personnelJson.OrderBy(x => x.Weight).ToList();
+					break;
+			}
+
+			return Json(personnelJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelForGridWithFilter(bool filterSelf = false)
+		{
+			List<PersonnelForJson> personnelJson = new List<PersonnelForJson>();
+			var dep = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedMinusDisabledAsync(dep.DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			foreach (var user in users)
+			{
+				if (filterSelf)
+					if (user.UserId == UserId)
+						continue;
+
+				PersonnelForJson person = new PersonnelForJson();
+				person.UserId = user.UserId;
+				person.Name = await UserHelper.GetFullNameForUser(personnelNames, user.UserName, user.UserId);
+
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				if (group != null)
+					person.Group = group.Name;
+
+				var roles = await _personnelRolesService.GetRolesForUserAsync(user.UserId, DepartmentId);
+				person.Roles = new List<string>();
+				foreach (var role in roles)
+				{
+					person.Roles.Add(role.Name);
+				}
+
+				personnelJson.Add(person);
+			}
+
+			return Json(personnelJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelList()
+		{
+			List<PersonnelForListJson> personnelJson = new List<PersonnelForListJson>();
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedAsync(DepartmentId);
+			var departmentMembers = await _departmentsService.GetAllMembersForDepartmentUnlimitedAsync(DepartmentId);
+			//var actionLogs = await _actionLogsService.GetActionLogsForDepartment(DepartmentId, true);
+			//var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartment(DepartmentId);
+			var canGroupAdminsDelete = await _authorizationService.CanGroupAdminsRemoveUsersAsync(DepartmentId);
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentIncDisabledDeletedAsync(DepartmentId);
+			var userGroupRoles = await _usersService.GetUserGroupAndRolesByDepartmentIdInLimitAsync(DepartmentId, true, true, false);
+
+			var sortOrder = await _departmentSettingsService.GetDepartmentPersonnelSortOrderAsync(DepartmentId);
+
+			foreach (var user in users)
+			{
+				var member = departmentMembers.FirstOrDefault(x => x.UserId == user.UserId);
+
+				// Skip hidden/disabled users unless current user is dept admin or group admin of their group
+				if (member != null && ((member.IsDisabled.HasValue && member.IsDisabled.Value) || (member.IsHidden.HasValue && member.IsHidden.Value)))
+				{
+					if (!department.IsUserAnAdmin(UserId))
+					{
+						var userGroup = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+						if (userGroup == null || !userGroup.IsUserGroupAdmin(UserId))
+							continue;
+					}
+				}
+
+				var person = new PersonnelForListJson();
+				person.UserId = user.UserId.ToString();
+				var externalState = await _externalIdentityLinkService.GetSsoManagementStateAsync(user.UserId);
+				person.IsSsoManaged = externalState.IsSsoManaged ||
+					(member != null && (!string.IsNullOrWhiteSpace(member.ExternalSsoId) || member.SsoLinkedOn.HasValue));
+
+				//var actionLog = actionLogs.FirstOrDefault(x => x.UserId == user.UserId);
+				//var userProfile = await _userProfileService.GetProfileByUserId(user.UserId);
+
+				if (!profiles.ContainsKey(user.UserId))
+				{
+					person.Name = "Unknown User";
+				}
+				else
+				{
+					var userProfile = profiles[user.UserId];
+					person.Name = userProfile.FullName.AsFirstNameLastName;
+					person.FirstName = userProfile.FirstName;
+					person.LastName = userProfile.LastName;
+				}
+
+				if (ClaimsAuthorizationHelper.CanViewPII())
+					person.EmailAddress = user.Email;
+				else
+					person.EmailAddress = "";
+
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				if (group != null)
+				{
+					person.Group = group.Name;
+
+					if (department.IsUserAnAdmin(UserId) || (canGroupAdminsDelete && group.IsUserGroupAdmin(UserId) && !department.IsUserAnAdmin(user.UserId)))
+						person.CanRemoveUser = true;
+
+					if (group.IsUserGroupAdmin(UserId) || department.IsUserAnAdmin(UserId))
+						person.CanEditUser = true;
+
+					person.GroupId = group.DepartmentGroupId;
+				}
+				else
+				{
+					if (department.IsUserAnAdmin(UserId))
+					{
+						person.CanRemoveUser = true;
+						person.CanEditUser = true;
+					}
+				}
+
+				person.CanResetPassword = user.UserId != UserId &&
+					user.UserId != department.ManagingUserId &&
+					(department.IsUserAnAdmin(UserId) ||
+					 (group != null && group.IsUserGroupAdmin(UserId) && !department.IsUserAnAdmin(user.UserId)));
+
+				//var roles = await _personnelRolesService.GetRolesForUser(user.UserId);
+				//foreach (var role in roles)
+				//{
+				//	if (String.IsNullOrWhiteSpace(person.Roles))
+				//		person.Roles = role.Name;
+				//	else
+				//		person.Roles += ", " + role.Name;
+				//}
+
+				var userGroupRole = userGroupRoles.FirstOrDefault(x => x.UserId == user.UserId);
+				if (userGroupRole != null)
+					person.Roles = userGroupRole.RoleNames;
+				else
+					person.Roles = "";
+
+				StringBuilder sb = new StringBuilder();
+
+				if (member != null)
+				{
+					if (member.IsAdmin.HasValue && member.IsAdmin.Value ||
+							department.ManagingUserId == user.UserId)
+						sb.Append("Admin");
+					else
+						sb.Append("Normal");
+
+					if (member.IsDisabled.HasValue && member.IsDisabled.Value)
+						sb.Append(sb.Length > 0 ? ", Disabled" : "Disabled");
+
+					if (member.IsHidden.HasValue && member.IsHidden.Value)
+						sb.Append(sb.Length > 0 ? ", Hidden" : "Hidden");
+
+					person.State = sb.ToString();
+					//person.EmailAddress = membership.Email;
+				}
+				else
+				{
+					person.State = "Normal";
+				}
+
+				//if (actionLog != null)
+				//{
+				//	person.LastActivityDate = actionLog.Timestamp.TimeConverterToString(department);
+				//}
+				//else
+				//{
+				//	person.LastActivityDate = "Never";
+				//}
+
+				personnelJson.Add(person);
+			}
+
+			switch (sortOrder)
+			{
+				case PersonnelSortOrders.Default:
+					return Json(personnelJson);
+				case PersonnelSortOrders.FirstName:
+					return Json(personnelJson.OrderBy(x => x.FirstName));
+				case PersonnelSortOrders.LastName:
+					return Json(personnelJson.OrderBy(x => x.LastName));
+				case PersonnelSortOrders.Group:
+					return Json(personnelJson.OrderBy(x => x.GroupId));
+				default:
+					return Json(personnelJson);
+			}
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelListPaged(int perPage, int page)
+		{
+			PersonnelListPagedResult result = new PersonnelListPagedResult();
+			result.Data = new List<PersonnelForListJson>();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedAsync(DepartmentId);
+			var departmentMembers = await _departmentsService.GetAllMembersForDepartmentUnlimitedAsync(DepartmentId);
+			//var actionLogs = await _actionLogsService.GetActionLogsForDepartment(DepartmentId, true);
+			//var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartment(DepartmentId);
+			var canGroupAdminsDelete = await _authorizationService.CanGroupAdminsRemoveUsersAsync(DepartmentId);
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentIncDisabledDeletedAsync(DepartmentId);
+			var userGroupRoles = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, true, true, false);
+
+			var sortOrder = await _departmentSettingsService.GetDepartmentPersonnelSortOrderAsync(DepartmentId);
+
+			foreach (var user in users)
+			{
+				var member = departmentMembers.FirstOrDefault(x => x.UserId == user.UserId);
+
+				// Skip hidden/disabled users unless current user is dept admin or group admin of their group
+				if (member != null && ((member.IsDisabled.HasValue && member.IsDisabled.Value) || (member.IsHidden.HasValue && member.IsHidden.Value)))
+				{
+					if (!department.IsUserAnAdmin(UserId))
+					{
+						var userGroup = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+						if (userGroup == null || !userGroup.IsUserGroupAdmin(UserId))
+							continue;
+					}
+				}
+
+				var person = new PersonnelForListJson();
+				person.UserId = user.UserId.ToString();
+				var externalState = await _externalIdentityLinkService.GetSsoManagementStateAsync(user.UserId);
+				person.IsSsoManaged = externalState.IsSsoManaged ||
+					(member != null && (!string.IsNullOrWhiteSpace(member.ExternalSsoId) || member.SsoLinkedOn.HasValue));
+
+				//var actionLog = actionLogs.FirstOrDefault(x => x.UserId == user.UserId);
+				//var userProfile = await _userProfileService.GetProfileByUserId(user.UserId);
+
+				if (!profiles.ContainsKey(user.UserId))
+				{
+					person.Name = "Unknown User";
+				}
+				else
+				{
+					var userProfile = profiles[user.UserId];
+					person.Name = userProfile.FullName.AsFirstNameLastName;
+					person.FirstName = userProfile.FirstName;
+					person.LastName = userProfile.LastName;
+				}
+
+				if (ClaimsAuthorizationHelper.CanViewPII())
+					person.EmailAddress = user.Email;
+				else
+					person.EmailAddress = "";
+
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				if (group != null)
+				{
+					person.Group = group.Name;
+
+					if (department.IsUserAnAdmin(UserId) || (canGroupAdminsDelete && group.IsUserGroupAdmin(UserId) && !department.IsUserAnAdmin(user.UserId)))
+						person.CanRemoveUser = true;
+
+					if (group.IsUserGroupAdmin(UserId) || department.IsUserAnAdmin(UserId))
+						person.CanEditUser = true;
+				}
+				else
+				{
+					if (department.IsUserAnAdmin(UserId))
+					{
+						person.CanRemoveUser = true;
+						person.CanEditUser = true;
+					}
+				}
+
+				person.CanResetPassword = user.UserId != UserId &&
+					user.UserId != department.ManagingUserId &&
+					(department.IsUserAnAdmin(UserId) ||
+					 (group != null && group.IsUserGroupAdmin(UserId) && !department.IsUserAnAdmin(user.UserId)));
+
+				//var roles = await _personnelRolesService.GetRolesForUser(user.UserId);
+				//foreach (var role in roles)
+				//{
+				//	if (String.IsNullOrWhiteSpace(person.Roles))
+				//		person.Roles = role.Name;
+				//	else
+				//		person.Roles += ", " + role.Name;
+				//}
+
+				var userGroupRole = userGroupRoles.FirstOrDefault(x => x.UserId == user.UserId);
+				if (userGroupRole != null)
+					person.Roles = userGroupRole.RoleNames;
+				else
+					person.Roles = "";
+
+				StringBuilder sb = new StringBuilder();
+
+				if (member != null)
+				{
+					if (member.IsAdmin.HasValue && member.IsAdmin.Value ||
+							department.ManagingUserId == user.UserId)
+						sb.Append("Admin");
+					else
+						sb.Append("Normal");
+
+					if (member.IsDisabled.HasValue && member.IsDisabled.Value)
+						sb.Append(sb.Length > 0 ? ", Disabled" : "Disabled");
+
+					if (member.IsHidden.HasValue && member.IsHidden.Value)
+						sb.Append(sb.Length > 0 ? ", Hidden" : "Hidden");
+
+					person.State = sb.ToString();
+					//person.EmailAddress = membership.Email;
+				}
+				else
+				{
+					person.State = "Normal";
+				}
+
+				//if (actionLog != null)
+				//{
+				//	person.LastActivityDate = actionLog.Timestamp.TimeConverterToString(department);
+				//}
+				//else
+				//{
+				//	person.LastActivityDate = "Never";
+				//}
+
+				result.Data.Add(person);
+			}
+
+			switch (sortOrder)
+			{
+				case PersonnelSortOrders.FirstName:
+					result.Data = result.Data.OrderBy(x => x.FirstName).ToList();
+					break;
+				case PersonnelSortOrders.LastName:
+					result.Data = result.Data.OrderBy(x => x.LastName).ToList();
+					break;
+			}
+
+			result.Total = result.Data.Count;
+			result.Page = page;
+			result.Data = result.Data.Skip(perPage * (page - 1))
+									 .Take(perPage).ToList();
+
+			return Json(result);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> GetPersonnelStatusHtmlForDropdownByStateId(int customStateId)
+		{
+			string buttonHtml = string.Empty;
+
+			CustomState customStates = null;
+			List<CustomStateDetail> activeDetails = null;
+
+			if (customStateId > 25)
+			{
+				customStates = await _customStateService.GetCustomSateByIdAsync(customStateId);
+
+				if (customStates != null)
+				{
+					activeDetails = customStates.GetActiveDetails();
+				}
+			}
+
+			if (activeDetails == null)
+				activeDetails = _customStateService.GetDefaultPersonStatuses();
+
+			StringBuilder sb = new StringBuilder();
+
+			foreach (var state in activeDetails.OrderBy(x => x.Order))
+			{
+				sb.Append($"<option value='{state.CustomStateDetailId}'>{state.ButtonText}</option>");
+			}
+
+			buttonHtml = sb.ToString();
+
+
+			return Content(buttonHtml);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> GetPersonnelStaffingHtmlForDropdownByStateId(int customStateId)
+		{
+			string buttonHtml = string.Empty;
+
+			CustomState customStates = null;
+			List<CustomStateDetail> activeDetails = null;
+
+			if (customStateId > 25)
+			{
+				customStates = await _customStateService.GetCustomSateByIdAsync(customStateId);
+
+				if (customStates != null)
+				{
+					activeDetails = customStates.GetActiveDetails();
+				}
+			}
+
+			if (activeDetails == null)
+				activeDetails = _customStateService.GetDefaultPersonStaffings();
+
+			StringBuilder sb = new StringBuilder();
+
+			foreach (var state in activeDetails.OrderBy(x => x.Order))
+			{
+				sb.Append($"<option value='{state.CustomStateDetailId}'>{state.ButtonText}</option>");
+			}
+
+			buttonHtml = sb.ToString();
+
+
+			return Content(buttonHtml);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> GetPersonnelStatusDestinationHtmlForDropdown(int customStateId, int customStatusDetailId)
+		{
+			string buttonHtml = string.Empty;
+
+			CustomState customStates = null;
+			List<CustomStateDetail> activeDetails = null;
+
+			if (customStateId > 25)
+			{
+				customStates = await _customStateService.GetCustomSateByIdAsync(customStateId);
+
+				if (customStates != null)
+				{
+					activeDetails = customStates.GetActiveDetails();
+				}
+			}
+
+			if (activeDetails == null)
+				activeDetails = _customStateService.GetDefaultPersonStatuses();
+
+			var state = activeDetails.FirstOrDefault(x => x.CustomStateDetailId == customStatusDetailId);
+			// Group-scoped dispatch (off by default): only offer calls in the viewer's area or that they are on.
+			var activeCalls = await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId, await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId));
+			var stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+			var destinationPois = await _mappingService.GetDestinationPOIsForDepartmentAsync(DepartmentId);
+			var noneText = HttpUtility.HtmlEncode(_localizer["None"].Value);
+			var callsLabel = HttpUtility.HtmlEncode(_localizer["Calls"].Value);
+			var stationsLabel = HttpUtility.HtmlEncode(_localizer["Stations"].Value);
+			var poisLabel = _localizer["Pois"].Value;
+			var callPrefix = _localizer["Call"].Value;
+			var stationPrefix = _localizer["Station"].Value;
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append($"<option value=''>{noneText}</option>");
+
+			if (state != null)
+			{
+				if (state.DetailType.SupportsCalls())
+				{
+					sb.Append($"<optgroup label='{callsLabel}'>");
+					foreach (var call in activeCalls)
+					{
+						var callText = HttpUtility.HtmlEncode($"{callPrefix} {call.GetIdentifier()}:{ProtectedDataEnvelope.SafeDisplay(call.Name)}");
+						sb.Append($"<option value='{(int)DestinationEntityTypes.Call}:{call.CallId}'>{callText}</option>");
+					}
+					sb.Append("</optgroup>");
+				}
+
+				if (state.DetailType.SupportsStations())
+				{
+					sb.Append($"<optgroup label='{stationsLabel}'>");
+					foreach (var station in stations)
+					{
+						var stationText = HttpUtility.HtmlEncode($"{stationPrefix}: {station.Name}");
+						sb.Append($"<option value='{(int)DestinationEntityTypes.Station}:{station.DepartmentGroupId}'>{stationText}</option>");
+					}
+					sb.Append("</optgroup>");
+				}
+
+				if (state.DetailType.SupportsPois())
+				{
+					foreach (var poiGroup in destinationPois.GroupBy(x => !String.IsNullOrWhiteSpace(x.Type?.Name) ? x.Type.Name : string.Empty))
+					{
+						var poiGroupLabel = !String.IsNullOrWhiteSpace(poiGroup.Key) ? poiGroup.Key : poisLabel;
+						sb.Append($"<optgroup label='{HttpUtility.HtmlEncode(poiGroupLabel)}'>");
+						foreach (var poi in poiGroup.OrderBy(x => x.Name).ThenBy(x => x.Address).ThenBy(x => x.Note))
+						{
+							var poiText = HttpUtility.HtmlEncode(PoiDisplayHelper.GetSelectionLabel(poi, poiGroupLabel));
+							sb.Append($"<option value='{(int)DestinationEntityTypes.Poi}:{poi.PoiId}'>{poiText}</option>");
+						}
+						sb.Append("</optgroup>");
+					}
+				}
+			}
+
+			buttonHtml = sb.ToString();
+
+
+			return Content(buttonHtml);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> SetActionForUser(string userId, int actionType, int destination, int type, string note, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewPersonAsync(UserId, userId, DepartmentId))
+				return Unauthorized();
+
+			try
+			{
+				var decodedNote = !String.IsNullOrWhiteSpace(note) ? HttpUtility.UrlDecode(note) : null;
+
+				if (destination > 0)
+				{
+					if (!await IsValidDestinationAsync(destination, type))
+						return BadRequest();
+
+					await _actionLogsService.SetUserActionAsync(userId, DepartmentId, actionType, null, destination, type, decodedNote, cancellationToken);
+				}
+				else
+				{
+					await _actionLogsService.SetUserActionAsync(userId, DepartmentId, actionType, null, decodedNote, cancellationToken);
+				}
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex);
+			}
+
+			return RedirectToAction("Index");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> SetUserActionForMultiple(string userIds, int actionType, int destination, int type, string note, CancellationToken cancellationToken)
+		{
+			if (!String.IsNullOrWhiteSpace(userIds) && userIds.Split(char.Parse("|")).Any())
+			{
+				foreach (var userId in userIds.Split(char.Parse("|")))
+				{
+					if (!await _authorizationService.CanUserViewPersonAsync(UserId, userId, DepartmentId))
+						return Unauthorized();
+
+					try
+					{
+						var decodedNote = !String.IsNullOrWhiteSpace(note) ? HttpUtility.UrlDecode(note) : null;
+
+						if (destination > 0)
+						{
+							if (!await IsValidDestinationAsync(destination, type))
+								return BadRequest();
+
+							await _actionLogsService.SetUserActionAsync(userId, DepartmentId, actionType, null, destination, type, decodedNote, cancellationToken);
+						}
+						else
+						{
+							await _actionLogsService.SetUserActionAsync(userId, DepartmentId, actionType, null, decodedNote, cancellationToken);
+						}
+					}
+					catch (Exception ex)
+					{
+						Logging.LogException(ex);
+					}
+				}
+			}
+
+			return RedirectToAction("Index");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> SetStaffingForUser(string userId, int staffing, string note, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewPersonAsync(UserId, userId, DepartmentId))
+				return Unauthorized();
+
+			string staffingNote = String.Empty;
+			if (!String.IsNullOrWhiteSpace(note))
+				staffingNote = HttpUtility.UrlDecode(note);
+
+			try
+			{
+				var savedState = await _userStateService.CreateUserStateAsync(userId, DepartmentId, staffing, staffingNote, DateTime.UtcNow, cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex);
+			}
+
+			return RedirectToAction("Index");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> SetUserStaffingForMultiple(string userIds, int staffing, string note, CancellationToken cancellationToken)
+		{
+			if (!String.IsNullOrWhiteSpace(userIds) && userIds.Split(char.Parse("|")).Any())
+			{
+				string staffingNote = String.Empty;
+				if (!String.IsNullOrWhiteSpace(note))
+					staffingNote = HttpUtility.UrlDecode(note);
+
+				foreach (var userId in userIds.Split(char.Parse("|")))
+				{
+					if (!await _authorizationService.CanUserViewPersonAsync(UserId, userId, DepartmentId))
+						return Unauthorized();
+
+					try
+					{
+						var savedState = await _userStateService.CreateUserStateAsync(userId, DepartmentId, staffing, staffingNote, DateTime.UtcNow, cancellationToken);
+					}
+					catch (Exception ex)
+					{
+						Logging.LogException(ex);
+					}
+				}
+			}
+
+			return RedirectToAction("Index");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelGroupStatusForGridCombined()
+		{
+			List<GroupStatusJson> personnelGroupJson = new List<GroupStatusJson>();
+			var dep = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(dep.DepartmentId);
+			var lastUserActionlogs = await _actionLogsService.GetAllActionLogsForDepartmentAsync(dep.DepartmentId);
+			var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(dep.DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			List<UserState> userStates = new List<UserState>();
+
+			foreach (var u in allUsers)
+			{
+				if (!await _departmentsService.IsUserDisabledAsync(u.UserId, DepartmentId) && !await _departmentsService.IsUserHiddenAsync(u.UserId, DepartmentId))
+				{
+					userStates.Add(await _userStateService.GetLastUserStateByUserIdAsync(u.UserId));
+				}
+			}
+
+			foreach (var departmentGroup in groups)
+			{
+				GroupStatusJson group = new GroupStatusJson();
+				group.GroupId = departmentGroup.DepartmentGroupId;
+				group.Name = departmentGroup.Name;
+				group.Personnel = new List<PersonnelStatusJson>();
+
+				var sortedUsers = from u in departmentGroup.Members
+													  join pn in personnelNames on u.UserId equals pn.UserId
+													  let name = pn.Name
+													  orderby name ascending
+													  select new
+													  {
+													  	Name = name,
+													  	User = u
+													  };
+
+				foreach (var member in sortedUsers)
+				{
+					PersonnelStatusJson person = new PersonnelStatusJson();
+					person.UserId = member.User.UserId;
+
+					var al = lastUserActionlogs.Where(x => x.UserId == member.User.UserId).FirstOrDefault();
+
+					if (al != null)
+					{
+						person.Status = al.GetActionText();
+						person.StatusCss = al.GetActionCss();
+						person.LastActionDate = al.Timestamp;
+					}
+
+					var level = userStates.Where(x => x.UserId == member.User.UserId).FirstOrDefault();
+
+					if (level != null)
+					{
+						person.Staffing = level.GetStaffingText();
+						person.StaffingCss = level.GetStaffingCss();
+					}
+
+					group.Personnel.Add(person);
+				}
+
+				personnelGroupJson.Add(group);
+			}
+
+
+			return Json(personnelGroupJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelGroupStatusForGrid()
+		{
+			List<GroupStatusJson> personnelGroupJson = new List<GroupStatusJson>();
+			var dep = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(dep.DepartmentId);
+
+			foreach (var departmentGroup in groups)
+			{
+				GroupStatusJson group = new GroupStatusJson();
+				group.GroupId = departmentGroup.DepartmentGroupId;
+				group.Name = departmentGroup.Name;
+				group.CanSetGroupStatus = false || (dep.IsUserAnAdmin(UserId) || departmentGroup.IsUserGroupAdmin(UserId));
+
+				personnelGroupJson.Add(group);
+			}
+
+			GroupStatusJson defaultGroup = new GroupStatusJson();
+			defaultGroup.GroupId = 0;
+			defaultGroup.Name = "";
+			defaultGroup.CanSetGroupStatus = false;
+
+			personnelGroupJson.Add(defaultGroup);
+
+			return Json(personnelGroupJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelGroupMemberStatusForGrid(int groupId)
+		{
+			List<PersonnelStatusJson> personnel = new List<PersonnelStatusJson>();
+			var dep = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			var lastUserActionlogs = await _actionLogsService.GetAllActionLogsForDepartmentAsync(dep.DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			if (groupId == 0)
+			{
+				var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(dep.DepartmentId);
+				var groupedUserIds = await _departmentGroupsService.AllGroupedUserIdsForDepartmentAsync(dep.DepartmentId);
+
+				var unGroupedUsers = from u in allUsers
+														 where !(from uid in groupedUserIds
+																		 select uid).Contains(u.UserId)
+														 select u;
+
+				var sortedUsers = from u in unGroupedUsers
+													join pn in personnelNames on u.UserId equals pn.UserId
+													let name = pn.Name
+													orderby name ascending
+													select new
+													{
+														Name = name,
+														User = u
+													};
+
+				foreach (var member in sortedUsers)
+				{
+					PersonnelStatusJson person = new PersonnelStatusJson();
+					person.UserId = member.User.UserId;
+					person.Name = member.Name;
+
+					var al = lastUserActionlogs.Where(x => x.UserId == member.User.UserId).FirstOrDefault();
+
+					if (al != null)
+					{
+						person.Status = al.GetActionText();
+						person.StatusCss = al.GetActionCss();
+						person.LastActionDate = al.Timestamp;
+					}
+
+					var level = await _userStateService.GetLastUserStateByUserIdAsync(member.User.UserId);
+
+					if (level != null)
+					{
+						person.Staffing = level.GetStaffingText();
+						person.StaffingCss = level.GetStaffingCss();
+					}
+
+					personnel.Add(person);
+				}
+			}
+			else
+			{
+				var depGroup = await _departmentGroupsService.GetGroupByIdAsync(groupId);
+
+				var sortedUsers = from u in depGroup.Members
+													join pn in personnelNames on u.UserId equals pn.UserId
+													let name = pn.Name
+													orderby name ascending
+													select new
+													{
+														Name = name,
+														User = u
+													};
+
+				foreach (var member in sortedUsers)
+				{
+					PersonnelStatusJson person = new PersonnelStatusJson();
+					person.UserId = member.User.UserId;
+					person.Name = member.Name;
+
+					var al = lastUserActionlogs.Where(x => x.UserId == member.User.UserId).FirstOrDefault();
+
+					if (al != null)
+					{
+						person.Status = al.GetActionText();
+						person.StatusCss = al.GetActionCss();
+						person.LastActionDate = al.Timestamp;
+					}
+
+					var level = await _userStateService.GetLastUserStateByUserIdAsync(member.User.UserId);
+
+					if (level != null)
+					{
+						person.Staffing = level.GetStaffingText();
+						person.StaffingCss = level.GetStaffingCss();
+					}
+
+					personnel.Add(person);
+				}
+			}
+
+
+			return Json(personnel);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetMembersForRole(int id)
+		{
+			var role = await _personnelRolesService.GetRoleByIdAsync(id);
+
+			if (role == null || role.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			return Json(role.Users?.Select(x => x.UserId).ToList() ?? new List<string>());
+		}
+
+		/// <summary>
+		/// Confirmation page for bringing a removed member back (AddPerson lands here when the e-mail matches one).
+		/// It changes nothing: the reactivation is the POST below. After that POST it shows the result once.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_Create)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> ReactivateUser(string id, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserAddNewUserAsync(DepartmentId, UserId))
+				return Unauthorized();
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(id, DepartmentId);
+			if (member == null || member.DepartmentId != DepartmentId)
+				return NotFound();
+
+			var justReactivated = string.Equals(TempData[ReactivatedUserTempDataKey] as string, id, StringComparison.OrdinalIgnoreCase);
+			if (!member.IsDeleted && !justReactivated)
+				return RedirectToAction("ViewPerson", "Personnel", new { area = "User", userId = id });
+
+			var model = await BuildMemberConfirmationViewAsync(id, member);
+			model.ConfirmationPending = member.IsDeleted;
+			if (model.ConfirmationPending)
+				model.PersonnelLimitReached = !await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId, true);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Personnel_Create)]
+		[RequiresRecentTwoFactor]
+		[ActionName("ReactivateUser")]
+		public async Task<IActionResult> ReactivateUserPost(string id, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserAddNewUserAsync(DepartmentId, UserId))
+				return Unauthorized();
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(id, DepartmentId);
+			if (member == null || member.DepartmentId != DepartmentId)
+				return NotFound();
+
+			// A second submit (double click, back button) finds the member already back and changes nothing.
+			if (member.IsDeleted)
+			{
+				// A returning member takes a personnel seat; at the plan's limit the confirmation page says so instead.
+				if (!await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId, true))
+					return RedirectToAction("ReactivateUser", "Personnel", new { area = "User", id });
+
+				await _departmentsService.ReactivateUserAsync(DepartmentId, id, UserId, cancellationToken);
+
+				_userProfileService.ClearAllUserProfilesFromCache(DepartmentId);
+				_departmentsService.InvalidateDepartmentUsersInCache(DepartmentId);
+				_departmentsService.InvalidatePersonnelNamesInCache(DepartmentId);
+				_departmentsService.InvalidateDepartmentMembers();
+				_usersService.ClearCacheForDepartment(DepartmentId);
+			}
+
+			TempData[ReactivatedUserTempDataKey] = id;
+			return RedirectToAction("ReactivateUser", "Personnel", new { area = "User", id });
+		}
+
+		private const string ReactivatedUserTempDataKey = "ReactivatedUserId";
+		private const string AddedExistingUserTempDataKey = "AddedExistingUserId";
+
+		/// <summary>
+		/// Confirmation page for adding an account that already exists in another department (AddPerson lands here when
+		/// the e-mail matches one). It changes nothing: the add is the POST below. After that POST it shows the result once.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_Create)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> AddExistingUser(string id, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserAddNewUserAsync(DepartmentId, UserId))
+				return Unauthorized();
+
+			if (string.IsNullOrWhiteSpace(id) || _usersService.GetUserById(id) == null)
+				return NotFound();
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(id, DepartmentId);
+			if (member != null)
+			{
+				// A removed member comes back through reactivation, never as a second membership row.
+				if (member.IsDeleted)
+					return RedirectToAction("ReactivateUser", "Personnel", new { area = "User", id });
+
+				var justAdded = string.Equals(TempData[AddedExistingUserTempDataKey] as string, id, StringComparison.OrdinalIgnoreCase);
+				if (!justAdded)
+					return RedirectToAction("ViewPerson", "Personnel", new { area = "User", userId = id });
+			}
+
+			var model = await BuildMemberConfirmationViewAsync(id, member);
+			model.ConfirmationPending = member == null;
+			if (model.ConfirmationPending)
+				model.PersonnelLimitReached = !await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId, true);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Personnel_Create)]
+		[RequiresRecentTwoFactor]
+		[ActionName("AddExistingUser")]
+		public async Task<IActionResult> AddExistingUserPost(string id, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserAddNewUserAsync(DepartmentId, UserId))
+				return Unauthorized();
+
+			if (string.IsNullOrWhiteSpace(id) || _usersService.GetUserById(id) == null)
+				return NotFound();
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(id, DepartmentId);
+			if (member != null && member.IsDeleted)
+				return RedirectToAction("ReactivateUser", "Personnel", new { area = "User", id });
+
+			// A second submit (double click, back button) finds the member already in and changes nothing.
+			if (member == null)
+			{
+				// At the plan's personnel limit the confirmation page says so instead.
+				if (!await _limitsService.CanDepartmentAddNewUserAsync(DepartmentId, true))
+					return RedirectToAction("AddExistingUser", "Personnel", new { area = "User", id });
+
+				var added = await _departmentsService.AddExistingUserAsync(DepartmentId, id, cancellationToken);
+
+				if (added != null)
+				{
+					var auditEvent = new AuditEvent();
+					auditEvent.DepartmentId = DepartmentId;
+					auditEvent.UserId = UserId;
+					auditEvent.Type = AuditLogTypes.UserAdded;
+					auditEvent.After = added.CloneJsonToString();
+					auditEvent.Successful = true;
+					auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+					auditEvent.ServerName = Environment.MachineName;
+					auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+					_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+				}
+
+				_userProfileService.ClearAllUserProfilesFromCache(DepartmentId);
+				_departmentsService.InvalidateDepartmentUsersInCache(DepartmentId);
+				_departmentsService.InvalidatePersonnelNamesInCache(DepartmentId);
+				_departmentsService.InvalidateDepartmentMembers();
+				_usersService.ClearCacheForDepartment(DepartmentId);
+			}
+
+			TempData[AddedExistingUserTempDataKey] = id;
+			return RedirectToAction("AddExistingUser", "Personnel", new { area = "User", id });
+		}
+
+		/// <summary>The ReactivateUser / AddExistingUser page model. <paramref name="member"/> is null for an account not yet in the department.</summary>
+		private async Task<ViewPersonView> BuildMemberConfirmationViewAsync(string id, DepartmentMember member)
+		{
+			ViewPersonView model = new ViewPersonView();
+			model.Profile = await _userProfileService.GetProfileByUserIdAsync(id, true);
+			model.User = _usersService.GetUserById(id);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Group = await _departmentGroupsService.GetGroupForUserAsync(id, DepartmentId);
+			var roles = await _personnelRolesService.GetRolesForUserAsync(id, DepartmentId);
+
+			if (roles != null && roles.Count > 0)
+			{
+				foreach (var role in roles)
+				{
+					if (string.IsNullOrWhiteSpace(model.Roles))
+						model.Roles = role.Name;
+					else
+						model.Roles += string.Format(", {0}", role.Name);
+				}
+			}
+			else
+			{
+				model.Roles = "None";
+			}
+
+			StringBuilder sb = new StringBuilder();
+			if (member != null)
+			{
+				if (member.IsAdmin.HasValue && member.IsAdmin.Value ||
+						model.Department.ManagingUserId == id)
+					sb.Append("Admin");
+				else
+					sb.Append("Normal");
+
+				if (member.IsDisabled.HasValue && member.IsDisabled.Value)
+					sb.Append(sb.Length > 0 ? ", Disabled" : "Disabled");
+
+				if (member.IsHidden.HasValue && member.IsHidden.Value)
+					sb.Append(sb.Length > 0 ? ", Hidden" : "Hidden");
+
+				model.State = sb.ToString();
+			}
+
+			return model;
+		}
+
+		[HttpGet]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> GetRolesForCallGrid()
+		{
+			List<RoleForJson> rolesJson = new List<RoleForJson>();
+			var roles = await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId);
+
+			foreach (var role in roles)
+			{
+				RoleForJson roleJson = new RoleForJson();
+				roleJson.RoleId = role.PersonnelRoleId;
+				roleJson.Name = role.Name;
+
+				if (role.Users != null)
+					roleJson.Count = role.Users.Count;
+				else
+					roleJson.Count = 0;
+
+				rolesJson.Add(roleJson);
+			}
+
+			return Json(rolesJson);
+		}
+
+		#region Roles
+		[HttpGet]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		[Authorize(Policy = ResgridResources.Role_View)]
+		public async Task<IActionResult> Roles()
+		{
+			PersonnelRolesModel model = new PersonnelRolesModel();
+			model.Roles = await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId);
+			model.CanAddNewRole = true;
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Role_Create)]
+		public async Task<IActionResult> AddRole()
+		{
+			AddRoleModel model = new AddRoleModel();
+			model.Role = new PersonnelRole();
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Role_Create)]
+		public async Task<IActionResult> AddRole(AddRoleModel model, CancellationToken cancellationToken)
+		{
+			model.Role.DepartmentId = DepartmentId;
+
+			if (await _personnelRolesService.GetRoleByDepartmentAndNameAsync(model.Role.DepartmentId, model.Role.Name) != null)
+				ModelState.AddModelError("Role.Name", "Role with that name already exists in the department.");
+
+			if (ModelState.IsValid)
+			{
+				await _personnelRolesService.SaveRoleAsync(model.Role, cancellationToken);
+
+				return RedirectToAction("Roles");
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Role_Update)]
+		public async Task<IActionResult> EditRole(int roleId)
+		{
+			if (!await _authorizationService.CanUserEditRoleAsync(UserId, roleId))
+				return Unauthorized();
+
+			EditRoleModel model = new EditRoleModel();
+			model.Role = await _personnelRolesService.GetRoleByIdAsync(roleId);
+			model.Users = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Role_Update)]
+		public async Task<IActionResult> EditRole(EditRoleModel model, IFormCollection collection, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserEditRoleAsync(UserId, model.Role.PersonnelRoleId))
+				return Unauthorized();
+
+			var role = await _personnelRolesService.GetRoleByIdAsync(model.Role.PersonnelRoleId);
+			role.Name = model.Role.Name;
+			role.Description = model.Role.Description;
+
+			var existingRole = await _personnelRolesService.GetRoleByDepartmentAndNameAsync(model.Role.DepartmentId, model.Role.Name);
+			if (existingRole != null && existingRole.PersonnelRoleId != model.Role.PersonnelRoleId)
+				ModelState.AddModelError("Role.Name", "Role with that name already exists in the department.");
+
+			// Phase D4: members the role is gaining are checked against its certification requirements before anything is
+			// removed. Enforce blocks the save and names the members; WarnOnly lets it through with a notice.
+			var incomingUsers = collection.ContainsKey("users") ? collection["users"].ToString().Split(char.Parse(","), StringSplitOptions.RemoveEmptyEntries).Distinct().ToList() : new List<string>();
+			var currentUsers = new HashSet<string>(role.Users.Select(u => u.UserId), StringComparer.OrdinalIgnoreCase);
+			var blocked = new List<string>(); var warned = new List<string>();
+			foreach (var userId in incomingUsers.Where(u => !currentUsers.Contains(u)))
+			{
+				var check = await _personnelRolesService.CheckRoleMembershipAsync(DepartmentId, userId, new[] { role.PersonnelRoleId });
+				if (check.IsBlocked) blocked.Add(userId);
+				else if (check.Warnings.Count > 0) warned.Add(userId);
+			}
+			if (blocked.Count > 0)
+				ModelState.AddModelError("Role.Users", string.Format(_certificationLocalizer["RoleMembersBlocked"].Value, string.Join(", ", await PersonnelDisplayNamesAsync(blocked))));
+
+			if (ModelState.IsValid)
+			{
+				if (warned.Count > 0)
+					TempData["RoleMembersWarning"] = string.Format(_certificationLocalizer["RoleMembersWarned"].Value, string.Join(", ", await PersonnelDisplayNamesAsync(warned)));
+
+				try
+				{
+					// One transaction for the name/description and the membership swap: a refused member (the service's own
+					// gate re-runs against live data) leaves the previous membership untouched.
+					await _personnelRolesService.ReplaceRoleMembersAsync(role, incomingUsers, cancellationToken, UserId);
+				}
+				catch (RoleMembershipException ex)
+				{
+					// The service names the one member it refused (the live re-check can differ from the check above);
+					// a stranger to the department is refused the same way rather than written as a member.
+					var refused = ex.UserId != null ? new[] { ex.UserId } : incomingUsers.Where(u => !currentUsers.Contains(u));
+					var key = ex.Message == RoleMembershipException.NotInDepartment ? "RoleMembersNotInDepartment" : "RoleMembersBlocked";
+					ModelState.AddModelError("Role.Users", string.Format(_certificationLocalizer[key].Value, string.Join(", ", await PersonnelDisplayNamesAsync(refused))));
+					model.Users = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+					return View(model);
+				}
+
+				//_userProfileService.ClearUserProfileFromCache(model.UserId);
+				_userProfileService.ClearAllUserProfilesFromCache(DepartmentId);
+				_departmentsService.InvalidateDepartmentUsersInCache(DepartmentId);
+				_departmentsService.InvalidatePersonnelNamesInCache(DepartmentId);
+				_departmentsService.InvalidateDepartmentMembers();
+				_usersService.ClearCacheForDepartment(DepartmentId);
+
+				return RedirectToAction("Roles");
+			}
+
+			model.Users = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+			return View(model);
+		}
+
+		private async Task<List<string>> PersonnelDisplayNamesAsync(IEnumerable<string> userIds)
+		{
+			var names = (await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId) ?? new List<PersonName>()).GroupBy(n => n.UserId, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.First().Name, StringComparer.OrdinalIgnoreCase);
+			return userIds.Select(id => names.TryGetValue(id, out var name) ? name : id).ToList();
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Role_Delete)]
+		public async Task<IActionResult> DeleteRole(int roleId, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserEditRoleAsync(UserId, roleId))
+				return Unauthorized();
+
+			await _personnelRolesService.DeleteRoleByIdAsync(roleId, cancellationToken);
+
+			// Deleting the role also drops its membership rows, so anything caching who is in what role
+			// has to be dumped or the role keeps showing up on personnel until the cache ages out.
+			_userProfileService.ClearAllUserProfilesFromCache(DepartmentId);
+			_departmentsService.InvalidateDepartmentUsersInCache(DepartmentId);
+			_departmentsService.InvalidatePersonnelNamesInCache(DepartmentId);
+			_departmentsService.InvalidateDepartmentMembers();
+			_usersService.ClearCacheForDepartment(DepartmentId);
+
+			return RedirectToAction("Roles");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Role_View)]
+		public async Task<IActionResult> ViewRole(int roleId)
+		{
+			if (!await _authorizationService.CanUserViewRoleAsync(UserId, roleId))
+				return Unauthorized();
+
+			ViewRoleModel model = new ViewRoleModel();
+			model.Role = await _personnelRolesService.GetRoleByIdAsync(roleId);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+
+		public async Task<IActionResult> GetRoles()
+		{
+			var rolesJson = new List<RoleForJson>();
+			var roles = await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId);
+
+			foreach (var role in roles)
+			{
+				var roleJson = new RoleForJson();
+				roleJson.RoleId = role.PersonnelRoleId;
+				roleJson.Name = role.Name;
+
+				rolesJson.Add(roleJson);
+			}
+
+			return Json(rolesJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+
+		public async Task<IActionResult> GetCertifications()
+		{
+			var certificationsJson = new List<CertificationJson>();
+			var certifications = await _certificationService.GetAllCertificationTypesByDepartmentAsync(DepartmentId);
+
+			foreach (var certification in certifications)
+			{
+				var certificationJson = new CertificationJson();
+				certificationJson.Id = certification.DepartmentCertificationTypeId;
+				certificationJson.Name = certification.Type;
+
+				certificationsJson.Add(certificationJson);
+			}
+
+			return Json(certificationsJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+
+		public async Task<IActionResult> GetRolesForUser(string userId)
+		{
+			var rolesJson = new List<RoleForJson>();
+			var roles = await _personnelRolesService.GetRolesForUserAsync(userId, DepartmentId);
+
+			foreach (var role in roles)
+			{
+				var roleJson = new RoleForJson();
+				roleJson.RoleId = role.PersonnelRoleId;
+				roleJson.Name = role.Name;
+
+				rolesJson.Add(roleJson);
+			}
+
+			return Json(rolesJson);
+		}
+		#endregion Roles
+
+		#region Personnel Events
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> ViewEvents(string userId)
+		{
+			if (!await _authorizationService.CanUserViewUserAsync(UserId, userId))
+				return Unauthorized();
+
+			var model = new ViewPersonEventsView();
+			model.UserId = userId;
+
+			var profile = await _userProfileService.GetProfileByUserIdAsync(userId);
+			model.PersonName = profile != null ? profile.FullName.AsFirstNameLastName : userId;
+
+			model.OSMKey = Config.MappingConfig.OSMKey;
+
+			var address = await _departmentSettingsService.GetBigBoardCenterAddressDepartmentAsync(DepartmentId);
+			var gpsCoordinates = await _departmentSettingsService.GetBigBoardCenterGpsCoordinatesDepartmentAsync(DepartmentId);
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+
+			double? centerLat = null;
+			double? centerLon = null;
+
+			if (!String.IsNullOrWhiteSpace(gpsCoordinates))
+			{
+				var coordinates = gpsCoordinates.Split(char.Parse(","));
+				if (coordinates.Length == 2 &&
+					double.TryParse(coordinates[0], out double parsedLat) &&
+					double.TryParse(coordinates[1], out double parsedLon))
+				{
+					centerLat = parsedLat;
+					centerLon = parsedLon;
+				}
+			}
+
+			if (!centerLat.HasValue && !centerLon.HasValue && address != null)
+			{
+				string coordinates = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3}",
+					address.Address1, address.City, address.State, address.PostalCode));
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					var coordinatesArr = coordinates.Split(char.Parse(","));
+					if (double.TryParse(coordinatesArr[0], out double parsedLat) &&
+						double.TryParse(coordinatesArr[1], out double parsedLon))
+					{
+						centerLat = parsedLat;
+						centerLon = parsedLon;
+					}
+				}
+			}
+
+			if (!centerLat.HasValue && !centerLon.HasValue && department.Address != null)
+			{
+				string coordinates = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3}",
+					department.Address.Address1, department.Address.City,
+					department.Address.State, department.Address.PostalCode));
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					var coordinatesArr = coordinates.Split(char.Parse(","));
+					if (double.TryParse(coordinatesArr[0], out double parsedLat) &&
+						double.TryParse(coordinatesArr[1], out double parsedLon))
+					{
+						centerLat = parsedLat;
+						centerLon = parsedLon;
+					}
+				}
+			}
+
+			if (!centerLat.HasValue || !centerLon.HasValue)
+			{
+				centerLat = 39.14086268299356;
+				centerLon = -119.7583809782715;
+			}
+
+			model.CenterLat = centerLat.Value;
+			model.CenterLon = centerLon.Value;
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Personnel_Delete)]
+		public async Task<IActionResult> ClearAllPersonnelEvents(ViewPersonEventsView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserDeleteUserAsync(DepartmentId, UserId, model.UserId))
+				return Unauthorized();
+
+			if (model.ConfirmClearAll)
+				await _actionLogsService.DeleteActionLogsForUserAsync(model.UserId, cancellationToken);
+
+			return RedirectToAction("ViewEvents", new { userId = model.UserId });
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<IActionResult> GeneratePersonnelEventsReport(IFormCollection form)
+		{
+			var eventIds = new List<int>();
+			foreach (var key in form.Keys)
+			{
+				if (key.ToString().StartsWith("selectEvent_"))
+				{
+					var suffix = key.ToString().Replace("selectEvent_", "");
+					if (int.TryParse(suffix, out var eventId))
+						eventIds.Add(eventId);
+				}
+			}
+
+			var model = new PersonnelEventsReportView();
+			model.Rows = new List<PersonnelEventJson>();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+			var stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+			var activeCalls = await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId);
+			var pois = await _mappingService.GetPOIsForDepartmentAsync(DepartmentId);
+
+			var actionLogs = new List<ActionLog>();
+			foreach (var eventId in eventIds)
+			{
+				var actionLog = await _actionLogsService.GetActionLogByIdAsync(eventId);
+				if (actionLog == null)
+					continue;
+
+				if (actionLog.DepartmentId != DepartmentId)
+					continue;
+
+				if (!await _authorizationService.CanUserViewPersonAsync(UserId, actionLog.UserId, DepartmentId))
+					continue;
+
+				actionLogs.Add(actionLog);
+			}
+
+			var calls = await ReferencedCallsHelper.AddReferencedCallsAsync(_callsService, DepartmentId, activeCalls, actionLogs
+				.Where(x => x.DestinationId.HasValue && x.GetEffectiveDestinationType() != DestinationEntityTypes.Station && x.GetEffectiveDestinationType() != DestinationEntityTypes.Poi)
+				.Select(x => x.DestinationId.Value));
+
+			foreach (var actionLog in actionLogs)
+			{
+				var personnelEvent = new PersonnelEventJson();
+				personnelEvent.EventId = actionLog.ActionLogId;
+				personnelEvent.UserId = actionLog.UserId;
+
+				var profile = await _userProfileService.GetProfileByUserIdAsync(actionLog.UserId);
+				personnelEvent.PersonName = profile != null ? profile.FullName.AsFirstNameLastName : actionLog.UserId;
+
+				var statusDetail = await CustomStatesHelper.GetCustomPersonnelStatus(DepartmentId, actionLog);
+				personnelEvent.State = statusDetail?.ButtonText;
+				personnelEvent.Timestamp = actionLog.Timestamp.TimeConverterToString(model.Department);
+				personnelEvent.Note = actionLog.Note;
+
+				var destination = DestinationResolutionHelper.Resolve(actionLog.DestinationId, actionLog.DestinationType, statusDetail?.DetailType, calls, stations, pois, _localizer);
+				personnelEvent.DestinationName = destination.Name;
+
+				var coordinates = actionLog.GetCoordinates();
+				if (coordinates != null)
+				{
+					if (coordinates.Latitude.HasValue)
+						personnelEvent.Latitude = coordinates.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+					if (coordinates.Longitude.HasValue)
+						personnelEvent.Longitude = coordinates.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				}
+
+				model.Rows.Add(personnelEvent);
+			}
+
+			return View("~/Areas/User/Views/Reports/PersonnelEventsReport.cshtml", model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> GetPersonnelEvents(string userId)
+		{
+			if (!await _authorizationService.CanUserViewUserAsync(UserId, userId))
+				return Unauthorized();
+
+			var personnelEvents = new List<PersonnelEventJson>();
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var profile = await _userProfileService.GetProfileByUserIdAsync(userId);
+			var personName = profile != null ? profile.FullName.AsFirstNameLastName : userId;
+			var allEvents = await _actionLogsService.GetAllActionLogsForUser(userId);
+			var events = allEvents.Where(al => al.DepartmentId == DepartmentId).ToList();
+			var stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+			var activeCalls = await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId);
+			var pois = await _mappingService.GetPOIsForDepartmentAsync(DepartmentId);
+
+			foreach (var actionLog in events)
+			{
+				var personnelEvent = new PersonnelEventJson();
+				personnelEvent.EventId = actionLog.ActionLogId;
+				personnelEvent.UserId = actionLog.UserId;
+				personnelEvent.PersonName = personName;
+
+				var statusDetail = await CustomStatesHelper.GetCustomPersonnelStatus(DepartmentId, actionLog);
+				personnelEvent.State = statusDetail?.ButtonText;
+				personnelEvent.Timestamp = actionLog.Timestamp.TimeConverterToString(department);
+				personnelEvent.Note = actionLog.Note;
+
+				var destination = DestinationResolutionHelper.Resolve(actionLog.DestinationId, actionLog.DestinationType, statusDetail?.DetailType, activeCalls, stations, pois, _localizer);
+				personnelEvent.DestinationName = destination.Name;
+
+				var coordinates = actionLog.GetCoordinates();
+				if (coordinates != null)
+				{
+					if (coordinates.Latitude.HasValue)
+						personnelEvent.Latitude = coordinates.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+					if (coordinates.Longitude.HasValue)
+						personnelEvent.Longitude = coordinates.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				}
+
+				personnelEvents.Add(personnelEvent);
+			}
+
+			return Json(personnelEvents);
+		}
+
+		private async Task<bool> IsValidDestinationAsync(int destinationId, int destinationType)
+		{
+			var entityType = (DestinationEntityTypes)destinationType;
+
+			switch (entityType)
+			{
+				case DestinationEntityTypes.Station:
+					var station = await _departmentGroupsService.GetGroupByIdAsync(destinationId, false);
+					return station != null && station.DepartmentId == DepartmentId;
+				case DestinationEntityTypes.Call:
+					var call = await _callsService.GetCallByIdAsync(destinationId, false);
+					// Group-scoped dispatch (off by default): a call outside the caller's area can't be picked by id either.
+					return call != null && call.DepartmentId == DepartmentId
+						&& await _dispatchScopeService.CanUserAccessCallAsync(DepartmentId, UserId, call);
+				case DestinationEntityTypes.Poi:
+					return await _mappingService.GetDestinationPOIByIdAsync(DepartmentId, destinationId) != null;
+				default:
+					return false;
+			}
+		}
+
+		#endregion Personnel Events
+	}
+}

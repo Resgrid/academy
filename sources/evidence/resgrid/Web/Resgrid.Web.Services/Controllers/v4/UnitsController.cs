@@ -1,0 +1,495 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using System.Linq;
+using System.Threading.Tasks;
+using Resgrid.Web.Services.Helpers;
+using Resgrid.Web.Services.Models.v4.Units;
+using Resgrid.Web.Services.Models.v4.UserDefinedFields;
+using Resgrid.Model;
+using Resgrid.Model.Helpers;
+using Resgrid.Web.Services.Models.v4.Personnel;
+using System.Collections.Generic;
+using System;
+using System.Web;
+using SharpKml.Dom;
+
+namespace Resgrid.Web.Services.Controllers.v4
+{
+	/// <summary>
+	/// Information regarding Units
+	/// </summary>
+	[Route("api/v{VersionId:apiVersion}/[controller]")]
+	[ApiVersion("4.0")]
+	[ApiExplorerSettings(GroupName = "v4")]
+	public class UnitsController : V4AuthenticatedApiControllerbaseSystemAuth
+	{
+		#region Members and Constructors
+		private readonly IUnitsService _unitsService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly ICustomStateService _customStateService;
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUserDefinedFieldsService _userDefinedFieldsService;
+		private readonly IProtectedReadService _protectedReadService;
+
+		public UnitsController(IUnitsService unitsService, IDepartmentGroupsService departmentGroupsService,
+			ICustomStateService customStateService, Model.Services.IAuthorizationService authorizationService,
+			IDepartmentsService departmentsService, IUserDefinedFieldsService userDefinedFieldsService,
+			IProtectedReadService protectedReadService)
+		{
+			_unitsService = unitsService;
+			_departmentGroupsService = departmentGroupsService;
+			_customStateService = customStateService;
+			_authorizationService = authorizationService;
+			_departmentsService = departmentsService;
+			_userDefinedFieldsService = userDefinedFieldsService;
+			_protectedReadService = protectedReadService;
+		}
+
+		/// <summary>The caller's Protected Data Grant, when presented (plan section 3.1 step 6).</summary>
+		private string ProtectedGrantToken => Request.Headers[DataProtectionController.GrantHeader].ToString();
+
+		/// <summary>
+		/// Resolves the catalog-v2 operational fields these endpoints return — unit-state note and
+		/// position, plus UDF values — through the attended read pipeline. With a valid grant the
+		/// values come back as plaintext; without one every enveloped value becomes the exact
+		/// REDACTED placeholder. Either way the DTO converters never see ciphertext.
+		/// </summary>
+		private async Task ResolveOperationalReadsAsync(IReadOnlyList<UnitState> states, IReadOnlyList<UdfFieldValue> udfValues)
+		{
+			if (states != null && states.Count > 0)
+				await _protectedReadService.ResolveUnitStatesForReadAsync(DepartmentId, states, ProtectedGrantToken, UserId);
+
+			if (udfValues != null && udfValues.Count > 0)
+				await _protectedReadService.ResolveUdfFieldValuesForReadAsync(DepartmentId, udfValues, ProtectedGrantToken, UserId);
+		}
+		#endregion Members and Constructors
+
+		/// <summary>
+		/// Gets all the Units for a Department
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet("GetAllUnits")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Unit_View)]
+		public async Task<ActionResult<UnitsResult>> GetAllUnits()
+		{
+			var result = new UnitsResult();
+			var units = await _unitsService.GetUnitsForDepartmentAsync(DepartmentId);
+			var types = await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId);
+
+			if (units != null && units.Any())
+			{
+				var unitStatuses = await _unitsService.GetAllLatestStatusForUnitsByDepartmentIdAsync(DepartmentId);
+
+				// Batch-fetch all UDF values for every unit in one query, then group by EntityId
+				// so each unit can look up its own values without an extra round-trip (avoids N+1).
+				var unitEntityIds = units.Select(u => u.UnitId.ToString()).ToList();
+				var allUdfValues = await _userDefinedFieldsService.GetFieldValuesForEntitiesAsync(
+					DepartmentId, (int)UdfEntityType.Unit, unitEntityIds);
+				var udfValuesByEntityId = allUdfValues
+					.GroupBy(v => v.EntityId)
+					.ToDictionary(g => g.Key, g => g.ToList());
+
+				await ResolveOperationalReadsAsync(unitStatuses?.ToList(), allUdfValues?.ToList());
+
+				foreach (var unit in units)
+				{
+					if (!await _authorizationService.CanUserViewUnitViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+						continue;
+
+					UnitType type = null;
+
+					if (types != null && types.Any())
+						type = types.FirstOrDefault(x => x.Type == unit.Type);
+
+					var unitData = ConvertUnitsData(unit, unitStatuses.FirstOrDefault(x => x.UnitId == unit.UnitId), type, TimeZone);
+
+					if (!await UnitLocationVisibility.CanSeeAsync(_authorizationService, unit.UnitId, UserId, DepartmentId))
+						UnitLocationVisibility.Withhold(unitData);
+
+					if (udfValuesByEntityId.TryGetValue(unit.UnitId.ToString(), out var unitUdfValues) && unitUdfValues.Any())
+					{
+						unitData.UdfValues = unitUdfValues.Select(v => new UdfFieldValueResultData
+						{
+							UdfFieldValueId = v.UdfFieldValueId,
+							UdfFieldId = v.UdfFieldId,
+							UdfDefinitionId = v.UdfDefinitionId,
+							EntityId = v.EntityId,
+							EntityType = v.EntityType,
+							Value = v.Value
+						}).ToList();
+					}
+
+					result.Data.Add(unitData);
+				}
+
+				result.PageSize = result.Data.Count;
+				result.Status = ResponseHelper.Success;
+			}
+			else
+			{
+				result.PageSize = 0;
+				result.Status = ResponseHelper.NotFound;
+			}
+
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets all the Units for a Department
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet("GetAllUnitsInfos")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Unit_View)]
+		public async Task<ActionResult<UnitsInfoResult>> GetAllUnitsInfos(string activeFilter)
+		{
+			var result = new UnitsInfoResult();
+			var units = await _unitsService.GetUnitsForDepartmentAsync(DepartmentId);
+			var types = await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			string filter = null;
+			string[] activeFilters = null;
+			if (!String.IsNullOrWhiteSpace(activeFilter))
+			{
+				filter = HttpUtility.UrlDecode(activeFilter);
+				activeFilters = filter.Split(char.Parse("|"));
+			}
+			var filters = await GetFilterOptions();
+
+			if (units != null && units.Any())
+			{
+				var unitStatuses = await _unitsService.GetAllLatestStatusForUnitsByDepartmentIdAsync(DepartmentId);
+
+				foreach (var unit in units)
+				{
+					if (!await _authorizationService.CanUserViewUnitViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+						continue;
+
+					UnitType type = null;
+
+					if (types != null && types.Any())
+						type = types.FirstOrDefault(x => x.Type == unit.Type);
+
+					var canViewLocation = await UnitLocationVisibility.CanSeeAsync(_authorizationService, unit.UnitId, UserId, DepartmentId);
+
+					var unitState = unitStatuses.FirstOrDefault(x => x.UnitId == unit.UnitId);
+					var customState = await _customStateService.GetCustomUnitStateAsync(unitState);
+
+					if (activeFilters != null)
+					{
+						foreach (var afilter in activeFilters)
+						{
+							if (String.IsNullOrWhiteSpace(afilter) || afilter.Length <= 2)
+								continue;
+
+							//var text = GetTextValue(afilter, filters);
+
+							if (afilter.Substring(0, 2) == "G:")
+							{
+								if (unit != null && unit.StationGroupId != null && afilter.Replace("G:", "").Trim() == unit.StationGroupId.Value.ToString())
+								{
+									var roles = await _unitsService.GetActiveRolesForUnitAsync(unit.UnitId);
+									result.Data.Add(ConvertUnitsInfoResultData(unit, unitState, customState, type, TimeZone, canViewLocation, roles, personnelNames));
+									break;
+								}
+							}
+						}
+					}
+					else
+					{
+						var roles = await _unitsService.GetActiveRolesForUnitAsync(unit.UnitId);
+						result.Data.Add(ConvertUnitsInfoResultData(unit, unitState, customState, type, TimeZone, canViewLocation, roles, personnelNames));
+					}
+				}
+
+				result.PageSize = result.Data.Count;
+				result.Status = ResponseHelper.Success;
+			}
+			else
+			{
+				result.PageSize = 0;
+				result.Status = ResponseHelper.NotFound;
+			}
+
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets all the options available to filter units against compatible Resgrid APIs
+		/// </summary>
+		/// <returns>GetUnitsFilterOptionsResult with information pertaining to each filter option</returns>
+		[HttpGet("GetUnitsFilterOptions")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Personnel_View)]
+		public async Task<ActionResult<GetUnitsFilterOptionsResult>> GetUnitsFilterOptions()
+		{
+			var result = new GetUnitsFilterOptionsResult();
+			result.Data = new List<FilterResult>();
+
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+
+			var everyone = new FilterResult()
+			{
+				Id = "0",
+				Type = "",
+				Name = "All Units"
+			};
+			result.Data.Add(everyone);
+
+			if (groups != null && groups.Any())
+			{
+				foreach (var group in groups)
+				{
+					result.Data.Add(new FilterResult()
+					{
+						Id = $"G:{group.DepartmentGroupId}",
+						Type = "Groups",
+						Name = group.Name
+					});
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Resolves a unit name to the corresponding unit.
+		/// Used by the SMTP relay to resolve unit dispatch codes like "engine2" to numeric unit IDs for DispatchList.
+		/// </summary>
+		/// <param name="name">The unit name to look up.</param>
+		/// <param name="departmentId">Optional department override for SystemApiKey (hosted multi-department) mode.</param>
+		/// <returns>UnitResult with the matching unit, or a not-found response.</returns>
+		[HttpGet("GetUnitByName")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Unit_View)]
+		public async Task<ActionResult<UnitResult>> GetUnitByName(string name, [FromQuery] string departmentId = null)
+		{
+			var result = new UnitResult();
+
+			if (String.IsNullOrWhiteSpace(name))
+			{
+				ResponseHelper.PopulateV4ResponseNotFound(result);
+				return result;
+			}
+
+			var effectiveDepartmentId = GetEffectiveDepartmentId(departmentId);
+
+			if (effectiveDepartmentId <= 0)
+			{
+				ResponseHelper.PopulateV4ResponseNotFound(result);
+				return result;
+			}
+
+			var unit = await _unitsService.GetUnitByNameDepartmentIdAsync(effectiveDepartmentId, name);
+
+			if (unit == null)
+			{
+				ResponseHelper.PopulateV4ResponseNotFound(result);
+				return result;
+			}
+
+			if (!IsSystemApiKeyRequest && !await _authorizationService.CanUserViewUnitViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+			{
+				ResponseHelper.PopulateV4ResponseNotFound(result);
+				return result;
+			}
+
+			result.Data = ConvertUnitsData(unit, null, null, TimeZone);
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		public static UnitResultData ConvertUnitsData(Model.Unit unit, UnitState state, UnitType type, string timeZone)
+		{
+			var data = new UnitResultData();
+			data.UnitId = unit.UnitId.ToString();
+			data.DepartmentId = unit.DepartmentId.ToString();
+			data.Name = unit.Name;
+			data.Type = unit.Type;
+			data.Vin = unit.VIN;
+
+			if (unit.FourWheel.HasValue)
+				data.FourWheelDrive = unit.FourWheel.Value;
+
+			if (unit.SpecialPermit.HasValue)
+				data.SpecialPermit = unit.SpecialPermit.Value;
+
+			if (state != null)
+			{
+				data.CurrentStatusId = state.State.ToString();
+
+				data.CurrentStatusTimestamp = state.Timestamp.TimeConverter(new Department() { TimeZone = timeZone });
+
+				// Resolved upstream by ResolveOperationalReadsAsync: plaintext with a valid grant,
+				// the REDACTED placeholder without one. SafeDisplay stays as a belt-and-braces guard
+				// for any caller that reaches the converter without resolving first.
+				data.Note = ProtectedDataEnvelope.SafeDisplay(state.Note);
+
+				if (state.DestinationId.HasValue)
+					data.CurrentDestinationId = state.DestinationId.Value.ToString();
+
+				if (state.Latitude.HasValue)
+					data.Latitude = state.Latitude.Value.ToString();
+
+				if (state.Longitude.HasValue)
+					data.Longitude = state.Longitude.Value.ToString();
+			}
+
+			if (type != null)
+			{
+				data.CustomStatusSetId = type.CustomStatesId.GetValueOrDefault().ToString();
+				data.TypeId = type.UnitTypeId;
+			}
+
+			if (unit.StationGroup != null)
+			{
+				data.GroupId = unit.StationGroup.DepartmentGroupId.ToString();
+				data.GroupName = unit.StationGroup.Name;
+			}
+
+			return data;
+		}
+
+		public static UnitsInfoResultData ConvertUnitsInfoResultData(Model.Unit unit, UnitState state, CustomStateDetail customState, UnitType type, string timeZone,
+			bool canViewLocation, List<UnitActiveRole> activeRoles, List<PersonName> names)
+		{
+			var data = new UnitsInfoResultData();
+			data.UnitId = unit.UnitId.ToString();
+			data.DepartmentId = unit.DepartmentId.ToString();
+			data.Name = unit.Name;
+			data.Type = unit.Type;
+			data.Vin = unit.VIN;
+
+			if (unit.FourWheel.HasValue)
+				data.FourWheelDrive = unit.FourWheel.Value;
+
+			if (unit.SpecialPermit.HasValue)
+				data.SpecialPermit = unit.SpecialPermit.Value;
+
+			if (state != null)
+			{
+				data.CurrentStatusId = state.State.ToString();
+
+				data.CurrentStatusTimestamp = state.Timestamp.TimeConverter(new Department() { TimeZone = timeZone });
+
+				data.CurrentStatusTimestampUtc = state.Timestamp;
+				data.Note = ProtectedDataEnvelope.SafeDisplay(state.Note);
+
+				if (state.DestinationId.HasValue)
+					data.CurrentDestinationId = state.DestinationId.Value.ToString();
+
+				if (canViewLocation)
+				{
+					if (state.Latitude.HasValue)
+						data.Latitude = state.Latitude.Value.ToString();
+
+					if (state.Longitude.HasValue)
+						data.Longitude = state.Longitude.Value.ToString();
+				}
+			}
+
+			if (type != null)
+			{
+				data.CustomStatusSetId = type.CustomStatesId.GetValueOrDefault().ToString();
+				data.TypeId = type.UnitTypeId;
+			}
+
+			if (unit.StationGroup != null)
+			{
+				data.GroupId = unit.StationGroup.DepartmentGroupId.ToString();
+				data.GroupName = unit.StationGroup.Name;
+			}
+
+			data.Roles = new List<UnitRoleData>();
+
+			if (unit.Roles != null && unit.Roles.Any())
+			{
+				foreach (var role in unit.Roles)
+				{
+					var unitRoleData = new UnitRoleData();
+					unitRoleData.RoleId = role.UnitRoleId.ToString();
+					unitRoleData.RoleName = role.Name;
+
+					if (activeRoles != null && activeRoles.Any())
+					{
+						var activeRole = activeRoles.FirstOrDefault(x => x.Role == role.Name);
+
+						if (activeRole != null)
+						{
+							unitRoleData.UserId = activeRole.UserId;
+
+							if (names != null && names.Any())
+							{
+								var personName = names.FirstOrDefault(x => x.UserId == activeRole.UserId);
+
+								if (personName != null)
+									unitRoleData.Name = $"{personName.FirstName} {personName.LastName}";
+							}
+						}
+					}
+
+					data.Roles.Add(unitRoleData);
+				}
+			}
+
+			if (customState != null)
+			{
+				data.CurrentStatus = customState.ButtonText;
+
+				// ButtonColor is either a hex value or a legacy bootstrap label class; clients cannot
+				// render the latter and were prefixing the former with a second '#'. Resolve to a plain
+				// hex colour here so every client can use the value verbatim.
+				data.CurrentStatusColor = customState.ButtonClassToColor();
+				data.CurrentStatusBaseType = customState.BaseType;
+			}
+
+			return data;
+		}
+
+		private string GetTextValue(string filter, List<FilterResult> filters)
+		{
+			return filters.Where(x => x.Id == filter).Select(y => y.Name).FirstOrDefault();
+		}
+
+		private string GetIdValue(string filter, List<FilterResult> filters)
+		{
+			return filters.Where(x => x.Id == filter).Select(y => y.Name).FirstOrDefault();
+		}
+
+		private async Task<List<FilterResult>> GetFilterOptions()
+		{
+			var result = new List<FilterResult>();
+
+			var stations = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+
+			Parallel.ForEach(stations, s =>
+			{
+				var respondingTo = new FilterResult();
+				respondingTo.Id = $"G:{s.DepartmentGroupId}";
+				respondingTo.Type = "Group";
+				respondingTo.Name = s.Name;
+
+				result.Add(respondingTo);
+			});
+
+			return result;
+		}
+	}
+}

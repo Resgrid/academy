@@ -1,0 +1,119 @@
+Browser tab: 6, Title: "Resgrid | Assistant Settings", URL: "/User/ChatbotSettings".
+1 AXWebArea Resgrid | Assistant Settings, URL: 127.0.0.1:18767/User/ChatbotSettings
+	2 container wrapper
+		3 container
+			4 image
+			5 link Description: Wallace Boden, Value: 127.0.0.1:18767/User/ChatbotSettings#
+			6 content list side-menu
+				7 link Description:  Home, Value: 127.0.0.1:18767/User/Home/Dashboard
+				8 link Description:  Calls, Value: 127.0.0.1:18767/User/Dispatch/Dashboard
+				9 link Description:  Personnel, Value: 127.0.0.1:18767/User/Personnel
+				10 link Description:  Units, Value: 127.0.0.1:18767/User/Units
+				11 link Description:  Contacts, Value: 127.0.0.1:18767/User/Contacts
+				12 link Description:  Mapping, Value: 127.0.0.1:18767/User/Mapping
+				13 link Description:  Shifts, Value: 127.0.0.1:18767/User/Shifts
+				14 link (collapsed) Description: Records, Value: 127.0.0.1:18767/User/ChatbotSettings#, Secondary Actions: Expand
+				15 link Description:  Reports, Value: 127.0.0.1:18767/User/Reports
+				16 link Description:  Documents, Value: 127.0.0.1:18767/User/Documents
+				17 link Description:  Calendar, Value: 127.0.0.1:18767/User/Calendar
+				18 link Description:  Notes, Value: 127.0.0.1:18767/User/Notes
+				19 link Description:  Trainings, Value: 127.0.0.1:18767/User/Trainings
+				20 link Description:  Inventory, Value: 127.0.0.1:18767/User/Inventory
+				21 link (collapsed) Description: Readiness, Value: 127.0.0.1:18767/User/ChatbotSettings#, Secondary Actions: Expand
+				22 link (collapsed) Description: Workforce & Business Ops, Value: 127.0.0.1:18767/User/ChatbotSettings#, Secondary Actions: Expand
+		23 container page-wrapper
+			24 content list
+				25 link Description: Firehouse 51 — Training Department , Value: 127.0.0.1:18767/User/ChatbotSettings#
+				26 link Description: Help , Value: 127.0.0.1:18767/User/ChatbotSettings#
+				27 link (collapsed) Description: Language, Value: 127.0.0.1:18767/User/ChatbotSettings#, ID: languageDropdown, Secondary Actions: Expand
+				28 button Log out
+			29 container
+				30 heading Assistant Settings, Value: 2
+					31 text Assistant Settings
+				32 content list
+					33 link Description: Home, Value: 127.0.0.1:18767/User/Home/Dashboard
+					34 container
+						35 text / 
+						36 link Description: Department Settings, Value: 127.0.0.1:18767/User/Department/Settings
+					37 container
+						38 text /  Assistant
+			39 container
+				40 heading Assistant Configuration, Value: 5
+					41 text Assistant Configuration
+				42 text Assistant settings saved. Enable Assistant
+				43 checkbox (settable, integer) Value: 1, ID: IsEnabled
+				44 text Allow members of this department to interact with the assistant. Allowed Platforms
+				45 text field (settable) Value: WebChat, ID: AllowedPlatforms
+				46 text Comma-separated platform names this department allows, or * for all. Valid names: SmsTwilio, SmsSignalWire, Discord, Slack, Telegram, WhatsApp, MicrosoftTeams, Signal, WebChat, Line, Viber, GoogleChat. Allow Dispatch via Assistant
+				47 checkbox (settable, integer) Value: 0, ID: AllowDispatchViaChatbot
+				48 text Allow authorized users to create or dispatch calls through the assistant. Confirm Status Changes
+				49 checkbox (settable, integer) Value: 1, ID: RequireConfirmationForStatusChange
+				50 text Require an explicit confirmation before destructive or status-changing actions. Confirm Phone Linking
+				51 checkbox (settable, integer) Value: 1, ID: RequireLinkingConfirmation
+				52 text Require a one-time 'Reply YES' confirmation before linking an SMS number to a matching account. Proactive Notifications
+				53 checkbox (settable, integer) Value: 0, ID: ProactiveNotificationsEnabled
+				54 text Allow the assistant to push proactive notifications (calls, reminders) to linked users. Messages / User / Minute
+				55 stepper (settable) MessagesPerUserPerMinute
+				56 text Per-user rate limit. Leave blank to use the system default. Messages / Dept / Minute
+				57 stepper (settable) MessagesPerDepartmentPerMinute
+				58 text Per-department rate limit. Leave blank to use the system default.
+				59 heading Your own AI provider (bring your own key), Value: 5
+					60 text Your own AI provider (bring your own key)
+				61 text With Enhanced AI, your department can connect its own subscription with an AI provider such as OpenAI, Anthropic, Google Gemini, Azure OpenAI or Mistral, or with a model server you run. The chatbot then sends this department's messages to that provider under your agreement with them. Leave these fields empty to use Resgrid's own AI, which never sends your data to cloud AI providers. Your Enhanced AI add-on could not be confirmed right now, so the chatbot uses Resgrid's own AI. Please try again later.
+				62 text Provider
+				63 container
+					64 pop up button (disabled, collapsed, settable) Provider, Value: Choose a provider, ID: llm-provider, Secondary Actions: Expand
+						65 menu
+							66 (disabled) Choose a provider
+							67 (disabled) OpenAI
+							68 (disabled) Anthropic (Claude)
+							69 (disabled) Google Gemini
+							70 (disabled) Microsoft Azure OpenAI
+							71 (disabled) Mistral AI
+							72 (disabled) xAI (Grok)
+							73 (disabled) DeepSeek
+							74 (disabled) Groq
+							75 (disabled) Together AI
+							76 (disabled) Fireworks AI
+							77 (disabled) OpenRouter
+							78 (disabled) Perplexity
+							79 (disabled) Cohere
+							80 (disabled) Other OpenAI-compatible endpoint
+					81 text Choosing a provider fills in its endpoint. For Azure OpenAI, replace {resource} and {deployment} with your own values.
+				82 text LLM Endpoint
+				83 container
+					84 text field (disabled) LLM Endpoint, ID: LlmApiEndpoint
+					85 text The full request URL. It must use https and a public address.
+				86 text LLM Model
+				87 container
+					88 text field (disabled) LLM Model, ID: LlmModelName
+					89 text Enter the model name exactly as your provider lists it.
+				90 text LLM API Key
+				91 container
+					92 text field (disabled) LLM API Key
+					93 text No key stored. The key is encrypted at rest and never displayed.
+				94 button Save
+				95 link Description: Cancel, Value: 127.0.0.1:18767/User/Department/Settings
+			96 container
+				101 container
+					102 button Assistant
+					103 container Assistant
+						104 text Assistant
+						105 button Close
+						106 container
+							107 text Assistant Resgrid AI assistant
+							108 button Description: New assistant conversation, Help: New conversation
+							109 text 7:07 AM
+							110 container rgchat-msg-30a76cc1-3621-4e0b-84b3-4c4fdea36114
+								111 text Wallace Boden 7:07 AM
+								112 text Where do I configure custom unit statuses, and how do their labels differ from their base meanings?
+							113 container rgchat-msg-37e31803-6acb-49e0-a5ee-65c3c9b9a1e8
+								114 text RA Resgrid Assistant 7:07 AM
+								115 text I didn't understand that command. Text HELP to see available commands.
+							116 text entry area (settable)
+							117 button (disabled) Description: Send message, Help: Send
+				98 button Chat
+				99 text Copyright
+				100 text  Resgrid, LLC © 2026 All Rights Reserved.  Version 3.0.0.0
+
+The focused UI element is 102 button Assistant

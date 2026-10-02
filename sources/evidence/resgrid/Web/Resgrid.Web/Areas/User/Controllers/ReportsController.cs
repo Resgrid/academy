@@ -1,0 +1,2619 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Resgrid.Config;
+using Resgrid.Model;
+using Resgrid.Model.Helpers;
+using Resgrid.Model.Reporting;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using Resgrid.Web.Areas.User.Models;
+using Resgrid.Web.Areas.User.Models.Departments.ActionLogs;
+using Resgrid.Web.Areas.User.Models.Reports.Activity;
+using Resgrid.Web.Areas.User.Models.Reports.Calls;
+using Resgrid.Web.Areas.User.Models.Reports.Certifications;
+using Resgrid.Web.Areas.User.Models.Reports.Logs;
+using Resgrid.Web.Areas.User.Models.Reports.Params;
+using Resgrid.Web.Areas.User.Models.Reports.Personnel;
+using Resgrid.Web.Areas.User.Models.Reports.Shifts;
+using Resgrid.Web.Areas.User.Models.Reports.EventAttendance;
+using Resgrid.Web.Areas.User.Models.Reports.Units;
+using Resgrid.Web.Helpers;
+using IAuthorizationService = Resgrid.Model.Services.IAuthorizationService;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	[ClaimsResource(ResgridClaimTypes.Resources.Reports)]
+	public partial class ReportsController : SecureBaseController
+	{
+		#region Private Members and Constructors
+
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUsersService _usersService;
+		private readonly IActionLogsService _actionLogsService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IDepartmentMemberSensitiveDataService _memberSensitiveDataService;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly IAddressService _addressService;
+		private readonly IUserStateService _userStateService;
+		private readonly IScheduledTasksService _scheduledTasksService;
+		private readonly ICertificationService _certificationService;
+		private readonly IWorkLogsService _logService;
+		private readonly IShiftsService _shiftsService;
+		private readonly ICallsService _callsService;
+		private readonly IWorkLogsService _workLogsService;
+		private readonly ICustomStateService _customStateService;
+		private readonly IAuthorizationService _authorizationService;
+		private readonly IUnitsService _unitsService;
+		private readonly IUnitStatesService _unitStatesService;
+		private readonly ICalendarService _calendarService;
+		// Department activity and personnel hours read legacy Logs and finalized Records through one feed, so
+		// totals reconcile across the Records cutover (RMS plan section 4.10).
+		private readonly IRecordsReportingService _recordsReporting;
+		private readonly IBusinessOperationsAccessService _businessOperationsAccess;
+		private readonly ICallStatusAttributionService _callStatusAttributionService;
+
+		public ReportsController(IDepartmentsService departmentsService, IUsersService usersService,
+			IActionLogsService actionLogsService,
+			IDepartmentGroupsService departmentGroupsService, IPersonnelRolesService personnelRolesService,
+			IUserProfileService userProfileService,
+			IAddressService addressService, IUserStateService userStateService,
+			IScheduledTasksService scheduledTasksService,
+			ICertificationService certificationService, IWorkLogsService logService, IShiftsService shiftsService,
+			ICallsService callsService, IWorkLogsService workLogsService,
+			ICustomStateService customStateService, IAuthorizationService authorizationService,
+			IUnitsService unitsService, IUnitStatesService unitStatesService,
+			ICalendarService calendarService, IDepartmentMemberSensitiveDataService memberSensitiveDataService,
+			IProtectedReadService protectedReadService, IRecordsReportingService recordsReporting,
+			IBusinessOperationsAccessService businessOperationsAccess, ICallStatusAttributionService callStatusAttributionService)
+		{
+			_departmentsService = departmentsService;
+			_usersService = usersService;
+			_actionLogsService = actionLogsService;
+			_departmentGroupsService = departmentGroupsService;
+			_personnelRolesService = personnelRolesService;
+			_userProfileService = userProfileService;
+			_memberSensitiveDataService = memberSensitiveDataService;
+			_protectedReadService = protectedReadService;
+			_addressService = addressService;
+			_userStateService = userStateService;
+			_scheduledTasksService = scheduledTasksService;
+			_certificationService = certificationService;
+			_logService = logService;
+			_shiftsService = shiftsService;
+			_callsService = callsService;
+			_workLogsService = workLogsService;
+			_customStateService = customStateService;
+			_authorizationService = authorizationService;
+			_unitsService = unitsService;
+			_unitStatesService = unitStatesService;
+			_calendarService = calendarService;
+			_recordsReporting = recordsReporting;
+			_businessOperationsAccess = businessOperationsAccess;
+			_callStatusAttributionService = callStatusAttributionService;
+		}
+
+		#endregion Private Members and Constructors
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> Index()
+		{
+			return View();
+		}
+
+		#region Action Logs
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> ActionLogs(bool groupSelect, int groupId, string userId, DateTime start,
+			DateTime end)
+		{
+			//var model = new PersonnelStatusHistoryView();
+			//model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			//model.User = _usersService.GetUserById(UserId);
+
+			return View(
+				await PersonnelStatusHistoryReportModel(DepartmentId, groupSelect, groupId, userId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> GetActionLogs()
+		{
+			var actionLogs = new List<ActionLogForJson>();
+			var dep = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var logs = await _actionLogsService.GetAllActionLogsForDepartmentAsync(DepartmentId);
+
+			var names = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			foreach (var l in logs)
+			{
+				var actionLog = new ActionLogForJson();
+
+				var name = names.FirstOrDefault(x => x.UserId == l.UserId);
+				if (name != null)
+					actionLog.Name = name.Name;
+				else
+					actionLog.Name = await UserHelper.GetFullNameForUser(l.UserId);
+
+				actionLog.Timestamp = TimeConverterHelper.TimeConverterToString(l.Timestamp, dep);
+				actionLog.ActionType = l.ActionTypeId;
+
+				if (l.ActionTypeId <= 25)
+				{
+					if (l.ActionTypeId == 1)
+					{
+						actionLog.Action = "Not Responding";
+					}
+					else if (l.ActionTypeId == 2)
+					{
+						actionLog.Action = "Responding";
+					}
+					else if (l.ActionTypeId == 0)
+					{
+						actionLog.Action = "Available";
+					}
+					else if (l.ActionTypeId == 3)
+					{
+						actionLog.Action = "On Scene";
+					}
+					else if (l.ActionTypeId == 4)
+					{
+						if (l.DestinationId.HasValue)
+						{
+							var group = await _departmentGroupsService.GetGroupByIdAsync(l.DestinationId.Value);
+							actionLog.Action = string.Format("Available at {0}", group.Name);
+						}
+						else
+							actionLog.Action = "Available Station";
+					}
+					else if (l.ActionTypeId == 5)
+					{
+						if (l.DestinationId.HasValue)
+						{
+							var group = await _departmentGroupsService.GetGroupByIdAsync(l.DestinationId.Value);
+							actionLog.Action = string.Format("Responding To Station {0}", group.Name);
+						}
+						else
+							actionLog.Action = "Responding To Station";
+					}
+					else if (l.ActionTypeId == 6)
+					{
+						if (l.DestinationId.HasValue)
+							actionLog.Action = string.Format("Responding To Scene {0}", l.DestinationId.Value);
+						else
+							actionLog.Action = "Responding To Scene ";
+					}
+					else if (l.ActionTypeId == 7)
+					{
+							actionLog.Action = l.GetActionText();
+					}
+				}
+				else
+				{
+					var customStatus = await CustomStatesHelper.GetCustomState(DepartmentId, l.ActionTypeId);
+
+					if (customStatus != null)
+					{
+						actionLog.Action = customStatus.ButtonText;
+					}
+					else
+					{
+						actionLog.Action = "Unknown";
+					}
+				}
+
+				actionLogs.Add(actionLog);
+			}
+
+			return Json(actionLogs);
+		}
+
+		#endregion Action Logs
+
+		#region Views
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelReport()
+		{
+			return View(await CreatePersonnelReportModel(DepartmentId));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> StaffingReport()
+		{
+			return View(await CreateStaffingReportModel(DepartmentId));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CertificationsReport()
+		{
+			if (await _businessOperationsAccess.IsEnabledAsync(DepartmentId))
+				return NotFound();
+
+			return View(await CreateCertificationsReportModel(DepartmentId));
+		}
+
+		/// <summary>Workforce &amp; Business Operations plan Phase D9: person × type and unit × type compliance matrices (ReportTypes.CertificationCompliance = 14). Value-free: names, types, statuses and dates only.</summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CertificationComplianceReport()
+		{
+			return View(await CreateCertificationComplianceReportModel(DepartmentId, applyPersonVisibility: true));
+		}
+
+		/// <summary>
+		/// The interactive report applies the personnel visibility matrix like the sibling personnel reports; the scheduled
+		/// InternalRunReport path has no caller identity and renders the department-wide matrix.
+		/// </summary>
+		private async Task<Resgrid.Web.Areas.User.Models.Certifications.CertificationComplianceReportView> CreateCertificationComplianceReportModel(int departmentId, bool applyPersonVisibility)
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			var dashboard = await _certificationService.GetExpiryDashboardAsync(departmentId);
+			if (applyPersonVisibility)
+			{
+				var visible = new List<Resgrid.Model.CertificationDashboardCell>();
+				foreach (var cell in dashboard.PersonCells)
+				{
+					if (await _authorizationService.CanUserViewPersonViaMatrixAsync(cell.SubjectId, UserId, departmentId))
+						visible.Add(cell);
+				}
+				dashboard.PersonCells = visible;
+				// The totals came from the department-wide matrix; over the filtered cells they would both disagree with
+				// the rows on the page and count certification states of the members the matrix hides.
+				dashboard.RecountTotals();
+			}
+
+			return new Resgrid.Web.Areas.User.Models.Certifications.CertificationComplianceReportView
+			{
+				Department = department,
+				RunOn = DateTime.UtcNow.TimeConverter(department),
+				Dashboard = dashboard,
+				Settings = await _certificationService.GetCertificationSettingsAsync(departmentId)
+			};
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> LogReport(int logId)
+		{
+			if (!await _authorizationService.CanUserViewAndEditWorkLogAsync(UserId, logId))
+				return Unauthorized();
+
+			return View(await CreateLogReportModel(logId));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> UpcomingShiftReadinessReport()
+		{
+			return View(await UpcomingShiftReadinessReportModel(DepartmentId));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> DepartmentActivityReport()
+		{
+			return View(await DepartmentActivityReportModel(DepartmentId));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelHoursReport(DateTime start, DateTime end)
+		{
+			return View(await PersonnelHoursReportModel(DepartmentId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelHoursDetailReport(string userId, DateTime start, DateTime end)
+		{
+			return View(await PersonnelHoursDetailReportModel(DepartmentId, userId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelStaffingHistoryReport(bool groupSelect, int groupId, string userId,
+			DateTime start, DateTime end)
+		{
+			return View(
+				await PersonnelStaffingHistoryReportModel(DepartmentId, groupSelect, groupId, userId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CallSummaryReport(DateTime start, DateTime end)
+		{
+			return View(await CallSummaryReportModel(DepartmentId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelHoursReportParams()
+		{
+			var model = new PersonnelHoursReportParams();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Start =
+				TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), department);
+			model.End = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59),
+				department);
+
+			var profiles = new List<UserProfile>();
+
+			if (await _authorizationService.CanUserViewAllPeopleAsync(UserId, DepartmentId))
+				profiles.Add(new UserProfile() { UserId = String.Empty, FirstName = "All", LastName = "Users" });
+
+			var users = await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId);
+			await ApplyMemberIdentificationNumbersAsync(DepartmentId, users?.Values);
+			foreach (var u in users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(u.Key, UserId, DepartmentId))
+					continue;
+
+				profiles.Add(u.Value);
+			}
+
+			model.Users = new SelectList(profiles, "UserId", "FullName.AsFirstNameLastName", Guid.Empty);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> PersonnelHoursReportParams(PersonnelHoursReportParams model)
+		{
+			if (string.IsNullOrWhiteSpace(model.UserId))
+				return RedirectToAction("PersonnelHoursReport", new { start = model.Start, end = model.End });
+			else
+				return RedirectToAction("PersonnelHoursDetailReport",
+					new { userId = model.UserId, start = model.Start, end = model.End });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelStaffingHistoryReportParams()
+		{
+			var model = new PersonnelStaffingHistoryReportParams();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Start =
+				TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), department);
+			model.End = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59),
+				department);
+
+			var profiles = new List<UserProfile>();
+
+			if (await _authorizationService.CanUserViewAllPeopleAsync(UserId, DepartmentId))
+				profiles.Add(new UserProfile() { UserId = String.Empty, FirstName = "All", LastName = "Users" });
+
+			var users = await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId);
+			await ApplyMemberIdentificationNumbersAsync(DepartmentId, users?.Values);
+			foreach (var u in users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(u.Key, UserId, DepartmentId))
+					continue;
+
+				profiles.Add(u.Value);
+			}
+
+			model.Users = new SelectList(profiles, "UserId", "FullName.AsFirstNameLastName", Guid.Empty);
+
+			if (await _authorizationService.CanUserViewAllPeopleAsync(UserId, DepartmentId))
+			{
+				var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+				model.Groups = new SelectList(groups, "DepartmentGroupId", "Name", 0);
+			}
+			else
+			{
+				model.Groups = new SelectList(new List<DepartmentGroup>(), "DepartmentGroupId", "Name", 0);
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> PersonnelStaffingHistoryReportParams(
+			PersonnelStaffingHistoryReportParams model)
+		{
+			return RedirectToAction("PersonnelStaffingHistoryReport",
+				new
+				{
+					groupSelect = model.GroupSelect, groupId = model.GroupId, userId = model.UserId,
+					start = model.Start, end = model.End
+				});
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> UnitStateHistoryReportParams()
+		{
+			var model = new UnitStateHistoryReportParams();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Start =
+				TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), department);
+			model.End = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59),
+				department);
+
+			var units = new List<Unit>();
+			units.Add(new Unit() { UnitId = 0, Name = "All Units" });
+
+			units.AddRange(await _unitsService.GetUnitsForDepartmentAsync(DepartmentId));
+			model.Units = new SelectList(units, "UnitId", "Name", 0);
+
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+			model.Groups = new SelectList(groups, "DepartmentGroupId", "Name", 0);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> UnitStateHistoryReportParams(UnitStateHistoryReportParams model)
+		{
+			return RedirectToAction("UnitStateHistoryReport",
+				new
+				{
+					groupSelect = model.GroupSelect, groupId = model.GroupId, unitId = model.UnitId,
+					start = model.Start, end = model.End
+				});
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> UnitStateHistoryReport(bool groupSelect, int groupId, int unitId,
+			DateTime start, DateTime end)
+		{
+			return View(await UnitStateHistoryReportModel(DepartmentId, groupSelect, groupId, unitId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> ActionLogsParams()
+		{
+			var model = new PersonnelStaffingHistoryReportParams();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Start =
+				TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), department);
+			model.End = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59),
+				department);
+
+			var profiles = new List<UserProfile>();
+			if (await _authorizationService.CanUserViewAllPeopleAsync(UserId, DepartmentId))
+				profiles.Add(new UserProfile() { UserId = String.Empty, FirstName = "All", LastName = "Users" });
+
+			var users = await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId);
+			await ApplyMemberIdentificationNumbersAsync(DepartmentId, users?.Values);
+			foreach (var u in users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(u.Key, UserId, DepartmentId))
+					continue;
+
+				profiles.Add(u.Value);
+			}
+
+			model.Users = new SelectList(profiles, "UserId", "FullName.AsFirstNameLastName", Guid.Empty);
+
+			if (await _authorizationService.CanUserViewAllPeopleAsync(UserId, DepartmentId))
+			{
+				var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+				model.Groups = new SelectList(groups, "DepartmentGroupId", "Name", 0);
+			}
+			else
+			{
+				model.Groups = new SelectList(new List<DepartmentGroup>(), "DepartmentGroupId", "Name", 0);
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> ActionLogsParams(PersonnelStaffingHistoryReportParams model)
+		{
+			return RedirectToAction("ActionLogs",
+				new
+				{
+					groupSelect = model.GroupSelect, groupId = model.GroupId, userId = model.UserId,
+					start = model.Start, end = model.End
+				});
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CallSummaryReportParams()
+		{
+			var model = new PersonnelHoursReportParams();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			model.Start =
+				TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), department);
+			model.End = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59),
+				department);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> CallSummaryReportParams(PersonnelHoursReportParams model)
+		{
+			return RedirectToAction("CallSummaryReport", new { start = model.Start, end = model.End });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CallUnitTimesReportParams()
+		{
+			var model = new PersonnelHoursReportParams();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var today = DateTime.UtcNow.TimeConverter(department).Date;
+
+			model.Start = today.AddDays(-7);
+			model.End = today.AddDays(1).AddSeconds(-1);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CallUnitTimesReportParams(PersonnelHoursReportParams model)
+		{
+			return RedirectToAction("CallUnitTimesReport", new { start = model.Start, end = model.End });
+		}
+
+		/// <summary>
+		/// Dispatched / en route / on scene / staging / cleared per unit per call, for a period or (callId) one call.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CallUnitTimesReport(DateTime? start, DateTime? end, int? callId)
+		{
+			if (callId.HasValue && callId.Value > 0 && !await _authorizationService.CanUserViewCallAsync(UserId, callId.Value))
+				return Unauthorized();
+
+			var model = await CallUnitTimesReportModel(DepartmentId, start, end, callId);
+			if (model == null)
+				return NotFound();
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> CallUnitTimesReportCsv(DateTime? start, DateTime? end, int? callId)
+		{
+			if (callId.HasValue && callId.Value > 0 && !await _authorizationService.CanUserViewCallAsync(UserId, callId.Value))
+				return Unauthorized();
+
+			var model = await CallUnitTimesReportModel(DepartmentId, start, end, callId);
+			if (model == null)
+				return NotFound();
+
+			string Time(DateTime? value) => value.HasValue ? value.Value.TimeConverterToString(model.Department) : string.Empty;
+
+			var csv = new StringBuilder();
+			csv.AppendLine(string.Join(",", new[] { "Call Number", "Call Name", "Call Type", "Logged On", "Closed On", "Unit", "Group",
+				"Dispatched", "En Route", "On Scene", "Staging", "Cleared", "Linked By" }.Select(CsvCell)));
+
+			foreach (var call in model.Calls)
+			{
+				foreach (var unit in call.Units)
+				{
+					csv.AppendLine(string.Join(",", new[]
+					{
+						call.Number, call.Name, call.Type, Time(call.LoggedOn), Time(call.ClosedOn), unit.UnitName, unit.Group,
+						Time(unit.Times.DispatchedOn), Time(unit.Times.EnrouteOn), Time(unit.Times.OnSceneOn), Time(unit.Times.StagingOn),
+						Time(unit.Times.ClearedOn), unit.Times.Source.ToString()
+					}.Select(CsvCell)));
+				}
+			}
+
+			var fileName = callId.HasValue && callId.Value > 0 ? $"call-unit-times-{callId.Value}.csv" : "call-unit-times.csv";
+			return File(new UTF8Encoding(true).GetBytes(csv.ToString()), "text/csv", fileName);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> ActiveCallsResourcesReport()
+		{
+			return View(await ActiveCallsResourcesReportModel(DepartmentId));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> FlaggedCallNotesReport(DateTime? start, DateTime? end)
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return Unauthorized();
+
+			return View(await FlaggedCallNotesReportModel(DepartmentId, start, end));
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public async Task<IActionResult> FlaggedCallNotesReportParams()
+		{
+			if (!ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+				return Unauthorized();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			var model = new FlaggedCallNotesReportParams
+			{
+				Start = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), department),
+				End = TimeConverterHelper.TimeConverter(new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59), department)
+			};
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		public IActionResult FlaggedCallNotesReportParams(FlaggedCallNotesReportParams model)
+		{
+			return RedirectToAction("FlaggedCallNotesReport", new { start = model.Start, end = model.End });
+		}
+		#endregion Views
+
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> InternalRunReport(int type, int departmentId)
+		{
+			var expectedKey = Config.SecurityConfig.InternalReportsToken;
+			var key = Request.Headers["X-Internal-Reports-Token"].ToString();
+
+			if (String.IsNullOrWhiteSpace(expectedKey) || String.IsNullOrWhiteSpace(key) ||
+				!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+					Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(expectedKey)))
+				return Unauthorized();
+
+			if (((ReportTypes)type) == ReportTypes.Staffing)
+			{
+				return View("StaffingReport", await CreateStaffingReportModel(departmentId));
+			}
+			else if (((ReportTypes)type) == ReportTypes.Personnel)
+			{
+				return View("PersonnelReport", await CreatePersonnelReportModel(departmentId));
+			}
+			else if (((ReportTypes)type) == ReportTypes.Certifications)
+			{
+				if (await _businessOperationsAccess.IsEnabledAsync(departmentId))
+					return NotFound();
+
+				return View("CertificationsReport", await CreateCertificationsReportModel(departmentId));
+			}
+			else if (((ReportTypes)type) == ReportTypes.ShiftReadiness)
+			{
+				return View("UpcomingShiftReadinessReport", await UpcomingShiftReadinessReportModel(departmentId));
+			}
+			else if (((ReportTypes)type) == ReportTypes.CertificationCompliance)
+			{
+				return View("CertificationComplianceReport", await CreateCertificationComplianceReportModel(departmentId, applyPersonVisibility: false));
+			}
+
+			return new EmptyResult();
+		}
+
+		private async Task<StaffingReportView> CreateStaffingReportModel(int departmentId)
+		{
+			var model = new StaffingReportView();
+			model.Rows = new List<StaffingReportRow>();
+			//model.StaffingBreakdown = new StaffingBreakdown();
+			model.GroupBreakdowns = new List<GroupBreakdown>();
+
+			var users = await _departmentsService.GetAllUsersForDepartmentAsync(departmentId, false);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+			model.CustomStaffing = await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(departmentId);
+
+			foreach (var user in users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(user.UserId, UserId, DepartmentId))
+					continue;
+
+				var person = new StaffingReportRow();
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				var staffing = await _userStateService.GetLastUserStateByUserIdAsync(user.UserId);
+				var staffingChanges =
+					await _scheduledTasksService.GetUpcomingScheduledTasksByUserIdTaskTypeAsync(user.UserId,
+						TaskTypes.UserStaffingLevel);
+
+				person.Name = await UserHelper.GetFullNameForUser(user.UserId);
+
+				if (group != null)
+					person.Group = group.Name;
+
+				var sb = new StringBuilder();
+				var roles = await _personnelRolesService.GetRolesForUserAsync(user.UserId, DepartmentId);
+				foreach (var role in roles)
+				{
+					if (sb.Length > 0)
+						sb.Append(", ");
+
+					sb.Append(role.Name);
+				}
+
+				person.Roles = sb.ToString();
+				person.Staffing = staffing.State;
+
+				if (staffing.AutoGenerated)
+					person.StaffingTimestamp = "Never";
+				else
+					person.StaffingTimestamp = staffing.Timestamp.FormatForDepartment(model.Department);
+
+				// ADP (catalog v9): every other staffing note in this file is masked; this one was
+				// missed and would have printed the envelope into the report and its PDF.
+				person.StaffingNote = ProtectedDataEnvelope.SafeDisplay(staffing.Note);
+
+				GroupBreakdown groupBreakdown = model.GroupBreakdowns.FirstOrDefault(x => x.Name == person.Group);
+				bool isNew = false;
+				if (groupBreakdown == null)
+				{
+					isNew = true;
+					groupBreakdown = new GroupBreakdown();
+					groupBreakdown.Name = person.Group;
+				}
+
+				groupBreakdown.AddStaffing(model.GetStaffingName(person.Staffing));
+				model.AddStaffing(person.Staffing);
+
+				//if (person.Staffing <= 25)
+				//{
+				//	switch ((UserStateTypes)person.Staffing)
+				//	{
+				//		case UserStateTypes.Available:
+				//			model.StaffingBreakdown.Available++;
+				//			groupBreakdown.Available++;
+				//			break;
+				//		case UserStateTypes.Delayed:
+				//			model.StaffingBreakdown.Delayed++;
+				//			groupBreakdown.Delayed++;
+				//			break;
+				//		case UserStateTypes.Unavailable:
+				//			model.StaffingBreakdown.Unavailable++;
+				//			groupBreakdown.Unavailable++;
+				//			break;
+				//		case UserStateTypes.Committed:
+				//			model.StaffingBreakdown.Committed++;
+				//			groupBreakdown.Committed++;
+				//			break;
+				//		case UserStateTypes.OnShift:
+				//			model.StaffingBreakdown.OnShift++;
+				//			groupBreakdown.OnShift++;
+				//			break;
+				//	}
+				//}
+				//else
+				//{
+				//	//var customState = CustomStatesHelper.GetCustomState(DepartmentId, person.Staffing);
+
+				//	//if (customState != null)
+				//	//{
+				//	//	state = customState.ButtonText;
+				//	//	stateCss = "label-default";
+				//	//	stateStyle = string.Format("color:{0};background-color:{1};", customState.TextColor, customState.ButtonColor);
+				//	//}
+				//	//else
+				//	//{
+				//	//	state = "Unknown";
+				//	//	stateCss = "label-default";
+				//	//}
+				//}
+
+				if (isNew)
+					model.GroupBreakdowns.Add(groupBreakdown);
+
+				if (staffingChanges != null && staffingChanges.Count > 0)
+				{
+					person.NextStaffing = int.Parse(staffingChanges.First().Data);
+					var currentLocalTime = DateTime.UtcNow.TimeConverter(model.Department);
+					var timestamp = staffingChanges.First().WhenShouldJobBeRun(currentLocalTime);
+
+					if (timestamp < currentLocalTime)
+						timestamp = currentLocalTime.AddMinutes(15);
+
+					if (timestamp != null)
+						person.NextStaffingTimestamp = timestamp.Value.FormatForDepartment(model.Department);
+				}
+				else
+				{
+					person.NextStaffing = -1;
+					person.NextStaffingTimestamp = "";
+				}
+
+				model.Rows.Add(person);
+			}
+
+			return model;
+		}
+
+		private async Task<PersonnelReportView> CreatePersonnelReportModel(int departmentId)
+		{
+			var model = new PersonnelReportView();
+			model.Rows = new List<PersonnelReportRow>();
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedMinusDisabledAsync(departmentId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+
+			// Identification number and mailing address are department-scoped and protected (plan
+			// 5.1). Reading them from the global profile would show another department's badge number
+			// and would hand out an address this department has encrypted; resolved here so a
+			// protected department renders the REDACTED placeholder instead.
+			var sensitiveByUser = await _memberSensitiveDataService.GetResolvedForDepartmentAsync(departmentId, null, UserId);
+
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			foreach (var user in users)
+			{
+				var departmentUser = await _departmentsService.GetDepartmentMemberAsync(user.UserId, DepartmentId, false);
+
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(user.UserId, UserId, DepartmentId))
+					continue;
+
+				if (departmentUser != null)
+				{
+					var person = new PersonnelReportRow();
+					var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+					var savedProfile = await _userProfileService.GetProfileByUserIdAsync(user.UserId);
+
+					if (departmentUser.IsAdmin.HasValue && departmentUser.IsAdmin.Value ||
+						model.Department.ManagingUserId == user.UserId)
+						person.DepartmentRole = "Admin";
+					else
+						person.DepartmentRole = "Available";
+
+					if (group != null)
+						person.Group = group.Name;
+
+					person.Email = user.Email;
+					person.Username = user.UserName;
+
+					var sb = new StringBuilder();
+					var roles = await _personnelRolesService.GetRolesForUserAsync(user.UserId, DepartmentId);
+					foreach (var role in roles)
+					{
+						if (sb.Length > 0)
+							sb.Append(", ");
+
+						sb.Append(role.Name);
+					}
+
+					person.Roles = sb.ToString();
+
+					if (savedProfile != null)
+					{
+						sensitiveByUser.TryGetValue(user.UserId, out var sensitive);
+
+						person.Name = savedProfile.FullName.AsFirstNameLastName;
+						person.ID = sensitive?.IdentificationNumber;
+						person.MobilePhoneNumber = savedProfile.MobileNumber;
+
+						if (sensitive != null && !string.IsNullOrWhiteSpace(sensitive.MailingAddress1))
+						{
+							StringBuilder address = new StringBuilder();
+							address.Append("<address>");
+							address.Append(sensitive.MailingAddress1);
+							address.Append("&nbsp<br>");
+							address.Append(sensitive.MailingCity);
+							address.Append(sensitive.MailingState);
+							address.Append(sensitive.MailingPostalCode);
+							address.Append("&nbsp<br>");
+							address.Append(sensitive.MailingCountry);
+							address.Append("&nbsp<br>");
+							address.Append("</address>");
+
+							person.MailingAddress = address.ToString();
+						}
+					}
+					else
+					{
+						var userProfile = await _userProfileService.GetProfileByUserIdAsync(user.UserId);
+						person.Name = userProfile.FullName.AsFirstNameLastName;
+					}
+
+					model.Rows.Add(person);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<CertificationsReportView> CreateCertificationsReportModel(int departmentId)
+		{
+			var model = new CertificationsReportView();
+			model.Rows = new List<CertificationsReportRow>();
+
+			// Active members only: deleted, disabled and hidden members are not reported.
+			var activeMembers = await _departmentsService.GetActiveMemberUserIdsAsync(departmentId) ?? new HashSet<string>();
+			var users = (await _departmentsService.GetAllUsersForDepartmentUnlimitedMinusDisabledAsync(departmentId) ?? new List<Resgrid.Model.Identity.IdentityUser>())
+				.Where(u => u?.UserId != null && activeMembers.Contains(u.UserId)).ToList();
+			var department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+
+			// Department-scoped, protected identification number (plan 5.1) — never the global column.
+			var sensitiveByUser = await _memberSensitiveDataService.GetResolvedForDepartmentAsync(departmentId, null, UserId);
+
+			model.RunOn = DateTime.UtcNow.TimeConverter(department);
+
+			foreach (var user in users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(user.UserId, UserId, DepartmentId))
+					continue;
+
+				var person = new CertificationsReportRow();
+				person.SubRows = new List<CertificationsReportSubRow>();
+
+				// The holder's records across every department they belong to; this report is this department's only.
+				var certifications = (await _certificationService.GetCertificationsByUserIdAsync(user.UserId))?
+					.Where(c => c != null && c.DepartmentId == departmentId).ToList();
+
+				if (certifications != null && certifications.Count > 0)
+				{
+					var savedProfile = await _userProfileService.GetProfileByUserIdAsync(user.UserId);
+
+					if (savedProfile != null)
+					{
+						person.Name = savedProfile.FullName.AsFirstNameLastName;
+						person.ID = sensitiveByUser.TryGetValue(user.UserId, out var sensitive)
+							? sensitive.IdentificationNumber
+							: null;
+					}
+					else
+					{
+						var userProfile = await _userProfileService.GetProfileByUserIdAsync(user.UserId);
+						person.Name = userProfile.FullName.AsFirstNameLastName;
+					}
+
+					// Reports have no reveal step, so a protected department's certification values
+					// render as the placeholder rather than as ciphertext (plan 5.1, catalog v6).
+					foreach (var certification in certifications)
+					{
+						var subRow = new CertificationsReportSubRow();
+						subRow.Name = ProtectedDataEnvelope.SafeDisplay(certification.Name);
+						subRow.Number = ProtectedDataEnvelope.SafeDisplay(certification.Number);
+						subRow.Type = ProtectedDataEnvelope.SafeDisplay(certification.Type);
+						subRow.IssuedBy = ProtectedDataEnvelope.SafeDisplay(certification.IssuedBy);
+
+						if (certification.ExpiresOn.HasValue)
+							subRow.ExpiresOn = certification.ExpiresOn.Value.ToShortDateString();
+
+						subRow.Area = ProtectedDataEnvelope.SafeDisplay(certification.Area);
+
+						person.SubRows.Add(subRow);
+					}
+
+
+					model.Rows.Add(person);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<LogReportView> CreateLogReportModel(int logId)
+		{
+			var model = new LogReportView();
+			model.Log = await _logService.GetWorkLogByIdAsync(logId);
+
+			// The report template writes the narrative, initial report and cause with Html.Raw.
+			// Resolved rather than SafeDisplayed field by field: one call covers every cataloged log
+			// field, including any added by a later catalog version, and a caller holding a grant
+			// still gets the real report.
+			await _protectedReadService.ResolveLogsForReadAsync(model.Log.DepartmentId, new List<Log> { model.Log },
+				Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(model.Log.DepartmentId);
+			model.RunOn = DateTime.UtcNow.TimeConverter(department);
+
+
+			foreach (var user in model.Log.Users)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(user.UserId, UserId, DepartmentId))
+					continue;
+
+				var profile = await _userProfileService.GetProfileByUserIdAsync(user.UserId);
+				var station = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+
+				var stationName = "";
+
+				if (station != null)
+					stationName = station.Name;
+
+				if (!model.UserData.ContainsKey(user.UserId))
+					model.UserData.Add(user.UserId, new Tuple<string, UserProfile>(stationName, profile));
+			}
+
+			if (model.Log.StationGroup != null)
+			{
+				var stationMembers = model.UserData.Count(x => x.Value.Item1 == model.Log.StationGroup.Name);
+				model.Attendance = (stationMembers * 100f) / model.Log.StationGroup.Members.Count;
+			}
+			else
+			{
+				var members = await _departmentsService.GetAllMembersForDepartmentAsync(DepartmentId);
+				model.Attendance = (model.Log.Users.Count * 100f) / members.Count;
+			}
+
+			return model;
+		}
+
+		private async Task<UpcomingShiftReadinessView> UpcomingShiftReadinessReportModel(int departmentId)
+		{
+			var model = new UpcomingShiftReadinessView();
+			model.Rows = new List<UpcomingShiftReadinessReportRow>();
+
+			var shifts = await _shiftsService.GetAllShiftsByDepartmentAsync(departmentId);
+			var department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(department);
+
+			foreach (var s1 in shifts)
+			{
+				var shift = await _shiftsService.PopulateShiftData(s1, true, true, true, true, true);
+
+				if (shift != null && shift.Days != null && shift.Days.Count > 0)
+				{
+					bool readyShift = true;
+					var shiftRow = new UpcomingShiftReadinessReportRow();
+					var nextShiftDay = (from s in shift.Days
+										where s.Day > DateTime.UtcNow.TimeConverter(department)
+										orderby s.Day.Day descending
+										select s).FirstOrDefault();
+
+					if (nextShiftDay != null)
+					{
+						var shiftRoleDeltas = await _shiftsService.GetShiftDayNeedsAsync(nextShiftDay.ShiftDayId);
+
+						shiftRow.ShiftName = shift.Name;
+						shiftRow.ShiftDate = nextShiftDay.Day.ToShortDateString();
+						shiftRow.Type = ((ShiftAssignmentTypes)shift.AssignmentType).ToString();
+
+						if (shift.Groups != null && shift.Groups.Count > 0)
+						{
+							foreach (var group in shift.Groups)
+							{
+								var shiftSubRow = new UpcomingShiftReadinessReportSubRow();
+								shiftSubRow.GroupName = group.DepartmentGroup.Name;
+
+								if (group.Roles != null && group.Roles.Count > 0)
+								{
+									foreach (var role in group.Roles)
+									{
+										var subRowRoles = new UpcomingShiftReadinessGroupRole();
+										subRowRoles.Name = role.Role.Name;
+										subRowRoles.Required = role.Required;
+										subRowRoles.Optional = role.Optional;
+
+										if (shiftRoleDeltas != null && shiftRoleDeltas.ContainsKey(group.DepartmentGroupId))
+										{
+											var roleDelta = shiftRoleDeltas[group.DepartmentGroupId];
+
+											if (roleDelta.ContainsKey(role.PersonnelRoleId))
+												subRowRoles.Delta = roleDelta[role.PersonnelRoleId];
+
+											if (subRowRoles.Delta > 0)
+												readyShift = false;
+										}
+										else
+										{
+											subRowRoles.Delta = 0;
+										}
+
+										shiftSubRow.Roles.Add(subRowRoles);
+									}
+								}
+
+								if (shift.Personnel != null && shift.Personnel.Count > 0)
+								{
+									foreach (var person in shift.Personnel)
+									{
+										var subRowPerson = new UpcomingShiftReadinessPersonnel();
+										subRowPerson.Name = await UserHelper.GetFullNameForUser(person.UserId);
+										subRowPerson.Roles =
+											(await _personnelRolesService.GetRolesForUserAsync(person.UserId, DepartmentId))
+											.Select(x => x.Name).ToList();
+
+										shiftSubRow.Personnel.Add(subRowPerson);
+									}
+								}
+
+								var shiftSignupsForDay =
+									await _shiftsService.GetShiftSignpsForShiftDayAsync(nextShiftDay.ShiftDayId);
+								if (shiftSignupsForDay != null)
+								{
+									foreach (var signup in shiftSignupsForDay.Where(x =>
+												 x.DepartmentGroupId.Value == group.DepartmentGroupId))
+									{
+										var subRowPerson = new UpcomingShiftReadinessPersonnel();
+										subRowPerson.Name = await UserHelper.GetFullNameForUser(signup.UserId);
+										subRowPerson.Roles =
+											(await _personnelRolesService.GetRolesForUserAsync(signup.UserId, DepartmentId))
+											.Select(x => x.Name).ToList();
+
+										shiftSubRow.Personnel.Add(subRowPerson);
+									}
+								}
+
+								shiftRow.SubRows.Add(shiftSubRow);
+							}
+						}
+
+						if (shift.AssignmentType == (int)ShiftAssignmentTypes.Assigned)
+							readyShift = true;
+
+						shiftRow.Ready = readyShift;
+						model.Rows.Add(shiftRow);
+					}
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<DepartmentActivityView> DepartmentActivityReportModel(int departmentId)
+		{
+			var model = new DepartmentActivityView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			var calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId,
+				new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1),
+				new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59));
+			var logs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Training,
+					new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1),
+					new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59));
+
+			model.TotalCalls = calls.Count;
+			model.CallTypeCount = new List<Tuple<string, int>>();
+			model.TrainingMonthCount = new List<Tuple<int, int>>();
+			model.Trainings = new List<PersonnelTraining>();
+
+			var groupedCalls = calls.GroupBy(x => x.Type);
+			foreach (var grouppedCall in groupedCalls)
+			{
+				string key = "No Type";
+				if (!String.IsNullOrWhiteSpace(grouppedCall.Key))
+					key = grouppedCall.Key;
+
+				model.CallTypeCount.Add(new Tuple<string, int>(key, grouppedCall.ToList().Count));
+			}
+
+			model.CallTypeCount.Add(new Tuple<string, int>("Total", calls.Count));
+
+			model.Responses = new List<PersonnelResponse>();
+			var personnel = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId);
+			await ApplyMemberIdentificationNumbersAsync(DepartmentId, profiles?.Values);
+
+			CultureInfo culture = new CultureInfo("en-us");
+			Calendar calendar = culture.Calendar;
+
+			for (int i = 1; i <= 12; i++)
+			{
+				var monthLogs =
+					logs.Where(x => calendar.GetMonth(x.LoggedOn) == i).GroupBy(x => x.Course);
+
+				foreach (var monthLog in monthLogs)
+				{
+					model.TrainingMonthCount.Add(new Tuple<int, int>(i, monthLog.ToList().Count));
+				}
+			}
+
+			foreach (var person in personnel)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(person.UserId, UserId, DepartmentId))
+					continue;
+
+				var response = new PersonnelResponse();
+				var training = new PersonnelTraining();
+
+				var profile = profiles[person.UserId];
+
+				if (profile != null)
+				{
+					var group = await _departmentGroupsService.GetGroupForUserAsync(profile.UserId, DepartmentId);
+
+					response.ID = profile.IdentificationNumber;
+					training.ID = profile.IdentificationNumber;
+					response.Name = profile.FullName.AsFirstNameLastName;
+					training.Name = profile.FullName.AsFirstNameLastName;
+
+					if (group != null)
+					{
+						response.Group = group.Name;
+						training.Group = group.Name;
+
+						var totalTrainings = logs.Where(x =>
+							!x.StationGroupId.HasValue || x.StationGroupId == group.DepartmentGroupId);
+						training.Total = totalTrainings.Count();
+					}
+					else
+					{
+						var totalTrainings = logs.Where(x => !x.StationGroupId.HasValue);
+						training.Total = totalTrainings.Count();
+					}
+
+					var tonedCalls = calls.Where(x => x.Dispatches.Select(y => y.UserId).Contains(person.UserId));
+					response.TotalCalls = tonedCalls.Count();
+
+					var attendedTrainings = logs.Where(x => x.Participants.Select(y => y.UserId).Contains(person.UserId));
+					training.Attended = attendedTrainings.Count();
+
+					var actionLogs = await _actionLogsService.GetAllActionLogsForUserInDateRangeAsync(person.UserId,
+						new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1),
+						new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59));
+
+					response.CallTypeCount = new List<Tuple<string, int>>();
+					foreach (var call in tonedCalls.GroupBy(x => x.Type))
+					{
+						var count = 0;
+
+						foreach (var tonnedCall in call.ToList())
+						{
+							var callLog = await _recordsReporting.GetCallActivityAsync(DepartmentId, UserId, tonnedCall.CallId);
+							if (callLog != null && callLog.Any())
+							{
+								var userLogs = callLog.Where(x => x.Participants.Select(y => y.UserId).Contains(person.UserId));
+								if (userLogs != null && userLogs.Any())
+								{
+									count += userLogs.Count();
+								}
+							}
+
+							var callActionLogs = actionLogs.Where(x => x.DestinationId == tonnedCall.CallId);
+
+							if (callActionLogs != null && callActionLogs.Any())
+							{
+								count += callActionLogs.Count();
+							}
+						}
+
+						string key = "No Type";
+						if (!String.IsNullOrWhiteSpace(call.Key))
+							key = call.Key;
+
+						response.CallTypeCount.Add(new Tuple<string, int>(key, count));
+					}
+
+					model.Responses.Add(response);
+					model.Trainings.Add(training);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<PersonnelHoursView> PersonnelHoursReportModel(int departmentId, DateTime? start,
+			DateTime? end)
+		{
+			var model = new PersonnelHoursView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+			List<Call> calls = new List<Call>();
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+
+				calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, start.Value, end.Value);
+			}
+			else
+			{
+				model.Start = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1);
+				model.End = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59);
+
+				calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, model.Start, model.End);
+			}
+
+			var workLogs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Work, model.Start,
+					model.End);
+			var trainingLogs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Training,
+					model.Start, model.End);
+			var callLogs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Run, model.Start,
+					model.End);
+
+			model.CallsHours = new List<PersonnelCallHours>();
+			model.WorkHours = new List<PersonnelWorkHours>();
+			model.TrainingHours = new List<PersonnelTrainingHours>();
+
+			var personnel = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId);
+			await ApplyMemberIdentificationNumbersAsync(DepartmentId, profiles?.Values);
+
+			foreach (var person in personnel)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(person.UserId, UserId, DepartmentId))
+					continue;
+
+				var callHours = new PersonnelCallHours();
+				var workHours = new PersonnelWorkHours();
+				var trainingHours = new PersonnelTrainingHours();
+
+				var profile = profiles[person.UserId];
+
+				if (profile != null)
+				{
+					var group = await _departmentGroupsService.GetGroupForUserAsync(profile.UserId, DepartmentId);
+
+					callHours.ID = profile.IdentificationNumber;
+					workHours.ID = profile.IdentificationNumber;
+					trainingHours.ID = profile.IdentificationNumber;
+
+					callHours.Name = profile.FullName.AsFirstNameLastName;
+					workHours.Name = profile.FullName.AsFirstNameLastName;
+					trainingHours.Name = profile.FullName.AsFirstNameLastName;
+
+					if (group != null)
+					{
+						callHours.Group = group.Name;
+						workHours.Group = group.Name;
+						trainingHours.Group = group.Name;
+					}
+
+					var totalCallLogs = callLogs.Where(x => x.Participants.Select(y => y.UserId).Contains(person.UserId));
+					callHours.TotalCalls = totalCallLogs.Count();
+
+					double callTotalHours = 0;
+					foreach (var log in totalCallLogs)
+					{
+						var userLog = log.Participants.FirstOrDefault(x => x.UserId == person.UserId);
+						if (log.StartedOn.HasValue && log.EndedOn.HasValue)
+						{
+							callTotalHours += (log.EndedOn.Value - log.StartedOn.Value).TotalSeconds;
+						}
+						else if (userLog != null && userLog.UnitId.HasValue)
+						{
+							var unit = log.Units.FirstOrDefault(x => x.UnitId == userLog.UnitId.Value);
+
+							if (unit != null && unit.Dispatched.HasValue && unit.InQuarters.HasValue)
+								callTotalHours += (unit.InQuarters.Value - unit.Dispatched.Value).TotalSeconds;
+						}
+						else
+						{
+							var call = calls.FirstOrDefault(x => x.CallId == log.CallId);
+
+							if (call != null && call.ClosedOn.HasValue)
+							{
+								callTotalHours += (call.ClosedOn.Value - call.LoggedOn).TotalSeconds;
+							}
+						}
+					}
+
+					callHours.TotalSeconds += callTotalHours;
+
+					var totalWorkLogs = workLogs.Where(x => x.Participants.Select(y => y.UserId).Contains(person.UserId));
+					workHours.TotalWorkLogs = totalWorkLogs.Count();
+					workHours.TotalSeconds = totalWorkLogs.Where(log => log.StartedOn.HasValue && log.EndedOn.HasValue)
+						.Sum(log => (log.EndedOn.Value - log.StartedOn.Value).TotalSeconds);
+
+					var totalTrainingLogs =
+						trainingLogs.Where(x => x.Participants.Select(y => y.UserId).Contains(person.UserId));
+					trainingHours.TotalTrainings = totalTrainingLogs.Count();
+					trainingHours.TotalSeconds = totalTrainingLogs
+						.Where(log => log.StartedOn.HasValue && log.EndedOn.HasValue).Sum(log =>
+							(log.EndedOn.Value - log.StartedOn.Value).TotalSeconds);
+
+					model.CallsHours.Add(callHours);
+					model.WorkHours.Add(workHours);
+					model.TrainingHours.Add(trainingHours);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<PersonnelHoursDetailView> PersonnelHoursDetailReportModel(int departmentId, string userId,
+			DateTime? start, DateTime? end)
+		{
+			var model = new PersonnelHoursDetailView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+			List<Call> calls = new List<Call>();
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+
+				calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, start.Value, end.Value);
+			}
+			else
+			{
+				model.Start = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1);
+				model.End = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59);
+
+				calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, model.Start, model.End);
+			}
+
+			var workLogs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Work,
+					model.Start, model.End);
+
+			var trainingLogs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Training,
+					model.Start, model.End);
+
+			var callLogs =
+				await _recordsReporting.GetActivityAsync(DepartmentId, UserId, RmsOperationalRecordType.Run,
+					model.Start, model.End);
+
+			model.CallDetails = new List<CallDetail>();
+			model.WorkDetails = new List<WorkDetail>();
+			model.TrainingDetails = new List<TrainingDetail>();
+
+			var profile = await _userProfileService.GetProfileByUserIdAsync(userId);
+			await ApplyMemberIdentificationNumbersAsync(DepartmentId, new[] { profile });
+			model.ID = profile.IdentificationNumber;
+			model.Name = profile.FullName.AsFirstNameLastName;
+
+			var group = await _departmentGroupsService.GetGroupForUserAsync(profile.UserId, DepartmentId);
+
+			if (group != null)
+				model.Group = group.Name;
+
+			var totalCallLogs = callLogs.Where(x => x.Participants.Select(y => y.UserId).Contains(userId));
+			foreach (var log in totalCallLogs)
+			{
+				var callDetail = new CallDetail();
+				callDetail.CallNumber = log.CallNumber;
+				callDetail.Name = log.CallName;
+
+				bool valueSet = false;
+				var userLog = log.Participants.FirstOrDefault(x => x.UserId == userId);
+				if (log.StartedOn.HasValue && log.EndedOn.HasValue)
+				{
+					callDetail.Start = log.StartedOn.Value;
+					callDetail.End = log.EndedOn.Value;
+
+					valueSet = true;
+				}
+				else if (userLog != null && userLog.UnitId.HasValue)
+				{
+					var unit = log.Units.FirstOrDefault(x => x.UnitId == userLog.UnitId.Value);
+
+					if (unit != null && unit.Dispatched.HasValue && unit.InQuarters.HasValue)
+					{
+						callDetail.Start = unit.Dispatched.Value;
+						callDetail.End = unit.InQuarters.Value;
+
+						valueSet = true;
+					}
+				}
+				else
+				{
+					var call = calls.FirstOrDefault(x => x.CallId == log.CallId);
+
+					if (call != null && call.ClosedOn.HasValue)
+					{
+						callDetail.Start = call.LoggedOn;
+						callDetail.End = call.ClosedOn.Value;
+
+						valueSet = true;
+					}
+				}
+
+				if (valueSet)
+					model.CallDetails.Add(callDetail);
+			}
+
+			var totalWorkLogs = workLogs.Where(x => x.Participants.Select(y => y.UserId).Contains(userId));
+			foreach (var log in totalWorkLogs)
+			{
+				var workDetail = new WorkDetail();
+
+				if (log.StartedOn.HasValue && log.EndedOn.HasValue)
+				{
+					var loggedByProfile = await _userProfileService.GetProfileByUserIdAsync(log.LoggedByUserId);
+
+					workDetail.Name = string.Format("{0}-{1}", log.LoggedOn.ToString("G"),
+						loggedByProfile.FullName.AsFirstNameLastName);
+					workDetail.Start = log.StartedOn.Value;
+					workDetail.End = log.EndedOn.Value;
+
+					model.WorkDetails.Add(workDetail);
+				}
+			}
+
+			var totalTrainingLogs = trainingLogs.Where(x => x.Participants.Select(y => y.UserId).Contains(userId));
+			foreach (var log in totalTrainingLogs)
+			{
+				var trainingDetail = new TrainingDetail();
+
+				if (log.StartedOn.HasValue && log.EndedOn.HasValue)
+				{
+					trainingDetail.Name = log.Course;
+					trainingDetail.Start = log.StartedOn.Value;
+					trainingDetail.End = log.EndedOn.Value;
+
+					model.TrainingDetails.Add(trainingDetail);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<PersonnelStaffingHistoryView> PersonnelStaffingHistoryReportModel(int departmentId,
+			bool groupSelect, int groupId, string userId, DateTime? start, DateTime? end)
+		{
+			var model = new PersonnelStaffingHistoryView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+			}
+			else
+			{
+				model.Start = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1);
+				model.End = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59);
+			}
+
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(departmentId);
+			await ApplyMemberIdentificationNumbersAsync(departmentId, profiles?.Values);
+			var allStates =
+				await _userStateService.GetAllStatesForDepartmentInDateRangeAsync(departmentId, model.Start, model.End);
+			var groups = await _departmentGroupsService.GetAllDepartmentGroupsForDepartmentAsync(departmentId);
+
+			var states = new List<UserState>();
+
+			if (groupSelect && groupId > 0)
+			{
+				var group = await _departmentGroupsService.GetGroupByIdAsync(groupId);
+				var usersInGroup = group.Members.Select(x => x.UserId);
+
+				states.AddRange(allStates.Where(x => usersInGroup.Contains(x.UserId)));
+			}
+			else
+			{
+				if (!String.IsNullOrWhiteSpace(userId))
+				{
+					states.AddRange(allStates.Where(x => x.UserId == userId));
+				}
+				else
+				{
+					states.AddRange(allStates);
+				}
+			}
+
+			var groupedStates = from s in states
+				group s by s.UserId
+				into g
+				select new { UserId = g.Key, States = g.ToList() };
+
+			foreach (var group in groupedStates)
+			{
+				if (profiles.ContainsKey(group.UserId))
+				{
+					if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(group.UserId, UserId, DepartmentId))
+						continue;
+
+					var summary = new PersonnelStaffingSummary();
+					var profile = profiles[group.UserId];
+
+					summary.ID = profile.IdentificationNumber;
+					summary.Name = profile.FullName.AsFirstNameLastName;
+					summary.TotalStaffingChanges = group.States.Count;
+
+					var scheduledTasks =
+						await _scheduledTasksService.GetScheduledTasksByUserTypeAsync(group.UserId,
+							(int)TaskTypes.UserStaffingLevel);
+					if (scheduledTasks != null)
+						summary.TotalActiveScheduledChanges = scheduledTasks.Count;
+					else
+						summary.TotalActiveScheduledChanges = 0;
+
+					if (groups.ContainsKey(group.UserId))
+					{
+						var dg = groups[group.UserId];
+						summary.Group = dg.Name;
+					}
+
+					foreach (var state in group.States)
+					{
+						var detail = new PersonnelStaffingDetail();
+						detail.Timestamp = state.Timestamp.TimeConverterToString(model.Department);
+						detail.Note = ProtectedDataEnvelope.SafeDisplay(state.Note);
+
+						var customState = await CustomStatesHelper.GetCustomPersonnelStaffing(departmentId, state);
+						detail.State = customState.ButtonText;
+						detail.StateColor = customState.ButtonColor;
+
+						summary.Details.Add(detail);
+					}
+
+					model.Personnel.Add(summary);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<CallSummaryView> CallSummaryReportModel(int departmentId, DateTime? start, DateTime? end)
+		{
+			var model = new CallSummaryView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+			}
+			else
+			{
+				model.Start = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1);
+				model.End = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59);
+			}
+
+			// The range is picked in department-local time; the call and log timestamps are UTC.
+			var startUtc = model.Start.DepartmentLocalToUtc(model.Department);
+			var endUtc = model.End.DepartmentLocalToUtc(model.Department);
+
+			var calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(departmentId, startUtc, endUtc);
+			var logs = await _logService.GetAllLogsByDepartmentDateRangeAsync(departmentId, LogTypes.Run, startUtc,
+				endUtc);
+
+			model.TotalCalls = calls.Count;
+			model.CallTypeCount = new List<Tuple<string, int>>();
+			model.CallCloseCount = new List<Tuple<string, int>>();
+			model.CallSummaries = new List<CallSummary>();
+
+			var groupedCalls = calls.GroupBy(x => x.Type);
+			foreach (var grouppedCall in groupedCalls)
+			{
+				string key = "No Type";
+				if (!String.IsNullOrWhiteSpace(grouppedCall.Key))
+					key = grouppedCall.Key;
+
+				model.CallTypeCount.Add(new Tuple<string, int>(key, grouppedCall.ToList().Count));
+			}
+
+			model.CallTypeCount.Add(new Tuple<string, int>("Total", calls.Count));
+
+			var groupedCallStates = calls.GroupBy(x => x.State);
+			foreach (var grouppedCall in groupedCallStates)
+			{
+				model.CallCloseCount.Add(new Tuple<string, int>(((CallStates)grouppedCall.Key).ToString(),
+					grouppedCall.ToList().Count));
+			}
+
+			model.CallCloseCount.Add(new Tuple<string, int>("Total", calls.Count));
+
+			// Calls without a run log (most departments never write one, and none can once Records is active) take
+			// their unit/personnel counts and first on-scene time from the status history linked to the call.
+			var callsWithoutLogs = calls.Where(c => !logs.Any(l => l.CallId == c.CallId)).ToList();
+			var statusActivity = callsWithoutLogs.Count > 0
+				? await GetCallStatusActivityAsync(departmentId, callsWithoutLogs, startUtc, endUtc)
+				: new Dictionary<int, (int Units, int Personnel, DateTime? FirstOnScene)>();
+
+			foreach (var call in calls)
+			{
+				var summary = new CallSummary();
+				summary.Number = call.Number;
+				summary.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				summary.LoggedOn = call.LoggedOn;
+				summary.ClosedOn = call.ClosedOn;
+				summary.Type = ProtectedDataEnvelope.SafeDisplay(call.Type);
+
+				DateTime? onSceneTime = null;
+				var callLogs = logs.Where(x => x.CallId == call.CallId);
+
+				if (callLogs != null && callLogs.Any())
+				{
+					foreach (var callLog in callLogs)
+					{
+						if (callLog.Units != null && callLog.Units.Any())
+						{
+							summary.UnitsCount += callLog.Units.Count();
+
+							foreach (var unit in callLog.Units)
+							{
+								if (unit.OnScene.HasValue)
+								{
+									if (onSceneTime.HasValue == false || onSceneTime.Value > unit.OnScene.Value)
+										onSceneTime = unit.OnScene;
+								}
+							}
+						}
+
+						if (callLog.Users != null && callLog.Users.Any())
+							summary.PersonnelCount += callLog.Users.Count();
+					}
+
+					summary.FirstOnSceneTime = onSceneTime;
+				}
+				else if (statusActivity.TryGetValue(call.CallId, out var activity))
+				{
+					summary.FirstOnSceneTime = activity.FirstOnScene;
+					summary.UnitsCount = activity.Units;
+					summary.PersonnelCount = activity.Personnel;
+				}
+				else
+				{
+					summary.FirstOnSceneTime = null;
+					summary.UnitsCount = 0;
+					summary.PersonnelCount = 0;
+				}
+
+				model.CallSummaries.Add(summary);
+			}
+
+			return model;
+		}
+
+		/// <summary>
+		/// Per call: distinct units and personnel with a status on the call's record (linked or inferred, see
+		/// CallStatusAttribution), and the first unit on-scene time (custom statuses count through their base type). Status
+		/// history is read once for the report window rather than once per call.
+		/// </summary>
+		private async Task<Dictionary<int, (int Units, int Personnel, DateTime? FirstOnScene)>> GetCallStatusActivityAsync(int departmentId,
+			List<Call> calls, DateTime startUtc, DateTime endUtc)
+		{
+			var callIds = calls.Select(c => c.CallId).ToHashSet();
+			var customStates = await _customStateService.GetAllCustomStatesForDepartmentAsync(departmentId);
+			var unitBaseTypes = CallStatusLinkage.BuildUnitBaseTypeMap(customStates);
+
+			var statesByCall = await _callStatusAttributionService.GetUnitStatesForCallsAsync(departmentId, calls);
+			var logsByCall = await _callStatusAttributionService.GetActionLogsForCallsAsync(departmentId, calls);
+
+			var result = new Dictionary<int, (int Units, int Personnel, DateTime? FirstOnScene)>();
+			foreach (var callId in callIds)
+			{
+				var callUnitStates = statesByCall.TryGetValue(callId, out var callStates) ? callStates : new List<UnitState>();
+				var firstOnScene = callUnitStates
+					.Where(s => CallStatusLinkage.ResolveUnitStateKind(s.State, unitBaseTypes) == UnitStateTypes.OnScene)
+					.Select(s => (DateTime?)s.Timestamp)
+					.OrderBy(t => t)
+					.FirstOrDefault();
+
+				var callLogs = logsByCall.TryGetValue(callId, out var logs) ? logs : new List<ActionLog>();
+
+				result[callId] = (callUnitStates.Select(s => s.UnitId).Distinct().Count(),
+					callLogs.Select(a => a.UserId).Distinct(StringComparer.OrdinalIgnoreCase).Count(),
+					firstOnScene);
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// The unit times report for a period or (callId) one call; null when that call is deleted or not the department's.
+		/// </summary>
+		private async Task<CallUnitTimesView> CallUnitTimesReportModel(int departmentId, DateTime? start, DateTime? end, int? callId)
+		{
+			var model = new CallUnitTimesView();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			var calls = new List<Call>();
+			if (callId.HasValue && callId.Value > 0)
+			{
+				model.CallId = callId.Value;
+				var call = await _callsService.GetCallByIdAsync(callId.Value);
+
+				// A deleted call has no report (the caller answers NotFound).
+				if (call == null || call.DepartmentId != departmentId || call.IsDeleted)
+					return null;
+
+				calls.Add(call);
+				model.Start = call.LoggedOn.TimeConverter(model.Department);
+				model.End = (call.ClosedOn ?? DateTime.UtcNow).TimeConverter(model.Department);
+			}
+			else
+			{
+				var today = DateTime.UtcNow.TimeConverter(model.Department).Date;
+				model.Start = start ?? today.AddDays(-7);
+				model.End = end ?? today.AddDays(1).AddSeconds(-1);
+
+				// The range is picked in department-local time; call timestamps are UTC.
+				calls = (await _callsService.GetAllCallsByDepartmentDateRangeAsync(departmentId,
+					model.Start.DepartmentLocalToUtc(model.Department), model.End.DepartmentLocalToUtc(model.Department))) ?? new List<Call>();
+			}
+
+			if (calls.Count == 0)
+				return model;
+
+			var statesByCall = await _callStatusAttributionService.GetUnitStatesForCallsAsync(departmentId, calls);
+			var dispatchesByCall = await _callStatusAttributionService.GetUnitDispatchesForCallsAsync(departmentId, calls);
+			var customBaseTypes = await _unitsService.GetCustomUnitStateBaseTypesAsync(departmentId);
+			var units = (await _unitsService.GetUnitsForDepartmentAsync(departmentId) ?? new List<Unit>()).ToDictionary(x => x.UnitId);
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(departmentId) ?? new List<DepartmentGroup>();
+
+			foreach (var call in calls.OrderBy(x => x.LoggedOn))
+			{
+				var callModel = new CallUnitTimesCall
+				{
+					CallId = call.CallId,
+					Number = call.Number,
+					Name = ProtectedDataEnvelope.SafeDisplay(call.Name),
+					Type = ProtectedDataEnvelope.SafeDisplay(call.Type),
+					LoggedOn = call.LoggedOn,
+					ClosedOn = call.ClosedOn
+				};
+
+				statesByCall.TryGetValue(call.CallId, out var states);
+				dispatchesByCall.TryGetValue(call.CallId, out var dispatches);
+
+				foreach (var row in CallUnitTimesCalculator.Compute(dispatches, states, customBaseTypes))
+				{
+					units.TryGetValue(row.UnitId, out var unit);
+					var group = unit?.StationGroupId != null ? groups.FirstOrDefault(g => g.DepartmentGroupId == unit.StationGroupId.Value) : null;
+
+					callModel.Units.Add(new CallUnitTimesUnit { UnitName = unit?.Name ?? $"#{row.UnitId}", Group = group?.Name, Times = row });
+
+					model.AnyAutoLinked |= row.Source == CallUnitTimesSources.AutoLinked;
+					model.AnyInferred |= row.Source == CallUnitTimesSources.Inferred;
+				}
+
+				callModel.Units = callModel.Units.OrderBy(x => x.Times.DispatchedOn ?? x.Times.EnrouteOn ?? x.Times.OnSceneOn ?? DateTime.MaxValue).ThenBy(x => x.UnitName).ToList();
+				model.Calls.Add(callModel);
+			}
+
+			return model;
+		}
+
+		/// <summary>Quotes a CSV cell and neutralises spreadsheet formula prefixes in user-entered text.</summary>
+		private static string CsvCell(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+				return string.Empty;
+
+			if ("=+-@\t\r".Contains(value[0]))
+				value = "'" + value;
+
+			return "\"" + value.Replace("\"", "\"\"") + "\"";
+		}
+
+		private async Task<PersonnelStatusHistoryView> PersonnelStatusHistoryReportModel(int departmentId,
+			bool groupSelect, int groupId, string userId, DateTime? start, DateTime? end)
+		{
+			var model = new PersonnelStatusHistoryView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+			}
+			else
+			{
+				model.Start = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1);
+				model.End = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59);
+			}
+
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(departmentId);
+			await ApplyMemberIdentificationNumbersAsync(departmentId, profiles?.Values);
+			var groups = await _departmentGroupsService.GetAllDepartmentGroupsForDepartmentAsync(departmentId);
+
+			// The range is picked in department-local time; action log timestamps are UTC.
+			var startUtc = model.Start.DepartmentLocalToUtc(model.Department);
+			var endUtc = model.End.DepartmentLocalToUtc(model.Department);
+
+			var statuses = new List<ActionLog>();
+
+			if (groupSelect && groupId > 0)
+			{
+				var group = await _departmentGroupsService.GetGroupByIdAsync(groupId);
+
+				if (group != null && group.DepartmentId == departmentId && group.Members != null)
+				{
+					var usersInGroup = group.Members.Select(x => x.UserId);
+
+					foreach (var user in usersInGroup)
+					{
+						statuses.AddRange(
+							await _actionLogsService.GetAllActionLogsForUserInDateRangeAsync(user, startUtc, endUtc));
+					}
+				}
+			}
+			else
+			{
+				if (!String.IsNullOrWhiteSpace(userId))
+				{
+					// Only a member of this department can be reported on.
+					if (await _departmentsService.GetDepartmentMemberAsync(userId, departmentId) != null)
+						statuses.AddRange(
+							await _actionLogsService.GetAllActionLogsForUserInDateRangeAsync(userId, startUtc,
+								endUtc));
+				}
+				else
+				{
+					statuses.AddRange(
+						await _actionLogsService.GetAllActionLogsInDateRangeAsync(departmentId, startUtc,
+							endUtc));
+				}
+			}
+
+			// A member of several departments has statuses in each; only this department's belong here.
+			statuses = statuses.Where(x => x != null && x.DepartmentId == departmentId).ToList();
+
+			var groupedStates = from s in statuses
+				group s by s.UserId
+				into g
+				select new { UserId = g.Key, States = g.ToList() };
+
+			foreach (var group in groupedStates)
+			{
+				if (profiles.ContainsKey(group.UserId))
+				{
+					var summary = new PersonnelStatusSummary();
+					var profile = profiles[group.UserId];
+
+					summary.ID = profile.IdentificationNumber;
+					summary.Name = profile.FullName.AsFirstNameLastName;
+					summary.TotalStaffingChanges = group.States.Count;
+
+					if (groups.ContainsKey(group.UserId))
+					{
+						var dg = groups[group.UserId];
+						summary.Group = dg.Name;
+					}
+
+					foreach (var state in group.States)
+					{
+						var detail = new PersonnelStatusDetail();
+						detail.Timestamp = state.Timestamp.TimeConverterToString(model.Department);
+						detail.Note = ProtectedDataEnvelope.SafeDisplay(state.Note);
+
+						var customState = await CustomStatesHelper.GetCustomPersonnelStatus(departmentId, state);
+
+						if (customState != null)
+						{
+							detail.Status = customState.ButtonText;
+							detail.StatusColor = customState.ButtonColor;
+						}
+						else
+						{
+							detail.Status = "Unknown";
+							detail.StatusColor = "#FFF";
+						}
+
+						summary.Details.Add(detail);
+					}
+
+					model.Personnel.Add(summary);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<UnitStateHistoryView> UnitStateHistoryReportModel(int departmentId, bool groupSelect,
+			int groupId, int unitId, DateTime? start, DateTime? end)
+		{
+			var model = new UnitStateHistoryView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+			}
+			else
+			{
+				model.Start = new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1);
+				model.End = new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59);
+			}
+
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(departmentId);
+			await ApplyMemberIdentificationNumbersAsync(departmentId, profiles?.Values);
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(departmentId);
+			var units = await _unitsService.GetUnitsForDepartmentAsync(departmentId);
+
+			// The range is picked in department-local time; unit state timestamps are UTC.
+			var startUtc = model.Start.DepartmentLocalToUtc(model.Department);
+			var endUtc = model.End.DepartmentLocalToUtc(model.Department);
+
+			var statuses = new List<UnitState>();
+
+			if (groupSelect && groupId > 0)
+			{
+				// Only this department's units are reported on, whatever group or unit id was posted.
+				var unitsInGroup = (units ?? new List<Unit>()).Where(x => x.StationGroupId == groupId);
+
+				foreach (var unit in unitsInGroup)
+				{
+					var groupUnitStates = await _unitStatesService.GetAllStatesForUnitInDateRangeAsync(unit.UnitId, startUtc, endUtc);
+
+					if (groupUnitStates != null)
+						statuses.AddRange(groupUnitStates);
+				}
+			}
+			else
+			{
+				if (unitId > 0)
+				{
+					if (units != null && units.Any(x => x.UnitId == unitId))
+					{
+						var perUnitStates = await _unitStatesService.GetAllStatesForUnitInDateRangeAsync(unitId, startUtc, endUtc);
+
+						if (perUnitStates != null)
+							statuses.AddRange(perUnitStates);
+					}
+				}
+				else
+				{
+					foreach (var unit in units)
+					{
+						var unitStates = await _unitStatesService.GetAllStatesForUnitInDateRangeAsync(unit.UnitId, startUtc, endUtc);
+
+						if (unitStates != null)
+							statuses.AddRange(unitStates);
+					}
+				}
+			}
+
+			var groupedStates = from s in statuses
+				group s by s.UnitId
+				into g
+				select new { UnitId = g.Key, Unit = units.FirstOrDefault(x => x.UnitId == g.Key), States = g.ToList() };
+
+			foreach (var group in groupedStates)
+			{
+				var summary = new UnitStateSummary();
+				summary.Name = group.Unit?.Name;
+				summary.TotalStatusChanges = group.States.Count;
+
+				if (group.Unit?.StationGroupId.HasValue == true)
+				{
+					var groupInfo = groups.FirstOrDefault(x => x.DepartmentGroupId == group.Unit?.StationGroupId);
+					if (groupInfo != null)
+					{
+						summary.Group = groupInfo.Name;
+					}
+				}
+
+				foreach (var state in group.States)
+				{
+					var detail = new UnitStateDetail();
+					detail.Timestamp = state.Timestamp.TimeConverterToString(model.Department);
+					detail.Note = ProtectedDataEnvelope.SafeDisplay(state.Note);
+
+					var customState = await CustomStatesHelper.GetCustomUnitState(state);
+
+					if (customState != null)
+					{
+						detail.State = customState.ButtonText;
+						detail.StateColor = customState.ButtonColor;
+					}
+					else
+					{
+						detail.State = "Unknown";
+						detail.StateColor = "#FFF";
+					}
+
+					summary.Details.Add(detail);
+				}
+
+				model.Units.Add(summary);
+			}
+
+			return model;
+		}
+
+		private async Task<OpenCallResourceView> ActiveCallsResourcesReportModel(int departmentId)
+		{
+			var model = new OpenCallResourceView();
+
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			var calls = await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId);
+			var personnel = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false);
+			var units = await _unitsService.GetUnitsForDepartmentAsync(DepartmentId);
+			var activeRoles = await _unitsService.GetAllActiveRolesForUnitsByDepartmentIdAsync(DepartmentId);
+
+			foreach (var call in calls)
+			{
+				var summary = new OpenCallResource();
+				summary.Number = call.Number;
+				summary.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				summary.LoggedOn = call.LoggedOn.TimeConverter(model.Department);
+				summary.Type = ProtectedDataEnvelope.SafeDisplay(call.Type);
+
+				var callData = await _callsService.PopulateCallData(call, true, false, false, true, true, true, false, false, false);
+
+				if (callData != null)
+				{
+					if (callData.Dispatches != null && callData.Dispatches.Any())
+					{
+						foreach (var dispatch in callData.Dispatches)
+						{
+							var person = personnel.FirstOrDefault(x => x.UserId == dispatch.UserId);
+
+							if (person != null)
+							{
+								var personResource = new OpenCallResourcePerson();
+								personResource.Name = person.Name;
+								personResource.Roles = person.RoleNames;
+								personResource.GroupName = person.DepartmentGroupName;
+								personResource.DispatchedOn = dispatch.DispatchedOn.TimeConverter(model.Department);
+
+								summary.Personnel.Add(personResource);
+							}
+						}
+					}
+
+					if (callData.UnitDispatches != null && callData.UnitDispatches.Any())
+					{
+						foreach (var disaptch in callData.UnitDispatches)
+						{
+							var unit = units.FirstOrDefault(x => x.UnitId == disaptch.UnitId);
+
+							if (unit != null)
+							{
+								var unitResource = new OpenCallResourceUnit();
+								unitResource.UnitName = unit.Name;
+								unitResource.DispatchedOn = disaptch.DispatchedOn.TimeConverter(model.Department);
+
+								if (unit.Roles != null && unit.Roles.Any())
+								{
+									foreach (var role in unit.Roles)
+									{
+										var activeRole = activeRoles.FirstOrDefault(x => x.Role == role.Name);
+
+										if (activeRole != null)
+										{
+											var activeRolePerson = personnel.FirstOrDefault(x => x.UserId == activeRole.UserId);
+
+											if (activeRolePerson != null)
+											{
+												var roleUnitPerson = new OpenCallResourcePerson();
+												roleUnitPerson.Name = activeRolePerson.Name;
+												roleUnitPerson.Roles = activeRolePerson.RoleNames;
+												roleUnitPerson.GroupName = activeRolePerson.DepartmentGroupName;
+
+												unitResource.Roles.Add(role.Name, roleUnitPerson);
+											}
+										}
+									}
+								}
+
+								summary.Units.Add(unitResource);
+							}
+						}
+					}
+
+					model.Calls.Add(summary);
+				}
+			}
+
+			return model;
+		}
+
+		private async Task<FlaggedCallNotesReportView> FlaggedCallNotesReportModel(int departmentId, DateTime? start = null, DateTime? end = null)
+		{
+			var model = new FlaggedCallNotesReportView();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(departmentId, false);
+			model.RunOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			if (start.HasValue && end.HasValue)
+			{
+				model.Start = start.Value;
+				model.End = end.Value;
+			}
+
+			var flaggedNotes = await _callsService.GetFlaggedCallNotesByDepartmentIdAsync(departmentId);
+			var flaggedImages = await _callsService.GetFlaggedCallImagesByDepartmentIdAsync(departmentId);
+			var flaggedFiles = await _callsService.GetFlaggedCallFilesByDepartmentIdAsync(departmentId);
+
+			if (start.HasValue && end.HasValue)
+			{
+				flaggedNotes = flaggedNotes
+					.Where(n => n.FlaggedOn.HasValue &&
+					            n.FlaggedOn.Value.TimeConverter(model.Department) >= start.Value &&
+					            n.FlaggedOn.Value.TimeConverter(model.Department) <= end.Value)
+					.ToList();
+				flaggedImages = flaggedImages
+					.Where(i => i.FlaggedOn.HasValue &&
+					            i.FlaggedOn.Value.TimeConverter(model.Department) >= start.Value &&
+					            i.FlaggedOn.Value.TimeConverter(model.Department) <= end.Value)
+					.ToList();
+				flaggedFiles = flaggedFiles
+					.Where(f => f.FlaggedOn.HasValue &&
+					            f.FlaggedOn.Value.TimeConverter(model.Department) >= start.Value &&
+					            f.FlaggedOn.Value.TimeConverter(model.Department) <= end.Value)
+					.ToList();
+			}
+
+			var allCallIds = flaggedNotes.Select(n => n.CallId)
+				.Concat(flaggedImages.Select(i => i.CallId))
+				.Concat(flaggedFiles.Select(f => f.CallId))
+				.Distinct()
+				.ToList();
+
+			var calls = new Dictionary<int, Call>();
+			foreach (var callId in allCallIds)
+			{
+				var call = await _callsService.GetCallByIdAsync(callId);
+				if (call != null)
+					calls[callId] = call;
+			}
+
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(departmentId);
+			await ApplyMemberIdentificationNumbersAsync(departmentId, profiles?.Values);
+
+			foreach (var note in flaggedNotes)
+			{
+				var row = new FlaggedCallNoteRow();
+
+				if (calls.TryGetValue(note.CallId, out var call))
+				{
+					row.CallNumber = call.Number;
+					row.CallName = ProtectedDataEnvelope.SafeDisplay(call.Name);
+					row.CallType = string.IsNullOrWhiteSpace(call.Type) ? "None" : ProtectedDataEnvelope.SafeDisplay(call.Type);
+					row.CallAddress = ProtectedDataEnvelope.SafeDisplay(call.Address);
+					row.CallLoggedOn = call.LoggedOn.TimeConverter(model.Department);
+				}
+
+				row.CallNoteId = note.CallNoteId;
+				row.NoteText = ProtectedDataEnvelope.SafeDisplay(note.Note);
+				row.NoteTimestamp = note.Timestamp.TimeConverter(model.Department);
+
+				if (!string.IsNullOrWhiteSpace(note.UserId) && profiles.TryGetValue(note.UserId, out var authorProfile))
+					row.NoteAuthorName = authorProfile.FullName.AsFirstNameLastName;
+				else
+					row.NoteAuthorName = "Unknown";
+
+				row.FlaggedOn = note.FlaggedOn.HasValue
+					? note.FlaggedOn.Value.TimeConverter(model.Department)
+					: null;
+				row.FlaggedReason = ProtectedDataEnvelope.SafeDisplay(note.FlaggedReason);
+
+				if (!string.IsNullOrWhiteSpace(note.FlaggedByUserId) && profiles.TryGetValue(note.FlaggedByUserId, out var flaggedByProfile))
+					row.FlaggedByName = flaggedByProfile.FullName.AsFirstNameLastName;
+				else
+					row.FlaggedByName = "Unknown";
+
+				model.Notes.Add(row);
+			}
+
+			foreach (var image in flaggedImages)
+			{
+				var row = new FlaggedCallImageRow();
+
+				if (calls.TryGetValue(image.CallId, out var call))
+				{
+					row.CallNumber = call.Number;
+					row.CallName = ProtectedDataEnvelope.SafeDisplay(call.Name);
+					row.CallType = string.IsNullOrWhiteSpace(call.Type) ? "None" : ProtectedDataEnvelope.SafeDisplay(call.Type);
+					row.CallAddress = ProtectedDataEnvelope.SafeDisplay(call.Address);
+					row.CallLoggedOn = call.LoggedOn.TimeConverter(model.Department);
+				}
+
+				row.CallAttachmentId = image.CallAttachmentId;
+				row.FileName = ProtectedDataEnvelope.SafeDisplay(image.FileName);
+				row.ImageTimestamp = image.Timestamp.HasValue
+					? image.Timestamp.Value.TimeConverter(model.Department)
+					: null;
+
+				if (!string.IsNullOrWhiteSpace(image.UserId) && profiles.TryGetValue(image.UserId, out var authorProfile))
+					row.ImageAuthorName = authorProfile.FullName.AsFirstNameLastName;
+				else
+					row.ImageAuthorName = "Unknown";
+
+				row.FlaggedOn = image.FlaggedOn.HasValue
+					? image.FlaggedOn.Value.TimeConverter(model.Department)
+					: null;
+				row.FlaggedReason = ProtectedDataEnvelope.SafeDisplay(image.FlaggedReason);
+
+				if (!string.IsNullOrWhiteSpace(image.FlaggedByUserId) && profiles.TryGetValue(image.FlaggedByUserId, out var flaggedByProfile))
+					row.FlaggedByName = flaggedByProfile.FullName.AsFirstNameLastName;
+				else
+					row.FlaggedByName = "Unknown";
+
+				model.Images.Add(row);
+			}
+
+			foreach (var file in flaggedFiles)
+			{
+				var row = new FlaggedCallFileRow();
+
+				if (calls.TryGetValue(file.CallId, out var call))
+				{
+					row.CallNumber = call.Number;
+					row.CallName = ProtectedDataEnvelope.SafeDisplay(call.Name);
+					row.CallType = string.IsNullOrWhiteSpace(call.Type) ? "None" : ProtectedDataEnvelope.SafeDisplay(call.Type);
+					row.CallAddress = ProtectedDataEnvelope.SafeDisplay(call.Address);
+					row.CallLoggedOn = call.LoggedOn.TimeConverter(model.Department);
+				}
+
+				row.CallAttachmentId = file.CallAttachmentId;
+				row.FileName = ProtectedDataEnvelope.SafeDisplay(file.FileName);
+				row.FileTypeName = file.CallAttachmentType switch
+				{
+					1 => "Dispatch Audio",
+					3 => "File",
+					4 => "Video",
+					_ => "Unknown"
+				};
+				row.FileTimestamp = file.Timestamp.HasValue
+					? file.Timestamp.Value.TimeConverter(model.Department)
+					: null;
+
+				if (!string.IsNullOrWhiteSpace(file.UserId) && profiles.TryGetValue(file.UserId, out var fileAuthorProfile))
+					row.FileAuthorName = fileAuthorProfile.FullName.AsFirstNameLastName;
+				else
+					row.FileAuthorName = "Unknown";
+
+				row.FlaggedOn = file.FlaggedOn.HasValue
+					? file.FlaggedOn.Value.TimeConverter(model.Department)
+					: null;
+				row.FlaggedReason = ProtectedDataEnvelope.SafeDisplay(file.FlaggedReason);
+
+				if (!string.IsNullOrWhiteSpace(file.FlaggedByUserId) && profiles.TryGetValue(file.FlaggedByUserId, out var flaggedByFileProfile))
+					row.FlaggedByName = flaggedByFileProfile.FullName.AsFirstNameLastName;
+				else
+					row.FlaggedByName = "Unknown";
+
+				model.Files.Add(row);
+			}
+
+			return model;
+		}
+
+		#region Event Attendance Report
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> EventAttendanceReportParams()
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var now = DateTime.UtcNow.TimeConverter(department);
+
+			var model = new EventAttendanceReportParams();
+			model.Start = new DateTime(now.Year, 1, 1);
+			model.End = new DateTime(now.Year, 12, 31, 23, 59, 59);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> EventAttendanceReportParams(EventAttendanceReportParams model)
+		{
+			return RedirectToAction("EventAttendanceReport", new { start = model.Start.ToString("o"), end = model.End.ToString("o") });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> EventAttendanceReport(DateTime start, DateTime end)
+		{
+			var model = await BuildEventAttendanceReportModel(start, end);
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Reports_View)]
+		[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+		public async Task<IActionResult> EventAttendanceDetailReport(string userId, DateTime start, DateTime end)
+		{
+			if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(userId, UserId, DepartmentId))
+				return Unauthorized();
+
+			var canViewLocation = await _authorizationService.CanUserViewPersonLocationViaMatrixAsync(userId, UserId, DepartmentId);
+			var model = await BuildEventAttendanceDetailReportModel(userId, start, end, canViewLocation);
+			return View(model);
+		}
+
+		private async Task<EventAttendanceView> BuildEventAttendanceReportModel(DateTime start, DateTime end)
+		{
+			var model = new EventAttendanceView();
+			model.RunOn = DateTime.UtcNow;
+			model.Start = start;
+			model.End = end;
+			model.Name = "Event Attendance Report";
+			model.EventHours = new List<PersonnelEventHours>();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.Department = department;
+
+			var checkIns = await _calendarService.GetCheckInsByDepartmentDateRangeAsync(DepartmentId, start, end);
+			var calendarItems = await _calendarService.GetAllCalendarItemsForDepartmentInRangeAsync(DepartmentId, start, end);
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			// Build a lookup: userId → set of calendarItemIds they were listed as attendee for
+			var attendeeEventsByUser = new Dictionary<string, HashSet<int>>();
+			foreach (var item in calendarItems)
+			{
+				if (item.Attendees != null)
+				{
+					foreach (var attendee in item.Attendees)
+					{
+						if (!attendeeEventsByUser.ContainsKey(attendee.UserId))
+							attendeeEventsByUser[attendee.UserId] = new HashSet<int>();
+						attendeeEventsByUser[attendee.UserId].Add(item.CalendarItemId);
+					}
+				}
+			}
+
+			// Build a lookup: userId → set of calendarItemIds they actually checked in for
+			var checkedInEventsByUser = new Dictionary<string, HashSet<int>>();
+			foreach (var ci in checkIns)
+			{
+				if (!checkedInEventsByUser.ContainsKey(ci.UserId))
+					checkedInEventsByUser[ci.UserId] = new HashSet<int>();
+				checkedInEventsByUser[ci.UserId].Add(ci.CalendarItemId);
+			}
+
+			// Collect all users who are either attendees or have check-ins
+			var allUserIds = new HashSet<string>(attendeeEventsByUser.Keys);
+			foreach (var ci in checkIns)
+				allUserIds.Add(ci.UserId);
+
+			foreach (var userId in allUserIds)
+			{
+				if (!await _authorizationService.CanUserViewPersonViaMatrixAsync(userId, UserId, DepartmentId))
+					continue;
+
+				var personHours = new PersonnelEventHours();
+				personHours.ID = userId;
+
+				// Count events checked in for
+				checkedInEventsByUser.TryGetValue(userId, out var checkedInEvents);
+				personHours.TotalEvents = checkedInEvents?.Count ?? 0;
+
+				// Count events listed as attendee but did NOT check in for
+				attendeeEventsByUser.TryGetValue(userId, out var attendeeEvents);
+				if (attendeeEvents != null)
+				{
+					personHours.MissedEvents = checkedInEvents != null
+						? attendeeEvents.Count(e => !checkedInEvents.Contains(e))
+						: attendeeEvents.Count;
+				}
+
+				// Total hours from check-ins with checkouts
+				personHours.TotalSeconds = checkIns
+					.Where(c => c.UserId == userId && c.CheckOutTime.HasValue)
+					.Sum(c => (c.CheckOutTime.Value - c.CheckInTime).TotalSeconds);
+
+				var name = personnelNames?.FirstOrDefault(x => x.UserId == userId);
+				personHours.Name = name?.Name ?? userId;
+
+				if (groups != null)
+				{
+					var userGroup = groups.FirstOrDefault(g => g.Members != null && g.Members.Any(m => m.UserId == userId));
+					personHours.Group = userGroup?.Name ?? "";
+				}
+
+				model.EventHours.Add(personHours);
+			}
+
+			model.EventHours = model.EventHours.OrderBy(x => x.Name).ToList();
+
+			return model;
+		}
+
+		private async Task<EventAttendanceDetailView> BuildEventAttendanceDetailReportModel(string userId, DateTime start, DateTime end, bool includeLocation = true)
+		{
+			var model = new EventAttendanceDetailView();
+			model.RunOn = DateTime.UtcNow;
+			model.Start = start;
+			model.End = end;
+			model.Name = "Event Attendance Detail Report";
+			model.Details = new List<EventAttendanceDetail>();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.Department = department;
+
+			var profile = await _userProfileService.GetProfileByUserIdAsync(userId);
+			model.PersonnelName = profile?.FullName?.AsFirstNameLastName ?? userId;
+
+			var checkIns = await _calendarService.GetCheckInsByUserDateRangeAsync(userId, DepartmentId, start, end);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+
+			// Batch-fetch calendar items to avoid N+1 queries
+			var calendarItemIds = checkIns.Select(c => c.CalendarItemId).Distinct().ToList();
+			var calendarItemsDict = new Dictionary<int, CalendarItem>();
+			foreach (var id in calendarItemIds)
+			{
+				var item = await _calendarService.GetCalendarItemByIdAsync(id);
+				if (item != null)
+					calendarItemsDict[id] = item;
+			}
+
+			double totalSeconds = 0;
+			foreach (var checkIn in checkIns)
+			{
+				calendarItemsDict.TryGetValue(checkIn.CalendarItemId, out var calItem);
+
+				var detail = new EventAttendanceDetail();
+				detail.EventTitle = calItem?.Title ?? "Unknown Event";
+				detail.CheckInTime = checkIn.CheckInTime;
+				detail.CheckOutTime = checkIn.CheckOutTime;
+				detail.IsManualOverride = checkIn.IsManualOverride;
+				detail.CheckInNote = checkIn.CheckInNote;
+				detail.CheckOutNote = checkIn.CheckOutNote;
+				if (includeLocation)
+				{
+					detail.CheckInLatitude = checkIn.CheckInLatitude;
+					detail.CheckInLongitude = checkIn.CheckInLongitude;
+					detail.CheckOutLatitude = checkIn.CheckOutLatitude;
+					detail.CheckOutLongitude = checkIn.CheckOutLongitude;
+				}
+
+				if (!string.IsNullOrWhiteSpace(checkIn.CheckInByUserId))
+				{
+					var byName = personnelNames?.FirstOrDefault(x => x.UserId == checkIn.CheckInByUserId);
+					detail.CheckInByName = byName?.Name;
+				}
+
+				if (!string.IsNullOrWhiteSpace(checkIn.CheckOutByUserId))
+				{
+					var byName = personnelNames?.FirstOrDefault(x => x.UserId == checkIn.CheckOutByUserId);
+					detail.CheckOutByName = byName?.Name;
+				}
+
+				if (checkIn.CheckOutTime.HasValue)
+				{
+					detail.DurationSeconds = (checkIn.CheckOutTime.Value - checkIn.CheckInTime).TotalSeconds;
+					totalSeconds += detail.DurationSeconds;
+				}
+
+				model.Details.Add(detail);
+			}
+
+			model.TotalSeconds = totalSeconds;
+
+			return model;
+		}
+
+		#endregion Event Attendance Report
+
+		/// <summary>
+		/// Stamps the DEPARTMENT-SCOPED identification number onto the profiles a report renders
+		/// (ADP plan 5.1) — a badge number is department-issued and differs between departments, and
+		/// the global profile column can no longer answer for any one of them. Reports have no
+		/// step-up flow, so a protected department's number renders as the REDACTED placeholder.
+		/// </summary>
+		private async Task ApplyMemberIdentificationNumbersAsync(int departmentId, IEnumerable<UserProfile> profiles)
+		{
+			if (profiles == null)
+				return;
+
+			await _memberSensitiveDataService.ApplyIdentificationNumbersAsync(departmentId, profiles, null, UserId);
+		}
+
+	}
+}

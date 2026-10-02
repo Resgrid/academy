@@ -1,0 +1,36 @@
+Custom map layers
+Production status: source-backed recording brief; capture pending
+Problem / impact: Give responders useful reference layers with an identified owner and update process.
+What it does: Upload your own map images, such as a campus or venue map.
+Prerequisites: [{"Kind": "module", "Id": "Mapping"}]
+Release: available
+
+CAPTURE SCRIPT
+1. Open Custom map layers as the intended dispatchers and administrators.
+2. Confirm members allow location sharing in the Responder app, and decide how long a position should stay on the map.
+3. Demonstrate one controlled sample through the owning screen.
+4. Check marker age and source, POI placement, reference-layer alignment, and the intended weather-alert coverage.
+5. Show one common issue and the evidence used to diagnose it.
+
+FIELDS FOUND IN THE OWNING VIEW: 
+Screen locator for the editor: {"Controller": "CustomMaps", "Action": "Index"}
+Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/mapping.yaml", "sha256": "6e1073584969ee4c86b7998e147e1691ca05650a160593389d4a378db0d91c4b", "line": 1167}
+Documentation reference: https://docs.resgrid.com/web-app/custom-maps/
+
+Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+
+
+ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
+Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
+
+Community paramedicine and mental health response: Custom map layers: Use current operational team positions for visit coverage; choose a location lifetime and follow the service’s location-access procedures.
+
+Search and rescue: Custom map layers: Set a location lifetime suitable for remote search updates; use search-area POIs and distinguish stale positions from current team location.
+
+Security companies and departments: Custom map layers: Map patrol vehicles and site POIs; review stale-location lifetime before treating an old position as current patrol coverage.
+
+Wildland contractors: Custom map layers: Map staging, divisions and support vehicles; review device update frequency and stale location during remote assignments.
+
+Industrial emergency response teams: Custom map layers: Map facility access points, response equipment and team positions; review indoor or weak-signal limitations and fallback procedures.
+
+Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.

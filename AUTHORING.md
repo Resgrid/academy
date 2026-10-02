@@ -10,7 +10,7 @@ The Pages action builds from the checked-in sources and uploads only `site/`.
 | --- | --- |
 | Primer titles, on-screen text, narration and chapters | `sources/course.json` |
 | 173 feature recording briefs and five-sector examples | `sources/course.json` and `sources/scripts/feature-*.txt` |
-| 336 department settings references | `sources/settings.csv` |
+| Department settings reference content | `sources/course.json` (`settings`), with `sources/settings.csv` retained for authoring |
 | 30 detailed configuration plans | `sources/deep-dive/course.json` |
 | Seven captured lesson scripts, screen order and results | `sources/deep-dive/lessons/*.json` |
 | Original screenshots and capture evidence | `sources/captures/firehouse51/` and `sources/captures/deep-dive/` |
@@ -21,7 +21,8 @@ The Pages action builds from the checked-in sources and uploads only `site/`.
 | Current finished videos, captions and posters | `sources/media/`, `sources/deep-dive/media/`, and the intro capture folder |
 | Application source cited by the lessons | `sources/evidence/resgrid/`, with hashes in `sources/evidence/source-manifest.json` |
 | Fictional department fixtures and stack recipes | `sources/demo/` |
-| Page layouts and video assembly | `sources/production/library.py`, `deep_dive.py`, and the rendering tools |
+| Public website layouts and content selection | `scripts/public_site.py` and `scripts/export_site.py` |
+| Internal review pages and video assembly | `sources/production/library.py`, `deep_dive.py`, and the rendering tools |
 
 The application evidence is a snapshot of cited files, including changes in the original
 working tree. A complete runnable Resgrid checkout is obtained separately by the demo
@@ -42,7 +43,11 @@ python3 scripts/serve.py
 ```
 
 Build regenerates primer scripts and edit briefs from `sources/course.json`, refreshes
-review pages, indexes the stored application evidence, and exports the website. Changes
+internal review pages, indexes the stored application evidence, and builds the learner-facing
+website through `scripts/public_site.py`. Voice names, editorial state and recording QA
+stay in the authoring sources. Public transcripts and feature guides are generated from
+the course content. Operational terms such as draft records and planned feature availability
+remain part of the lessons. Changes
 to spoken text also require a new narration export and a video render. Build preserves
 existing video bytes; it does not generate speech. Keep a feature's standalone recording
 brief in sync when editing its description in the manifest.
@@ -71,7 +76,16 @@ python3 scripts/import_narration.py --kind primer --lesson 00-start \
 python3 scripts/render_slides.py --lesson 00-start
 python3 sources/production/descript/render_natural.py \
   --ffmpeg /path/to/ffmpeg --lesson 00-start
+python3 scripts/render_public_media.py --ffmpeg /path/to/ffmpeg --lesson 00-start
 ```
+
+The public-media step refreshes primer graphics and posters with Academy branding. It
+copies the existing narration audio and removes complete editorial closing cues about
+future recording plans, updating captions and chapter times together. Original narration
+exports remain available in the authoring folders. The natural-narration renderer
+also prepares those original exports by omitting the known editorial closing cues
+when they are absent from the current lesson script, keeping script alignment valid. Run without `--lesson` to refresh all
+primers. The regular Pages build does not encode video.
 
 For a detailed lesson, edit `sources/deep-dive/lessons/01-setup-wizard.json`, replace its
 captures as needed, and use:

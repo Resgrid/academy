@@ -1,36 +1,21 @@
 New Calendar Event
-Production status: source-backed recording brief; capture pending
-Problem / impact: Shifts show who is on duty and can drive dispatch, so calls page the people who are actually working.
-What it does: Add an event to the department calendar.
-Prerequisites: [{"Kind": "module", "Id": "Calendar"}]
-Release: available
 
-CAPTURE SCRIPT
-1. Open New Calendar Event as the intended schedulers, dispatchers, and members.
-2. Have your rotation or duty schedule, and decide whether dispatch should follow shifts.
-3. Demonstrate one controlled sample through the owning screen.
-4. Compare the scheduled roster with the people dispatch would include at the selected time. Check trade completion and the visible duty coverage.
-5. Show one common issue and the evidence used to diagnose it.
+Add an event to the department calendar.
 
-FIELDS FOUND IN THE OWNING VIEW: Item.RepeatOnDay, Item.CheckInType, Item.Description, Item.End, Item.Friday, Item.IsAllDay, Item.ItemType, Item.Location, Item.LockEditing, Item.Monday, Item.Public, Item.RecurrenceEnd, Item.RecurrenceType, Item.Reminder, Item.Saturday, Item.SignupType, Item.Start, Item.Sunday, Item.Thursday, Item.Title, Item.Tuesday, Item.Wednesday, WeekdayDayOfWeek, WeekdayOccurrence, entities
-Screen locator for the editor: {"Controller": "Calendar", "Action": "New"}
-Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/shifts.yaml", "sha256": "f6490a94b70348ae90da00dacb7b040e97155d89b06e5a7fdc1a3da0a8c73f58", "line": 264}
-Documentation reference: https://docs.resgrid.com/web-app/calendar/
+Why it helps
+Shifts show who is on duty and can drive dispatch, so calls page the people who are actually working.
 
-Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+How to configure it
+Have your rotation or duty schedule, and decide whether dispatch should follow shifts.
 
+Before you begin
+Calendar module enabled
 
-ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
-Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
-
+Examples for your department
 Community paramedicine and mental health response: New Calendar Event: Schedule mobile-crisis or outreach coverage windows and eligible team roles; review gaps and overlapping assignments.
-
 Search and rescue: New Calendar Event: Schedule search standby and field-team coverage with eligible roles; do not confuse sign-up with arrival at staging.
-
 Security companies and departments: New Calendar Event: Schedule site patrol coverage and supervisor positions; review whether members may sign up for multiple shift groups.
-
 Wildland contractors: New Calendar Event: Schedule crew availability and relief windows; check conflicts with deployments and rest requirements.
-
 Industrial emergency response teams: New Calendar Event: Schedule facility ERT coverage across plant shifts; review required positions and overlapping assignments.
 
-Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.
+Documentation: https://docs.resgrid.com/web-app/calendar/

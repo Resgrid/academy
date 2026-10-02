@@ -6,17 +6,19 @@ on:
       - 'site/**'
       - 'sources/**'
       - 'scripts/**'
+      - 'pages.json'
       - '.github/workflows/pages.yml'
   pull_request:
     paths:
       - 'site/**'
       - 'sources/**'
       - 'scripts/**'
+      - 'pages.json'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
     inputs:
       custom_domain:
-        description: 'Optional: verify the custom domain already saved in Settings > Pages'
+        description: 'Optional override of the expected hostname stored in pages.json'
         required: false
         type: string
 
@@ -67,15 +69,18 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
-          sparse-checkout: scripts
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/
+            /pages.json
       - name: Read GitHub Pages configuration
         id: pages
         uses: actions/configure-pages@v5
-      - name: Verify the optional custom domain
+      - name: Verify the persistent Academy hostname
         env:
           ACADEMY_CUSTOM_DOMAIN: ${{ inputs.custom_domain || vars.ACADEMY_CUSTOM_DOMAIN || '' }}
           ACADEMY_PAGES_URL: ${{ steps.pages.outputs.base_url }}
-        run: python3 scripts/check_domain.py
+        run: python3 scripts/check_domain.py --config pages.json
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

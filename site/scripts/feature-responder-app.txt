@@ -1,36 +1,21 @@
 Responder application
-Production status: source-backed recording brief; capture pending
-Problem / impact: Separate member device setup from department configuration and verify each member's channels.
-What it does: The member app for receiving dispatches, responding and setting status.
-Prerequisites: []
-Release: available
 
-CAPTURE SCRIPT
-1. Open Responder application as the intended members, dispatchers, and commanders.
-2. Have every member install the Responder app, sign in and allow notifications.
-3. Demonstrate one controlled sample through the owning screen.
-4. Check the active department, device identity, and a controlled notification test. Check what a shared station screen exposes.
-5. Show one common issue and the evidence used to diagnose it.
+The member app for receiving dispatches, responding and setting status.
 
-FIELDS FOUND IN THE OWNING VIEW: Carrier, Email, FirstName, IsDepartmentAdmin, IsDisabled, IsHidden, IsUserGroupAdmin, LastName, MailingAddress1, MailingAddressSameAsPhysical, MailingCity, MailingCountry, MailingPostalCode, MailingState, PhysicalAddress1, PhysicalCity, PhysicalCountry, PhysicalPostalCode, PhysicalState, Profile.DoNotRecieveNewsletters, Profile.EnableModernApplicationSounds, Profile.HomeNumber, Profile.IdentificationNumber, Profile.Language, Profile.MobileNumber, Profile.SendEmail, Profile.SendMessageEmail, Profile.SendMessagePush, Profile.SendMessageSms, Profile.SendNotificationEmail, Profile.SendNotificationPush, Profile.SendPush, Profile.SendSms, Profile.TimeZone, Profile.VoiceCallHome, Profile.VoiceCallMobile, Profile.VoiceForCall, SecurityPin, SecurityPinEnabled, UserGroup
-Screen locator for the editor: {"Controller": "Home", "Action": "EditUserProfile"}
-Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/apps.yaml", "sha256": "0e6805ea54eafa3dd4ef745e3aa0cbe3d2d41f2ec99a84d786d7b0d5f9ffb253", "line": 190}
-Documentation reference: https://docs.resgrid.com/apps/responder/
+Why it helps
+Separate member device setup from department configuration and verify each member's channels.
 
-Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+How to configure it
+Have every member install the Responder app, sign in and allow notifications.
 
+Before you begin
+Check your department access and intended audience.
 
-ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
-Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
-
+Examples for your department
 Community paramedicine and mental health response: Responder application: Choose member, dispatch and display apps according to response-team duties; verify device registration and external providers separately.
-
 Search and rescue: Responder application: Choose field-member, dispatch and coordination-display apps; verify location update and remote connectivity.
-
 Security companies and departments: Responder application: Choose patrol-member, dispatcher and site-display apps; verify site scope and device registration.
-
 Wildland contractors: Responder application: Choose crew-member, dispatch and coordination apps; verify device updates during remote assignments.
-
 Industrial emergency response teams: Responder application: Choose responder, control-room and display apps; verify provider prerequisites and facility connectivity.
 
-Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.
+Documentation: https://docs.resgrid.com/apps/responder/

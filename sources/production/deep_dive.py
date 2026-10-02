@@ -40,7 +40,7 @@ def frame(lesson,scene,capture,index,total,path):
     d.text((1270,850),'Firehouse 51: fictional training data',font=font(24),fill='#c2d5df')
     d.text((1270,900),'Adapt the workflow to your sector.',font=font(24),fill='#c2d5df')
     d.text((1270,955),f'{index+1:02} / {total:02}  •  Actual application capture',font=font(22),fill='#91dfc5')
-    d.text((32,1044),'GUIDED CUTS BETWEEN REAL APP STATES  •  LOCAL TRAINING DEPARTMENT  •  OPERATIONAL TESTS IDENTIFIED SEPARATELY',font=font(18),fill='#a7c0d1')
+    d.text((32,1044),'RESGRID ACADEMY  •  LEARN. CONFIGURE. APPLY.  •  FICTIONAL DEPARTMENT EXAMPLES',font=font(18),fill='#a7c0d1')
     im.save(path)
 
 def prepare(lesson,manifest,refresh_pages=False):
@@ -139,7 +139,7 @@ def render(lesson,ffmpeg):
     work=BASE/'build/deep-dive'/ident;work.mkdir(parents=True,exist_ok=True)
     listing=''.join(f"file '{ROOT/s['frame']}'\nduration {s['end']-s['start']:.6f}\n" for s in shots)+f"file '{ROOT/shots[-1]['frame']}'\n"
     (work/'visuals.txt').write_text(listing)
-    metadata=';FFMETADATA1\ntitle='+lesson['title']+'\ncomment=Authentic app screenshots; guided cuts; fictional training data; Warm Lulu\n'
+    metadata=';FFMETADATA1\ntitle='+lesson['title']+'\ncomment=Resgrid Academy configuration walkthrough; fictional department examples\n'
     for c in chapters:metadata+=f"[CHAPTER]\nTIMEBASE=1/1000\nSTART={round(c['start']*1000)}\nEND={round(c['end']*1000)}\ntitle={c['title']}\n"
     (work/'chapters.txt').write_text(metadata);temp=work/'assembling.mp4'
     run([ffmpeg,'-y','-v','error','-f','concat','-safe','0','-i',str(work/'visuals.txt'),'-i',str(audio),'-i',str(out/'captions.srt'),'-f','ffmetadata','-i',str(work/'chapters.txt'),'-map','0:v:0','-map','1:a:0','-map','2:0','-map_metadata','3','-map_chapters','3','-r','30','-t',str(duration+1.2),'-c:v','libx264','-preset','veryfast','-tune','stillimage','-crf','18','-pix_fmt','yuv420p','-c:a','aac','-b:a','160k','-ar','48000','-af','loudnorm=I=-16:TP=-1.5:LRA=7,apad=pad_dur=1.2','-c:s','mov_text','-metadata:s:s:0','language=eng','-movflags','+faststart',str(temp)])

@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import textwrap
 from align_captions import align, parse_srt, seconds, BASE, ROOT
 
@@ -37,7 +38,25 @@ def make_lesson(ident, ffmpeg, pause):
         narration = ROOT / "natural/audio" / (ident + ".m4a")
     raw = ROOT / "natural/captions" / (ident + "-raw.srt")
     brief = json.loads((ROOT / (ident + "-edit-brief.json")).read_text())
+    raw_text = raw.read_text()
     voice_duration = duration(ffmpeg, narration)
+    # Original narration exports retain their editorial closing lines. The course
+    # script defines the current lesson; remove only known, complete closing cues
+    # before alignment when those lines are absent from the current script.
+    sys.path.insert(0, str(BASE.parent / 'scripts'))
+    from render_public_media import INTRO_TAIL, TAIL, parse_captions, publication_cut
+    expected = ' '.join(scene['narration'] for scene in brief['scenes'])
+    editorial = INTRO_TAIL if ident == '00-start' else TAIL
+    if editorial not in expected:
+        cut, retained = publication_cut(ident, parse_captions(raw_text), voice_duration)
+        if cut < voice_duration:
+            prepared = work / 'narration-publication.m4a'
+            run([ffmpeg, '-v', 'error', '-y', '-i', str(narration), '-t', str(cut),
+                 '-map', '0:a:0', '-c:a', 'copy', str(prepared)])
+            narration = prepared
+            voice_duration = duration(ffmpeg, narration)
+            raw_text = ''.join(f'{i}\n{timestamp(c["start"])} --> {timestamp(c["end"])}\n{c["text"]}\n\n'
+                               for i, c in enumerate(retained, 1))
     level_info = run([ffmpeg, "-v", "info", "-i", str(narration), "-map", "0:a:0",
                       "-af", "volumedetect", "-f", "null", "-"]).stderr
     level = re.search(r"mean_volume: (-?[0-9.]+) dB", level_info)
@@ -51,13 +70,13 @@ def make_lesson(ident, ffmpeg, pause):
     samples = array.array("f")
     samples.frombytes(decoded.stdout)
     cue_levels = []
-    for index, cue in enumerate(parse_srt(raw.read_text())):
+    for index, cue in enumerate(parse_srt(raw_text)):
         clip = samples[int(seconds(cue["start"]) * 16000):int(seconds(cue["end"]) * 16000)]
         rms = math.sqrt(sum(v * v for v in clip) / len(clip)) if clip else 0
         cue_levels.append(rms)
         if rms < .001:
             raise ValueError(f"Unrendered or silent narration cue {index + 1}: {ident}")
-    srt, audit = align(brief, raw.read_text(), media_duration=voice_duration)
+    srt, audit = align(brief, raw_text, media_duration=voice_duration)
     for change in audit["text_changes"]:
         if change["operation"] in ("delete", "insert"):
             value = change["transcription"] if change["operation"] == "delete" else change["script"]
@@ -128,7 +147,7 @@ def make_lesson(ident, ffmpeg, pause):
     text += f"file '{last_image}'\n"
     listing.write_text(text)
     metadata = work / "chapters.txt"
-    text = ";FFMETADATA1\ntitle=" + brief["title"] + "\ncomment=Illustrated draft; Warm Lulu stock narration; live walkthrough pending\n"
+    text = ";FFMETADATA1\ntitle=" + brief["title"] + "\ncomment=Resgrid Academy video lesson\n"
     for c in chapters:
         text += (f'[CHAPTER]\nTIMEBASE=1/1000\nSTART={round(c["start"]*1000)}\n'
                  f'END={round(c["end"]*1000)}\ntitle={c["title"].replace("=", "-")}\n')
@@ -164,7 +183,7 @@ def make_lesson(ident, ffmpeg, pause):
         run([ffmpeg, "-y", "-v", "error", "-i", str(narration), "-map", "0:a:0",
              "-c:a", "copy", str(audio_sources / (ident + ".m4a"))])
     shutil.copy2(subtitle, media / (ident + ".srt"))
-    vtt = "WEBVTT\n\nNOTE Warm Lulu narration; speech-timed captions with scene pauses. Human listening review pending.\n\n"
+    vtt = "WEBVTT\n\nNOTE English captions\n\n"
     vtt += re.sub(r"\d{2}:\d{2}:\d{2},\d{3}", lambda m: m.group().replace(",", "."), subtitle.read_text())
     (media / (ident + ".vtt")).write_text(vtt)
     (media / (ident + ".chapters.json")).write_text(json.dumps(chapters, indent=2) + "\n")

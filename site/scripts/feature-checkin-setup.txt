@@ -1,36 +1,21 @@
 Check-in timers
-Production status: source-backed recording brief; capture pending
-Problem / impact: Review lone-worker and response follow-up with approved local procedures.
-What it does: Timers that remind responders on a call to check in, with escalation when they do not.
-Prerequisites: []
-Release: available
 
-CAPTURE SCRIPT
-1. Open Check-in timers as the intended dispatchers and administrators.
-2. Collect your call types, the statuses members report while responding, and the details of any CAD or paging system that should create calls.
-3. Demonstrate one controlled sample through the owning screen.
-4. Check the saved call details and intended recipients. Use a controlled communication test to evaluate delivery separately from the saved dispatch.
-5. Show one common issue and the evidence used to diagnose it.
+Timers that remind responders on a call to check in, with escalation when they do not.
 
-FIELDS FOUND IN THE OWNING VIEW: DispatchRecommendationMode, RecommendationUnitMinimumStaffingLevel, ShiftClearStatus, ShiftDispatchStatus, UnitClearStatus, UnitDispatchStatus, UnitTypeStatusOverrides, AutoEnableCheckInTimers, AutoSetStatusForShiftPersonnel, DispatchRecommendationAutoDispatch, DispatchShiftInsteadOfGroup, GroupDispatchScopeEnabled, NewCallFields[i].Key, NewCallFields[i].Required, NewCallFields[i].Visible, PersonnelOnUnitSetUnitStatus, RecommendationEtaShortlistSize, RecommendationIncludeStaleLocations, RecommendationMaxLocationAgeSeconds, RecommendationMaxRadiusMeters, RecommendationMoveUpEnabled, RecommendationPersonnelMaxLocationAgeSeconds, RecommendationRestPeriodMinutes, RecommendationUseRoutedEta, UnitDispatchAlsoDispatchToAssignedPersonnel, UnitDispatchAlsoDispatchToGroup
-Screen locator for the editor: {"Controller": "Department", "Action": "DispatchSettings"}
-Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/calls.yaml", "sha256": "829d72e13ba234174f078fb5373a65971555fd4d33d606f4dd352da02c968204", "line": 2076}
-Documentation reference: https://docs.resgrid.com/web-app/call-checkin-timers/
+Why it helps
+Review lone-worker and response follow-up with approved local procedures.
 
-Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+How to configure it
+Collect your call types, the statuses members report while responding, and the details of any CAD or paging system that should create calls.
 
+Before you begin
+Check your department access and intended audience.
 
-ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
-Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
-
+Examples for your department
 Community paramedicine and mental health response: Check-in timers: Use an approved operational request type for a visit or mobile response; keep clinical triage and sensitive detail under the service’s procedures.
-
 Search and rescue: Check-in timers: Use Rescue or a reviewed search type and clear staging information; select the appropriate team.
-
 Security companies and departments: Check-in timers: Use Investigation or a reviewed patrol incident type with the correct site and selected resources.
-
 Wildland contractors: Check-in timers: Use a reviewed assignment or incident type and staging details; select crew and support resources.
-
 Industrial emergency response teams: Check-in timers: Use a reviewed facility incident type and access location; select the facility team and specialist equipment.
 
-Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.
+Documentation: https://docs.resgrid.com/web-app/call-checkin-timers/

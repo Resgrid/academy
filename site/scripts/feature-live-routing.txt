@@ -1,36 +1,21 @@
 Live Routing
-Production status: source-backed recording brief; capture pending
-Problem / impact: A current map shows where responders and apparatus are and puts important locations in front of dispatchers.
-What it does: Directions and routes for responding resources.
-Prerequisites: [{"Kind": "module", "Id": "Mapping"}]
-Release: available
 
-CAPTURE SCRIPT
-1. Open Live Routing as the intended dispatchers and administrators.
-2. Confirm members allow location sharing in the Responder app, and decide how long a position should stay on the map.
-3. Demonstrate one controlled sample through the owning screen.
-4. Check marker age and source, POI placement, reference-layer alignment, and the intended weather-alert coverage.
-5. Show one common issue and the evidence used to diagnose it.
+Directions and routes for responding resources.
 
-FIELDS FOUND IN THE OWNING VIEW: 
-Screen locator for the editor: {"Controller": "Mapping", "Action": "Index"}
-Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/mapping.yaml", "sha256": "6e1073584969ee4c86b7998e147e1691ca05650a160593389d4a378db0d91c4b", "line": 1141}
-Documentation reference: https://docs.resgrid.com/web-app/mapping/#live-routing
+Why it helps
+A current map shows where responders and apparatus are and puts important locations in front of dispatchers.
 
-Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+How to configure it
+Confirm members allow location sharing in the Responder app, and decide how long a position should stay on the map.
 
+Before you begin
+Mapping module enabled
 
-ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
-Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
-
+Examples for your department
 Community paramedicine and mental health response: Live Routing: Use current operational team positions for visit coverage; choose a location lifetime and follow the service’s location-access procedures.
-
 Search and rescue: Live Routing: Set a location lifetime suitable for remote search updates; use search-area POIs and distinguish stale positions from current team location.
-
 Security companies and departments: Live Routing: Map patrol vehicles and site POIs; review stale-location lifetime before treating an old position as current patrol coverage.
-
 Wildland contractors: Live Routing: Map staging, divisions and support vehicles; review device update frequency and stale location during remote assignments.
-
 Industrial emergency response teams: Live Routing: Map facility access points, response equipment and team positions; review indoor or weak-signal limitations and fallback procedures.
 
-Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.
+Documentation: https://docs.resgrid.com/web-app/mapping/#live-routing

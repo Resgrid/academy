@@ -27,30 +27,37 @@ credentials, private certificates and private Descript editor links stay outside
 Subsequent changes to `sources/`, `site/`, `scripts/` or the workflow deploy automatically when
 pushed to the default branch. Pull requests validate without deployment. The workflow
 uses the default branch reported by GitHub, so either `main` or `master` works.
-The site does not hardcode an owner, repository name or hostname.
+The site uses relative URLs. `pages.json` records the expected hostname, `academy.resgrid.com`; every deployment checks it against GitHub Pages settings.
 
 The preparation agent leaves everything uncommitted. The source project's AGENTS.md
 requires human verification before commits and pushes; it says agents never run either.
 
-## Add your custom domain
+## Academy hostname
 
-All internal links, thumbnails, videos and captions use relative URLs. The same files
-work at a GitHub project address and at the root of your custom domain, with no rebuild
-or URL rewriting required.
+The public hostname is **academy.resgrid.com**. `pages.json` is the versioned domain
+configuration. The deployment job reads it on every publish and stops if GitHub Pages
+reports a different hostname, preventing an accidental deployment under another address.
 
-1. Verify your domain with GitHub, then save it under **Settings → Pages → Custom domain**.
-2. Configure DNS for your domain using [GitHub's custom-domain instructions](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
-   A subdomain CNAME points to the account or organization's `github.io` hostname,
-   without a repository path. Use the documented A/ALIAS/ANAME records for an apex domain.
-3. Enable **Enforce HTTPS** when GitHub's certificate is available.
-4. Run deployment. Leave the action's `custom_domain` field blank to use the existing
-   Pages setting. Optionally enter the configured domain, without `https://` or a path,
-   to have the workflow verify it before publishing. For automatic runs, the optional
-   repository variable `ACADEMY_CUSTOM_DOMAIN` supplies the same check.
+GitHub Pages must be enabled once under **Settings → Pages → Source → GitHub Actions**.
+Save **academy.resgrid.com** under **Custom domain**. DNS uses a CNAME record named
+`academy` pointing to `resgrid.github.io`, with no repository path. Enable **Enforce
+HTTPS** when GitHub's certificate is ready.
 
-The optional field verifies the domain; it does not change DNS or repository settings.
-With an Actions publishing source, GitHub reads the domain from Pages settings and
-ignores a `CNAME` file in the artifact. No extra administrative token is needed.
+The custom domain is a repository setting, so replacing the site artifact preserves it.
+The workflow reads and checks that setting; it never clears or replaces it. GitHub ignores
+artifact `CNAME` files for Actions publishing. The hostname check also accepts GitHub's
+HTTP site URL while its TLS certificate is being provisioned, without changing HTTPS settings.
+
+Leave the manual `custom_domain` input blank to use `pages.json`. An explicit input or
+`ACADEMY_CUSTOM_DOMAIN` repository variable overrides only the expected-hostname check.
+To change the permanent hostname, update `pages.json`, the Pages setting and DNS together.
+
+If `configure-pages` reports **Not Found**, open the repository's Pages settings and
+select **GitHub Actions**, then rerun the failed deployment. Automatic Pages enablement
+requires separate administrative access; the publishing workflow uses the normal scoped
+GitHub token without a stored personal token.
+
+Reference: [GitHub custom-domain setup](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
 
 ## Preview and validate
 

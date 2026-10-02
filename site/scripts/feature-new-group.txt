@@ -1,36 +1,21 @@
 New Group
-Production status: source-backed recording brief; capture pending
-Problem / impact: Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first.
-What it does: Create a station or group.
-Prerequisites: []
-Release: available
 
-CAPTURE SCRIPT
-1. Open New Group as the intended administrators.
-2. Have your member list with email addresses or mobile numbers, and decide how stations or teams are grouped.
-3. Demonstrate one controlled sample through the owning screen.
-4. Verify a sample member appears in the correct group and role. Check an accepted invitation and the member contact details.
-5. Show one common issue and the evidence used to diagnose it.
+Create a station or group.
 
-FIELDS FOUND IN THE OWNING VIEW: Address1, City, Country, Latitude, Longitude, NewGroup.ParentDepartmentGroupId, PostalCode, PrinterName, State, What3Word, NewGroup.Name, NewGroup.Type
-Screen locator for the editor: {"Controller": "Groups", "Action": "NewGroup"}
-Source evidence: {"path": "Core/Resgrid.AdminAssist/Catalog/people.yaml", "sha256": "899813ebc12d17584ce93a4c9a94461d96a4b63bab5a7479d025fc7b9840d660", "line": 453}
-Documentation reference: https://docs.resgrid.com/web-app/groups-stations/
+Why it helps
+Dispatch, notifications, permissions and reports all start from who belongs to which group, so set this up first.
 
-Before release: confirm labels, permissions, exact save/closeout behavior, target version, and the visible outcome in the demo application.
+How to configure it
+Have your member list with email addresses or mobile numbers, and decide how stations or teams are grouped.
 
+Before you begin
+Check your department access and intended audience.
 
-ADAPT THIS WORKFLOW TO YOUR DEPARTMENT
-Firehouse 51 is synthetic demonstration data. Apply the same workflow to your department’s procedures.
-
+Examples for your department
 Community paramedicine and mental health response: New Group: Create operational roles for clinicians and peer responders, then track credentials separately; membership does not establish clinical scope.
-
 Search and rescue: New Group: Use roles such as Search Team Leader and Navigation Specialist; review current qualifications and actual availability before assignment.
-
 Security companies and departments: New Group: Use Patrol Officer and Site Supervisor roles; scope group administration to the intended site and reserve department administration for department-wide ownership.
-
 Wildland contractors: New Group: Use Crew Leader, Saw Operator and Driver roles; review seasonal roster membership and current credentials before deployment.
-
 Industrial emergency response teams: New Group: Use ERT Leader, HazMat Technician and Equipment Operator roles; role labels do not replace qualification review.
 
-Practice: reproduce the configuration in your training department, save it, inspect the result, and identify the responsible reviewer. Sector examples are written companions; their presence does not certify provider delivery, clinical scope, or an updated video export.
+Documentation: https://docs.resgrid.com/web-app/groups-stations/

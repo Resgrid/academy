@@ -12,14 +12,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class AcademyHandler(SimpleHTTPRequestHandler):
-    mount = '/Resgrid-Academy'
+    mount = '/academy'
 
     def translate_path(self, path):
         parsed = urlsplit(path)
-        if self.mount and parsed.path.startswith(self.mount + '/'):
-            path = parsed.path[len(self.mount):]
-            if parsed.query:
-                path += '?' + parsed.query
+        # Keep earlier shared preview paths working alongside the chosen mount.
+        for mount in dict.fromkeys((self.mount, '/academy', '/Resgrid-Academy')):
+            if mount and parsed.path.startswith(mount + '/'):
+                path = parsed.path[len(mount):]
+                if parsed.query:
+                    path += '?' + parsed.query
+                break
         return super().translate_path(path)
 
     def send_head(self):
@@ -94,7 +97,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8769)
     parser.add_argument('--site', type=Path, default=ROOT / 'site')
-    parser.add_argument('--project-path', default='/Resgrid-Academy')
+    parser.add_argument('--project-path', default='/academy')
     args = parser.parse_args()
     AcademyHandler.mount = args.project_path.rstrip('/')
     server = ThreadingHTTPServer(('127.0.0.1', args.port), partial(AcademyHandler, directory=str(args.site.resolve())))

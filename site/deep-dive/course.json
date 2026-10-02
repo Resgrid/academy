@@ -1,21 +1,5 @@
 {
-  "title": "Resgrid configuration and operations — detailed walkthroughs",
-  "demonstration_department": "Firehouse 51 — synthetic local training dataset",
-  "voice": "Warm Lulu",
-  "format": "Actual application captures with step-by-step configuration, observed saves, department impact, verification, common failure and practice exercise",
-  "required_sector_coverage": [
-    "Community paramedicine and mental health response",
-    "Search and rescue",
-    "Security companies and departments",
-    "Wildland contractors",
-    "Industrial emergency response teams"
-  ],
-  "lesson_requirements": [
-    "At least one concrete adaptation section explaining how the same workflow serves other sectors",
-    "Sector-specific sample names, statuses, roles or scenario mappings in the workbook",
-    "No inference that a software profile establishes clinical or qualification scope",
-    "Keep external delivery, paid transactions and unavailable providers clearly identified"
-  ],
+  "title": "Resgrid configuration topics",
   "lessons": [
     {
       "id": "01-setup-wizard",
@@ -26,8 +10,6 @@
         "Module choices",
         "Evidence and handover"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Choose the appropriate EMS or mobile-crisis operating pack and review visit coverage and notification setup.",
         "Search and rescue": "Choose Search and rescue, then review mapping, training, inventory and deployments.",
@@ -45,16 +27,13 @@
         "Staffing suppression",
         "Module switches"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Set the local time zone for scheduled outreach visits; review whether a daily reset would incorrectly mark an occupied response team available.",
         "Search and rescue": "Choose availability reset rules that suit volunteers and overnight searches; avoid implying that a remote volunteer has arrived at staging.",
         "Security companies and departments": "Set patrol-day boundaries and display order; review staffing suppression before excluding an off-duty patrol member from alerts.",
         "Wildland contractors": "Review reset times across overnight assignments and the deployment time zone before changing contractor crew availability.",
         "Industrial emergency response teams": "Align display time with plant shifts and review automatic resets before overwriting a team engaged in an extended incident."
-      },
-      "script_words": 995
+      }
     },
     {
       "id": "03-custom-statuses",
@@ -66,16 +45,13 @@
         "Notes and GPS",
         "Assignment and effect"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use labels such as En route to visit and Contact made with appropriate base meanings; include only approved operational notes.",
         "Search and rescue": "Use Searching assigned area with Searching meaning, an incident destination and an accountability note.",
         "Security companies and departments": "Use On patrol, Investigating and Made contact with the corresponding base meanings; distinguish availability from patrol activity.",
         "Wildland contractors": "Use Staging, Responding and Returning for crew movement; make notes capture the assigned division or staging point.",
         "Industrial emergency response teams": "Use Maintenance and Unavailable for defective equipment, and On scene for the response team; a label alone must not imply equipment readiness."
-      },
-      "script_words": 1047
+      }
     },
     {
       "id": "04-personnel",
@@ -87,8 +63,6 @@
         "Department administrators",
         "Group administrators"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Create operational roles for clinicians and peer responders, then track credentials separately; membership does not establish clinical scope.",
         "Search and rescue": "Use roles such as Search Team Leader and Navigation Specialist; review current qualifications and actual availability before assignment.",
@@ -107,8 +81,6 @@
         "Crew positions",
         "Availability"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Model response areas or outreach teams as groups and mobile response vehicles as units; define team positions appropriate to the service.",
         "Search and rescue": "Model bases and field teams as groups and search vehicles or boats as units; define team leader and operator positions.",
@@ -127,16 +99,13 @@
         "Field policies",
         "Check-in timers"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Compare dispatching the scheduled mobile team with dispatching every member of its response-area group; review who should receive a visit alert.",
         "Search and rescue": "Compare alerting the active search shift with paging an entire volunteer group; check crew propagation and excluded unavailable members.",
         "Security companies and departments": "Dispatch the on-duty patrol shift or selected site group; review whether assigning a vehicle should also alert its staffed officers.",
         "Wildland contractors": "Dispatch the assigned crew and support vehicle; verify that off-assignment contractor personnel are not unintentionally included.",
         "Industrial emergency response teams": "Dispatch the on-duty facility team; review department-wide specialist role exceptions before enabling group-scoped recipient selection."
-      },
-      "script_words": 1103
+      }
     },
     {
       "id": "07-run-cards",
@@ -148,8 +117,6 @@
         "Location age and radius",
         "Manual review"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Create a reviewed response classification for a mobile-team request; specify eligible resource types and leave clinical triage to approved procedures.",
         "Search and rescue": "Use terrain or search classification to recommend a ground team, boat or specialist resource; review location freshness and qualifications.",
@@ -168,8 +135,6 @@
         "Trades and approvals",
         "Overlap warnings"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Schedule mobile-crisis or outreach coverage windows and eligible team roles; review gaps and overlapping assignments.",
         "Search and rescue": "Schedule search standby and field-team coverage with eligible roles; do not confuse sign-up with arrival at staging.",
@@ -187,8 +152,6 @@
         "Static assignments",
         "Difference from recurring shifts"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use a static shift to reserve a response vehicle for a defined outreach period; the start and end delimit its commitment.",
         "Search and rescue": "Use a static shift to reserve a search vehicle or boat for an operational period; review its assigned units and commitment dates.",
@@ -207,8 +170,6 @@
         "Layers and POIs",
         "Visibility and routing"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use current operational team positions for visit coverage; choose a location lifetime and follow the service’s location-access procedures.",
         "Search and rescue": "Set a location lifetime suitable for remote search updates; use search-area POIs and distinguish stale positions from current team location.",
@@ -227,8 +188,6 @@
         "Maps and freshness",
         "Station use"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Show response-team availability and active work on a coordination display; select an appropriate operational view and protect sensitive details.",
         "Search and rescue": "Show search-team status, incident and staging context; choose status aging thresholds that prompt a check-in.",
@@ -248,16 +207,13 @@
         "Threads and reactions",
         "Verification and client limits"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use operational chat for team coordination and handover; keep detailed clinical records in the approved record workflow.",
         "Search and rescue": "Use team chat for search coordination and logistics; confirm incident assignments separately.",
         "Security companies and departments": "Use site or patrol chat for low-impact coordination; review recipients before posting client-specific information.",
         "Wildland contractors": "Use crew chat for staging and logistics; ensure time-critical instructions also follow approved communications procedures.",
         "Industrial emergency response teams": "Use facility chat for coordination and equipment updates; record defects and incidents in their owning workflows."
-      },
-      "script_words": 883
+      }
     },
     {
       "id": "13-assistant",
@@ -270,16 +226,13 @@
         "HELP and CALLS",
         "Persistence and operational verification"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Ask for help locating setup or operational information, then check it on the owning screen; the assistant is not clinical decision support.",
         "Search and rescue": "Ask how to locate search-team or configuration information; verify the answer and current source records.",
         "Security companies and departments": "Ask for help with patrol workflow configuration; inspect site scope and source data before acting.",
         "Wildland contractors": "Ask how to find deployment or crew setup information; verify current assignment data and provider availability.",
         "Industrial emergency response teams": "Ask for help finding facility workflows; validate answers against current records and approved procedures."
-      },
-      "script_words": 874
+      }
     },
     {
       "id": "14-admin-assist",
@@ -291,16 +244,13 @@
         "Worklist and ownership",
         "Verification and plans"
       ],
-      "status": "video-verified",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use evidence checks to review roster, communications and upcoming credentials; investigate findings with the service owner.",
         "Search and rescue": "Review empty groups, qualifications and shift conflicts before the next search exercise.",
         "Security companies and departments": "Review patrol groups, administrative access and shift conflicts before expanding site coverage.",
         "Wildland contractors": "Review seasonal members, qualification expiry and deployment-related setup gaps before mobilization.",
         "Industrial emergency response teams": "Review facility groups, credentials and equipment-related setup findings; retain unresolved items in the handover."
-      },
-      "script_words": 902
+      }
     },
     {
       "id": "15-inventory",
@@ -312,8 +262,6 @@
         "Assignments",
         "Expiry and purchasing"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Track operational kits and consumables by location; record issues and returns without exposing clinical information.",
         "Search and rescue": "Track rope, radios and search kits; issue equipment to a team, then reconcile returns and damaged items.",
@@ -332,8 +280,6 @@
         "Review and finalization",
         "Incident and prevention scope"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use an approved operational record definition for visits or responses; select fields and access according to the service’s record policy.",
         "Search and rescue": "Record search activity, participants and outcomes; distinguish a saved draft from a reviewed or finalized record.",
@@ -352,8 +298,6 @@
         "Completion",
         "Follow-up"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Assign approved response and outreach training; review acknowledgments and completion separately from competency or authorization.",
         "Search and rescue": "Assign navigation, search and equipment training; follow up on incomplete sessions.",
@@ -372,8 +316,6 @@
         "Renewal",
         "Expiring qualification review"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Track relevant professional and operational credentials and expiry dates; verify originals and renewal requirements with the responsible owner.",
         "Search and rescue": "Track search, rescue and equipment qualifications; review expiry before allocating specialist roles.",
@@ -392,8 +334,6 @@
         "Search",
         "Operational references"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Maintain approved referral and partner contacts with organizational access rules; keep operational contact notes distinct from clinical records.",
         "Search and rescue": "Maintain land-manager, mutual-aid and logistics contacts for a search area.",
@@ -412,8 +352,6 @@
         "Add-on prerequisites",
         "Read-only fixture versus live billing"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Compare active member counts and enabled modules with subscription capacity; identify the owner of subscription changes.",
         "Search and rescue": "Plan seasonal volunteer capacity and relevant add-ons before increasing the roster.",
@@ -432,8 +370,6 @@
         "Review and exports",
         "Deployment links"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Set worker classifications, operational assignments and reviewed time workflow appropriate to the service.",
         "Search and rescue": "Set workforce tracking only where needed, separating volunteer availability from any payable work.",
@@ -452,8 +388,6 @@
         "Assignments and readiness",
         "Operational and finance evidence"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Plan an outreach event or temporary response-coverage deployment with dates, roster and operational objectives.",
         "Search and rescue": "Plan a search deployment with staging, operational period, personnel and resource roster.",
@@ -472,8 +406,6 @@
         "Incident records",
         "Review and export"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Report operational coverage, response activity and training progress; interpret metrics according to the service’s approved definitions.",
         "Search and rescue": "Report search activity, team participation and readiness gaps; verify filters and source records.",
@@ -492,8 +424,6 @@
         "Failure follow-up",
         "Compliance reports"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use a vehicle or operational-kit checklist; follow up on failed items and distinguish scheduled compliance from an on-demand check.",
         "Search and rescue": "Use search-kit and vehicle readiness checks; assign failed equipment follow-up.",
@@ -512,8 +442,6 @@
         "Steps and cost evidence",
         "Closure and restoration"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Turn a response-vehicle or kit defect into a work order with an owner, state and completion evidence.",
         "Search and rescue": "Track defective radios or search equipment through review, repair and return to service.",
@@ -532,8 +460,6 @@
         "Reimbursement workspace",
         "Review before external transactions"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Connect approved operational activity to the service’s cost workflow; review eligibility and export prerequisites outside the operational roster.",
         "Search and rescue": "Keep operational search records and any approved cost evidence together without assuming reimbursement eligibility.",
@@ -552,8 +478,6 @@
         "Chat and messages",
         "Communication test scope"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Review eligible channels and intended team recipients before an authorized communication test; configuration alone does not prove delivery.",
         "Search and rescue": "Review volunteer alert channels and inactive members; test reviewed recipients and fallback communications.",
@@ -572,8 +496,6 @@
         "Import connector configuration",
         "Provider prerequisites"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Use an approved operational request type for a visit or mobile response; keep clinical triage and sensitive detail under the service’s procedures.",
         "Search and rescue": "Use Rescue or a reviewed search type and clear staging information; select the appropriate team.",
@@ -592,8 +514,6 @@
         "Commands and templates",
         "Ownership and review"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Organize approved response and referral procedures with responsible owners and review dates.",
         "Search and rescue": "Organize search, navigation and equipment protocols and mutual-aid references.",
@@ -612,8 +532,6 @@
         "API and MCP",
         "Observed integration limits"
       ],
-      "status": "pending-capture",
-      "target_minutes": "5–9",
       "sector_examples": {
         "Community paramedicine and mental health response": "Choose member, dispatch and display apps according to response-team duties; verify device registration and external providers separately.",
         "Search and rescue": "Choose field-member, dispatch and coordination-display apps; verify location update and remote connectivity.",

@@ -11,6 +11,7 @@ GITHUB_SITE_LIMIT = 1_000_000_000
 GITHUB_FILE_LIMIT = 100 * 1024 * 1024
 TEXT_TYPES = {'.html', '.json', '.txt', '.csv', '.srt', '.vtt', '.css', '.js', '.svg'}
 FORBIDDEN_PARTS = {'local-stack', 'private', '.git', '.github', '__pycache__', 'build', 'descript'}
+ACADEMY_PRODUCTION_PATTERN = re.compile(r'Warm\s+Lulu|illustrated\s+draft|live\s+(?:screen\s+)?walkthrough\s+pending|human\s+listening\s+review\s+(?:remains\s+)?pending|remaining\s+detailed\s+production|narrated\s+revision[^\n]{0,40}in\s+production', re.I)
 PRIVATE_PATTERN = re.compile(r'https?://(?:web|share)\.descript\.com|https?://(?:127\.0\.0\.1|localhost)(?=[:/\s])|/Users/|[?&](?:X-Goog-Signature|X-Amz-Signature|access_token|sig)=', re.I)
 
 
@@ -63,6 +64,8 @@ def validate(root):
         records.append({'path': relative.as_posix(), 'bytes': path.stat().st_size})
         if path.suffix in TEXT_TYPES:
             text = path.read_text(encoding='utf-8')
+            if ACADEMY_PRODUCTION_PATTERN.search(text):
+                issues.append(f'Academy production label in public content: {relative}')
             if PRIVATE_PATTERN.search(text):
                 issues.append(f'Private editor link, local address or temporary signed URL: {relative}')
             if path.suffix == '.html':

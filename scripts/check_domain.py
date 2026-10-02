@@ -1,5 +1,8 @@
 """Check a configured Pages domain without changing repository settings."""
+import argparse
+import json
 import os
+from pathlib import Path
 import re
 from urllib.parse import urlsplit
 
@@ -19,14 +22,24 @@ def check_domain(expected, pages_url):
         return 'Using the existing GitHub Pages address or configured custom domain.'
     domain = normalize_domain(expected)
     current = urlsplit(pages_url)
-    if current.scheme != 'https' or (current.hostname or '').lower() != domain:
+    if current.scheme not in ('https', 'http') or current.username or current.password or current.port or (current.hostname or '').lower() != domain:
         raise ValueError('The expected domain is not the configured Pages address. Save it in Settings > Pages > Custom domain, then rerun deployment.')
     return 'The configured custom domain matches the expected domain.'
 
 
+def configured_domain(override, config_path):
+    if override.strip():
+        return normalize_domain(override)
+    config = json.loads(Path(config_path).read_text())
+    return normalize_domain(config['custom_domain'])
+
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--config', type=Path, default=Path(__file__).resolve().parents[1] / 'pages.json')
+    args = parser.parse_args()
     try:
-        print(check_domain(os.environ.get('ACADEMY_CUSTOM_DOMAIN', ''), os.environ.get('ACADEMY_PAGES_URL', '')))
+        print(check_domain(configured_domain(os.environ.get('ACADEMY_CUSTOM_DOMAIN', ''), args.config), os.environ.get('ACADEMY_PAGES_URL', '')))
     except ValueError as error:
         raise SystemExit(str(error))
 

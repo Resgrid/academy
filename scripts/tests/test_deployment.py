@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from check_domain import check_domain, normalize_domain
+from check_domain import check_domain, configured_domain, normalize_domain
 from export_site import public_data, public_html
 from validate_site import local_target, validate
 
@@ -35,6 +35,18 @@ class DeploymentTests(unittest.TestCase):
         for domain in ('https://academy.example.com', '*.example.com', 'example.com/path', 'example.com:443', '-bad.example.com', 'example..com'):
             with self.assertRaises(ValueError):
                 normalize_domain(domain)
+
+    def test_repository_hostname_is_used_on_every_automatic_publish(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'pages.json'
+            path.write_text('{"custom_domain":"academy.resgrid.com"}')
+            expected = configured_domain('', path)
+            self.assertEqual(expected, 'academy.resgrid.com')
+            for scheme in ('https', 'http'):
+                self.assertIn('matches', check_domain(expected, scheme + '://academy.resgrid.com/'))
+            with self.assertRaises(ValueError):
+                check_domain(expected, 'https://resgrid.github.io/academy')
+            self.assertEqual(configured_domain('training.example.com', path), 'training.example.com')
 
     def test_deployment_rejects_missing_links_and_altered_video(self):
         with tempfile.TemporaryDirectory() as directory:

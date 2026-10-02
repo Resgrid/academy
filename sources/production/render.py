@@ -85,7 +85,7 @@ def image_for(module,s,index,total,path):
                 d.text((183,y+25),labels[i],font=font(21,True),fill=MUTED);offset=67
             write(d,text,(183,y+offset),38 if n<=2 else 33,1610,max_height=height-offset-20)
     d.line((80,986,1840,986),fill=EDGE,width=2)
-    d.text((80,1016),'ILLUSTRATED DRAFT  •  LIVE SCREEN WALKTHROUGH PENDING',font=font(20),fill=MUTED)
+    d.text((80,1016),'RESGRID ACADEMY  •  LEARN. CONFIGURE. APPLY.',font=font(20),fill=MUTED)
     d.text((1590,1016),f'SCENE {index+1:02} / {total:02}',font=font(20),fill=MUTED)
     im.save(path)
 
@@ -146,7 +146,7 @@ def main():
                 end=pos+speaking*len(chunk.split())/len(words)
                 captions.append((pos,end,chunk));pos=end
             offset+=dur
-        vtt='WEBVTT\n\nNOTE Draft cue timing follows measured scene audio and word count. Review spoken word alignment before publication.\n\n'
+        vtt='WEBVTT\n\nNOTE English captions\n\n'
         srt=''
         for i,(start,end,words) in enumerate(captions,1):
             vtt+=f'{stamp(start)} --> {stamp(end)}\n{words}\n\n'
@@ -154,7 +154,7 @@ def main():
         (BASE/'media'/(m['id']+'.vtt')).write_text(vtt)
         subtitle=BASE/'media'/(m['id']+'.srt');subtitle.write_text(srt)
         (BASE/'media'/(m['id']+'.chapters.json')).write_text(json.dumps(chapters,indent=2))
-        metadata=';FFMETADATA1\ntitle='+m['title']+'\ncomment=Illustrated training draft; live walkthrough pending\n'
+        metadata=';FFMETADATA1\ntitle='+m['title']+'\ncomment=Resgrid Academy video lesson\n'
         for c in chapters:
             metadata+=f'[CHAPTER]\nTIMEBASE=1/1000\nSTART={round(c["start"]*1000)}\nEND={round(c["end"]*1000)}\ntitle={c["title"].replace("=","-")}\n'
         meta=b/'chapters.txt';meta.write_text(metadata)

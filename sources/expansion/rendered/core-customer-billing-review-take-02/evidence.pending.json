@@ -1,0 +1,2754 @@
+{
+  "schema_version": 1,
+  "lesson_id": "core-customer-billing-review",
+  "video": {
+    "file": "expansion/rendered/core-customer-billing-review-take-02/core-customer-billing-review.mp4",
+    "sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+    "duration_seconds": 349.13525,
+    "width": 1920,
+    "height": 1080,
+    "assembled_at": "2026-10-30T21:00:10.056415+00:00",
+    "captions": {
+      "file": "expansion/rendered/core-customer-billing-review-take-02/core-customer-billing-review.vtt",
+      "sha256": "00acfde7f93e6d13d440b86b2e86800a8cb986536862ab02e17e9fb861d721b7"
+    }
+  },
+  "screenshots": [
+    {
+      "id": "001-invoicing-catalog-no-invoices",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.jpg",
+      "sha256": "e63175e351e0e3aa3e56ff6394352ff7a0a4cb61f62ce675639ac9bac76a1309",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Index",
+        "captured_at": "2026-10-29T05:28:53.004Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.dom.txt",
+      "dom_sha256": "ff65c2550a6781736ab700e72a99dde46dc485104384d149925aa4605f4a73bb",
+      "visible_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices.",
+        "Number",
+        "Status",
+        "Filter"
+      ],
+      "required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices.",
+        "Number",
+        "Status",
+        "Filter"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual empty fictional customer-invoice list. Zero invoices/balances do not prove a payment or settlement. New invoice is visible but unused; no draft or number consumed."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "e63175e351e0e3aa3e56ff6394352ff7a0a4cb61f62ce675639ac9bac76a1309",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "002-billing-identity-empty-defaults",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.jpg",
+      "sha256": "0524296ecca3b1d17ada2ad2591d121410ead5f4cafc5fda8990b84d5d4d81e1",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Settings",
+        "captured_at": "2026-10-29T05:29:01.732Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.dom.txt",
+      "dom_sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "visible_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address",
+        "Address",
+        "City",
+        "State / province",
+        "Postal code",
+        "Country"
+      ],
+      "required_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address",
+        "Address",
+        "City",
+        "State / province",
+        "Postal code",
+        "Country"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Identity form fields are blank. GET may construct unsaved defaults; this is not saved billing-identity proof. Only Billing identity tab is offered; no provider configuration/result is shown."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "0524296ecca3b1d17ada2ad2591d121410ead5f4cafc5fda8990b84d5d4d81e1",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "003-billing-registrations-readonly",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.jpg",
+      "sha256": "58fd7123de6ec2f2677eab5a0671708747ca3fef074caba93c8cd195eb8082c0",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Settings",
+        "captured_at": "2026-10-29T05:29:12.243Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.dom.txt",
+      "dom_sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "visible_labels": [
+        "Registrations",
+        "Tax registration number",
+        "Secondary tax registration",
+        "SAM UEI",
+        "CAGE code",
+        "Workers' comp account",
+        "Invoice footer"
+      ],
+      "required_labels": [
+        "Registrations",
+        "Tax registration number",
+        "Secondary tax registration",
+        "SAM UEI",
+        "CAGE code",
+        "Workers' comp account",
+        "Invoice footer"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "All registration fields pictured are empty. Do not infer registrations or legal/tax coverage. Invoice footer field is blank."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "58fd7123de6ec2f2677eab5a0671708747ca3fef074caba93c8cd195eb8082c0",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "004-footer-pay-link-display-preferences",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.jpg",
+      "sha256": "8f9d0b7d2a9ca4e9c0ed77f29920591f5f95ab203daa5cc53974cf94da2dea7a",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Settings#WorkersCompAccountNumber",
+        "captured_at": "2026-10-29T05:29:12.453Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.dom.txt",
+      "dom_sha256": "8fe91e124329fcf7688a6621c46aec917deecbebc5f3910021099237cfd2964f",
+      "visible_labels": [
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices",
+        "Save"
+      ],
+      "required_labels": [
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices",
+        "Save"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual displayed link-expiry30 and checked display preference are form values, not successful link generation, payment connection, invoice document or provider collection. Save untouched."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "8f9d0b7d2a9ca4e9c0ed77f29920591f5f95ab203daa5cc53974cf94da2dea7a",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "005-rate-card-catalog-empty",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.jpg",
+      "sha256": "0734f513705f2d4a268e8b454e71f8b3df6eccba9d72a76ea994afaf5d54d742",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/RateCards",
+        "captured_at": "2026-10-29T05:29:26.344Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.dom.txt",
+      "dom_sha256": "830812e7fed17327acb0418beb00c882391c0b0c8a9bebff414e82eda5f40367",
+      "visible_labels": [
+        "Rate Cards",
+        "New rate card",
+        "No rate cards yet."
+      ],
+      "required_labels": [
+        "Rate Cards",
+        "New rate card",
+        "No rate cards yet."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual catalog is empty. Help describes department default versus customer-pinned card; no card/rate saved."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "0734f513705f2d4a268e8b454e71f8b3df6eccba9d72a76ea994afaf5d54d742",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "006-new-rate-card-unsaved-preview",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.jpg",
+      "sha256": "d5db3f12c9a138d327fe96de2c5f5d0edc3a29f25617ec7bbeb22ab92e8f6081",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/EditRateCard",
+        "captured_at": "2026-10-29T05:29:48.783Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.dom.txt",
+      "dom_sha256": "4f41b71b2f4fd09b0c0731ad7adeb776f0bf490f19e9c7ee04063097fcc82104",
+      "visible_labels": [
+        "New rate card",
+        "Name",
+        "Description",
+        "Department default (used when a customer has no pinned rate card)",
+        "Active",
+        "Save the rate card before adding items.",
+        "Cancel",
+        "Save"
+      ],
+      "required_labels": [
+        "New rate card",
+        "Name",
+        "Description",
+        "Department default (used when a customer has no pinned rate card)",
+        "Active",
+        "Save the rate card before adding items.",
+        "Cancel",
+        "Save"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "New unsaved card form; blank Name/Description, department default unchecked, Active checked. Rate card items panel says save first. Cancel/Save controls are pictured; neither any Save nor rate item operation is claimed."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "d5db3f12c9a138d327fe96de2c5f5d0edc3a29f25617ec7bbeb22ab92e8f6081",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "008-existing-fictional-customer-contact",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.jpg",
+      "sha256": "8f0fc2595968ba7639a64f2c465dcf826bca3e9069fe8a96a2e602af0db35d84",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Contacts",
+        "captured_at": "2026-10-29T05:30:08.044Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.dom.txt",
+      "dom_sha256": "973b2f31541ff4a13d4401682da7b7007289b09eb7fc3c1ff56cda09dd9037ab",
+      "visible_labels": [
+        "Contacts",
+        "Academy Logistics Desk (fictional)",
+        "View",
+        "Location\\Company"
+      ],
+      "required_labels": [
+        "Contacts",
+        "Academy Logistics Desk (fictional)",
+        "View",
+        "Location\\Company"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Existing company contact and its View control visible; no new contact or directory edit in this lesson. Company row is bottom of viewport but full name/View are readable."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "8f0fc2595968ba7639a64f2c465dcf826bca3e9069fe8a96a2e602af0db35d84",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "009-customer-billing-no-profile",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.jpg",
+      "sha256": "7ba626e40159935056765928764d386be7a8959d12796327242b1aa1000587f2",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Contacts/View?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8",
+        "captured_at": "2026-10-29T05:42:36.983Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.dom.txt",
+      "dom_sha256": "5edde24b110ffb112ae7bcc841f9555ad9680832b333645da43bf8b741dfebac",
+      "visible_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Billing",
+        "Billing profile",
+        "No billing profile yet. Save one to start invoicing this contact.",
+        "Set up billing profile",
+        "Invoices",
+        "No invoices."
+      ],
+      "required_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Billing",
+        "Billing profile",
+        "No billing profile yet. Save one to start invoicing this contact.",
+        "Set up billing profile",
+        "Invoices",
+        "No invoices."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Settled contact Billing section states no profile yet and no invoices. Directory category is numeric; do not narrate it as the named category. Fictional display email is not a billing-address readback; no email value is used by the candidate."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "7ba626e40159935056765928764d386be7a8959d12796327242b1aa1000587f2",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "010-unsaved-customer-terms-discount-rate-defaults",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.jpg",
+      "sha256": "7e6b921cb756277bd57fa1bbdf89a96a75f18c4df3aadc6f1d32d9d4a8e2f9db",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8#TermsNetDays",
+        "captured_at": "2026-10-29T05:43:51.569Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.dom.txt",
+      "dom_sha256": "a284dd6b0eaf62e1df62c95f4697ec15fb9e69c5378b36aac5518ddbde976d0b",
+      "visible_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Default rate schedule",
+        "Use the department default",
+        "Purchase order number required on invoices",
+        "Active (new invoices may be created)",
+        "Use the contact's mailing address"
+      ],
+      "required_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Default rate schedule",
+        "Use the department default",
+        "Purchase order number required on invoices",
+        "Active (new invoices may be created)",
+        "Use the contact's mailing address"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Unsaved customer-profile defaults, not stored profile proof. Terms30 and blank discount; default card and schedule; PO unchecked; Active checked. Top Terms input reaches viewport boundary; only reading labels/value is taught, no fill interaction. BillingEmail input stays outside the viewport; its value is not inspected or retained in reviewed metadata."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "7e6b921cb756277bd57fa1bbdf89a96a75f18c4df3aadc6f1d32d9d4a8e2f9db",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "011-unsaved-address-tax-components-save-controls",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.jpg",
+      "sha256": "1f22ccb635dbd1cb69d08ad4f72d6d4ff69e1bd25185e5a5d1f6de7963afa314",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8#Notes",
+        "captured_at": "2026-10-29T05:43:51.778Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.dom.txt",
+      "dom_sha256": "0ba758149921b442a95d5ad5b49e0250c6b3a0abfc4165fabb8e5d8892839441",
+      "visible_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax",
+        "Tax exempt",
+        "Tax rate %",
+        "Tax components",
+        "Name",
+        "Rate %",
+        "Registration number",
+        "Notes",
+        "Cancel",
+        "Save"
+      ],
+      "required_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax",
+        "Tax exempt",
+        "Tax rate %",
+        "Tax components",
+        "Name",
+        "Rate %",
+        "Registration number",
+        "Notes",
+        "Cancel",
+        "Save"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Lower unsaved profile form only; no persisted address/tax profile, tax determination, invoice or Send result. BillingEmail remains outside viewport and is not read. PO label at top is clipped; use010 for it. Save/Cancel fully visible."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "1f22ccb635dbd1cb69d08ad4f72d6d4ff69e1bd25185e5a5d1f6de7963afa314",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "007-aging-no-outstanding-invoices",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.jpg",
+      "sha256": "5f128a5e8fc7a530e488458921f87ec2bf51dccbd58581c715bbc1e7c0c667e8",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Aging",
+        "captured_at": "2026-10-29T05:30:00.391Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.dom.txt",
+      "dom_sha256": "73de2f599f4d72b3b3470a050fdbb4ecd479eb5b7ee4c02da322c5b7fee5b725",
+      "visible_labels": [
+        "Accounts receivable aging",
+        "Aging",
+        "Current",
+        "1-30 days past due",
+        "31-60 days past due",
+        "61-90 days past due",
+        "90+ days past due",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "required_labels": [
+        "Accounts receivable aging",
+        "Aging",
+        "Current",
+        "1-30 days past due",
+        "31-60 days past due",
+        "61-90 days past due",
+        "90+ days past due",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "All actual aging buckets zero, with an As of timestamp. Empty No outstanding invoices is not proof customers paid or a collection was performed. Populated per-currency detail is not demonstrated."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "5f128a5e8fc7a530e488458921f87ec2bf51dccbd58581c715bbc1e7c0c667e8",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "012-department-menu-subscription-entry",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.jpg",
+      "sha256": "c2dba9d00551401da3de7f5bc9aa60bb8a807d35407ae078b6a416e9ad3fa29f",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing",
+        "captured_at": "2026-10-29T05:44:20.467Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.dom.txt",
+      "dom_sha256": "15733db9df50d48cf545380606bcd7a1c6ab57e06b94bbb717a7b7fe38a7ac81",
+      "visible_labels": [
+        "Subscription & Billing",
+        "Department Settings",
+        "Security & Permissions",
+        "Invoicing"
+      ],
+      "required_labels": [
+        "Subscription & Billing",
+        "Department Settings",
+        "Security & Permissions",
+        "Invoicing"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual department menu Subscription & Billing launcher is pictured. No security/settings item selected and no provider/account change."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "c2dba9d00551401da3de7f5bc9aa60bb8a807d35407ae078b6a416e9ad3fa29f",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "013-local-subscription-distinct-from-customer-invoicing",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.jpg",
+      "sha256": "5c4f27bdf9648e9192d39c80ff3a813efc57afd22e44f94facc23594825124c5",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Subscription",
+        "captured_at": "2026-10-29T05:45:16.011Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.dom.txt",
+      "dom_sha256": "009f6fe9af0cae0eb50f795f36c0feecb0510fc21c4927e2cc881633e97a8e25",
+      "visible_labels": [
+        "Subscription Plan & Billing",
+        "Legacy Plan",
+        "Entities",
+        "Warning"
+      ],
+      "required_labels": [
+        "Subscription Plan & Billing",
+        "Legacy Plan",
+        "Entities",
+        "Warning"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Legacy local training-plan screen; values and add-on snippets are not current commercial pricing/capacity recommendations. No purchase/cancel/renewal/billing-info operation performed."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "5c4f27bdf9648e9192d39c80ff3a813efc57afd22e44f94facc23594825124c5",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "014-entities-tab-legacy-plan-readonly",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.jpg",
+      "sha256": "a6b08ecbcc2137b052a6205f867249497e30338f52daabeeb396049e8e00d6b3",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Subscription",
+        "captured_at": "2026-10-29T05:45:47.654Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.dom.txt",
+      "dom_sha256": "c40ab4be1e7a4e054fe8111c5f02958efc1dbdb97aec707208e0cc9432fc2331",
+      "visible_labels": [
+        "Subscription Plan & Billing",
+        "Entities",
+        "Active Legacy Subscription"
+      ],
+      "required_labels": [
+        "Subscription Plan & Billing",
+        "Entities",
+        "Active Legacy Subscription"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Entities tab shows Active Legacy Subscription notice, not a modern entity-capacity selection form. Legacy14/Unlimited is not taught as the actual all-plan capacity rule. No provider/plan operation."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "a6b08ecbcc2137b052a6205f867249497e30338f52daabeeb396049e8e00d6b3",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "016-fresh-invoicing-no-invoices",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.jpg",
+      "sha256": "26152be556d7e838dcd60bc6814c0d092c0446483aa2d00abfdf9139329b5d4a",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing",
+        "captured_at": "2026-10-29T05:45:48.552Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.dom.txt",
+      "dom_sha256": "a4579333f40829cab202f5482fb0f633d3d44ffe4edfde8fcca7dafb90e19df9",
+      "visible_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Fresh invoice list still0invoices/0outstanding/0overdue. It establishes no invoice was created in this read-only exercise, not a stored customer-profile success. The separate015contact fade is excluded."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "26152be556d7e838dcd60bc6814c0d092c0446483aa2d00abfdf9139329b5d4a",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "invoicing",
+      "title": "Orient to customer invoicing",
+      "kind": "operational",
+      "start": 0.0,
+      "end": 28.31,
+      "screens": [
+        {
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "start": 0.0,
+          "end": 28.31
+        }
+      ],
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 3.849,
+          "text": "Customer invoicing tracks what your department bills to its customers.",
+          "cue": 1,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [
+            "Invoicing"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Invoicing": "Invoicing"
+          }
+        },
+        {
+          "start": 4.19,
+          "end": 7.809,
+          "text": "In our fictional Chicago Fire practice department, the Invoicing",
+          "cue": 2,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [
+            "Invoicing"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Invoicing": "Invoicing"
+          }
+        },
+        {
+          "start": 7.809,
+          "end": 12.0,
+          "text": "page shows Invoices, Rate Cards, Aging and Billing settings.",
+          "cue": 3,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [
+            "Invoices",
+            "Rate Cards",
+            "Aging",
+            "Billing settings"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Invoices": "Invoices",
+            "Rate Cards": "Rate Cards",
+            "Aging": "Aging",
+            "Billing settings": "Billing settings"
+          }
+        },
+        {
+          "start": 12.31,
+          "end": 15.239,
+          "text": "The list is empty, and the balance tiles show zero.",
+          "cue": 4,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 15.659,
+          "end": 20.139,
+          "text": "Read these as the current account contents, not proof that payments were collected.",
+          "cue": 5,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 20.559,
+          "end": 23.59,
+          "text": "This walkthrough inspects configuration and account views;",
+          "cue": 6,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 23.889,
+          "end": 28.11,
+          "text": "we leave New invoice unused and keep all financial data unchanged.",
+          "cue": 7,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "a293884e060a9d8850917f0bd0960d059e54405279a7a67e5657d6756b886ae3",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "identity",
+      "title": "Inspect the department’s billing identity",
+      "kind": "operational",
+      "start": 28.31,
+      "end": 58.599,
+      "screens": [
+        {
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "start": 28.31,
+          "end": 32.81
+        },
+        {
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "start": 32.81,
+          "end": 58.599
+        }
+      ],
+      "captions": [
+        {
+          "start": 28.31,
+          "end": 32.259,
+          "text": "Choose Billing settings to inspect what invoices say about the department.",
+          "cue": 8,
+          "screenshot_id": "001-invoicing-catalog-no-invoices",
+          "required_labels": [
+            "Invoices",
+            "Billing settings"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Invoices": "Invoices",
+            "Billing settings": "Billing settings"
+          }
+        },
+        {
+          "start": 32.81,
+          "end": 36.389,
+          "text": "Billing identity contains Legal business name and the remit-to",
+          "cue": 9,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [
+            "Billing identity",
+            "Legal business name"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Billing identity": "Billing identity",
+            "Legal business name": "Legal business name"
+          }
+        },
+        {
+          "start": 36.389,
+          "end": 40.63,
+          "text": "address, with city, state or province, postal code and country.",
+          "cue": 10,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [
+            "Address",
+            "City",
+            "Postal code",
+            "Country"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Address": "Address",
+            "City": "City",
+            "Postal code": "Postal code",
+            "Country": "Country"
+          }
+        },
+        {
+          "start": 41.109,
+          "end": 44.399,
+          "text": "These fields supply the identity used on invoice documents.",
+          "cue": 11,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 44.709,
+          "end": 46.41,
+          "text": "They are blank in this exercise.",
+          "cue": 12,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 46.83,
+          "end": 51.02,
+          "text": "An empty form may be showing initial defaults; it is not evidence that a",
+          "cue": 13,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 51.02,
+          "end": 53.26,
+          "text": "complete billing identity has been saved.",
+          "cue": 14,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [
+            "Billing identity"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Billing identity": "Billing identity"
+          }
+        },
+        {
+          "start": 53.699,
+          "end": 56.33,
+          "text": "Identify the needed organizational information",
+          "cue": 15,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 56.33,
+          "end": 58.489,
+          "text": "before planning any later change.",
+          "cue": 16,
+          "screenshot_id": "002-billing-identity-empty-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address",
+        "City",
+        "State / province",
+        "Postal code",
+        "Country"
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "4640fc40bb578850c010164e595e4ac8b74d82ae45a5b9256297932ec9289491",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "registrations",
+      "title": "Read registrations and document-link preferences",
+      "kind": "operational",
+      "start": 58.599,
+      "end": 91.579,
+      "screens": [
+        {
+          "screenshot_id": "003-billing-registrations-readonly",
+          "start": 58.599,
+          "end": 73.919
+        },
+        {
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "start": 73.919,
+          "end": 91.579
+        }
+      ],
+      "captions": [
+        {
+          "start": 58.599,
+          "end": 64.4,
+          "text": "The Registrations section separates tax registrations, SAM UEI, CAGE code and",
+          "cue": 17,
+          "screenshot_id": "003-billing-registrations-readonly",
+          "required_labels": [
+            "Registrations",
+            "SAM UEI",
+            "CAGE code"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Registrations": "Registrations",
+            "SAM UEI": "SAM UEI",
+            "CAGE code": "CAGE code"
+          }
+        },
+        {
+          "start": 64.4,
+          "end": 66.54,
+          "text": "workers’ compensation account information.",
+          "cue": 18,
+          "screenshot_id": "003-billing-registrations-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 66.95,
+          "end": 68.459,
+          "text": "Each field is empty here.",
+          "cue": 19,
+          "screenshot_id": "003-billing-registrations-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 68.78,
+          "end": 71.789,
+          "text": "These are distinct organization identifiers, not",
+          "cue": 20,
+          "screenshot_id": "003-billing-registrations-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 71.789,
+          "end": 73.37,
+          "text": "interchangeable account names.",
+          "cue": 21,
+          "screenshot_id": "003-billing-registrations-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 73.919,
+          "end": 76.9,
+          "text": "Invoice footer supplies text printed under totals.",
+          "cue": 22,
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "required_labels": [
+            "Invoice footer"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Invoice footer": "Invoice footer"
+          }
+        },
+        {
+          "start": 77.219,
+          "end": 81.09,
+          "text": "Below it, Pay link expiry is thirty days and the Show a Pay",
+          "cue": 23,
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 81.09,
+          "end": 82.99,
+          "text": "online link preference is checked.",
+          "cue": 24,
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 83.299,
+          "end": 86.799,
+          "text": "That display preference alone does not establish a usable payment",
+          "cue": 25,
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 86.799,
+          "end": 88.6,
+          "text": "connection or generate a link.",
+          "cue": 26,
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 88.959,
+          "end": 91.199,
+          "text": "We inspect the controls without using Save.",
+          "cue": 27,
+          "screenshot_id": "004-footer-pay-link-display-preferences",
+          "required_labels": [
+            "Save"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Save": "Save"
+          }
+        }
+      ],
+      "visual_required_labels": [
+        "Registrations",
+        "Tax registration number",
+        "Secondary tax registration",
+        "SAM UEI",
+        "CAGE code",
+        "Workers' comp account",
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices",
+        "Save"
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "89aa890183931ec2f282836e5aefa0e65f1ff93a3df76d82ee86affca8c732a3",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "rate-cards",
+      "title": "Distinguish rate definitions from saved charges",
+      "kind": "operational",
+      "start": 91.579,
+      "end": 122.95,
+      "screens": [
+        {
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "start": 91.579,
+          "end": 108.72
+        },
+        {
+          "screenshot_id": "006-new-rate-card-unsaved-preview",
+          "start": 108.72,
+          "end": 122.95
+        }
+      ],
+      "captions": [
+        {
+          "start": 91.579,
+          "end": 95.67,
+          "text": "Rate Cards describes the charge schedule: unit or personnel time,",
+          "cue": 28,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [
+            "Rate Cards"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Rate Cards": "Rate Cards"
+          }
+        },
+        {
+          "start": 95.77,
+          "end": 98.38,
+          "text": "flat fees, mileage and materials.",
+          "cue": 29,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 98.73,
+          "end": 102.27,
+          "text": "A customer can pin a card instead of using the department default.",
+          "cue": 30,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 102.7,
+          "end": 105.52,
+          "text": "The catalog currently says No rate cards yet.",
+          "cue": 31,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [
+            "Rate Cards",
+            "No rate cards yet."
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Rate Cards": "Rate Cards",
+            "No rate cards yet.": "No rate cards yet."
+          }
+        },
+        {
+          "start": 106.009,
+          "end": 108.329,
+          "text": "New rate card opens the definition form.",
+          "cue": 32,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [
+            "New rate card"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "New rate card": "New rate card"
+          }
+        },
+        {
+          "start": 108.72,
+          "end": 111.849,
+          "text": "Name and Description are blank; Department default is",
+          "cue": 33,
+          "screenshot_id": "006-new-rate-card-unsaved-preview",
+          "required_labels": [
+            "Name",
+            "Description"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Name": "Name",
+            "Description": "Description"
+          }
+        },
+        {
+          "start": 111.929,
+          "end": 114.04,
+          "text": "unchecked and Active is checked.",
+          "cue": 34,
+          "screenshot_id": "006-new-rate-card-unsaved-preview",
+          "required_labels": [
+            "Active"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Active": "Active"
+          }
+        },
+        {
+          "start": 114.429,
+          "end": 117.909,
+          "text": "The items panel says to save the card before adding items.",
+          "cue": 35,
+          "screenshot_id": "006-new-rate-card-unsaved-preview",
+          "required_labels": [
+            "Save"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Save": "Save"
+          }
+        },
+        {
+          "start": 118.249,
+          "end": 122.7,
+          "text": "This is an unsaved form, with no charge items or default card created.",
+          "cue": 36,
+          "screenshot_id": "006-new-rate-card-unsaved-preview",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Rate Cards",
+        "No rate cards yet.",
+        "New rate card",
+        "Name",
+        "Description",
+        "Department default (used when a customer has no pinned rate card)",
+        "Active",
+        "Save the rate card before adding items."
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "05bd2f7d0cc028ca254fecdf05d7bed10b872ea44c982e073eb7b285a8293919",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "customer",
+      "title": "Inspect the existing customer’s Billing section",
+      "kind": "operational",
+      "start": 122.95,
+      "end": 151.549,
+      "screens": [
+        {
+          "screenshot_id": "008-existing-fictional-customer-contact",
+          "start": 122.95,
+          "end": 130.88
+        },
+        {
+          "screenshot_id": "009-customer-billing-no-profile",
+          "start": 130.88,
+          "end": 151.549
+        }
+      ],
+      "captions": [
+        {
+          "start": 122.95,
+          "end": 128.169,
+          "text": "For customer-specific settings, open Contacts and use View on Academy Logistics",
+          "cue": 37,
+          "screenshot_id": "008-existing-fictional-customer-contact",
+          "required_labels": [
+            "Contacts",
+            "View"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Contacts": "Contacts",
+            "View": "View"
+          }
+        },
+        {
+          "start": 128.169,
+          "end": 130.459,
+          "text": "Desk, our existing fictional company.",
+          "cue": 38,
+          "screenshot_id": "008-existing-fictional-customer-contact",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 130.88,
+          "end": 135.529,
+          "text": "Its Billing section says No billing profile yet and No invoices.",
+          "cue": 39,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [
+            "Billing",
+            "Billing profile",
+            "Invoices",
+            "No invoices."
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Billing": "Billing",
+            "Billing profile": "Billing profile",
+            "Invoices": "Invoices",
+            "No invoices.": "No invoices."
+          }
+        },
+        {
+          "start": 135.94,
+          "end": 139.429,
+          "text": "A directory contact and a billing profile are separate records.",
+          "cue": 40,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [
+            "Billing",
+            "Billing profile"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Billing": "Billing",
+            "Billing profile": "Billing profile"
+          }
+        },
+        {
+          "start": 139.769,
+          "end": 144.369,
+          "text": "Set up billing profile opens a form for that contact; it does not itself",
+          "cue": 41,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [
+            "Billing",
+            "Billing profile",
+            "Set up billing profile"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Billing": "Billing",
+            "Billing profile": "Billing profile",
+            "Set up billing profile": "Set up billing profile"
+          }
+        },
+        {
+          "start": 144.369,
+          "end": 146.699,
+          "text": "save a profile or issue an invoice.",
+          "cue": 42,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 147.019,
+          "end": 149.709,
+          "text": "Keep that distinction when assessing whether a customer is",
+          "cue": 43,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 149.769,
+          "end": 151.31,
+          "text": "actually ready for invoicing.",
+          "cue": 44,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Contacts",
+        "Academy Logistics Desk (fictional)",
+        "View",
+        "Billing",
+        "Billing profile",
+        "No billing profile yet. Save one to start invoicing this contact.",
+        "Set up billing profile",
+        "No invoices."
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "8d02fcadee11cd5d296a9bbaa9cdab43e70cd8c89d4a9b075fe563e2c43a12b9",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "terms",
+      "title": "Read customer terms and rate preferences",
+      "kind": "operational",
+      "start": 151.549,
+      "end": 184.029,
+      "screens": [
+        {
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "start": 151.549,
+          "end": 184.029
+        }
+      ],
+      "captions": [
+        {
+          "start": 151.549,
+          "end": 155.929,
+          "text": "The new customer form shows thirty net days, a blank Default discount,",
+          "cue": 45,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 156.159,
+          "end": 159.86,
+          "text": "and department-default choices for Rate card and Default rate schedule.",
+          "cue": 46,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [
+            "Rate card",
+            "Default rate schedule"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Rate card": "Rate card",
+            "Default rate schedule": "Default rate schedule"
+          }
+        },
+        {
+          "start": 160.389,
+          "end": 164.589,
+          "text": "Customer terms help set an unset invoice due date when it moves to Sent;",
+          "cue": 47,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 164.879,
+          "end": 166.839,
+          "text": "contract terms can take precedence.",
+          "cue": 48,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 167.28,
+          "end": 169.729,
+          "text": "The discount is a default for a new draft.",
+          "cue": 49,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 170.159,
+          "end": 173.44,
+          "text": "The schedule help concerns contractor bids and deployments",
+          "cue": 50,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 173.44,
+          "end": 175.259,
+          "text": "when no contract names a schedule.",
+          "cue": 51,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 175.749,
+          "end": 179.46,
+          "text": "Purchase order required is unchecked and Active is checked.",
+          "cue": 52,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 179.819,
+          "end": 183.819,
+          "text": "These are unsaved preferences, not completed invoice transactions.",
+          "cue": 53,
+          "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Default rate schedule",
+        "Use the department default",
+        "Purchase order number required on invoices",
+        "Active (new invoices may be created)"
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "514a922672d86614662403c91d82309a36f2835571ca27104eb808f47781a3c2",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "address-tax",
+      "title": "Review address source and tax fields deliberately",
+      "kind": "operational",
+      "start": 184.029,
+      "end": 215.04,
+      "screens": [
+        {
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "start": 184.029,
+          "end": 215.04
+        }
+      ],
+      "captions": [
+        {
+          "start": 184.029,
+          "end": 186.47,
+          "text": "Use the contact’s mailing address is checked.",
+          "cue": 54,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 186.88,
+          "end": 190.409,
+          "text": "That selects an address source; it does not verify that the",
+          "cue": 55,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 190.409,
+          "end": 192.159,
+          "text": "directory address is complete.",
+          "cue": 56,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 192.55,
+          "end": 197.13,
+          "text": "Tax exempt is unchecked, with a blank Tax rate and empty component rows for",
+          "cue": 57,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [
+            "Tax",
+            "Tax exempt"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Tax": "Tax",
+            "Tax exempt": "Tax exempt"
+          }
+        },
+        {
+          "start": 197.13,
+          "end": 199.449,
+          "text": "Name, Rate and Registration number.",
+          "cue": 58,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [
+            "Name",
+            "Registration number"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Name": "Name",
+            "Registration number": "Registration number"
+          }
+        },
+        {
+          "start": 199.77,
+          "end": 202.469,
+          "text": "The form supports up to three named components.",
+          "cue": 59,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 202.889,
+          "end": 205.569,
+          "text": "Notes, Cancel and Save appear below.",
+          "cue": 60,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [
+            "Notes",
+            "Cancel",
+            "Save"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Notes": "Notes",
+            "Cancel": "Cancel",
+            "Save": "Save"
+          }
+        },
+        {
+          "start": 206.01,
+          "end": 209.739,
+          "text": "Use only organization-approved values in a real billing setup.",
+          "cue": 61,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 210.09,
+          "end": 213.209,
+          "text": "For this inspection, leave all fields unchanged and do",
+          "cue": 62,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 213.209,
+          "end": 214.959,
+          "text": "not save a customer profile.",
+          "cue": 63,
+          "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+          "required_labels": [
+            "Save"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Save": "Save"
+          }
+        }
+      ],
+      "visual_required_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax exempt",
+        "Tax rate %",
+        "Tax components",
+        "Name",
+        "Rate %",
+        "Registration number",
+        "Notes",
+        "Cancel",
+        "Save"
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "1cfb0037c1a9d3d901412f0a1274a84df80f1598be313ff3c2f9a45e21f80bb0",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "aging",
+      "title": "Interpret the aging view’s actual scope",
+      "kind": "operational",
+      "start": 215.04,
+      "end": 246.799,
+      "screens": [
+        {
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "start": 215.04,
+          "end": 246.799
+        }
+      ],
+      "captions": [
+        {
+          "start": 215.04,
+          "end": 219.259,
+          "text": "Aging groups positive outstanding balances by how far they are past due.",
+          "cue": 64,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [
+            "Aging"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Aging": "Aging"
+          }
+        },
+        {
+          "start": 219.77,
+          "end": 224.13,
+          "text": "Read Current, one to thirty, thirty-one to sixty, sixty-one to",
+          "cue": 65,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [
+            "Current"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Current": "Current"
+          }
+        },
+        {
+          "start": 224.13,
+          "end": 228.8,
+          "text": "ninety, and ninety-plus days with Total and the displayed as-of time.",
+          "cue": 66,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [
+            "Total"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Total": "Total"
+          }
+        },
+        {
+          "start": 229.329,
+          "end": 233.96,
+          "text": "Here every bucket is zero and the page says No outstanding invoices.",
+          "cue": 67,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [
+            "No outstanding invoices."
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "No outstanding invoices.": "No outstanding invoices."
+          }
+        },
+        {
+          "start": 234.32,
+          "end": 236.8,
+          "text": "That is consistent with the empty invoice account.",
+          "cue": 68,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 237.15,
+          "end": 240.109,
+          "text": "It does not demonstrate receipt of a payment, a collection",
+          "cue": 69,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 240.109,
+          "end": 242.169,
+          "text": "action or a customer settlement.",
+          "cue": 70,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 242.57,
+          "end": 246.699,
+          "text": "Review the underlying invoice before acting on a populated aging result.",
+          "cue": 71,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [
+            "Aging"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Aging": "Aging"
+          }
+        }
+      ],
+      "visual_required_labels": [
+        "Accounts receivable aging",
+        "Current",
+        "1-30 days past due",
+        "31-60 days past due",
+        "61-90 days past due",
+        "90+ days past due",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "ce5503bb839ebdbb01563e30ebaa943f00b1c591271734e5cd46e56ccded944d",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "subscription",
+      "title": "Separate the Resgrid subscription from customer invoices",
+      "kind": "operational",
+      "start": 246.799,
+      "end": 284.69,
+      "screens": [
+        {
+          "screenshot_id": "012-department-menu-subscription-entry",
+          "start": 246.799,
+          "end": 254.33
+        },
+        {
+          "screenshot_id": "013-local-subscription-distinct-from-customer-invoicing",
+          "start": 254.33,
+          "end": 264.16
+        },
+        {
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "start": 264.16,
+          "end": 284.69
+        }
+      ],
+      "captions": [
+        {
+          "start": 246.799,
+          "end": 250.26,
+          "text": "The department menu has a separate Subscription and Billing entry.",
+          "cue": 72,
+          "screenshot_id": "012-department-menu-subscription-entry",
+          "required_labels": [
+            "Subscription & Billing"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Subscription & Billing": "Subscription and Billing"
+          }
+        },
+        {
+          "start": 250.73,
+          "end": 253.76,
+          "text": "Use that to review the department’s Resgrid service plan.",
+          "cue": 73,
+          "screenshot_id": "012-department-menu-subscription-entry",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 254.33,
+          "end": 258.379,
+          "text": "Subscription Plan and Billing concerns the department’s subscription, not",
+          "cue": 74,
+          "screenshot_id": "013-local-subscription-distinct-from-customer-invoicing",
+          "required_labels": [
+            "Subscription Plan & Billing"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Subscription Plan & Billing": "Subscription Plan and Billing"
+          }
+        },
+        {
+          "start": 258.379,
+          "end": 260.539,
+          "text": "invoices to Academy Logistics Desk.",
+          "cue": 75,
+          "screenshot_id": "013-local-subscription-distinct-from-customer-invoicing",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 261.029,
+          "end": 263.679,
+          "text": "This department displays a Legacy Plan notice.",
+          "cue": 76,
+          "screenshot_id": "013-local-subscription-distinct-from-customer-invoicing",
+          "required_labels": [
+            "Legacy Plan"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Legacy Plan": "Legacy Plan"
+          }
+        },
+        {
+          "start": 264.16,
+          "end": 268.009,
+          "text": "Selecting Entities shows Active Legacy Subscription rather",
+          "cue": 77,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [
+            "Entities",
+            "Active Legacy Subscription"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Entities": "Entities",
+            "Active Legacy Subscription": "Active Legacy Subscription"
+          }
+        },
+        {
+          "start": 268.009,
+          "end": 269.629,
+          "text": "than an entity-selection form.",
+          "cue": 78,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 270.09,
+          "end": 272.509,
+          "text": "Read the notices that apply to your own department.",
+          "cue": 79,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 273.049,
+          "end": 277.049,
+          "text": "The example’s displayed legacy amounts and counters should not be used to",
+          "cue": 80,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 277.049,
+          "end": 279.61,
+          "text": "price another plan or infer its limits.",
+          "cue": 81,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 280.04,
+          "end": 283.239,
+          "text": "No purchase, cancellation or payment-detail change",
+          "cue": 82,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 283.27,
+          "end": 284.39,
+          "text": "is part of this review.",
+          "cue": 83,
+          "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Subscription & Billing",
+        "Subscription Plan & Billing",
+        "Legacy Plan",
+        "Entities",
+        "Active Legacy Subscription"
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "c2c9f483c9b5a436a56468d7321f52789d8a0d9bdfdf1e34ad77c8741266bcf1",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "review-result",
+      "title": "Finish at the unchanged invoice list",
+      "kind": "operational",
+      "start": 284.69,
+      "end": 311.599,
+      "screens": [
+        {
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "start": 284.69,
+          "end": 311.599
+        }
+      ],
+      "captions": [
+        {
+          "start": 284.69,
+          "end": 289.1,
+          "text": "The final Invoicing view still shows no invoices, zero outstanding",
+          "cue": 84,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [
+            "Invoicing",
+            "Invoices"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Invoicing": "Invoicing",
+            "Invoices": "Invoices"
+          }
+        },
+        {
+          "start": 289.1,
+          "end": 291.37,
+          "text": "balance and zero overdue balance.",
+          "cue": 85,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [
+            "Overdue balance"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Overdue balance": "Overdue balance"
+          }
+        },
+        {
+          "start": 291.77,
+          "end": 296.209,
+          "text": "Reviewing an unsaved rate card or customer form has not created an invoice.",
+          "cue": 86,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 296.719,
+          "end": 300.98,
+          "text": "Keep your review notes specific: which identity fields need confirmation,",
+          "cue": 87,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 301.23,
+          "end": 305.49,
+          "text": "which customer defaults need a decision, and which subscription notice applies.",
+          "cue": 88,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 305.939,
+          "end": 309.789,
+          "text": "A form inspected is different from a configuration saved or",
+          "cue": 89,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 309.789,
+          "end": 311.4,
+          "text": "a financial action completed.",
+          "cue": 90,
+          "screenshot_id": "016-fresh-invoicing-no-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "53941803427fcb85bd4ee061602e4339c80f417d507b35c7a5acf478b4fba08a",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    },
+    {
+      "id": "sector-examples",
+      "title": "Apply a bounded billing review across sectors",
+      "kind": "operational",
+      "start": 311.599,
+      "end": 349.13525,
+      "screens": [
+        {
+          "screenshot_id": "009-customer-billing-no-profile",
+          "start": 311.599,
+          "end": 324.459
+        },
+        {
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "start": 324.459,
+          "end": 334.509
+        },
+        {
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "start": 334.509,
+          "end": 349.13525
+        }
+      ],
+      "captions": [
+        {
+          "start": 311.599,
+          "end": 314.909,
+          "text": "Chicago Fire can distinguish a training-service customer from",
+          "cue": 91,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 314.909,
+          "end": 316.319,
+          "text": "its department subscription.",
+          "cue": 92,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 316.79,
+          "end": 320.169,
+          "text": "Community care and mental-health teams can review an operational",
+          "cue": 93,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 320.169,
+          "end": 323.999,
+          "text": "partner’s billing setup without putting client histories into Notes.",
+          "cue": 94,
+          "screenshot_id": "009-customer-billing-no-profile",
+          "required_labels": [
+            "Billing"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Billing": "Billing"
+          }
+        },
+        {
+          "start": 324.459,
+          "end": 328.03,
+          "text": "Search-and-rescue coordinators can identify the intended customer for",
+          "cue": 95,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 328.03,
+          "end": 332.3,
+          "text": "an exercise; security teams can separate a customer-specific rate",
+          "cue": 96,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 332.3,
+          "end": 333.999,
+          "text": "card from the department default.",
+          "cue": 97,
+          "screenshot_id": "005-rate-card-catalog-empty",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 334.509,
+          "end": 338.989,
+          "text": "Wildland teams can review a bounded customer account, and industrial teams can",
+          "cue": 98,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 338.989,
+          "end": 341.28,
+          "text": "inspect outstanding-balance categories.",
+          "cue": 99,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [
+            "Accounts receivable aging"
+          ],
+          "instructional": true,
+          "spoken_references": {
+            "Accounts receivable aging": "outstanding-balance categories"
+          }
+        },
+        {
+          "start": 341.759,
+          "end": 346.46,
+          "text": "In all six settings, confirm the organization, customer and account scope",
+          "cue": 100,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        },
+        {
+          "start": 346.55,
+          "end": 348.969,
+          "text": "before any authorized financial change.",
+          "cue": 101,
+          "screenshot_id": "007-aging-no-outstanding-invoices",
+          "required_labels": [],
+          "instructional": false,
+          "spoken_references": {}
+        }
+      ],
+      "visual_required_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Billing profile",
+        "Rate Cards",
+        "New rate card",
+        "Accounts receivable aging",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "instruction_review": {
+        "passed": true,
+        "reviewer": "Root retained complete source/cue map; Codex literal-reference checks",
+        "reviewed_at": "2026-10-30T06:08:48.389696+00:00",
+        "correspondence_reviewed": true,
+        "no_unseen_controls": true,
+        "mapping_sha256": "b1f02cbdc5f8e6b88cc9c69c476587dfe8f6fdeca5655351937366226947b197",
+        "parent_timing_review_file": "expansion/plans/root-billing-shifts-timing-review-20261030.json",
+        "parent_timing_review_sha256": "c373d1a5d150205076837d03258572591e0227470e9814b27752313b5c4a75b5",
+        "method": "Frozen original image/DOM reviews, exact accepted screen/cue map and real caption/PCM identities are retained. Caption references use only exact source literals and actual unchanged speech phrases. Root accepted the complete map and explicit coarse-service cuts/merges. No new original-pixel, encoded-frame, browser-playback or human-listening review is claimed."
+      }
+    }
+  ],
+  "rendered_segments": [
+    {
+      "scene_id": "invoicing",
+      "screenshot_id": "001-invoicing-catalog-no-invoices",
+      "start": 0.0,
+      "end": 28.31,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0001.png",
+        "sha256": "a1937af3a06b24d2366e17a99176b82ca7ef2099857427bca1426d7d5d29e09a",
+        "width": 1920,
+        "height": 1080,
+        "time": 1.9245,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Customer invoicing tracks what your department bills to its customers."
+      }
+    },
+    {
+      "scene_id": "identity",
+      "screenshot_id": "001-invoicing-catalog-no-invoices",
+      "start": 28.31,
+      "end": 32.81,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0002.png",
+        "sha256": "1313874086f9c6cfe7c0d11c91321940540170a2cf3513b940066c2ef4ef7380",
+        "width": 1920,
+        "height": 1080,
+        "time": 30.2845,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Choose Billing settings to inspect what invoices say about the department."
+      }
+    },
+    {
+      "scene_id": "identity",
+      "screenshot_id": "002-billing-identity-empty-defaults",
+      "start": 32.81,
+      "end": 58.599,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0003.png",
+        "sha256": "2da7c704f5ff7781dae14fbc1931b026a131d45398ec8a3a011935e96002e399",
+        "width": 1920,
+        "height": 1080,
+        "time": 34.599500000000006,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Billing identity contains Legal business name and the remit-to"
+      }
+    },
+    {
+      "scene_id": "registrations",
+      "screenshot_id": "003-billing-registrations-readonly",
+      "start": 58.599,
+      "end": 73.919,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0004.png",
+        "sha256": "b698d0ec21a15ab4da37d9ca2cf30232079510e03d50310cb08fd158fb6ab4bf",
+        "width": 1920,
+        "height": 1080,
+        "time": 61.4995,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "The Registrations section separates tax registrations, SAM UEI, CAGE code and"
+      }
+    },
+    {
+      "scene_id": "registrations",
+      "screenshot_id": "004-footer-pay-link-display-preferences",
+      "start": 73.919,
+      "end": 91.579,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0005.png",
+        "sha256": "b0020247c0947225065cf19d9e50f0c03ef3b4e7c2df199696432e64aff78d40",
+        "width": 1920,
+        "height": 1080,
+        "time": 75.40950000000001,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Invoice footer supplies text printed under totals."
+      }
+    },
+    {
+      "scene_id": "rate-cards",
+      "screenshot_id": "005-rate-card-catalog-empty",
+      "start": 91.579,
+      "end": 108.72,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0006.png",
+        "sha256": "8b7426632e6c617ff44185fe54fa79602ab0b113299dfa2f25bb504235329a67",
+        "width": 1920,
+        "height": 1080,
+        "time": 93.6245,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Rate Cards describes the charge schedule: unit or personnel time,"
+      }
+    },
+    {
+      "scene_id": "rate-cards",
+      "screenshot_id": "006-new-rate-card-unsaved-preview",
+      "start": 108.72,
+      "end": 122.95,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0007.png",
+        "sha256": "8a1825a9a5914a90371109712c2e1ab071e1619060eb621e06cee59e49d164de",
+        "width": 1920,
+        "height": 1080,
+        "time": 110.28450000000001,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Name and Description are blank; Department default is"
+      }
+    },
+    {
+      "scene_id": "customer",
+      "screenshot_id": "008-existing-fictional-customer-contact",
+      "start": 122.95,
+      "end": 130.88,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0008.png",
+        "sha256": "cb15a9695277ad0bd1333f78066df182cfb79f0bf7209d716ea762c87a417f8e",
+        "width": 1920,
+        "height": 1080,
+        "time": 125.55950000000001,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "For customer-specific settings, open Contacts and use View on Academy Logistics"
+      }
+    },
+    {
+      "scene_id": "customer",
+      "screenshot_id": "009-customer-billing-no-profile",
+      "start": 130.88,
+      "end": 151.549,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0009.png",
+        "sha256": "4b378d4e010689cc7fc292e09790cd5ea84659e4987fa465a6e4e7bf0f1e25b9",
+        "width": 1920,
+        "height": 1080,
+        "time": 133.2045,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Its Billing section says No billing profile yet and No invoices."
+      }
+    },
+    {
+      "scene_id": "terms",
+      "screenshot_id": "010-unsaved-customer-terms-discount-rate-defaults",
+      "start": 151.549,
+      "end": 184.029,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0010.png",
+        "sha256": "1385bdc53ad2b7b9afae94f12c01b27d1c8ed6178d5f1608d7a7e6e6568cecbf",
+        "width": 1920,
+        "height": 1080,
+        "time": 153.739,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "The new customer form shows thirty net days, a blank Default discount,"
+      }
+    },
+    {
+      "scene_id": "address-tax",
+      "screenshot_id": "011-unsaved-address-tax-components-save-controls",
+      "start": 184.029,
+      "end": 215.04,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0011.png",
+        "sha256": "c2ce2470f3d243afc7be8429c51bbc3222bd8962b76e0dd310b31495c81d54bf",
+        "width": 1920,
+        "height": 1080,
+        "time": 185.2495,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Use the contact’s mailing address is checked."
+      }
+    },
+    {
+      "scene_id": "aging",
+      "screenshot_id": "007-aging-no-outstanding-invoices",
+      "start": 215.04,
+      "end": 246.799,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0012.png",
+        "sha256": "b64ad50336e79f3bc517ff1f5100b4e93ec80c25c8398e082a975cd2f949cb0b",
+        "width": 1920,
+        "height": 1080,
+        "time": 217.1495,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Aging groups positive outstanding balances by how far they are past due."
+      }
+    },
+    {
+      "scene_id": "subscription",
+      "screenshot_id": "012-department-menu-subscription-entry",
+      "start": 246.799,
+      "end": 254.33,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0013.png",
+        "sha256": "e48fcff6e82f39a274cc317a59c3080859249b2615c186043d0cb7e71ebb770c",
+        "width": 1920,
+        "height": 1080,
+        "time": 248.52949999999998,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "The department menu has a separate Subscription and Billing entry."
+      }
+    },
+    {
+      "scene_id": "subscription",
+      "screenshot_id": "013-local-subscription-distinct-from-customer-invoicing",
+      "start": 254.33,
+      "end": 264.16,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0014.png",
+        "sha256": "68f1a255b7dfb8a0a309d36ca8d3a76748ce95807788aa5baae461f2518cfb38",
+        "width": 1920,
+        "height": 1080,
+        "time": 256.35450000000003,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Subscription Plan and Billing concerns the department’s subscription, not"
+      }
+    },
+    {
+      "scene_id": "subscription",
+      "screenshot_id": "014-entities-tab-legacy-plan-readonly",
+      "start": 264.16,
+      "end": 284.69,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0015.png",
+        "sha256": "033f4e160acb63f5aa4c5f6585aafbc2ecd3f420b87d0891799708a4c7bc2bf8",
+        "width": 1920,
+        "height": 1080,
+        "time": 266.08450000000005,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Selecting Entities shows Active Legacy Subscription rather"
+      }
+    },
+    {
+      "scene_id": "review-result",
+      "screenshot_id": "016-fresh-invoicing-no-invoices",
+      "start": 284.69,
+      "end": 311.599,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0016.png",
+        "sha256": "9ac2bf6da9455012fd24d21472c411c3af9dd80abad46df13bb81b538d0c86a6",
+        "width": 1920,
+        "height": 1080,
+        "time": 286.895,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "The final Invoicing view still shows no invoices, zero outstanding"
+      }
+    },
+    {
+      "scene_id": "sector-examples",
+      "screenshot_id": "009-customer-billing-no-profile",
+      "start": 311.599,
+      "end": 324.459,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0017.png",
+        "sha256": "23fe4ba156ba2f9c69dde4ed3b233d3a6c688ecf4be91d9afbc0bb914a3cf2af",
+        "width": 1920,
+        "height": 1080,
+        "time": 313.254,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Chicago Fire can distinguish a training-service customer from"
+      }
+    },
+    {
+      "scene_id": "sector-examples",
+      "screenshot_id": "005-rate-card-catalog-empty",
+      "start": 324.459,
+      "end": 334.509,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0018.png",
+        "sha256": "9c9d87545894056e5da85f2a768588143444c2f7537e8d4c4550252238cdce12",
+        "width": 1920,
+        "height": 1080,
+        "time": 326.2445,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Search-and-rescue coordinators can identify the intended customer for"
+      }
+    },
+    {
+      "scene_id": "sector-examples",
+      "screenshot_id": "007-aging-no-outstanding-invoices",
+      "start": 334.509,
+      "end": 349.13525,
+      "frame": {
+        "file": "expansion/rendered/core-customer-billing-review-take-02/frames/frame-0019.png",
+        "sha256": "916c0cc1c4429ee1fee0e8c4b949a098d70545a3e600f757c92ed4146d1b5c88",
+        "width": 1920,
+        "height": 1080,
+        "time": 336.749,
+        "video_sha256": "f2be4d1f6c3481145c38e370bcc24a0d4e7509972bedec59844118ada8abf9ff",
+        "review_status": "pending_actual_frame_review",
+        "application_visible": null,
+        "visible_labels": [],
+        "reviewed_control_names": [],
+        "caption_text": "Wildland teams can review a bounded customer account, and industrial teams can"
+      }
+    }
+  ],
+  "browser_playback": []
+}

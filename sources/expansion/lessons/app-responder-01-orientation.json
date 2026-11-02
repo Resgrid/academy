@@ -1,0 +1,477 @@
+{
+  "id": "app-responder-01-orientation",
+  "title": "Responder: your account, availability, and security",
+  "app": "Responder",
+  "audience": "Individual members, volunteers, responders, and supervisors using their own account.",
+  "summary": "Learn which identity Responder represents, sign in on the correct server, set personal status and staffing, and protect access to departmental information.",
+  "prerequisites": [
+    "An isolated training department, a member account, configured personnel statuses and staffing levels, and sample calls, stations, and POIs.",
+    "A second demonstration session for approval; SSO, MFA, and passkeys configured only for the corresponding optional branches.",
+    "A native device for platform permission demonstrations. Show browser differences explicitly; capture plans are not proof of delivered notifications or working hardware."
+  ],
+  "scenes": [
+    {
+      "id": "01-start-with-your-own-identity",
+      "title": "Start with your own identity",
+      "route": "/home",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "My Status",
+        "My Staffing",
+        "Home",
+        "People",
+        "Units",
+        "Calls"
+      ],
+      "narration": "Responder is the personal workspace for a named member. Check the account and department, then read My Status and My Staffing on Home. People, Units, and Calls provide the wider operating picture. A community response team can use the same pattern to show who is available and which incident each person is joining. Every name and incident shown here belongs to our fictional training department.",
+      "practice": "Identify the signed-in training member, compare the two personal cards, and locate the People, Units, and Calls tabs.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "022-status-responding-result"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Responder follows you as an individual member. On Home, the Status, Staffing, and Call tabs answer three different questions: what you are doing, whether you are available, and which incident you are following. Your department may use different terminology. Read the actual labels before changing anything, and keep personal availability separate from the status of a vehicle shared by a crew.",
+        "required_labels": [
+          "Status",
+          "Staffing",
+          "Call"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "02-first-launch-and-language",
+      "title": "First launch and language",
+      "route": "/onboarding -> /login",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Resgrid Responder",
+        "Next",
+        "Skip",
+        "Let's Get Started",
+        "Language:"
+      ],
+      "narration": "First launch introduces Resgrid Responder, Instant Notifications, and Interact with Calls. Use Next to read each page, Skip to leave the introduction, or Let’s Get Started on the final page. Language is available on the login screen. These introduction pages describe intended features; they do not establish that this browser has received a push notification or exercised a native device permission.",
+      "practice": "Read the three introduction pages and locate Language on the empty login screen without entering or exposing credentials.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "180-onboarding-first-screen",
+          "181-onboarding-notifications",
+          "182-onboarding-complete",
+          "178-empty-login-after-witness"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "At first launch, use Next to move through the introduction, or Skip to reach sign-in. These cards introduce notifications, location, and calls; they do not grant every device permission. On the login screen, open Language and choose the language you will use during a shift. Read a few labels after changing it so you recognize the same workflow in that language.",
+        "required_labels": [
+          "Next",
+          "Skip",
+          "Language"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "03-select-a-server-before-signing-in",
+      "title": "Select a server before signing in",
+      "route": "/login",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Change Server URL",
+        "Server",
+        "Server URL",
+        "Username",
+        "Password",
+        "Login",
+        "Save"
+      ],
+      "narration": "Use Change Server URL before signing in when your organization supplies a different API endpoint. The Server selector offers regional choices and Custom; Server URL takes the API origin without slash api slash v four or a trailing slash. This recording uses only the local fictional API. Return to Username and Password, then Login using your own authorized account. Keep credentials outside screenshots and shared recordings.",
+      "practice": "Inspect the training API origin and identify Save, then explain which account and department should appear after authorized sign-in.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "178-empty-login-after-witness",
+          "179-custom-server-entry"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Before entering credentials, select Change Server URL and confirm the server or region your department uses. Choose a listed location or Custom, then save the address. Return to Username and Password and select Login. A correct password on the wrong server can still fail. Keep your credentials private and use the training account while practicing this server-selection workflow.",
+        "required_labels": [
+          "Change Server URL",
+          "Username",
+          "Password",
+          "Login"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "04-use-organization-sign-in-when-enabled",
+      "title": "Use organization sign-in when enabled",
+      "route": "/login/sso",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Login with SSO",
+        "Username or Email",
+        "Department ID (optional)",
+        "Continue"
+      ],
+      "narration": "Login with SSO opens a separate entry screen with Username or Email and Department ID, which is optional. Continue starts the organization’s configured identity flow. The training environment has no usable identity-provider discovery configuration, so this is an entry-screen walkthrough only. A deployed organization must verify its provider, return link, and any additional challenge on the intended platform before relying on that sign-in path.",
+      "practice": "Find the two SSO fields and explain why viewing Continue does not prove a provider sign-in succeeded.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "053-sso-entry-styled"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "If your organization provides single sign-on, choose Login with SSO and enter the username requested by the discovery screen. Continue through the organization sign-in shown for that account, then return to Responder. If no configuration is found, use Back and the permitted password route. Browser callbacks and native app redirects differ, so show the actual return path on the platform being taught.",
+        "required_labels": [
+          "Login with SSO",
+          "Back"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "05-complete-verification-and-plan-recovery",
+      "title": "Complete verification and plan recovery",
+      "route": "/login -> /login/recovery",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Recover your account",
+        "Back to sign in"
+      ],
+      "narration": "Recover your account explains that a recovery code is entered after a password or organization sign-in. Without that code, contact the department administrator or support; this screen cannot turn off two-factor authentication. Back to sign in returns to the normal entry point. We are showing the actual no-challenge view, without changing credentials, creating recovery codes, or claiming that verification has completed.",
+      "practice": "Read the recovery prerequisite and return to sign-in; describe the authorized help path when a recovery code is unavailable.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "183-recovery-entry-limits"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "When sign-in asks for another factor, use a method that is actually offered for this account. An authenticator code, passkey, and approval request are different choices, not interchangeable promises. Recover your account is for a lost factor: a recovery code starts replacement and can end existing sessions. Use Continue only on a disposable training account when demonstrating that recovery path.",
+        "required_labels": [
+          "Recover your account",
+          "Continue"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "06-set-a-personal-status-deliberately",
+      "title": "Set a personal status deliberately",
+      "route": "/home",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "My Status",
+        "Status",
+        "Responding",
+        "Not Responding",
+        "On Scene",
+        "Standing By",
+        "Set Status: Responding"
+      ],
+      "narration": "On Home, select Status and read the offered choices before changing your personal state. This department offers Responding, Not Responding, On Scene, and Standing By. Its labels and transitions come from department configuration. The example selects Responding and opens Set Status: Responding. After the completed action, My Status shows the saved state and destination. Use the displayed result to confirm the change.",
+      "practice": "Compare the current personal card with the available states, then identify which action opens the destination step.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "022-status-responding-result",
+          "019-status-call-destination"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open Status and read the option marked Current. To set a quick status, press and hold the chosen button for two seconds. The available next steps follow your department’s configured workflow. Show all statuses exposes additional choices, while Show next statuses only returns to the guided list. Choose a status because it describes your activity; do not use it as a substitute for staffing availability.",
+        "required_labels": [
+          "Status",
+          "Current",
+          "Show next statuses only"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "07-choose-the-destination-and-required-note",
+      "title": "Choose the destination and required note",
+      "route": "/home",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Calls",
+        "Stations",
+        "POI",
+        "Add Note",
+        "Save",
+        "Responding"
+      ],
+      "narration": "The destination step separates Calls, Stations, and POI. Select the intended destination before moving to Add Note. In this exercise, the community medical standby is the chosen call and the note clearly says it is an Academy exercise. Save completes the personal status change, and the Home card displays that destination. Read any required-field instruction in your department rather than assuming every status uses the same steps.",
+      "practice": "Use the fictional standby to trace destination, note, Save, and the resulting Home card without starting a live response.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "019-status-call-destination",
+          "021-status-note-confirmation",
+          "022-status-responding-result"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Some statuses open a destination step. Select Calls, Stations, or POI when offered, and choose the incident or place you mean. In this training account, the POI list is empty. Add the requested note, review the confirmation, and select Save. Check the resulting personal status and destination on Home. A successful card update does not establish that an offline update has synchronized to every device.",
+        "required_labels": [
+          "Calls",
+          "Stations",
+          "POI",
+          "Save"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "08-keep-staffing-availability-accurate",
+      "title": "Keep staffing availability accurate",
+      "route": "/home",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Staffing",
+        "Available",
+        "Delayed",
+        "Unavailable",
+        "Committed",
+        "On Shift",
+        "Add Note",
+        "Review and Confirm",
+        "Submit",
+        "My Staffing"
+      ],
+      "narration": "Staffing records your availability for assignment. This department offers Available, Delayed, Unavailable, Committed, and On Shift. The example chooses Available, uses Add Note to state the training availability window, and checks Review and Confirm before Submit. My Staffing then shows the saved result. Personal status and staffing serve different coordination needs, so read both cards when handing over a community care or search-team duty period.",
+      "practice": "Trace the fictional availability note through confirmation and verify the resulting My Staffing card.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "026-staffing-result",
+          "024-staffing-note",
+          "025-staffing-confirmation"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open Staffing when you need to tell the department whether you can help. A quick staffing choice may apply immediately, while a long press opens the note flow. Some choices require a note before confirmation. Use Add Note to explain a useful limit, such as an availability window, and review the resulting staffing card. Staffing describes availability even when your activity status has not changed.",
+        "required_labels": [
+          "Staffing",
+          "Add Note"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "09-read-the-personnel-and-unit-picture",
+      "title": "Read the personnel and unit picture",
+      "route": "/home/personnel -> /home/units",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "People",
+        "Search personnel...",
+        "Filter Personnel",
+        "Groups",
+        "Roles",
+        "Units",
+        "Search units...",
+        "Ambulance 61",
+        "Location",
+        "Vehicle Information"
+      ],
+      "narration": "People shows the member’s group, role, status, staffing, and update time. Search personnel and Filter Personnel narrow that picture by Groups and Roles. Units has its own search and opens resource details such as Location and Vehicle Information. These are useful reference views for a search-and-rescue team, security patrol, or industrial standby. Reading a unit here does not establish an active shared-device crew session.",
+      "practice": "Find a training member by group, compare a unit card, and inspect the fictional ambulance’s detail without changing its status or crew.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "027-personnel-roster",
+          "028-personnel-filters",
+          "029-units-overview",
+          "030-unit-readonly-details"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "The People and Units views help you understand the team around you. Search for a person or apparatus, use the filter control, and open a card to inspect its details. Clear search removes the text restriction before you compare the wider roster. These views provide context; seeing another member or vehicle does not automatically give you authority to change their information.",
+        "required_labels": [
+          "Clear search"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "10-review-passkeys-and-verification-activity",
+      "title": "Review passkeys and verification activity",
+      "route": "/settings -> /account-security",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Authenticator app",
+        "Passkeys for this app",
+        "Recent verifications"
+      ],
+      "narration": "Open Sign-in and security to review Authenticator app, Passkeys for this app, and Recent verifications. The actual training account says its authenticator is not set up, has no app passkeys, and has no verifications in the last thirty days. Those are configuration states, not proof of a successful challenge. Setup or credential changes belong to the organization’s approved security process and are outside this exercise.",
+      "practice": "Read the three security sections and distinguish an unconfigured method from a completed verification.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "174-account-security-current"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "In Settings, open Sign-in and security and read what this account actually offers. The training view shows an authenticator that is not set up, no passkeys for this app, stopped Responder approvals, and no recent verifications. These are configuration states, not completed enrollment. An authorized administrator can arrange supported setup on the appropriate platform. Do not claim that a browser settings view proves passkey verification or native approval delivery.",
+        "required_labels": [
+          "Sign-in and security",
+          "Passkeys for this app",
+          "Recent verifications"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "11-approve-only-the-request-you-started",
+      "title": "Approve only the request you started",
+      "route": "/approve-sign-in",
+      "capture_intent": "Use the referenced actual application viewports in their listed order. Keep credentials out of the recording and retain all declared platform/configuration limits.",
+      "required_labels": [
+        "Responder approvals",
+        "Approvals stopped",
+        "Confirm Logout",
+        "Cancel",
+        "Yes, Logout"
+      ],
+      "narration": "Responder approvals lists device approval availability; this account shows Approvals stopped. A configured approval request must be matched to a sign-in you initiated, including its number, before any approval. No challenge or hardware notification was exercised here. For a shared or handed-over device, Logout asks for confirmation before clearing local session data. The declared web recording adapter preserves the source confirmation text and buttons; native confirmation remains platform-specific.",
+      "practice": "Explain why an unfamiliar approval should not be accepted, then read the logout warning and identify Cancel and Yes, Logout without exposing credentials.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "174-account-security-current",
+          "175-source-confirmation-web-fallback"
+        ],
+        "observations": [
+          "Source screenshots reviewed; security methods and native/provider operations are explicitly unexercised where stated."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Responder can show Approve sign-in? for a request started in another Resgrid session. Compare the app, department, device label, location context, and expiration. Enter the Number shown on the requesting screen, then complete the offered passkey verification before choosing Approve. Choose Deny for an unexpected request. Check the requesting session afterward, because approving a request and reaching a signed-in workspace are separate states.",
+        "required_labels": [
+          "Approve sign-in?",
+          "Number",
+          "Approve",
+          "Deny"
+        ],
+        "status": "Supported source workflow reference; conditional security/provider branches are not exercised in this recording."
+      },
+      "narration_word_count": 68
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A fire or EMS member checks in before a fictional standby.",
+      "practice": "Confirm the actual signed-in member and department, select only a personal status/destination and required note, and keep personal staffing separate from apparatus status or crew assignment."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A mobile crisis or community-care responder makes availability clear.",
+      "practice": "Use the actual personal status and staffing screens with a fictional note; keep real client or health details out of training data and verify the displayed result."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A SAR volunteer prepares for a staging assignment.",
+      "practice": "Read the actual Calls, Stations and POIs destination choices offered for the selected status; a software destination is not proof of GPS tracking, arrival or dispatch receipt."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A security officer begins a patrol shift.",
+      "practice": "Check personal identity, current availability and the People/Units picture. Inspect sign-in verification choices and recent activity without enrolling credentials or changing another member."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A wildland mutual-aid member reviews access and readiness.",
+      "practice": "Confirm the intended server/account and personal availability; use only offered recovery or approval controls. Browser security/settings views do not demonstrate native communications or location hardware."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial response member uses the personal app alongside a vehicle tablet.",
+      "practice": "Distinguish Responder member status/staffing from Unit apparatus/crew context. Read actual passkey/authenticator/approval states and verify a request before acting, with no MFA or device credential changes."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Responder/src/app/login/index.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/login/sso.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/login/recovery.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/home/index.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/status/personnel-status-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/staffing/staffing-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/account-security.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/approve-sign-in.tsx"
+  ],
+  "capture_manifest": "captures/expansion/responder/manifest.json",
+  "authoring_status": "frozen_for_natural_narration",
+  "capture_limitations": [
+    "No native push delivery, authenticator challenge, passkey operation, recovery-code use, device approval, GPS, Bluetooth or provider success is claimed.",
+    "SSO provider discovery is unconfigured; the real entry screen and no-challenge recovery prerequisite are shown.",
+    "Actual saved personal status/staffing are historical training actions; other department activity may change later values.",
+    "Web logout uses declared existing-component compatibility fallback; native behavior unchanged."
+  ],
+  "frozen_at": "2026-10-26T18:33:00.519458+00:00",
+  "narration_word_count": 708,
+  "spoken_sector_examples": [
+    "community response and community care",
+    "search-and-rescue",
+    "security patrol",
+    "industrial standby"
+  ],
+  "media_status": {
+    "natural_audio": "pending",
+    "speech_timed_captions": "pending",
+    "rendered_video": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-responder-01-orientation-take-01/evidence.public-reviewed.json"
+}

@@ -1,0 +1,278 @@
+{
+  "id": "core-contacts-administration",
+  "title": "Create and maintain useful contact categories, people and organizations",
+  "app": "Core",
+  "audience": [
+    "department administrators",
+    "dispatchers maintaining an operational directory"
+  ],
+  "summary": "Create a category, save a person and an organization, verify reference-location and copied-address fields, combine filters, and read back a saved phone change.",
+  "prerequisites": [
+    "Use your department Contacts permissions and a fictional practice directory.",
+    "Prepare reserved training contact channels and a clearly fictional address/location pair."
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Maintain fictional logistics and mutual-aid coordination contacts in a reviewed category.",
+    "Community care and mental health": "Organize operational partners and outreach references without patient or clinical details.",
+    "Search and rescue": "Group staging, equipment and support contacts; a saved directory point is not an arrival report.",
+    "Security": "Group site and coordination contacts without real client information in a training environment.",
+    "Wildland": "Keep supply and assignment support contacts current; verify changes before the next exercise.",
+    "Industrial response": "Organize facility coordination and equipment-support contacts with a responsible directory owner."
+  },
+  "source_files": [
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Controllers/ContactsController.cs",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/AddCategory.cshtml",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/Categories.cshtml",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/Add.cshtml",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/Edit.cshtml",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/View.cshtml",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/Index.cshtml",
+    "expansion/plans/core-contacts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Localization/Areas/User/Contacts/Contacts.en.resx"
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "scenes": [
+    {
+      "id": "directory",
+      "title": "Choose the directory and its categories",
+      "route": "/User/Contacts/Categories",
+      "capture_refs": [
+        "001-category-list-empty"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Categories",
+        "Add Category",
+        "Contacts In Category"
+      ],
+      "narration": "Contacts gives your department a shared directory of people, organizations, and locations. Keep member accounts and roster roles in Personnel; use this directory for useful operational references. In our fictional Chicago Fire training department, we are in Contacts, on the Categories page. The category table separates its name, description, color, and contact count. It starts empty here, even though the department already has uncategorized contacts. We will create a small partner directory and verify each saved entry.",
+      "practice": "Find the category table and identify its contact-count column before adding an entry."
+    },
+    {
+      "id": "category",
+      "title": "Create and verify a useful category",
+      "route": "/User/Contacts/AddCategory",
+      "capture_refs": [
+        "002-category-form-prepared",
+        "003-category-saved"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Add Category",
+        "Name",
+        "Academy Partner Directory",
+        "Color",
+        "Display On Map",
+        "Map Icon",
+        "Default",
+        "Description",
+        "Save",
+        "Contacts In Category",
+        "0"
+      ],
+      "narration": "Choose Add Category. Enter Academy Partner Directory as the Name and describe it as fictional training partners and logistics contacts. Keep the blue color so the category is easy to recognize. Display On Map remains unchecked and Map Icon stays Default. Those controls are separate from organizing the directory. Save, then read the returned category row. Its name, description, and blue color are present, while Contacts In Category is zero. That saved row is our starting point for adding contacts.",
+      "practice": "Save a fictional partner category with map display off, then verify its name and zero contact count."
+    },
+    {
+      "id": "person",
+      "title": "Prepare a person and a clear description",
+      "route": "/User/Contacts/Add",
+      "capture_refs": [
+        "004-person-identity-prepared",
+        "005-person-description-prepared"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Add Contact",
+        "Contact Type",
+        "Person",
+        "Category",
+        "Academy Partner Directory",
+        "First Name",
+        "Sylvie",
+        "Last Name",
+        "Brett",
+        "Email Address",
+        "Cell Phone",
+        "Description",
+        "TRAINING ONLY - Fictional community partner liaison. Verify current contact details before operational use."
+      ],
+      "narration": "On the Add Contact form, select Person, then Academy Partner Directory. Enter Sylvie and Brett in the first and last name fields. The organization field can add context; here it contains Academy Community Partners, marked fictional. Email Address and Cell Phone hold deliberately reserved training values. Scroll to Description and explain the purpose of the entry. Our text identifies a fictional community partner liaison and asks the reader to verify current details before operational use. Keep that description useful and specific.",
+      "practice": "Prepare a fictional Person entry with first and last names, the intended category and a useful operational description."
+    },
+    {
+      "id": "person-readback",
+      "title": "Find and inspect the saved person",
+      "route": "/User/Contacts",
+      "capture_refs": [
+        "006-person-search-result",
+        "007-person-details-saved",
+        "008-person-description-saved"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Search:",
+        "Brett",
+        "Sylvie Brett",
+        "Person",
+        "Academy Partner Directory",
+        "View",
+        "Contact Details",
+        "liaison@example.invalid",
+        "+13125550142",
+        "Description",
+        "TRAINING ONLY - Fictional community partner liaison. Verify current contact details before operational use."
+      ],
+      "narration": "After saving the person, use the Contacts table Search field to enter Brett. The result shows Sylvie Brett, the Person type, and the named category. Choose View and check the saved name and training contact channels. Scroll down to read the complete Description again. These separate checks confirm that both the identity and the useful context were stored. To verify category membership, use the named category in the list or the edit form; the Additional Info category value on this View is numeric.",
+      "practice": "Search for the saved person, open View and verify the saved channels and complete description."
+    },
+    {
+      "id": "company",
+      "title": "Add a separate organization",
+      "route": "/User/Contacts/Add",
+      "capture_refs": [
+        "009-company-identity-prepared",
+        "010-company-description-prepared"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Contact Type",
+        "Location or Company",
+        "Category",
+        "Academy Partner Directory",
+        "Company\\Location Name",
+        "Academy Logistics Desk (fictional)",
+        "Office Phone",
+        "+13125550143",
+        "Description",
+        "TRAINING ONLY - Fictional supply and mutual-aid coordination contact."
+      ],
+      "narration": "Create a second entry using Location or Company. Keep the same category, leave the person name fields empty, and enter Academy Logistics Desk, marked fictional, in Company Location Name. The organization has its own reserved training email and an Office Phone ending in zero one four three. Its Description explains that it is a fictional supply and mutual-aid coordination contact. Using the appropriate contact type and phone field makes the directory easier to understand when someone else opens the entry.",
+      "practice": "Prepare a Location or Company entry with a clear organization name and a reserved office phone."
+    },
+    {
+      "id": "location",
+      "title": "Enter an explicit reference point and address",
+      "route": "/User/Contacts/Add",
+      "capture_refs": [
+        "011-company-location-prepared",
+        "012-company-address-prepared"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Location Info",
+        "GPS Location",
+        "41.8722",
+        "-87.6524",
+        "Entrance GPS Location",
+        "Exit GPS Location",
+        "Physical Address",
+        "1000 Training Avenue (fictional)",
+        "Mailing Address",
+        "Same as Physical?",
+        "Save"
+      ],
+      "narration": "In Location Info, GPS Location has a latitude field and a longitude field. Enter the complete fictional Chicago pair together. Entrance GPS Location and Exit GPS Location are separate pairs and stay blank in this exercise. Continue to Physical Address and enter the fictional Training Avenue street, Chicago, Illinois, and postal code. Check Same as Physical under Mailing Address, then use Save at the bottom of the form. These are stored directory reference values; entering coordinates does not establish a device position, a verified entrance, or a successful route.",
+      "practice": "Save a fictional paired reference location and address with Same as Physical selected; keep entrance and exit pairs blank."
+    },
+    {
+      "id": "filters",
+      "title": "Combine the category and text filters",
+      "route": "/User/Contacts",
+      "capture_refs": [
+        "013-category-filter-saved-contacts",
+        "014-category-and-text-filter"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Academy Partner Directory",
+        "Sylvie Brett",
+        "Person",
+        "Academy Logistics Desk (fictional)",
+        "Location\\Company",
+        "Showing 1 to 2 of 2 entries",
+        "Search:",
+        "Logistics",
+        "View",
+        "Edit"
+      ],
+      "narration": "Back in Contacts, select Academy Partner Directory in the category tree. Both newly saved entries appear: the person and the logistics organization. Now enter Logistics in Search. The table narrows the selected category to the organization, and the count says that one result is filtered from two entries. Read the name and type before choosing View or Edit. A short list can reflect the combination of these filters, so check the selected category and search text before deciding that an entry is missing.",
+      "practice": "Select the category, search for the organization, then clear the text search and confirm both entries return."
+    },
+    {
+      "id": "readback",
+      "title": "Verify location and copied address on the owning forms",
+      "route": "/User/Contacts/View?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8",
+      "capture_refs": [
+        "016-company-location-saved-stable",
+        "017-company-address-description-saved",
+        "018-company-edit-saved-category",
+        "020-company-mailing-address-readback"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Contact Details",
+        "GPS Location:",
+        "41.8722,-87.6524",
+        "Physical Address",
+        "1000 Training Avenue (fictional)",
+        "Description",
+        "TRAINING ONLY - Fictional supply and mutual-aid coordination contact.",
+        "Edit Contact",
+        "Academy Partner Directory",
+        "Mailing Address",
+        "Same as Physical?"
+      ],
+      "narration": "Open the saved organization. Contact Details shows its name and email, and Location Info shows the stored coordinate pair. Farther down, verify the physical address and original Description. For the named category and copied mailing address, return to the list and choose Edit. The category is selected by name, and the reopened mailing fields contain the copied street, city, state, and postal code. Same as Physical is clear on reopening here. Check those actual fields rather than assuming the blank mailing section on View proves that nothing was saved.",
+      "practice": "Reopen Edit and verify the named category and copied mailing fields on that form."
+    },
+    {
+      "id": "phone-edit",
+      "title": "Verify a small saved change",
+      "route": "/User/Contacts/Edit?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8",
+      "capture_refs": [
+        "019-company-office-phone-readback",
+        "021-company-office-phone-edited",
+        "023-company-updated-office-phone-saved"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Office Phone",
+        "+13125550143",
+        "+13125550144",
+        "Description",
+        "TRAINING ONLY - Fictional supply and mutual-aid coordination contact."
+      ],
+      "narration": "Use a small, easy-to-check edit to confirm your maintenance workflow. In the reopened organization form, Office Phone ends in zero one four three. Change that final digit to four. After saving and reopening the same contact, the field now ends in zero one four four. Read the reopened value, not just the value you typed. The original supply and mutual-aid Description remains in place. A successful change to one field is a reason to verify that field specifically, rather than assume every attempted edit was stored.",
+      "practice": "Change the reserved office phone on your fictional organization, save, leave and reopen to verify the new final digit."
+    },
+    {
+      "id": "handover",
+      "title": "Review the finished directory and adapt it",
+      "route": "/User/Contacts/Categories",
+      "capture_refs": [
+        "024-category-final-count",
+        "013-category-filter-saved-contacts"
+      ],
+      "capture_intent": "Show the named controls before saved results; use the ordered source frames without implying an unpictured click.",
+      "required_labels": [
+        "Categories",
+        "Academy Partner Directory",
+        "Contacts In Category",
+        "2",
+        "Sylvie Brett",
+        "Academy Logistics Desk (fictional)"
+      ],
+      "narration": "Finish in Categories. Academy Partner Directory now contains two contacts. Give someone responsibility for reviewing those details as partners change. Chicago Fire can use this pattern for logistics contacts. Community care and mental health teams can maintain operational partner directories without patient detail. Search and rescue can organize staging and support contacts; security teams can group site contacts; wildland crews can maintain supply references; and industrial response teams can organize facility coordination contacts. In each setting, choose clear categories, verify saved values, and keep the directory current.",
+      "practice": "Verify the category contains both practice contacts and choose who will review the directory before the next exercise."
+    }
+  ],
+  "authoring_status": "ready_actual_screen_video_after_strict_evidence_and_playback_review",
+  "media_status": "complete_reviewed_actual_screen_video",
+  "publication_mode": "video",
+  "capture_manifest": "expansion/plans/core-contacts-administration-take-01-source-correspondence-20261028/captures.reviewed.json",
+  "evidence_file": "expansion/rendered/core-contacts-administration-take-01/evidence.final.json",
+  "source_freeze": "expansion/plans/core-contacts-administration-capture-freeze-20261028/core-contacts-administration.narrated-source.json"
+}

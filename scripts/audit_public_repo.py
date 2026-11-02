@@ -12,6 +12,7 @@ PATTERNS = {
     'GitHub credential': rb'\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})\b',
     'AWS access credential': rb'\b(?:AKIA|ASIA)[A-Z0-9]{16}\b',
     'Google API credential': rb'\bAIza[A-Za-z0-9_-]{35}\b',
+    'embedded Mapbox access token': rb'\b(?:pk|sk)\.[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}\b',
     'Slack credential': rb'\bxox[baprs]-[A-Za-z0-9-]{20,}\b',
     'Stripe secret credential': rb'\b(?:sk|rk)_(?:live|test)_[A-Za-z0-9]{16,}\b',
     'JWT bearer credential': rb'\beyJ[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}\b',
@@ -35,6 +36,8 @@ def scan_bytes(data, extra_values=()):
         findings.add('known private training-stack credential')
     for match in (match for pattern in ASSIGNMENTS for match in pattern.finditer(data)):
         key, value = match.groups()
+        if key == b'mapaccesstoken' and value == b'@mapConfig.AccessToken':
+            continue  # Exact Razor field reference; no literal access token is stored here.
         if PLACEHOLDER.search(value):
             continue
         if re.search(rb'header(?:name)?$', key, re.I) and re.fullmatch(rb'X-[A-Za-z0-9-]+', value):

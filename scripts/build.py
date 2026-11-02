@@ -9,7 +9,7 @@ from verify_sources import verify
 from sync_course import sync
 
 
-def build(root):
+def build(root, *, local_preview=False):
     root = Path(root).resolve()
     sources = root / 'sources'
     sync(sources)
@@ -18,12 +18,13 @@ def build(root):
         raise ValueError('Authoring inputs are incomplete: ' + '; '.join(result['issues']))
     for script, arguments in [('deep_dive.py', ['--refresh-pages']), ('library.py', [])]:
         subprocess.run([sys.executable, str(sources / 'production' / script), *arguments], check=True)
-    return export(sources, root / 'site')
+    return export(sources, root / 'site', local_preview=local_preview)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--local-preview', action='store_true', help='Build a self-contained local copy without the Pages total-size gate. Deployment must separately package and validate the Release-media site.')
     args = parser.parse_args()
     import json
-    print(json.dumps(build(args.root), indent=2))
+    print(json.dumps(build(args.root, local_preview=args.local_preview), indent=2))

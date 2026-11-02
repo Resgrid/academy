@@ -1,27 +1,34 @@
 # Resgrid Academy
 
 This is the standalone Resgrid Academy authoring and GitHub Pages repository. It contains the tutorial website,
-24 illustrated primer videos, seven detailed videos with actual Resgrid screens, the
-introductory Firehouse 51 walkthrough, English captions, chapter controls, 173 feature
-briefs, 336 configuration references and examples for five department sectors.
+actual Resgrid screen walkthroughs, 24 text topic guides, English captions, chapter controls,
+feature briefs and configuration references. `site/site-manifest.json` records the current
+completed video inventory. Illustrated primer recordings remain in the authoring sources
+and are not exported.
 
-The full course is still in production: 23 detailed workflows and human voice review
-remain. Firehouse 51 uses fictional training data. The website is static. The repository includes public recording-stack recipes; generated
-credentials, private certificates and private Descript editor links stay outside Git.
+Published videos require complete screen, caption, audio and browser-playback evidence.
+Editable lesson sources and capture plans are retained separately from qualified videos.
+The text guides retain their teaching sections, role paths,
+search, deep links, transcript downloads and examples for six sectors. The new lessons include examples for fire and EMS,
+community care and mental health response, SAR, security, wildland and industrial teams.
+Firehouse 51 uses fictional training data. The website is static. Public recording-stack
+recipes are included; generated credentials, private certificates and private Descript
+editor links stay outside Git.
 
 ## Publish the separate repository
 
 1. Create an empty GitHub repository, for example `Resgrid-Academy`, under your chosen
    account or organization. Place this bundle's contents in its root, including `.github`.
-   Keep the actual media files in `site/`; the bundle ZIP itself is a download convenience.
+   Keep the original media and authoring files in the repository. Deployment also uploads
+   the qualified video bytes to GitHub Release assets.
 2. Review the files, then commit and push them yourself. Suggested initial commit message:
    `Publish Resgrid Academy on GitHub Pages`.
 3. In the new repository, select **Settings → Pages → Build and deployment → Source →
    GitHub Actions**. The first automatic deployment can fail until Pages is enabled;
    the manual action below is the initial deployment after this setting is saved.
 4. Select **Actions → Deploy Resgrid Academy → Run workflow** and use the repository's
-   default branch. The action validates the site, uploads the website artifact, then
-   deploys it through the `github-pages` environment. The completed deployment displays
+   default branch. The action validates and packages the site, uploads and verifies new
+   Release videos, then deploys the website through the `github-pages` environment. The completed deployment displays
    the actual site URL.
 
 Subsequent changes to `sources/`, `site/`, `scripts/` or the workflow deploy automatically when
@@ -72,17 +79,19 @@ Open `http://127.0.0.1:8769/` to test a domain-root deployment, or
 The preview serves byte ranges for video playback and chapter seeking.
 
 ```sh
-python3 -m unittest discover -s scripts/tests -v
-python3 scripts/validate_site.py --site site --report _reports/pages-validation.json
+python3 scripts/test_academy.py
 ```
 
 Validation checks relative links and chapter anchors, dynamic player assets, private
 editor links, local addresses, temporary signed URLs, symlinks, media checksums and file
-sizes. The current site is approximately 380 MB; its largest file is approximately
-44 MB. It is within the [GitHub Pages 1 GB site limit](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
-and the [GitHub regular-file limit](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
-Media growth beyond these limits requires external media hosting; deployment validation
-will stop rather than upload an oversized site.
+sizes. The Pages delivery bundle serves video from permanent GitHub Release URLs, keeping
+the website below the [GitHub Pages 1 GB site limit](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
+as the library grows. Local preview retains self-contained video playback. See
+[Release video delivery](docs/release-video-delivery.md) for packaging and verification.
+
+The test runner checks current tools directly. Historical byte-pinned recipe regressions
+run in an isolated copy with their exact retained validator; original receipts, expected
+hashes and source files remain unchanged.
 
 ## Author and rebuild here
 
@@ -92,12 +101,19 @@ current video masters and source evidence. See [AUTHORING.md](AUTHORING.md) for 
 editing and rendering workflow.
 
 ```sh
-python3 scripts/build.py
+python3 scripts/build.py --local-preview
 ```
 
 This builds the website from sources in this repository; no separate production folder,
 Descript connection or running Resgrid stack is required. The Pages action performs the
-same build before validation and deployment. It uploads only `site/`.
+same build before packaging and validation. It deploys the smaller Pages bundle and
+publishes byte-identical video assets in the repository's `academy-media` Release.
+
+The Academy's shared appearance lives in `sources/brand/academy.css` and
+`scripts/academy_brand.py`. The official Resgrid logo and favicon files are included in
+`sources/brand/`, with their original file paths and checksums in `provenance.json`.
+Update these source files and rebuild to apply branding consistently across the homepage,
+topic guides, and video lessons. Navigation and footer resource links share the same template.
 
 Create a new local Resgrid recording stack using the included fictional fixtures:
 
@@ -111,6 +127,12 @@ credentials, ports, safe reuse and recapturing screen states. Without `--core`, 
 acquires the recorded Resgrid revision in an ignored local checkout. Existing department
 data is preserved; the seed is applied only on first use.
 
+The expansion lessons retain a separate five-repository source profile and reviewed
+recording support patches. Use `python3 scripts/setup_demo.py --source-profile expansion --plan`
+to inspect it. See [the expansion reproduction guide](sources/demo/README.expansion.md)
+for isolated stack setup, verified app preparation and launch commands. Omitting the
+selector keeps the legacy default; an existing saved source selection is reused.
+
 Reference: [GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
 ## Check before a public commit
@@ -119,7 +141,8 @@ Run the credential audit before committing or pushing:
 
 ```sh
 python3 scripts/audit_public_repo.py --report _reports/public-repo-audit.json
-python3 scripts/validate_site.py --site site --report _reports/pages-validation.json
+python3 scripts/release_media.py package --site site --destination _reports/pages-site --assets _reports/release-media --repository Resgrid/academy
+python3 scripts/validate_site.py --site _reports/pages-site --report _reports/pages-validation.json
 ```
 
 The audit checks all tracked and non-ignored untracked working files, stored Git blobs and local Git configuration for private

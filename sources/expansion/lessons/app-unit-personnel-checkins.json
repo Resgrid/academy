@@ -1,0 +1,169 @@
+{
+  "id": "app-unit-personnel-checkins",
+  "title": "Unit: confirm personnel check-ins and review their history",
+  "app": "Unit",
+  "audience": [
+    "Unit app operators",
+    "Department coordinators"
+  ],
+  "summary": "Read a personnel timer, review earlier entries, confirm a useful check-in note, and verify the reset and saved history.",
+  "prerequisites": [
+    "A permitted Unit session with an active unit selected.",
+    "A training call with check-in timers enabled and an eligible Personnel timer.",
+    "Use fictional data and your department’s reporting procedure."
+  ],
+  "scenes": [
+    {
+      "id": "01-find-the-practice-call",
+      "title": "Find the right call",
+      "required_labels": [
+        "Calls",
+        "No Active Call"
+      ],
+      "narration": "Open Calls and choose the community care check-in exercise. Confirm its training title and department call number before you continue. The left panel identifies Engine 51, the apparatus selected in Unit. No Active Call means that opening a call to read it has not itself assigned that call as the unit's response. This example uses a fictional community paramedicine and mental health outreach visit. The same check-in tools can support other department workflows.",
+      "practice": "Open an authorized practice call and confirm the unit, call number, and title.",
+      "route": "/calls",
+      "capture_evidence": {
+        "status": "actual_pixels_and_stored_dom_reviewed",
+        "capture_refs": [
+          "004-fresh-bundle-call-list-released"
+        ]
+      }
+    },
+    {
+      "id": "02-read-the-personnel-timer",
+      "title": "Read the check-in timer",
+      "required_labels": [
+        "Check-In",
+        "Personnel"
+      ],
+      "narration": "In Call Details, open Check-In. The Personnel card shows the check-in type, the time since the last entry, and its current state. Here the last check-in was ten minutes ago, the counter reads ten of sixty minutes, and the state is OK. These values help a coordinator see when a scheduled update is due. The sixty-minute interval comes from department configuration; it is not a duration that the crew sets on this card.",
+      "practice": "Identify the timer type, current elapsed time, configured interval, and state.",
+      "route": "/call/51012",
+      "capture_evidence": {
+        "status": "actual_pixels_and_stored_dom_reviewed",
+        "capture_refs": [
+          "005-correct-utc-saved-personnel-age"
+        ]
+      }
+    },
+    {
+      "id": "03-review-earlier-history",
+      "title": "Read the previous saved note",
+      "required_labels": [
+        "History",
+        "Personnel"
+      ],
+      "narration": "Open History below the timer. The saved Personnel entry includes its timestamp and note, so you can distinguish an earlier check-in from an update you are about to enter. In this exercise the note identifies a scheduled software check-in for the community care visit. Check the history before repeating an update, especially when a crew changes or another team member may already have checked in. A saved software entry does not establish someone's physical location.",
+      "practice": "Open History and read the existing entry before adding another one.",
+      "route": "/call/51012",
+      "capture_evidence": {
+        "status": "actual_pixels_and_stored_dom_reviewed",
+        "capture_refs": [
+          "006-correct-local-history-saved-note"
+        ]
+      }
+    },
+    {
+      "id": "04-confirm-a-personnel-checkin",
+      "title": "Add a note and confirm the check-in",
+      "required_labels": [
+        "Check In",
+        "Personnel",
+        "Add note",
+        "Confirm Check-In"
+      ],
+      "narration": "Select Check In on the Personnel card. In the form, confirm Personnel under Select check-in type, then use Add note to explain the update. Our note says this is a follow-up software check-in after reviewing history. Review the wording and select Confirm Check-In. Use a short, useful note that follows your department's procedures. For search and rescue or security patrols, describe the agreed reporting update without adding unnecessary personal details.",
+      "practice": "Prepare a concise training note, review its type, and confirm it once.",
+      "route": "/call/51012",
+      "capture_evidence": {
+        "status": "actual_pixels_and_stored_dom_reviewed",
+        "capture_refs": [
+          "007-followup-personnel-checkin-note-form"
+        ]
+      }
+    },
+    {
+      "id": "05-verify-the-reset",
+      "title": "Verify the timer reset",
+      "required_labels": [
+        "Personnel",
+        "OK"
+      ],
+      "narration": "After confirmation, review the Personnel card again. The displayed age is now zero minutes, the counter reads zero of sixty minutes, and the state remains OK. This is the observed reset for this check-in. A timer reset and a unit status change are separate operations. Wildland contractors and industrial response teams can use the same distinction when coordinating regular reports during a longer assignment.",
+      "practice": "Compare the elapsed value before and after the confirmed check-in.",
+      "route": "/call/51012",
+      "capture_evidence": {
+        "status": "actual_pixels_and_stored_dom_reviewed",
+        "capture_refs": [
+          "008-followup-checkin-counter-reset"
+        ]
+      }
+    },
+    {
+      "id": "06-read-the-new-saved-entry",
+      "title": "Verify the new saved history entry",
+      "required_labels": [
+        "History"
+      ],
+      "narration": "Open History again and read the newest entry. The follow-up note appears above the earlier scheduled check-in, with its own timestamp. This is how you verify that the note was stored, rather than simply left in the form. Check both the timer and history when learning this workflow. Your department decides the reporting interval and escalation procedure; the app supplies the check-in controls and a record of the updates.",
+      "practice": "Reopen History and verify the new note and timestamp alongside the earlier entry.",
+      "route": "/call/51012",
+      "capture_evidence": {
+        "status": "actual_pixels_and_stored_dom_reviewed",
+        "capture_refs": [
+          "009-followup-note-saved-history"
+        ]
+      }
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Use a configured Personnel timer during a training response and confirm the saved update.",
+      "practice": "Compare the elapsed timer with its newest history entry."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate scheduled reports during a community paramedicine or mental health outreach visit.",
+      "practice": "Write a useful update without including patient or client details."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use an agreed reporting schedule for a search-team assignment.",
+      "practice": "Verify the reporting note and timestamp under the team’s procedures."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Review updates during a patrol or security assignment.",
+      "practice": "Check prior history before adding the next agreed report."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Keep a record of scheduled crew updates during a contractor assignment.",
+      "practice": "Distinguish a software timer reset from apparatus response status."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Record a support team’s agreed progress report during an exercise.",
+      "practice": "Verify the new note while applying the site’s separate safety and escalation procedures."
+    }
+  ],
+  "authoring_status": "ready_actual_screen_video_after_strict_evidence_and_playback_review",
+  "capture_limitations": [
+    "Demonstrates a Personnel timer in the browser; hardware location, alert delivery, other timer targets and warning transitions are outside this exercise."
+  ],
+  "source_files": [
+    "Unit/src/components/check-in-timers/check-in-timer-card.tsx",
+    "Unit/src/components/check-in-timers/check-in-tab-content.tsx",
+    "Unit/src/components/check-in-timers/check-in-history-list.tsx",
+    "Unit/src/components/check-in-timers/check-in-bottom-sheet.tsx",
+    "Core/Web/Resgrid.Web/Areas/User/Views/Department/DispatchSettings.cshtml"
+  ],
+  "narration_word_count": 424,
+  "capture_manifest": "expansion/plans/app-unit-personnel-checkins-capture-freeze-20261028-v2/captures.reviewed.json",
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-unit-personnel-checkins-take-01/evidence.final.json",
+  "source_freeze": "expansion/plans/app-unit-personnel-checkins-capture-freeze-20261028-v2/app-unit-personnel-checkins.narrated-source.json"
+}

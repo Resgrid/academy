@@ -1,0 +1,556 @@
+{
+  "id": "app-responder-03-communications",
+  "title": "Responder communications, conversations, and field references",
+  "app": "Responder",
+  "audience": "Members who coordinate with colleagues, respond to departmental messages, or consult field information.",
+  "summary": "Choose the correct communication audience, compose and acknowledge fictional notices, organize direct/group/thread chat, consult contact and briefing references, and inspect native/provider configuration limits through actual Responder screens.",
+  "prerequisites": [
+    "Demo inbox and sent messages, safe recipients, a second chat session, and Chat.System enabled.",
+    "Configured voice channels, audio stream entries, and supported test hardware only for optional live demonstrations.",
+    "Contacts with preplans, files, notes, and call history; department notes and protocols."
+  ],
+  "scenes": [
+    {
+      "id": "01-choose-the-right-communication-surface",
+      "title": "Choose the right communication surface",
+      "route": "/messages -> /chat",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Inbox",
+        "Sent",
+        "All Messages",
+        "Chat"
+      ],
+      "narration": "Messages organizes departmental notices into Inbox, Sent, and All Messages. Chat organizes ongoing conversations. Choose the audience and purpose before composing anything. Community response teams can use a notice for a briefing and a chat for coordination; industrial teams can use the same distinction for shift handovers. A stored message in your own app confirms a record, not delivery to every recipient’s device.",
+      "practice": "Choose a notice and a conversation for a fictional community-response handover, then identify the intended recipients.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "078-incoming-acknowledgement-inbox",
+          "064-message-sent-result",
+          "059-message-mailbox-filters",
+          "077-chat-direct-and-group-list"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Messages and Chat support different kinds of coordination. Messages presents Inbox, Sent, and All Messages for departmental communications and responses. Chat organizes ongoing conversations, channels, and incident discussions when enabled. Start by deciding which surface fits the task and who needs to receive it. A message being visible in your own interface does not, by itself, establish delivery to another person’s device.",
+        "required_labels": [
+          "Inbox",
+          "Sent",
+          "All Messages",
+          "Chat"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 63
+    },
+    {
+      "id": "02-compose-a-scoped-departmental-message",
+      "title": "Compose a scoped departmental message",
+      "route": "/messages",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Compose",
+        "New Message",
+        "Message Type",
+        "Recipients",
+        "Subject",
+        "Message Body",
+        "Send"
+      ],
+      "narration": "The Compose icon opens New Message. Choose Message Type and Recipients, then enter a clear Subject and Message Body. The recipient picker separates People, Groups, and Roles. Check the selected names before Send. Our training notice goes only to the fictional Boden account. Find its saved card in Sent and open the content afterward; do not treat that card as proof of a push notification.",
+      "practice": "Prepare a clearly marked training notice to one fictional member and verify its saved content in Sent.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "078-incoming-acknowledgement-inbox",
+          "060-message-compose",
+          "061-message-recipients",
+          "063-message-training-prepared-confirmed",
+          "064-message-sent-result"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Select Compose to open New Message. Review Message Type, choose Recipients, and enter Subject and Message Body. The recipient selector can include people, groups, roles, and units as permitted. Keep the audience narrow enough for the purpose and inspect the selected count before Send. For a training demonstration, make the exercise context clear and use accounts that belong to the isolated demo department.",
+        "required_labels": [
+          "New Message",
+          "Message Type",
+          "Recipients",
+          "Subject",
+          "Message Body",
+          "Send"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 65
+    },
+    {
+      "id": "03-respond-and-maintain-the-inbox",
+      "title": "Respond and maintain the inbox",
+      "route": "/messages",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Respond to Message",
+        "Response",
+        "Note (Optional)",
+        "Send Response",
+        "Responded",
+        "Select All",
+        "Delete"
+      ],
+      "narration": "An incoming Poll can open Respond to Message through its reply arrow. Enter Response, add a Note (Optional), and choose Send Response. The training polls show a stored Yes response as code one; inspect the Responded result. Long-pressing a card exposes Select All and Delete. Review the selection carefully. This browser’s native confirmation does not complete deletion, so these examples preserve both messages.",
+      "practice": "Acknowledge a fictional briefing poll, inspect the stored response, and enter then leave selection mode without deleting data.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "132-message-response-heading-complete",
+          "079-message-response-prepared",
+          "133-message-response-note-send",
+          "134-readiness-acknowledgement-result",
+          "135-message-bulk-selection"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open a message to read its content, sender, expiration, and response information. When a response is available, use Respond to Message and Send Response rather than assuming the sender can infer your decision. Back in the list, search for related messages or select items for Delete. Select All affects the current selection scope, so review it before confirming deletion of disposable training messages.",
+        "required_labels": [
+          "Respond to Message",
+          "Send Response",
+          "Select All",
+          "Delete"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 63
+    },
+    {
+      "id": "04-start-a-direct-or-group-conversation",
+      "title": "Start a direct or group conversation",
+      "route": "/chat",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "New Direct Message",
+        "New Group",
+        "DIRECT MESSAGES",
+        "CHANNELS",
+        "INCIDENTS",
+        "Create group (2)"
+      ],
+      "narration": "Open New conversation and choose New Direct Message for one person or New Group for a shared discussion. Search for the intended member instead of choosing Everyone. Name the group and review the selected people before you create the group. Direct messages, channels, and incidents then organize the list. SAR task teams and security posts can use these same audience checks to avoid sending coordination to the wrong team.",
+      "practice": "Find fictional Matthew Casey for a direct conversation, then inspect the two-member Academy readiness group.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "067-chat-new-conversation-menu",
+          "076-chat-direct-person-selector",
+          "068-chat-new-group-prepared",
+          "077-chat-direct-and-group-list",
+          "066-chat-channels-incidents"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Chat separates Direct Messages, Channels, and Incidents so you can recognize the conversation’s purpose. Choose New Direct Message for a person, or New Group for an ad hoc team. Select the intended members and identify the group clearly. Check the conversation before writing, especially when similar incident names are visible. The channel list depends on permissions and the department’s enabled chat configuration.",
+        "required_labels": [
+          "Direct Messages",
+          "Channels",
+          "Incidents",
+          "New Direct Message",
+          "New Group"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {
+        "Create group (2)": "create the group",
+        "DIRECT MESSAGES": "Direct messages",
+        "CHANNELS": "channels",
+        "INCIDENTS": "incidents"
+      },
+      "narration_word_count": 69
+    },
+    {
+      "id": "05-use-the-chat-composer-with-context",
+      "title": "Use the chat composer with context",
+      "route": "/chat/[channelId]",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Type a message",
+        "Attach",
+        "Send",
+        "Emoji",
+        "Add image",
+        "Add GIF",
+        "Share location",
+        "Urgent"
+      ],
+      "narration": "Confirm the conversation name before entering Type a message. Attach is the plus icon; its menu offers Emoji, Add image, Add GIF, Share location, and Urgent in a channel. Send is the paper-plane icon and becomes available after entering text. Threads offer fewer attachment choices. This exercise uses fictional text; media services, location permissions, and real hardware require separate checks on the intended platform.",
+      "practice": "Compare the channel and thread attachment menus, prepare an unsent training draft, and explain when urgency is appropriate.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "137-chat-placeholder-and-context",
+          "136-chat-active-composer-reviewed",
+          "074-chat-channel-attachments"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Use Type a message for a concise update and Send when the audience is correct. Add image and Add GIF offer different supporting content; Share location asks for location permission. Urgent is a deliberate communication choice, not a replacement for your emergency procedures. Record the actual permission prompt and selected content when teaching an attachment or location share, and check the resulting message afterward.",
+        "required_labels": [
+          "Type a message",
+          "Add image",
+          "Add GIF",
+          "Share location",
+          "Urgent",
+          "Send"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 64
+    },
+    {
+      "id": "06-keep-threads-and-acknowledgements-meaningful",
+      "title": "Keep threads and message actions meaningful",
+      "route": "/chat/[channelId] -> /chat/thread/[messageId]",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Reply in thread",
+        "Copy",
+        "Edit",
+        "Delete",
+        "Pin",
+        "Remove (moderator)",
+        "Thread",
+        "ORIGINAL MESSAGE"
+      ],
+      "narration": "Long-press a message to inspect its actions. The training account’s own-message menu shows Reply in thread, Copy, Edit, Delete, Pin, and moderator removal. Available actions depend on ownership and permissions. Thread keeps the ORIGINAL MESSAGE visible while you add related replies. Review the target before editing, pinning, deleting, or moderating. The captured reply is fictional; no deletion or moderator removal is demonstrated.",
+      "practice": "Open the fictional message menu, follow its thread, and distinguish an ordinary reply from a destructive or moderation action.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "071-chat-own-message-actions",
+          "072-chat-thread-result"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Long press a message to inspect the actions your role permits. Reply in thread keeps follow-up together; Edit and Delete apply to eligible messages. Pin highlights information, and Report opens a reason choice for moderation. Remove (moderator) is reserved for authorized moderation. Reactions and acknowledgement requests serve different purposes, so follow the actual banner or message control shown. Check the other demo session when practicing acknowledgements.",
+        "required_labels": [
+          "Reply in thread",
+          "Edit",
+          "Pin",
+          "Report"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {
+        "Remove (moderator)": "moderator removal"
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "07-ask-the-assistant-a-bounded-question",
+      "title": "Inspect the assistant before using a provider",
+      "route": "/chatbot",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Assistant",
+        "New session",
+        "Send"
+      ],
+      "narration": "Assistant opens a question workspace with New session and a Send icon. Decide what you need to know and whether the information is approved for that service before submitting anything. A bounded question about a training procedure is more useful than a vague request for everything. This recording stays on the workspace: it does not invoke a provider or validate an answer. Verify any operational answer against approved references.",
+      "practice": "Draft a bounded, non-sensitive training question and identify the reference you would use to verify its answer.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "083-assistant-workspace"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open Assistant for an available organization-supported conversation. Ask a clear question with the context the assistant can legitimately use, and inspect its reply before acting on it. A new conversational session can reset the discussion where that control is offered, while prior message history may remain. Keep the question about demo procedures or information, and distinguish a suggested answer from a verified operational instruction.",
+        "required_labels": [
+          "Assistant"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 69
+    },
+    {
+      "id": "08-join-and-leave-a-voice-channel",
+      "title": "Check voice availability on the intended platform",
+      "route": "Sidebar Voice",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Voice Channels",
+        "No voice channels available"
+      ],
+      "narration": "Voice opens Voice Channels. This training configuration says No voice channels available, so there is no channel to join here. Resolve that setup before relying on voice coordination. A configured deployment also needs the intended device’s audio permissions, microphone, and push-to-talk equipment checked through an approved test. An empty browser list cannot establish native radio or background-audio behavior. Keep the team’s agreed fallback communication available.",
+      "practice": "Explain the empty channel state to a fictional team and identify the authorized configuration and device checks needed before use.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "081-voice-channels-empty"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open Voice Channels, choose the permitted channel, and select Join. Review the connected channel and microphone state before using the push-to-talk control. Release the control to stop transmitting, and use Mute or Unmute as offered. Disconnect leaves the session. Allow microphone access only as needed, and confirm with a test listener before relying on voice. Browser foreground audio differs from native background and device behavior.",
+        "required_labels": [
+          "Voice Channels",
+          "Join",
+          "Mute",
+          "Unmute",
+          "Disconnect"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 65
+    },
+    {
+      "id": "09-inspect-streams-and-audio-hardware",
+      "title": "Inspect streams and audio hardware settings",
+      "route": "Sidebar Stream -> /settings",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Audio Streams",
+        "Select Audio Stream",
+        "Refresh Streams",
+        "BT Handset",
+        "No device selected"
+      ],
+      "narration": "Stream opens Audio Streams and Select Audio Stream. None means no stream is selected; the screen also says no audio stream is currently playing. Refresh Streams reloads the configured list. In Settings, BT Handset currently says No device selected. Inspect these states before troubleshooting audio. Browser settings do not demonstrate Bluetooth pairing, headset buttons, or native background playback, and this exercise does not connect a real provider.",
+      "practice": "Distinguish an unselected stream from an unpaired handset, then describe a permitted device test without claiming audio was heard.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "082-audio-stream-settings",
+          "057-settings-native-capability-controls"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Audio Streams lets you use Select Audio Stream and inspect its Loading, Buffering, Playing, or Stopped state. It differs from a two-way voice channel. Use Audio Settings and the Bluetooth or audio-device settings view to inspect the intended input and output. Native phones expose hardware and operating-system audio behavior that a browser cannot reproduce, so test any physical push-to-talk button on the intended device before relying on it.",
+        "required_labels": [
+          "Audio Streams",
+          "Select Audio Stream",
+          "Audio Settings"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 67
+    },
+    {
+      "id": "10-use-contact-context-and-preplans",
+      "title": "Use contact context and preplans",
+      "route": "/contacts",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Contact Details",
+        "Details",
+        "Notes",
+        "Pre-Plan",
+        "Files",
+        "Calls"
+      ],
+      "narration": "Contacts opens Contact Details with Details, Notes, Pre-Plan, Files, and Calls. Confirm the contact’s identity before following its information. Our fictional warehouse has no recorded preplan, notes, files, or related calls in these tabs. That absence does not establish that the site has no hazards. Wildland and industrial teams can use the same tabs for reliable access information and site documents once their department has populated them.",
+      "practice": "Review the fictional warehouse’s empty tabs and explain what information must be obtained before relying on a site plan.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "084-contacts-list",
+          "085-contact-details",
+          "086-contact-preplan-empty",
+          "087-contact-notes-empty",
+          "088-contact-files-empty",
+          "089-contact-related-calls-empty"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open Contacts, find a person or company, and inspect Contact Details. Details supplies the contact and location information; Notes, Pre-Plan, Files, and Calls provide additional context when available. Check entrances, hazards, or earlier call information before relying on a general address. Phone, email, and web links hand off to other applications, so use demonstration destinations and show the actual supported behavior on your platform.",
+        "required_labels": [
+          "Contact Details",
+          "Details",
+          "Notes",
+          "Pre-Plan",
+          "Files",
+          "Calls"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 67
+    },
+    {
+      "id": "11-consult-notes-and-protocols-in-place",
+      "title": "Consult notes and protocols in place",
+      "route": "/notes -> /protocols",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Notes",
+        "Firehouse 51 — shift briefing",
+        "Protocols",
+        "No protocols found"
+      ],
+      "narration": "Notes contains the Firehouse 51 — shift briefing. Open it to read the actual briefing content and its category and date. Protocols is a separate reference library; this training department shows No protocols found. Search the appropriate library and confirm that an approved reference exists before relying on it. Reading a briefing does not create a protocol, and an empty library is a reason to obtain the correct departmental material.",
+      "practice": "Find the fictional shift briefing and identify the missing protocol material needed for a planned training activity.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "090-reference-notes-list",
+          "091-reference-note-rich-text",
+          "092-protocols-empty"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Notes provides departmental information that may be categorized or time limited. Use the search field in Notes to narrow the list, open the relevant entry, and read its full context. Protocols presents published guidance through its own list and detail view; an incident may also have a Protocols tab. Use the reference that matches the situation and review it alongside the call-specific information.",
+        "required_labels": [
+          "Notes"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 70
+    },
+    {
+      "id": "12-verify-notifications-on-the-target-platform",
+      "title": "Prepare the target device and verify notifications",
+      "route": "/settings",
+      "capture_intent": "Use the explicitly referenced actual application viewports; split cuts around scrolling and menus so required controls remain legible. Preserve the stated platform/data limits.",
+      "required_labels": [
+        "Settings",
+        "Keep Alive",
+        "Realtime Geolocation",
+        "Background Geolocation",
+        "BT Handset"
+      ],
+      "narration": "In Settings, inspect Keep Alive, Realtime Geolocation, Background Geolocation, and BT Handset. These preferences affect different device capabilities; do not assume one switch enables all field behavior. Native background location, audio hardware, and push notifications require the appropriate platform, permissions, and an approved device test. This browser exercise leaves the location switches off. Confirm actual alert receipt separately before a team depends on a device for notifications.",
+      "practice": "Explain which settings and permitted device tests a fictional SAR or community-response member would verify before a shift.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "057-settings-native-capability-controls"
+        ],
+        "observations": [
+          "Actual screenshots and named controls reviewed. Provider, native hardware, unavailable configuration and destructive-action limits are stated in narration."
+        ]
+      },
+      "source_workflow_reference": {
+        "narration": "Open the notification bell and inspect the available inbox and detail view. A notification entry, a browser permission grant, and a delivered phone alert are separate observations. Use an approved test notification to check the intended device and its tap-through to the correct screen. In Settings, review the relevant preferences. If an expected alert does not arrive, investigate the device and configured delivery path before relying on it.",
+        "required_labels": [
+          "Settings"
+        ],
+        "status": "Supported-source reference; unexercised branches are not claimed as recorded operations."
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 67
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire and emergency services",
+      "scenario": "A station team separates a shift briefing notice from an ongoing crew discussion.",
+      "practice": "Choose Message or Chat, verify the selected training recipients, and inspect the stored result without assuming alert delivery."
+    },
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "A mobile care team coordinates a training briefing and follows up in a limited conversation without unnecessary sensitive narratives.",
+      "practice": "Review recipients and use a fictional notice, direct conversation and thread; confirm actual device receipt separately."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search task team keeps assignment follow-up in a thread and checks whether its approved briefing and protocols are available.",
+      "practice": "Choose the intended training group, open the thread and inspect Notes and Protocols before relying on the reference."
+    },
+    {
+      "sector": "Security companies and departments",
+      "scenario": "A patrol supervisor needs checkpoint follow-up in a limited channel and a poll response recorded in the system.",
+      "practice": "Inspect the selected audience, a training thread and the actual Respond to Message result; a sent card does not prove device delivery."
+    },
+    {
+      "sector": "Wildland contractors",
+      "scenario": "A seasonal crew shares a training briefing and reviews a site contact before relying on its communications equipment.",
+      "practice": "Open the relevant Notes and Contact Details, then inspect actual Voice, Stream and handset states without claiming a configured provider or native radio test."
+    },
+    {
+      "sector": "Industrial emergency response teams",
+      "scenario": "An industrial team needs an approved site preplan and clearly configured communication channels for shift handovers.",
+      "practice": "Inspect the contact tabs and actual voice/device settings; an empty preplan or channel list is a setup gap rather than evidence that the site has no hazards."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/messages.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/messages/compose-message-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/messages/message-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/chat.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/chat/[channelId].tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/chat/message-composer.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/chat/message-actions-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/livekit/livekit-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/audio-stream/audio-stream-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/contacts/contact-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/notes.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/protocols.tsx"
+  ],
+  "capture_manifest": "captures/expansion/responder/manifest.json",
+  "authoring_status": "frozen_for_natural_narration_with_declared_capture_limits",
+  "capture_limitations": [
+    "Voice channel list is empty; join/mute/unmute/disconnect/PTT hardware are unexercised supported paths.",
+    "Audio Streams has None; no provider playback or Bluetooth pairing tested.",
+    "Assistant workspace shown without invoking an external provider.",
+    "Contact preplan/notes/files/history and Protocols show genuine empty data states.",
+    "Native notification/location/audio permissions and delivery are not established by browser settings.",
+    "Native Alert confirmation does not complete message deletion on web; selection controls only shown.",
+    "No claim of peer chat/push delivery; fictional chat records persisted across browser reload."
+  ],
+  "frozen_at": "2026-10-26T17:59:22.245054+00:00",
+  "narration_word_count": 791,
+  "spoken_sector_examples": [
+    "Scene 1: community response and industrial shift handovers",
+    "Scene 4: SAR task teams and security posts",
+    "Scene 10: wildland and industrial access information",
+    "Scene 12: SAR and community-response device readiness"
+  ],
+  "media_status": {
+    "narration": "pending_natural_voice_export",
+    "video": "not_assembled",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-responder-03-communications-take-01/evidence.reviewed.json"
+}

@@ -1,0 +1,186 @@
+{
+  "id": "app-responder-certification-renewal",
+  "title": "Responder: renew certifications and record education hours",
+  "app": "Responder",
+  "audience": [
+    "Department members",
+    "Personnel maintaining their own records"
+  ],
+  "summary": "Review an existing certification, save an education-hours entry, renew its date, and understand the resulting verification state.",
+  "prerequisites": [
+    "A normal authorized Responder account and an existing training certification.",
+    "Use fictional exercise values and follow your department record-review procedure."
+  ],
+  "scenes": [
+    {
+      "id": "find-record",
+      "title": "Find the intended certification",
+      "required_labels": [
+        "My certifications",
+        "Firefighter qualification",
+        "Active",
+        "Number DEMO-CERT-1"
+      ],
+      "narration": "Open My certifications in Responder. This area gives the signed-in member a place to review their own certification records. The training account has an existing Firefighter qualification, marked Active, with the number DEMO-CERT-1 and an expiry date. Open the intended record before changing it. An organization can use this recordkeeping pattern for its own required qualifications, including community response, search teams, security, contractor crews, and industrial response.",
+      "practice": "Locate the intended record and compare its name, number and displayed status.",
+      "capture_evidence": {
+        "status": "actual_screenshot_reviewed",
+        "capture_refs": [
+          "114-certification-list"
+        ]
+      }
+    },
+    {
+      "id": "review-record",
+      "title": "Review dates, verification and available fields",
+      "required_labels": [
+        "Firefighter qualification",
+        "Active",
+        "Number DEMO-CERT-1",
+        "Verified 2026-10-25",
+        "Renew",
+        "New expiry date",
+        "New number (optional)",
+        "Hours",
+        "Date (defaults to today)",
+        "Category (course, drill, conference)",
+        "What it was"
+      ],
+      "narration": "Review the record detail before acting. Check the number, issuer, area, received date, expiry date, and verification date. Our example is issued by the fictional Academy Training Board. Renew has fields for a new expiry date and an optional new number. The continuing-education section starts with zero hours and offers Hours, Date, Category, and What it was. These fields help keep an education entry attached to the correct qualification.",
+      "practice": "Compare the record identity and current verification before entering an update.",
+      "capture_evidence": {
+        "status": "actual_screenshot_reviewed",
+        "capture_refs": [
+          "118-certification-renewal-ce-controls"
+        ]
+      }
+    },
+    {
+      "id": "add-education",
+      "title": "Review and add an education entry",
+      "required_labels": [
+        "0.25",
+        "Date (defaults to today)",
+        "Training software demonstration",
+        "TRAINING ONLY — Academy interface practice; no accredited credit claimed.",
+        "Add hours"
+      ],
+      "narration": "For this software exercise, enter zero point two five hours. The Date field indicates that it defaults to today. We enter Training software demonstration as the category and a note explicitly saying that no accredited credit is claimed. Review the amount, date choice, category, and description before choosing Add hours. Use the actual activity information your department requires when maintaining a real record.",
+      "practice": "Review one permitted training entry and choose Add hours only when its values are correct.",
+      "capture_evidence": {
+        "status": "actual_screenshot_reviewed",
+        "capture_refs": [
+          "119-certification-ce-prepared"
+        ]
+      }
+    },
+    {
+      "id": "verify-education",
+      "title": "Read back the saved education hours",
+      "required_labels": [
+        "Hours added.",
+        "Number DEMO-CERT-1",
+        "0.25 continuing-education hours",
+        "2026-10-26 · 0.25 h · Training software demonstration · TRAINING ONLY — Academy interface practice; no accredited credit claimed."
+      ],
+      "narration": "Read back the result. Hours added appears, the total is now zero point two five continuing-education hours, and the stored entry includes its date, amount, category, and note. The number is still DEMO-CERT-1. This saved ledger distinguishes an entry that reached the record from text left in a form. The displayed training entry is a software demonstration; its note does not claim an accredited course or awarded qualification.",
+      "practice": "Check the saved total and ledger entry after submission.",
+      "capture_evidence": {
+        "status": "actual_screenshot_reviewed",
+        "capture_refs": [
+          "120-certification-ce-result"
+        ]
+      }
+    },
+    {
+      "id": "save-renewal",
+      "title": "Review and save the renewal date",
+      "required_labels": [
+        "Renew",
+        "New expiry date",
+        "10/27/2028",
+        "New number (optional)",
+        "Save renewal"
+      ],
+      "narration": "Next, review Renew. In this recorded training example, New expiry date is set to October twenty-seven, twenty twenty-eight. New number is optional and remains blank. Check the intended expiry date and whether the credential number needs to change, then choose Save renewal. Keep an education-hours entry and a certification renewal distinct: one adds an activity to the ledger, while this action updates the certification record.",
+      "practice": "Review the renewal date and optional number before Save renewal.",
+      "capture_evidence": {
+        "status": "actual_screenshot_reviewed",
+        "capture_refs": [
+          "122-certification-renewal-prepared"
+        ]
+      }
+    },
+    {
+      "id": "verify-renewal",
+      "title": "Read the saved renewal and verification state",
+      "required_labels": [
+        "Firefighter qualification",
+        "Renewal saved.",
+        "Awaiting verification",
+        "Number DEMO-CERT-1",
+        "Expires 2028-10-27 (732 days)",
+        "Not verified by the department yet",
+        "0.25 continuing-education hours"
+      ],
+      "narration": "Verify the resulting record. Renewal saved appears, the expiry date is October twenty-seven, twenty twenty-eight, and the original number remains. The status now says Awaiting verification, with Not verified by the department yet. Read that state before treating the update as reviewed. The education entry remains visible below. This same habit supports fire and EMS personnel, community paramedicine and mental health response teams, search and rescue, security companies, wildland contractors, and industrial teams: maintain the details and check the department review state.",
+      "practice": "Verify the saved expiry, retained number, education total and pending verification state.",
+      "capture_evidence": {
+        "status": "actual_screenshot_reviewed",
+        "capture_refs": [
+          "123-certification-renewal-result"
+        ]
+      }
+    }
+  ],
+  "source_files": [
+    "evidence/expansion/Responder/src/app/(app)/certifications/index.tsx",
+    "evidence/expansion/Responder/src/app/(app)/certifications/[id].tsx"
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Keep a training qualification record and its education entries together.",
+      "practice": "Review the saved renewal and department verification state."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Track the qualifications your community paramedicine or mental health response team requires.",
+      "practice": "Check the record identity before updating its education ledger."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Review team qualification expiry dates and stored education activities.",
+      "practice": "Verify the new date and the resulting review state."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Keep staff qualification records and permitted training entries organized.",
+      "practice": "Check the saved entry and record status after submission."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Maintain contractor crew qualification records and education history.",
+      "practice": "Review dates and verification before relying on the updated record."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Organize response-team qualification records under the site review procedure.",
+      "practice": "Verify the retained credential number, new expiry and education total."
+    }
+  ],
+  "capture_limitations": [
+    "Existing fictional certification only; new-record creation, editing and removal are not demonstrated.",
+    "No photo attachment or native camera operation is demonstrated.",
+    "Awaiting verification is observed after renewal; no department approval or final verification operation is demonstrated.",
+    "The fictional education entry claims no accredited credit. Displayed dates and days remaining belong to the historical recording."
+  ],
+  "authoring_status": "ready_actual_screen_video_after_strict_evidence_and_playback_review",
+  "media_status": "complete_reviewed_actual_screen_video",
+  "export_ready": true,
+  "narration_word_count": 414,
+  "publication_mode": "video",
+  "capture_manifest": "expansion/plans/app-responder-certification-renewal-capture-freeze-20261028/captures.reviewed.json",
+  "evidence_file": "expansion/rendered/app-responder-certification-renewal-take-01/evidence.final.json",
+  "source_freeze": "expansion/plans/app-responder-certification-renewal-capture-freeze-20261028/app-responder-certification-renewal.narrated-source.json"
+}

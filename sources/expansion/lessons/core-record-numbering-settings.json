@@ -1,0 +1,265 @@
+{
+  "id": "core-record-numbering-settings",
+  "app": "Core",
+  "title": "Configure record numbering and verify saved changes",
+  "summary": "Understand patterns, padding, year starts and prefixes; save a custom pattern, verify its sequence previews, then restore the original format.",
+  "audience": [
+    "Department administrators",
+    "Records administrators",
+    "Migration coordinators"
+  ],
+  "prerequisites": [
+    "An authorized department administrator session with Records Settings available.",
+    "A separate training department for practice and an agreed numbering policy before changing operational settings."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start in the department Records Settings",
+      "narration": "Record numbers help people find and distinguish documents during a handover or a data migration. This walkthrough starts on Records Settings in the fictional Firehouse fifty-one training department. We will inspect the numbering controls, save one change, verify what persisted and restore the original pattern. The department name and settings page should match the department you intend to administer.",
+      "practice": "Verify the intended department and Records Settings page before editing.",
+      "required_labels": [
+        "Records Settings"
+      ],
+      "capture_refs": [
+        "001-records-settings-lifecycle"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Read the number pattern and its tokens",
+      "narration": "Scroll to Record numbering. Number pattern currently contains the prefix token, a hyphen, the four-digit year token, another hyphen and the sequence token. The help below explains what each token writes. Prefix uses the record type prefix, year includes the numbering year, and sequence supplies the counter. Changing this pattern does not renumber records that already have numbers. Read that impact before applying a new format.",
+      "practice": "Read the existing pattern and the explanation that existing record numbers are retained.",
+      "required_labels": [
+        "Record numbering",
+        "Number pattern",
+        "{PREFIX}-{YYYY}-{SEQ}"
+      ],
+      "capture_refs": [
+        "006-pattern-tokens-padding-readable"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Distinguish padding from the next sequence",
+      "narration": "Sequence digits is four in this department. The help shows that four digits writes a zero-padded value such as zero one eight four. This control accepts three through eight digits. Changing the width keeps each sequence's next number; it is not the same as choosing a different next counter. Definitions that have their own numbering keep their own width. In this exercise, we leave the four-digit setting as it is.",
+      "practice": "Find Sequence digits and distinguish zero padding from a counter change.",
+      "required_labels": [
+        "Sequence digits",
+        "4"
+      ],
+      "capture_refs": [
+        "006-pattern-tokens-padding-readable"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Review the numbering year start",
+      "narration": "Numbering year starts has a month and day. January first is selected here. The displayed help explains how a fiscal-year start affects sequences that include the year. This setting is separate from call numbering, which has its own year start on Call Settings. Review the policy your department actually follows before changing either. This demonstration keeps the existing January-first value.",
+      "practice": "Identify the actual month and day controls and read their scope before changing a year start.",
+      "required_labels": [
+        "Numbering year starts",
+        "January",
+        "1"
+      ],
+      "capture_refs": [
+        "005-year-start-readable",
+        "001-separate-call-number-year-controls"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Understand type prefixes and shared sequences",
+      "narration": "Record type prefixes lists each type, its default and a Number prefix box. The visible defaults include Run, R U N; Training, T R N; Work, W R K; and Meeting, M T G. Leave a box blank to keep its default. The help explains that a new prefix starts its own sequence, and types given the same prefix share one sequence. Prefixes take effect when the number pattern includes the prefix token. Choose them deliberately rather than using a cosmetic change that accidentally joins two counters.",
+      "practice": "Compare the visible type, default and prefix columns and read the sharing rule.",
+      "required_labels": [
+        "Record type prefixes",
+        "Record type",
+        "Default",
+        "Number prefix",
+        "Run",
+        "RUN",
+        "Training",
+        "TRN",
+        "Work",
+        "WRK",
+        "Meeting",
+        "MTG"
+      ],
+      "capture_refs": [
+        "008-prefix-heading-and-table"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Prepare a custom pattern in the training department",
+      "narration": "For this local exercise, replace the two hyphens in Number pattern with underscores. Keep the same prefix, four-digit year and sequence tokens. The example beside the field now uses underscores too. This is still an unsaved form value. The format of the example is useful feedback, but it does not prove the department has saved the change or issued a new record number.",
+      "practice": "Compare the prepared underscore pattern and example without treating the preview as a saved result.",
+      "required_labels": [
+        "Record numbering",
+        "Number pattern",
+        "{PREFIX}_{YYYY}_{SEQ}",
+        "INC_2026_0153"
+      ],
+      "capture_refs": [
+        "001-prepared-custom-pattern"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Use the actual Save action",
+      "narration": "Scroll to the bottom of Records Settings, where Save and Cancel are visible. Review your intended edit before choosing Save. This demonstration changes the number pattern only; it does not submit a record, raise a counter or request delivery to an external service. Use Save once, then verify the returned settings page instead of assuming that typing in the field completed the configuration.",
+      "practice": "Find the real Save control at the bottom of the settings form.",
+      "required_labels": [
+        "Save",
+        "Cancel"
+      ],
+      "capture_refs": [
+        "002-save-control"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Verify the returned success message",
+      "narration": "The returned page displays Records settings saved. This confirms that the settings form was accepted. We still need to verify the particular value we intended to change. A general success notice is useful, but reading the saved field and its effect gives an administrator a more complete check.",
+      "practice": "Read the success notice, then continue to inspect the specific saved field.",
+      "required_labels": [
+        "Records Settings",
+        "Records settings saved."
+      ],
+      "capture_refs": [
+        "003-settings-saved"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Reopen settings and confirm persistence",
+      "narration": "Reopening Records Settings shows the underscore-separated pattern in Number pattern, with the matching example alongside it. This is a fresh page load after saving. Compare the full pattern, including each token and separator, with your intended format. The result confirms persistence of this local setting; the example is still an example rather than a newly issued record.",
+      "practice": "Verify the complete saved pattern after reopening the page.",
+      "required_labels": [
+        "Record numbering",
+        "{PREFIX}_{YYYY}_{SEQ}",
+        "INC_2026_0153"
+      ],
+      "capture_refs": [
+        "006-pattern-after-reopen"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Inspect the effect on next-number previews",
+      "narration": "The saved pattern changes Next numbers for twenty twenty-six. The Run and Training previews now have underscores and end in zero zero zero one. The text around the sequence token changed, so this format has its own sequence. Raise next to is a separate control for carrying on from previously issued numbers. Leave it alone when you do not intend to raise a counter. Viewing this table does not issue the previewed numbers.",
+      "practice": "Read the new pattern previews and distinguish them from a request to raise a counter.",
+      "required_labels": [
+        "Next numbers for 2026",
+        "RUN_2026_0001",
+        "TRN_2026_0001",
+        "Raise next to"
+      ],
+      "capture_refs": [
+        "005-new-pattern-next-numbers"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Restore the original pattern for the exercise",
+      "narration": "After the exercise, the original hyphen-separated pattern was restored. Record numbering now shows the original prefix, year and sequence arrangement. Restore a practice change only when that is your intended configuration. Changing separators back is a format decision; it is not a way to erase previously issued numbers or reset a counter.",
+      "practice": "Compare the restored pattern with the original baseline.",
+      "required_labels": [
+        "Record numbering",
+        "{PREFIX}-{YYYY}-{SEQ}",
+        "INC-2026-0153"
+      ],
+      "capture_refs": [
+        "007-original-pattern-restored"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Verify the original sequence resumes",
+      "narration": "The original format now shows Training ending in zero zero zero three, the same next-number preview it had before the demonstration. Run ends in zero zero zero one. Restoring the earlier format resumed its existing sequence rather than restarting Training at one. No new records were issued during this exercise. When importing from another system, review Raise next to against the numbers already issued before applying a higher starting point.",
+      "practice": "Verify the resumed original Training sequence without entering or saving a counter increase.",
+      "required_labels": [
+        "Next numbers for 2026",
+        "TRN-2026-0003",
+        "RUN-2026-0001",
+        "Raise next to"
+      ],
+      "capture_refs": [
+        "008-original-sequence-resumed"
+      ]
+    },
+    {
+      "id": "13",
+      "title": "Distinguish other record-number settings",
+      "narration": "Other record numbers has separate rows for Records requests, Occupancies, Inspections, Permits and Investigations. Each visible row has a Number pattern, Sequence digits and a next-number area. The help explains that blank patterns keep the built-in numbers and that these types follow the record-numbering year start above. Review the particular row you intend to administer. This recording inspects those controls without saving a custom pattern for these other record types.",
+      "practice": "Identify the correct row before editing another record-number pattern.",
+      "required_labels": [
+        "Other record numbers",
+        "Records requests",
+        "Occupancies",
+        "Inspections",
+        "Permits",
+        "Investigations",
+        "Number pattern",
+        "Sequence digits",
+        "Next number"
+      ],
+      "capture_refs": [
+        "010-other-record-number-patterns"
+      ]
+    },
+    {
+      "id": "14",
+      "title": "Apply a clear numbering policy across departments",
+      "narration": "A consistent numbering policy helps security teams find post reports, wildland contractors distinguish crew-support work, and industrial teams coordinate equipment records. Community paramedicine and mental health teams can organize appropriate service documentation, while search-and-rescue teams can distinguish training and support records. Fire and E M S departments can use the same pattern review. Agree on the format, inspect the correct controls, save deliberately and verify both persistence and the next-number preview.",
+      "practice": "Apply the demonstrated format, persistence and sequence checks to a fictional policy for your department.",
+      "required_labels": [
+        "Next numbers for 2026",
+        "TRN-2026-0003",
+        "Raise next to"
+      ],
+      "capture_refs": [
+        "008-original-sequence-resumed"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Agree on distinguishable training and incident record identifiers."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Keep appropriate outreach documentation identifiable under the department policy."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Distinguish training and mission-support records."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Use a consistent identifier format for authorized post-support documentation."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Distinguish crew-support records and preserve previously issued identifiers."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Coordinate equipment-support records using understood prefixes and counters."
+    }
+  ],
+  "scope_limits": [
+    "Demonstrates normal settings UI in the fictional local department: an underscore pattern is saved, verified after a fresh GET, then the original hyphen pattern is saved again. No records or numbers are issued.",
+    "Width, fiscal-year start, type prefixes, counter-raising and other record-type patterns are inspected without changing those settings. No counter raise, shared-prefix transition or fiscal-year rollover is demonstrated.",
+    "The running screen has month/day controls but no year-label selector. Only visible controls and their displayed help are taught."
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-record-numbering-settings-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-record-numbering-settings-source-proposal-20261101-v2/lesson.candidate.json",
+    "sha256": "9a5271952fd4918d8b06a340588322c70e1c44886d2018060d594f74602fc1f5"
+  }
+}

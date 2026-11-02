@@ -1,0 +1,164 @@
+{
+  "id": "core-onboarding-import",
+  "title": "Import department data with a reviewed workspace",
+  "app": "Core",
+  "audience": "Department administrators and migration coordinators",
+  "summary": "Prepare external CSV data, match columns and values, resolve issues, approve a commit and verify the resulting department entries.",
+  "prerequisites": [
+    "Use a fictional Chicago Fire demonstration department with administrator access and Import & Migration available.",
+    "The import file store and background processing must be available; Excel workbooks also need file scanning.",
+    "Prepare small fictional CSVs using downloaded current templates, with stable source IDs and no sensitive narratives.",
+    "Know whether this is a new-department, additive, reviewed-update or continuation workspace; do not invite real people during practice."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start the right workspace",
+      "route": "/User/DepartmentImport/Index",
+      "capture_intent": "Create named additive training workspace and open Overview.",
+      "required_labels": [
+        "Import & Migration",
+        "Start an import",
+        "Name",
+        "What are you doing?"
+      ],
+      "narration": "Open Import and Migration in the Chicago Fire demonstration department. Choose Add to a live department for this isolated practice, name it Academy CSV Practice, and add an internal reference you can recognize later. A new-department workspace has a different purpose from reviewed updates or continuing an earlier import. Choose the mode that describes your work before uploading. Start the workspace and inspect Overview. This workspace holds the files, decisions, runs and verification together so you can review the operation as a whole.",
+      "practice": "Create an additive training workspace and record its name and intended scope."
+    },
+    {
+      "id": "02",
+      "title": "Prepare exported source data",
+      "route": "/User/DepartmentImport/Files?id=<workspace-id>",
+      "capture_intent": "Show product glossary, starter templates and actual file choices.",
+      "required_labels": [
+        "Files & data sets",
+        "Where your data comes from",
+        "Glossary available",
+        "Download workbook"
+      ],
+      "narration": "On Files and data sets, inspect Where your data comes from. Choosing a product can explain its words in Resgrid and suggest familiar names. It does not connect to that product or extract its records. Export your data to a supported file, then match it here. Download current CSV templates or the starter workbook. Keep their field codes and follow the example-row instructions. For this exercise, prepare Academy Station North, an Academy Engine type, one unit and Alex Example with a reserved demonstration email address.",
+      "practice": "Download a current template and identify the source IDs that will link your sample files."
+    },
+    {
+      "id": "03",
+      "title": "Upload a small dependency set",
+      "route": "/User/DepartmentImport/Files?id=<workspace-id>",
+      "capture_intent": "Upload fictional groups/types/roles before units/personnel and observe analysis.",
+      "required_labels": [
+        "Upload a file",
+        "Upload",
+        "Files",
+        "Data sets"
+      ],
+      "narration": "Start with groups, roles and unit types, then upload the people and units that reference them. Stable source IDs make those relationships easier to review than ambiguous names. Choose a small CSV and select Upload. Watch the file progress, then the dataset's analysis state. Uploaded means the file has arrived; it does not mean its contents have been committed to the department. Excel, JSON and supported text formats are alternatives, but use the format whose contents you can inspect confidently.",
+      "practice": "Upload one dependency file and wait for the dataset to be ready for mapping."
+    },
+    {
+      "id": "04",
+      "title": "Confirm the destination and columns",
+      "route": "/User/DepartmentImport/Dataset?id=<workspace-id>&datasetId=<dataset-id>",
+      "capture_intent": "Confirm destination, change at least one column match, save and show recheck.",
+      "required_labels": [
+        "Destination",
+        "Save matches"
+      ],
+      "narration": "Open the dataset and confirm what kind of information it contains. A station list belongs to Groups, while an engine list belongs to Units; a confident guess still deserves review. Check every required destination field against its source column. For personnel, review first name, last name and email. Match source IDs as identifiers, rather than placing them into display names. Leave irrelevant columns out. Select Save matches and wait for the file to be checked again before reviewing counts or approving anything.",
+      "practice": "Correct one column match and confirm the destination and required fields are complete."
+    },
+    {
+      "id": "05",
+      "title": "Resolve values and references",
+      "route": "/User/DepartmentImport/Values?id=<workspace-id>&datasetId=<dataset-id>&field=<field-key>",
+      "capture_intent": "Map a source group/type/role to intended existing or reviewed new entry.",
+      "required_labels": [
+        "Apply"
+      ],
+      "narration": "Some values need a decision after their columns are matched. A unit's station, a person's role or a source status label may refer to an existing Resgrid option. Open the value or reference review and choose the intended match. If creating a new option is offered, review it explicitly instead of assuming every spelling variation needs another entry. Check Academy Station North and Academy Search Leader against the earlier source records. Use an explicit date format when a source date could be read two ways.",
+      "practice": "Resolve one reference and confirm it points to the intended group, role or type."
+    },
+    {
+      "id": "06",
+      "title": "Fix issues before approval",
+      "route": "/User/DepartmentImport/Issues?id=<workspace-id>",
+      "capture_intent": "Show an intentional missing value or bad reference, correct it and show reduced blockers.",
+      "required_labels": [
+        "Issues",
+        "Blocked"
+      ],
+      "narration": "Open Issues and work through blocking problems. Our practice file includes one missing required value so we can inspect the affected row and correct it. Other common issues include duplicates, invalid email addresses, ambiguous references and dates. Read the issue's meaning before changing the data. Correct a value, revise a match, or deliberately exclude a row according to the available action. Wait for revalidation. A lower blocker count should follow a real resolved issue, not simply a decision to overlook a warning.",
+      "practice": "Resolve an intentional sample issue and verify the affected dataset changes state."
+    },
+    {
+      "id": "07",
+      "title": "Review proposed configuration",
+      "route": "/User/DepartmentImport/Configure?id=<workspace-id>",
+      "capture_intent": "Inspect current/proposed settings and accept or keep individual choices.",
+      "required_labels": [
+        "Configure",
+        "Department",
+        "Names",
+        "Numbering"
+      ],
+      "narration": "On Configure, review settings the workspace proposes alongside the imported data. Suggestions may involve department details, names, maps, modules or numbering. Compare current and proposed values, then choose which changes to accept. Selecting a source product can offer familiar terminology here, but those words do not prove that its features or historical records were imported. Configuration decisions remain part of the reviewed import. Return to this tab whenever the preview identifies a setting that cannot yet be applied.",
+      "practice": "Keep one current setting and accept one appropriate training-only proposal, then inspect the review summary."
+    },
+    {
+      "id": "08",
+      "title": "Read the preview and write mode",
+      "route": "/User/DepartmentImport/Review?id=<workspace-id>",
+      "capture_intent": "Show totals, capacity, Add only mode and selected datasets without approving yet.",
+      "required_labels": [
+        "Review & import",
+        "How to treat records that already exist",
+        "Add only",
+        "Approve and import"
+      ],
+      "narration": "Open Review and import. Compare the create, update or link, unchanged, skipped and blocked totals with your source files. Check available capacity and which datasets are in this wave. Use Add only for this additive exercise. Review updates changes how existing matches are treated and recalculates the plan, so reread the result after changing modes. This screen is a preview. No department records are written merely because the counts look correct. Review configuration consequences and every acknowledgement before approving.",
+      "practice": "Explain exactly which records and settings the current preview proposes to change."
+    },
+    {
+      "id": "09",
+      "title": "Approve and observe the commit",
+      "route": "/User/DepartmentImport/Review?id=<workspace-id>",
+      "capture_intent": "Perform authorized training approval, then open actual run history.",
+      "required_labels": [
+        "Approve and import",
+        "History"
+      ],
+      "narration": "When the preview is correct, select the intended ready datasets and confirm the consequences. Complete any required identity confirmation or second-administrator approval. Approve and import authorizes the actual write, which runs in the background. Open History and follow the real run state and counts. Queued or running is not completed. If work fails or stops, inspect the recorded issue and available controls before trying again. A change to the data or mappings can require a fresh review and approval.",
+      "practice": "Approve only the isolated sample and compare its completed run counts with the reviewed preview."
+    },
+    {
+      "id": "10",
+      "title": "Verify entries and activate deliberately",
+      "route": "/User/DepartmentImport/Verify?id=<workspace-id>",
+      "capture_intent": "Open imported entries in owning screens and show dormant/invitation/sign-off distinctions.",
+      "required_labels": [
+        "Verify & activate",
+        "Invite people",
+        "Sign off and go live"
+      ],
+      "narration": "Open Verify and activate, then check the imported records in Personnel, Groups and Units. Confirm the exact values and relationships, not just the totals. Imported people remain separate from invited and accepted accounts. Review administrator promotion and invitation choices independently; do not send practice invitations. Sign off and go live records your sign-off, while checklist actions can be completed separately. For an update, continuation or rollback, inspect the specific plan and eligible actions again. Preserve the workspace history as evidence of what was approved and written.",
+      "practice": "Verify one group, unit and person on their owning screens, and document which activation actions remain outstanding."
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: import fictional stations, engine types, units and a member with stable source IDs.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: import team and personnel metadata, excluding private clinical notes and visit narratives.",
+    "Search and rescue": "Search and rescue: review team, role and certification references before importing volunteer rosters.",
+    "Security companies and departments": "Security: distinguish client sites, patrol units and member groups when mapping external exports.",
+    "Wildland contractors": "Wildland contractors: use additive seasonal roster imports and review existing-member matches carefully.",
+    "Industrial emergency response teams": "Industrial response: import facility teams and equipment types while reviewing qualifications and permissions separately."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/DepartmentImportController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Index.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Files.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Dataset.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Review.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Verify.cshtml",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/Onboarding/ImportAnalysisHandler.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/Onboarding/ImportUploadService.cs",
+    "/Users/shawn/Documents/dev/Core/Providers/Resgrid.Providers.Import/Catalog/ImportCatalog.cs"
+  ]
+}

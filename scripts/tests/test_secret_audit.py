@@ -14,6 +14,7 @@ class PublicRepositoryAuditTests(unittest.TestCase):
         examples = [
             (b'-----BEGIN ' + b'PRIVATE KEY-----\nsynthetic', 'private-key material'),
             (b'ghp_' + b'a' * 36, 'GitHub credential'),
+            (b'pk.' + b'a' * 24 + b'.' + b'b' * 24, 'embedded Mapbox access token'),
             (b'https://account:' + b'privatevalue@github.com/repo', 'credential-bearing URL'),
         ]
         for value, rule in examples:
@@ -40,6 +41,14 @@ class PublicRepositoryAuditTests(unittest.TestCase):
         self.assertEqual(scan_bytes(b'Action = rotated ? "ScimBearerTokenRotated" : "ScimBearerTokenProvisioned";'), [])
         self.assertEqual(scan_bytes(b'public const string TokenHeader = "X-Resgrid-Connector-Token";'), [])
         self.assertIn('possible embedded credential assignment', scan_bytes(b'{"token": "' + b'aF8wS2eR6tY0uI4oP9qL3dH7jK1zX5cV' + b'"}'))
+
+    def test_only_exact_map_razor_reference_is_treated_as_source_code(self):
+        field = b'mapaccesstoken'
+        reference = b'@mapConfig.AccessToken'
+        self.assertEqual(scan_bytes(field + b'="' + reference + b'"'), [])
+        for key, value in [(b'api_key', reference), (field, reference + b'Extra'),
+                           (field, b'@' + b'aF8wS2eR6tY0uI4oP9qL3dH7jK1zX5cV')]:
+            self.assertIn('possible embedded credential assignment', scan_bytes(key + b'="' + value + b'"'))
 
     def test_ignored_local_key_is_excluded_but_a_tracked_key_still_fails(self):
         with tempfile.TemporaryDirectory() as directory:

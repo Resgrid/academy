@@ -1,0 +1,104 @@
+"""Actual preflight/refusal tests; no browser or listening proof is invented."""
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+
+sys.dont_write_bytecode = True
+ROOT = Path(__file__).resolve().parents[2]
+PATH = ROOT / 'sources/production/qualify_app_reference_take_01_20261030.py'
+spec = importlib.util.spec_from_file_location('app_reference_actual_qualifier', PATH)
+m = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(m)
+
+
+def snapshot_tree(root):
+    if root.is_symlink():
+        return ('symlink', str(root.readlink()))
+    if not root.exists():
+        return None
+    return {path.relative_to(root).as_posix():
+            ('symlink', str(path.readlink())) if path.is_symlink() else
+            ('directory',) if path.is_dir() else ('file', m.sha(path))
+            for path in sorted(root.rglob('*'))}
+
+
+class AppReferenceQualificationGuards(unittest.TestCase):
+    def test_all_actual_source_frame_preflights(self):
+        catalog = json.loads(m.CONFIG.read_text())
+        for alias, counts in [('dispatch', (27, 77, 21)), ('ic', (17, 79, 10)), ('responder', (14, 69, 11))]:
+            with self.subTest(alias=alias):
+                expected_take = Path('expansion/rendered') / (catalog['lessons'][alias]['id'] + '-take-01')
+                before = snapshot_tree(m.S / expected_take)
+                cfg, take, evidence, source, authoring = m.preflight(alias)
+                self.assertEqual((cfg['holds'], cfg['cues'], cfg['sources']), counts)
+                self.assertEqual(take, expected_take)
+                self.assertEqual(evidence['browser_playback'], [])
+                self.assertEqual(len(authoring), 64)
+                self.assertEqual(snapshot_tree(m.S / expected_take), before)
+
+    def test_configuration_tamper_refused(self):
+        with patch.object(m, 'CONFIG_SHA', '0' * 64), self.assertRaisesRegex(ValueError, 'config changed'):
+            m.preflight('dispatch')
+
+    def test_qualification_needs_real_proofs(self):
+        with self.assertRaisesRegex(ValueError, 'Actual proof and review'):
+            m.main(['--lesson', 'dispatch', '--qualify'])
+
+    def test_partial_proof_arguments_refused(self):
+        with self.assertRaisesRegex(ValueError, 'Supply all exact'):
+            m.main(['--lesson', 'dispatch', '--proof-observations-file', '_reports/not-present.json'])
+
+    def test_exact_actual_receipt_hash_required(self):
+        with self.assertRaisesRegex(ValueError, 'exact genuine'):
+            m.exact_file('_reports/not-present.json', None)
+
+    def test_missing_actual_proof_refused(self):
+        with tempfile.TemporaryDirectory() as folder, self.assertRaisesRegex(ValueError, 'missing'):
+            m.exact_file('missing.json', 'a' * 64, Path(folder))
+
+    def test_proof_tamper_refused(self):
+        with tempfile.TemporaryDirectory() as folder:
+            p = Path(folder) / 'fixture.json'
+            p.write_text('synthetic path integrity fixture only')
+            with self.assertRaisesRegex(ValueError, 'changed or has not been reviewed'):
+                m.exact_file('fixture.json', 'a' * 64, Path(folder))
+
+    def test_proof_symlink_refused(self):
+        with tempfile.TemporaryDirectory() as folder:
+            p = Path(folder) / 'fixture.json'
+            p.write_text('synthetic path integrity fixture only')
+            (Path(folder) / 'linked.json').symlink_to(p)
+            digest = hashlib.sha256(p.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(ValueError, 'Symlink'):
+                m.exact_file('linked.json', digest, Path(folder))
+
+    def test_escape_and_private_paths_refused(self):
+        for relative in ('../outside', '/tmp/outside', 'a/../outside', 'a/./outside', 'a//outside', 'private/key',
+                         'node_modules/file', '.env.local', 'a\\file'):
+            with self.subTest(relative=relative), self.assertRaises(ValueError):
+                m.contained(relative)
+
+    def test_root_source_review_does_not_establish_browser_playback(self):
+        source_review = json.loads((m.S / 'expansion/plans/core-records-administration-actual135-source-map-20261030/root-complete-map-review.json').read_text())
+        with self.assertRaisesRegex(ValueError, 'different raw proof'):
+            m.validate_root_review(source_review, [], 'a' * 64, 'b' * 64)
+
+    def test_agent_review_cannot_impersonate_actual_Root_browser_review(self):
+        with self.assertRaisesRegex(ValueError, 'Genuine Root'):
+            m.validate_root_review({'reviewer': 'Numerical QA'}, [], 'a' * 64, 'b' * 64)
+
+    def test_optimized_python_cannot_disable_guards(self):
+        result = subprocess.run([sys.executable, '-B', '-O', str(PATH), '--lesson', 'ic'], cwd=ROOT,
+                                capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('ordinary Python', result.stderr)
+
+
+if __name__ == '__main__':
+    unittest.main()

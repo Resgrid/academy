@@ -1,0 +1,189 @@
+{
+  "id": "core-run-cards",
+  "title": "Build and test run cards, conditional responses and reusable packages",
+  "app": "Core",
+  "audience": "Department administrators and dispatch supervisors",
+  "summary": "Create a standard response plan, add conditional packages, then review the recommendation on Core New Call.",
+  "prerequisites": [
+    "Use the fictional Chicago Fire demonstration department with training-only incidents, units and personnel.",
+    "Run Cards must be enabled; conditional decisions, response packages and templates require conditional run cards availability.",
+    "Prepare call types/priorities, unit types/classes, personnel roles, meaningful statuses, staffing and allowed nearby locations.",
+    "Keep automatic dispatch off while learning, and use an isolated notification setup before saving training calls."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start with dispatch defaults",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show saved mode and dispatcher-review setting before opening cards.",
+      "required_labels": [
+        "Run Cards & Automatic Dispatch",
+        "Automatic resource selection mode",
+        "Automatically dispatch recommended resources"
+      ],
+      "narration": "Start in the Chicago Fire demonstration department. Engine 51 and our officer personnel are fictional resources for a training exercise. Open Dispatch Settings and find Run Cards and Automatic Dispatch. Select Closest Unit Response for this example, and leave automatic dispatch off so a dispatcher can review the suggested resources. Save, then reopen the page to confirm the choices. A run card can override these department defaults, so check both places when a result surprises you.",
+      "practice": "Record the department selection mode and whether recommendations will be reviewed or dispatched automatically."
+    },
+    {
+      "id": "02",
+      "title": "Build a standard run card",
+      "route": "/User/RunCards/New",
+      "capture_intent": "Enter General values and identify all five tabs.",
+      "required_labels": [
+        "General",
+        "Name",
+        "Disabled",
+        "Pre-populate for dispatcher review",
+        "Triggers",
+        "Alarm Levels",
+        "Dispatchable Statuses",
+        "Test / Simulate"
+      ],
+      "narration": "Open Run Cards and choose a new card. Name it Academy Training Alarm, and describe the exercise it supports. In General, choose Pre-populate for dispatcher review. Leave the card disabled while building it. Home station supplies an origin when a call has no location; it is not a substitute for checking an incident address. Notice the other tabs: Triggers, Alarm Levels, Dispatchable Statuses, and Test or Simulate. Each controls a different part of the recommendation.",
+      "practice": "Create a disabled training card with a clear name and review mode."
+    },
+    {
+      "id": "03",
+      "title": "Match the right incident",
+      "route": "/User/RunCards/Edit?runCardId=<id>#tab-triggers",
+      "capture_intent": "Add a Priority and Type trigger and a fixed alarm-level requirement; save the complete disabled card and reopen it.",
+      "required_labels": [
+        "Triggers",
+        "Add Trigger",
+        "Priority and Type",
+        "Alarm Levels",
+        "Add Unit Type",
+        "Add Role"
+      ],
+      "narration": "On Triggers, choose Add Trigger and select Priority and Type. Pick the department's training call type and an actual priority from the list. This is more specific than matching either one alone. On Alarm Levels, name level one Initial Response. Add one Engine under Unit type requirements and one Officer under Personnel role requirements. Counts describe what the plan asks for; they do not create resources or guarantee that a qualified, available person can be found. Save this complete card while it remains disabled.",
+      "practice": "Save a complete trigger and a first alarm level requesting one unit and one role."
+    },
+    {
+      "id": "04",
+      "title": "Review dispatchable statuses",
+      "route": "/User/RunCards/Edit?runCardId=<id>#tab-selections",
+      "capture_intent": "Show standard rules then demonstrate an explicit selection scope.",
+      "required_labels": [
+        "Dispatchable Statuses",
+        "Standard rules",
+        "Start from the standard rules",
+        "All unit types",
+        "By unit type"
+      ],
+      "narration": "Open Dispatchable Statuses before widening the plan. An empty section follows the standard availability rules. Selecting options replaces those rules for that section, so ticking only one status can exclude the others. To add Returning, begin with Start from the standard rules, then add the appropriate meaning. Prefer meanings when several custom labels share the same purpose. A unit type can have its own rule, so inspect that section as well as All unit types.",
+      "practice": "Explain which statuses your card accepts and confirm whether it uses standard or replacement rules."
+    },
+    {
+      "id": "05",
+      "title": "Create a reusable response package",
+      "route": "/User/RunCards/NewPackage",
+      "capture_intent": "Add and save two package rows, then reopen the package.",
+      "required_labels": [
+        "Response packages",
+        "Name",
+        "Add row",
+        "Any of these",
+        "Pick",
+        "Status",
+        "Keep outstanding until sent"
+      ],
+      "narration": "For a reusable response, open Response packages and create Academy Initial Response. Add a row that can pick one Engine and another that can pick one Officer. Any of these allows alternative targets within a row. Pick fills a count; Ensure first-arriving adds the earliest matching resource only when another row has not already covered it. Status narrows eligible resources. Keep outstanding until sent preserves an unmet request for follow-up. Save and reopen the package to verify the rows.",
+      "practice": "Build a two-row package and confirm the saved targets, counts and status filters."
+    },
+    {
+      "id": "06",
+      "title": "Add a conditional decision",
+      "route": "/User/RunCards/Edit?runCardId=<id>#tab-alarms",
+      "capture_intent": "Create root condition and complete Yes/No outcome links.",
+      "required_labels": [
+        "Decision graph",
+        "Add condition",
+        "Add outcome",
+        "Start",
+        "Available within",
+        "Within (seconds)",
+        "How many",
+        "If yes",
+        "If no",
+        "Send package",
+        "Advice for dispatchers"
+      ],
+      "narration": "Return to Alarm Levels and add a condition named Engine within eight minutes. Choose Available within, Engine, a count of one, and 480 seconds. Create two outcomes. The Yes outcome sends Academy Initial Response; the No outcome has no package and advises the dispatcher to review alternatives. Mark the condition Start, then connect If yes and If no to the correct outcomes. Every branch needs a destination. Save the card before testing the decision you just changed.",
+      "practice": "Create one complete decision with a dispatch outcome and an advice-only outcome."
+    },
+    {
+      "id": "07",
+      "title": "Understand alternatives and fallbacks",
+      "route": "/User/RunCards/Edit?runCardId=<id>#tab-alarms",
+      "capture_intent": "Show Arrives before and package fallback fields without inventing recommendations.",
+      "required_labels": [
+        "Arrives before",
+        "Compared with",
+        "By at least (seconds)",
+        "Relax status filters for unfilled rows",
+        "Substitute package"
+      ],
+      "narration": "Arrives before compares one resource choice with another, including turnout and travel time. Use it when an earlier arrival changes the response you want. Package rows can name a substitute package, and the card can relax status filters for rows it cannot fill. These choices can broaden a response, so document their purpose. Missing or stale positions can make a decision uncertain. Treat that warning as a reason to review available evidence, rather than as proof that no suitable resource exists. Watch the test with both fixed requirements and the same package: their rows add together, so the card asks for another engine and reports a shortfall. In this example we remove the fixed rows when moving to the conditional package. The next test fills one engine and one officer without that duplication.",
+      "practice": "Describe one justified fallback and the data needed to evaluate it."
+    },
+    {
+      "id": "08",
+      "title": "Test the saved plan",
+      "route": "/User/RunCards/Edit?runCardId=<id>#tab-test",
+      "capture_intent": "Run actual simulation and inspect path, outcome and resource shortfalls.",
+      "required_labels": [
+        "Test / Simulate",
+        "Run Test",
+        "Show raw result"
+      ],
+      "narration": "Open Test or Simulate. Choose the priority, type, training coordinates, and alarm level, then run the test. Read the matched card and the path through its conditions. Check the chosen outcome, recommended people and units, and any shortfall or uncertainty. This is a preview of current data, not a dispatched incident. A saved card can be tested while disabled. If you edit a rule, save it and run the test again so your review matches the stored plan. At the nearby training coordinates, Engine 51 meets the eight-minute condition and the Initial Response package selects an engine and an officer. At the farther test location, the No branch shows Review alternatives with its advice. These displayed times are estimates, not proof of a routed drive time.",
+      "practice": "Capture one actual test result and explain the selected outcome and any shortfall."
+    },
+    {
+      "id": "09",
+      "title": "Use the plan on Core New Call",
+      "route": "/User/Dispatch/NewCall",
+      "capture_intent": "Set matching values and pin; show Run Card panel and checkbox selections.",
+      "required_labels": [
+        "Run Card",
+        "Personnel",
+        "Units",
+        "Set Pin on Map"
+      ],
+      "narration": "When testing is satisfactory, enable the card and open New Call. Enter TRAINING ONLY in the name and nature, choose the matching type and priority, and set the incident pin. Wait for the Run Card panel and resource lists to refresh. Review the actual decision, advice, selected resources, and any response code choices. The nearest list helps you inspect each suggestion. You can change recipients before saving; a highlighted suggestion is still a decision for the dispatcher to review.",
+      "practice": "Verify the card and selected recipients on the unsent training call form."
+    },
+    {
+      "id": "10",
+      "title": "Verify the result and maintain the card",
+      "route": "/User/Dispatch/UpdateCall?callId=<id>",
+      "capture_intent": "Show actual saved training call, resources and current alarm; optionally gallery preview.",
+      "required_labels": [
+        "Run Card",
+        "Alarm"
+      ],
+      "narration": "Save only inside your approved training environment, then open the resulting call and confirm its recipients and alarm level. A saved call does not establish that a member received an alert; verify that separately through a controlled communication test. Further alarm levels add requirements to an active response. Review those levels before using Strike Next Alarm. When starting from a gallery template, inspect its department mappings, keep the created card disabled, and repeat the same saved-plan test before putting it into use. The same planning controls fit other organizations. A community paramedicine or mental health team can request a clinician and peer responder. Search and rescue can request a search team and leader. Security can combine a patrol unit with a site supervisor. Wildland contractors can plan crew and support resources, while an industrial team can request a response unit and a hazardous-materials role. Configure the resource types, qualification checks and local procedures for your own operation.",
+      "practice": "Compare the saved training call with the tested plan and record any manual recipient changes."
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: compare a first engine response with a Officer requirement, using fictional resources.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: use separate clinician and peer-responder roles, with actual qualification checks before dispatch.",
+    "Search and rescue": "Search and rescue: request a search team and leader, then review missing or stale remote positions.",
+    "Security companies and departments": "Security: choose patrol and site-supervisor resources according to the incident type and actual site scope.",
+    "Wildland contractors": "Wildland contractors: use crew and support-unit packages, with suitable turnaround and staffing assumptions.",
+    "Industrial emergency response teams": "Industrial response: request the facility response unit and HazMat role while preserving equipment availability checks."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/RunCardsController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/RunCards/Edit.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/RunCards/EditPackage.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/DispatchController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/wwwroot/js/app/internal/dispatch/resgrid.dispatch.newcall.js",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/RunCardConditionalTypes.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/DispatchRecommendationService.cs"
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-run-cards-take-02/evidence.reviewed.json"
+}

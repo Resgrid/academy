@@ -1,0 +1,173 @@
+{
+  "id": "app-dispatch-maps-communications-reference",
+  "title": "Dispatch: maps, communications and reference information",
+  "app": "Dispatch",
+  "audience": [
+    "Dispatchers",
+    "Communications specialists",
+    "Operations coordinators"
+  ],
+  "summary": "Use shared geographic context, site references, weather, voice and text communication to support the dispatch decision.",
+  "prerequisites": [
+    "Mapbox and department map layers, POIs, contacts, preplans, protocols and notes prepared.",
+    "Weather test alerts and authorized settings access for source and zone administration.",
+    "Chat.System enabled; configured chat and assistant services with a second participant.",
+    "LiveKit, department voice channels, radio streams and microphone permission for voice capture; Firebase/Novu configuration for notification demonstrations."
+  ],
+  "scenes": [
+    {
+      "title": "Map the working response",
+      "route": "/map",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Map Layers",
+        "Show All",
+        "Hide All"
+      ],
+      "narration": "Open Map from navigation or expand the console map. Pan, zoom and recenter, then open Map Layers to choose the overlays relevant to the response. Show All and Hide All provide a quick reset before enabling individual layers. Select a call, person, unit or point of interest to inspect the available details. Set a call as current when you want to carry that incident into your working context. Resource movement depends on genuine location updates and permission to view them. Dispatch uses different browser and native map implementations, so confirm the controls and layer behavior on the surface used for your recording.",
+      "practice": "Find a wildland training call and enable only the useful access and operational overlays.",
+      "id": "app-dispatch-maps-communications-reference-scene-01"
+    },
+    {
+      "title": "Find destinations and site references",
+      "route": "/pois",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "POIs"
+      ],
+      "narration": "Open POIs and search for a location. Filter by its configured type and use the sort choices when a long list needs a different order. Inspect the selected point’s address, note and destination information, then use Route if the platform provides an appropriate external mapping option. A point of interest is useful for hospitals, gates, staging sites or equipment locations, but its role depends on department setup. Treat map and POI authoring as preparation in the administration system. The field screen helps you find and use that prepared information during the response.",
+      "practice": "Locate a hospital for an EMS response and a separate access gate for a security exercise.",
+      "id": "app-dispatch-maps-communications-reference-scene-02"
+    },
+    {
+      "title": "Read contacts, preplans, notes and protocols",
+      "route": "/contacts",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Details",
+        "Notes",
+        "Pre-Plan",
+        "Files",
+        "Calls"
+      ],
+      "narration": "Search Contacts and open a person or company. Details, Notes, Pre-Plan, Files and Calls bring together contact information, alerts, site guidance, documents and earlier events. Read the tactical summary and relevant access, hazard, utility or water-supply information; check review dates before relying on it. Protected information may require a reveal and verification step. From Protocols, search and open the attached guidance. Department notes also appear in the console, and the Notes screen supports searching existing material. These screens primarily consume prepared reference information. Do not confuse viewing a preplan with editing or certifying it as current.",
+      "practice": "Use an industrial contact’s preplan to identify an access issue, then inspect the relevant protocol.",
+      "id": "app-dispatch-maps-communications-reference-scene-03"
+    },
+    {
+      "title": "Monitor weather and maintain configured coverage",
+      "route": "/weather-alerts",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Weather Alerts"
+      ],
+      "narration": "Open Weather Alerts and filter by severity or change the sort order to compare urgency and expiry. Inspect an alert’s details and affected area before deciding how it relates to the incident. Authorized settings users can review enabled behavior, severity thresholds, automatic messaging, call integration and excluded events. Sources and zones determine where the integration looks, including primary and active coverage choices. Save changes only in the training configuration. A recorded alert is a test example unless it truly comes from the connected source; the interface cannot establish that a severe event is occurring simply by displaying a sample.",
+      "practice": "Review a labeled wildland weather alert and check the configured training coverage zone.",
+      "id": "app-dispatch-maps-communications-reference-scene-04"
+    },
+    {
+      "title": "Voice channels and radio streams",
+      "route": "/home",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Radio"
+      ],
+      "narration": "At the console’s voice controls, choose an available department channel and join it. Use the press-and-hold transmit control, then release it when finished. Verify reception with another authorized training endpoint before describing the exchange as successful. The activity area can show radio or transmission information when those events exist. Audio streams are a separate listening workflow: choose the prepared stream and use its playback controls. Browser microphone and autoplay rules need user interaction and permission. Native Bluetooth push-to-talk hardware, operating-system call integration and background audio need native-device footage; a browser recording cannot demonstrate those behaviors.",
+      "practice": "Rehearse a short community-event channel check and inspect a prepared radio stream.",
+      "id": "app-dispatch-maps-communications-reference-scene-05"
+    },
+    {
+      "title": "Conversations, urgent messages and threads",
+      "route": "/chat",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "New Direct Message",
+        "New Group"
+      ],
+      "narration": "Open Chat and choose an existing direct conversation, department channel or incident channel. To begin a new conversation, select the intended people or available unit identity and review the group choice. Compose a message, adding an image, GIF, emoji or location where permitted. Urgent messaging adds an acknowledgment workflow; use the second participant to show the actual acknowledgment. Open message actions for Reply in thread, Copy, Edit, Delete, Pin or Flag as allowed by your role. An archived incident channel can remain readable while posting is frozen. Membership and moderation controls depend on permissions, so teach the visible actions rather than promise every account the same powers.",
+      "practice": "Send a training SAR coordination message, reply in its thread and complete an urgent acknowledgment.",
+      "id": "app-dispatch-maps-communications-reference-scene-06"
+    },
+    {
+      "title": "Assistant and notification inbox",
+      "route": "/chatbot",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "New session"
+      ],
+      "narration": "Open the assistant from its navigation entry and ask a focused question using approved training context. Review the answer against the actual incident and department guidance before using it operationally. Copy an answer where the platform supports that action, and begin New session when a separate topic needs a fresh conversation. Return to the app header to open Notifications, inspect the available inbox items and use its supported read or removal controls. A notification deep link should be demonstrated with a real test notification. Browser push also needs a secure context, service worker, Firebase configuration and permission; the inbox and operating-system delivery are related but distinct surfaces.",
+      "practice": "Ask an event-planning question, then inspect a prepared training notification and its destination.",
+      "id": "app-dispatch-maps-communications-reference-scene-07"
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Use hospital POIs, site preplans and incident communications around a training response."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Choose event reference material and conduct a voice channel check."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use map context, a shared-location message and an urgent acknowledgment."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Find gate information and keep a shift conversation attached to the correct incident."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Compare access overlays with weather coverage and alert expiry."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Review facility hazards and utilities before communicating the dispatch decision."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/map.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/map.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/pois.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/poi/[id].web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/ptt-interface.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/ptt-channel-selector.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/notifications/NotificationButton.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/notifications/NotificationDetail.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/notifications/NotificationInbox.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/stores/app/livekit-store.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/stores/app/audio-stream-store.web.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/contacts.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-card.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-details-extra.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-files-list.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-files-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-notes-list.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/contact-preplan-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/contacts/preplan-summary.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/notes.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/protocols.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/weather-alerts/index.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/weather-alerts/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/weather-alerts/settings.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/weatherAlerts/weather-alert-banner.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/weatherAlerts/weather-alert-card.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/weatherAlerts/weather-alert-source-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/weatherAlerts/weather-alert-zone-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/chat.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/chat/[channelId].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/chat/thread/[messageId].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/chatbot.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/ack-banner.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/chat-utils.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/gif-picker-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/message-actions-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/message-bubble.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/message-composer.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/new-conversation-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/chat/typing-indicator.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/translations/en.json"
+  ]
+}

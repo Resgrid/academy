@@ -1,0 +1,263 @@
+{
+  "id": "app-ic-communications-records-offline",
+  "title": "IC: communications, records, operations and offline work",
+  "app": "IC",
+  "audience": [
+    "Incident commanders",
+    "Command staff",
+    "Field records contributors",
+    "Deployment supervisors"
+  ],
+  "summary": "Communicate within the incident, document work, manage the command device and verify offline replay.",
+  "prerequisites": [
+    "Chat.System, actual incident/lane channels and assistant service configured.",
+    "Reachable LiveKit and voice session services, microphone permission and a second authorized endpoint.",
+    "Records.System and Records.Field.IncidentCommand enabled with supported records and assignments; prepared connectors and deployments.",
+    "Operations.Deployments and applicable finance/costing/MARS access; shared-session and account-security configuration.",
+    "Hydrate the session, board and references online before offline capture; use a native build for BLE, CallKeep, camera, critical alerts and background behavior."
+  ],
+  "scenes": [
+    {
+      "title": "Incident voice and transmission history",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Voice Channels",
+        "Add Channel",
+        "Join",
+        "Leave",
+        "Close All"
+      ],
+      "narration": "In Voice Channels, add a permitted incident channel using a preset or a clear name. Join the channel and use the microphone control to change its state, then Leave when the exchange is finished. Inspect Transmission Log and its page controls when recorded transmissions exist. Close All ends the incident’s channels when appropriate. Verify real audio reception on another training endpoint before claiming it worked. The browser uses WebRTC and still needs permission and a reachable voice service. Native Bluetooth hardware, operating-system call handling and background audio require separate native footage; the visible browser controls do not demonstrate those capabilities.",
+      "practice": "Create a tactical training channel, conduct a verified short exchange and inspect the available transmission history.",
+      "id": "app-ic-communications-records-offline-scene-01",
+      "capture_refs": [],
+      "capture_observations": [
+        "Voice setup still needs capture. No audio transmission, native hardware or external provider test performed.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Command chat, direct messages and assistant",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Command",
+        "All Leads",
+        "Dispatch",
+        "Message Commander"
+      ],
+      "narration": "Use Command, All Leads, Dispatch or the lane’s chat action to open the intended conversation. A channel may still be loading or may not have been created, so read an unavailable or retry message honestly. Role-holder and lane-lead message actions provide more focused communication. Message Commander on the call offers a subject, body and optional deputy recipients through the configured notification channels. The incident assistant can use a focused question or suggestion, but its response still needs review against the actual board and department guidance. A notification, chat reply and assistant answer are different workflows; verify each through its own returned state.",
+      "practice": "Ask for an event medical update in the relevant channel, then draft a message to the commander.",
+      "id": "app-ic-communications-records-offline-scene-02",
+      "capture_refs": [],
+      "capture_observations": [
+        "Internal app chat authorized but not attempted before browser interruption. No message delivery claimed.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Text conversation, threads and notification delivery",
+      "route": "/chat",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "New Direct Message",
+        "New Group",
+        "Reply in thread"
+      ],
+      "narration": "Open Chat to choose a direct conversation, channel or incident discussion, or create a permitted group. Compose text, an image, GIF or location where allowed. Urgent messaging introduces acknowledgment; use a second participant to demonstrate that action. Message actions can include reply, copy, edit, delete, pin or flag depending on permissions, and threads keep replies attached to their original message. Archived incident conversations can remain readable while posting is frozen. The app-header notification inbox and operating-system push need their own demonstration. Browser push requires permission, Firebase configuration and a service worker, while native critical-alert behavior must be captured on a properly configured device.",
+      "practice": "Send a SAR coordination message, reply in its thread and complete a real training acknowledgment.",
+      "id": "app-ic-communications-records-offline-scene-03",
+      "capture_refs": [],
+      "capture_observations": [
+        "Chat/threads/notifications not captured; no send, acknowledgment or push delivery claimed.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Field records and attachments",
+      "route": "/records",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Records",
+        "New Record",
+        "Keep on this device",
+        "Save and send"
+      ],
+      "narration": "Open Records to inspect assigned work, drafts, returned items and recent records. Acknowledge an assignment where offered, then choose the permitted definition or start New Record from a useful incident context. Review prefilled values, complete required fields and repeating rows, and add approved photo or file attachments. The definition decides whether Keep on this device is offered or an online Save and send is required. Reopen and Save a draft before Submit for review, or complete the required attestation for an authorized Finalize. Unsupported definitions and online-only records need their stated workflow; the presence of an offline board does not make every record available offline.",
+      "practice": "Create a fictional industrial incident record, attach a training image and inspect its allowed submission path.",
+      "id": "app-ic-communications-records-offline-scene-04",
+      "capture_refs": [],
+      "capture_observations": [
+        "Records list/definition/form still need capture; no record submitted.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Record deployments, connectors and operations",
+      "route": "/operations",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Time",
+        "Expenses",
+        "Signatures"
+      ],
+      "narration": "Records deployment screens show source snapshots, fills, linked artifacts and reconciliation information. Connector details explain authority, readiness and run history; Read feed now is a real backend operation; the screen explains that connector administration and credentials are managed on the web. Open Deployments from navigation, then select the deployment, date and roster scope before creating individual or crew time. Review time type, start and end, breaks and other applicable details, then Save and Submit report. Signatures and approval depend on role and state. Add expenses and receipts where permitted, record enabled resource usage, and inspect F-42 validation when MARS is configured. Finance mode can hide numbers or panels; do not imply reimbursement or external acceptance from their presence.",
+      "practice": "Review a wildland crew day, add one training expense and inspect an imported deployment discrepancy.",
+      "id": "app-ic-communications-records-offline-scene-05",
+      "capture_refs": [],
+      "capture_observations": [
+        "The observed navigation label is Deployments. Deployment/time/expense/connector screens still need capture; no financial action performed.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Preferences, account security and platform differences",
+      "route": "/settings",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Settings",
+        "Login Info",
+        "Sign-in and security",
+        "Shared device"
+      ],
+      "narration": "In Settings, verify the app version, environment and server, then inspect Login Info without exposing credentials. Theme, language and keep-awake preferences prepare the command surface. The BT Handset control belongs to a supported native device and available hardware; record its actual connection flow there. Open Sign-in and security to review methods, passkeys, approval preferences and account activity. Adding or changing a passkey needs the real platform authenticator and verification process. Shared device configures the installation, while server session controls manage its shift and lock. Support and status links open external information. Use the device’s actual options instead of presenting a browser recording as native parity.",
+      "practice": "Prepare a security command tablet’s language and keep-awake settings, then locate its security activity view.",
+      "id": "app-ic-communications-records-offline-scene-06",
+      "capture_refs": [],
+      "capture_observations": [
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Work offline and inspect the queue",
+      "route": "/settings/offline-queue",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Sync Queue",
+        "Sync Now",
+        "Retry Failed",
+        "Clear Done"
+      ],
+      "narration": "Begin online so the app has the authorized session, board and reference information. Disconnect deliberately, make a supported practice change and inspect the pending-sync indication. In Settings, open View Sync Queue to inspect pending, processing, failed or completed events and their attempts. Reconnect and use Sync Now, then verify the resulting board from another client. Retry Failed or an individual retry is appropriate only when that state actually exists. Canceling an event or clearing the queue changes what can be replayed, so reserve those controls for disposable exercises. Queued and failed events are not server-confirmed actions, and a reconnect alone does not prove replay succeeded.",
+      "practice": "Make a harmless SAR board change offline, reconnect and verify the accepted result on a second client.",
+      "id": "app-ic-communications-records-offline-scene-07",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-43-sync-queue-empty",
+          "file": "captures/expansion/ic/ic-43-sync-queue-empty.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Reviewed actual Sync Queue shows Online and 0 pending/0 failed/0 done, Queue is empty, disabled Sync Now/Retry Failed/clearing controls. No supported offline write, retry or successful replay demonstrated."
+      ]
+    },
+    {
+      "title": "Finish the working session deliberately",
+      "route": "/settings",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Logout"
+      ],
+      "narration": "Before handing over, review the board’s current incident, unresolved needs and synchronization state. An incident command transfer should use Transfer on the board; changing operators on a shared device is a separate session action. Use Lock for an unattended supported shared session or End Shift when the operator’s shift is finished. Ordinary Logout has a confirmation and clears local app data, cached values and settings, so resolve pending work before choosing it. Record the real configured behavior on the target platform. End with a clear handover of responsibilities and known pending items rather than treating an empty screen or a closed application as proof that the incident is complete.",
+      "practice": "Hand over a community-event command device, distinguishing command transfer, pending sync and operator sign-out.",
+      "id": "app-ic-communications-records-offline-scene-08",
+      "capture_refs": [],
+      "capture_observations": [
+        "No voluntary Logout, End Shift or command transfer completed. Old session returned to login automatically; fresh-session completion is unverified.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Tactical voice and incident messages support a staged medical or fire command response."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "An event lead reviews pending work before handing over the shared device."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A second participant acknowledges a message and verifies an offline board replay."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Native hardware setup and account security prepare a command tablet."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Crew time, receipts and configured F-42 information support deployment documentation."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "A field record documents a fictional site response with an authorized training attachment."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/IC/src/components/command/voice-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/message-commander-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/assistant-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/stores/app/livekit-store.ts",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/command.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/chat.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/chat/[channelId].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/chat/thread/[messageId].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/chatbot.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/ack-banner.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/chat-utils.ts",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/gif-picker-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/message-actions-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/message-bubble.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/message-composer.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/new-conversation-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/chat/typing-indicator.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/records.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/records/new.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/records/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/records/deployment-items.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/records/record-attachments.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/records/record-field.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/records/record-form.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/records/record-list-item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/records/records-quick-create.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/records/deployments/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/records/deployments/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/records/connectors/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/records/connectors/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/operations/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/operations/_layout.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/operations/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/operations/expenses-panel.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/operations/mars-panel.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/operations/option-select.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/operations/scope-picker.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/operations/time-report-editor.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/operations/usage-form.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/settings.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/settings/account-security.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/login/shared-device.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/shared-session/shared-session-bar.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/shared-session/shared-session-lock-screen.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/audio-device-selection.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/bluetooth-device-item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/bluetooth-device-selection-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/items-container.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/keep-alive-item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/language-item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/login-info-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/server-url-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/theme-item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/settings/toggle-item.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/settings/offline-queue.tsx",
+    "/Users/shawn/Documents/dev/IC/src/stores/command/store.ts",
+    "/Users/shawn/Documents/dev/IC/src/services/offline-event-manager.service.ts",
+    "/Users/shawn/Documents/dev/IC/src/translations/en.json"
+  ],
+  "capture_manifest": "captures/expansion/ic/manifest.json",
+  "capture_provenance": "captures/expansion/ic/provenance.json",
+  "capture_action_ledger": "captures/expansion/ic/actions.json",
+  "export_ready": false
+}

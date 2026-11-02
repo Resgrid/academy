@@ -1,0 +1,193 @@
+{
+  "id": "app-dispatch-command-records-operations-settings",
+  "title": "Dispatch: command support, records and shift administration",
+  "app": "Dispatch",
+  "audience": [
+    "Dispatch supervisors",
+    "Authorized command staff",
+    "Records contributors",
+    "Deployment coordinators"
+  ],
+  "summary": "Support an incident command board, capture records and deployment work, and manage the operating account and workstation.",
+  "prerequisites": [
+    "Prepared command templates, role capabilities, units, personnel and active calls.",
+    "Records.System and Records.Field.Dispatch enabled with supported definitions and assignments.",
+    "Operations.Deployments and the applicable costing or MARS flags, finance mode and permissions.",
+    "Configured account security, shared sessions, notification sounds and platform capabilities for the settings segments."
+  ],
+  "scenes": [
+    {
+      "title": "Support command from the dispatch position",
+      "route": "/incident-command",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Incident Command",
+        "Establish Command"
+      ],
+      "narration": "Open Incident Command to inspect active command summaries, or enter the Command tab on a call. An authorized operator can establish command from a prepared template and open the full dispatch board. Review the commander, action plan and role assignments before changing the structure. Add a lane, choose its parent where offered, and assign a department person or unit. Moving a lane and moving a resource serve different changes, so inspect the destination before saving. Dispatch has its own command interface; the dedicated IC app offers additional need, lead and work-time workflows. Use the controls actually present on this board.",
+      "practice": "Establish command for a small fire exercise and place a training unit in its intended lane.",
+      "id": "app-dispatch-command-records-operations-settings-scene-01"
+    },
+    {
+      "title": "Accountability, tactical context and command close",
+      "route": "/call/[id]/command",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Run PAR",
+        "Open tactical map",
+        "Transfer Command",
+        "Close Command"
+      ],
+      "narration": "Review the dispatch board’s objectives, timers, accountability and incident timeline. Add or complete a practice objective, acknowledge a timer when appropriate, and use Run PAR to request the configured evaluation. Open tactical map to add a labeled training marker, then verify its saved state. Incident voice and chat controls connect the board to its configured channels. Transfer Command requires the intended new commander, while Close Command ends that command context. Releasing a resource is another explicit action. Read the server response for each change, especially when a capability or service is unavailable. These controls support coordination; they do not verify physical accountability by themselves.",
+      "practice": "Add a staging marker, review PAR, and rehearse a command transfer on a disposable board.",
+      "id": "app-dispatch-command-records-operations-settings-scene-02"
+    },
+    {
+      "title": "Assignments and record creation",
+      "route": "/records",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Records",
+        "New Record"
+      ],
+      "narration": "Open Records to see assigned work, drafts, returned items and recent records. Acknowledge the assignment when that control is offered, then inspect the record and its context. New Record shows the supported definitions your account may create. Starting from a call can provide useful prefilled information, which still needs review. Complete required fields and repeating rows, and add authorized photos or files where the definition permits them. The definition determines whether Keep on this device is available or the work needs an online Save and send. A missing catalog or unsupported definition is a reason to resolve setup, not improvise a different record.",
+      "practice": "Open an assigned community-response record and draft the required details using fictional information.",
+      "id": "app-dispatch-command-records-operations-settings-scene-03"
+    },
+    {
+      "title": "Review, finalization and external record feeds",
+      "route": "/records/connectors",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Submit for review",
+        "Finalize",
+        "Read feed now"
+      ],
+      "narration": "Reopen a draft and save the changes before using Submit for review. Finalize appears only where the record’s permissions and attestation workflow allow it; review the statement before confirming. Returned work needs the requested correction rather than an invented approval step. From the Records deployment and connector screens, inspect imported snapshots, fills, linked artifacts, consent or authority information and reconciliation differences. Read feed now performs a real configured backend operation. Inspect the run log and resulting state before claiming the feed completed. The connector screen explains that credentials and administration are managed on the web. Displaying imported data does not imply connector write-back support.",
+      "practice": "Inspect a training connector discrepancy and open its linked record without overwriting the imported source.",
+      "id": "app-dispatch-command-records-operations-settings-scene-04"
+    },
+    {
+      "title": "Deployment time and signatures",
+      "route": "/operations",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Time",
+        "Start time report",
+        "Submit report",
+        "Signatures"
+      ],
+      "narration": "Open Operations and choose the relevant deployment from Open or All. Review its roster and select the working date and scope before starting an individual or crew time report. Enter the time type, start and end, next-day handling, unpaid break and the applicable meal, accommodation or note details. Check the total, apply an entry to the crew only when appropriate, then save. Submit report changes the workflow state. Crew-boss and customer signatures, and Approve report, depend on your role and the report state. A read-only or awaiting-approval view is meaningful; it should not be presented as an editable report.",
+      "practice": "Prepare a wildland crew’s training day and review its submission and signature requirements.",
+      "id": "app-dispatch-command-records-operations-settings-scene-05"
+    },
+    {
+      "title": "Expenses, resource usage and cost recovery",
+      "route": "/operations/[id]",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Expenses"
+      ],
+      "narration": "Use Expenses for the selected deployment and date. Enter the expense type, amount and explanation, attach an approved receipt image where needed, and review the saved entry. Remove an expense only when correcting the exercise. When internal costing is enabled, record the appropriate unit usage, phase, odometer values, engine hours or fuel information. MARS coverage depends on its own configuration and access; open F-42 and use Validate when offered, then read the resulting readiness information. Finance mode can hide numbers or entire panels. These screens capture work and review status; they do not by themselves certify reimbursement or external acceptance.",
+      "practice": "Record a plant response expense and inspect a separately configured MARS training item.",
+      "id": "app-dispatch-command-records-operations-settings-scene-06"
+    },
+    {
+      "title": "Preferences, active unit and personal locking",
+      "route": "/settings",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Settings",
+        "Active Unit",
+        "Login Info",
+        "Shared device"
+      ],
+      "narration": "Open Settings to confirm the app version, environment and server. Review Login Info without exposing credentials, and choose Active Unit only when the operating role requires that context. Theme, language, keep-awake and notification-sound preferences help prepare the workstation. A personal installation can use its inactivity password lock; on Lock Screen, Unlock verifies the password or returns you to sign-in when that verification is unavailable. Shared-device locking instead follows the server-managed session and configured second factor. Browser behavior and native notification sounds may differ, so record the actual controls on each platform. A maintenance notice describes deployment availability, not a dispatch task.",
+      "practice": "Prepare a security desk’s language, sound and active-unit preferences, then identify its lock mode.",
+      "id": "app-dispatch-command-records-operations-settings-scene-07"
+    },
+    {
+      "title": "Account security and ending the shift",
+      "route": "/account-security",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Sign-in and security",
+        "Logout"
+      ],
+      "narration": "In Sign-in and security, inspect the available authentication methods and recovery-code count. Add, rename or remove a passkey only through the supported authenticator and the account’s actual verification flow. Review approval preferences and activity, and use the reporting option for an unrecognized entry when appropriate. Keep secrets, QR setup material and recovery codes outside the recording. Shared-session controls provide Lock and End Shift where configured; ordinary Logout ends the app session. The support, system-status, privacy and terms links open external information. Finish by confirming the next operator has the intended sign-in path rather than leaving the working screen unattended.",
+      "practice": "Rehearse a volunteer coordination desk handover and locate the security activity view without revealing secrets.",
+      "id": "app-dispatch-command-records-operations-settings-scene-08"
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Dispatch staff monitor command, objectives and accountability for a training fire."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "An assigned field record documents a volunteer welfare visit."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A staging marker, resource release and command transfer support a search handover."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Shared desk preferences and session controls support operator turnover."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "A crew deployment collects time, signatures, expenses and enabled cost-recovery information."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "An imported deployment discrepancy and equipment usage are reviewed against a training response."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Dispatch/src/components/incident-command/incident-command-tab.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/incident-command/command-board-view.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/incident-command/incident-command-sheets.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/incident-command/command-map.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/incident-command/command-voice.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/records.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/records/new.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/records/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/records/deployment-items.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/records/record-attachments.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/records/record-field.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/records/record-form.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/records/record-list-item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/records/records-quick-create.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/records/deployments/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/records/deployments/index.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/records/connectors/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/records/connectors/index.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/operations/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/operations/_layout.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/operations/index.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/operations/expenses-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/operations/mars-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/operations/option-select.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/operations/scope-picker.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/operations/time-report-editor.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/operations/usage-form.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/settings.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/account-security.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/shared-device.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/shared-session/shared-session-bar.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/shared-session/shared-session-lock-screen.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/items-container.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/keep-alive-item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/language-item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/login-info-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/modern-notification-sounds-item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/server-url-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/theme-item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/settings/toggle-item.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/lockscreen.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/translations/en.json"
+  ]
+}

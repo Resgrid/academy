@@ -6,6 +6,7 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+from media_delivery import asset_name, release_base
 
 GITHUB_SITE_LIMIT = 1_000_000_000
 GITHUB_FILE_LIMIT = 100 * 1024 * 1024
@@ -20,9 +21,14 @@ class PageLinks(HTMLParser):
         super().__init__()
         self.links = []
         self.ids = set()
+        self.tags = set()
+        self.video_sources = []
 
     def handle_starttag(self, tag, attributes):
+        self.tags.add(tag)
         values = dict(attributes)
+        if tag in {'video', 'source'} and values.get('src'):
+            self.video_sources.append(values['src'])
         if values.get('id'):
             self.ids.add(values['id'])
         for key in ('href', 'src', 'poster'):
@@ -46,7 +52,7 @@ def local_target(root, page, reference):
     return target
 
 
-def validate(root):
+def validate(root, *, pages_size_limit=True):
     root = Path(root).resolve()
     issues, records = [], []
     pages = {}
@@ -83,7 +89,7 @@ def validate(root):
             except ValueError as error:
                 issues.append(f'{page.relative_to(root)}: {error}')
     total = sum(row['bytes'] for row in records)
-    if total >= GITHUB_SITE_LIMIT:
+    if pages_size_limit and total >= GITHUB_SITE_LIMIT:
         issues.append('Site exceeds the GitHub Pages 1 GB limit; move media to a CDN before deployment.')
     if not (root / 'index.html').is_file():
         issues.append('The published site needs index.html at its root.')
@@ -92,13 +98,37 @@ def validate(root):
         issues.append('Missing media manifest.')
     else:
         manifest = json.loads(manifest_path.read_text())
+        remote_media = manifest.get('format_version') == 3
         listed = {item['path'] for item in manifest.get('media', [])}
-        actual = {row['path'] for row in records if row['path'].endswith('.mp4')}
-        if actual != listed:
+        actual = {row['path'] for row in records if Path(row['path']).suffix.lower() in {'.mp4', '.webm'}}
+        release_urls = set()
+        if remote_media:
+            delivery = manifest.get('media_delivery', {})
+            try:
+                if delivery.get('kind') != 'github_release':
+                    raise ValueError('Unsupported external media delivery.')
+                base = release_base(delivery.get('repository'), delivery.get('tag'))
+                for item in manifest.get('media', []):
+                    expected = base + '/' + asset_name(item['path'], item['sha256'])
+                    if item.get('url') != expected or type(item.get('bytes')) is not int or item['bytes'] <= 0:
+                        raise ValueError('Release media URL, size or hash is invalid.')
+                    release_urls.add(expected)
+            except (KeyError, TypeError, ValueError) as error:
+                issues.append('Invalid Release media manifest: ' + str(error))
+            if actual:
+                issues.append('Release delivery bundle must not contain local videos.')
+            if {lesson.get('video') for lesson in manifest.get('lessons', [])} != release_urls:
+                issues.append('Release media manifest differs from the lesson inventory.')
+            for parser in pages.values():
+                if any(reference not in release_urls for reference in parser.video_sources):
+                    issues.append('A video player uses an unlisted Release asset.')
+        elif actual != listed:
             issues.append('Published videos differ from the media manifest.')
-        if manifest.get('lessons') and {urlsplit(lesson['video']).path for lesson in manifest['lessons']} != listed:
+        if not remote_media and manifest.get('lessons') and {urlsplit(lesson['video']).path for lesson in manifest['lessons']} != listed:
             issues.append('Media manifest differs from the lesson inventory.')
         for item in manifest.get('media', []):
+            if remote_media:
+                continue
             try:
                 path = local_target(root, root / 'index.html', item['path'])
                 if path is None or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
@@ -110,11 +140,48 @@ def validate(root):
                 if not lesson.get(key):
                     issues.append(f'Missing {key} reference: {lesson["id"]}')
                     continue
+                if remote_media and key == 'video':
+                    if lesson[key] not in release_urls:
+                        issues.append(f'Unlisted Release video: {lesson["id"]}')
+                    continue
                 target = local_target(root, root / 'index.html', lesson[key])
                 if target is None or not target.is_file():
                     issues.append(f'Missing lesson asset: {lesson["id"]} {key}')
         course = json.loads((root / 'course.json').read_text()) if (root / 'course.json').is_file() else {}
+        topic_guides = manifest.get('topic_guides', [])
+        if manifest.get('format_version', 1) >= 2:
+            if not isinstance(topic_guides, list) or manifest.get('topic_guide_count') != len(course.get('lessons', [])):
+                issues.append('Topic guide count differs from the public course.')
+                topic_guides = []
+            guide_ids = [item.get('id') for item in topic_guides]
+            if len(set(guide_ids)) != len(guide_ids) or set(guide_ids) != {item.get('id') for item in course.get('lessons', [])}:
+                issues.append('Topic guide inventory differs from the public course.')
+            if any(item.get('kind') not in {'actual application walkthrough', 'Video walkthrough'} for item in manifest.get('lessons', [])):
+                issues.append('Only actual application walkthroughs belong in the video inventory.')
+            for guide in topic_guides:
+                if guide.get('kind') != 'topic_guide' or any(key in guide for key in ('video', 'poster', 'captions', 'chapters', 'subtitle')):
+                    issues.append(f'Topic guide cannot expose illustrated media: {guide.get("id")}')
+                for key in ('href', 'transcript'):
+                    if not guide.get(key):
+                        issues.append(f'Missing topic guide {key}: {guide.get("id")}')
+                        continue
+                    try:
+                        target = local_target(root, root / 'index.html', guide[key])
+                        if target is None or not target.is_file():
+                            issues.append(f'Missing topic guide {key}: {guide.get("id")}')
+                        elif key == 'href' and target in pages and pages[target].tags & {'video', 'track'}:
+                            issues.append(f'Topic guide contains a media player: {guide.get("id")}')
+                    except ValueError:
+                        issues.append(f'Invalid topic guide {key}: {guide.get("id")}')
         for lesson in course.get('lessons', []):
+            if manifest.get('format_version', 1) >= 2:
+                if lesson.get('kind') != 'topic_guide' or any(key in lesson for key in ('video', 'poster', 'subtitle', 'duration_seconds')):
+                    issues.append(f'Public topic content cannot expose a primer player: {lesson["id"]}')
+                if lesson['id'] in {item.get('id') for item in manifest.get('lessons', [])}:
+                    issues.append(f'Topic guide is incorrectly listed as a video: {lesson["id"]}')
+                for suffix in ('.mp4', '.webm', '.vtt', '.srt', '.chapters.json'):
+                    if (root / 'media' / (lesson['id'] + suffix)).exists():
+                        issues.append(f'Illustrated primer asset is not public: {lesson["id"]}{suffix}')
             for key in ('video', 'poster', 'subtitle'):
                 if lesson.get(key):
                     target = local_target(root, root / 'index.html', lesson[key])
@@ -126,8 +193,11 @@ def validate(root):
         for feature in course.get('features', []):
             if not (root / 'scripts' / f'feature-{feature["id"]}.txt').is_file():
                 issues.append(f'Missing feature brief: {feature["id"]}')
+    local_videos = sum(Path(row['path']).suffix.lower() in {'.mp4', '.webm'} for row in records)
+    remote_videos = len(release_urls) if manifest_path.is_file() and remote_media else 0
     return {'passed': not issues, 'files': len(records), 'bytes': total,
-            'video_files': sum(row['path'].endswith('.mp4') for row in records),
+            'video_files': local_videos + remote_videos, 'local_video_files': local_videos,
+            'release_video_files': remote_videos, 'pages_size_limit_enforced': pages_size_limit,
             'html_pages': len(pages), 'relative_links_checked': True,
             'private_links_and_local_addresses': 'excluded' if not any('Private editor' in x for x in issues) else 'found',
             'issues': sorted(set(issues))}

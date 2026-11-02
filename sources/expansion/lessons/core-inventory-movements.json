@@ -1,0 +1,446 @@
+{
+  "id": "core-inventory-movements",
+  "title": "Review inventory setup and record stock movements",
+  "app": "Core",
+  "audience": [
+    "Inventory administrators",
+    "Stock coordinators",
+    "Department administrators"
+  ],
+  "summary": "Review a prepared catalogue item and saved lot, verify recorded receipt/transfer/personnel issue results, interpret a partial-return balance, and inspect alert/report boundaries.",
+  "prerequisites": [
+    "Access to the intended department Inventory workspace and the relevant catalogue, stock, transfer or issue permissions.",
+    "An authorized training item, lot and actual intended source/destination holders.",
+    "A department process for physical verification, controlled items, stock differences and returns; this example uses ordinary fictional bulk consumables."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Locate stock and holders",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Inventory",
+        "On hand",
+        "Items",
+        "Location",
+        "Unit",
+        "Person",
+        "Filter"
+      ],
+      "narration": "In Core, Inventory separates the item catalogue from what the department currently holds. On hand provides Items and Location filters, while Unit and Person lookups help identify a particular holder. Start by choosing the right item and location before interpreting a quantity. This walkthrough follows one fictional training consumable through recorded software movements, rather than claiming that anyone physically inspected or transported supplies.",
+      "practice": "Locate the item and holder filters; confirm the intended stock context before changing anything.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-007-inventory-initialized-on-hand"
+        ]
+      },
+      "narration_word_count": 63,
+      "capture_refs": [
+        "legacy-core-op-007-inventory-initialized-on-hand"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Choose tracking deliberately",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Items",
+        "Tracking mode",
+        "Status",
+        "New item",
+        "How it is tracked",
+        "By quantity",
+        "Track lots",
+        "Expiration required",
+        "Controlled substance",
+        "Kit item"
+      ],
+      "narration": "The Items tab lists catalogue entries and their Tracking mode and Status. New item opens the catalogue workflow. On How it is tracked, this example uses By quantity with Track lots and Expiration required selected. Controlled substance and Kit item remain off. Decide how an item should be tracked before stock exists; later changes can be restricted. Industrial teams can apply the same distinction to bulk consumables and individually tracked equipment.",
+      "practice": "Review the displayed tracking choices for an authorized training item; do not enable controlled or kit behavior merely for practice.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-008-inventory-catalog-existing",
+          "legacy-core-op-009-inventory-item-tracking-options"
+        ]
+      },
+      "narration_word_count": 71,
+      "capture_refs": [
+        "legacy-core-op-008-inventory-catalog-existing",
+        "legacy-core-op-009-inventory-item-tracking-options"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Review catalogue identity before saving",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Review",
+        "Name",
+        "Academy training batteries",
+        "Unit of Measure",
+        "packs",
+        "Code",
+        "ACADEMY-BAT-01",
+        "Minimum stock",
+        "Reorder point",
+        "Unit cost",
+        "Save"
+      ],
+      "narration": "The Review page brings the prepared item together: Academy training batteries, measured in packs, with its code and description. It also shows minimum stock five, reorder point eight, and the fictional unit cost. Read these values before Save. A catalogue entry describes the item; it does not itself receive twenty packs or prove a physical purchase. The next screens use that item in an existing saved lot and stock movement.",
+      "practice": "Compare the prepared catalogue review with your intended tracking policy before saving; distinguish catalogue setup from receiving stock.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-010-inventory-item-review"
+        ]
+      },
+      "narration_word_count": 70,
+      "capture_refs": [
+        "legacy-core-op-010-inventory-item-review"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Read the saved lot and expiry",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Lots",
+        "Batch",
+        "ACADEMY-LOT-A",
+        "Academy training batteries",
+        "Expires",
+        "11/30/2026",
+        "New lot"
+      ],
+      "narration": "Lots identifies batches separately from quantities. The saved ACADEMY lot A row belongs to Academy training batteries and displays a November thirtieth expiry. New lot is available for creating another batch, but this view demonstrates the saved row. Check the lot and expiry when recording a movement so that later stock history refers to the intended batch. Creating a lot alone does not add stock.",
+      "practice": "Read the saved batch identity and expiry; keep lot creation separate from receiving a quantity.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-011-inventory-lot-saved"
+        ]
+      },
+      "narration_word_count": 65,
+      "capture_refs": [
+        "legacy-core-op-011-inventory-lot-saved"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Record a reviewed receipt and verify it",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Adjust stock",
+        "Review",
+        "Receive",
+        "Academy training batteries",
+        "ACADEMY-LOT-A",
+        "Destination location",
+        "Station",
+        "Amount",
+        "20",
+        "Record movement",
+        "On hand",
+        "Quantity",
+        "20.000000"
+      ],
+      "narration": "In Adjust stock, the prepared Review shows Receive, the training item and lot, Station as the destination, and Amount twenty. Its note clearly identifies a software exercise. Read the complete movement and choose Record movement only when it matches the intended receipt. The filtered On hand result then shows twenty packs at Station. That stored balance is the result of the receipt, rather than proof supplied by the preparation screen alone.",
+      "practice": "Compare the receipt review with the posted item/location quantity before continuing to another movement.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-012-inventory-receipt-review",
+          "legacy-core-op-013-inventory-receipt-result"
+        ]
+      },
+      "narration_word_count": 71,
+      "capture_refs": [
+        "legacy-core-op-012-inventory-receipt-review",
+        "legacy-core-op-013-inventory-receipt-result"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Transfer between the intended locations",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "New transfer",
+        "Review",
+        "Source location",
+        "Station",
+        "Destination location",
+        "Unit",
+        "Amount",
+        "5",
+        "Record movement",
+        "Transfers"
+      ],
+      "narration": "New transfer reviews the same item and lot, with Station as Source location, Unit as Destination location, and Amount five. Confirm both ends before Record movement. A generic location label does not identify a particular apparatus by itself. The Transfers list then shows the saved Station-to-Unit move. Search and rescue or wildland crews can use this pattern for a documented restock, while keeping software movement distinct from actual delivery.",
+      "practice": "Review both holders and the amount; verify the saved transfer without assuming the generic Unit label names your apparatus.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-015-inventory-transfer-review",
+          "legacy-core-op-016-inventory-transfer-posted"
+        ]
+      },
+      "narration_word_count": 69,
+      "capture_refs": [
+        "legacy-core-op-015-inventory-transfer-review",
+        "legacy-core-op-016-inventory-transfer-posted"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Audit the recorded movement in History",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "History",
+        "Items",
+        "Location",
+        "Filter",
+        "Receive",
+        "Transfer",
+        "Academy training batteries",
+        "Station",
+        "Unit",
+        "20.000000",
+        "5.000000",
+        "Attest as witness",
+        "Rebuild stock balances"
+      ],
+      "narration": "History shows the recorded Receive of twenty and Transfer of five for the training batteries. The transfer appears as one visible row with Station pointing to Unit, and its note explains the purpose. Use the item and location filters to understand a change. Attest as witness and Rebuild stock balances are separate controls; this example reads the ledger without invoking either operation.",
+      "practice": "Find the receipt and transfer rows, compare their amounts and notes, and leave witness/rebuild actions untouched.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-017-inventory-ledger-transfer-pair"
+        ]
+      },
+      "narration_word_count": 62,
+      "capture_refs": [
+        "legacy-core-op-017-inventory-ledger-transfer-pair"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Issue stock to a named person",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Issue equipment",
+        "Review",
+        "Academy training batteries",
+        "Station",
+        "Amount",
+        "2",
+        "Person",
+        "Matthew Casey",
+        "Expected return date",
+        "Issue",
+        "Issuances",
+        "Personnel",
+        "Outstanding",
+        "2.000000",
+        "Return"
+      ],
+      "narration": "Issue equipment reviews two packs from Station for Matthew Casey, together with the expected return date and a training note. Confirm the person and quantity before Issue. The Issuances result shows Personnel, two outstanding, and a Return action. The named recipient was established in the review; this table uses the holder label. Community response and security teams can use that distinction to track supplies signed out to a person.",
+      "practice": "Compare recipient and amount in the issue review, then verify the resulting outstanding quantity.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-018-inventory-issuance-review",
+          "legacy-core-op-019-inventory-issue-posted"
+        ]
+      },
+      "narration_word_count": 69,
+      "capture_refs": [
+        "legacy-core-op-018-inventory-issuance-review",
+        "legacy-core-op-019-inventory-issue-posted"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Recognize a partial return result",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Issuances",
+        "Partially returned",
+        "Outstanding",
+        "1.000000",
+        "Return"
+      ],
+      "narration": "A later saved Issuances view shows Partially returned and one pack still outstanding. This is a partial return, not a completed return of everything issued. The Return action remains available for the outstanding balance. Here we review that stored result; the intervening return-entry dialog is not shown. Check the remaining quantity and status instead of treating any return as evidence that the whole issue is closed.",
+      "practice": "Read the remaining outstanding amount and status; do not repeat an old return or infer completion of the issue.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-020-inventory-partial-return-result"
+        ]
+      },
+      "narration_word_count": 66,
+      "capture_refs": [
+        "legacy-core-op-020-inventory-partial-return-result"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Reconcile the dated balance snapshot",
+      "route": "/User/Inventory/Reopen",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Academy training batteries",
+        "Location",
+        "Quantity",
+        "Station",
+        "14.000000",
+        "Unit",
+        "5.000000",
+        "Personnel",
+        "1.000000"
+      ],
+      "narration": "At this point in the example, the balance table shows fourteen packs at Station, five at Unit, and one at Personnel. Those twenty packs reconcile the receipt, transfer, issue and partial return. These are the quantities in this dated snapshot, before later usage. In your own department, read the current filtered balances and exact holder context rather than copying the demonstration quantities.",
+      "practice": "Reconcile the three displayed balances to the recorded receipt; use your department current data for any operational decision.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-021-inventory-result-balances"
+        ]
+      },
+      "narration_word_count": 62,
+      "capture_refs": [
+        "legacy-core-op-021-inventory-result-balances"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Read the actual alert state",
+      "route": "/User/Inventory/ReopenOperations",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Counts, alerts and reports",
+        "Inventory alerts",
+        "Low stock",
+        "Academy training batteries",
+        "Resolved",
+        "All locations",
+        "Refresh alerts"
+      ],
+      "narration": "Counts, alerts and reports contains Inventory alerts. This captured row is a Low stock alert for the training batteries, marked Resolved across All locations. The page also describes expiry and overdue-return alerts, but no expiring-lot result is shown here. Refresh alerts is a separate available action. Read the alert type and status alongside stock data; a resolved alert does not replace a current stock review.",
+      "practice": "Read the alert type/status and distinguish this resolved low-stock row from an expiry or overdue-return alert.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-022-inventory-expiry-alerts"
+        ]
+      },
+      "narration_word_count": 65,
+      "capture_refs": [
+        "legacy-core-op-022-inventory-expiry-alerts"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Choose a report and preserve the workflow boundaries",
+      "route": "/User/Inventory/ReopenOperations",
+      "capture_intent": "Retain each full foreground application viewport for its exact narration span; no guessed timings.",
+      "required_labels": [
+        "Inventory reports",
+        "Choose a report",
+        "Inventory on hand",
+        "Continue",
+        "Narrow it down"
+      ],
+      "narration": "Inventory reports opens Choose a report with Inventory on hand displayed. Continue leads toward Narrow it down, but this view is the chooser, not a generated report or exported PDF. Fire and EMS administrators, like other services, should verify a report’s scope before relying on its numbers. Keep catalogue setup, recorded movements, stock counts and reporting distinct so that another person can understand what each result actually establishes. The same process supports fire and EMS, community paramedicine and mental health response, search and rescue, security departments and companies, wildland contractors, and industrial emergency response teams.",
+      "practice": "Identify the displayed report type; obtain and review actual scoped output before claiming a report or export succeeded.",
+      "capture_evidence": {
+        "status": "bounded_existing_source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "legacy-core-op-023-inventory-reports"
+        ]
+      },
+      "narration_word_count": 95,
+      "capture_refs": [
+        "legacy-core-op-023-inventory-reports"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "An EMS station receives a training consumable and tracks its batch.",
+      "practice": "Review item identity, lot expiry, receipt destination and posted balance before issuing stock."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A community care coordinator signs supplies out to an individual responder.",
+      "practice": "Confirm the person in Issue equipment and compare it with the Personnel holder and outstanding amount."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search team stages consumables for a support vehicle.",
+      "practice": "Review both transfer locations and audit the saved ledger row without equating the generic Unit label to a specific apparatus."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A security team tracks equipment issued to an employee.",
+      "practice": "Distinguish Outstanding from Partially returned and verify the remaining quantity."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A wildland crew reviews a documented restock.",
+      "practice": "Compare the receipt/transfer and balance snapshot, preserving batch identity and separating delivery from software records."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial response administrator sets up consumable tracking.",
+      "practice": "Review bulk-versus-serialized choices and lot/expiry controls before stock exists; leave controlled/witness operations to their separate authorized workflow."
+    }
+  ],
+  "source_files": [
+    "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+    "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+    "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Operations.cshtml",
+    "Core/Web/Resgrid.Web/wwwroot/js/app/internal/inventory/inventory-modern.js",
+    "Core/Web/Resgrid.Web/wwwroot/js/app/internal/inventory/inventory-operations.js",
+    "Core/Core/Resgrid.Services/InventoryCatalog.cs",
+    "Core/Core/Resgrid.Services/InventoryIssuance.cs",
+    "Core/Core/Resgrid.Services/InventoryAlerts.cs",
+    "Core/Core/Resgrid.Services/InventoryReports.cs",
+    "Core/Core/Resgrid.Services/InventoryLegacyMigration.cs",
+    "Core/Core/Resgrid.Model/Inventories/InventoryModels.cs",
+    "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryOperationsController.cs",
+    "Core/Core/Resgrid.Services/InventoryPosting.cs",
+    "Core/Core/Resgrid.Services/InventoryReportDocuments.cs"
+  ],
+  "authoring_status": "ready_actual_screen_video_after_strict_evidence_and_playback_review",
+  "export_ready": true,
+  "narration_word_count": 828,
+  "scope_limits": [
+    "Review stages are shown for item/receipt/transfer/issue. Earlier unpictured wizard fields are not presented as a complete field-entry tutorial.",
+    "Saved lot, partial return and report chooser are review-only scopes; their creation/dialog/export steps remain missing.",
+    "Dated balances14/5/1 precede later usage; parent currently reports13/5/1. No claim that the older snapshot is current.",
+    "Generic Unit location maps to Ambulance61 in retained seed/migration provenance, but no named apparatus is printed in these snapshots; this narration claims no specific apparatus identity.",
+    "No migration rerun, new DB action, stock count, controlled item/witness, rebuild, purchasing, report export, provider dispatch or physical receipt/delivery is performed by this preparation.",
+    "Old broad Inventory primer, original captures/observations, source pins, canonical/media/site and all broader coverage gaps remain unchanged.",
+    "No audio/captions/cue timing/render/playback/publication is generated or approved."
+  ],
+  "candidate_only": true,
+  "publication_approved": false,
+  "source_complete": true,
+  "media_status": "complete_reviewed_actual_screen_video",
+  "publication_mode": "video",
+  "capture_manifest": "expansion/plans/core-inventory-movements-capture-freeze-20261028/captures.reviewed.json",
+  "evidence_file": "expansion/rendered/core-inventory-movements-take-01/evidence.final.json",
+  "source_freeze": "expansion/plans/core-inventory-movements-capture-freeze-20261028/core-inventory-movements.narrated-source.json"
+}

@@ -14,29 +14,37 @@ ROOT = Path(__file__).resolve().parents[1]
 DEMO = ROOT / 'sources/demo'
 sys.path.insert(0, str(DEMO))
 from settings import DEFAULT_NAME, load, profile
+from source_profiles import (PROFILE_DEFAULTS, load_source_set, managed_source,
+                             prepare_core, save_pin, select_profile, summary, verify_pin)
 
-INFRA = ['postgres', 'redis', 'rabbit', 'mail']
+INFRA = ['postgres', 'redis', 'rabbit', 'mail', 'object-store']
 DATABASES = ['resgrid_academy_docs', 'resgrid_academy_oidc', 'resgrid_academy_workers']
 
 
 def plan(args):
+    source_name, pinned = select_profile(DEMO, getattr(args, 'source_profile', None))
+    source_set = load_source_set(source_name, ROOT)
+    verify_pin(pinned, source_set)
+    default_name, default_port = PROFILE_DEFAULTS[source_name]
     saved = DEMO / 'private/stack.json'
-    selected = load() if saved.exists() else profile(args.name or DEFAULT_NAME, args.web_port or 18867)
+    selected = load(DEMO) if saved.exists() else profile(args.name or default_name, args.web_port or default_port)
     if args.name and selected['name'] != args.name or args.web_port and selected['ports']['web'] != args.web_port:
         raise ValueError('This checkout already has a recording profile. Use it, or use another Academy checkout for another profile.')
-    manifest = json.loads((ROOT / 'sources/evidence/source-manifest.json').read_text())
     pointer = DEMO / 'private/core-path.json'
-    default_core = Path(json.loads(pointer.read_text())['path']) if pointer.exists() else DEMO / 'checkout'
+    default_core = Path(json.loads(pointer.read_text())['path']) if pointer.exists() else (
+        managed_source(DEMO, 'Core') if source_name == 'expansion' else DEMO / 'checkout')
     core = (args.core or default_core).expanduser().resolve()
     return {'stack': selected, 'core_checkout': str(core), 'acquire_upstream': args.core is None and not (core / 'Resgrid.sln').is_file(),
-            'upstream': manifest['upstream'], 'recorded_revision': manifest['recorded_source_head'],
+            'source_set': summary(source_set), 'upstream': source_set['repositories']['Core']['upstream'],
+            'recorded_revision': source_set['repositories']['Core']['head'],
             'steps': ['Check Docker Compose, .NET SDK, Git and OpenSSL', 'Acquire recorded Resgrid revision if no checkout was supplied',
+                      'Verify expansion source and workflow patch hashes; patch only the managed isolated checkout' if source_name == 'expansion' else 'Preserve the legacy source revision and evidence manifest',
                       'Generate local credentials and TLS/OIDC certificates', 'Restore and publish five Resgrid applications',
                       'Create this profile’s volumes and infrastructure', 'Create auxiliary databases and apply Resgrid migrations',
                       'Seed Firehouse 51 once; preserve an existing department', 'Start applications and check health'],
             'web_url': 'http://127.0.0.1:' + str(selected['ports']['web']),
             'credentials_file': 'sources/demo/private/credentials.json',
-            'notice': 'This plan does not start containers or write credentials. Application source comes from Resgrid/Core; evidence snapshots may include later working-tree changes.'}
+            'notice': 'This plan does not start containers, acquire source or write local state. Existing saved stack names, ports, credentials and counters are preserved.'}
 
 
 def require_fresh_credentials_for_existing_storage(docker, selected):
@@ -88,12 +96,16 @@ def execute(args, instructions):
             subprocess.run(['git', '-C', str(core), 'checkout', '--detach', instructions['recorded_revision']], check=True, stdout=log, stderr=subprocess.STDOUT)
     if not (core / 'Resgrid.sln').is_file():
         raise ValueError('No Resgrid.sln in --core. Supply a complete Resgrid/Core checkout.')
+    source_name = instructions['source_set']['source_profile']
+    source_set = load_source_set(source_name, ROOT)
+    source_state = prepare_core(core, DEMO, source_set)
     private = DEMO / 'private'
     private.mkdir(exist_ok=True, mode=0o700)
     (private / 'stack.json').write_text(json.dumps(instructions['stack'], indent=2) + '\n')
     (private / 'core-path.json').write_text(json.dumps({'path': str(core)}, indent=2) + '\n')
     for name in ('stack.json', 'core-path.json'):
         (private / name).chmod(0o600)
+    save_pin(DEMO, source_set)
     os.environ['RESGRID_CORE_PATH'] = str(core)
     for script in ('prepare.py', 'prepare_tls.py', 'prepare.py'):
         subprocess.run([sys.executable, str(DEMO / script)], check=True)
@@ -110,6 +122,7 @@ def execute(args, instructions):
     manager.start([manager.STACK + '-' + service + '-1' for service in INFRA])
     wait_for_infrastructure(manager)
     manager.stage()
+    manager.initialize_object_store()
     for database in DATABASES:
         exists = manager.sql("SELECT 1 FROM pg_database WHERE datname='" + database + "';", db='postgres')
         if not exists:
@@ -134,6 +147,7 @@ def execute(args, instructions):
                 raise
             time.sleep(5)
     report = {'stack': instructions['stack'], 'web_url': instructions['web_url'], 'core_revision': subprocess.run(['git', '-C', str(core), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip(),
+              'source_set': summary(source_set), 'source_preparation': source_state,
               'seed_applied_only_if_absent': True, 'credentials_file': instructions['credentials_file']}
     (DEMO / 'setup-report.json').write_text(json.dumps(report, indent=2) + '\n')
     print('Recording stack ready: ' + instructions['web_url'])
@@ -143,6 +157,7 @@ def execute(args, instructions):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--core', type=Path, help='Use a complete existing Resgrid/Core checkout; otherwise acquire the recorded revision locally.')
+    parser.add_argument('--source-profile', choices=PROFILE_DEFAULTS, help='Explicitly select legacy or expansion source; defaults to the saved selection, otherwise legacy.')
     parser.add_argument('--name', help='New recording profile name, starting resgrid-academy-.')
     parser.add_argument('--web-port', type=int, help='New profile web port; the other ports move by the same offset.')
     parser.add_argument('--plan', action='store_true', help='Display the steps without generating credentials or using Docker.')

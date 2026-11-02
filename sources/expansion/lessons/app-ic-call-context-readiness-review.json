@@ -1,0 +1,178 @@
+{
+  "id": "app-ic-call-context-readiness-review",
+  "title": "IC: review incident context, unit readiness and check-in status",
+  "app": "IC",
+  "audience": [
+    "Incident commanders",
+    "Command aides",
+    "Department supervisors"
+  ],
+  "summary": "Identify the right incident, review its stored location, and compare unit readiness evidence with the call check-in timer state before a handover.",
+  "prerequisites": [
+    "An authorized signed-in IC session with permission to view the intended incident.",
+    "A fictional training incident for practice and your department's handover process."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Identify the incident in Calls",
+      "route": "/calls",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-07-calls"
+      ],
+      "required_labels": [
+        "Calls",
+        "Search calls...",
+        "#DEMO-0003",
+        "#DEMO-0002"
+      ],
+      "narration": "IC gives incident commanders, command aides and supervisors a shared place to review an incident. Begin in Calls. The visible cards identify the Vehicle rescue exercise as DEMO zero zero zero three, and the Community medical standby as DEMO zero zero zero two. Each card brings together its name, location and assigned resources. Read those details together before selecting the incident you intend to review. Search calls is above the list when you need to locate another incident.",
+      "practice": "Locate the Calls list and Search calls, then compare the number, name and resource tags on a fictional incident card."
+    },
+    {
+      "id": "02",
+      "title": "Confirm the selected call and command context",
+      "route": "/call/51001",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-39-call-context-chicago-map"
+      ],
+      "required_labels": [
+        "Call Details",
+        "TRAINING — Warehouse alarm (DEMO-0001)",
+        "Active Command",
+        "Open Command Board"
+      ],
+      "narration": "For the detailed review, we use the separate Warehouse alarm exercise, DEMO zero zero zero one. Call Details shows that name and number at the top. Its description says reported smoke at an unoccupied training warehouse, with Squad Three assigned for a search demonstration. Active Command and Open Command Board are visible on the right. Confirm the selected incident before carrying information into a command board; a similar exercise name in the list can refer to a different call.",
+      "practice": "Confirm the selected incident number and read the exercise description before identifying Open Command Board."
+    },
+    {
+      "id": "03",
+      "title": "Check the stored incident location and reference tools",
+      "route": "/call/51001",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-39-call-context-chicago-map"
+      ],
+      "required_labels": [
+        "Training site 1 (fictional), Chicago, IL",
+        "Notes",
+        "Images",
+        "Files",
+        "Route"
+      ],
+      "narration": "Immediately below the incident description, the map shows the training incident pin in Chicago. The location label reads Training site one, fictional, Chicago, Illinois. Compare that stored location with the incident you are reviewing. It is incident context; it is not evidence of a responder arriving there. Notes, Images, Files and Route sit together below the map. Identify these entry points so you know where to look for supporting information when coordinating with another operator.",
+      "practice": "Match the incident pin and location label, then locate Notes, Images, Files and Route without treating the pin as a crew position."
+    },
+    {
+      "id": "04",
+      "title": "Read the complete Readiness result",
+      "route": "/call/51001 → Readiness",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-41-call-readiness-empty-checks"
+      ],
+      "required_labels": [
+        "Readiness",
+        "Squad 3",
+        "Ready",
+        "No completed checks in this window."
+      ],
+      "narration": "Scroll to the call tabs and choose Readiness. The selected tab is underlined. In this exercise, the unit row names Squad Three and shows Ready on the right. Read the next line as well: No completed checks in this window. Those two messages are visible together. The Ready label alone does not establish that someone completed an apparatus checklist. During a handover, report the unit name, the displayed status and the evidence message together. That helps the next operator identify what still needs confirmation.",
+      "practice": "Read Squad 3, Ready and the completed-checks message together. Explain why the status label alone is not proof of a completed checklist."
+    },
+    {
+      "id": "05",
+      "title": "Inspect the Check-In tab independently",
+      "route": "/call/51001 → Check-In",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-42-call-check-in-not-active",
+        "ic-41-call-readiness-empty-checks"
+      ],
+      "required_labels": [
+        "Check-In",
+        "No check-in timers active"
+      ],
+      "narration": "Choose Check-In at the right end of the same tab row. In this exercise, the selected tab says No check-in timers active. That is the current result for this call. It does not show a completed personnel check-in or an accountability result. Keep this observation separate from the unit readiness summary. An operator who only reports Ready has omitted the fact that this call view currently has no active check-in timers.",
+      "practice": "Locate Check-In and read its actual result. Distinguish an inactive timer view from a completed check-in."
+    },
+    {
+      "id": "06",
+      "title": "Compare both views before a handover",
+      "route": "/call/51001 → Readiness → Check-In",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-41-call-readiness-empty-checks",
+        "ic-42-call-check-in-not-active"
+      ],
+      "required_labels": [
+        "Readiness",
+        "Ready",
+        "No completed checks in this window.",
+        "Check-In",
+        "No check-in timers active"
+      ],
+      "narration": "Compare the two tabs before briefing a relief operator. Readiness shows Squad Three as Ready, with no completed checks in this window. Check-In shows no active timers. A useful handover preserves both statements, instead of turning either one into a blanket assurance about the crew. Resolve missing operational information through your department's coordination process. In practice, read each tab aloud and have a colleague identify which facts were actually displayed.",
+      "practice": "Give a short handover that includes both exact results and keeps missing information explicit."
+    },
+    {
+      "id": "07",
+      "title": "Carry the verified context into command coordination",
+      "route": "/call/51001",
+      "capture_intent": "Show the exact corresponding actual IC call view. During comparisons, change the shown view with the spoken tab and result.",
+      "capture_refs": [
+        "ic-39-call-context-chicago-map"
+      ],
+      "required_labels": [
+        "Call Details",
+        "Active Command",
+        "Open Command Board"
+      ],
+      "narration": "Return to the call heading to confirm the incident identity again before moving on to Open Command Board. The same review pattern helps a fire or E M S command aide, a community paramedicine or mental health coordinator, a search-and-rescue lead, a security supervisor, a wildland contractor or an industrial response team. Names and assignments will differ, but the task is the same: identify the incident, read the actual status and evidence messages, then pass on a precise account of what the screens show.",
+      "practice": "Summarize the incident identity, stored location, readiness evidence and timer state for another authorized operator."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire/EMS",
+      "scenario": "A command aide reports the incident identity and both readiness and timer messages during relief."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A community paramedicine or mental health coordinator confirms the selected operational incident and identifies missing readiness evidence."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search coordinator distinguishes a stored mission location from proof of a team arriving there."
+    },
+    {
+      "sector": "Security",
+      "scenario": "An event supervisor compares readiness and check-in views before handing a coordination workstation to a colleague."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "A contractor reports actual crew-unit status and evidence messages without treating an incident pin as a crew position."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "An exercise coordinator gives a precise briefing from the selected incident and its two status tabs."
+    }
+  ],
+  "source_files": [],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "scope_limits": [
+    "Read-only incident context, readiness and inactive check-in timer inspection from actual archived training screens.",
+    "No search-results operation, command creation, response, checklist completion, timer activation, personnel check-in, PAR, GPS or attachment operation is demonstrated.",
+    "The separate completed IC command-board lesson covers command-board operations. This focused lesson does not complete all IC coverage."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-ic-call-context-readiness-review-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/app-ic-call-context-readiness-review-source-proposal-20261101/lesson.candidate.json",
+    "sha256": "d8b7588ede72732c72670ff65c4aff7df055c764364c764b6ab106ca90b5a232"
+  }
+}

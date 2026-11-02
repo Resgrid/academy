@@ -1,0 +1,642 @@
+{
+  "id": "app-unit-04-field-workspace",
+  "title": "Unit: maps, communications, records, and deployment work",
+  "app": "Unit",
+  "audience": "Crews using Unit for shared situational awareness, field documentation, and deployment support.",
+  "summary": "Use the wider field workspace while keeping location, provider, record, and reporting states honest across browser and native platforms.",
+  "prerequisites": [
+    "Populated map pins, POIs, custom and indoor maps, valid mapping access, and prepared weather-alert examples.",
+    "Chat, assistant, voice, audio streams, notifications, and references configured only for the corresponding branches.",
+    "Records.System and Records.Field.Unit enabled with supported forms and assignments; operations access with rostered crew and optional costing/MARS data.",
+    "A native device for background location, camera, Bluetooth, hardware PTT, and phone-notification captures; browser results do not establish native behavior."
+  ],
+  "scenes": [
+    {
+      "id": "01-follow-the-apparatus-and-control-the-map",
+      "title": "Follow the apparatus and control the map",
+      "route": "/",
+      "capture_intent": "Capture legible real cartography and current unit; review named lock/unlock icons with DOM bounds and actual image review; show recenter only if genuinely offered. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Lock map to unit",
+        "Unlock map"
+      ],
+      "narration": "The main map uses the active unit’s operational context. Lock map to unit and Unlock map are accessible names on icon controls; inspect the real icons and map response. Recenter appears after manual exploration when a usable position exists. A wildland crew or security patrol still needs current location data. Unit already has web map components; browser cartography and native background location require separate verification.",
+      "practice": "Pan around a fictional response area, return to the selected unit, and explain the difference between the marker and a verified live background update.",
+      "source_workflow_reference": {
+        "title": "Follow the apparatus and control the map",
+        "narration": "The main map shows the active unit’s operational context. Lock map to unit keeps the view following its location; Unlock map allows manual exploration. After panning, use the recenter control when offered to return to the unit. Read the current unit selection before interpreting its position. Browser location and a native device’s foreground or background updates have different limits, so explain which platform produced the displayed view.",
+        "required_labels": [
+          "Lock map to unit",
+          "Unlock map"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Pan around a fictional response area, return to the selected unit, and explain the difference between the marker and a verified live background update."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture legible real cartography and current unit; review named lock/unlock icons with DOM bounds and actual image review; show recenter only if genuinely offered."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "02-inspect-pins-and-useful-map-overlays",
+      "title": "Inspect pins and useful map overlays",
+      "route": "/",
+      "capture_intent": "Select real incident/resource/POI pins and review actual details; enable only actual supplied route/geofence/layer overlays. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "View Call Details",
+        "Set as Current Call"
+      ],
+      "narration": "Select a map pin to inspect the information associated with a call, resource, or place. Open View Call Details for incident context and use Set as Current Call where offered only when the crew intends to follow that incident. Available overlays add route stops, geofence context, or configured layers. Inspect what is enabled instead of assuming every department has the same map content or identical pin types.",
+      "practice": "Open the fictional incident pin and compare its detail with the active route overlay before selecting the crew’s next task.",
+      "source_workflow_reference": {
+        "title": "Inspect pins and useful map overlays",
+        "narration": "Select a map pin to inspect the information associated with a call, resource, or place. Open View Call Details for incident context and use Set as Current Call where offered only when the crew intends to follow that incident. Available overlays add route stops, geofence context, or configured layers. Inspect what is enabled instead of assuming every department has the same map content or identical pin types.",
+        "required_labels": [
+          "View Call Details",
+          "Set as Current Call"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Open the fictional incident pin and compare its detail with the active route overlay before selecting the crew’s next task."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Select real incident/resource/POI pins and review actual details; enable only actual supplied route/geofence/layer overlays."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "03-use-custom-map-layers-for-the-task",
+      "title": "Use custom map layers for the task",
+      "route": "/maps -> /maps/custom/[id]",
+      "capture_intent": "Use a guarded local custom-map fixture with real source layer/region data; capture catalog, Layer Toggles and rendered layer changes. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Custom Maps",
+        "Layer Toggles",
+        "Region"
+      ],
+      "narration": "Open Custom Maps in the maps catalog and choose an available map. Layer Toggles controls the overlays prepared for it, while a selected Region provides local context. Turn on only the layers needed for the exercise and inspect how they relate to the base map. A configured event area or industrial zone can clarify the destination, but it depends on the quality and currency of the supplied data.",
+      "practice": "Open a fictional community-event map, compare two configured layers, and identify the region that contains the crew’s assignment.",
+      "source_workflow_reference": {
+        "title": "Use custom map layers for the task",
+        "narration": "Open Custom Maps in the maps catalog and choose an available map. Layer Toggles controls the overlays prepared for it, while a selected Region provides local context. Turn on only the layers needed for the exercise and inspect how they relate to the base map. A configured event area or industrial zone can clarify the destination, but it depends on the quality and currency of the supplied data.",
+        "required_labels": [
+          "Custom Maps",
+          "Layer Toggles",
+          "Region"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Open a fictional community-event map, compare two configured layers, and identify the region that contains the crew’s assignment."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Use a guarded local custom-map fixture with real source layer/region data; capture catalog, Layer Toggles and rendered layer changes."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 68
+    },
+    {
+      "id": "04-find-a-building-floor-or-zone",
+      "title": "Find a building floor or zone",
+      "route": "/maps/search -> /maps/indoor/[id]",
+      "capture_intent": "Use an actual indoor-map/floor/zone fixture; capture floor selection, zone info and Dispatch to this zone opening the real form, explicitly verify absent/unconsumed prefill. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Indoor Maps",
+        "Zone",
+        "Dispatch to this zone"
+      ],
+      "narration": "Indoor Maps and Search Maps locate configured buildings, floors, zones, and regions. Choose the correct floor before selecting a zone. Dispatch to this zone opens the new-call route with zone identifiers. The current new-call screen does not consume those parameters, so verify the actual location and recipients manually. Opening this route does not dispatch a call or establish that the zone was prefilled.",
+      "practice": "Find a fictional industrial building zone, verify its floor, and prepare the permitted zone action without involving real dispatch recipients.",
+      "source_workflow_reference": {
+        "title": "Find a building floor or zone",
+        "narration": "Use Indoor Maps or Search Maps to locate configured floors, zones, and regions. Open the intended building and choose the correct Floor before inspecting a Zone. Dispatch to this zone has operational impact, so use it only for a reviewed training incident and authorized account. Before confirming, verify the floor, selected zone, resulting location, and recipient context rather than assuming any point inside the building is equivalent.",
+        "required_labels": [
+          "Indoor Maps",
+          "Floor",
+          "Zone",
+          "Dispatch to this zone"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Find a fictional industrial building zone, verify its floor, and prepare the permitted zone action without involving real dispatch recipients."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Use an actual indoor-map/floor/zone fixture; capture floor selection, zone info and Dispatch to this zone opening the real form, explicitly verify absent/unconsumed prefill."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "05-read-the-weather-alert-itself",
+      "title": "Read the weather alert itself",
+      "route": "/weather-alerts -> /weather-alert/[id]",
+      "capture_intent": "Capture Weather Alerts search/severity filters; use clearly fictional prepared alert for detail/polygon/instructions, or disclose No Weather Alerts. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Weather Alerts"
+      ],
+      "narration": "Open Weather Alerts or the available alert banner, then search or filter the prepared alerts. Read the actual detail, affected area, timing, and instructions rather than relying only on its severity color. A No Weather Alerts or disabled state explains the data currently available to the app. Use fictional or safely prepared examples, and do not present a recorded training screen as a current safety forecast.",
+      "practice": "Inspect a prepared wildland weather-alert example and explain which area and time window the displayed notice describes.",
+      "source_workflow_reference": {
+        "title": "Read the weather alert itself",
+        "narration": "Open Weather Alerts or the available alert banner, then search or filter the prepared alerts. Read the actual detail, affected area, timing, and instructions rather than relying only on its severity color. A No Weather Alerts or disabled state explains the data currently available to the app. Use fictional or safely prepared examples, and do not present a recorded training screen as a current safety forecast.",
+        "required_labels": [
+          "Weather Alerts"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Inspect a prepared wildland weather-alert example and explain which area and time window the displayed notice describes."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture Weather Alerts search/severity filters; use clearly fictional prepared alert for detail/polygon/instructions, or disclose No Weather Alerts."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "06-coordinate-in-chat-and-verify-assistant-advice",
+      "title": "Coordinate in chat and verify assistant advice",
+      "route": "/chat -> /chat/[channelId] -> /chatbot",
+      "capture_intent": "Capture actual Chat entry, recipients/group/thread/composer/attachment choices; internal fictional sends only. Assistant workspace view only, no AI provider query. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "New Group",
+        "Type a message"
+      ],
+      "narration": "Chat separates direct messages, channels, and incident conversations when enabled. New Group and Type a message work within the selected audience; inspect available attachment and thread choices before sending fictional internal text. Assistant is a separate workspace and does not establish provider availability or reliable advice. Media, location sharing, reactions, urgent flags, and remote delivery require their own observed results; no hardware permission is granted here.",
+      "practice": "Create a fictional logistics group, inspect a thread and acknowledgement request, and verify a training assistant answer against a reference.",
+      "source_workflow_reference": {
+        "title": "Coordinate in chat and verify assistant advice",
+        "narration": "Open Chat for Direct Messages, channels, and incident conversations when enabled. New Group creates a scoped team conversation; confirm the members before using Type a message, attachments, location, reactions, or urgent options. Threads and acknowledgements help organize follow-up. Assistant is a separate available conversation whose answers should be checked against actual references. Unit provides crew context while the person who signed in remains accountable.",
+        "required_labels": [
+          "Direct Messages",
+          "New Group",
+          "Type a message",
+          "Assistant"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Create a fictional logistics group, inspect a thread and acknowledgement request, and verify a training assistant answer against a reference."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture actual Chat entry, recipients/group/thread/composer/attachment choices; internal fictional sends only. Assistant workspace view only, no AI provider query."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "07-inspect-voice-streams-and-real-device-settings",
+      "title": "Inspect voice, streams, and real device settings",
+      "route": "Sidebar Voice Channels -> Audio Streams -> /settings",
+      "capture_intent": "Open actual Voice Channels and Audio Streams availability; connected-only Audio Settings/Disconnect must not be required when no approved session exists. No device permissions/provider join. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Voice Channels",
+        "Audio Streams"
+      ],
+      "narration": "Voice Channels offers Join when channels and provider access exist. A connected session can show Disconnect and Audio Settings; those controls are not guaranteed in an empty picker. Audio Streams is a separate listening surface. Inspect actual availability and any reachable device settings without claiming microphone, Bluetooth, push-to-talk, or background success. Native hardware and provider sessions need separate authorized tests with an approved listener.",
+      "practice": "Compare a training voice channel with a listening stream and inspect device routing; label any untested hardware or provider branch explicitly.",
+      "source_workflow_reference": {
+        "title": "Inspect voice, streams, and real device settings",
+        "narration": "Voice Channels supports a two-way session through Join and Disconnect. Audio Streams is a separate listening surface with its own stream state. Open Audio Settings and the Bluetooth device view to inspect the intended microphone and output. Native phones and browsers expose different permissions and audio controls. Test physical push-to-talk and background behavior on the intended device, with an approved listener, before relying on them during an assignment.",
+        "required_labels": [
+          "Voice Channels",
+          "Join",
+          "Disconnect",
+          "Audio Streams",
+          "Audio Settings"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Compare a training voice channel with a listening stream and inspect device routing; label any untested hardware or provider branch explicitly."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open actual Voice Channels and Audio Streams availability; connected-only Audio Settings/Disconnect must not be required when no approved session exists. No device permissions/provider join."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "08-consult-the-department-s-field-references",
+      "title": "Consult the department’s field references",
+      "route": "/contacts -> /notes -> /protocols",
+      "capture_intent": "Open actual contact details/preplan/files/calls and department Note/Protocol HTML through Unit’s existing HtmlRenderer.web. No Responder patch assumed. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Contact Details",
+        "Pre-Plan",
+        "Files",
+        "Calls"
+      ],
+      "narration": "Contacts provides Contact Details and, when available, Pre-Plan, Files, and Calls context for a site or person. Inspect entrances and hazards before relying on a general address. Notes holds departmental reference information, while Protocols presents published guidance. These are reference surfaces, not a substitute for command or clinical training. Open the actual item that matches the exercise and explain why it is relevant to the crew’s next decision.",
+      "practice": "Review a fictional site entrance, its preplan, and a supporting protocol before describing an access approach.",
+      "source_workflow_reference": {
+        "title": "Consult the department’s field references",
+        "narration": "Contacts provides Contact Details and, when available, Pre-Plan, Files, and Calls context for a site or person. Inspect entrances and hazards before relying on a general address. Notes holds departmental reference information, while Protocols presents published guidance. These are reference surfaces, not a substitute for command or clinical training. Open the actual item that matches the exercise and explain why it is relevant to the crew’s next decision.",
+        "required_labels": [
+          "Contact Details",
+          "Pre-Plan",
+          "Files",
+          "Calls"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Review a fictional site entrance, its preplan, and a supporting protocol before describing an access approach."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open actual contact details/preplan/files/calls and department Note/Protocol HTML through Unit’s existing HtmlRenderer.web. No Responder patch assumed."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 68
+    },
+    {
+      "id": "09-create-a-field-record-in-the-correct-context",
+      "title": "Create a field record in the correct context",
+      "route": "/records -> /records/new",
+      "capture_intent": "Open Records catalog and contextual training form; create a clearly labelled legitimate server draft and verify actual draft reference and context. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Assigned to you",
+        "Drafts",
+        "New Record",
+        "Save and send"
+      ],
+      "narration": "Records lists assigned work, drafts, returned items, and recent activity when permitted. New Record uses the server’s catalog and supplied call or unit context. Read the form’s validations before Save and send. That first save can produce a legitimate server draft reference rather than a final record number. Supported offline authoring and protected forms differ; an unavailable definition must not be recreated with a substitute screen.",
+      "practice": "Start a fictional apparatus incident record, inspect its prefilled context, and save only the intended demonstration draft.",
+      "source_workflow_reference": {
+        "title": "Create a field record in the correct context",
+        "narration": "Records shows Assigned to you, Drafts, Returned to you, and recent work when the feature and permissions allow it. Select an available New Record definition and review the unit or call context supplied to the form. Complete the supported fields and required validations before Save and send. The catalog decides what this app can create; an unavailable or unsupported form should be handled through the indicated web workflow.",
+        "required_labels": [
+          "Assigned to you",
+          "Drafts",
+          "New Record",
+          "Save and send"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Start a fictional apparatus incident record, inspect its prefilled context, and save only the intended demonstration draft."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Records catalog and contextual training form; create a clearly labelled legitimate server draft and verify actual draft reference and context."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "10-handle-record-attachments-and-offline-states",
+      "title": "Handle record attachments and offline states",
+      "route": "/records/[id]",
+      "capture_intent": "Inspect record Attachments and supported lifecycle actions; upload only authorized training file if allowed and verify stored result. Actual local/returned/final states require their own source-supported scenario. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Attachments"
+      ],
+      "narration": "After a server save, Attachments may offer Take a photo and Choose a file. Use permitted training content and verify the actual upload result. Paused, resumable, and failed states require genuine evidence; do not manufacture an interrupted upload. Submit for review and Finalize appear only for supported lifecycle paths. Keep local drafts, server drafts, returned work, and finalized records distinct, without performing credential or device-permission changes.",
+      "practice": "Attach a harmless sample file to the practice draft and identify its current lifecycle and upload states before any review submission.",
+      "source_workflow_reference": {
+        "title": "Handle record attachments and offline states",
+        "narration": "After the first server save, Attachments can add a permitted photo or file. Take a photo requires the real platform’s camera permission, and Choose a file opens the supported picker. Inspect upload progress and any paused or resumable state. Submit for review and Finalize are separate lifecycle actions. Offline capability belongs to the selected definition; keep local, synchronized, returned, and finalized states distinct in the narration.",
+        "required_labels": [
+          "Attachments",
+          "Take a photo",
+          "Choose a file",
+          "Submit for review"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Attach a harmless sample file to the practice draft and identify its current lifecycle and upload states before any review submission."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Inspect record Attachments and supported lifecycle actions; upload only authorized training file if allowed and verify stored result. Actual local/returned/final states require their own source-supported scenario."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "11-separate-external-orders-from-daily-operations",
+      "title": "Separate external orders from daily operations",
+      "route": "/records/deployments -> /records/connectors",
+      "capture_intent": "Open Records deployments/fills and connector readiness/run/reconciliation views; never invoke Read feed now against a real provider or expose credentials. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Deployments",
+        "External connectors",
+        "Read feed now"
+      ],
+      "narration": "Deployments inside Records describes external orders, requests, and fills. External connectors shows source authority, readiness, recent runs, and reconciliation differences. Read feed now can contact an ordering system, so use a safe demonstration source or inspect the existing history. Credential setup and reconciliation decisions belong on the web. This view provides ordering context; the operational deployment screen used for crew time is a different workflow.",
+      "practice": "Compare a fictional mutual-aid order and connector run with the separate operational deployment selected for daily crew reporting.",
+      "source_workflow_reference": {
+        "title": "Separate external orders from daily operations",
+        "narration": "Deployments inside Records describes external orders, requests, and fills. External connectors shows source authority, readiness, recent runs, and reconciliation differences. Read feed now can contact an ordering system, so use a safe demonstration source or inspect the existing history. Credential setup and reconciliation decisions belong on the web. This view provides ordering context; the operational deployment screen used for crew time is a different workflow.",
+        "required_labels": [
+          "Deployments",
+          "External connectors",
+          "Read feed now"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Compare a fictional mutual-aid order and connector run with the separate operational deployment selected for daily crew reporting."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Records deployments/fills and connector readiness/run/reconciliation views; never invoke Read feed now against a real provider or expose credentials."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "12-record-the-crew-s-deployment-day",
+      "title": "Record the crew’s deployment day",
+      "route": "/operations/[id]",
+      "capture_intent": "Open independent fictional deployment rostered to Engine51; choose a new date if crew draft already exists. Capture actual crew time form/save result, leaving signatures/approval unexercised. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Time",
+        "Start crew time report",
+        "Save entries",
+        "Submit report"
+      ],
+      "narration": "Select the operational deployment, date, and active unit’s crew scope. Time can offer Start crew time report, entries, breaks, Apply to crew, Save entries, and Submit report. If a report already exists, open it instead of claiming a new one was started. Signatures are separate. Unit disables supervisor approval in its capabilities; an authorized Responder or web workflow handles that stage, with no payment implied here.",
+      "practice": "Prepare a fictional wildland apparatus crew’s travel day and identify the submission and signature steps still required.",
+      "source_workflow_reference": {
+        "title": "Record the crew’s deployment day",
+        "narration": "On the operational deployment, review the date and the active unit’s crew scope. In Time, use Start crew time report when offered and add the appropriate deployment, standby, or travel entries. Review breaks, overnight boundaries, and Apply to crew before Save entries and Submit report. Signatures remain separate steps. Unit supports field submission; supervisor approval is handled through an authorized Responder or web workflow rather than this app’s approval capability.",
+        "required_labels": [
+          "Time",
+          "Start crew time report",
+          "Save entries",
+          "Submit report"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Prepare a fictional wildland apparatus crew’s travel day and identify the submission and signature steps still required."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open independent fictional deployment rostered to Engine51; choose a new date if crew draft already exists. Capture actual crew time form/save result, leaving signatures/approval unexercised."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "13-capture-expenses-and-readings-without-claiming-submission",
+      "title": "Capture expenses and readings without claiming submission",
+      "route": "/operations/[id]",
+      "capture_intent": "Inspect Expenses/Usage forms and permitted fictional saved inputs only if authorized; capture actual F-42 local draft/validation failure without external submission. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Expenses",
+        "Add expense",
+        "Usage",
+        "Add reading",
+        "F-42",
+        "Validate"
+      ],
+      "narration": "Use Expenses to record an allowed cost and supporting receipt, then Add expense. Usage captures the apparatus readings appropriate to the deployment through Add reading. Review any exception or Needs review state. When enabled, F-42 can draft from submitted reports and Validate its current data. Validation is preparation, not an external portal submission; that final manual, audited step remains with authorized staff on the web.",
+      "practice": "Record a fictional fuel receipt and odometer reading, then inspect a prepared F-42 result without representing it as submitted.",
+      "source_workflow_reference": {
+        "title": "Capture expenses and readings without claiming submission",
+        "narration": "Use Expenses to record an allowed cost and supporting receipt, then Add expense. Usage captures the apparatus readings appropriate to the deployment through Add reading. Review any exception or Needs review state. When enabled, F-42 can draft from submitted reports and Validate its current data. Validation is preparation, not an external portal submission; that final manual, audited step remains with authorized staff on the web.",
+        "required_labels": [
+          "Expenses",
+          "Add expense",
+          "Usage",
+          "Add reading",
+          "F-42",
+          "Validate"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Record a fictional fuel receipt and odometer reading, then inspect a prepared F-42 result without representing it as submitted."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Inspect Expenses/Usage forms and permitted fictional saved inputs only if authorized; capture actual F-42 local draft/validation failure without external submission."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "14-set-reliable-preferences-and-verify-recovery",
+      "title": "Set reliable preferences and verify recovery",
+      "route": "/settings",
+      "capture_intent": "Show actual browser settings/toggles, shared installation and logout views. Explain the source-defined Android-only Modern Notification Sounds control explicitly; do not require it in browser shots. No GPS/audio/notification permission, native background or durable-storage success claim. Retain only actually visible and reviewed controls.",
+      "required_labels": [
+        "Background Geolocation",
+        "Realtime Geolocation",
+        "Keep Alive",
+        "Settings"
+      ],
+      "narration": "Settings offers language, theme, Background Geolocation, Realtime Geolocation, and Keep Alive. Unit defaults realtime sharing on; confirm the actual state and device permissions before duty. Modern Notification Sounds appears only on Android, so it is absent here. These controls do not prove a notification or location update succeeded. Checklist web storage is memory-only, record offline support depends on its definition, and inventory counts save to the server. Verify native storage, hardware, and background delivery separately.",
+      "practice": "Choose suitable preferences for a training vehicle, inspect a queued feature’s recovery, and list the native notification or offline branches still unverified.",
+      "source_workflow_reference": {
+        "title": "Set reliable preferences and verify recovery",
+        "narration": "In Settings, review language, theme, notification sounds, Background Geolocation, Realtime Geolocation, and Keep Alive for the actual device and duty. These settings have different effects on location, received updates, battery, and screen behavior. Inspect real permission views and a test notification separately. After lost connectivity, review queued work and synchronization for the specific feature; a browser session cannot demonstrate durable native offline storage or background delivery.",
+        "required_labels": [
+          "Background Geolocation",
+          "Realtime Geolocation",
+          "Keep Alive",
+          "Settings"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Choose suitable preferences for a training vehicle, inspect a queued feature’s recovery, and list the native notification or offline branches still unverified."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T15:16:56.681677+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Show actual settings/toggles, shared installation and logout views; no GPS/audio/notification permissions, no native background or durable-storage success claims."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review.",
+        "platform_limits": {
+          "Modern Notification Sounds": "Android only; the actual browser settings omits this control. No native notification test performed.",
+          "Realtime Geolocation": "Unit source defaults to on. The actual browser AX displayed on/Connected to hub; this is not GPS permission, a transmitted fix or hardware proof."
+        }
+      },
+      "narration_word_count": 75
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A fire or EMS apparatus reviews its field workspace.",
+      "practice": "Inspect actual unit map controls and pins, contacts, record context and configured communication choices without native/provider success claims."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A mobile community-care team coordinates a virtual handoff.",
+      "practice": "Use a fictional internal chat and source-backed references; treat assistant advice as something to verify and keep real client data out of practice records."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A SAR vehicle needs map layers and building context.",
+      "practice": "Review actual custom/indoor layers and zone actions, noting that passing zone params does not prove coordinate/recipient prefill in the current new-call form."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A security team checks site references and weather.",
+      "practice": "Read actual contact preplan/files/calls and alert severity/content; empty feeds and unconfigured voice channels remain explicit limits."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A mutual-aid unit documents a wildland deployment day.",
+      "practice": "Use actual crew time/usage/expense/F-42 forms when access allows. Unit does not approve time, and local validation is not portal submission or payment."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial response vehicle prepares for loss of connectivity.",
+      "practice": "Inspect actual preferences and record/checklist recovery choices; browser checklist storage is memory-only and native background/location/audio behavior needs separate device proof."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/index.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/maps/index.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/maps/search.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/maps/custom/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/maps/indoor/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/weather-alerts.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/chat.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/chat/[channelId].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/livekit/livekit-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/records.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/records/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/records/connectors/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/operations/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/lib/operations/capabilities.ts",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/settings.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/lib/checklists/vault.ts"
+  ],
+  "authoring_status": "source_reconciled_awaiting_actual_captures",
+  "source_audited_at": "2026-10-26T19:08:15.698056+00:00",
+  "narration_word_count": 924,
+  "capture_limitations": [
+    "No actual Unit scene-to-screen proof is established by this source audit.",
+    "No credential/factor/device-security changes or GPS/audio/native permissions are exercised.",
+    "Unrendered API/store operations are not app-screen walkthrough actions.",
+    "No external ordering/AI/voice provider, notification delivery, physical arrival, durable native offline operation, or financial submission success is claimed."
+  ],
+  "media_status": {
+    "natural_audio": "not_frozen",
+    "speech_timed_captions": "pending",
+    "rendered_video": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "spoken_sector_examples": [
+    "wildland",
+    "security patrol"
+  ]
+}

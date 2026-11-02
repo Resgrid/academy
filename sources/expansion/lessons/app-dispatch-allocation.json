@@ -1,0 +1,346 @@
+{
+  "id": "app-dispatch-allocation",
+  "title": "Dispatch: closest recipients and conditional run-card decisions",
+  "app": "Dispatch",
+  "audience": [
+    "Dispatchers",
+    "Duty officers",
+    "Response planners"
+  ],
+  "summary": "Use a real located training call to compare personnel and units, inspect conditional Yes/No and stale-position explanations, apply a proposal, and review a saved allocation.",
+  "prerequisites": [
+    "Authorized fictional Department 51 account and local isolated training stack; no real provider delivery test.",
+    "Dispatch.RunCards and Dispatch.RunCardConditions enabled with Academy Training Alarm matching Urgent / Structure Fire, eight-minute engine condition, Academy Initial Response package and one alarm level.",
+    "Engine51 crew1/1 with Herrmann, actual current statuses, station fallback and separately declared simulated officer station fixes; preserve original three active calls.",
+    "Use only a disposable training call for Create/Re-evaluate/Close, verify fields and recipients before submitting, and use actual Notify everyone control off for the demonstration close."
+  ],
+  "scenes": [
+    {
+      "id": "app-dispatch-allocation-scene-01",
+      "title": "Prepare the incident location and matching fields",
+      "route": "/call/new",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Urgent",
+        "Type",
+        "Structure Fire",
+        "Latitude",
+        "Longitude"
+      ],
+      "narration": "Begin in New Call with a clearly named training exercise. Complete Name and Nature, then choose the department’s Priority and Type. Here, Urgent and Structure Fire match the prepared Academy Training Alarm. A run card is configured beforehand in Core administration; the dispatch app uses that configuration. Enter and check the incident’s Latitude and Longitude before comparing resources. These are fictional incident coordinates, not a device location. The first exercise stays unsent while we inspect its recommendation. This browser recording cannot establish native background GPS collection or delivery of an alert to a real device.",
+      "practice": "Prepare an unsent training call and verify its type, priority and coordinates before opening the recipient picker.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-03-new-call-matching-fields",
+          "dispatch-16-restored-near-call-location"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 95
+    },
+    {
+      "id": "app-dispatch-allocation-scene-02",
+      "title": "Read a conditional result and its shortfall",
+      "route": "/call/new",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Dispatch To",
+        "Academy Training Alarm",
+        "Decision",
+        "Advice",
+        "Engine within eight minutes",
+        "Yes",
+        "Ideal configuration not available",
+        "Could not fill"
+      ],
+      "narration": "Under Dispatch To, read the named card and its Decision. The rule asks whether an engine is within eight minutes. The first preview says Yes: Engine 51 has an estimated two-minute response. That does not mean the entire response package is complete. Ideal configuration not available and Could not fill explain that the incident-officer positions are too old. Read the explanation before accepting a proposal. An available vehicle and an eligible officer are separate requirements. The advice to send the initial response is guidance from this configured card; it is not proof that resources have already been dispatched.",
+      "practice": "Identify the successful engine condition and the separate officer shortfall without treating the package as fully staffed.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-05-conditional-yes-officer-shortfall",
+          "dispatch-06-stale-position-apply-controls"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 98
+    },
+    {
+      "id": "app-dispatch-allocation-scene-03",
+      "title": "Review and apply the complete proposal",
+      "route": "/call/new",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Recommended units (1)",
+        "Engine 51",
+        "Recommended personnel (1)",
+        "Christopher Herrmann",
+        "Fills: Engine",
+        "Fills: Incident officer",
+        "Apply recommendation",
+        "2 selected"
+      ],
+      "narration": "For the next preview, the three unchanged fictional officers received fresh simulated station fixes through the controlled training setup. Their statuses and earlier history were preserved; no device GPS was used. The refreshed proposal now lists Engine 51 under Recommended units and Christopher Herrmann under Recommended personnel. The Fills labels explain which package requirement each resource satisfies. Read both rows and their reasons, then choose Apply recommendation. The form changes to two selected. Applying the proposal prepares a selection; it does not create the call. Open that selection to inspect the actual people and units before proceeding.",
+      "practice": "Read the two Fills labels, apply the proposal and verify that only the intended two recipients are selected.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-17-restored-near-complete-decision",
+          "dispatch-07-complete-recommendation-resources",
+          "dispatch-08-recommendation-applied-unsent",
+          "dispatch-09-closest-personnel-near"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 97
+    },
+    {
+      "id": "app-dispatch-allocation-scene-04",
+      "title": "Compare closest people, names and availability",
+      "route": "/call/new → Select Dispatch Recipients",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Closest",
+        "Name",
+        "Available only",
+        "Everyone",
+        "No location",
+        "Confirm"
+      ],
+      "narration": "The Select Dispatch Recipients sheet offers Closest, Name and Available only. Closest follows the server’s location-aware board. Herrmann appears with Nearest number one and the Run card badge. Name changes the order; Blake Gallo then appears with Unavailable and No location. The absence of a location is useful information, not an invitation to guess one. Available only reduces this example from fourteen users to twelve. Previously selected recipients remain selected, so review the checkmarks and total as well as the filter. Everyone is a broader recipient choice. Leave it clear when this exercise needs only named resources.",
+      "practice": "Compare Closest with Name, apply Available only, and explain why a No location row has no distance estimate.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-09-closest-personnel-near",
+          "dispatch-10-name-sort-unavailable-location",
+          "dispatch-11-available-only-personnel"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 97
+    },
+    {
+      "id": "app-dispatch-allocation-scene-05",
+      "title": "Choose the unit and distinguish its group",
+      "route": "/call/new → Select Dispatch Recipients",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Engine 51",
+        "Nearest #3",
+        "Run card",
+        "Crew: Christopher Herrmann (Officer / Team Lead)",
+        "At station",
+        "2 selected",
+        "Confirm"
+      ],
+      "narration": "Search for Engine to narrow the sheet. The Groups entry called Engine 51 and the unit called Engine 51 are separate choices. In this example the group is unchecked and the unit is checked. Read the unit’s Available status, Herrmann’s crew assignment and At station position source. Its Nearest number three badge is its place among the board’s available units; it does not say that three engines are selected. The row shows an estimated travel time, while the board can rank units using turnout plus travel. Confirm returns the selected recipients to the call form. It is still separate from creating or dispatching the call.",
+      "practice": "Find the group and unit with the same name, check the intended unit, inspect its crew and confirm the selection.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-12-closest-unit-station-crew"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 105
+    },
+    {
+      "id": "app-dispatch-allocation-scene-06",
+      "title": "Compare a distant incident and return to the near point",
+      "route": "/call/new",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Decision",
+        "Outcome: Review alternatives",
+        "Advice",
+        "No",
+        "Christopher Herrmann",
+        "Engine 51",
+        "At station",
+        "Latitude",
+        "Longitude"
+      ],
+      "narration": "Changing only the unsent incident’s coordinates creates the distant comparison. The same engine now fails the eight-minute condition, and the outcome becomes Review alternatives. The advice-only branch recommends no additional package. The recipient sheet shows about one hundred and one kilometres and roughly one hundred and ninety-eight minutes for both Herrmann and Engine 51. The run-card response estimate is slightly longer because its response calculation includes turnout. These are estimates, not a promise of arrival. Notice that the earlier two selected recipients remain in the form even when the recommendation changes. Restore the near coordinates and review both the new decision and your selection.",
+      "practice": "Move only the fictional incident point, compare the returned condition and estimates, then restore the near point and recheck recipients.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-13-far-condition-advice",
+          "dispatch-14-far-personnel-comparison",
+          "dispatch-15-far-unit-comparison",
+          "dispatch-16-restored-near-call-location",
+          "dispatch-17-restored-near-complete-decision"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 104
+    },
+    {
+      "id": "app-dispatch-allocation-scene-07",
+      "title": "Save a controlled training allocation and inspect its pin",
+      "route": "/call/[id] → Dispatched",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Dispatched",
+        "Strike alarm 2",
+        "Dispatch additional resources",
+        "Christopher Herrmann",
+        "Engine 51",
+        "Select Dispatch Recipients",
+        "Decision",
+        "Re-evaluate"
+      ],
+      "narration": "For the saved example, a separate call named TRAINING ONLY, Dispatch allocation recording was created with those same two fictional recipients after checking every field. Open Dispatched to inspect what the application stored: Herrmann as a user and Engine 51 as a unit. Dispatch additional resources opens the existing call’s recommendation. Its banner says the decision was pinned from the dispatcher’s preview, and the explanation counts the engine and officer already on the call. Zero additional recommendations can mean the existing allocation covers the package. Strike alarm two is visible, but this training card has only one configured level, so no escalation is exercised here.",
+      "practice": "On the saved training call, compare its stored recipients with the pinned preview and explain why no additional resources are proposed.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-20-own-call-created-console",
+          "dispatch-21-own-saved-dispatched-controls",
+          "dispatch-22-own-saved-pinned-decision"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 105
+    },
+    {
+      "id": "app-dispatch-allocation-scene-08",
+      "title": "Re-evaluate deliberately and finish the exercise",
+      "route": "/call/[id] → Dispatch additional resources → Close Call",
+      "capture_intent": "Use only the ordered, reviewed real application sources. Keep the named control or returned state readable while it is explained; split screens at the stated source correspondence.",
+      "required_labels": [
+        "Re-evaluate",
+        "Outcome: Review alternatives",
+        "No",
+        "0 selected",
+        "Close Call",
+        "Close Type",
+        "Close Note",
+        "Notify everyone on the call",
+        "Active Calls",
+        "Released",
+        "Awaiting Resources",
+        "No calls awaiting resources"
+      ],
+      "narration": "Re-evaluate requests a current calculation. Here it returns No and Review alternatives after ordinary call creation changed the engine to Responding. Treat this as a fresh assessment, not another dispatch or evidence that the earlier recipients vanished. Cancel the picker without adding anyone. To finish this disposable exercise, Close Call uses Closed, a training note, and Notify everyone on the call switched off. Only this new call was closed. The console returned to the original three active calls, and Activity records the engine’s normal change from Responding to Released. Awaiting Resources is a separate queue for outstanding requirements; the captured queue is empty, so no requirement fulfilment or dismissal is claimed.",
+      "practice": "Explain the difference between a saved pin and a new calculation. Close only a disposable training call with the reviewed notification setting.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screens_with_declared_limits",
+        "capture_refs": [
+          "dispatch-22-own-saved-pinned-decision",
+          "dispatch-23-own-reevaluated-advice",
+          "dispatch-25-own-close-notifications-off",
+          "dispatch-26-own-close-returned-original-three",
+          "dispatch-28-own-recorded-unit-activity",
+          "dispatch-18-awaiting-resources-empty"
+        ],
+        "observations": [
+          "Exact source JPEGs/hash-bound foreground observations reviewed. No native GPS, physical arrival or external provider result inferred."
+        ]
+      },
+      "spoken_label_references": {},
+      "narration_word_count": 111
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Review a prepared engine-and-officer package, or repeat the closest-person comparison with an authorized medical resource policy."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Search for named on-duty volunteers, compare availability and avoid Everyone when only a specific team should receive the call."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Compare a search vehicle’s crew with named personnel qualifications and inspect unknown-location rows before selection."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Compare patrol availability with Name and Closest, then review the exact recipients before creating a training alarm."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Use a distant staging-point exercise to read an estimated threshold failure and the configured alternative advice."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Check a specialist’s current staffing, the vehicle crew and station fallback before accepting the proposed allocation."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/dispatch-selection-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/dispatch-recipient-rows.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/lib/dispatch-board.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/models/v4/dispatch/nearestUnitBoard.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/api/runcards/runcards.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/recommendation-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/escalate-alarm-button.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/run-card-decision-section.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/run-card-save-fields.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/models/v4/runcards/dispatchRecommendationResultData.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/awaiting-resources.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/awaiting-resources-banner.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/call-outstanding-requirements.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/dismiss-requirement-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/unit-available-alert-host.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/_layout.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/translations/en.json"
+  ],
+  "capture_manifest": "captures/expansion/dispatch/reviewed-source-subset-20261027.json",
+  "authoring_status": "frozen_for_natural_narration_with_declared_capture_limits",
+  "frozen_at": "2026-10-27T20:04:41.294121+00:00",
+  "narration_word_count": 812,
+  "export_ready": true,
+  "media_status": {
+    "narration": "not_generated",
+    "video": "not_assembled",
+    "browser_playback": "not_performed",
+    "publishable": false
+  },
+  "capture_limitations": [
+    "Browser-only recording; no physical GPS, camera, Bluetooth, native background behavior or external delivery claim.",
+    "The guarded three-officer fixture refresh is simulated telemetry, recorded separately; unit position/status/crew were not forced.",
+    "The first unsent near/far exercise was cancelled; the saved example is separate own call51010/FD51-2026-0002, now closed with notifications off.",
+    "Only alarm1configured; Strike alarm2 control shown, no escalation attempted.",
+    "Awaiting Resources trulyempty; outstanding Dispatch/Dismiss actions remain required future coverage in the unfrozen call-lifecycle lesson.",
+    "No fixed-card-only, automatic dispatch, move-up, first-arriving, response-code selection or substitute-package operation is claimed in this captured sequence; retain supported-source branches for later real footage.",
+    "Full-reload DOM restored the saved pin, but JPEG24 contains a red development overlay and is excluded; no clean reload footage is asserted by narration.",
+    "Archived Calls returned404 and is excluded as operational footage."
+  ],
+  "source_workflow_reference": {
+    "status": "Full earlier supported-source draft retained; unexercised branches remain required future coverage, never recorded outcomes.",
+    "file": "expansion/plans/app-dispatch-allocation-capture-freeze-20261027/source-before.json"
+  },
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-dispatch-allocation-take-01/evidence.reviewed.json"
+}

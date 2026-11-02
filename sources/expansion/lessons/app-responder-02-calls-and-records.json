@@ -1,0 +1,800 @@
+{
+  "id": "app-responder-02-calls-and-records",
+  "title": "Responder: work a call and document the outcome",
+  "app": "Responder",
+  "audience": "Members who receive calls, respond, collaborate at an incident, or complete field records.",
+  "summary": "Follow an incident from call discovery and dispatch through active response, field evidence, and an accurately labeled draft or review state.",
+  "prerequisites": [
+    "Fictional Dept 51 training account with appropriate access. Use actual normal login after human clears the Chrome extension block; never capture credential values.",
+    "Keep existing medical standby 51002 open and parent-reserved 51006 untouched. Coordinate any new/create/close scenario with the Core numbering/run-card owner before mutation.",
+    "The currently captured standby has no protocols, linked preplan, related calls, active incident command, video feeds or Check-In tab. Populated examples require separately guarded fictional fixtures.",
+    "Field-policy-loaded Create/Edit forms, catalog-offered compatible Records definitions, and a timer-enabled call with an eligible target are prerequisites for the unrecorded branches.",
+    "Preserve Engine 51 Officer/TeamLead role 51001 assigned to Christopher Herrmann; do not alter unit roles, qualifications, global policies or seeded approvals.",
+    "No external provider reads/dispatch, GPS permissions, camera capture, attestation, account-security changes or financial operations in this browser exercise."
+  ],
+  "scenes": [
+    {
+      "id": "01-find-the-incident-you-mean",
+      "title": "Find the incident you mean",
+      "route": "/home/calls",
+      "capture_intent": "After human clears Chrome, authenticate Boden normally with no credential screenshot; confirm the Calls view. Type the fictional medical call name; capture its card and the Only Calls I'm On toggle, then Clear search before reviewing the complete list. Capture New Call/Clear search accessible names and fully visible DOM boxes; bind an image-reviewed visible_controls attestation rather than inventing painted labels.",
+      "required_labels": [
+        "New Call",
+        "Clear search"
+      ],
+      "narration": "Open Calls from Home and search for the incident you need. The person icon limits the list to calls you are on; Clear search appears after entering text. The plus icon is New Call when your account can create calls. Confirm the incident name before opening it. A community care visit or security patrol needs the same care with identifying information as an EMS response.",
+      "practice": "Find a fictional medical call by name, compare its card with another call, and open the correct incident.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "016-calls-styled"
+        ],
+        "observations": [
+          "Actual existing-call cards captured. New Call icon and search reset require explicit viewport evidence."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Find the incident you mean",
+        "route": "/home/calls",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "New Call",
+          "Clear search"
+        ],
+        "narration": "Open the Calls view from Home and search for the incident you need. Use the option that limits the list to calls you are on when that helps, and Clear search before checking the full active list. Read the call card’s identifying information before opening it. New Call is for an authorized new dispatch; it is not the way to join an existing incident.",
+        "practice": "Find a fictional medical call by name, compare its card with another call, and open the correct incident."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Source-backed icon controls; existing list partially captured.",
+        "remaining_capture_operations": [
+          "After human clears Chrome, authenticate Boden normally with no credential screenshot; confirm the Calls view.",
+          "Type the fictional medical call name; capture its card and the Only Calls I'm On toggle, then Clear search before reviewing the complete list.",
+          "Capture New Call/Clear search accessible names and fully visible DOM boxes; bind an image-reviewed visible_controls attestation rather than inventing painted labels."
+        ],
+        "runtime_gates": [
+          "Browser remains explicitly blocked until human extension dismissal.",
+          "New Call needs create permission; search reset only exists when search text is nonempty."
+        ],
+        "icon_only_controls": [
+          "New Call",
+          "Clear search",
+          "Only Calls I'm On"
+        ]
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "02-read-the-detail-tabs-before-acting",
+      "title": "Read the detail tabs before acting",
+      "route": "/call/[id]",
+      "capture_intent": "Reopen call 51002 without closing it; capture clean Contact, full Info rich text, and active tab contents. Reuse only reviewed 032/034/035/036 captures if they still match the lesson; empty Protocols must retain its actual no-protocols message.",
+      "required_labels": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity"
+      ],
+      "narration": "In Call Details, start with Info for the incident location and current information. Contact gives supplied contact details, Protocols shows attached guidance, Dispatched identifies assigned resources, and Activity shows updates. Our standby says no protocols are attached; do not infer guidance from an empty tab. Read the information actually present before changing status or starting a record, and follow your organization’s response procedures.",
+      "practice": "Read the training incident’s location, dispatched resources, and latest activity, then identify the attached reference to review.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "032-call-info-repaired",
+          "034-call-protocols-empty",
+          "035-call-dispatched",
+          "036-call-activity"
+        ],
+        "observations": [
+          "Readable call rich text, map and Info/Protocols/Dispatched/Activity captured. Contact screenshot 033 excluded because development notice overlays it."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Read the detail tabs before acting",
+        "route": "/call/[id]",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Info",
+          "Contact",
+          "Protocols",
+          "Dispatched",
+          "Activity"
+        ],
+        "narration": "In Call Details, start with Info for the incident location and current information. Contact gives the supplied contact context, Protocols shows attached guidance, and Dispatched identifies assigned resources. Activity helps you understand the sequence of updates. A protocol being present does not replace your department’s training or command instructions. Pause on the actual detail screen before changing a status or starting a record.",
+        "practice": "Read the training incident’s location, dispatched resources, and latest activity, then identify the attached reference to review."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Actual detail tabs partially captured; Contact overlay excluded.",
+        "remaining_capture_operations": [
+          "Reopen call 51002 without closing it; capture clean Contact, full Info rich text, and active tab contents.",
+          "Reuse only reviewed 032/034/035/036 captures if they still match the lesson; empty Protocols must retain its actual no-protocols message."
+        ],
+        "runtime_gates": [
+          "Contact033 has an obscuring development notice and is excluded.",
+          "This incident currently has no attached protocol; do not narrate an attached protocol as present."
+        ]
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "03-create-only-the-call-you-intend",
+      "title": "Create only the call you intend",
+      "route": "/call/new",
+      "capture_intent": "Open New Call after coordinator confirms a disposable training-call window; capture actual loaded field-policy fields and any harmless validation message. Prepare a clearly TRAINING ONLY industrial alarm without saving, dispatching or altering the reserved calls.",
+      "required_labels": [
+        "Create New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Type"
+      ],
+      "narration": "When New Call is available, Create New Call begins with Name, Nature, Priority, and Type. The loaded department field policy determines which other fields appear and what is required. Prepare a clearly marked training title and a concise industrial alarm description. Read validation before continuing. Preparing this form has no demonstrated dispatch result; a saved exercise must be checked separately before anyone treats it as an incident.",
+      "practice": "Prepare a clearly fictional industrial alarm form without saving or dispatching; identify policy-required fields.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Create form not captured; no new incident created."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Create only the call you intend",
+        "route": "/call/new",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Create New Call",
+          "Name",
+          "Nature",
+          "Priority",
+          "Type"
+        ],
+        "narration": "An authorized dispatcher can choose New Call and complete Create New Call. Enter Name and Nature, then select the configured Priority and Type. The department’s field policy decides which details are required and which are offered. Read any validation message before continuing. A sensible training title helps everyone distinguish an exercise from another incident, while a clear nature statement explains why the resources are needed.",
+        "practice": "Prepare a fictional industrial alarm with an exercise name, a concise nature, and valid department priority and type."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "New-call form source supported, no actual creation capture.",
+        "remaining_capture_operations": [
+          "Open New Call after coordinator confirms a disposable training-call window; capture actual loaded field-policy fields and any harmless validation message.",
+          "Prepare a clearly TRAINING ONLY industrial alarm without saving, dispatching or altering the reserved calls."
+        ],
+        "runtime_gates": [
+          "No Create action until the Core numbering/run-card coordinator authorizes a disposable scenario.",
+          "Existing call 51002 stays open; parent-reserved 51006 is untouched."
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "04-resolve-and-confirm-the-location",
+      "title": "Resolve and confirm the location",
+      "route": "/call/new",
+      "capture_intent": "Show Address/GPS Coordinates/what3words/Plus Code only when the current policy offers them; record the actual route as Edit Call for existing screenshot045. If safely supported, demonstrate a non-provider invalid coordinate message. Do not request/accept actual GPS, open an automatic-location picker, or invoke external geocoding. After map adapter verification is authorized and browser unblocks, accept a map image only when actual cartography and the app-supplied incident point appear.",
+      "required_labels": [
+        "Address",
+        "GPS Coordinates",
+        "what3words",
+        "Plus Code"
+      ],
+      "narration": "Call Location can offer Address, GPS Coordinates, what3words, Plus Code, and Select Location on Map, depending on policy. Our captured fields are in Edit Call; they do not show a completed lookup. Compare supplied coordinates with the intended SAR staging point before any save. Provider searches, real device location, and the map picker require separate verification. A visible location control alone does not establish a correct marker or a successful search.",
+      "practice": "Compare the supplied fictional SAR staging coordinates with the location fields; do not request device location or external lookup.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "045-call-location-controls"
+        ],
+        "observations": [
+          "Actual Address/GPS Coordinates/what3words/Plus Code selector in Edit Call. No provider geocoding or location update saved."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Resolve and confirm the location",
+        "route": "/call/new",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Address",
+          "GPS Coordinates",
+          "what3words",
+          "Plus Code"
+        ],
+        "narration": "Call Location supports several ways to identify a place. Search an Address, enter GPS Coordinates, or use a configured what3words or Plus Code lookup. Select Location on Map provides a visual choice. Inspect the resulting marker and address together before proceeding. Remote searches may need coordinates rather than a street address, and a failed lookup is a cue to correct the input, not to guess.",
+        "practice": "Locate a fictional remote search staging point, compare the coordinates with the map, and correct an intentionally invalid coordinate entry."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Only Edit Call location fields observed; no lookup or saved location.",
+        "remaining_capture_operations": [
+          "Show Address/GPS Coordinates/what3words/Plus Code only when the current policy offers them; record the actual route as Edit Call for existing screenshot045.",
+          "If safely supported, demonstrate a non-provider invalid coordinate message. Do not request/accept actual GPS, open an automatic-location picker, or invoke external geocoding.",
+          "After map adapter verification is authorized and browser unblocks, accept a map image only when actual cartography and the app-supplied incident point appear."
+        ],
+        "runtime_gates": [
+          "Map adapter is source/compile verified; standalone cartography is still pending actual browser validation.",
+          "Provider searches and physical-device location are not authorized evidence."
+        ]
+      },
+      "narration_word_count": 71
+    },
+    {
+      "id": "05-choose-recipients-and-scheduling",
+      "title": "Choose recipients and scheduling",
+      "route": "/call/new",
+      "capture_intent": "Capture allowed Groups/Units and scroll actual Users/Roles if offered; preserve existing assignments and recipients. Capture permitted schedule input and its actual validation without sending a notification or creating a scheduled incident.",
+      "required_labels": [
+        "Dispatch To",
+        "Select Dispatch Recipients",
+        "Scheduled Dispatch Time",
+        "Confirm"
+      ],
+      "narration": "Dispatch To opens Select Dispatch Recipients. Review the permitted Groups and Units, and any Users or Roles actually offered. Everyone has broad scope. Scheduled Dispatch Time appears only when policy allows it and must pass the form’s timing checks. Our example inspects these controls in Edit Call without changing recipients. Preparing a selection or time does not prove that Create saved a call or sent a dispatch.",
+      "practice": "Inspect a small fictional response group and offered schedule inputs; cancel without changing existing recipients.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "046-call-dispatch-recipients",
+          "047-dispatch-recipients-clean"
+        ],
+        "observations": [
+          "Actual Select Dispatch Recipients modal and current selected recipients. Only Groups/Units viewport; Roles/Users and create scheduling require more captures. No recipient changes saved."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Choose recipients and scheduling",
+        "route": "/call/new",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Dispatch To",
+          "Select Dispatch Recipients",
+          "Scheduled Dispatch Time",
+          "Create"
+        ],
+        "narration": "Review Dispatch To and open Select Recipients to choose the permitted people, groups, roles, or units. Everyone has a broad impact, so use it only when the exercise calls for that scope. Scheduled Dispatch Time is useful only when allowed by policy and set far enough ahead. Review the destination and identifiers offered by this form, then select Create for the isolated training incident.",
+        "practice": "Select a small demo response group and review a future dispatch time without notifying operational recipients."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Recipient modal observed in Edit Call; create/schedule result absent.",
+        "remaining_capture_operations": [
+          "Capture allowed Groups/Units and scroll actual Users/Roles if offered; preserve existing assignments and recipients.",
+          "Capture permitted schedule input and its actual validation without sending a notification or creating a scheduled incident."
+        ],
+        "runtime_gates": [
+          "Current screenshots046/047 are Edit Call; they are not evidence of Create New Call or a dispatched schedule.",
+          "Everyone and hidden policy fields are not universally available."
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "06-correct-details-without-losing-context",
+      "title": "Correct details without losing context",
+      "route": "/call/[id]/edit",
+      "capture_intent": "Show menu Edit Call, current values and Save. If a coordinator-approved independent incident exists, change one fictional description only and verify it after reopening. Until a saved before/after is captured, narrate the form and verification procedure rather than claiming a saved correction.",
+      "required_labels": [
+        "Edit Call",
+        "Save"
+      ],
+      "narration": "The call menu offers Edit Call to an account with create permission. Inspect the current Name, Nature, location, contact, and recipient fields before using Save. Change only an approved fictional detail, then reopen the incident to verify the server result. The captured form was canceled, so it proves the available editing controls rather than a saved correction. Keep the training medical standby open while practicing this inspection.",
+      "practice": "Inspect Edit Call and explain how a saved correction would be verified; preserve the standby and reserved coordinator call.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "042-call-menu-repaired",
+          "044-edit-call-form",
+          "045-call-location-controls",
+          "047-dispatch-recipients-clean"
+        ],
+        "observations": [
+          "Actual Edit Call form opened and canceled; no edit saved."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Correct details without losing context",
+        "route": "/call/[id]/edit",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Edit Call",
+          "Save"
+        ],
+        "narration": "Use Edit Call when an existing incident needs a correction. Review the current values first, change only the intended detail, and select Save. Reopen the detail view to inspect the displayed information. The same field policy and scheduling checks still apply during editing. For a demonstration, changing a fictional contact or descriptive note makes the impact easy to see without altering a real response.",
+        "practice": "Correct the contact information on the demo call, save it, and compare the new detail view with the original capture."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Edit form observed and canceled; no saved correction.",
+        "remaining_capture_operations": [
+          "Show menu Edit Call, current values and Save. If a coordinator-approved independent incident exists, change one fictional description only and verify it after reopening.",
+          "Until a saved before/after is captured, narrate the form and verification procedure rather than claiming a saved correction."
+        ],
+        "runtime_gates": [
+          "Do not modify parent-reserved 51006, global dispatch policies or unit staffing."
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "07-make-the-call-active-and-navigate",
+      "title": "Make the call active and navigate",
+      "route": "/call/[id] -> /home",
+      "capture_intent": "Capture Home active Call, View Call Details and Clear Active Call with call 51002 context; distinguish selection from a personal status submission. Capture Route and Route to Destination only if the call has a destination with coordinates. Stop before external navigation.",
+      "required_labels": [
+        "Set as Active Call",
+        "View Call Details",
+        "Clear Active Call",
+        "Route"
+      ],
+      "narration": "Set as Active Call selects the incident for Home’s Call tab. It does not submit your personal responding status. View Call Details returns to the incident, and Clear Active Call removes that Home selection. Route uses incident coordinates; Route to Destination appears only for a configured destination with coordinates. Inspect the endpoint before any external handoff. This browser walkthrough does not demonstrate travel, GPS tracking, or turn-by-turn navigation.",
+      "practice": "Compare Home active selection with personal status, then identify the incident endpoint without opening external navigation.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "042-call-menu-repaired"
+        ],
+        "observations": [
+          "Set as Active Call control observed and selected; home active panel and route controls still need capture. No GPS or turn-by-turn native navigation exercised."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Make the call active and navigate",
+        "route": "/call/[id] -> /home",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Set as Active Call",
+          "View Call Details",
+          "Route",
+          "Route to Destination"
+        ],
+        "narration": "Choose Set as Active Call to make this incident the one shown on your Home Call tab. View Call Details returns to the full record. Route opens the incident location in the available mapping application, while Route to Destination uses a configured destination. Confirm the endpoint before leaving Responder. Native navigation and browser mapping can open differently, so record the actual handoff on the device being demonstrated.",
+        "practice": "Make the fictional EMS call active and compare incident routing with the configured destination routing before starting travel."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Set-active action selected; Home/destination evidence incomplete.",
+        "remaining_capture_operations": [
+          "Capture Home active Call, View Call Details and Clear Active Call with call 51002 context; distinguish selection from a personal status submission.",
+          "Capture Route and Route to Destination only if the call has a destination with coordinates. Stop before external navigation."
+        ],
+        "runtime_gates": [
+          "No external maps navigation, real GPS or turn-by-turn driving proof.",
+          "Destination action is conditional; do not require it on the current standby if absent."
+        ]
+      },
+      "narration_word_count": 68,
+      "conditional_required_labels": {
+        "Route to Destination": "Only if the selected call actually has destination coordinates and the action is visible."
+      }
+    },
+    {
+      "id": "08-add-useful-notes-and-supporting-evidence",
+      "title": "Add useful notes and supporting evidence",
+      "route": "/call/[id]",
+      "capture_intent": "After fresh canonical-issuer login, submit one fictional Call Note and reopen Notes to verify the persisted text; otherwise retain it as prepared/failed only. Open Images and existing Files, recording actual empty states; file upload is not available in this Call Files screen. If a permitted synthetic source image is later uploaded through actual Images UI, inspect the server-returned item separately; no camera access or unrelated private files.",
+      "required_labels": [
+        "Notes",
+        "Call Notes",
+        "Add Note",
+        "Images",
+        "Files"
+      ],
+      "narration": "Notes opens Call Notes, where Add Note sends a brief update. Verify saved text by reopening the list; the earlier training attempt failed authentication and is not a saved note. Images separately offers image selection and upload. Files lists existing attachments and download actions; it has no file-upload control. Use only permitted fictional material. Camera capture and native file sharing are separate device operations and are not demonstrated here.",
+      "practice": "Prepare a fictional access-plan note, verify a normal-UI save only if it succeeds, and distinguish Images upload from Files download.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "032-call-info-repaired",
+          "048-call-note-compose"
+        ],
+        "observations": [
+          "Notes/Images/Files launch controls and actual fictional note composer captured. Add Note ended in HTTP401; saving unconfirmed. Image/file dialogs pending."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Add useful notes and supporting evidence",
+        "route": "/call/[id]",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Notes",
+          "Images",
+          "Files"
+        ],
+        "narration": "Use Notes for a brief operational update that others can understand without a separate conversation. Images and Files hold supporting material associated with this call. Choose only permitted training content, and inspect an uploaded item rather than treating a selection dialog as completion. Camera permissions and gallery behavior differ between a phone and a browser; allow the access needed for the intended action and review the displayed attachment.",
+        "practice": "Attach a fictional site photograph or permitted sample file and add a note that explains what the evidence shows."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Actual note composer observed; previous save failed401.",
+        "remaining_capture_operations": [
+          "After fresh canonical-issuer login, submit one fictional Call Note and reopen Notes to verify the persisted text; otherwise retain it as prepared/failed only.",
+          "Open Images and existing Files, recording actual empty states; file upload is not available in this Call Files screen.",
+          "If a permitted synthetic source image is later uploaded through actual Images UI, inspect the server-returned item separately; no camera access or unrelated private files."
+        ],
+        "runtime_gates": [
+          "Capture049 is an authentication failure and excluded; it does not prove the note saved.",
+          "Call Files download/share depends on native file-system/sharing behavior and remains unexercised."
+        ]
+      },
+      "narration_word_count": 69
+    },
+    {
+      "id": "09-use-site-history-and-incident-coordination",
+      "title": "Use site history and incident coordination",
+      "route": "/call/[id]",
+      "capture_intent": "Show No site information, No related calls, No incident command and No video feeds as actual dataset states. Only expand to populated preplan/history/command after an independently guarded fictional fixture is available; never open external feeds or paint replacements.",
+      "required_labels": [
+        "Site Info",
+        "History",
+        "Command",
+        "Video"
+      ],
+      "narration": "Site Info can show a linked contact’s preplan or hazards, History earlier related calls, Command incident coordination, and Video configured feeds. This standby instead shows No site information, No related calls, no active command, and no video feeds. Those are useful limits to recognize before a warehouse or wildland response. They do not establish that a preplan, command operation, or external video stream was available.",
+      "practice": "Read each actual empty state and identify which guarded fictional data would be needed for a populated example.",
+      "capture_evidence": {
+        "status": "observed_empty_data",
+        "capture_refs": [
+          "037-call-site-info",
+          "038-call-location-history",
+          "039-call-command",
+          "040-call-video"
+        ],
+        "observations": [
+          "Actual Site Info, History, Command and Video tabs show empty states. No active command, video feed, preplan or related call is asserted."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Use site history and incident coordination",
+        "route": "/call/[id]",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Site Info",
+          "History",
+          "Command",
+          "Video"
+        ],
+        "narration": "Site Info can bring the matched contact’s preplan and hazards into the incident. History provides available earlier context, while Command shows the resource view and incident coordination allowed for your role. Video appears when supported feeds are configured. Open these tabs with prepared demo data and explain what each contributes. A visible feed entry is not evidence that an external video provider successfully streamed.",
+        "practice": "Review a fictional warehouse preplan, compare available history, and identify the command information relevant to your assignment."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Actual site/history/command/video empty states captured.",
+        "remaining_capture_operations": [
+          "Show No site information, No related calls, No incident command and No video feeds as actual dataset states.",
+          "Only expand to populated preplan/history/command after an independently guarded fictional fixture is available; never open external feeds or paint replacements."
+        ],
+        "runtime_gates": [
+          "The current four screenshots contain no warehouse preplan, active command operation or video stream."
+        ]
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "10-check-in-against-the-correct-target",
+      "title": "Check in against the correct target",
+      "route": "/call/[id]",
+      "capture_intent": "Use a separate coordinator-approved timer-enabled training call and eligible personnel target; do not change current role/unit assignments. Capture Check-In, eligible timer target, note/Confirm check-in and server history only if actually offered. Distinguish a saved check-in from an offline-queued outcome. Capture the no-tab/no-timers case honestly when timer setup is unavailable; do not add an imaginary timer-management control.",
+      "required_labels": [
+        "Check-In"
+      ],
+      "narration": "Check-In appears only when the call enables timers. Eligible personnel or assignment targets determine the offered checks. Open the intended timer, inspect its target, and use the note and confirmation controls only when offered. Review history for the server result; a queued message is a different outcome. Our standby has no Check-In tab. Timer setup belongs elsewhere, and a software check-in does not prove physical arrival or alert delivery.",
+      "practice": "Identify whether the selected call offers Check-In. With an authorized eligible timer, inspect target and history without claiming a physical arrival.",
+      "capture_evidence": {
+        "status": "conditional_unavailable",
+        "capture_refs": [],
+        "observations": [
+          "Selected standby call has no Check-In tab; a timer-enabled fictional call and target are needed. Call properties not changed."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Check in against the correct target",
+        "route": "/call/[id]",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Check-In"
+        ],
+        "narration": "Open Check-In to inspect the call’s configured timers, target, and history. Record a check-in for the correct person or assignment using the offered control. Authorized users may also see timer-management options. Recording a check-in and receiving a background notification are separate events. Follow your department’s check-in procedures and inspect the history rather than assuming a phone alert always arrived.",
+        "practice": "Inspect a SAR team’s training check-in timer, record the intended check-in, and review the corresponding history entry."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Check-In is conditionally absent in current incident.",
+        "remaining_capture_operations": [
+          "Use a separate coordinator-approved timer-enabled training call and eligible personnel target; do not change current role/unit assignments.",
+          "Capture Check-In, eligible timer target, note/Confirm check-in and server history only if actually offered. Distinguish a saved check-in from an offline-queued outcome.",
+          "Capture the no-tab/no-timers case honestly when timer setup is unavailable; do not add an imaginary timer-management control."
+        ],
+        "runtime_gates": [
+          "No timer-enabled call or eligible-target screen is captured yet.",
+          "A check-in is a software record, not GPS arrival, push delivery or a safety assurance."
+        ]
+      },
+      "narration_word_count": 69,
+      "conditional_required_labels": {
+        "Check-In": "Only on a timer-enabled call; current standby does not render this tab."
+      }
+    },
+    {
+      "id": "11-start-a-call-linked-field-record",
+      "title": "Start a call-linked field record",
+      "route": "/call/[id] -> /records/new",
+      "capture_intent": "Open call-context New Record only if server catalog offers it; show definition/version and actual form labels. Use a fictional incident record draft: distinguish SupportsPrefill context, ordinary required fields and finalize-only requirements. Use Save and send only through normal UI, then capture returned Draft/DraftReference. Show Keep on this device enabled or disabled according to the definition without claiming durable browser offline behavior.",
+      "required_labels": [
+        "New Record",
+        "Save and send",
+        "Keep on this device"
+      ],
+      "narration": "Call-context New Record appears only when the enabled Records feature and server catalog offer a definition. Select the permitted definition and read its actual fields; prefill runs only when supported. Save and send uses the server path. Keep on this device is disabled for definitions without offline authoring. Check the returned state: an incident record with a Draft reference is legitimate draft work, not a finalized document.",
+      "practice": "If the catalog offers it, create an online fictional incident draft and retain its legitimate Draft reference; do not finalize it.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Actual linked record form and local-save controls not captured."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Start a call-linked field record",
+        "route": "/call/[id] -> /records/new",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "New Record",
+          "Save and send",
+          "Keep on this device"
+        ],
+        "narration": "From the available call record action, choose a permitted New Record definition and review its prefilled context. Complete the required fields using the actual form labels. Save and send uses the online path; Keep on this device is offered only for a definition that supports that workflow. A locally kept draft and a server-saved draft are different states, so read the screen’s status before describing the result.",
+        "practice": "Start a fictional incident record from the active call, confirm its call context, and deliberately keep it as a draft."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Records catalog/form source supported; no actual Responder field record capture.",
+        "remaining_capture_operations": [
+          "Open call-context New Record only if server catalog offers it; show definition/version and actual form labels.",
+          "Use a fictional incident record draft: distinguish SupportsPrefill context, ordinary required fields and finalize-only requirements.",
+          "Use Save and send only through normal UI, then capture returned Draft/DraftReference. Show Keep on this device enabled or disabled according to the definition without claiming durable browser offline behavior."
+        ],
+        "runtime_gates": [
+          "Records.Field/catalog/access/schema/definition compatibility must be verified in actual browser first.",
+          "An incident record legitimately remains Draft; never fabricate final number or finalization."
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "12-review-drafts-attachments-and-final-states",
+      "title": "Review drafts, attachments, and final states",
+      "route": "/records -> /records/[id]",
+      "capture_intent": "Open a genuinely server-saved fictional Draft record, capture Drafts/Returned to you list and actual detail identifier/state. Show Save, allowed attachment controls and conditional Submit for review/Finalize with unchecked attestation. Do not attest, finalize or claim a review outcome. If an actual permitted upload is performed later, verify attachment server state and metadata; do not infer it from a picker or progress label.",
+      "required_labels": [
+        "Drafts",
+        "Returned to you",
+        "Submit for review",
+        "Finalize"
+      ],
+      "narration": "Records includes Drafts and Returned to you. Reopen a real server-saved draft to inspect its identifier, status, fields, and allowed attachments. Draft or Returned records with a supported schema offer Save and Submit for review. Finalize also requires attestation and server authority; this practice leaves the attestation unchecked. Uploads need their own verified result. Approval, amendment, and voiding remain web workflows rather than actions in this field screen.",
+      "practice": "Inspect the actual draft, attachment policy and unchecked attestation; explain the unperformed review and finalization stages.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Actual record draft/review/finalization controls not captured; no record finalized."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Review drafts, attachments, and final states",
+        "route": "/records -> /records/[id]",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Drafts",
+          "Returned to you",
+          "Submit for review",
+          "Finalize"
+        ],
+        "narration": "Records separates Drafts, Returned to you, and other available work. Reopen the incident draft, save changes, and add permitted attachments after the first server save. Submit for review sends an eligible record into review. Finalize requires the offered attestation and authority. A legitimate incident record may remain labeled Draft throughout this exercise; describe that accurately instead of presenting an unfinished record as finalized.",
+        "practice": "Reopen the practice draft, inspect its attachments and status, and explain which remaining step would send it for review."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "Record lifecycle and attachment source supported; actual screen pending.",
+        "remaining_capture_operations": [
+          "Open a genuinely server-saved fictional Draft record, capture Drafts/Returned to you list and actual detail identifier/state.",
+          "Show Save, allowed attachment controls and conditional Submit for review/Finalize with unchecked attestation. Do not attest, finalize or claim a review outcome.",
+          "If an actual permitted upload is performed later, verify attachment server state and metadata; do not infer it from a picker or progress label."
+        ],
+        "runtime_gates": [
+          "Draft/Returned plus supported schema render editing controls; final states are read-only.",
+          "Attachment policy and server authority govern each action; approval/amend/void remain web workflows."
+        ]
+      },
+      "narration_word_count": 68
+    },
+    {
+      "id": "13-distinguish-external-orders-and-feeds",
+      "title": "Distinguish external orders and feeds",
+      "route": "/records/deployments -> /records/connectors",
+      "capture_intent": "Open Records Deployments and External connectors read-only, capture actual empty/readiness/authority/run-history messages. If a fictional order exists, inspect its fills/reconciliation values only; do not press Read feed now or change credentials/reconciliation.",
+      "required_labels": [
+        "Deployments",
+        "External connectors",
+        "Read feed now"
+      ],
+      "narration": "Records Deployments describes external resource orders and fills. External connectors shows readiness, read authority, run history, and reconciliation differences. This is separate from the deployment used for crew time. Read feed now is readiness-gated and can contact another system, so inspect existing status without pressing it here. Connector credentials, setup, and reconciliation decisions belong to the web coordinator; an empty list is not a completed mutual-aid import.",
+      "practice": "Compare actual external-order and connector status read-only; do not request a feed read or reconciliation write.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "External connectors and deployment import surfaces not captured; no external feed read requested."
+        ]
+      },
+      "source_workflow_reference": {
+        "title": "Distinguish external orders and feeds",
+        "route": "/records/deployments -> /records/connectors",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Deployments",
+          "External connectors",
+          "Read feed now"
+        ],
+        "narration": "The Deployments area under Records describes external resource orders and fills. External connectors shows feed readiness, authority, run history, and reconciliation differences. This is separate from the operational deployment used for time reporting. Read feed now can contact an external system, so use a safe demonstration connector or inspect the existing status. Connector setup, credentials, and reconciliation decisions are handled in the web application.",
+        "practice": "Compare a fictional mutual-aid resource order with its connector status and identify a disagreement that requires a web coordinator."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "External-orders/connectors source supported; actual list/detail pending.",
+        "remaining_capture_operations": [
+          "Open Records Deployments and External connectors read-only, capture actual empty/readiness/authority/run-history messages.",
+          "If a fictional order exists, inspect its fills/reconciliation values only; do not press Read feed now or change credentials/reconciliation."
+        ],
+        "runtime_gates": [
+          "No external feed read, provider dispatch or write authority is claimed.",
+          "Operational time-report deployments are a separate data model and route."
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "14-close-the-incident-deliberately",
+      "title": "Close the incident deliberately",
+      "route": "/call/[id]",
+      "capture_intent": "Show actual own51009 close form, default notification on, reviewed unchecked state before submit, successful normal close and preserved original active calls across224/225. No provider or physical-resolution claim.",
+      "required_labels": [
+        "Close Call",
+        "Close Type",
+        "Close Note",
+        "Notify everyone on the call",
+        "Closed"
+      ],
+      "narration": "Close Call opens Close Type, Close Note, and Notify everyone on the call, which defaults on. For this industrial software exercise, choose Closed, enter a training-only note, turn notification off, and submit. Closure succeeds; the original three calls remain active. Closing an incident, clearing active selection, and finalizing a field record are distinct. This software action proves no physical incident resolution.",
+      "practice": "Inspect and cancel Close Call on the open medical standby; explain how a separate disposable close would be verified.",
+      "capture_evidence": {
+        "status": "reviewed_actual_screen_subset; whole lesson still incomplete",
+        "capture_refs": [
+          "221-practice-call-actions",
+          "222-close-call-default-notify",
+          "223-close-own-call-notify-off",
+          "224-close-success-original-calls-preserved",
+          "225-original-warehouse-call-preserved"
+        ],
+        "manifest": "captures/expansion/responder/manifest.json",
+        "observations": [
+          "Actual screenshots and DOM semantics reviewed; no invented controls, timing or native/provider success."
+        ],
+        "remaining_scene_capture_operations": []
+      },
+      "source_workflow_reference": {
+        "title": "Close the incident deliberately",
+        "route": "/call/[id]",
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "required_labels": [
+          "Close Call",
+          "Close Type",
+          "Close Note",
+          "Notify everyone on the call"
+        ],
+        "narration": "When authorized to close the incident, open Close Call and select the appropriate Close Type. Add a Close Note that explains the outcome, and decide whether Notify everyone on the call is appropriate for this exercise. Confirm only after reviewing the scope. Closing the call, clearing your active selection, and finalizing a separate record are distinct actions; check each state that matters to the scenario.",
+        "practice": "Close a disposable false-alarm exercise with the appropriate type, then verify the record draft remains a separate document."
+      },
+      "source_audit": {
+        "audited_at": "2026-10-26T19:25:20.535298+00:00",
+        "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+        "status": "observed_controls_reconciled; lesson not frozen or voiced",
+        "remaining_capture_operations": [],
+        "runtime_gates": [
+          "No actual call close occurred in this Responder sequence.",
+          "Closing a call, clearing active selection and finalizing a record are independent operations."
+        ],
+        "checked_at": "2026-10-27T15:41:58.857140+00:00"
+      },
+      "narration_word_count": 61
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "An EMS standby has a supplied incident address and may have a separate hospital destination.",
+      "practice": "Compare actual Info/Contact/Dispatched, read any offered destination, and keep a field record Draft unless authorized final steps are truly completed."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A mobile crisis or community-care team needs a concise operational handoff without real client details.",
+      "practice": "Use the actual narrow recipient selector and fictional Call Note, then reopen it; keep private medical/client information out of practice data."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search team needs a named check-in target and a reliable staging reference.",
+      "practice": "Read the actual Personnel timer target and history, distinguish simulated coordinates from device GPS, and treat a software check-in separately from physical arrival."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A security patrol reviews an industrial alarm and site access plan.",
+      "practice": "Inspect actual Contact/Site Info/History states, retain empty-state limits, and verify a saved note rather than assuming an external feed is present."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A mutual-aid crew coordinates a remote wildland assignment.",
+      "practice": "Inspect actual call-pin details and conditional routing controls; leave external navigation/feed reads and provider delivery unclaimed without separate evidence."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "A facility team prepares a clearly fictional alarm exercise.",
+      "practice": "Trace actual Create, narrow Boden-only recipients and saved Contact correction on the disposable call; close only that exercise with closing notification off when cleanup is authorized."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Responder/src/app/(app)/home/calls.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/call/new/index.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/call/[id]/index.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/call/[id]/edit.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/calls/close-call-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/records/new.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/records/[id].tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/records/deployments/[id].tsx",
+    "/Users/shawn/Documents/dev/Responder/src/app/records/connectors/[id].tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/calls/call-files-modal.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/calls/call-images-modal.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/check-in/check-in-tab-panel.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/records/records-quick-create.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/records/record-attachments.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/components/home/active-call-tab.tsx",
+    "/Users/shawn/Documents/dev/Responder/src/lib/records/schema.ts"
+  ],
+  "capture_manifest": "captures/expansion/responder/manifest.json",
+  "authoring_status": "source_reconciled_partial_actual_captures_awaiting_browser_resumption",
+  "capture_limitations": [
+    "Chrome automation is explicitly blocked by an open extension UI until the human clears it; no browser retries or alternate login path are permitted.",
+    "Call Files is download/list only, with no file upload action. Images and record attachments use different actual controls.",
+    "Previous Call Note save failed401 and is not proof of persistence. Contact033 and error049 are excluded from successful-screen evidence.",
+    "Current scene captures mainly inspect existing-call forms and empty states; Create/Edit/Close results, timer check-in, field records and connector screens remain unrecorded.",
+    "Map adapter is source/compile verified only; actual standalone cartography and conditional destination are not verified. No navigation, provider geocoding or real GPS operation is claimed.",
+    "Compatible Draft/Returned records offer lifecycle controls. Attestation/finalization and web-only approval/amend/void are not demonstrated.",
+    "No video is frozen, voiced, rendered, playback-tested or publishable from this source audit."
+  ],
+  "spoken_sector_examples": [
+    "community care visit",
+    "security patrol",
+    "EMS response",
+    "industrial alarm",
+    "SAR staging",
+    "warehouse and wildland response"
+  ],
+  "media_status": {
+    "narration_frozen": false,
+    "render": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "narration_word_count": 943
+}

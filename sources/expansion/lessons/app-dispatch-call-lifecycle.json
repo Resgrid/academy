@@ -1,0 +1,321 @@
+{
+  "id": "app-dispatch-call-lifecycle",
+  "title": "Dispatch: create, hold, schedule and close calls",
+  "app": "Dispatch",
+  "audience": [
+    "Dispatchers",
+    "Duty supervisors",
+    "Call takers"
+  ],
+  "summary": "Follow a call from a complete initial entry through pending or scheduled dispatch, operational updates and historical closeout.",
+  "prerequisites": [
+    "Call creation and editing rights; prepared priorities, types and department field policies.",
+    "Training contacts, protocols, destination POIs, templates and linked calls.",
+    "Configured geocoding for address, what3words or Plus Code demonstrations; prepared media and a valid test video stream.",
+    "Disposable historical data for archive insertion, deletion and any optional renumbering."
+  ],
+  "scenes": [
+    {
+      "title": "Create a complete call",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Type"
+      ],
+      "narration": "Open Calls and choose New Call. If the department has a useful call template, apply it first and review what it fills. Give the call a clear name, describe its nature, and choose the correct priority and type. Add the initial note and complete any department-required fields or custom form sections. The app waits for the department’s call settings before allowing a reliable submission. In the browser, the form offers keyboard shortcuts, including Control and Enter to create. Use the visible Create control while learning so you can review the complete entry before sending it.",
+      "practice": "Prepare a training industrial alarm using its template, then verify the priority, type and required custom fields.",
+      "id": "app-dispatch-call-lifecycle-scene-01",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-03-new-call-matching-fields",
+          "file": "captures/expansion/dispatch/dispatch-03-new-call-matching-fields.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-20-own-call-created-console",
+          "file": "captures/expansion/dispatch/dispatch-20-own-call-created-console.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Own local training call51010/FD51-2026-0002 created after exact field/recipient readback; saved only fictional Herrmann+Engine. No provider delivery claim."
+      ]
+    },
+    {
+      "title": "Locate the incident and its destination",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Address",
+        "Latitude",
+        "Longitude",
+        "Destination POI"
+      ],
+      "narration": "Use the location method that best describes the reported incident. Search an address and review the proposed match, enter both coordinates in decimal degrees, or use the map picker. Where the provider is configured, what3words and Plus Code offer additional search paths. Check the resulting pin against a known landmark; the presence of text alone is not confirmation of a usable location. Choose a Destination POI separately when the response has a known destination, such as a hospital or staging site. The destination does not replace the incident location. Provider availability and map permissions must be checked on the capture platform.",
+      "practice": "Locate a remote SAR training point, then select a separate staging destination.",
+      "id": "app-dispatch-call-lifecycle-scene-02",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-16-restored-near-call-location",
+          "file": "captures/expansion/dispatch/dispatch-16-restored-near-call-location.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-04-unsent-pending-option",
+          "file": "captures/expansion/dispatch/dispatch-04-unsent-pending-option.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Exact fictional latitude/longitude and genuine Chicago map shown. Destination POI has no destination/No destination POIs available; no destination selection or geocoding provider success demonstrated."
+      ]
+    },
+    {
+      "title": "Connect the supporting information",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Contact Name",
+        "Contact Info",
+        "Protocols",
+        "Linked Call"
+      ],
+      "narration": "Add the caller or site contact, using contact search when the person or organization already exists. Review the contact information and any incident, reference or external identifiers your workflow uses. Select the relevant protocols and link an existing call when the events belong together. These links give the next operator more context than an isolated free-text note. Choose the intended recipients before creating the call; the allocation lesson explains the nearest-resource picker and run-card recommendations. Review the destination, recipients and supporting information together, because an accurate incident description still needs the right people and resources to receive it.",
+      "practice": "Prepare a community welfare call linked to an earlier event and attach the appropriate department protocol.",
+      "id": "app-dispatch-call-lifecycle-scene-03"
+    },
+    {
+      "title": "Hold a call as pending",
+      "route": "/pending-calls",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Pending Calls",
+        "Dispatch"
+      ],
+      "narration": "When the situation needs review before notification, choose Save as pending on New Call. The call is saved and numbered, and the proposed recipients are retained, while notification and field-app visibility wait for dispatch. Open Pending Calls, search for the entry, and inspect its details before using Dispatch. Check the proposed recipients again if availability has changed. Cancel a pending entry only when your practice scenario calls for it. Pending is a deliberate holding state for a call taker or supervisor; it should not be mistaken for an active response simply because the call has a number.",
+      "practice": "Hold a security alarm while a supervisor verifies it, then review the proposed dispatch.",
+      "id": "app-dispatch-call-lifecycle-scene-04",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-04-unsent-pending-option",
+          "file": "captures/expansion/dispatch/dispatch-04-unsent-pending-option.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-29-pending-empty",
+          "file": "captures/expansion/dispatch/dispatch-29-pending-empty.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Save-as-pending option shown off and queue genuinelyempty. No pending call saved or later dispatched."
+      ]
+    },
+    {
+      "title": "Schedule, reschedule or dispatch now",
+      "route": "/scheduled-calls",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Scheduled Calls",
+        "Dispatch now"
+      ],
+      "narration": "For a planned future response, set the scheduled dispatch date and time on the call form. The app requires the scheduled time to be at least fifteen minutes ahead. Open Scheduled Calls to search and inspect the planned response. Dispatch now brings the action forward when the situation changes. From call details, use Reschedule to choose an offered time preset or a custom date and time, then review the new schedule. Confirm the department’s time context during the exercise. Scheduled dispatch and a pending call serve different decisions, so choose the state that matches the actual operational plan.",
+      "practice": "Schedule coverage for a public event, then move its start time and review the updated call.",
+      "id": "app-dispatch-call-lifecycle-scene-05",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-30-scheduled-empty",
+          "file": "captures/expansion/dispatch/dispatch-30-scheduled-empty.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Scheduled queue genuinelyempty. No schedule/reschedule/DispatchNow/cancellation result demonstrated."
+      ]
+    },
+    {
+      "title": "Work through call details and protected information",
+      "route": "/call/[id]",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity",
+        "Site Info",
+        "History",
+        "Check-In"
+      ],
+      "narration": "Open a call from Calls List and walk through its tabs. Info and Contact explain the incident, Protocols supplies attached guidance, and Dispatched shows the recorded allocation. Activity, History and Site Info add the event sequence, location history and site context. Use the protected-data reveal control when offered and complete the server’s required verification. Check-In shows the configured timer and accountability information; enable or disable timers only as your role permits. Set Active selects the call for the current working context. Edit changes the call, while Route opens the platform’s routing option for a usable location.",
+      "practice": "Inspect a fire call’s site hazards, verify its dispatch rows and locate the check-in history.",
+      "id": "app-dispatch-call-lifecycle-scene-06",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-19-historical-saved-recipients",
+          "file": "captures/expansion/dispatch/dispatch-19-historical-saved-recipients.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-21-own-saved-dispatched-controls",
+          "file": "captures/expansion/dispatch/dispatch-21-own-saved-dispatched-controls.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-27-own-call-location-history",
+          "file": "captures/expansion/dispatch/dispatch-27-own-call-location-history.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-28-own-recorded-unit-activity",
+          "file": "captures/expansion/dispatch/dispatch-28-own-recorded-unit-activity.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Actual saved Dispatched, prior-location History and unit-status Activity captured. Readable selected Info/Contact/Protocols/SiteInfo/Check-In contents still need footage.",
+        "Check-In is conditional on CheckInTimersEnabled in current web/native source. Native has ProtectedRevealBar/ProtectedText; current web detail file does not render that reveal workflow. Do not claim web/native feature parity or successful reveal."
+      ]
+    },
+    {
+      "title": "Notes, images, files, audio and video",
+      "route": "/call/[id]",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Notes",
+        "Images",
+        "Files",
+        "Audio",
+        "Video"
+      ],
+      "narration": "Use Notes to add a meaningful operational update. Open Images to view evidence or add a training image from the gallery or camera with a note, then review the upload. Files can be opened or shared through the available platform tools, and Audio provides playback when a recording exists. On Video, add or edit an authorized test feed using its name, stream URL, camera type and format; inspect the remaining location and display options before saving. A saved feed entry does not prove its stream can play. Browser media support, camera access, native sharing and provider connectivity need their own checks.",
+      "practice": "Attach a labeled exercise image and inspect a prepared drone feed without claiming live flight or transmission.",
+      "id": "app-dispatch-call-lifecycle-scene-07",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-19-historical-saved-recipients",
+          "file": "captures/expansion/dispatch/dispatch-19-historical-saved-recipients.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Actual Notes/Images/Files/Audio quick controls and Video tab label visible. No attachment/provider/media playback or upload operation exercised."
+      ]
+    },
+    {
+      "title": "Close the response and preserve history",
+      "route": "/archived-calls",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Close Call",
+        "Archived Calls",
+        "Add Archived Call"
+      ],
+      "narration": "Close Call asks for the outcome and closing note, with an option controlling notification. Review that choice before confirming. Search Archived Calls by year and the available status, type, priority and date filters to find the completed event. Add Archived Call records an incident that already happened: enter its logged and closed times, outcome, location, identifiers and historical recipients. It is saved as closed without dispatching those recipients. Optional recalculation changes the year’s numbering, so demonstrate it only in disposable data. Deletion is also a deliberate record-changing action; show its confirmation only when the exercise requires removal.",
+      "practice": "Close an EMS training call, locate it in the archive and draft a separate historical event.",
+      "id": "app-dispatch-call-lifecycle-scene-08",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-25-own-close-notifications-off",
+          "file": "captures/expansion/dispatch/dispatch-25-own-close-notifications-off.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-26-own-close-returned-original-three",
+          "file": "captures/expansion/dispatch/dispatch-26-own-close-returned-original-three.jpg"
+        },
+        {
+          "screenshot_id": "dispatch-28-own-recorded-unit-activity",
+          "file": "captures/expansion/dispatch/dispatch-28-own-recorded-unit-activity.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Own51010 closed normally after actual Closed outcome, exact note and notification input checked=false readback. Returned original3active; EngineResponding→Released recorded by app.",
+        "Normal Archived Calls navigation returned404 because current API lacks the exact archival endpoints requested by Dispatch. No archive/error screen accepted as operational footage; add-after-fact/filter/recalculation/deletion unperformed."
+      ]
+    },
+    {
+      "title": "Resolve an outstanding allocation after dispatch",
+      "route": "/awaiting-resources",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Awaiting Resources",
+        "Dispatch",
+        "Dismiss"
+      ],
+      "narration": "A conditional requirement configured to remain outstanding can place the call in Awaiting Resources. Open it from the console banner or menu badge. Read the requirement’s progress, any substitute already sent, waiting time, response code and currently matching units. Dispatch adds the chosen available unit to the existing call and reconciles the requirement. Review the updated state instead of assuming a click completed the allocation. When the requirement is no longer needed, Dismiss lets you record an optional explanation. A unit-available alert requires a real change from the backend; use a second training client to demonstrate it honestly.",
+      "practice": "Keep an industrial specialty-unit requirement outstanding, make a suitable training unit available, and review fulfillment.",
+      "id": "app-dispatch-call-lifecycle-scene-09",
+      "capture_refs": [
+        {
+          "screenshot_id": "dispatch-18-awaiting-resources-empty",
+          "file": "captures/expansion/dispatch/dispatch-18-awaiting-resources-empty.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Only actual empty queue is captured. Required Dispatch/Dismiss controls and fulfilment/unit-available response still need genuine outstanding requirement data and actual UI footage. No freeze/TTS approved for this chapter."
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A medical call receives a hospital destination, check-in review and documented closeout."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A welfare visit is linked to earlier context and held for supervisor review."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Coordinates and a staging POI describe a remote response."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A pending alarm waits for verification before notification."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "A planned standby is scheduled and adjusted as coverage changes."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "An alarm template, custom fields and site contact support a plant response."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Dispatch/src/app/call/new/index.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/call/new/index.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/activity-link-marker.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-audio-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-card.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-card.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-detail-menu.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-files-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-form-renderer.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-form-renderer.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-images-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-notes-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-site-info-tab-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/call-templates-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/close-call-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/contact-picker-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/dispatch-recipient-rows.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/dispatch-selection-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/full-screen-image-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/linked-calls-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/location-history-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/protocol-selector-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/reschedule-call-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/scheduled-call-card.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/udf-fields-renderer.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/udf-select.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/udf-select.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/use-call-dispatch-now.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/pending-calls.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/scheduled-calls.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/archived-calls.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/call/new/archived.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/call/[id].web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/call/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/call/[id]/edit.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/callVideoFeeds/video-feed-card.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/callVideoFeeds/video-feed-form-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/callVideoFeeds/video-feeds-tab.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/callVideoFeeds/video-player.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/translations/en.json"
+  ],
+  "export_ready": false,
+  "authoring_status": "unfrozen_capture_gaps"
+}

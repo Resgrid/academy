@@ -1,0 +1,278 @@
+{
+  "id": "core-mapping",
+  "title": "Make location information useful and current",
+  "app": "Core",
+  "audience": "Dispatchers, mapping coordinators and department administrators",
+  "summary": "Use the operating map, points, layers, indoor maps, routes and location-based dispatch with visible saved results.",
+  "prerequisites": [
+    "Use the fictional Chicago Fire demonstration department with permitted nearby training locations.",
+    "A working map source is required; routing and weather features depend on configured providers and access.",
+    "Prepare one training point, polygon, call, station, unit and person, plus fictional floor-plan or geospatial files where used.",
+    "Have mapping-management permissions for edits and use only isolated training dispatch and notification actions."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Read the operating map",
+      "route": "/User/Mapping/Index",
+      "capture_intent": "Show real rendered tiles and fictional named resources at useful zoom.",
+      "required_labels": [
+        "Mapping",
+        "Show calls",
+        "Show stations",
+        "Show units",
+        "Show personnel"
+      ],
+      "narration": "Open Mapping in the Chicago Fire demonstration department. Begin with a practical question: where is the training incident, and which resources or site information help the dispatcher understand it? Locate the labeled training call, station, unit and person on the actual map. Check the viewing area and map source before interpreting an empty region. Visibility and permitted location data affect what appears. A marker means a position is available to this view; it does not promise that a person or unit is ready to respond.",
+      "practice": "Identify the incident and three related objects by name and map position.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "core-config-001-mapping-before-markers"
+        ],
+        "observations": [
+          "Actual populated map and navigation controls. More lower-map and popup views pending."
+        ]
+      }
+    },
+    {
+      "id": "02",
+      "title": "Use filters and visibility controls",
+      "route": "/User/Mapping/Index",
+      "capture_intent": "Filter marker text and toggle categories/labels with visible results.",
+      "required_labels": [
+        "Filter marker text",
+        "Hide labels",
+        "Show calls",
+        "Show stations",
+        "Show units",
+        "Show personnel",
+        "Show POIs"
+      ],
+      "narration": "Use Filter marker text to find a named training resource, then clear the filter. Toggle calls, stations, units, personnel and points of interest one at a time. Compare what disappears and returns so the controls are meaningful. Hide labels can reduce clutter, but restore them while learning unfamiliar symbols. A category hidden by your view controls is different from a record that lacks a location or permission. When investigating a missing marker, begin with these controls before changing the underlying data.",
+      "practice": "Find one item by text and demonstrate a category visibility change without editing the item.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "03",
+      "title": "Create a useful point of interest",
+      "route": "/User/Mapping/POIs",
+      "capture_intent": "Open type, add fictional point and show saved popup on map.",
+      "required_labels": [
+        "Manage POIs"
+      ],
+      "narration": "Open Manage POIs and choose an appropriate point type. Create Academy Staging Point with a clear name, fictional training coordinates and a short operational note. Confirm the latitude and longitude are paired correctly and that the selected type describes the point's purpose. Save, reopen the point and check the values. Return to Mapping with points visible and inspect the actual marker and popup. A useful point connects a recognizable symbol with information responders can verify, rather than only decorating the map.",
+      "practice": "Create one fictional point, then confirm its type, position and popup on the main map.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "04",
+      "title": "Draw and verify a map layer",
+      "route": "/User/Mapping/NewLayer",
+      "capture_intent": "Draw training polygon, set name/color/default visibility, save then toggle actual layer.",
+      "required_labels": [
+        "Name",
+        "Color",
+        "Layer Elements",
+        "Is Visible By Default",
+        "Is Destination"
+      ],
+      "narration": "Open Manage Layers and add a layer named Academy Exercise Area. Choose a readable color and draw a small training boundary using the map's drawing controls. Review default visibility and destination choices before saving. Return to the main map and open Layers. Turn the saved overlay off and on, then compare its position with the training incident. The layer's name and polygon should agree. Saving a row in Manage Layers is only half the check; the real overlay must render where you intended.",
+      "practice": "Save one small training boundary and verify its actual overlay and visibility toggle.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "title": "Review custom geospatial maps",
+      "route": "/User/CustomMaps/Index",
+      "capture_intent": "Open actual custom map/layer and import harmless GeoJSON through supported form.",
+      "required_labels": [
+        "Custom Maps"
+      ],
+      "narration": "Custom Maps organizes additional geospatial content. Open a training map, select its intended layer and review the import controls. Use a small fictional GeoJSON file whose features and coordinates you understand. After import, inspect the recorded outcome and open the rendered content. A supported file still needs sensible coordinates and the right target layer. Keep the imported sample separate from operational site data, and verify a recognizable point or shape before treating a successful upload message as a usable map.",
+      "practice": "Import or inspect a small training feature and confirm the correct target layer and rendered position.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "title": "Locate indoor information",
+      "route": "/User/IndoorMaps/Index",
+      "capture_intent": "Open actual saved training building/floor and zone controls.",
+      "required_labels": [
+        "Indoor Maps",
+        "Floors"
+      ],
+      "narration": "Open Indoor Maps and select the fictional Academy Building. Open Floors and inspect the floor plan and saved zones. Floor names, zone names and the building context must be clear enough for a dispatcher to choose the correct place. Use a simple fictional training plan, not a sensitive facility layout. When a call needs an indoor location, select its actual floor or zone through the call's location control. Outdoor coordinates identify the site; they do not automatically establish the correct interior room or level.",
+      "practice": "Identify one building, floor and zone and verify the same location can be selected for a training call.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "07",
+      "title": "Build a route with reviewed stops",
+      "route": "/User/Routes/Index",
+      "capture_intent": "Open training route plan and inspect stops, status/profile and actual path.",
+      "required_labels": [
+        "Routes",
+        "New Route",
+        "In Progress",
+        "Archived Routes"
+      ],
+      "narration": "Open Routes and review an Academy Training Route. Inspect its named stops, order and route profile. Add or edit only the intended training points, then open the route view or directions to inspect the actual path. A list of stops is not proof that a suitable route exists between them. Routing depends on the configured provider, and access restrictions or vehicle requirements still need operational review. Keep planned routes distinct from a unit's live position and from the incident response recommendation.",
+      "practice": "Compare a route's saved stop order with the actual directions or displayed path.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "08",
+      "title": "Inspect routing to a call",
+      "route": "/User/Mapping/LiveRouting?callId=<id>",
+      "capture_intent": "Open actual training call routing and show provider result or honest unavailable state.",
+      "required_labels": [
+        "Live Routing"
+      ],
+      "narration": "From an actual training call, open Live Routing and inspect the destination and resource context. Check that the route ends at the incident, not at a similarly named point. Read the displayed time and any limitation from the provider. A road route differs from a straight-line estimate shown elsewhere. If routing is unavailable, resolve the location or provider issue before relying on the result. Dispatchers still need to consider access, vehicle suitability and conditions that a route service may not represent.",
+      "practice": "Verify the destination and distinguish an actual routed result from an estimated response time.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "09",
+      "title": "Review weather zones and alerts",
+      "route": "/User/WeatherAlerts/Index",
+      "capture_intent": "Show configured training zone and alert/rule controls; verify actual saved scope.",
+      "required_labels": [
+        "Weather Alerts"
+      ],
+      "narration": "Open Weather Alerts and inspect the zones relevant to your training area. Confirm the geographical scope and configured alert choices before enabling an audience. Use a controlled test process for notifications. A configured zone means the department has defined an area to watch; it does not establish that a weather event has occurred or that every recipient received an alert. Relate any displayed event to its actual source and time, and keep weather context alongside the incident location rather than treating a broad warning as a precise site condition.",
+      "practice": "Confirm one zone's area and intended audience without sending an unplanned alert.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "legacy-core-058-weather-zones"
+        ],
+        "observations": [
+          "Actual monitoring-zone authoring form; no provider event or notification proof."
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Read the icon legend",
+      "route": "/User/Mapping/Legend",
+      "capture_intent": "Compare actual type/priority/status families and link to icon editor.",
+      "required_labels": [
+        "Map Icon Legend"
+      ],
+      "narration": "Return to Mapping and open Map Icon Legend. Calls combine type and priority, units combine type and status, and personnel use role and status. Inspect a familiar training entity's family before customizing anything. Specific uploaded priority or status icons can override the base symbol; otherwise a badge or standard pin style carries the meaning. Staffing levels do not change icons. Use the dedicated marker lesson to save and test those changes, then compare the actual map with this legend.",
+      "practice": "Predict one current marker from its type or role and operational state.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "legacy-core-013-map-icon-legend"
+        ],
+        "observations": [
+          "Actual icon-family explanation and status/priority colors before custom definitions."
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "title": "Connect mapping to New Call",
+      "route": "/User/Dispatch/NewCall",
+      "capture_intent": "Place training pin and show real nearest personnel/units list and position modal.",
+      "required_labels": [
+        "New Call",
+        "Set Pin on Map",
+        "Personnel",
+        "Units"
+      ],
+      "narration": "Open New Call and place the training incident at a recognizable point in your exercise area. The nearest personnel and unit lists now provide response context, including status, position, ETA, staffing and role mix. Open a resource position to compare it with the incident. Move the pin once and wait for the values to refresh. Read freshness and estimate labels before choosing recipients. A nearby map marker can help you investigate a resource, but selection still needs actual availability, scope and capability checks.",
+      "practice": "Compare one resource before and after a training location change and justify the intended selection.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "12",
+      "title": "Verify freshness and saved results",
+      "route": "/User/Mapping/Index",
+      "capture_intent": "Return to final actual map and inspect same named points, overlays and resources.",
+      "required_labels": [
+        "Filter marker text",
+        "Layers"
+      ],
+      "narration": "Finish on the operating map with your training point, boundary and named resources visible. Reopen one saved item to check its source values, then compare its actual map position. Review whether a resource's information is current, stale, hidden or missing before making a decision. Keep a named owner for maintaining site points, routes and overlays, and review outdated training content after the exercise. The useful result is a map whose objects, controls and operational meaning agree with the department's current data.",
+      "practice": "Verify a saved point, overlay and resource position, then identify who will maintain each one.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: connect a fictional incident, station, staging point and exercise boundary on the actual map.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: use permitted operational locations and useful destination points without exposing visit narratives.",
+    "Search and rescue": "Search and rescue: compare staging, search boundaries, field positions and planned routes with freshness checks.",
+    "Security companies and departments": "Security: organize site boundaries, patrol stops and indoor floor zones with appropriate access.",
+    "Wildland contractors": "Wildland contractors: review remote staging, crew routes and weather-area context before relying on travel times.",
+    "Industrial emergency response teams": "Industrial response: link facility points, indoor zones, response boundaries and equipment locations with reviewed access."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Mapping/Index.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Mapping/NewLayer.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Apps/src/components/map/MapElement.tsx",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/CustomMaps/Import.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/IndoorMaps/Index.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Routes/Index.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/WeatherAlertsController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Mapping/Legend.cshtml"
+  ]
+}

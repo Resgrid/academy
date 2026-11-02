@@ -1,0 +1,307 @@
+{
+  "id": "core-records-analytics-summary-workload",
+  "app": "Core",
+  "title": "Read Records analytics and compare filtered workload",
+  "summary": "Read the Executive summary and Workload dashboards, apply definition and group filters, compare refreshed results and distinguish record, transition and queue measures.",
+  "audience": [
+    "Department administrators",
+    "Records supervisors",
+    "Training coordinators"
+  ],
+  "prerequisites": [
+    "An authorized Core session with permission to view Records analytics.",
+    "Appropriate finalized department Records and an understood reporting window.",
+    "A fictional training environment for practice. The recorded examples do not establish real service, training attendance or accreditation."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Open Analytics and read the reporting scope",
+      "narration": "In Core, open the Records navigation and choose Analytics. The selected Executive summary tab gives the department's recorded summary. Start with From, To, Station slash group and Definition. This example displays August second through October thirty-first, with All station groups and All definitions selected. Read the Generated line and Records read count with those filters. The page says that dashboards are computed on demand over finalized Records, and that viewers see the Records they are authorized to open. Your account's access and the displayed reporting scope both matter when comparing results.",
+      "practice": "Open Records, choose Analytics, and read the date window, selected group, definition and Records read count.",
+      "required_labels": [
+        "Records",
+        "Analytics",
+        "Executive summary",
+        "From",
+        "To",
+        "Station / group",
+        "Definition",
+        "All station groups",
+        "All definitions",
+        "Records read: 4"
+      ],
+      "capture_refs": [
+        "009-restored-all-filters-navigation"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Read headline figures with the prior period",
+      "narration": "Scroll to Headline figures and read the prior-period dates before comparing values. Here, Records finalized is four, Personnel hours and Training hours are each zero point five, and Amendments is one. Incident reports, unit responses and the NERIS counts are zero in this fictional dataset. The values beneath the tiles show their comparison with the prior period. These are measures derived from the saved software records. They do not independently confirm physical attendance, service delivery or a department's real operational performance.",
+      "practice": "Identify the current and prior periods and read the actual record, hours and transition figures.",
+      "required_labels": [
+        "Headline figures",
+        "Prior period: 2026-05-03 - 2026-08-01",
+        "Records finalized",
+        "Personnel hours",
+        "Training hours",
+        "Amendments",
+        "Incident reports",
+        "Unit responses",
+        "NERIS accepted",
+        "NERIS rejected"
+      ],
+      "capture_refs": [
+        "003-headline-figures"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Distinguish lifecycle, queue and breakdown measures",
+      "narration": "Continue to Lifecycle, Queues and obligations, By month and By definition. Median hours to finalize is zero point one here, while several unavailable measures show a dash. A dash is not a measured zero. Open drafts shows one and Awaiting review shows zero. Those are current visible-queue counts, rather than the finalized-record count of a selected definition. The breakdown tables show four October records, split between two Training records and two community software-exercise records. Use the headings, counts, hours and shares together to understand what each panel is describing.",
+      "practice": "Compare the lifecycle values, current queues and definition breakdown without treating all measures as the same dataset.",
+      "required_labels": [
+        "Lifecycle",
+        "Median hours to finalize",
+        "Median review turnaround (h)",
+        "Queues and obligations",
+        "Open drafts",
+        "Awaiting review",
+        "By month",
+        "By definition",
+        "Training",
+        "TRAINING ONLY - Community software exercise",
+        "Count",
+        "Hours",
+        "Share"
+      ],
+      "capture_refs": [
+        "002-summary-measures"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Select a definition before refreshing",
+      "narration": "Return to the filter row and select Training in Definition. Before you choose Filter, the earlier Generated line still says Records read, four. This separates a prepared field selection from refreshed dashboard output. Check the intended dates and group at the same time, then choose Filter to request the new result. Selecting a reporting filter changes the question you ask of the saved data; it does not edit, finalize or delete a record.",
+      "practice": "Select Training and compare the prepared selection with the still-displayed generated count before applying Filter.",
+      "required_labels": [
+        "Definition",
+        "Training",
+        "Filter",
+        "Records read: 4",
+        "All station groups"
+      ],
+      "capture_refs": [
+        "004-training-filter-prepared"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Verify the refreshed definition result",
+      "narration": "After choosing Filter, read the returned filter row and generated result. Training remains selected, and Records read is now two. The dates and All station groups remain the same. This readback establishes which definition subset the dashboard actually loaded. When comparing two views, verify their returned selections and counts before attributing a difference to changing activity in your department.",
+      "practice": "Verify Training, the unchanged dates and group, and the refreshed Records read count of two.",
+      "required_labels": [
+        "Definition",
+        "Training",
+        "Filter",
+        "All station groups",
+        "Records read: 2"
+      ],
+      "capture_refs": [
+        "005-training-filter-applied"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Compare the filtered headline figures",
+      "narration": "Scroll to the refreshed headline figures. Records finalized is now two, while Training hours and Personnel hours remain zero point five. The broader four-record view included two community exercise records with no recorded hours, so narrowing to Training changes the count without changing these hour totals. Amendments remains one. Compare each named measure with its own purpose rather than assuming every tile must change when a filter is applied.",
+      "practice": "Compare the original and Training-only counts and hour totals using the actual refreshed figures.",
+      "required_labels": [
+        "Headline figures",
+        "Records finalized",
+        "Training hours",
+        "Personnel hours",
+        "Amendments",
+        "Training",
+        "Records read: 2"
+      ],
+      "capture_refs": [
+        "006-training-headline-figures"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Apply a station or group filter",
+      "narration": "Return to Station slash group, select Engine fifty-one and choose Filter, keeping Training selected. The returned page says Records read, zero. Read that zero with the selected group, definition, dates and your account's access. It describes this saved Records subset. It does not establish that the whole department has no activity, that nobody attended training, or that records outside your authorized view do not exist.",
+      "practice": "Select an appropriate fictional group, apply Filter and verify the returned scope before interpreting an empty result.",
+      "required_labels": [
+        "Station / group",
+        "Engine 51",
+        "Definition",
+        "Training",
+        "Filter",
+        "Records read: 0"
+      ],
+      "capture_refs": [
+        "007-engine-training-filter-applied"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Keep record and transition scopes distinct",
+      "narration": "In this filtered result, Records finalized and Training hours are zero, while Amendments still shows one. For this department-administrator account, that amendment figure counts department transitions in the time window; it is not the finalized-record count of the selected group. The empty breakdown panels say No finalized Records in this window. Read the actual label and scope of each measure before using it to explain a change or assess a department's workload.",
+      "practice": "Identify the zero finalized-record subset and the separately scoped amendment count without treating them as contradictory record totals.",
+      "required_labels": [
+        "Engine 51",
+        "Training",
+        "Records read: 0",
+        "Headline figures",
+        "Records finalized",
+        "Training hours",
+        "Amendments",
+        "By month",
+        "By definition",
+        "No finalized Records in this window."
+      ],
+      "capture_refs": [
+        "008-empty-subset-headline"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Restore and verify the broader scope",
+      "narration": "Select All station groups and All definitions, then choose Filter again. The returned Generated line reads four records. This restores the broader reporting scope without changing the saved records. Recheck these selections whenever you move between a narrowly scoped question and a department-wide review. A useful comparison begins with a deliberate, verified scope.",
+      "practice": "Restore both All selections, apply Filter and verify the returned four-record count.",
+      "required_labels": [
+        "Station / group",
+        "All station groups",
+        "Definition",
+        "All definitions",
+        "Filter",
+        "Records read: 4"
+      ],
+      "capture_refs": [
+        "009-restored-all-filters-navigation"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Open Workload and recheck its filters",
+      "narration": "Choose the Workload tab for another view of the same recorded activity. Recheck its date, group and definition filters and the Generated count. Here, it reads four records, with zero point five Record hours, Personnel hours and Training hours. These headings describe different measures even when their displayed values happen to match. Use this view to understand how recorded work is distributed, while checking the underlying entries when a result needs explanation.",
+      "practice": "Open Workload, verify its returned reporting scope and distinguish the three named hour measures.",
+      "required_labels": [
+        "Workload",
+        "From",
+        "To",
+        "Station / group",
+        "Definition",
+        "Records read: 4",
+        "Records finalized",
+        "Record hours",
+        "Personnel hours",
+        "Training hours"
+      ],
+      "capture_refs": [
+        "010-workload-overview"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Read workload counts, hours and shares",
+      "narration": "Scroll to By month and By definition. October contains four records and zero point five hours. In the definition table, Training has two records, zero point five hours and a fifty-percent share. The community software-exercise definition also has two records and a fifty-percent share, but zero recorded hours. Equal record counts do not mean equal recorded duration. Read all three columns before deciding where more detail or a closer records review is needed.",
+      "practice": "Compare Count, Hours and Share for two definitions rather than interpreting record count alone as workload duration.",
+      "required_labels": [
+        "By month",
+        "By definition",
+        "Count",
+        "Hours",
+        "Share",
+        "2026-10",
+        "Training",
+        "TRAINING ONLY - Community software exercise"
+      ],
+      "capture_refs": [
+        "013-workload-complete-breakdowns"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Compare timing, participation, authors and groups",
+      "narration": "Continue to Records by weekday and hour, then the person, unit, author and station-group panels. The matrix distributes these recorded entries by their timestamps. By person shows Matthew Casey with one entry and zero point five hours. By author shows Wallace Boden with four records. By station group separates Command from Firehouse fifty-one. Participation, authorship and group assignment answer different questions. The unit panel has no finalized Records in this window. This fictional matrix is not a live staffing display or independent evidence of current response demand.",
+      "practice": "Distinguish a participating person from an author and station group, and read the actual unit and timestamp breakdown states.",
+      "required_labels": [
+        "Records by weekday and hour",
+        "By person",
+        "Matthew Casey",
+        "By unit",
+        "No finalized Records in this window.",
+        "By author",
+        "Wallace Boden",
+        "By station group",
+        "Command",
+        "Firehouse 51",
+        "Count",
+        "Hours",
+        "Share"
+      ],
+      "capture_refs": [
+        "012-workload-weekday-hour"
+      ]
+    },
+    {
+      "id": "13",
+      "title": "Use a clear reporting question for your department",
+      "narration": "Start with a reporting question that matches your department's records. Community paramedicine and mental health teams can review outreach documentation, search-and-rescue teams can compare mission-support records, security companies can examine recorded service activity, and wildland or industrial response teams can review their own documented work. Fire and EMS departments can use the same filter and readback habits. Choose the intended window, definition and group, refresh the view, then investigate the underlying records before drawing conclusions from a count or hour total.",
+      "practice": "Choose a suitable fictional reporting question, apply the intended scope and explain the displayed results using the correct measure labels.",
+      "required_labels": [
+        "Analytics",
+        "Executive summary",
+        "From",
+        "To",
+        "Station / group",
+        "Definition",
+        "Filter",
+        "Records read: 4"
+      ],
+      "capture_refs": [
+        "009-restored-all-filters-navigation"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Compare the selected record definitions and station groups while distinguishing recorded hours, transitions and current queues."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Review authorized outreach or mental health response documentation without treating record totals as independently verified service delivery."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Compare mission-support records and their recorded hours within a deliberate reporting window."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Review recorded service workload by definition, author and group with the actual selected scope."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Compare documented work counts and hours while separately verifying crew attendance and current availability."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Read emergency-team documentation workload and identify entries needing a closer underlying-record review."
+    }
+  ],
+  "scope_limits": [
+    "Actual read-only local Core UI filter and navigation exercise. No record, roster, workflow or service-delivery mutation was performed.",
+    "The recorded account is a full-department administrator. A group-scoped user's actual authorization behavior was not exercised here.",
+    "Executive summary and Workload only; Response performance, Accreditation, Community risk and Readiness require their own actual walkthroughs.",
+    "For the recorded administrator, amendment/void transition counts use department/time-window scope; current queue counts do not represent the selected finalized-record definition subset.",
+    "The data is fictional software practice; no physical training, attendance, response performance, accreditation or external submission is certified."
+  ],
+  "export_ready": false,
+  "publication_mode": "source_candidate_only"
+}

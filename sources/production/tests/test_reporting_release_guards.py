@@ -1,0 +1,149 @@
+"""Reporting release guards; tests never adopt a real lesson or build a site."""
+from contextlib import contextmanager, redirect_stdout
+from copy import deepcopy
+import hashlib
+import importlib.util
+import io
+import json
+from pathlib import Path
+import sys
+import tempfile
+from types import SimpleNamespace
+import unittest
+from unittest.mock import patch
+
+sys.dont_write_bytecode=True
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from portable_test_evidence import retained_playback_raw
+
+PRODUCTION=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(PRODUCTION.parents[1]/'scripts'))
+
+
+def load(name,file):
+    spec=importlib.util.spec_from_file_location(name,PRODUCTION/file)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+
+
+qual=load('reporting_release_test_qualifier','qualify_core_reporting_fundamentals_take_01.py')
+adopt=load('reporting_release_test_adopter','adopt_core_reporting_fundamentals_20261030.py')
+
+
+@contextmanager
+def held_baseline():
+    """A complete synthetic baseline, independent of future real adoptions."""
+    with tempfile.TemporaryDirectory() as temp:
+        root=Path(temp);sources=root/'sources';base=root/'review';base.mkdir()
+        folder=sources/'expansion/lessons';folder.mkdir(parents=True)
+        files=[]
+        for i in range(41):
+            p=folder/f'held-{i:02}.json';p.write_text(json.dumps({'id':f'held-{i:02}'}))
+            files.append({'file':p.relative_to(sources).as_posix(),'sha256':adopt.sha(p)})
+        (base/'existing-canonical-hashes.json').write_text(json.dumps({'existing_lessons':41,'files':files}))
+        (base/'learner-copy.review-required.json').write_text('{}')
+        with patch.object(adopt,'SOURCES',sources),patch.object(adopt,'BASE',base),patch.object(adopt,'TARGET',folder/'new.json'),patch.object(adopt,'BASELINE_SHA',adopt.sha(base/'existing-canonical-hashes.json')),patch.object(adopt,'LEARNER_SHA',adopt.sha(base/'learner-copy.review-required.json')):
+            yield folder
+
+
+class ReportingReleaseGuardTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.enterClassContext(retained_playback_raw(qual))
+
+    def test_actual_three_proofs_and_strict_candidate_pass_without_writes(self):
+        paths=[qual.TAKE/'evidence.reviewed.json',qual.TAKE/'playback/proofs.json',qual.TAKE/'qualification.json',adopt.TARGET]
+        before={p:(p.read_bytes() if p.exists() else None) for p in paths}
+        rows,evidence,report,_=qual.prepare()
+        self.assertTrue(report['passed']);self.assertEqual(report['issues'],[])
+        self.assertEqual(len(rows),3)
+        self.assertTrue(all((x['screenshot']['width'],x['screenshot']['height'])==(1280,720) for x in rows))
+        self.assertEqual(evidence['authoring_sha256'],qual.AUTHORING)
+        self.assertEqual(before,{p:(p.read_bytes() if p.exists() else None) for p in paths})
+
+    def test_stale_video_or_jpeg_and_missing_position_rejected(self):
+        real=json.loads(qual.RAW.read_text())
+        for which in ['video','jpeg','position','missing']:
+            with self.subTest(which=which):
+                rows=deepcopy(real)
+                if which=='video':rows[0]['video_sha256']='0'*64
+                elif which=='jpeg':rows[1]['screenshot']['sha256']='0'*64
+                elif which=='position':rows[2]['position']='beginning'
+                else:rows.pop()
+                with self.assertRaises(ValueError):qual.validate_observations(rows)
+
+    def test_paused_unready_or_error_observation_cannot_qualify(self):
+        real=json.loads(qual.RAW.read_text())
+        for fields in [{'paused':True},{'ended':True},{'ready_state':2},{'media_error':{'code':3}},{'console_errors':['synthetic test error']}]:
+            rows=deepcopy(real);rows[0].update(fields)
+            with self.assertRaises(ValueError):qual.validate_observations(rows)
+
+    def test_qualification_write_requires_explicit_pinned_proof_hash(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with patch.object(qual,'TAKE',Path(temp)),patch.object(qual,'prepare',return_value=([],{},{},{})):
+                with self.assertRaisesRegex(ValueError,'exact reviewed raw-proof'):
+                    qual.main(['--qualify'])
+            self.assertEqual(list(Path(temp).iterdir()),[])
+
+    def test_qualification_refuses_existing_outputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            take=Path(temp);old=take/'evidence.reviewed.json';old.write_bytes(b'held synthetic history')
+            with patch.object(qual,'TAKE',take),patch.object(qual,'prepare',return_value=([],{},{},{})):
+                with self.assertRaisesRegex(ValueError,'New-only'):
+                    qual.main(['--qualify','--proof-observations-sha256',qual.RAW_SHA])
+            self.assertEqual(old.read_bytes(),b'held synthetic history')
+            self.assertEqual([p.name for p in take.iterdir()],['evidence.reviewed.json'])
+
+    def test_missing_real_qualification_blocks_adoption(self):
+        with tempfile.TemporaryDirectory() as temp:
+            fake=SimpleNamespace(TAKE=Path(temp),prepare=lambda:([],{},{},{}))
+            with patch.object(adopt,'baseline',return_value={}),patch.object(adopt,'qualifier',return_value=fake):
+                with self.assertRaisesRegex(ValueError,'have not arrived'):
+                    adopt.prepare(adopt.EVIDENCE_SHA,adopt.QUALIFICATION_SHA)
+            self.assertEqual(list(Path(temp).iterdir()),[])
+
+    def test_unpinned_qualification_hash_is_rejected(self):
+        fake=SimpleNamespace(TAKE=Path('/nonexistent-reporting-test'),prepare=lambda:([],{},{},{}))
+        with patch.object(adopt,'baseline',return_value={}),patch.object(adopt,'qualifier',return_value=fake):
+            with self.assertRaisesRegex(ValueError,'exact retained qualification'):
+                adopt.prepare(adopt.EVIDENCE_SHA,'a'*64)
+
+    def test_duplicate_target_refused_without_changing_existing_lesson(self):
+        with held_baseline():
+            adopt.TARGET.write_bytes(b'held existing lesson')
+            with self.assertRaisesRegex(ValueError,'existing lesson'):adopt.baseline()
+            self.assertEqual(adopt.TARGET.read_bytes(),b'held existing lesson')
+
+    def test_canonical_baseline_drift_is_rejected(self):
+        with held_baseline() as folder:
+            first=next(folder.glob('held*.json'));first.write_text('{"id":"changed"}')
+            with self.assertRaisesRegex(ValueError,'baseline drifted'):adopt.baseline()
+            self.assertEqual(len(list(folder.glob('*.json'))),41)
+
+    def test_adoption_mutation_requires_exact_qualification_hashes(self):
+        with held_baseline():
+            with self.assertRaisesRegex(ValueError,'exact qualified evidence/report'):
+                adopt.main(['--adopt'])
+            self.assertFalse(adopt.TARGET.exists())
+
+    def test_wrong_candidate_hash_cannot_create_canonical(self):
+        with held_baseline(),patch.object(adopt,'prepare',return_value=({},{})):
+            with self.assertRaisesRegex(ValueError,'exact candidate hash'):
+                adopt.main(['--adopt','--evidence-sha256',adopt.EVIDENCE_SHA,'--qualification-sha256',adopt.QUALIFICATION_SHA,'--candidate-sha256','0'*64])
+            self.assertFalse(adopt.TARGET.exists())
+
+    def test_defaults_read_only_with_complete_held41(self):
+        paths=[qual.TAKE/'evidence.reviewed.json',qual.TAKE/'playback/proofs.json',qual.TAKE/'qualification.json']
+        before={p:p.read_bytes() for p in paths}
+        with redirect_stdout(io.StringIO()) as output:qual.main([])
+        self.assertFalse(json.loads(output.getvalue())['qualified_outputs_written'])
+        self.assertEqual(before,{p:p.read_bytes() for p in paths})
+        with held_baseline() as folder,patch.object(adopt,'qualifier',return_value=SimpleNamespace(prepare=lambda:None)):
+            held={p:adopt.sha(p) for p in folder.glob('*.json')}
+            with redirect_stdout(io.StringIO()) as output:adopt.main([])
+            self.assertFalse(json.loads(output.getvalue())['canonical_written'])
+            self.assertEqual(held,{p:adopt.sha(p) for p in folder.glob('*.json')})
+            self.assertFalse(adopt.TARGET.exists())
+
+
+if __name__=='__main__':unittest.main()

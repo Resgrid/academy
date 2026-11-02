@@ -1,0 +1,281 @@
+{
+  "id": "core-document-numbering",
+  "title": "Configure call, record and document numbering",
+  "app": "Core",
+  "audience": "Department administrators and records managers",
+  "summary": "Choose patterns, fiscal-year rules and forward-only counters, then verify newly issued numbers.",
+  "prerequisites": [
+    "Use the fictional Chicago Fire demonstration department and disposable training documents.",
+    "Have department configuration permission; Records must be available with records-settings access.",
+    "Record existing patterns and next numbers before making changes.",
+    "Use isolated training calls and clearly labeled training work requests; do not issue or send real financial documents for practice."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the three numbering areas",
+      "route": "/User/Department/Settings",
+      "capture_intent": "Show Department Settings Calls & Dispatch menu, Customization menu, then Records Manage menu.",
+      "required_labels": [
+        "Calls & Dispatch",
+        "Call Settings",
+        "Customization",
+        "Document Numbering",
+        "Manage",
+        "Settings"
+      ],
+      "narration": "Numbering helps people connect an item with its operational process. In our Chicago Fire demonstration department, calls, records and work orders have separate settings. From Department Settings, open Calls & Dispatch, then Call Settings for calls. Document Numbering is under Customization. For records, open Records, expand Manage and choose Settings. Work orders, invoices, bids and daily time reports share Document Numbering. Check the page before editing: saving an invoice pattern does not change call or incident-record numbering.",
+      "practice": "List which settings page controls each item you plan to number.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-055-department-calls-dispatch-navigation",
+          "core-config-056-department-document-numbering-navigation",
+          "core-config-071-records-settings-navigation"
+        ],
+        "observations": [
+          "All three navigation menus observed. Records settings is reached through Records Manage, not a link in the Calls & Dispatch menu."
+        ]
+      }
+    },
+    {
+      "id": "02",
+      "title": "Set a call pattern",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Enter FD51-{YYYY}-{SEQ}, width 4 and inspect inline example.",
+      "required_labels": [
+        "Call Numbering",
+        "Call number pattern",
+        "Sequence digits",
+        "Example:"
+      ],
+      "narration": "Open Call Settings and scroll to Call Numbering. Our saved pattern is FD51-{YYYY}-{SEQ}: a department prefix, full year and sequence. Sequence digits is four. The inline example uses sample sequence 153, so it reads FD51-2026-0153; that sample is not the next issued number. The sequence token must appear exactly once. Letters, digits and supported separators form the fixed text. Review the example, choose Update and reopen the page to check the stored format before creating a training call.",
+      "practice": "Choose a clear training call prefix and confirm the preview before saving.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-004-call-numbering-format-preview",
+          "core-config-005-call-numbering-saved-new-scope",
+          "core-config-038-call-number-format-preserved"
+        ],
+        "observations": [
+          "Preview, initial saved new scope and later read-only saved pattern are distinct captures."
+        ]
+      }
+    },
+    {
+      "id": "03",
+      "title": "Choose the reset period",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Read actual date-token guidance and saved yearly reset description without changing the current scope.",
+      "required_labels": [
+        "Call number pattern",
+        "Next call number"
+      ],
+      "narration": "Read the token guidance under Call number pattern. A year pattern restarts each numbering year. Adding month makes a monthly scope; adding day makes a daily scope. A month needs a year, and a day needs a month. Without a date, the sequence continues without a date-based restart. For example, AC-{YYYY}{MM}{DD}-{SEQ} is a daily format. We keep the saved yearly FD51 pattern here. Dates follow the department time zone, so check that setting before choosing a reset rule.",
+      "practice": "Explain whether your call sequence resets yearly, monthly, daily or never.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-038-call-number-format-preserved",
+          "core-config-039-call-number-next-after-responder"
+        ],
+        "observations": [
+          "Actual token guidance and Starts again at1 eachyear shown. Monthly/daily examples are explanation, not a claimed saved demonstration."
+        ]
+      }
+    },
+    {
+      "id": "04",
+      "title": "Review fiscal-year naming",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Inspect actual month/day controls and fixed fiscal-year naming guidance.",
+      "required_labels": [
+        "Numbering year starts",
+        "January"
+      ],
+      "narration": "Numbering year starts has a month and day. We retain January first, the calendar year. For yearly patterns, a fiscal boundary starts a new sequence on that date. The help explains the year label: most fiscal years are named by their ending year, so a period beginning November first, 2026 is 2027. There is no separate start-year or end-year selector on this form. Monthly and daily call patterns use calendar dates. Review the month, day and guidance before changing an established scheme.",
+      "practice": "Confirm the intended year label for a date just before and just after the fiscal-year boundary.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-039-call-number-next-after-responder"
+        ],
+        "observations": [
+          "Only month/day controls exist; removed fictional start-year/end-year selectors from narration and required labels."
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "title": "Review the next number and carry-forward control",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Compare saved new-scope0001 with next0002 after actual issuance; leave forward-only Raise field blank.",
+      "required_labels": [
+        "Next call number",
+        "Raise next sequence to"
+      ],
+      "narration": "Next call number is the next value for a call logged now. Saving our new FD51 format started its own scope at 0001; older call numbers remained intact. After the training call received 0001, this page shows 0002. Raise next sequence to is for carrying forward numbers issued before Resgrid. It can only move forward. Save pattern or year-boundary changes first, reopen, then review any separate carry-forward value against the new scope. Leave this field blank when the displayed next number is correct, as we do here.",
+      "practice": "Reopen the saved pattern and identify the current next value without lowering or guessing it.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-005-call-numbering-saved-new-scope",
+          "core-config-006-call-numbering-reopened-next",
+          "core-config-039-call-number-next-after-responder"
+        ],
+        "observations": [
+          "Newprefixscope legitimately started0001; after separate Responder call51009 next0002. No forward raise persisted, no reset/lowering performed."
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "title": "Verify an issued call number",
+      "route": "/User/Dispatch/ViewCall?callId=51009",
+      "capture_intent": "Compare actual Core saved call51009 FD51-2026-0001 with pre-format call51008 number26-4 using existing owner captures; no further call creation.",
+      "required_labels": [
+        "Number:",
+        "FD51-2026-0001",
+        "26-4"
+      ],
+      "narration": "In an authorized training exercise, open the saved call and compare its issued number with the format you reviewed. Our disposable training call received FD51-2026-0001. An older call keeps its original 26-format number because a pattern change never rewrites issued numbers. Mixed historical formats can therefore be expected. If a result differs from what you expected, check the local date, numbering-year boundary and scope. Do not create repeated calls merely to force a counter toward the inline sample.",
+      "practice": "Compare a newly issued training call number with one that existed before the change.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-responder-eligible-boden-timer",
+          "core-nearest-training-call-closed-history"
+        ],
+        "observations": [
+          "Parent actualCoreViewCall51009 image visually reviewed: issued FD51-2026-0001 wraps across lines but allcharacters visible; separate timer panel is not a numbering action.",
+          "Pre-format call51008 actualCoreclosedhistory shows26-4. Reused existing screenshots with exact file hashes; this agent did not open/mutate either call."
+        ]
+      }
+    },
+    {
+      "id": "07",
+      "title": "Review record pattern and type prefixes",
+      "route": "/User/Records/Settings",
+      "capture_intent": "Show Records numbering pattern, prefix table and next rows.",
+      "required_labels": [
+        "Record numbering",
+        "Number pattern",
+        "Sequence digits",
+        "Record type prefixes",
+        "Next numbers for 2026"
+      ],
+      "narration": "In Records Settings, find Record numbering. We preserve {PREFIX}-{YYYY}-{SEQ} with four digits and January first. PREFIX uses the record type prefix. Training defaults to TRN when its override box is blank. The next-number table shows TRN-2026-0002 after the existing training record. Prefixes shared by types share a sequence; GROUP can create group-specific scopes and must be followed by a separator. Calls month and day tokens do not belong here. Review stored settings and each relevant next row before changing this separate family.",
+      "practice": "Identify the preserved Training prefix, four-digit sequence and next value without saving or raising it.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-016-record-numbering-preserved",
+          "core-config-019-record-year-and-digit-settings",
+          "core-config-017-record-next-numbers-preserved"
+        ],
+        "observations": [
+          "Records settings preserved. Blank Training override retains defaultTRN; no TRN reconfiguration or counter mutation."
+        ]
+      }
+    },
+    {
+      "id": "08",
+      "title": "Verify a record and its scope",
+      "route": "/User/Records",
+      "capture_intent": "Inspect existing Finalized Training record and separate Workdraft; no new lifecycle action.",
+      "required_labels": [
+        "TRN-2026-0001",
+        "Training",
+        "Finalized",
+        "Draft"
+      ],
+      "narration": "Open the existing training record. Its issued number is TRN-2026-0001, its station is Firehouse 51 and its state is Finalized. The register also has a separate Work draft with a draft reference. These are different types and lifecycle states. A number identifies an item; it does not by itself establish review, approval or external submission. Check the state and history separately. Use an existing safe example when one is available, preserving its original contents and audit trail.",
+      "practice": "Create or inspect one training record and identify its definition, group, number and lifecycle state.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-052-record-register-existing-final-number",
+          "core-config-053-training-record-existing-issued-number",
+          "core-config-054-training-record-existing-history"
+        ],
+        "observations": [
+          "Actual existing Finalized Trainingrecord and Workdraft inspected read-only; no approval, finalization, amendment or external submission performed."
+        ]
+      }
+    },
+    {
+      "id": "09",
+      "title": "Configure other document numbers",
+      "route": "/User/Department/DocumentNumbering",
+      "capture_intent": "Show work-order preview, saved MNTpattern and actual next0002; other rows remain builtin.",
+      "required_labels": [
+        "Document Numbering",
+        "Number pattern",
+        "Sequence digits",
+        "Next number",
+        "Raise next to"
+      ],
+      "narration": "Open Document Numbering. Each row controls work orders, invoices, bids or daily time reports. For our training work request we saved MNT-{YY}-{SEQ} with four digits, using Update. The sample reads MNT-26-0153, while the saved next value initially read 0001. After the request was issued, it advanced to MNT-26-0002. Invoice, bid and time-report rows retain their built-in formats. This page has its own numbering-year boundary, separate from Calls and Records. Reopen after saving and inspect every row you intended to change.",
+      "practice": "Configure one document kind and confirm the saved pattern and next number.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-002-document-numbering-before",
+          "core-config-009-work-order-numbering-preview",
+          "core-config-010-work-order-numbering-saved",
+          "core-config-021-work-order-next-after-issuance",
+          "core-config-070-document-numbering-page-heading"
+        ],
+        "observations": [
+          "Exactly one kind changed: workorders. Existing financial rows and year boundary preserved; no raise/reset."
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Check the owning document",
+      "route": "/User/WorkOrders/New",
+      "capture_intent": "Show harmless five-step work request review, saved Requested MNT-26-0001, preserved olderWOrows and separate Records other-number controls. Keep actual numbered work-request and Records-number-family footage during the cross-sector application paragraph.",
+      "required_labels": [
+        "New work order",
+        "Review",
+        "MNT-26-0001",
+        "Requested",
+        "Other record numbers"
+      ],
+      "narration": "The work-order wizard asks what the request is for, its unit or group, costs, safety details and a final review. Our fictional numbering demonstration uses Other, Low priority, no assignment and no costs. Saving creates MNT-26-0001 in Requested state. Reopen its detail and compare the register: older WO numbers remain unchanged. This request is software practice, not a completed repair or safety clearance. Records Settings separately holds request, occupancy, inspection, permit, investigation and evidence numbers. Verify actual saved items for the families you change and retain the chosen reset rules. A community care or mental health team can use a clear follow-up record prefix while keeping service work orders separate. Search and rescue teams can distinguish mission records from equipment requests. Security teams can separate patrol records, work requests and client documents. Wildland contractors can check fiscal-year rules for time reports. Industrial teams can distinguish incident, inspection, permit and maintenance references. In each setting, the identifier describes the item; review its actual contents and lifecycle state separately.",
+      "practice": "Record one real training result for each numbering family you changed.",
+      "capture_evidence": {
+        "status": "captured",
+        "capture_refs": [
+          "core-config-011-training-work-order-description",
+          "core-config-012-training-work-order-review",
+          "core-config-015-work-order-reopened-detail",
+          "core-config-020-work-order-register-number-scopes",
+          "core-config-018-other-record-number-families"
+        ],
+        "observations": [
+          "One actual request created and reopened viaGETDetail. Requested, not draft/completed/approved. No financial send, maintenance or safety authorization."
+        ]
+      }
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: FD51 calls, preserved TRN records and MNT software-practice work requests demonstrate separate numbering families.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: use clear visit or follow-up record prefixes without embedding personal information in identifiers.",
+    "Search and rescue": "Search and rescue: align yearly or mission identifiers with the actual record and group scope.",
+    "Security companies and departments": "Security: distinguish patrol records, client invoices and service work orders.",
+    "Wildland contractors": "Wildland contractors: review fiscal-year labels for work orders and daily time reports.",
+    "Industrial emergency response teams": "Industrial response: separate facility incident records from inspection, permit and maintenance numbers."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/CallNumbering.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/Records/RecordNumberFormat.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/DocumentNumbering.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Department/CallSettings.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Department/DocumentNumbering.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Records/Settings.cshtml",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/DocumentNumberingService.cs"
+  ]
+}

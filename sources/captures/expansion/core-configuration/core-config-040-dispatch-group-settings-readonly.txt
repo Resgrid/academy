@@ -1,0 +1,614 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 4":
+      - /url: "#"
+      - generic: 
+      - generic: "4"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Call & Dispatch Settings" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Department Settings":
+    - /url: /User/Department/Settings
+  - text: /
+  - strong: Call & Dispatch Settings
+- form:
+  - list
+  - heading "Group Dispatch Settings" [level=3]
+  - generic: Use Shift for Group Dispatch
+  - checkbox
+  - generic: Expand dispatched groups using the resolved on-duty roster. An empty shift result falls back to group members; preview both cases.
+  - generic: Set Status for Shift Personnel On Dispatch
+  - checkbox
+  - generic: Apply the configured status to shift-dispatched personnel. This only takes effect with shift dispatch enabled.
+  - generic: Person Call Dispatch Status
+  - combobox:
+    - option "Default" [selected]
+    - option "StandingBy"
+    - option "NotResponding"
+    - option "Responding"
+    - option "OnScene"
+    - option "AvailableStation"
+    - option "RespondingToStation"
+    - option "RespondingToScene"
+    - option "OnUnit"
+  - generic: Person Call Release Status
+  - combobox:
+    - option "Default" [selected]
+    - option "StandingBy"
+    - option "NotResponding"
+    - option "Responding"
+    - option "OnScene"
+    - option "AvailableStation"
+    - option "RespondingToStation"
+    - option "RespondingToScene"
+    - option "OnUnit"
+  - heading "Group-Scoped Dispatch" [level=4]
+  - generic: Scope Dispatch to Group Areas
+  - checkbox
+  - generic: Limit supported dispatch views to the member's group subtree. Department administrators and configured department-wide roles keep department-wide access.
+  - generic: "When on, each member's active call lists, maps and nearest unit board show only their own group and the groups beneath it: calls inside those groups' boundaries or dispatched to them, plus any call the member reported or was dispatched to. Department admins and the roles below keep a department-wide view. Nothing is copied or moved, so handing dispatch to another desk at shift change is only a change of role."
+  - generic: Department-Wide Dispatch Roles
+  - checkbox "Chief"
+  - text: Chief
+  - checkbox "Officer"
+  - text: Officer
+  - checkbox "Rescue Technician"
+  - text: Rescue Technician
+  - checkbox "Paramedic"
+  - text: Paramedic
+  - checkbox "Firefighter"
+  - text: Firefighter
+  - checkbox "Driver / Operator"
+  - text: Driver / Operator
+  - generic: Members holding any of these roles (for example a central dispatch center) see every area while scoping is on. Assign or remove the role to hand dispatch over; it takes effect on their next page load.
+  - heading "Unit Dispatch Settings" [level=3]
+  - generic: Also Dispatch To Assigned Personnel
+  - checkbox
+  - generic: Expand unit dispatch to its assigned crew. Review duplicate routes, current assignments and recipient permissions.
+  - generic: Also Dispatch To Entire Group
+  - checkbox
+  - generic: Expand unit dispatch to the station group. This can substantially increase the recipient audience.
+  - generic: Unit Call Dispatch Status
+  - combobox:
+    - option "Default (Dispatched, Responding or En Route)" [selected]
+    - option "Leave the unit's status unchanged"
+    - option "Available"
+    - option "Responding"
+    - option "On Scene"
+    - option "Made Contact"
+    - option "Investigating"
+    - option "Dispatched"
+    - option "Cleared"
+    - option "Returning"
+    - option "Staging"
+    - option "Unavailable"
+    - option "En Route"
+    - option "Transporting"
+    - option "Delivering"
+    - option "At Patient"
+    - option "At Hospital"
+    - option "Searching"
+    - option "Loading"
+    - option "Standby"
+    - option "On Patrol"
+    - option "Maintenance"
+    - option "On Break"
+    - option "Completed"
+    - option "In Quarters"
+  - generic: "Set on the units dispatched to a call. Pick what the status means: each unit gets the status of its own status set with that meaning (the first by order), so one setting works for unit types with different custom statuses. Default sets Dispatched (or Responding, or En Route) on units with custom statuses and Responding on units with the built-in statuses."
+  - generic: Unit Call Release Status
+  - combobox:
+    - option "Default (back in service)" [selected]
+    - option "Leave the unit's status unchanged"
+    - option "Available"
+    - option "Responding"
+    - option "On Scene"
+    - option "Made Contact"
+    - option "Investigating"
+    - option "Dispatched"
+    - option "Cleared"
+    - option "Returning"
+    - option "Staging"
+    - option "Unavailable"
+    - option "En Route"
+    - option "Transporting"
+    - option "Delivering"
+    - option "At Patient"
+    - option "At Hospital"
+    - option "Searching"
+    - option "Loading"
+    - option "Standby"
+    - option "On Patrol"
+    - option "Maintenance"
+    - option "On Break"
+    - option "Completed"
+    - option "In Quarters"
+  - generic: Set, by meaning in the same way, on the units still working a call when it is closed or they are taken off it. A unit already back in service, out of service (unavailable, maintenance or on a break) or working another call keeps its status; custom statuses are read by their base type. Default sets the unit's back-in-service status (Cleared, Available or In Quarters) on custom statuses and Released on the built-in statuses.
+  - generic: Personnel on Unit Set Unit Status
+  - checkbox
+  - generic: Allow personnel status updates to influence their assigned unit status. Review automation and crew assignment together.
+  - generic: When a unit submits a status and users are setup on roles, the users status will be set to On Unit.
+  - generic: Hold to set status
+  - checkbox
+  - generic: Unit and Responder apps set a status with a two-second press and hold instead of a tap followed by Next or Submit. Statuses that need a note or destination still open that step.
+  - generic: In the Unit and Responder apps, crews press and hold a status button for two seconds to set it, instead of tapping it and then pressing Next or Submit. Prevents accidental taps and forgotten confirmations. A status that needs a note or a destination choice still opens its next step.
+  - generic: Close call when last unit clears
+  - checkbox
+  - generic: An active call closes on its own when its last dispatched unit reports back in service or out of service. Units still working, a call with no unit dispatched and a call under an active incident command keep it open.
+  - generic: "An active call closes on its own when the last unit dispatched to it reports back in service or out of service (a status whose base type is Available, In Quarters, Cleared, Unavailable or Maintenance). Every other dispatched unit must also have reported finished since its dispatch. Only units count: a call with no unit dispatched, a call under an active incident command, or a unit still returning or transporting keeps the call open for the dispatcher."
+  - heading "Check-In Timer Settings" [level=3]
+  - generic: Auto-Enable Check-In Timers for New Calls
+  - checkbox
+  - generic: Automatically start configured check-in timers for new calls. Review timer targets and escalation before enabling it.
+  - generic: When enabled, all new calls will automatically have check-in timers turned on.
+  - heading "Run Cards & Automatic Dispatch" [level=3]
+  - generic: Automatic resource selection mode
+  - combobox:
+    - option "Off (Manual Dispatch)"
+    - option "Station Based Dispatching"
+    - option "Closest Unit Response" [selected]
+  - generic: "How the system selects units and personnel to fill a run card: by the station response area containing the call (cascading to the next nearest station on shortfall) or by the closest available resources."
+  - generic: Automatically dispatch recommended resources
+  - checkbox
+  - generic: Allow the recommendation path to dispatch automatically where enabled. Preview recipients and verify local procedures first.
+  - generic: When on, matched run cards dispatch resources immediately on call creation. When off, recommendations pre-populate the New Call page for dispatcher review.
+  - generic: Rest period (minutes)
+  - spinbutton: "0"
+  - generic: After a unit or person is dispatched, deprioritize them for this many minutes so the same resources are not dispatched back to back. 0 disables.
+  - generic: Minimum unit staffing to dispatch
+  - combobox:
+    - option "Off (No Staffing Gate)" [selected]
+    - option "At Least Partially Staffed"
+    - option "At Least Degraded"
+    - option "Fully Staffed Only"
+  - generic: Units staffed below this level are not selected even when their status matches. Units without defined roles always pass.
+  - generic: Enable move-up / backfill recommendations
+  - checkbox
+  - generic: After dispatch selection, check station coverage minimums and recommend relocating resources to depleted stations.
+  - heading "Closest Unit Response Tuning" [level=4]
+  - generic: Maximum unit location age (seconds)
+  - spinbutton: "1800"
+  - generic: Maximum personnel location age (seconds)
+  - spinbutton: "1800"
+  - generic: Maximum response radius (meters)
+  - spinbutton: "0"
+  - generic: Include stale locations
+  - checkbox
+  - generic: Order by driving ETA
+  - checkbox
+  - generic: Re-rank the closest candidates using routed drive time instead of straight-line distance. Uses the mapping provider and may add cost and latency.
+  - generic: ETA shortlist size
+  - spinbutton: "5"
+  - generic: In-quarters turnout (seconds)
+  - spinbutton: "120"
+  - generic: Time a unit at its station needs before it is moving. Applies to units in an In Quarters status and to units with no GPS position (taken to be at their station). Added to the travel time when ranking closest units. 0 = none.
+  - generic: Mobile turnout (seconds)
+  - spinbutton: <redacted>
+  - generic: Time a unit that is already out and available needs before it is moving to a new call. Applies to units ranked from their GPS position. Added to the travel time when ranking closest units. 0 = none.
+  - generic: Personnel turnout (seconds)
+  - spinbutton: "0"
+  - generic: Added to a person's travel time when run card rows that accept people compare them with units.
+  - generic: Dispatch freed units to calls awaiting them
+  - checkbox
+  - generic: "Off: dispatchers are alerted when a matching unit becomes available. On: the unit is sent to the highest-priority waiting call automatically. Run cards can override this."
+  - generic: Automatic dispatch limit (seconds, 0 = none)
+  - spinbutton: "0"
+  - generic: A freed unit further away than this is alerted, not sent. The alert itself always fires.
+  - generic: Response codes
+  - generic: Optional per-unit codes for run card proposals, such as C3 for lights and siren. Leave empty to keep codes out of every screen.
+  - table:
+    - rowgroup:
+      - row "Code Name Colour Retired":
+        - columnheader "Code"
+        - columnheader "Name"
+        - columnheader "Colour"
+        - columnheader "Retired"
+        - columnheader
+    - rowgroup
+  - button "Add code"
+  - checkbox "Show codes to crews (unit push and field apps)"
+  - text: Show codes to crews (unit push and field apps)
+  - heading "New Call Form Fields" [level=3]
+  - generic: Choose which built-in fields appear on the new call form and which must be completed before a call can be created and sent to the field. Name, nature, priority and type are always shown and always required. The same rules apply when a call is edited or an archived call is added.
+  - table:
+    - rowgroup:
+      - row "Field Visible Required":
+        - columnheader "Field"
+        - columnheader "Visible"
+        - columnheader "Required"
+    - rowgroup:
+      - row "Address":
+        - cell "Address"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "GPS Coordinates":
+        - cell "GPS Coordinates"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "what3words":
+        - cell "what3words"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Plus Code A plus code only finds the location and is not saved on the call, so it cannot be required. Require GPS Coordinates instead.":
+        - cell "Plus Code"
+        - cell:
+          - checkbox [checked]
+        - cell "A plus code only finds the location and is not saved on the call, so it cannot be required. Require GPS Coordinates instead.":
+          - checkbox "A plus code only finds the location and is not saved on the call, so it cannot be required. Require GPS Coordinates instead." [disabled]
+      - row "Destination":
+        - cell "Destination"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Indoor Location":
+        - cell "Indoor Location"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Note":
+        - cell "Note"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Reporter Name":
+        - cell "Reporter Name"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Reporter Contact Info":
+        - cell "Reporter Contact Info"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "External Call ID":
+        - cell "External Call ID"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Incident ID":
+        - cell "Incident ID"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Reference ID":
+        - cell "Reference ID"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Protocols":
+        - cell "Protocols"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Linked Call":
+        - cell "Linked Call"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Scheduled Dispatch":
+        - cell "Scheduled Dispatch"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+      - row "Dispatch Recipients":
+        - cell "Dispatch Recipients"
+        - cell:
+          - checkbox [checked]
+        - cell:
+          - checkbox
+  - link "Cancel":
+    - /url: /User/Home/Dashboard
+  - button "Save"
+- heading "Station Coverage Minimums" [level=5]
+- paragraph: Define the minimum number of each unit type or personnel role that should remain available at a station. When a dispatch would drop coverage below a minimum, the system recommends move-ups.
+- table:
+  - rowgroup:
+    - row "Station Unit Type / Role Minimum Available Radius (meters, closest-unit mode) Enabled":
+      - columnheader "Station"
+      - columnheader "Unit Type / Role"
+      - columnheader "Minimum Available"
+      - columnheader "Radius (meters, closest-unit mode)"
+      - columnheader "Enabled"
+      - columnheader
+  - rowgroup
+- combobox:
+  - option "Firehouse 51" [selected]
+- combobox:
+  - option "Engine" [selected]
+  - option "Aerial"
+  - option "Rescue"
+  - option "Ambulance"
+  - option "Command"
+  - option "Chief"
+  - option "Officer"
+  - option "Rescue Technician"
+  - option "Paramedic"
+  - option "Firefighter"
+  - option "Driver / Operator"
+- spinbutton "Minimum Available": "1"
+- spinbutton "Radius (meters, closest-unit mode)": "0"
+- button "Save"
+- heading "Default Timer Configurations" [level=5]
+- paragraph: These define the default check-in intervals for each target type. They apply to all calls unless overridden by call type/priority rules below.
+- table:
+  - rowgroup:
+    - row "Target Type Unit Type Duration (minutes) Warning Threshold (minutes) Enabled Active States":
+      - columnheader "Target Type"
+      - columnheader "Unit Type"
+      - columnheader "Duration (minutes)"
+      - columnheader "Warning Threshold (minutes)"
+      - columnheader "Enabled"
+      - columnheader "Active States"
+      - columnheader
+  - rowgroup
+- separator
+- heading "Add New Default Timer" [level=4]
+- form:
+  - generic: Target Type
+  - combobox:
+    - option "Personnel" [selected]
+    - option "Unit Type"
+    - option "IC (Incident Commander)"
+    - option "PAR (Personnel Accountability)"
+    - option "Hazmat Exposure"
+    - option "Sector Rotation"
+    - option "Rehab"
+  - generic: Duration (minutes)
+  - spinbutton: "30"
+  - generic: Warning Threshold (minutes)
+  - spinbutton: "5"
+  - generic: Enabled
+  - checkbox [checked]
+  - generic: Active States
+  - listbox:
+    - option: Responding
+    - option: Not Responding
+    - option: On Scene
+    - option: Standing By
+    - option: Available Station
+    - option: Responding to Station
+    - option: Responding to Scene
+    - option: On Unit
+    - option: Any "Available" status
+    - option: Any "Not Responding" status
+    - option: Any "Responding" status
+    - option: Any "On Scene" status
+    - option: Any "Made Contact" status
+    - option: Any "Investigating" status
+    - option: Any "Dispatched" status
+    - option: Any "Cleared" status
+    - option: Any "Returning" status
+    - option: Any "Staging" status
+    - option: Any "Unavailable" status
+    - option: Any "En Route" status
+    - option: Any "Transporting" status
+    - option: Any "Delivering" status
+    - option: Any "At Patient" status
+    - option: Any "At Hospital" status
+    - option: Any "Searching" status
+    - option: Any "Loading" status
+    - option: Any "Standby" status
+    - option: Any "On Patrol" status
+    - option: Any "Maintenance" status
+    - option: Any "On Break" status
+    - option: Any "Completed" status
+    - option: Any "In Quarters" status
+  - combobox:
+    - list:
+      - searchbox "Active States"
+  - generic: Leave empty for "All States".
+  - button "Add Timer Config"
+- heading "Call Type / Priority Overrides" [level=5]
+- paragraph: Overrides take precedence over default timers when a call matches the specified type and/or priority.
+- table:
+  - rowgroup:
+    - row "Call Type ID Call Priority Target Type Unit Type Duration (minutes) Warning Threshold (minutes) Enabled Active States":
+      - columnheader "Call Type ID"
+      - columnheader "Call Priority"
+      - columnheader "Target Type"
+      - columnheader "Unit Type"
+      - columnheader "Duration (minutes)"
+      - columnheader "Warning Threshold (minutes)"
+      - columnheader "Enabled"
+      - columnheader "Active States"
+      - columnheader
+  - rowgroup
+- separator
+- heading "Add New Override" [level=4]
+- form:
+  - generic: Call Type ID
+  - combobox:
+    - option "-- Any --" [selected]
+    - option "Structure Fire"
+    - option "Medical"
+    - option "Rescue"
+    - option "Investigation"
+  - generic: Call Priority
+  - combobox:
+    - option "-- Any --" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Emergency"
+  - generic: Target Type
+  - combobox:
+    - option "Personnel" [selected]
+    - option "Unit Type"
+    - option "IC (Incident Commander)"
+    - option "PAR (Personnel Accountability)"
+    - option "Hazmat Exposure"
+    - option "Sector Rotation"
+    - option "Rehab"
+  - generic: Duration (minutes)
+  - spinbutton: "30"
+  - generic: Warning Threshold (minutes)
+  - spinbutton: "5"
+  - generic: Enabled
+  - checkbox [checked]
+  - generic: Active States
+  - listbox:
+    - option: Responding
+    - option: Not Responding
+    - option: On Scene
+    - option: Standing By
+    - option: Available Station
+    - option: Responding to Station
+    - option: Responding to Scene
+    - option: On Unit
+    - option: Any "Available" status
+    - option: Any "Not Responding" status
+    - option: Any "Responding" status
+    - option: Any "On Scene" status
+    - option: Any "Made Contact" status
+    - option: Any "Investigating" status
+    - option: Any "Dispatched" status
+    - option: Any "Cleared" status
+    - option: Any "Returning" status
+    - option: Any "Staging" status
+    - option: Any "Unavailable" status
+    - option: Any "En Route" status
+    - option: Any "Transporting" status
+    - option: Any "Delivering" status
+    - option: Any "At Patient" status
+    - option: Any "At Hospital" status
+    - option: Any "Searching" status
+    - option: Any "Loading" status
+    - option: Any "Standby" status
+    - option: Any "On Patrol" status
+    - option: Any "Maintenance" status
+    - option: Any "On Break" status
+    - option: Any "Completed" status
+    - option: Any "In Quarters" status
+  - combobox:
+    - list:
+      - searchbox "Active States"
+  - generic: Leave empty for "All States".
+  - button "Add Override"
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

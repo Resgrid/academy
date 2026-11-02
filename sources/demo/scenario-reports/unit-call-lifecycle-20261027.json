@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-27T21:46:54.468804+00:00",
+  "environment": "Isolated local resgrid-academy-oct25 fictional Department 51; no production department or real emergency.",
+  "source_app": "Unit web client; normal visible controls only",
+  "department_id": 51,
+  "call_id": 51011,
+  "returned_call_number": "FD51-2026-0003",
+  "call_name": "TRAINING ONLY - Unit response walkthrough",
+  "nature": "Fictional Unit app exercise for Department 51. Simulated site inspection; no emergency and no external delivery claim.",
+  "priority": "Routine",
+  "call_type": "Investigation",
+  "note": "TRAINING ONLY. Disposable Academy exercise with simulated location and fictional recipients.",
+  "address": "Fictional Academy exercise site, Chicago, IL",
+  "explicit_simulated_point": {
+    "latitude": 41.8721,
+    "longitude": -87.6523,
+    "not_device_gps": true
+  },
+  "dispatch_selection": {
+    "everyone": false,
+    "users": [
+      "Wallace Boden"
+    ],
+    "groups": [],
+    "roles": [],
+    "scheduled_time": null
+  },
+  "contact_name": "Academy exercise coordinator",
+  "original_contact_info": "TRAINING ONLY - use the fictional exercise briefing",
+  "saved_contact_info": "TRAINING ONLY - meet the fictional coordinator at the east exercise entrance",
+  "external_id": "ACADEMY-UNIT-20261027",
+  "stored_access_note": "TRAINING ONLY - Fictional access note: use the east exercise entrance and check in with the exercise coordinator. No real hazards reported.",
+  "observed_operations": [
+    "Blank Create rejected the actual four required fields; a second Name-only omission was captured visibly before correction. Neither validation attempt created a call.",
+    "GPS search parsed and formatted the typed simulated Chicago coordinates. Address resolution reported failure. The incorrect western-US map was not confirmed.",
+    "Destination POI selector was empty. No external route or device-location permission was requested.",
+    "Exactly one Create was submitted after required fields and one fictional recipient were reviewed. The returned call was verified from a fresh Calls list.",
+    "Edit reread the saved coordinates, then Contact Info was changed and saved. Fresh Contact tab verified the stored text.",
+    "One fictional access note was added. Notes was closed and reopened, verifying stored text, author and time.",
+    "One public software-icon image was selected through the normal Gallery chooser and one Upload attempted. The preview returned and a fresh Images reopen was empty. No successful upload is claimed."
+  ],
+  "image_attempt": {
+    "asset": "sources/demo/marker-icons/unit-engine-base.png",
+    "image_note": "TRAINING ONLY - Sample software icon for the Academy upload exercise; not an incident photograph.",
+    "attempts": 1,
+    "verified_saved": false
+  },
+  "evidence": {
+    "manifest": "sources/captures/expansion/unit-response-actions-20261027/manifest.json",
+    "sha256": "2c9aae8620b250b493137251485236062224eaa01dec2e9c7a2d22eeded802ad",
+    "capture_ids": [
+      "004-name-required-visible-validation",
+      "007-single-fictional-dispatch-recipient",
+      "010-resolved-coordinates-map-mismatch",
+      "011-precreate-one-recipient-no-schedule",
+      "012-created-exercise-fresh-list",
+      "015-contact-edit-before-save",
+      "016-saved-contact-fresh-readback",
+      "017-access-note-before-add",
+      "018-stored-note-fresh-reopen",
+      "019-selected-sample-image-before-upload",
+      "020-image-upload-returned-to-preview",
+      "021-images-empty-after-attempt"
+    ]
+  },
+  "state_at_checkpoint": {
+    "call": "Open fictional exercise, retained for subsequent Unit recording; not closed yet.",
+    "engine_51_status": "Released unchanged by this recording batch",
+    "engine_51_crew": "Christopher Herrmann, original1of1 retained; no crew/status submit in this batch.",
+    "original_calls_51001_51002_51003": "Read-only; unchanged."
+  },
+  "replay": [
+    "Prepare the isolated expansion stack and sign in normally with its locally generated credentials. Do not copy credentials into this report or captures.",
+    "In Unit Calls use the actual plus control. Enter the explicit TRAINING ONLY values and select only the intended fictional training recipient.",
+    "Record the newly returned call ID and number; do not assume51011 or FD51-2026-0003 on another stack or reuse an unrelated existing call.",
+    "Verify location and recipient selection before Create. Reopen the saved call, use Edit Call to change only fictional Contact Info, then verify Contact.",
+    "Add the fictional access note and close/reopen Notes to confirm persistence.",
+    "Treat map and image-upload branches as unresolved until the separately retained web fixes pass actual UI retests. A selected preview is not a stored image.",
+    "Close only the disposable exercise through its actual Close Call workflow after remaining recordings; record the real resulting state. Never close the three original seeded examples."
+  ],
+  "limits": [
+    "No notification delivery, physical arrival, live GPS, external video stream or native device operation verified.",
+    "No import apply, MFA or authorization changes.",
+    "Browser extension currently blocks the Unit sign-in; pending human dismissal is required before dependent UI work resumes."
+  ]
+}

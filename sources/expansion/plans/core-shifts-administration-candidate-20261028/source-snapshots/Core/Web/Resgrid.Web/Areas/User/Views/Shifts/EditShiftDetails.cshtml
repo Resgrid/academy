@@ -1,0 +1,133 @@
+﻿@using Resgrid.Model
+@model Resgrid.Web.Areas.User.Models.Shifts.EditShiftView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Shifts.Shifts> localizer
+@{
+	ViewBag.Title = "Resgrid | " + localizer["EditShiftDetailsHeader"];
+	Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>@localizer["EditShiftDetailsHeader"]</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+			</li>
+			<li>
+				<a asp-controller="Shifts" asp-action="Index" asp-route-area="User">@localizer["ShiftsHeader"]</a>
+			</li>
+			<li class="active">
+				<strong>@localizer["EditShiftDetailsHeader"]</strong>
+			</li>
+		</ol>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="wrapper wrapper-content">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<form class="form-horizontal" role="form" asp-controller="Shifts" asp-action="EditShiftDetails" asp-route-area="User" method="post">
+
+						<div class="row">
+							<div class="col-md-8 col-md-offset-1">
+								@Html.AntiForgeryToken()
+								@Html.HiddenFor(m => m.Shift.ShiftId)
+								@Html.HiddenFor(m => m.Shift.AssignmentType)
+								@Html.HiddenFor(m => m.Shift.ScheduleType)
+								@* Set to true by the page script once the personnel pickers hold the current roster; until then a save leaves personnel alone. *@
+								<input type="hidden" id="PersonnelLoaded" name="PersonnelLoaded" value="false" />
+								<div asp-validation-summary="All" class="text-danger"></div>
+
+								@if (!String.IsNullOrEmpty(Model.Message))
+								{
+									<div class="alert alert-success">
+										@Model.Message
+									</div>
+								}
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@localizer["NameLabel"]</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" placeholder="@localizer["NamePlaceholder"]" asp-for="Shift.Name">
+								<span class="help-block m-b-none">@localizer["NameHelp"]</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@localizer["CodeLabel"]</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" placeholder="@localizer["CodePlaceholder"]" asp-for="Shift.Code">
+								<span class="help-block m-b-none">@localizer["CodeHelp"]</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@localizer["ColorLabel"]</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control"  asp-for="Shift.Color" id="colorPicker">
+								<span class="help-block m-b-none">@localizer["ShiftColorNote"]</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@localizer["StartTimeLabel"]</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" asp-for="Shift.StartTime">
+								<span class="help-block m-b-none">@localizer["StartTimeHelp"]</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@localizer["EndTimeLabel"]</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" asp-for="Shift.EndTime">
+								<span class="help-block m-b-none">@localizer["EndTimeHelp"]</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label><input type="checkbox" asp-for="RequireApproval" /> @localizer["RequireApprovalLabel"]</label>
+								</div>
+								<span class="help-block m-b-none">@localizer["RequireApprovalHelp"]</span>
+							</div>
+						</div>
+						@* Only an Assigned shift has a standing roster; a sign-up shift's people come from its sign-ups. *@
+						@if (Model.Shift.AssignmentType == (int)ShiftAssignmentTypes.Assigned)
+						{
+							<div class="form-group">
+								<label class="col-sm-2 control-label">@localizer["NonGroupPersonnelLabel"]</label>
+								<div class="col-sm-10">
+									<select id="shiftPersonnel" name="shiftPersonnel" style="width: 100%;"></select>
+									<span class="help-block m-b-none">@localizer["NonGroupPersonnelHelpEdit"]</span>
+								</div>
+							</div>
+							@foreach (var group in Model.Groups ?? new List<DepartmentGroup>())
+							{
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@group.Name</label>
+									<div class="col-sm-10">
+										<select id="groupPersonnel_@group.DepartmentGroupId" name="groupPersonnel_@group.DepartmentGroupId" class="groupPersonnelSelect" style="width: 100%;"></select>
+									</div>
+								</div>
+							}
+						}
+
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-2">
+								<a class="btn btn-white" asp-controller="Shifts" asp-action="Index" asp-route-area="User">@localizer["CancelButton"]</a>
+								<button class="btn btn-primary" type="submit">@localizer["UpdateShiftButton"]</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts
+{
+	<script src="~/js/app/internal/shifts/resgrid.shifts.editshiftdetails.js"></script>
+}

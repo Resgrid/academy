@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "core-unit-personnel-checkin",
+  "mode": "manual normal-UI exercise recipe; not an automatic database seed or scenario replay",
+  "purpose": "Record a clearly fictional community-care Personnel check-in from department rules through Unit history and Core close-out.",
+  "fixture_dependencies": [
+    "demo/fixtures.json",
+    "demo/scenarios/core-configuration.json"
+  ],
+  "recording_app_support": "demo/client-support/README.unit-recording-v2.md",
+  "preconditions": [
+    "Use an isolated training department and normal authorized accounts.",
+    "Use fictional inputs only. Keep Realtime Geolocation and Background Geolocation off for this software-only exercise. Do not grant new location permissions.",
+    "Preserve the three original active training calls. Create a separate disposable call; generated IDs and department numbers vary on each fresh stack."
+  ],
+  "department_configuration": {
+    "navigation": [
+      "Department",
+      "Department Settings",
+      "Calls & Dispatch",
+      "Call & Dispatch Settings"
+    ],
+    "recorded_existing_state": {
+      "Auto-Enable Check-In Timers for New Calls": false,
+      "Default Timer Configurations": [],
+      "Call Type / Priority Overrides": [
+        {
+          "Call Type ID": "Investigation",
+          "Call Priority": "-- Any --",
+          "Target Type": "Personnel",
+          "Unit Type": "",
+          "Duration (minutes)": 60,
+          "Warning Threshold (minutes)": 5,
+          "Enabled": true,
+          "Active States": []
+        }
+      ]
+    },
+    "fresh_stack_instruction": "Review existing rules first. On a fresh disposable department without this rule, configure the matching Personnel override using Add New Override and verify its saved row. Do not replace unknown department rules. The retained recording reviewed an existing rule and does not demonstrate this creation step.",
+    "threshold_limit": "The video must not teach warning/overdue behavior from the current OK-only recordings; separate threshold validation is required."
+  },
+  "call": {
+    "name": "TRAINING ONLY - Community care check-in exercise",
+    "type": "Investigation",
+    "priority": "Routine",
+    "location": "Fictional Academy outreach exercise site, Chicago, IL",
+    "simulated_coordinates": {
+      "latitude": 41.8721,
+      "longitude": -87.6523
+    },
+    "nature": "TRAINING ONLY. Fictional community paramedicine and mental health outreach check-in exercise. No patient data, no emergency, no physical response, and no external delivery claim.",
+    "notes": "TRAINING ONLY - Demonstrate personnel check-in timers and saved notes. Simulated location; not an arrival or safety verification.",
+    "external_call_id": "ACADEMY-CHECKIN-20261027",
+    "recipient_usernames": [
+      "boden"
+    ],
+    "unit_recipients": [],
+    "group_recipients": [],
+    "role_recipients": [],
+    "Enable Check-In Timers": true,
+    "Save As Pending Call": false,
+    "Scheduled Dispatch": "",
+    "Reporter Name": "Academy exercise coordinator",
+    "Reporter Contact Info": ""
+  },
+  "unit_steps": [
+    "Sign in normally, select Engine51 and verify Released/oneofone/NoActiveCall. Do not change crew or unit status.",
+    "Open the separate call from Calls, verify its generated number/name, then choose Check-In.",
+    "Use Personnel Check In and add the first note, then Confirm Check-In once. Check the visible saved result.",
+    "Open History and inspect the exact note and local timestamp.",
+    "Use Personnel Check In again with the distinct follow-up note. Confirm once, inspect the reset counter and reopen History for both records."
+  ],
+  "personnel_notes": [
+    "TRAINING ONLY - Scheduled software check-in for the fictional community-care exercise. No physical arrival, safety assessment, or device-location verification.",
+    "TRAINING ONLY - Follow-up software check-in after reviewing history. No physical arrival, safety assessment, or device-location verification."
+  ],
+  "core_readback": [
+    "Open View Call again after each saved Unit entry; do not assume the open Core page polls for changes.",
+    "Inspect Check-In Timers and Show Check-In History; scroll so the complete note is visible. Do not submit Core Check In, which can request device location.",
+    "Department display and device-local timestamps can use different zones. Do not teach them as equal strings."
+  ],
+  "cleanup": {
+    "only_the_new_exercise_call": true,
+    "Completed Type": "Closed",
+    "Send Notification": false,
+    "Completed Notes": "TRAINING ONLY - Community-care software check-in exercise complete. Two personnel check-in notes verified in Unit and Core history. No physical response, patient data or field safety assessment.",
+    "verify": [
+      "New call Closed with retained history.",
+      "Original three calls active.",
+      "Engine51Released/oneofone/NoActiveCall."
+    ]
+  },
+  "historical_recording_reference": {
+    "call_id": "51012",
+    "number": "FD51-2026-0004",
+    "first_note_unit_local": "10/27/2026, 5:37:13 PM",
+    "second_note_unit_local": "10/27/2026, 5:48:32 PM",
+    "closed_department_display": "10/27/2026 19:49:28"
+  },
+  "limitations": [
+    "Software-only records do not prove field arrival, clinical review, safety assessment or delivered notifications.",
+    "Maps may include a cached device point; these captures are not a location tutorial or device-GPS proof.",
+    "No Quick Check-In, Unit/IC/PAR target, native device, offline or restart persistence was demonstrated.",
+    "IDs, numbers, timestamps and timer counters are generated results, not fixed seed expectations."
+  ]
+}

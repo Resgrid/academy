@@ -1,0 +1,300 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:            
+    - link " Logs":
+      - /url: /User/Logs
+      - generic: 
+      - text: Logs
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Mapping and BigBoard Settings" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Department Settings":
+    - /url: /User/Department/Settings
+  - text: /
+  - strong: Mapping and BigBoard Settings
+- form:
+  - list
+  - heading "Personnel Mapping Settings" [level=3]
+  - generic: Allow Status with No Location Data to hide previous location
+  - checkbox
+  - generic: Allow a personnel status without a location to replace the previous location-bearing state. This can remove a marker.
+  - generic: If enabled and a status comes in for that user (i.e. Standing By) without a geolocation it'll hide the users location on the map. Otherwise the last location of the user will be shown even if it's older.
+  - generic: TTL In Minutes for Personnel Locations
+  - spinbutton: "0"
+  - generic: Maximum personnel location age in minutes. Zero keeps stale positions visible without an age limit; assess actual ping ages.
+  - generic: In Minutes, how long locations are valid for to be shown in the map. I.e. a value of 60 would mean a marker for a person would show on the maps for up to 60 minutes, afterwards would not be shown. Setting 0 disables TTL and a location, no matter how old, will be shown on the map.
+  - heading "Units Mapping Settings" [level=3]
+  - generic: Allow Unit Status with No Location Data to hide previous location
+  - checkbox
+  - generic: Allow a unit status without a location to overwrite earlier location data. Check hardware and app updates together.
+  - generic: If enabled and a status comes in for that unit (i.e. In Quarters) without a geolocation it'll hide the units location on the map. Otherwise the last location of the user will be shown even if it's older.
+  - generic: TTL In Minutes for Unit Locations
+  - spinbutton: "0"
+  - generic: Maximum unit location age in minutes. Zero retains stale unit locations indefinitely in supported map consumers.
+  - generic: In Minutes, how long locations are valid for to be shown in the map. I.e. a value of 60 would mean a marker for a unit would show on the maps for up to 60 minutes, afterwards would not be shown. Setting 0 disables TTL and a location, no matter how old, will be shown on the map.
+  - heading "Map Style" [level=3]
+  - generic: "The base map your department sees on every map in Resgrid: the website, Dispatch, Responder, Unit, IC and BigBoard."
+  - generic: This Resgrid server has no Mapbox token for the website, so website maps keep the standard map. The style you choose still applies in the apps.
+  - generic: Day Map Style
+  - combobox "Day Map Style":
+    - option "Automatic (Streets)" [selected]
+    - option "Streets"
+    - option "Outdoors (terrain)"
+    - option "Light"
+    - option "Dark"
+    - option "Satellite"
+    - option "Satellite with Streets"
+    - option "Navigation Day"
+    - option "Navigation Night"
+    - option "American Memory"
+    - option "Basic"
+    - option "Basic Overcast"
+    - option "Blueprint"
+    - option "Bubble"
+    - option "Cali Terrain"
+    - option "Decimal"
+    - option "Finland Topo"
+    - option "Frank"
+    - option "Ice Cream"
+    - option "Lè Shine"
+    - option "Mineral"
+    - option "Minimo"
+    - option "Moonlight"
+    - option "Neon Glow"
+    - option "North Star"
+    - option "Pencil"
+    - option "Standard Oil Company"
+    - option "Mapbox Streets Japan"
+    - option "Unicorn"
+  - generic: Mapbox base map every department map shows in a light theme, on the website and in all apps. Automatic is Streets; the website needs a server Mapbox token, and the department Mapbox override replaces it everywhere.
+  - generic: Used on the website, and in the apps when the device is in light mode. Community styles are designer maps from the Mapbox gallery; several show little street detail, so check the preview before using one for dispatch.
+  - generic: Night Map Style
+  - combobox "Night Map Style":
+    - option "Automatic (Dark)" [selected]
+    - option "Streets"
+    - option "Outdoors (terrain)"
+    - option "Light"
+    - option "Dark"
+    - option "Satellite"
+    - option "Satellite with Streets"
+    - option "Navigation Day"
+    - option "Navigation Night"
+    - option "American Memory"
+    - option "Basic"
+    - option "Basic Overcast"
+    - option "Blueprint"
+    - option "Bubble"
+    - option "Cali Terrain"
+    - option "Decimal"
+    - option "Finland Topo"
+    - option "Frank"
+    - option "Ice Cream"
+    - option "Lè Shine"
+    - option "Mineral"
+    - option "Minimo"
+    - option "Moonlight"
+    - option "Neon Glow"
+    - option "North Star"
+    - option "Pencil"
+    - option "Standard Oil Company"
+    - option "Mapbox Streets Japan"
+    - option "Unicorn"
+  - generic: Base map the apps show in dark mode. Automatic pairs with the day style (Dark for road maps, Navigation Night for Navigation Day; Outdoors and satellite unchanged). The website always uses the day style.
+  - generic: Used in the apps when the device is in dark mode. Automatic picks the night version of the day style.
+  - heading "Department Mapbox Override" [level=3]
+  - generic: Use Department Mapbox Map
+  - checkbox
+  - generic: Use the department map provider override. Turning it off on the owning screen removes the stored style and token.
+  - generic: "When enabled, this department's own Mapbox style and public token replace the Map Style above everywhere: the department website views (even when the system stays on Leaflet) and the Dispatch, Responder, Unit, IC and BigBoard apps, which load the token and style the next time they fetch their configuration. The custom style is used in both light and dark mode."
+  - generic: Mapbox Style Url
+  - textbox "mapbox://styles/username/styleid"
+  - generic: Custom map style reference. Verify the provider style and credential together; disabling the override deletes this value.
+  - generic: "Supported values are `mapbox://styles/...` or `https://api.mapbox.com/styles/v1/...`."
+  - generic: Mapbox Public Access Token
+  - textbox "pk.ey..."
+  - generic: Map-provider access token. Only presence is reported. Disabling the override deletes it and requires re-entry to restore.
+  - generic: Use a public (pk.) Mapbox token intended for website and mobile client-side map rendering for this department. It is sent to every member's browser and app; never use a secret (sk.) token.
+  - heading "Unit Status Timers" [level=3]
+  - generic: Highlight a unit on the Big Board when it has been sitting in a status too long — for example, dispatched for more than four minutes without reporting that it has departed. Leave both columns at 0 to time nothing.
+  - table:
+    - rowgroup:
+      - row "Status Warn after (minutes) Alert after (minutes)":
+        - columnheader "Status"
+        - columnheader "Warn after (minutes)"
+        - columnheader "Alert after (minutes)"
+    - rowgroup:
+      - row "Dispatched 0 0":
+        - cell "Dispatched"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "Responding 0 0":
+        - cell "Responding"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "En Route 0 0":
+        - cell "En Route"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "On Scene 0 0":
+        - cell "On Scene"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "Staging 0 0":
+        - cell "Staging"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "At Patient 0 0":
+        - cell "At Patient"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "Transporting 0 0":
+        - cell "Transporting"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "At Hospital 0 0":
+        - cell "At Hospital"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+      - row "Returning 0 0":
+        - cell "Returning"
+        - cell "0":
+          - spinbutton: "0"
+        - cell "0":
+          - spinbutton: "0"
+  - generic: Reason when acknowledging
+  - combobox "Reason when acknowledging":
+    - option "Optional" [selected]
+    - option "Required for alerts"
+    - option "Required for warnings and alerts"
+  - generic: "Whether acknowledging or muting a status timer alert needs a reason: optional, required for alerts, or required for warnings and alerts. It does not change the timers or the unit status."
+  - generic: Whether a dispatcher must enter a reason when acknowledging or muting a status timer alert on the Big Board. The reason stays with the alert for follow-up on recurring delays.
+  - link "Cancel":
+    - /url: /User/Home/Dashboard
+  - button "Save"
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

@@ -1,0 +1,428 @@
+{
+  "schema_version": 1,
+  "kind": "read_only_source_trace_not_runtime_capture",
+  "created_at": "2026-10-29T05:07:11.378551+00:00",
+  "lesson_proposal_id": "core-records-administration",
+  "repositories": {
+    "Core": "6f83872110b0382f2911d099e95d6a4ef7da8315",
+    "Responder": "0760a098e78871a6ce193a328f28926fad123e3b"
+  },
+  "actual_ui_or_DB_requests": false,
+  "source_runtime_parity": "These exact working files match their cited HEAD bytes; this agent did not inspect the running deployment or assert runtime parity. Parent must verify each actual screen and retain deviations.",
+  "facts": [
+    {
+      "id": "module-cutover",
+      "status": "source_confirmed",
+      "finding": "Records.System controls the visible module; an append-only department cutover separately determines RecordsUsable and legacy write blocking. Existing activation must be verified read-only, not repeated. Activation changes permission mappings; it is outside this capture replay.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsCutoverService.cs",
+          "line": 56,
+          "through_line": 92,
+          "sha256": "1dcf8af491812517122440c4c3f7735ee1b419ea7d86deac98b69b67df663494"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsCutoverService.cs",
+          "line": 125,
+          "through_line": 159,
+          "sha256": "1dcf8af491812517122440c4c3f7735ee1b419ea7d86deac98b69b67df663494"
+        }
+      ]
+    },
+    {
+      "id": "permissions",
+      "status": "source_confirmed",
+      "finding": "Normal definition management needs the controller RecordDefinition_Update policy plus service ManageRecordDefinitions. Publishing additionally requires RecordDefinition_Publish / PublishRecordDefinitions. Record authoring and finalization have separate policies, active-member checks and per-record visibility/authority. Current UI controls are authoritative; do not grant rights for the lesson.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordDefinitionsController.cs",
+          "line": 25,
+          "through_line": 25,
+          "sha256": "333ed09124d7ea52043c255f37a9991e0669ffdbd41696458f882e0c6783563f"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordDefinitionsController.cs",
+          "line": 201,
+          "through_line": 201,
+          "sha256": "333ed09124d7ea52043c255f37a9991e0669ffdbd41696458f882e0c6783563f"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Model/Records/RecordPermissionCatalog.cs",
+          "line": 84,
+          "through_line": 84,
+          "sha256": "1b3b394ac5ece2fe3788bdc7ca14641b200fc9b55fa8dd7f4c44d94595ea0f29"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsAuthorizationService.cs",
+          "line": 100,
+          "through_line": 124,
+          "sha256": "d67e3ae6e972631f720e06b92a684ca73a1afcd559b04ca198833db90a6ce922"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 688,
+          "through_line": 712,
+          "sha256": "7fe5dcb35ba6c27c44bd4f4cb7b664cea9d19b1cef973c2ab2070cdb9d37a767"
+        }
+      ]
+    },
+    {
+      "id": "normal-navigation",
+      "status": "source_confirmed",
+      "finding": "Records sidebar exposes dashboard and All records. On the queue, Manage contains Definitions when permitted. The definitions catalog offers Browse templates, New definition and per-published-row New Record; use that row link to avoid the generic New action defaulting to locked Training.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Shared/_Navigation.cshtml",
+          "line": 147,
+          "through_line": 157,
+          "sha256": "35917815487ad28912153c39aec4eb9ed5af15450901f592f7843cf7a6f00730"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Index.cshtml",
+          "line": 37,
+          "through_line": 52,
+          "sha256": "88d9e21f6b190f254d50c80ed13e259dbb65c2b621c9aec362c04f9e8cef8f79"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordDefinitionsController.cs",
+          "line": 52,
+          "through_line": 70,
+          "sha256": "333ed09124d7ea52043c255f37a9991e0669ffdbd41696458f882e0c6783563f"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 398,
+          "through_line": 433,
+          "sha256": "7fe5dcb35ba6c27c44bd4f4cb7b664cea9d19b1cef973c2ab2070cdb9d37a767"
+        }
+      ]
+    },
+    {
+      "id": "blank-definition",
+      "status": "source_confirmed",
+      "finding": "A new department key is normalized and must be unique, start with a lower-case letter, use lower-case letters/digits/dots/dashes and avoid system. Blank creation produces draft v1 with required ShortText Summary and optional LongText Notes. It does not publish a catalog entry or create an operational record.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordDefinitionsService.cs",
+          "line": 141,
+          "through_line": 197,
+          "sha256": "7f53c7ffbfee18643aae3b7c17b01d6285277d51be95e9bf7d6a33567c939cc1"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordDefinitionsService.cs",
+          "line": 828,
+          "through_line": 845,
+          "sha256": "7f53c7ffbfee18643aae3b7c17b01d6285277d51be95e9bf7d6a33567c939cc1"
+        }
+      ]
+    },
+    {
+      "id": "designer-save",
+      "status": "source_confirmed",
+      "finding": "The controlled designer exposes policy fields and Schema (JSON), plus a read-only field table. Validate runs validation without persisting. Save draft persists and redirects to a fresh version page. Publish impact is a separate preview; Publish is a normal POST preceded by a native JavaScript confirm. Published versions become read-only and new records use the published version.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/RecordDefinitions/Edit.cshtml",
+          "line": 137,
+          "through_line": 139,
+          "sha256": "999444fcc9e623bb7fd25a87a6b75e8ad283b18137e6b6febd407a89d46c191b"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordDefinitionsController.cs",
+          "line": 125,
+          "through_line": 172,
+          "sha256": "333ed09124d7ea52043c255f37a9991e0669ffdbd41696458f882e0c6783563f"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/RecordDefinitions/Impact.cshtml",
+          "line": 60,
+          "through_line": 64,
+          "sha256": "3737af9dccf16b74659bfa7d8ed2f300e5ae1453bca61c432c6ff32d4fa11c1b"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordDefinitionsController.cs",
+          "line": 202,
+          "through_line": 217,
+          "sha256": "333ed09124d7ea52043c255f37a9991e0669ffdbd41696458f882e0c6783563f"
+        }
+      ]
+    },
+    {
+      "id": "client-surface-limit",
+      "status": "source_confirmed",
+      "finding": "Current Core form can select Responder/Unit/IC/Dispatch, Allow offline, Allow attachments and photo-coordinate retention. Its model constructs a fresh ClientSurface from those booleans; it has no LaunchContexts or MinimumAppVersion fields. The model default LaunchContexts is empty and the field catalog interprets empty as none. Therefore a new blank definition can target an empty/global context via normal UI, but an arbitrary call/unit context cannot be promised through an unseen setting. Do not edit an existing template surface to work around this limitation.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Models/Records/RecordDefinitionsViewModels.cs",
+          "line": 115,
+          "through_line": 117,
+          "sha256": "a64c2e6c1771da0c5148cfbeb8cfaf392b31cad36abed182d740a4685987b15c"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Model/Records/RmsRecordDefinitions.cs",
+          "line": 458,
+          "through_line": 478,
+          "sha256": "fa9504d78b0474ad76e40da2113707b55208086af217aaaa6611cdb8e37adeab"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+          "line": 330,
+          "through_line": 336,
+          "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+        }
+      ]
+    },
+    {
+      "id": "field-preflight",
+      "status": "source_confirmed",
+      "finding": "Field catalog requires a supported origin, Records module usable, that app's field flag, active membership and its configured minimum version; individual definitions also require surface/context/capability/min-version eligibility. CreateRecord refusal yields a read-only/empty catalog, while listing failure reports catalog_unavailable. A list screen is not proof that New Record or a definition is eligible.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+          "line": 61,
+          "through_line": 113,
+          "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+          "line": 166,
+          "through_line": 238,
+          "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+          "line": 641,
+          "through_line": 670,
+          "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Config/RecordsFieldConfig.cs",
+          "line": 10,
+          "through_line": 14,
+          "sha256": "4780166979d936e462ffabac9a47f2fa1b4e93ea8a3de9921d17de67fb7f111f"
+        }
+      ]
+    },
+    {
+      "id": "unit-context",
+      "status": "source_confirmed",
+      "finding": "Server verifies each supplied context identifier. A Unit-origin request with UnitId is rejected as context_not_verified unless the authenticated user is in the last unit state Roles crew. An empty context is permitted; a call must belong to the department and be viewable. Do not change crew or forge context to bypass this boundary.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+          "line": 99,
+          "through_line": 171,
+          "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+        }
+      ]
+    },
+    {
+      "id": "earlier-unit-banner-inference",
+      "status": "source_grounded_inference_not_runtime_trace",
+      "finding": "The earlier Unit exercise used Boden with Engine51 while only Herrmann occupied its configured seat. That combination is consistent with the crew-context rejection above. This source trace does not prove which runtime branch produced that historical banner; no log/SQL/browser trace was performed.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+          "line": 123,
+          "through_line": 128,
+          "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+        }
+      ]
+    },
+    {
+      "id": "responder-context",
+      "status": "source_confirmed",
+      "finding": "Responder's normal Records context is its active call when set, otherwise an empty object. Quick Create renders only after the field status is enabled and catalog Definitions is nonempty. A published new definition enabled for Responder with default none context should be tested from an actually empty active-call context; a current call can legitimately exclude it. Source does not establish runtime success.",
+      "source_evidence": [
+        {
+          "repo": "Responder",
+          "file": "src/hooks/use-records-context.ts",
+          "line": 12,
+          "through_line": 20,
+          "sha256": "b940d3f77d58d0c429fc0f4983a4b9f25b02a21fa1a7962a569cd09fa1cb6d53"
+        },
+        {
+          "repo": "Responder",
+          "file": "src/components/records/records-quick-create.tsx",
+          "line": 38,
+          "through_line": 51,
+          "sha256": "4ed599ddd9cee669a60992be1e64a6d24a54b23bcced3c1d73770c69f6fe02c3"
+        },
+        {
+          "repo": "Responder",
+          "file": "src/app/(app)/records.tsx",
+          "line": 92,
+          "through_line": 92,
+          "sha256": "905d5e04338d68eb1637b088855984d84dfc8fa60b01898609f56db3a4c6e556"
+        }
+      ]
+    },
+    {
+      "id": "draft-save-finalize",
+      "status": "source_confirmed",
+      "finding": "Save draft and successful fresh edit/details readback are distinct from finalization. QuickEntry transitions Draft to Finalized; ReviewRequired and ApprovalAcknowledgement require other lifecycle states. Generic Core Records MVC exposes Finalize, not SubmitForReview/Approve controls. Finalize checks state, row version, definition role/authority, revealed data and required fields, allocates a number if needed and writes an immutable revision/outbox event. No provider delivery or review outcome is implied.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Model/Records/RmsLifecycle.cs",
+          "line": 11,
+          "through_line": 16,
+          "sha256": "6c3224468deb5bd2c0b66e3772ac5403366b77e0375cd303689ab35bf74918ae"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+          "line": 481,
+          "through_line": 549,
+          "sha256": "ef743169e47e0726a181353fb9af69341bb390764c4d95ef89e61725c0fcd28d"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsLifecycleAuthority.cs",
+          "line": 38,
+          "through_line": 52,
+          "sha256": "e506ff630f98fdb5f1962e3c81d4e4621409b82f610ef4fdba8d61628fe11a30"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+          "line": 264,
+          "through_line": 274,
+          "sha256": "7577b9dfe177af5d8487e7f98a3f3756c5d82302e0846b97cd59a31b91293e05"
+        }
+      ]
+    },
+    {
+      "id": "attachment-before-finalize",
+      "status": "source_confirmed",
+      "finding": "Add attachment on Details is offered for an editable non-terminal record; it posts files with explicit classification. Once finalized, attachments require an amendment. Use a tiny public software TXT, not incident media or device photos. A filename after fresh readback is stored attachment evidence; a selected chooser file is preparation only.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+          "line": 245,
+          "through_line": 250,
+          "sha256": "7577b9dfe177af5d8487e7f98a3f3756c5d82302e0846b97cd59a31b91293e05"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+          "line": 875,
+          "through_line": 918,
+          "sha256": "ef743169e47e0726a181353fb9af69341bb390764c4d95ef89e61725c0fcd28d"
+        }
+      ]
+    },
+    {
+      "id": "attachment-classification-mismatch",
+      "status": "source_confirmed",
+      "finding": "Source discrepancy: Create/EditDefinition upload options label value1 Unrestricted and value2 Restricted, while enum values are 0 Unrestricted, 1 Restricted, 2 Protected. Details AddAttachment correctly offers value1 Restricted and value0 Unrestricted. For this replay, first save without files, then use Details' visible Unrestricted operational content choice; do not claim Create/Edit upload classification is correct or change code.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/EditDefinition.cshtml",
+          "line": 101,
+          "through_line": 101,
+          "sha256": "cd2b8fcbb4132406ca4e9085ecc0debe4ad09d0ceb75b8048878298854d6fa6d"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Model/Records/RmsEvidenceArtifact.cs",
+          "line": 43,
+          "through_line": 54,
+          "sha256": "2a460b9508b8088f9a271c96925decc2348de3738afddb1bc94903097f3b4dd5"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+          "line": 248,
+          "through_line": 248,
+          "sha256": "7577b9dfe177af5d8487e7f98a3f3756c5d82302e0846b97cd59a31b91293e05"
+        }
+      ]
+    },
+    {
+      "id": "adp-security-boundary",
+      "status": "source_confirmed",
+      "finding": "Protected write handling is independent of the record's Standard label. The write seam allows a write when encryption is not required; when protection is enforced and nonempty fields need encryption, attended callers require a valid normal grant. Protection-state errors fail closed. Existing reveal/step-up gates must be honored; no policy, MFA, auth, role, grant or hidden API changes belong to the exercise.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/ProtectedReadService.cs",
+          "line": 2160,
+          "through_line": 2204,
+          "sha256": "9c537e25331cc49b06f2601535ac45a9db6c083b57a68b0ca963ec1e6b532cfa"
+        },
+        {
+          "repo": "Core",
+          "file": "Core/Resgrid.Services/Records/RecordsProtectionService.cs",
+          "line": 79,
+          "through_line": 85,
+          "sha256": "334374d0203e8356c723fe68c3d26d477cc45401e0118c6ced9ed8465520575c"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/EditDefinition.cshtml",
+          "line": 10,
+          "through_line": 26,
+          "sha256": "cd2b8fcbb4132406ca4e9085ecc0debe4ad09d0ceb75b8048878298854d6fa6d"
+        }
+      ]
+    },
+    {
+      "id": "search-export-limits",
+      "status": "source_confirmed",
+      "finding": "Queue filtering by definition/state/year is distinct from full text search. When the search host is unavailable, q is reported not applied rather than silently treated as a database search. CSV/JSON/print/PDF permissions and their result are separate; PDF/import/provider submissions remain deferred and no successful output is claimed.",
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 317,
+          "through_line": 334,
+          "sha256": "7fe5dcb35ba6c27c44bd4f4cb7b664cea9d19b1cef973c2ab2070cdb9d37a767"
+        },
+        {
+          "repo": "Core",
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 958,
+          "through_line": 966,
+          "sha256": "7fe5dcb35ba6c27c44bd4f4cb7b664cea9d19b1cef973c2ab2070cdb9d37a767"
+        }
+      ]
+    }
+  ],
+  "deferred": [
+    "Import",
+    "PDF rendering/output",
+    "external reporting/provider delivery",
+    "protected-data enrollment or step-up changes",
+    "existing template/definition migration or lifecycle policy changes",
+    "unpictured review/approval operations"
+  ]
+}

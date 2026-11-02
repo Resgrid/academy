@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "id": "core-certification-administration-actual-ui-20261028",
+  "mode": "Manual normal-UI replay; no automatic writes or executable seed",
+  "department_id": 51,
+  "environment": "Firehouse 51 — Training Department (fictional)",
+  "executed_by_this_helper": false,
+  "actual_capture_manifest": {
+    "file": "captures/expansion/core-certification-administration-20261028/manifest.json",
+    "sha256": "72ed387d579edea9547914e46f8b08f1695c10028e2d1a6f0a2353a7243d308e"
+  },
+  "new_person_type": {
+    "actual_returned_id": 51004,
+    "type": "TRAINING ONLY - Record review 20261028",
+    "code": "TRN-REVIEW-20261028",
+    "category": "Other",
+    "applies_to": "Person",
+    "issuing_authority": "Academy Software Exercise (fictional)",
+    "description": "TRAINING ONLY - Software record verification exercise. This is not an actual professional qualification or authorization.",
+    "default_validity_months": 12,
+    "never_expires": false,
+    "credit_hours_per_renewal": null,
+    "requires_supervisor_verification": true,
+    "active": true,
+    "role_requirements_added": 0
+  },
+  "new_record": {
+    "actual_returned_id": 51015,
+    "member": "Matthew Casey",
+    "actual_seeded_user_id": "DA25F49E-FEA4-5C8D-82D9-163D7D2023F9",
+    "type": "TRAINING ONLY - Record review 20261028",
+    "name": "TRAINING ONLY - Software record review",
+    "number": "DEMO-CASEY-REVIEW-20261028",
+    "valid_area": "Academy training department only",
+    "issued_by": "Academy Software Exercise (fictional)",
+    "issued_on": "2026-10-28",
+    "expires_on": "2027-10-28",
+    "file": null,
+    "created_status": "Pending verification",
+    "verified_status": "Active",
+    "verified_by": "Wallace Boden",
+    "displayed_verification_date": "2026-10-28"
+  },
+  "preserved_policy": {
+    "enforcement_mode": "Off",
+    "grace_period_days": 30,
+    "pending_as_valid": false,
+    "notify_lead_days": [
+      60,
+      30,
+      14,
+      7,
+      1
+    ],
+    "notify_holder": true,
+    "notify_admin_digest": true,
+    "settings_saved": false
+  },
+  "guards": [
+    "Use only the isolated fictional Department51 and ordinary existing assigned permissions; no security/role/identity changes.",
+    "Search exact type code and record number first. If present, reopen/read rather than recreate or overwrite. Actual returned IDs are observations, never IDs to fabricate.",
+    "For a fresh replay, use a new clearly marked type/code only when absent, and select the actual current fictional member through the normal Member control.",
+    "Leave original three types, existing Boden Pending record51001, Casey original51002, other member records, roles, policies, calls and units intact.",
+    "Review another member only. No self-verification attempt, forced permission, API call, database write or template application.",
+    "Do not add accredited/clinical/professional claims, real certification documents, providers, email tests, scheduled reports or payment data."
+  ],
+  "replay": [
+    {
+      "step": 1,
+      "route": "/User/Certifications",
+      "action": "Inspect department cards; own Pending record is read only and has no Verify.",
+      "sources": [
+        1,
+        2
+      ]
+    },
+    {
+      "step": 2,
+      "route": "/User/Certifications/Types",
+      "action": "Certification types → Template gallery → filter SAR; leave all unchecked → Cancel.",
+      "sources": [
+        1,
+        7,
+        8
+      ]
+    },
+    {
+      "step": 3,
+      "route": "/User/Certifications/EditType",
+      "action": "New type → exact fictional identity/Person/Other/issuer/description →12months/verificationON/ActiveON/creditsblank/NeverOFF → normal Save → verify catalog0Records0Requirements.",
+      "sources": [
+        7,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "step": 4,
+      "route": "/User/Certifications/Add",
+      "action": "Dashboard Add Certification → Member Casey/new type → explicit record identity and dates, no file → normal Save → dashboard Pending2.",
+      "sources": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "step": 5,
+      "route": "/User/Certifications/Record/51015",
+      "action": "Open actual returned Casey record normally; Pending → read member/number/expiry → normal Verify once → Active/Verified by Boden → fresh normal readback. Do not repeat Verify on an already Active record.",
+      "sources": [
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "step": 6,
+      "route": "/User/Certifications/Person?userId={actualSelectedMemberId}",
+      "action": "Member link → two holdings; Certification types →1Record0Requirements → own Edit readback Person disabled/options retained. No edits.",
+      "sources": [
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "step": 7,
+      "route": "/User/Certifications/Settings",
+      "action": "Read current policy. Recorded WarnOnly/Enforce selections were unsaved previews restored Off, with Save untouched. Replay may remain read-only on Off; do not apply policy.",
+      "sources": [
+        3,
+        4,
+        5,
+        6,
+        26
+      ]
+    },
+    {
+      "step": 8,
+      "route": "/User/Certifications?scope=person&category=&groupId=51004&roleId=",
+      "action": "Select Truck81 through Group → five rows/Casey expiry/globalPending1. Compliance report tab → real HTML CaseyActive; no export download or PDF.",
+      "sources": [
+        28,
+        27
+      ]
+    }
+  ],
+  "observed_final_state": {
+    "own_new_record": "Active/Verified by Boden persisted freshGET",
+    "type_records": 1,
+    "type_role_requirements": 0,
+    "Casey_existing_record": "Preserved",
+    "department_pending_count": 1,
+    "filtered_Truck81_rows": 5,
+    "role_or_global_policy_changes": false,
+    "message_delivery_test": false
+  },
+  "result_boundaries": [
+    "No role-requirement create/edit/save, AnyOf grouping, advisory/mandatory execution, grace expiry, role add/block/removal, worker run or notification delivery was demonstrated.",
+    "No Unit certification record, template application, record attachment, renewal, continuing-education addition, suspend/revoke/trainee action or delete was performed.",
+    "Export CSV control and filtered href are visible; no downloaded CSV bytes were inspected. HTML report is real; no PDF/print/scheduled report/delivery was demonstrated.",
+    "Own Boden Pending record is a pre-existing Responder renewal and remains unchanged. Casey was not self-verified. Verification date is readable; no hidden timestamp is claimed.",
+    "025 foreground/metadata mismatch is rejected.027 supersedes it only for the actual HTML report. Boden report row is clipped; do not claim it is readable.",
+    "005 Enforce option is truncated; only its literal prefix and visible warning are retained. Policy explanations are source-corroborated implications, not executed outcomes.003/026 Save is offscreen;006 shows Save but no save occurred.",
+    "Raw DOMs contain offscreen rows and unselected options. Reviewed labels are actual visible foreground pixels only; no hidden control geometry is promoted."
+  ]
+}

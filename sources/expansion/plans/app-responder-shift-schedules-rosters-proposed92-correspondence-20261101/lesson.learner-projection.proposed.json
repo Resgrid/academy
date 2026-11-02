@@ -1,0 +1,264 @@
+{
+  "id": "app-responder-shift-schedules-rosters",
+  "app": "Responder",
+  "title": "Responder: read shift schedules, rosters and coverage needs",
+  "summary": "Find an intended shift, compare personal schedule and day details, inspect calendar coverage and role needs, and read the On Duty, Trades and Approvals views.",
+  "audience": [
+    "Scheduled personnel",
+    "Field supervisors",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "A normal authorized Responder session in the intended department.",
+    "Existing department shifts and day rosters appropriate to your account.",
+    "A fictional training environment for practice; this lesson inspects saved schedules without changing assignments."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the intended shift today",
+      "narration": "In Responder, open Shifts from the navigation, then choose Today. Across the top are My Shifts, Calendar, Trades, On Duty and Approvals. Start by reading the intended day card. Here, A Shift at Firehouse 51 runs from eight in the morning until eight the next morning. The words next day matter when planning an overnight handover. Assigned describes this schedule's assignment mode. You are on identifies the signed-in person's roster membership, and Fully staffed is the displayed coverage result.",
+      "practice": "Open Shifts, choose Today, and read the full date and overnight time range on the intended day card.",
+      "required_labels": [
+        "Shifts",
+        "Today",
+        "My Shifts",
+        "Calendar",
+        "Trades",
+        "On Duty",
+        "Approvals",
+        "A Shift — Firehouse 51",
+        "next day",
+        "Fully staffed",
+        "You are on",
+        "Assigned"
+      ],
+      "capture_refs": [
+        "019-shifts-navigation",
+        "017-today-assigned"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Search and compare the standby result",
+      "narration": "Use Search shifts to narrow the list. Entering Community leaves the Community standby signup card. Read its date and its eight-to-noon time range. This card shows Sign-up and Approval required, while the current account already shows You are on. Those labels answer different questions: how this shift is offered, whether approval is required, and whether this person is already on its roster. Searching changes what you see in the list; it does not change the saved assignment.",
+      "practice": "Search for the intended shift and distinguish its assignment mode, approval label and personal roster state.",
+      "required_labels": [
+        "Community",
+        "Community standby signup",
+        "8:00 AM",
+        "12:00 PM",
+        "Fully staffed",
+        "You are on",
+        "Sign-up",
+        "Approval required"
+      ],
+      "capture_refs": [
+        "018-today-search-standby"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Read the day detail and approval rule",
+      "narration": "Open the standby card to read its day detail. The heading and date identify the selected occurrence, and Scheduled for repeats its time range. The page explicitly says that sign-ups and trades on this shift need supervisor approval. Read that rule before planning a coverage change. Open needs shows Firehouse 51 as Filled, with No role requirements for this particular day. Request trade and Add person are visible actions here. This walkthrough is inspecting the saved day, so neither action is submitted.",
+      "practice": "Open the intended day and read its approval rule and group coverage before considering a roster action.",
+      "required_labels": [
+        "Community standby signup",
+        "Saturday, October 31, 2026",
+        "Scheduled for",
+        "Sign-ups and trades on this shift need supervisor approval.",
+        "Open needs",
+        "Firehouse 51",
+        "Filled",
+        "No role requirements",
+        "Request trade",
+        "Add person"
+      ],
+      "capture_refs": [
+        "003-standby-overview-dark"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Read names, groups and roster source",
+      "narration": "Scroll through Roster and compare the person with the group and role beside them. Wallace Boden appears under Command with Chief, while the Engine and Squad entries identify their own people and roles. The repeated Scheduled label describes the saved roster source. Use these details to check that the people and functions you expected are represented. Confirm actual availability and attendance through your department's procedures before assigning work based on this schedule.",
+      "practice": "Read a person's group, role and Scheduled label without treating a saved schedule as physical attendance verification.",
+      "required_labels": [
+        "Wallace Boden",
+        "Chief",
+        "Christopher Herrmann",
+        "Officer",
+        "Joe Cruz",
+        "Rescue Technician",
+        "Kelly Severide",
+        "Scheduled"
+      ],
+      "capture_refs": [
+        "004-standby-roster-scheduled"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Compare personal shift summaries",
+      "narration": "Return to the shift views and choose My Shifts. Under Shifts I am on, the A Shift summary shows its code, personnel count, group count, next displayed day, rotation and Assigned label. Scroll to the standby summary to compare its own code and time range. It shows Manual, Sign-up and Approval required. Upcoming days begins a separate section below these summaries. Keep the shift definition and the dated occurrence distinct when checking which day you need to open.",
+      "practice": "Compare the shift summaries and identify the separate Upcoming days section.",
+      "required_labels": [
+        "My Shifts",
+        "Shifts I am on",
+        "A Shift — Firehouse 51",
+        "Shift Code: A51",
+        "Personnel Count: 10",
+        "Groups: 1",
+        "24/48",
+        "Assigned",
+        "Community standby signup",
+        "Shift Code: STBY",
+        "Manual",
+        "Sign-up",
+        "Approval required",
+        "Upcoming days"
+      ],
+      "capture_refs": [
+        "007-my-shifts-header",
+        "009-my-shifts-standby-summary"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Filter the calendar and select a date",
+      "narration": "Choose Calendar to look beyond the current day's list. The month heading establishes the period you are reading, and the filter row offers All Shifts or an individual shift. Select Training, Academy signup practice, then select the twenty-seventh of October. The legend identifies My shifts, Open slots and Fully staffed. The selected date appears above its day card, which shows the practice shift from one until three in the afternoon with two open slots. This recorded date is historical; its open-slot label does not establish a current signup opportunity.",
+      "practice": "Choose an individual calendar filter, select a date and compare the date heading with its day card.",
+      "required_labels": [
+        "Calendar",
+        "All Shifts",
+        "October 2026",
+        "TRAINING — Academy signup practice",
+        "My shifts",
+        "Open slots",
+        "Fully staffed",
+        "Tuesday, October 27, 2026",
+        "1:00 PM",
+        "3:00 PM",
+        "Open slots: 2",
+        "Sign-up"
+      ],
+      "capture_refs": [
+        "010-calendar-filter-month",
+        "011-filtered-practice-day",
+        "012-calendar-day-open-slots"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Inspect the group's role needs",
+      "narration": "Open that practice day to read the actual group requirements. Open needs shows Firehouse 51 with Open, two, and a Chief requirement marked Needed, two. Below it, Roster says No one is on this day yet. Compare the required function with the saved roster before deciding how to fill a gap. Add person is visible, but this inspection does not change the roster. Checking the dated requirement helps a supervisor distinguish an uncovered function from a day that simply has a familiar shift name.",
+      "practice": "Compare the group's displayed role requirement and open count with the actual roster state.",
+      "required_labels": [
+        "TRAINING — Academy signup practice",
+        "Tuesday, October 27, 2026",
+        "Open slots: 2",
+        "Add person",
+        "Open needs",
+        "Firehouse 51",
+        "Open: 2",
+        "Chief",
+        "Needed: 2",
+        "Roster",
+        "No one is on this day yet."
+      ],
+      "capture_refs": [
+        "013-practice-group-needs"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Read the On Duty roster carefully",
+      "narration": "Return to the views and choose On Duty. A Shift shows ten on-duty entries in this recorded state. Each entry gives a name, group and role, an Until time and a Scheduled source label. Read the shift heading with the individual row so you do not mix two overlapping schedules. This view makes the saved coverage picture easier to review. Its Scheduled entries still need the appropriate availability and attendance checks for your department's real work.",
+      "practice": "Read the shift heading, on-duty count, individual group and role, Until time and source label together.",
+      "required_labels": [
+        "On Duty",
+        "A Shift — Firehouse 51",
+        "On duty: 10",
+        "Sylvie Brett",
+        "Ambulance 61 · Paramedic",
+        "Until",
+        "Scheduled"
+      ],
+      "capture_refs": [
+        "014-on-duty-scheduled"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Inspect the trade and approval queues",
+      "narration": "Choose Trades to review the trade workspace. This account currently shows No shift trades, and explains that requests you send or receive appear here. Then choose Approvals. The recorded result is Nothing to approve, with a note that sign-ups and trades waiting for your approval appear here. These are the current account's displayed queues. An empty queue is not a completed approval or a confirmed replacement. Read the actual pending entry and its result whenever your department performs those operations.",
+      "practice": "Open Trades and Approvals and read the actual returned queue state before assuming that a staffing change is complete.",
+      "required_labels": [
+        "Trades",
+        "No shift trades",
+        "Trade requests you send or receive appear here.",
+        "Approvals",
+        "Nothing to approve",
+        "Sign-ups and trades waiting for your approval appear here."
+      ],
+      "capture_refs": [
+        "016-trades-empty",
+        "015-approvals-empty"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Apply the coverage checks to your team",
+      "narration": "Return to the intended day and recheck its identity, hours, personal roster label and approval requirement. The same checks help community paramedicine and mental health teams plan outreach coverage, search-and-rescue teams review mission support, security companies check a staffed post, wildland contractors plan crew coverage, and industrial response teams review an emergency roster. Fire and EMS departments can use them for their own station coverage. Match your department's roles and dates, investigate gaps, and verify the actual people before relying on a schedule for a handover.",
+      "practice": "Reopen the intended day and verify the saved schedule against the roles, people and availability your department actually needs.",
+      "required_labels": [
+        "Today",
+        "Community standby signup",
+        "8:00 AM",
+        "12:00 PM",
+        "Fully staffed",
+        "You are on",
+        "Sign-up",
+        "Approval required"
+      ],
+      "capture_refs": [
+        "018-today-search-standby"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Compare station coverage, overnight times, roles and the actual crew before a handover."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Review appropriate outreach or mental health response coverage and verify actual availability."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Check the intended date and required mission-support roles before planning coverage."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Read post coverage, assignment mode and approval requirements before a staffing change."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Compare crew schedule, dates and role needs while separately confirming actual personnel availability."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Review the emergency roster and uncovered functions for the intended shift occurrence."
+    }
+  ],
+  "scope_limits": [
+    "Actual local Responder web recording; no native-device or offline behavior is claimed.",
+    "Saved schedule inspection only: no signup, withdrawal, assignment, removal, trade submission, acceptance, cancellation, approval or denial is demonstrated.",
+    "The selected October 27 practice date is historical and is not presented as current signup availability.",
+    "Scheduled, You are on, Fully staffed and On Duty are recorded application states; physical attendance, location, dispatch readiness and payroll are not verified.",
+    "The separate approved future-day trade-and-cancellation exercise is retained independently; this walkthrough inspects recorded schedules and queues."
+  ],
+  "export_ready": false,
+  "publication_mode": "source_candidate_only"
+}

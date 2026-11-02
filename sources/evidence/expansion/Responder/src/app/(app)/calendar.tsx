@@ -1,0 +1,284 @@
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { CalendarCard } from '@/components/calendar/calendar-card';
+import { CalendarItemDetailsSheet } from '@/components/calendar/calendar-item-details-sheet';
+import { CompactCalendarItem } from '@/components/calendar/compact-calendar-item';
+import { EnhancedCalendarView } from '@/components/calendar/enhanced-calendar-view';
+import { Loading } from '@/components/common/loading';
+import ZeroState from '@/components/common/zero-state';
+import { View } from '@/components/ui';
+import { Button, ButtonText } from '@/components/ui/button';
+import { FlatList } from '@/components/ui/flat-list';
+import { Heading } from '@/components/ui/heading';
+import { HStack } from '@/components/ui/hstack';
+import { RefreshControl } from '@/components/ui/refresh-control';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { isDateInRange } from '@/lib/utils';
+import { type CalendarItemResultData } from '@/models/v4/calendar/calendarItemResultData';
+import { useCalendarStore } from '@/stores/calendar/store';
+import { TermKeys, useTerm } from '@/stores/terminology/store';
+
+type TabType = 'today' | 'upcoming' | 'calendar';
+
+export default function CalendarScreen() {
+  const { t } = useTranslation();
+  const calendarTitle = useTerm(TermKeys.Calendar, t('calendar.title'));
+  const router = useRouter();
+  const { trackEvent } = useAnalytics();
+  const [activeTab, setActiveTab] = useState<TabType>('today');
+  const [selectedItem, setSelectedItem] = useState<CalendarItemResultData | null>(null);
+  const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
+
+  const todayCalendarItems = useCalendarStore((state) => state.todayCalendarItems);
+  const upcomingCalendarItems = useCalendarStore((state) => state.upcomingCalendarItems);
+  const selectedMonthItems = useCalendarStore((state) => state.selectedMonthItems);
+  const selectedDate = useCalendarStore((state) => state.selectedDate);
+  const isTodaysLoading = useCalendarStore((state) => state.isTodaysLoading);
+  const isUpcomingLoading = useCalendarStore((state) => state.isUpcomingLoading);
+  const isLoading = useCalendarStore((state) => state.isLoading);
+  const error = useCalendarStore((state) => state.error);
+  const loadTodaysCalendarItems = useCalendarStore((state) => state.loadTodaysCalendarItems);
+  const loadUpcomingCalendarItems = useCalendarStore((state) => state.loadUpcomingCalendarItems);
+  const loadCalendarItemsForDateRange = useCalendarStore((state) => state.loadCalendarItemsForDateRange);
+  const viewCalendarItemAction = useCalendarStore((state) => state.viewCalendarItemAction);
+  const clearError = useCalendarStore((state) => state.clearError);
+
+  useEffect(() => {
+    // Initialize data on mount using new Angular-style actions
+    loadTodaysCalendarItems();
+    loadUpcomingCalendarItems();
+  }, [loadTodaysCalendarItems, loadUpcomingCalendarItems]);
+
+  // Track analytics when view becomes visible
+  useFocusEffect(
+    React.useCallback(() => {
+      trackEvent('calendar_viewed', {
+        timestamp: new Date().toISOString(),
+        activeTab,
+      });
+    }, [trackEvent, activeTab])
+  );
+
+  const handleRefresh = async () => {
+    clearError();
+
+    // Track analytics for refresh actions
+    trackEvent('calendar_refreshed', {
+      timestamp: new Date().toISOString(),
+      tab: activeTab,
+    });
+
+    if (activeTab === 'today') {
+      await loadTodaysCalendarItems();
+    } else if (activeTab === 'upcoming') {
+      await loadUpcomingCalendarItems();
+    }
+  };
+
+  const handleItemPress = React.useCallback(
+    (item: CalendarItemResultData) => {
+      if (item.IsVirtual && item.SourceId) {
+        router.push({ pathname: '/checklists', params: { occurrenceId: item.SourceId } });
+        return;
+      }
+      setSelectedItem(item);
+      viewCalendarItemAction(item); // Update store state to match Angular
+      setIsDetailsSheetOpen(true);
+
+      // Track analytics for item interaction
+      trackEvent('calendar_item_viewed', {
+        timestamp: new Date().toISOString(),
+        itemId: item.CalendarItemId,
+        itemTitle: item.Title,
+        itemType: item.TypeName,
+        tab: activeTab,
+      });
+    },
+    [activeTab, trackEvent, viewCalendarItemAction, router]
+  );
+
+  const handleMonthChange = (startDate: string, endDate: string) => {
+    loadCalendarItemsForDateRange(startDate, endDate);
+
+    // Track analytics for month navigation
+    trackEvent('calendar_month_changed', {
+      timestamp: new Date().toISOString(),
+      startDate,
+      endDate,
+    });
+  };
+
+  const itemsForSelectedDate = React.useMemo(() => {
+    if (!selectedDate) return [];
+
+    return selectedMonthItems.filter((item) => {
+      // Always use range-based filtering so that:
+      // 1. timed multi-day events (regardless of IsMultiDay flag) show on every covered day
+      // 2. all-day events use the exclusive-end convention
+      // 3. single-day events still work (start === end collapses to an exact match)
+      return isDateInRange(selectedDate, item.Start, item.End, item.IsAllDay);
+    });
+  }, [selectedDate, selectedMonthItems]);
+
+  const renderTabButton = (tab: TabType, label: string) => (
+    <Button
+      key={tab}
+      variant={activeTab === tab ? 'solid' : 'outline'}
+      onPress={() => {
+        setActiveTab(tab);
+        // Track analytics for tab changes
+        trackEvent('calendar_tab_changed', {
+          timestamp: new Date().toISOString(),
+          fromTab: activeTab,
+          toTab: tab,
+        });
+      }}
+      className={`flex-1 ${activeTab === tab ? 'bg-primary-600 dark:bg-primary-400' : 'border-primary-600 bg-transparent'}`}
+    >
+      <ButtonText className={activeTab === tab ? 'text-white' : 'text-primary-600'}>{label}</ButtonText>
+    </Button>
+  );
+
+  const renderCalendarItem = React.useCallback(({ item }: { item: CalendarItemResultData }) => <CalendarCard item={item} onPress={() => handleItemPress(item)} />, [handleItemPress]);
+
+  const renderCompactCalendarItem = React.useCallback(({ item }: { item: CalendarItemResultData }) => <CompactCalendarItem item={item} onPress={() => handleItemPress(item)} />, [handleItemPress]);
+
+  const calendarItemKeyExtractor = React.useCallback((item: CalendarItemResultData) => item.CalendarItemId, []);
+
+  const renderTodayTab = () => {
+    if (isTodaysLoading) {
+      return <Loading text={t('calendar.loading.today')} />;
+    }
+
+    if (error) {
+      return (
+        <ZeroState heading={t('calendar.error.title')} description={error} isError={true}>
+          <Button onPress={handleRefresh} className="mt-4">
+            <ButtonText>{t('common.retry')}</ButtonText>
+          </Button>
+        </ZeroState>
+      );
+    }
+
+    if (!todayCalendarItems || todayCalendarItems.length === 0) {
+      return <ZeroState heading={t('calendar.today.empty.title')} description={t('calendar.today.empty.description')} />;
+    }
+
+    return (
+      <FlatList
+        data={todayCalendarItems}
+        renderItem={renderCalendarItem}
+        keyExtractor={calendarItemKeyExtractor}
+        className="flex-1"
+        contentContainerStyle={{ padding: 16 }}
+        showsVerticalScrollIndicator={true}
+        refreshControl={<RefreshControl refreshing={isTodaysLoading} onRefresh={handleRefresh} colors={['#3B82F6']} tintColor="#3B82F6" />}
+      />
+    );
+  };
+
+  const renderUpcomingTab = () => {
+    if (isUpcomingLoading) {
+      return <Loading text={t('calendar.loading.upcoming')} />;
+    }
+
+    if (error) {
+      return (
+        <ZeroState heading={t('calendar.error.title')} description={error} isError={true}>
+          <Button onPress={handleRefresh} className="mt-4">
+            <ButtonText>{t('common.retry')}</ButtonText>
+          </Button>
+        </ZeroState>
+      );
+    }
+
+    if (!upcomingCalendarItems || upcomingCalendarItems.length === 0) {
+      return <ZeroState heading={t('calendar.upcoming.empty.title')} description={t('calendar.upcoming.empty.description')} />;
+    }
+
+    return (
+      <FlatList
+        data={upcomingCalendarItems}
+        renderItem={renderCalendarItem}
+        keyExtractor={calendarItemKeyExtractor}
+        className="flex-1"
+        contentContainerStyle={{ padding: 16 }}
+        showsVerticalScrollIndicator={true}
+        refreshControl={<RefreshControl refreshing={isUpcomingLoading} onRefresh={handleRefresh} colors={['#3B82F6']} tintColor="#3B82F6" />}
+      />
+    );
+  };
+
+  const renderCalendarTab = () => {
+    return (
+      <View className="flex-1">
+        <EnhancedCalendarView onMonthChange={handleMonthChange} />
+        {selectedDate ? (
+          <View className="flex-1 border-t border-gray-200 dark:border-gray-800">
+            {isLoading ? (
+              <Loading text={t('calendar.loading.date')} />
+            ) : itemsForSelectedDate.length === 0 ? (
+              <Text className="py-8 text-center text-gray-500 dark:text-gray-400">{t('calendar.selectedDate.empty')}</Text>
+            ) : (
+              <FlatList data={itemsForSelectedDate} renderItem={renderCompactCalendarItem} keyExtractor={calendarItemKeyExtractor} showsVerticalScrollIndicator={true} contentContainerStyle={{ padding: 8 }} />
+            )}
+          </View>
+        ) : (
+          <View className="flex-1 items-center justify-center">
+            <Text className="text-center text-gray-500 dark:text-gray-400">{t('calendar.selectDate')}</Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'today':
+        return renderTodayTab();
+      case 'upcoming':
+        return renderUpcomingTab();
+      case 'calendar':
+        return renderCalendarTab();
+      default:
+        return renderTodayTab();
+    }
+  };
+
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          title: calendarTitle,
+          headerShown: true,
+        }}
+      />
+      <VStack className="flex-1 bg-gray-50 dark:bg-gray-900" testID="calendar-screen">
+        {/* Tab Navigation */}
+        <HStack className="space-x-2 p-4">
+          {renderTabButton('today', t('calendar.tabs.today'))}
+          {renderTabButton('upcoming', t('calendar.tabs.upcoming'))}
+          {renderTabButton('calendar', t('calendar.tabs.calendar'))}
+        </HStack>
+
+        {/* Tab Content */}
+        <View className="flex-1">{renderActiveTab()}</View>
+
+        {/* Calendar Item Details Sheet */}
+        <CalendarItemDetailsSheet
+          item={selectedItem}
+          isOpen={isDetailsSheetOpen}
+          onClose={() => {
+            setIsDetailsSheetOpen(false);
+            setSelectedItem(null);
+          }}
+        />
+      </VStack>
+    </>
+  );
+}

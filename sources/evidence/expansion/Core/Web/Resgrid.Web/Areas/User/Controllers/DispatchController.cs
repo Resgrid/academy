@@ -1,0 +1,4349 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Events;
+using Resgrid.Model.Helpers;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Queue;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Bus;
+using Resgrid.Providers.Claims;
+using Resgrid.Web.Areas.User.Models;
+using Resgrid.Web.Areas.User.Models.BigBoardX;
+using Resgrid.Web.Areas.User.Models.Calls;
+using Resgrid.Web.Areas.User.Models.Dispatch;
+using Resgrid.Model.Identity;
+using Resgrid.Web.Areas.User.Models.Home;
+using Resgrid.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using RestSharp;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using Resgrid.WebCore.Areas.User.Models.Dispatch;
+using System.Text;
+using Resgrid.Localization.Areas.User.Dispatch;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	public class DispatchController : SecureBaseController
+	{
+		#region Private Members and Constructors
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUsersService _usersService;
+		private readonly ICallsService _callsService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly ICommunicationService _communicationService;
+		private readonly IQueueService _queueService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IWorkLogsService _workLogsService;
+		private readonly IGeoLocationProvider _geoLocationProvider;
+		private readonly IPersonnelRolesService _personnelRolesService;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IUnitsService _unitsService;
+		private readonly IActionLogsService _actionLogsService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly ICustomStateService _customStateService;
+		private readonly ITemplatesService _templatesService;
+		private readonly IPdfProvider _pdfProvider;
+		private readonly IProtocolsService _protocolsService;
+		private readonly IShiftsService _shiftsService;
+		private readonly IContactsService _contactsService;
+		private readonly IMappingService _mappingService;
+		private readonly IUserDefinedFieldsService _userDefinedFieldsService;
+		private readonly IUdfRenderingService _udfRenderingService;
+		private readonly ICheckInTimerService _checkInTimerService;
+		private readonly IWeatherAlertService _weatherAlertService;
+		private readonly ICallDispatchStatusService _callDispatchStatusService;
+		private readonly IPendingCallsService _pendingCallsService;
+		private readonly ICallClosureService _callClosureService;
+		private readonly IModerationService _moderationService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Dispatch.Call> _dispatchLocalizer;
+		private readonly IStringLocalizer<Resgrid.Localization.Common> _commonLocalizer;
+		private readonly ICallLocationHistoryService _callLocationHistoryService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Dispatch.LocationHistory> _locationHistoryLocalizer;
+		private readonly IDispatchRecommendationService _dispatchRecommendationService;
+		private readonly IDispatchScopeService _dispatchScopeService;
+		private readonly INearestUnitService _nearestUnitService;
+		private readonly IFeatureToggleService _featureToggleService;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly IRecordsCutoverService _recordsCutoverService;
+		private readonly IRecordsProtectionService _recordsProtection;
+		private readonly IIndoorMapService _indoorMapService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Department.Department> _departmentLocalizer;
+		private readonly IOutstandingRequirementsService _outstandingRequirementsService;
+
+		public DispatchController(IDepartmentsService departmentsService, IUsersService usersService, ICallsService callsService,
+			IDepartmentGroupsService departmentGroupsService, ICommunicationService communicationService, IQueueService queueService,
+			Model.Services.IAuthorizationService authorizationService, IWorkLogsService workLogsService, IGeoLocationProvider geoLocationProvider,
+						IPersonnelRolesService personnelRolesService, IDepartmentSettingsService departmentSettingsService, IUserProfileService userProfileService,
+						IUnitsService unitsService, IActionLogsService actionLogsService, IEventAggregator eventAggregator, ICustomStateService customStateService,
+						ITemplatesService templatesService, IPdfProvider pdfProvider, IProtocolsService protocolsService,
+						IShiftsService shiftsService, IContactsService contactsService, IMappingService mappingService,
+			IUserDefinedFieldsService userDefinedFieldsService, IUdfRenderingService udfRenderingService,
+			ICheckInTimerService checkInTimerService, IWeatherAlertService weatherAlertService,
+			ICallDispatchStatusService callDispatchStatusService, IModerationService moderationService,
+			IStringLocalizer<Resgrid.Localization.Areas.User.Dispatch.Call> dispatchLocalizer, IStringLocalizer<Resgrid.Localization.Common> commonLocalizer,
+			IDispatchRecommendationService dispatchRecommendationService, IFeatureToggleService featureToggleService,
+			IProtectedReadService protectedReadService, IRecordsCutoverService recordsCutoverService, IRecordsProtectionService recordsProtection,
+			IDispatchScopeService dispatchScopeService, INearestUnitService nearestUnitService,
+			ICallLocationHistoryService callLocationHistoryService, IStringLocalizer<Resgrid.Localization.Areas.User.Dispatch.LocationHistory> locationHistoryLocalizer,
+			IPendingCallsService pendingCallsService, ICallClosureService callClosureService, IIndoorMapService indoorMapService,
+			IStringLocalizer<Resgrid.Localization.Areas.User.Department.Department> departmentLocalizer,
+			IOutstandingRequirementsService outstandingRequirementsService)
+		{
+			_outstandingRequirementsService = outstandingRequirementsService;
+			_callLocationHistoryService = callLocationHistoryService;
+			_locationHistoryLocalizer = locationHistoryLocalizer;
+			_departmentsService = departmentsService;
+			_usersService = usersService;
+			_callsService = callsService;
+			_departmentGroupsService = departmentGroupsService;
+			_communicationService = communicationService;
+			_queueService = queueService;
+			_authorizationService = authorizationService;
+			_workLogsService = workLogsService;
+			_geoLocationProvider = geoLocationProvider;
+			_personnelRolesService = personnelRolesService;
+			_departmentSettingsService = departmentSettingsService;
+			_userProfileService = userProfileService;
+			_unitsService = unitsService;
+			_actionLogsService = actionLogsService;
+			_eventAggregator = eventAggregator;
+			_customStateService = customStateService;
+			_templatesService = templatesService;
+			_pdfProvider = pdfProvider;
+			_protocolsService = protocolsService;
+			_shiftsService = shiftsService;
+			_contactsService = contactsService;
+			_mappingService = mappingService;
+			_userDefinedFieldsService = userDefinedFieldsService;
+			_udfRenderingService = udfRenderingService;
+			_checkInTimerService = checkInTimerService;
+			_weatherAlertService = weatherAlertService;
+			_callDispatchStatusService = callDispatchStatusService;
+			_pendingCallsService = pendingCallsService;
+			_callClosureService = callClosureService;
+			_moderationService = moderationService;
+			_dispatchLocalizer = dispatchLocalizer;
+			_commonLocalizer = commonLocalizer;
+			_dispatchRecommendationService = dispatchRecommendationService;
+			_dispatchScopeService = dispatchScopeService;
+			_nearestUnitService = nearestUnitService;
+			_featureToggleService = featureToggleService;
+			_protectedReadService = protectedReadService;
+			_recordsCutoverService = recordsCutoverService;
+			_recordsProtection = recordsProtection;
+			_indoorMapService = indoorMapService;
+			_departmentLocalizer = departmentLocalizer;
+		}
+		#endregion Private Members and Constructors
+
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> Index()
+		{
+			return await Dashboard();
+		}
+
+		[Authorize(Policy = ResgridResources.Call_View)]
+
+		public async Task<IActionResult> Dashboard()
+		{
+			var model = new CallsDashboardModel();
+
+			var address = await _departmentSettingsService.GetBigBoardCenterAddressDepartmentAsync(DepartmentId);
+			var center = await _departmentSettingsService.GetBigBoardCenterGpsCoordinatesDepartmentAsync(DepartmentId);
+
+			if (center != null)
+			{
+				var points = center.Split(char.Parse(","));
+
+				if (points != null && points.Length == 2)
+				{
+					model.Latitude = points[0];
+					model.Longitude = points[1];
+				}
+			}
+			else if (address != null)
+			{
+				string coordinates =
+					await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3} {4}", address.Address1,
+						address.City, address.State, address.PostalCode, address.Country));
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					double newLat;
+					double newLon;
+					var coordinatesArr = coordinates.Split(char.Parse(","));
+					if (double.TryParse(coordinatesArr[0], out newLat) && double.TryParse(coordinatesArr[1], out newLon))
+					{
+						model.Latitude = newLat.ToString();
+						model.Longitude = newLon.ToString();
+					}
+				}
+			}
+
+			model.NewCall = new Resgrid.Model.Call();
+
+			return View(model);
+		}
+
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> ArchivedCalls()
+		{
+			var model = new CallsDashboardModel();
+			model.Years = new List<SelectListItem>();
+
+			var years = await _callsService.GetCallYearsByDeptartmentAsync(DepartmentId);
+
+			if (years != null && years.Any())
+			{
+				foreach (var year in years)
+				{
+					model.Years.Add(new SelectListItem(year, year));
+				}
+				model.Year = years[0];
+			}
+
+			return View(model);
+		}
+
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public IActionResult ScheduledCalls()
+		{
+			return View();
+		}
+
+		/// <summary>
+		/// Calls saved but not yet dispatched (Pending): fed in from another system, or entered for later. A dispatcher
+		/// opens one, chooses who to send it to and dispatches it.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public IActionResult PendingCalls()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> NewCall()
+		{
+			if (!await _authorizationService.CanUserCreateCallAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var model = new NewCallView();
+			model.Call = new Resgrid.Model.Call();
+
+			// Default the check-in timers checkbox from the department auto-enable setting,
+			// mirroring API call creation when no explicit value is supplied
+			model.Call.CheckInTimersEnabled = await _departmentSettingsService.GetCheckInTimersAutoEnableForNewCallsAsync(DepartmentId);
+
+			model = await FillNewCallView(model);
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// The protocols, linked calls and dispatch lists the call forms post as one form key per selected item. Read
+		/// the same way they are unpacked when saving, so the policy sees what was actually submitted.
+		/// </summary>
+		private sealed class PostedCallSelections
+		{
+			public bool HasProtocols { get; init; }
+			public bool HasLinkedCall { get; init; }
+			public bool HasDispatchList { get; init; }
+
+			public static PostedCallSelections From(IFormCollection collection)
+			{
+				var keys = collection?.Keys?.ToList() ?? new List<string>();
+
+				bool HasKeyStartingWith(string prefix) => keys.Any(x => x.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+				return new PostedCallSelections
+				{
+					// A pending protocol only counts when it is actually ticked.
+					HasProtocols = HasKeyStartingWith("activeProtocol_") ||
+								   keys.Any(x => x.StartsWith("pendingProtocol_", StringComparison.OrdinalIgnoreCase) && collection[x] == "1"),
+					HasLinkedCall = HasKeyStartingWith("linkedCall_"),
+					// Only the four prefixes the dispatch lists actually post. A bare "dispatch" prefix also
+					// swallows anything else the form happens to name that way.
+					HasDispatchList = HasKeyStartingWith("dispatchUser_") ||
+									  HasKeyStartingWith("dispatchGroup_") ||
+									  HasKeyStartingWith("dispatchUnit_") ||
+									  HasKeyStartingWith("dispatchRole_")
+				};
+			}
+		}
+
+		/// <summary>
+		/// The text of a rich-text note. An untouched editor posts markup such as "&lt;p&gt;&lt;br&gt;&lt;/p&gt;", which is not a
+		/// note and must not satisfy a required one.
+		/// </summary>
+		private static string NoteText(string html) =>
+			string.IsNullOrWhiteSpace(html)
+				? html
+				: System.Net.WebUtility.HtmlDecode(System.Text.RegularExpressions.Regex.Replace(html, "<[^>]*>", " ")).Trim();
+
+		/// <summary>The protocol ids a call form posted: every active one, and each pending one whose questions passed.</summary>
+		private static List<int> PostedProtocolIds(IFormCollection collection)
+		{
+			var ids = new List<int>();
+
+			foreach (var key in collection?.Keys ?? Enumerable.Empty<string>())
+			{
+				if (key.StartsWith("activeProtocol_") && int.TryParse(key.Replace("activeProtocol_", ""), out var activeId))
+					ids.Add(activeId);
+				else if (key.StartsWith("pendingProtocol_") && collection[key] == "1" && int.TryParse(key.Replace("pendingProtocol_", ""), out var pendingId))
+					ids.Add(pendingId);
+			}
+
+			return ids.Distinct().ToList();
+		}
+
+		/// <summary>
+		/// Adds a model error for every field the department's new-call policy requires that the call would be left
+		/// without, named by the label the department sees on its settings screen.
+		/// </summary>
+		private void AddFieldPolicyErrors(NewCallFieldPolicy policy, NewCallFieldValues values)
+		{
+			foreach (var violation in NewCallFieldPolicyValidator.Validate(policy, values))
+			{
+				ModelState.AddModelError($"NewCallField_{violation.Key}",
+					string.Format(_dispatchLocalizer["NewCallFieldRequired"].Value, _departmentLocalizer[$"NewCallField_{violation.Key}"].Value));
+			}
+		}
+
+		/// <summary>
+		/// Adds a model error for every field the department's new-call policy requires but the new (or archived) call
+		/// form left blank. <paramref name="unsupportedKeys"/> are fields that form has no way to collect.
+		/// </summary>
+		private void ApplyNewCallFieldPolicy(NewCallView model, IFormCollection collection, params string[] unsupportedKeys)
+		{
+			var policy = model.FieldPolicy;
+
+			if (policy == null || policy.IsEmpty)
+				return;
+
+			var selections = PostedCallSelections.From(collection);
+
+			var values = new NewCallFieldValues
+			{
+				Note = NoteText(model.Call?.Notes),
+				Address = model.Call?.Address,
+				// A placed pin. An address alone does not count even though it is geocoded on save, matching the v4
+				// SaveCall, which also checks the policy before geocoding.
+				Geolocation = model.PostedGeoLocation(),
+				What3Words = model.What3Word,
+				ContactName = model.Call?.ContactName,
+				ContactInfo = model.Call?.ContactNumber,
+				ExternalId = model.Call?.ExternalIdentifier,
+				IncidentId = model.Call?.IncidentNumber,
+				ReferenceId = model.Call?.ReferenceNumber,
+				DestinationPoiId = model.Call?.DestinationPoiId,
+				IndoorMapZoneId = collection?["IndoorMapZoneId"].FirstOrDefault(),
+				HasProtocols = selections.HasProtocols,
+				HasLinkedCall = selections.HasLinkedCall,
+				DispatchOn = model.ScheduleDispatchDate,
+				HasDispatchList = selections.HasDispatchList,
+				IsPending = model.SaveAsPending
+			}.Unsupported(unsupportedKeys);
+
+			AddFieldPolicyErrors(policy, values);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Create)]
+		public async Task<IActionResult> NewCall(NewCallView model, IFormCollection collection, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserCreateCallAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			model = await FillNewCallView(model);
+			var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call?.DestinationPoiId);
+
+			if (model.Call?.DestinationPoiId.HasValue == true && model.Call.DestinationPoiId.Value > 0 && destinationPoi == null)
+				ModelState.AddModelError("Call.DestinationPoiId", _dispatchLocalizer["InvalidDestinationPoi"].Value);
+
+			// The form posts the pin only as Latitude/Longitude. Call.GeoLocationData is model-bound, so drop anything
+			// posted into it (as with CallFormData below) rather than let an unchecked value satisfy the policy or be saved.
+			if (model.Call != null)
+				model.Call.GeoLocationData = null;
+
+			if (model.HasInvalidPin())
+				ModelState.AddModelError(nameof(model.Latitude), _dispatchLocalizer["InvalidCallCoordinates"].Value);
+
+			// Same policy the apps apply and the v4 API enforces: a call-taker cannot forward an
+			// incident to the field until the information the crews need is on it. Departments with no
+			// policy configured are unaffected.
+			ApplyNewCallFieldPolicy(model, collection);
+
+			if (ModelState.IsValid)
+			{
+				model.Call.ReportingUserId = UserId;
+				model.Call.LoggedOn = DateTime.UtcNow;
+				model.Call.DepartmentId = DepartmentId;
+				model.Call.Priority = (int)model.CallPriority;
+				// Saved as pending, the call waits in Pending Calls and nobody is notified until a dispatcher sends it.
+				model.Call.State = model.SaveAsPending ? (int)CallStates.Pending : (int)CallStates.Active;
+
+				// Forms module is disabled. The hidden field is model-bound, so drop anything posted
+				// into it rather than trusting the client not to send form data.
+				model.Call.CallFormData = null;
+				model.Call.NatureOfCall = System.Net.WebUtility.HtmlDecode(model.Call.NatureOfCall);
+				model.Call.Notes = System.Net.WebUtility.HtmlDecode(model.Call.Notes);
+
+				if (!String.IsNullOrWhiteSpace(model.What3Word))
+					model.Call.W3W = model.What3Word;
+
+				model.Call.DestinationPoiId = destinationPoi?.PoiId;
+
+				if (model.Call.Type == _dispatchLocalizer["NoType"].Value)
+					model.Call.Type = null;
+
+				var pin = model.PostedGeoLocation();
+				if (pin != null)
+					model.Call.GeoLocationData = pin;
+				// Address typed with no pin placed: locate it the same way the v4 SaveCall does, so the call
+				// still gets a map in the web and mobile apps.
+				else if (!string.IsNullOrWhiteSpace(model.Call.Address))
+					model.Call.GeoLocationData = await _geoLocationProvider.GetLatLonFromAddress(model.Call.Address);
+
+				// Check-in timers
+				var checkInTimersValue = collection["Call.CheckInTimersEnabled"].FirstOrDefault();
+				model.Call.CheckInTimersEnabled = !string.IsNullOrEmpty(checkInTimersValue) && checkInTimersValue.Contains("true", StringComparison.OrdinalIgnoreCase);
+
+				// 42 CFR Part 2 consent is a dispatcher-set flag; subject identifiers come only from integrations (v4 API),
+				// never from a posted form.
+				var part2ConsentValue = collection["Call.Part2ConsentOnFile"].FirstOrDefault();
+				model.Call.Part2ConsentOnFile = !string.IsNullOrEmpty(part2ConsentValue) && part2ConsentValue.Contains("true", StringComparison.OrdinalIgnoreCase);
+				model.Call.SubjectIdentifiers = null;
+
+				// Indoor map zone
+				var indoorMapZoneId = collection["IndoorMapZoneId"].FirstOrDefault();
+				var indoorMapFloorId = collection["IndoorMapFloorId"].FirstOrDefault();
+				if (!String.IsNullOrWhiteSpace(indoorMapZoneId))
+				{
+					model.Call.IndoorMapZoneId = indoorMapZoneId;
+					model.Call.IndoorMapFloorId = indoorMapFloorId;
+				}
+
+				List<string> dispatchingUserIds = new List<string>();
+				List<int> dispatchingGroupIds = new List<int>();
+				List<int> dispatchingUnitIds = new List<int>();
+				List<int> dispatchingRoleIds = new List<int>();
+				List<int> activeProtocols = new List<int>();
+				List<int> pendingProtocols = new List<int>();
+				List<int> linkedCalls = new List<int>();
+
+				foreach (var key in collection.Keys)
+				{
+					if (key.ToString().StartsWith("dispatchUser_"))
+					{
+						string userId = key.ToString().Replace("dispatchUser_", "");
+						dispatchingUserIds.Add(userId);
+					}
+					else if (key.ToString().StartsWith("dispatchGroup_"))
+					{
+						var groupId = int.Parse(key.ToString().Replace("dispatchGroup_", ""));
+						dispatchingGroupIds.Add(groupId);
+					}
+					else if (key.ToString().StartsWith("dispatchUnit_"))
+					{
+						var unitId = int.Parse(key.ToString().Replace("dispatchUnit_", ""));
+
+						// Only a unit the form offered: a current (non-deleted) unit of this department the editor can see.
+						if (model.Units != null && model.Units.Any(u => u.UnitId == unitId))
+							dispatchingUnitIds.Add(unitId);
+					}
+					else if (key.ToString().StartsWith("dispatchRole_"))
+					{
+						var roleId = int.Parse(key.ToString().Replace("dispatchRole_", ""));
+						dispatchingRoleIds.Add(roleId);
+					}
+					else if (key.ToString().StartsWith("activeProtocol_"))
+					{
+						var activeProtocolId = int.Parse(key.ToString().Replace("activeProtocol_", ""));
+						activeProtocols.Add(activeProtocolId);
+					}
+					else if (key.ToString().StartsWith("pendingProtocol_"))
+					{
+						var pendingProtocolId = int.Parse(key.ToString().Replace("pendingProtocol_", ""));
+
+						if (collection[key] == "1")
+							pendingProtocols.Add(pendingProtocolId);
+					}
+					else if (key.ToString().StartsWith("linkedCall_"))
+					{
+						var linkedCallId = int.Parse(key.ToString().Replace("linkedCall_", ""));
+						linkedCalls.Add(linkedCallId);
+					}
+				}
+
+				model.Call.Dispatches = new Collection<CallDispatch>();
+
+				// Add all users dispatch's
+				if (dispatchingUserIds.Any())
+				{
+					foreach (var userId in dispatchingUserIds)
+					{
+						var member = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId, false);
+						if (member == null || member.IsDisabled.GetValueOrDefault() || member.IsDeleted)
+							continue;
+
+						CallDispatch cd = new CallDispatch();
+						cd.UserId = userId;
+
+						model.Call.Dispatches.Add(cd);
+					}
+				}
+
+				// Add all groups dispatch's
+				if (dispatchingGroupIds.Any())
+				{
+					model.Call.GroupDispatches = new List<CallDispatchGroup>();
+
+					foreach (var id in dispatchingGroupIds)
+					{
+						CallDispatchGroup dispatch = new CallDispatchGroup();
+						dispatch.DepartmentGroupId = id;
+
+						model.Call.GroupDispatches.Add(dispatch);
+					}
+				}
+
+				// Add all unit dispatch's
+				if (dispatchingUnitIds.Any())
+				{
+					model.Call.UnitDispatches = new List<CallDispatchUnit>();
+
+					foreach (var id in dispatchingUnitIds)
+					{
+						CallDispatchUnit dispatch = new CallDispatchUnit();
+						dispatch.UnitId = id;
+
+						model.Call.UnitDispatches.Add(dispatch);
+					}
+				}
+
+				// Add all role dispatch's
+				if (dispatchingRoleIds.Any())
+				{
+					model.Call.RoleDispatches = new List<CallDispatchRole>();
+
+					foreach (var id in dispatchingRoleIds)
+					{
+						CallDispatchRole dispatch = new CallDispatchRole();
+						dispatch.RoleId = id;
+
+						model.Call.RoleDispatches.Add(dispatch);
+					}
+				}
+
+				model.Call.Protocols = new List<CallProtocol>();
+				if (activeProtocols.Any())
+				{
+					foreach (var id in activeProtocols)
+					{
+						CallProtocol protocol = new CallProtocol();
+						protocol.DispatchProtocolId = id;
+
+						if (collection.ContainsKey($"protocolCode_{id}"))
+							protocol.Data = collection[$"protocolCode_{id}"];
+
+						model.Call.Protocols.Add(protocol);
+					}
+				}
+
+				if (pendingProtocols.Any())
+				{
+					foreach (var id in pendingProtocols)
+					{
+						CallProtocol protocol = new CallProtocol();
+						protocol.DispatchProtocolId = id;
+
+						if (collection.ContainsKey($"protocolCode_{id}"))
+							protocol.Data = collection[$"protocolCode_{id}"];
+
+						model.Call.Protocols.Add(protocol);
+					}
+				}
+
+				model.Call.References = new List<CallReference>();
+				if (linkedCalls.Any())
+				{
+					foreach (var id in linkedCalls)
+					{
+						if (!model.Call.References.Any(x => x.TargetCallId == id))
+						{
+							CallReference reference = new CallReference();
+							reference.TargetCallId = id;
+							reference.AddedOn = DateTime.UtcNow;
+							reference.AddedByUserId = UserId;
+
+							if (collection.ContainsKey($"linkedCallNote_{id}"))
+								reference.Note = collection[$"linkedCallNote_{id}"];
+
+							model.Call.References.Add(reference);
+						}
+					}
+				}
+
+			// Handle scheduled dispatch (a pending call has no time: the dispatcher decides when it goes out)
+			if (model.ScheduleDispatchDate.HasValue && !model.SaveAsPending)
+			{
+				var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+				var dispatchUtc = DateTimeHelpers.ConvertToUtc(
+					DateTime.SpecifyKind(model.ScheduleDispatchDate.Value, DateTimeKind.Unspecified),
+					department.TimeZone);
+
+				// Validate dispatch is at least 15 minutes in the future
+				if (dispatchUtc <= DateTime.UtcNow.AddMinutes(15))
+				{
+					ModelState.AddModelError("ScheduleDispatchDate", _dispatchLocalizer["ScheduleDispatchValidationError"].Value);
+					return View("NewCall", model);
+				}
+				model.Call.DispatchOn = dispatchUtc;
+				model.Call.HasBeenDispatched = false;
+			}
+
+				var shouldDispatchNow = !model.SaveAsPending && (!model.Call.DispatchOn.HasValue || model.Call.DispatchOn.Value <= DateTime.UtcNow);
+
+				model.Call.Contacts = new List<CallContact>();
+				if (!String.IsNullOrWhiteSpace(model.PrimaryContact))
+				{
+					CallContact contact = new CallContact();
+					contact.DepartmentId = DepartmentId;
+					contact.ContactId = model.PrimaryContact;
+					contact.CallContactType = 0;
+
+					model.Call.Contacts.Add(contact);
+				}
+
+				if (model.AdditionalContacts != null && model.AdditionalContacts.Any())
+				{
+					foreach (var additionalContact in model.AdditionalContacts)
+					{
+						if (!String.IsNullOrWhiteSpace(additionalContact))
+						{
+							CallContact contact = new CallContact();
+							contact.DepartmentId = DepartmentId;
+							contact.ContactId = additionalContact;
+							contact.CallContactType = 1;
+
+							model.Call.Contacts.Add(contact);
+						}
+					}
+				}
+
+				model.Call.CallSource = (int)CallSources.User;
+
+				if (!string.IsNullOrWhiteSpace(model.Call.GeoLocationData) && model.Call.GeoLocationData.Length > 1 && string.IsNullOrWhiteSpace(model.Call.Address))
+				{
+					try
+					{
+						model.Call.Address = await _geoLocationProvider.GetAproxAddressFromLatLong(double.Parse(model.Latitude), double.Parse(model.Longitude));
+					}
+					catch { /* If no addy, no addy */ }
+				}
+
+				// Run card auto-dispatch: additively merge recommended resources into the
+				// call before save (only applies when the resolved auto-dispatch decision
+				// is on; pre-populate mode rides the form selections instead).
+				DispatchRecommendationResult recommendationResult = null;
+				if (shouldDispatchNow && await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId))
+				{
+					// Conditional run cards: the outcome the dispatcher saw on the preview, so the call keeps what they reviewed.
+					recommendationResult = await _dispatchRecommendationService.EnrichCallForDispatchAsync(model.Call, 1, true,
+						collection["RunCardOutcomeNodeKey"].ToString(), cancellationToken);
+
+					if (recommendationResult.AutoDispatch)
+					{
+						foreach (var recommendedUnit in recommendationResult.Units.Where(u => !dispatchingUnitIds.Contains(u.UnitId)))
+							dispatchingUnitIds.Add(recommendedUnit.UnitId);
+
+						foreach (var recommendedUser in recommendationResult.Personnel.Where(p => !dispatchingUserIds.Contains(p.UserId)))
+							dispatchingUserIds.Add(recommendedUser.UserId);
+					}
+				}
+
+				// Per-unit response codes the dispatcher kept, changed or cleared on the proposal (conditional run cards).
+				var responseCodeSelections = ReadResponseCodeSelections(collection);
+				if (responseCodeSelections.Any())
+					ResponseCodeSelections.ApplyAll(model.Call.UnitDispatches, responseCodeSelections, await _departmentSettingsService.GetDispatchResponseCodesAsync(DepartmentId));
+
+				var call = await _callsService.SaveCallAsync(model.Call, cancellationToken);
+
+				if (recommendationResult != null && recommendationResult.MatchedRunCardId.HasValue && recommendationResult.AutoDispatch)
+					await _dispatchRecommendationService.RecordActivationAsync(call, recommendationResult, UserId, cancellationToken);
+				else if (recommendationResult?.Decision != null)
+					await _dispatchRecommendationService.RecordDecisionAsync(call, recommendationResult, UserId, RunCardDecisionSources.SaveTime, cancellationToken);
+
+				// Attach weather alerts as call notes if enabled
+				await _weatherAlertService.AttachWeatherAlertsToCallAsync(call, cancellationToken);
+
+				// Save UDF field values for the new call.
+				// Keys named "udf_<id>" carry the submitted value; keys named "udf_<id>_exists"
+				// are hidden sentinels posted for every rendered UDF field regardless of whether
+				// the user filled it in. When only the sentinel is present (no "udf_<id>" key),
+				// we must still emit an entry with Value = empty so the service clears any
+				// previously stored value.
+				var udfValues = collection.Keys
+					.Where(k => k.StartsWith("udf_") && !k.EndsWith("_exists"))
+					.Select(k => new UdfFieldValue
+					{
+						UdfFieldId = k.Substring(4),
+						Value = collection[k]
+					})
+					.ToList();
+
+				// For every sentinel whose "udf_<id>" key was NOT posted, add a clearing entry.
+				var submittedIds = new HashSet<string>(udfValues.Select(v => v.UdfFieldId));
+				var clearingValues = collection.Keys
+					.Where(k => k.StartsWith("udf_") && k.EndsWith("_exists"))
+					.Select(k => k.Substring(4, k.Length - 4 - "_exists".Length))
+					.Where(id => !submittedIds.Contains(id))
+					.Select(id => new UdfFieldValue
+					{
+						UdfFieldId = id,
+						Value = string.Empty
+					});
+				udfValues.AddRange(clearingValues);
+
+				if (udfValues.Any())
+				{
+					bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+					bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+					await _userDefinedFieldsService.SaveFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Call, call.CallId.ToString(), udfValues, UserId, isDeptAdmin, isGroupAdmin, cancellationToken);
+				}
+
+				if (shouldDispatchNow && (dispatchingGroupIds.Any() || dispatchingUnitIds.Any()))
+				{
+					await _callDispatchStatusService.ApplyDispatchStatusesAsync(call, dispatchingGroupIds, dispatchingUnitIds, cancellationToken);
+				}
+
+				var cqi = new CallQueueItem();
+				cqi.Call = call;
+
+				// If we have any group, unit or role dispatches just bet the farm and add all profiles for now.
+				if (dispatchingGroupIds.Any() || dispatchingUnitIds.Any() || dispatchingRoleIds.Any())
+					cqi.Profiles = (await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId)).Select(x => x.Value).ToList();
+				else if (cqi.Call.Dispatches != null && cqi.Call.Dispatches.Any())
+					cqi.Profiles = await _userProfileService.GetSelectedUserProfilesAsync(cqi.Call.Dispatches.Select(x => x.UserId).ToList());
+				else
+					cqi.Profiles = new List<UserProfile>();
+
+				if (shouldDispatchNow && (dispatchingUserIds.Any() || dispatchingGroupIds.Any() || dispatchingUnitIds.Any() || dispatchingRoleIds.Any()))
+					await _queueService.EnqueueCallBroadcastAsync(cqi, cancellationToken);
+
+				// A pending call is not live yet: "added" (incident chat channel, Call Added workflows, the field apps'
+				// lists) waits until it is dispatched. The update still refreshes dispatcher screens.
+				if (model.SaveAsPending)
+				{
+					_eventAggregator.SendMessage<CallUpdatedEvent>(new CallUpdatedEvent() { DepartmentId = DepartmentId, Call = call });
+					return RedirectToAction("PendingCalls", "Dispatch", new { Area = "User" });
+				}
+
+				_eventAggregator.SendMessage<CallAddedEvent>(new CallAddedEvent() { DepartmentId = DepartmentId, Call = call });
+
+				return RedirectToAction("Dashboard", "Dispatch", new { Area = "User" });
+			}
+
+			return View("NewCall", model);
+		}
+
+		/// <summary>
+		/// Run card recommendation preview for the New Call page (pre-populate mode).
+		/// Called by JS whenever priority/type/location change; returns the full
+		/// explainability result so the page can pre-check grids and render the panel.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Create)]
+		public async Task<IActionResult> GetDispatchRecommendation(int priority, string type, double? latitude, double? longitude, int alarmLevel = 1)
+		{
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId))
+				return Json(new { success = false });
+
+			var result = await _dispatchRecommendationService.GetRecommendationAsync(new DispatchRecommendationRequest
+			{
+				DepartmentId = DepartmentId,
+				Priority = priority,
+				CallTypeName = type,
+				Latitude = latitude,
+				Longitude = longitude,
+				TargetAlarmLevel = alarmLevel
+			});
+
+			// Conditional run cards: the code catalog for the per-unit pickers (empty when the department uses none).
+			var codes = result.Decision != null
+				? (await _departmentSettingsService.GetDispatchResponseCodesAsync(DepartmentId))?.ActiveCodes().ToList()
+				: null;
+
+			return Json(new { success = true, result, codes });
+		}
+
+		/// <summary>
+		/// Run card recommendation for the Update Call page: what the call's run card still needs at its current alarm level,
+		/// after the units and people already dispatched to it. The priority, type and location come from the edit form when
+		/// sent (the dispatcher may have changed them without saving), otherwise from the call. Nothing is dispatched or
+		/// selected here; the page only ticks the recommendation when the dispatcher asks it to.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> GetCallDispatchRecommendation(int callId, int? priority, string type, double? latitude, double? longitude, bool reevaluate = false)
+		{
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId))
+				return Json(new { success = false });
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId || call.IsDeleted)
+				return Json(new { success = false });
+
+			// Same authority as editing the call: the recommendation is for adding resources to it.
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, true, false, false, false, true, false, false, false, false);
+
+			var request = DispatchRecommendationRequest.ForCallInProgress(call);
+
+			if (priority.HasValue)
+				request.Priority = priority.Value;
+
+			if (!String.IsNullOrWhiteSpace(type))
+				request.CallTypeName = type;
+
+			if (latitude.HasValue && longitude.HasValue && Math.Abs(latitude.Value) <= 90 && Math.Abs(longitude.Value) <= 180)
+			{
+				request.Latitude = latitude;
+				request.Longitude = longitude;
+			}
+
+			// Conditional run cards: walk the decision graph fresh instead of the decision pinned when the call was saved.
+			request.Reevaluate = reevaluate;
+
+			var result = await _dispatchRecommendationService.GetRecommendationAsync(request);
+
+			var codes = result.Decision != null
+				? (await _departmentSettingsService.GetDispatchResponseCodesAsync(DepartmentId))?.ActiveCodes().ToList()
+				: null;
+
+			return Json(new { success = true, result, codes });
+		}
+
+		/// <summary>
+		/// Calls awaiting resources (conditional run cards): every active call still holding a required resource that was
+		/// not available when it was dispatched, with what went instead and the nearest units now available that match.
+		/// Feeds the awaiting-resources badge, the toast and the list page.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Create)]
+		public async Task<IActionResult> GetAwaitingResources(bool countOnly, CancellationToken cancellationToken)
+		{
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCardConditions, DepartmentId))
+				return Json(new { success = true, enabled = false, calls = new List<AwaitingResourcesCall>() });
+
+			// Group-scoped dispatch: the same calls as the dispatcher's other call lists, for the badge and the list alike.
+			var visibleCallIds = await GetVisibleActiveCallIdsAsync();
+
+			// The top-bar badge polls: it needs the count only, not the available units and their response times.
+			if (countOnly)
+				return Json(new { success = true, enabled = true, count = await _outstandingRequirementsService.GetAwaitingCallCountAsync(DepartmentId, visibleCallIds, cancellationToken) });
+
+			var calls = await _outstandingRequirementsService.GetAwaitingCallsAsync(DepartmentId, visibleCallIds, cancellationToken);
+
+			return Json(new { success = true, enabled = true, calls });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Create)]
+		public async Task<IActionResult> AwaitingResources()
+		{
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCardConditions, DepartmentId))
+				return RedirectToAction("Dashboard", "Dispatch", new { Area = "User" });
+
+			return View();
+		}
+
+		/// <summary>The call's open outstanding requirements (reconciled with its dispatches first).</summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallOutstandingRequirements(int callId, CancellationToken cancellationToken)
+		{
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCardConditions, DepartmentId))
+				return Json(new { success = true, requirements = new List<CallOutstandingRequirement>() });
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Json(new { success = false });
+
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var requirements = await _outstandingRequirementsService.GetForCallAsync(DepartmentId, callId, false, cancellationToken);
+
+			return Json(new { success = true, requirements });
+		}
+
+		/// <summary>A person clears a requirement the call no longer needs (with an optional note); the same authority as editing the call.</summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> DismissOutstandingRequirement([FromForm] int callId, [FromForm] int requirementId, [FromForm] string note, CancellationToken cancellationToken)
+		{
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Json(new { success = false, message = HttpContext.WithDepartmentTerms("Call not found.") });
+
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			// The requirement must belong to the call named (never trust a posted key on its own).
+			var requirement = (await _outstandingRequirementsService.GetForCallAsync(DepartmentId, callId, false, cancellationToken))
+				.FirstOrDefault(r => r.CallOutstandingRequirementId == requirementId);
+
+			if (requirement == null)
+				return Json(new { success = false, message = "That requirement is no longer open." });
+
+			var dismissed = await _outstandingRequirementsService.DismissAsync(DepartmentId, requirementId, UserId, note, cancellationToken);
+
+			return Json(new { success = dismissed });
+		}
+
+		/// <summary>
+		/// One-step dispatch from the awaiting-resources toast or list: adds the unit to the call (additive, notifying only
+		/// that unit), which resolves the requirement it matches.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> DispatchToAwaitingCall([FromForm] int callId, [FromForm] int unitId, CancellationToken cancellationToken)
+		{
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Json(new { success = false, message = HttpContext.WithDepartmentTerms("Call not found.") });
+
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var unit = await _unitsService.GetUnitByIdAsync(unitId);
+
+			if (unit == null || unit.DepartmentId != DepartmentId || unit.IsDeleted)
+				return Json(new { success = false, message = HttpContext.WithDepartmentTerms("Unit not found.") });
+
+			var result = await _outstandingRequirementsService.DispatchUnitToCallAsync(DepartmentId, callId, unitId, UserId, cancellationToken);
+
+			return Json(new { success = result.Success, message = result.Message, resolved = result.ResolvedRequirements });
+		}
+
+		/// <summary>
+		/// The active calls this user dispatches under group-scoped dispatch, or null when they see the whole department (no
+		/// call list is read then). Only active calls can be awaiting a resource.
+		/// </summary>
+		private async Task<HashSet<int>> GetVisibleActiveCallIdsAsync()
+		{
+			var scope = await _dispatchScopeService.GetScopeForUserAsync(DepartmentId, UserId);
+
+			if (scope.IsDepartmentWide)
+				return null;
+
+			return new HashSet<int>((await _dispatchScopeService.FilterCallsAsync(scope, await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId)))
+				.Select(c => c.CallId));
+		}
+
+		/// <summary>The web form's per-unit response code fields (<c>unitResponseCode_{unitId}</c>; empty = cleared).</summary>
+		private static Dictionary<int, int?> ReadResponseCodeSelections(IFormCollection collection)
+		{
+			var selections = new Dictionary<int, int?>();
+
+			foreach (var key in collection.Keys.Where(k => k.StartsWith(ResponseCodeSelections.FormFieldPrefix, StringComparison.Ordinal)))
+			{
+				if (!int.TryParse(key.Substring(ResponseCodeSelections.FormFieldPrefix.Length), out var unitId))
+					continue;
+
+				selections[unitId] = int.TryParse(collection[key].ToString(), out var codeId) ? codeId : (int?)null;
+			}
+
+			return selections;
+		}
+
+		/// <summary>
+		/// Nearest available unit board for the New Call page: every unit (a team, an apparatus or an
+		/// individual set up as a unit) and responder in the dispatcher's scope with status, live position,
+		/// ETA, crew shift coverage and role mix. Called by JS whenever the call location changes.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Create)]
+		public async Task<IActionResult> GetNearestUnits(double latitude, double longitude, CancellationToken cancellationToken)
+		{
+			var board = await _nearestUnitService.GetBoardAsync(new NearestUnitRequest
+			{
+				DepartmentId = DepartmentId,
+				UserId = UserId,
+				Latitude = latitude,
+				Longitude = longitude
+			}, cancellationToken);
+
+			return Json(new { success = true, board });
+		}
+
+		/// <summary>
+		/// "Strike Next Alarm": escalates the call to its next alarm level, additively
+		/// dispatching that level's run card requirements and notifying only the newly
+		/// added resources via selective broadcast.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> EscalateCall([FromForm] int callId, CancellationToken cancellationToken)
+		{
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId))
+				return Json(new { success = false, message = "Run cards are not enabled for this department." });
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Json(new { success = false, message = HttpContext.WithDepartmentTerms("Call not found.") });
+
+			// The Call_Update claim and the department check above are not enough on their
+			// own: escalating dispatches units and notifies personnel, so it takes the same
+			// per-call authority as editing the call (department admin, or the call's
+			// reporting user), matching UpdateCall and the v4 EscalateCall endpoint.
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			if (call.State != (int)CallStates.Active)
+				return Json(new { success = false, message = "Only active calls can be escalated." });
+
+			call = await _callsService.PopulateCallData(call, true, false, false, true, true, true, false, false, false);
+
+			var previousAlarmLevel = Math.Max(1, call.AlarmLevel);
+			var targetAlarmLevel = previousAlarmLevel + 1;
+
+			var result = await _dispatchRecommendationService.EnrichCallForDispatchAsync(call, targetAlarmLevel, false, cancellationToken);
+
+			if (!result.MatchedRunCardId.HasValue)
+				return Json(new { success = false, message = "No run card matches this call; nothing to escalate." });
+
+			if (!result.HasRecommendations)
+				return Json(new { success = false, message = "The run card has no additional resources for the next alarm level.", result });
+
+			var newUnitIds = result.Units.Select(u => u.UnitId).ToList();
+			var newUserIds = result.Personnel.Select(p => p.UserId).ToList();
+
+			var savedCall = await _callsService.SaveCallAsync(call, cancellationToken);
+
+			await _dispatchRecommendationService.RecordActivationAsync(savedCall, result, UserId, cancellationToken);
+
+			if (newUnitIds.Any())
+				await _callDispatchStatusService.ApplyDispatchStatusesAsync(savedCall, null, newUnitIds, cancellationToken);
+
+			var cqi = new CallQueueItem();
+			cqi.Call = savedCall;
+
+			if (newUserIds.Any())
+				cqi.Profiles = await _userProfileService.GetSelectedUserProfilesAsync(newUserIds);
+			else
+				cqi.Profiles = new List<UserProfile>();
+
+			cqi.SetBroadcastDispatches(newUserIds, new List<int>(), newUnitIds, new List<int>());
+
+			await _queueService.EnqueueCallBroadcastAsync(cqi, cancellationToken);
+
+			_eventAggregator.SendMessage<CallAlarmEscalatedEvent>(new CallAlarmEscalatedEvent
+			{
+				DepartmentId = DepartmentId,
+				CallId = savedCall.CallId,
+				PreviousAlarmLevel = previousAlarmLevel,
+				NewAlarmLevel = savedCall.AlarmLevel,
+				AddedUnitIds = newUnitIds,
+				AddedUserIds = newUserIds
+			});
+
+			_eventAggregator.SendMessage<CallUpdatedEvent>(new CallUpdatedEvent() { DepartmentId = DepartmentId, Call = savedCall });
+
+			return Json(new { success = true, newAlarmLevel = savedCall.AlarmLevel, addedUnits = newUnitIds.Count, addedPersonnel = newUserIds.Count, result });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> UpdateCall(int callId)
+		{
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			UpdateCallView model = new UpdateCallView();
+			model.Call = await _callsService.GetCallByIdAsync(callId);
+
+			if (model.Call == null || model.Call.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			model.Call = await _callsService.PopulateCallData(model.Call, true, true, true, true, true, true, true, true, true);
+
+			// ADP: the edit form renders protected values as the REDACTED sentinel; a field posted
+			// back unchanged is restored to its stored envelope by the write safety net. Editing
+			// blind is workable but poor, so the page also carries the reveal banner.
+			var protectedEditRead = await _protectedReadService.ResolveForReadAsync(DepartmentId, model.Call, null, UserId);
+			model.Call = protectedEditRead.Call;
+			model.IsProtectedCall = protectedEditRead.IsProtected;
+			model.CallPriority = model.Call.Priority;
+			model = await FillUpdateCallView(model);
+
+			if (model.Call.DispatchOn.HasValue)
+			{
+				model.ScheduleDispatchDate = model.Call.DispatchOn.Value.TimeConverter(model.Department);
+			}
+
+			model.IsWaitingForDispatch = _pendingCallsService.IsWaitingForDispatch(model.Call);
+
+			if (!String.IsNullOrEmpty(model.Call.GeoLocationData) &&
+				model.Call.GeoLocationData != ProtectedDataEnvelope.RedactionValue)
+			{
+				string[] loc = model.Call.GeoLocationData.Split(char.Parse(","));
+				model.Latitude = loc[0];
+				model.Longitude = loc[1];
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> UpdateCall(UpdateCallView model, IFormCollection collection, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, model.Call.CallId))
+				return Unauthorized();
+
+			// The zone is posted outside the Call model; carried over so a re-rendered form keeps it.
+			model.Call.IndoorMapZoneId = collection["IndoorMapZoneId"].FirstOrDefault();
+			model.Call.IndoorMapFloorId = collection["IndoorMapFloorId"].FirstOrDefault();
+
+			model = await FillUpdateCallView(model);
+
+			// Populate navigation properties (References, Contacts, etc.) so the view can
+			// render safely if we return it on validation failure.
+			model.Call = await _callsService.PopulateCallData(model.Call, true, true, true, true, true, true, true, true, true);
+
+			var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call?.DestinationPoiId);
+
+			if (model.Call?.DestinationPoiId.HasValue == true && model.Call.DestinationPoiId.Value > 0 && destinationPoi == null)
+				ModelState.AddModelError("Call.DestinationPoiId", _dispatchLocalizer["InvalidDestinationPoi"].Value);
+
+			if (ModelState.IsValid)
+			{
+				var call = await _callsService.GetCallByIdAsync(model.Call.CallId);
+				call = await _callsService.PopulateCallData(call, true, true, true, true, true, true, true, true, true);
+
+				// A field the department hides is not on the form, so the call keeps what it has for it rather than
+				// taking the blank the form posts.
+				var policy = model.FieldPolicy ?? new NewCallFieldPolicy();
+				bool Shows(string key) => policy.IsVisible(key);
+
+				var indoorMapZoneId = collection["IndoorMapZoneId"].FirstOrDefault();
+				var indoorMapFloorId = collection["IndoorMapFloorId"].FirstOrDefault();
+				var postedPin = !String.IsNullOrEmpty(model.Latitude) && !String.IsNullOrEmpty(model.Longitude)
+					? string.Format("{0},{1}", model.Latitude, model.Longitude)
+					: null;
+
+				// The call as this edit would leave it must still have every field the department requires, checked
+				// before anything below touches stored data. The dispatch time only means something before a call goes
+				// out, so it is never required of an edit.
+				var selections = PostedCallSelections.From(collection);
+				AddFieldPolicyErrors(policy, new NewCallFieldValues
+				{
+					Note = Shows(NewCallFieldKeys.Note) ? NoteText(model.Call.Notes) : NoteText(call.Notes),
+					Address = Shows(NewCallFieldKeys.Address) ? model.Call.Address : call.Address,
+					Geolocation = postedPin ?? call.GeoLocationData,
+					What3Words = Shows(NewCallFieldKeys.What3Words) ? model.What3Word : call.W3W,
+					ContactName = Shows(NewCallFieldKeys.ContactName) ? model.Call.ContactName : call.ContactName,
+					ContactInfo = Shows(NewCallFieldKeys.ContactInfo) ? model.Call.ContactNumber : call.ContactNumber,
+					ExternalId = Shows(NewCallFieldKeys.ExternalId) ? model.Call.ExternalIdentifier : call.ExternalIdentifier,
+					IncidentId = Shows(NewCallFieldKeys.IncidentId) ? model.Call.IncidentNumber : call.IncidentNumber,
+					ReferenceId = Shows(NewCallFieldKeys.ReferenceId) ? model.Call.ReferenceNumber : call.ReferenceNumber,
+					DestinationPoiId = Shows(NewCallFieldKeys.DestinationPoi) ? destinationPoi?.PoiId : call.DestinationPoiId,
+					IndoorMapZoneId = Shows(NewCallFieldKeys.IndoorLocation) ? indoorMapZoneId : call.IndoorMapZoneId,
+					// Protocols are only ever added on this form, and a list or link left off the post keeps the call's own.
+					HasProtocols = selections.HasProtocols || (call.Protocols?.Any() ?? false),
+					HasLinkedCall = selections.HasLinkedCall || (call.References?.Any() ?? false),
+					HasDispatchList = selections.HasDispatchList || (call.Dispatches?.Any() ?? false) || (call.GroupDispatches?.Any() ?? false) ||
+									  (call.UnitDispatches?.Any() ?? false) || (call.RoleDispatches?.Any() ?? false),
+					IsPending = call.State == (int)CallStates.Pending && !model.DispatchNow && !model.ScheduleDispatchDate.HasValue
+				}.Unsupported(NewCallFieldKeys.DispatchOn));
+
+				if (!ModelState.IsValid)
+					return View("UpdateCall", model);
+
+				call.NatureOfCall = System.Net.WebUtility.HtmlDecode(model.Call.NatureOfCall);
+				call.Name = model.Call.Name;
+				call.Priority = (int)model.CallPriority;
+				call.IsCritical = model.Call.IsCritical;
+				call.MapPage = model.Call.MapPage;
+				call.CallSource = (int)CallSources.User;
+				call.Public = model.Call.Public;
+				call.Type = model.Call.Type;
+
+				if (Shows(NewCallFieldKeys.Note))
+					call.Notes = System.Net.WebUtility.HtmlDecode(model.Call.Notes);
+
+				if (Shows(NewCallFieldKeys.ContactName))
+					call.ContactName = model.Call.ContactName;
+
+				if (Shows(NewCallFieldKeys.ContactInfo))
+					call.ContactNumber = model.Call.ContactNumber;
+
+				if (Shows(NewCallFieldKeys.ExternalId))
+					call.ExternalIdentifier = model.Call.ExternalIdentifier;
+
+				if (Shows(NewCallFieldKeys.ReferenceId))
+					call.ReferenceNumber = model.Call.ReferenceNumber;
+
+				if (Shows(NewCallFieldKeys.IncidentId))
+					call.IncidentNumber = model.Call.IncidentNumber;
+
+				if (Shows(NewCallFieldKeys.Address))
+					call.Address = model.Call.Address;
+
+				if (Shows(NewCallFieldKeys.What3Words))
+					call.W3W = model.What3Word;
+
+				if (Shows(NewCallFieldKeys.DestinationPoi))
+					call.DestinationPoiId = destinationPoi?.PoiId;
+
+				if (postedPin != null)
+					call.GeoLocationData = postedPin;
+
+				var checkInTimersValue = collection["Call.CheckInTimersEnabled"].FirstOrDefault();
+				call.CheckInTimersEnabled = !string.IsNullOrEmpty(checkInTimersValue) && checkInTimersValue.Contains("true", StringComparison.OrdinalIgnoreCase);
+
+				var part2ConsentValue = collection["Call.Part2ConsentOnFile"].FirstOrDefault();
+				call.Part2ConsentOnFile = !string.IsNullOrEmpty(part2ConsentValue) && part2ConsentValue.Contains("true", StringComparison.OrdinalIgnoreCase);
+
+				// Indoor map zone (the form carries the stored zone, so a blank one was cleared on purpose)
+				if (Shows(NewCallFieldKeys.IndoorLocation))
+				{
+					if (!String.IsNullOrWhiteSpace(indoorMapZoneId))
+					{
+						call.IndoorMapZoneId = indoorMapZoneId;
+						call.IndoorMapFloorId = indoorMapFloorId;
+					}
+					else
+					{
+						call.IndoorMapZoneId = null;
+						call.IndoorMapFloorId = null;
+					}
+				}
+
+				// Protocols triggered by the call's type and priority are added; ones already on the call stay.
+				if (Shows(NewCallFieldKeys.Protocols))
+				{
+					if (call.Protocols == null)
+						call.Protocols = new List<CallProtocol>();
+
+					foreach (var protocolId in PostedProtocolIds(collection))
+					{
+						if (call.Protocols.Any(x => x.DispatchProtocolId == protocolId))
+							continue;
+
+						var protocolCode = collection.ContainsKey($"protocolCode_{protocolId}") ? collection[$"protocolCode_{protocolId}"].ToString() : null;
+						call.Protocols.Add(new CallProtocol { CallId = call.CallId, DispatchProtocolId = protocolId, Data = protocolCode });
+					}
+				}
+
+				List<CallDispatch> existingDispatches = new List<CallDispatch>(call.Dispatches ?? Enumerable.Empty<CallDispatch>());
+				List<CallDispatchGroup> existingGroupDispatches = new List<CallDispatchGroup>(call.GroupDispatches ?? Enumerable.Empty<CallDispatchGroup>());
+				List<CallDispatchUnit> existingUnitDispatches = new List<CallDispatchUnit>(call.UnitDispatches ?? Enumerable.Empty<CallDispatchUnit>());
+				List<CallDispatchRole> existingRoleDispatches = new List<CallDispatchRole>(call.RoleDispatches ?? Enumerable.Empty<CallDispatchRole>());
+
+				List<string> dispatchingUserIds = new List<string>();
+				List<int> dispatchingGroupIds = new List<int>();
+				List<int> dispatchingUnitIds = new List<int>();
+				List<int> dispatchingRoleIds = new List<int>();
+				List<int> linkedCalls = new List<int>();
+
+				foreach (var key in collection.Keys)
+				{
+					if (key.ToString().StartsWith("dispatchUser_"))
+					{
+						string userId = key.ToString().Replace("dispatchUser_", "");
+						dispatchingUserIds.Add(userId);
+					}
+					else if (key.ToString().StartsWith("dispatchGroup_"))
+					{
+						var groupId = int.Parse(key.ToString().Replace("dispatchGroup_", ""));
+						dispatchingGroupIds.Add(groupId);
+					}
+					else if (key.ToString().StartsWith("dispatchUnit_"))
+					{
+						var unitId = int.Parse(key.ToString().Replace("dispatchUnit_", ""));
+
+						// Only a unit the form offered: a current (non-deleted) unit of this department the editor can see.
+						if (model.Units != null && model.Units.Any(u => u.UnitId == unitId))
+							dispatchingUnitIds.Add(unitId);
+					}
+					else if (key.ToString().StartsWith("dispatchRole_"))
+					{
+						var roleId = int.Parse(key.ToString().Replace("dispatchRole_", ""));
+						dispatchingRoleIds.Add(roleId);
+					}
+					else if (key.ToString().StartsWith("linkedCall_"))
+					{
+						var linkedCallId = int.Parse(key.ToString().Replace("linkedCall_", ""));
+						linkedCalls.Add(linkedCallId);
+					}
+				}
+
+				//await _callsService.DeleteDispatchesAsync(call.Dispatches.ToList(), cancellationToken);
+				//await _callsService.DeleteGroupDispatchesAsync(call.GroupDispatches.ToList(), cancellationToken);
+				//await _callsService.DeleteRoleDispatchesAsync(call.RoleDispatches.ToList(), cancellationToken);
+				//await _callsService.DeleteUnitDispatchesAsync(call.UnitDispatches.ToList(), cancellationToken);
+
+				// Add all users dispatch's
+				if (dispatchingUserIds.Any())
+				{
+					//model.Call.Dispatches = new Collection<CallDispatch>();
+					//model.Call.Dispatches.RemoveAll()
+
+					var dispatchesToRemove = call.Dispatches.Select(x => x.UserId).Where(y => !dispatchingUserIds.Contains(y)).ToList();
+
+					foreach (var userId in dispatchesToRemove)
+					{
+						var item = call.Dispatches.First(x => x.UserId == userId);
+						call.Dispatches.Remove(item);
+					}
+
+					foreach (var userId in dispatchingUserIds)
+					{
+						var member = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId, false);
+						if (member == null || member.IsDisabled.GetValueOrDefault() || member.IsDeleted)
+							continue;
+
+						if (!call.Dispatches.Any(x => x.UserId == userId))
+						{
+							CallDispatch cd = new CallDispatch();
+							cd.CallId = call.CallId;
+							cd.UserId = userId;
+
+							call.Dispatches.Add(cd);
+						}
+					}
+				}
+
+				// Add all groups dispatch's
+				if (dispatchingGroupIds.Any())
+				{
+					//model.Call.GroupDispatches = new List<CallDispatchGroup>();
+
+					var dispatchesToRemove = call.GroupDispatches.Select(x => x.DepartmentGroupId).Where(y => !dispatchingGroupIds.Contains(y)).ToList();
+
+					foreach (var id in dispatchesToRemove)
+					{
+						call.GroupDispatches.Remove(call.GroupDispatches.First(x => x.DepartmentGroupId == id));
+					}
+
+					foreach (var id in dispatchingGroupIds)
+					{
+						if (!call.GroupDispatches.Any(x => x.DepartmentGroupId == id))
+						{
+							CallDispatchGroup dispatch = new CallDispatchGroup();
+							dispatch.CallId = call.CallId;
+							dispatch.DepartmentGroupId = id;
+
+							call.GroupDispatches.Add(dispatch);
+						}
+					}
+				}
+
+				// Add all unit dispatch's
+				if (dispatchingUnitIds.Any())
+				{
+					//model.Call.UnitDispatches = new List<CallDispatchUnit>();
+
+					// A unit hidden from this editor (Security > View Units) is not on the form, so it stays dispatched.
+					var dispatchesToRemove = call.UnitDispatches.Select(x => x.UnitId).Where(y => !dispatchingUnitIds.Contains(y) && model.Units.Any(u => u.UnitId == y)).ToList();
+
+					foreach (var id in dispatchesToRemove)
+					{
+						call.UnitDispatches.Remove(call.UnitDispatches.First(x => x.UnitId == id));
+					}
+
+					foreach (var id in dispatchingUnitIds)
+					{
+						if (!call.UnitDispatches.Any(x => x.UnitId == id))
+						{
+							CallDispatchUnit dispatch = new CallDispatchUnit();
+							dispatch.CallId = call.CallId;
+							dispatch.UnitId = id;
+
+							call.UnitDispatches.Add(dispatch);
+						}
+					}
+
+					// Response codes chosen for units on the add-resources proposal (conditional run cards).
+					var responseCodeSelections = ReadResponseCodeSelections(collection);
+					if (responseCodeSelections.Any())
+						ResponseCodeSelections.ApplyAll(call.UnitDispatches, responseCodeSelections, await _departmentSettingsService.GetDispatchResponseCodesAsync(DepartmentId));
+				}
+
+				// Add all role dispatch's
+				if (dispatchingRoleIds.Any())
+				{
+					//model.Call.RoleDispatches = new List<CallDispatchRole>();
+
+					var dispatchesToRemove = call.RoleDispatches.Select(x => x.RoleId).Where(y => !dispatchingRoleIds.Contains(y)).ToList();
+
+					foreach (var id in dispatchesToRemove)
+					{
+						call.RoleDispatches.Remove(call.RoleDispatches.First(x => x.RoleId == id));
+					}
+
+					foreach (var id in dispatchingRoleIds)
+					{
+						if (!call.RoleDispatches.Any(x => x.RoleId == id))
+						{
+							CallDispatchRole dispatch = new CallDispatchRole();
+							dispatch.CallId = call.CallId;
+							dispatch.RoleId = id;
+
+							call.RoleDispatches.Add(dispatch);
+						}
+					}
+				}
+
+				if (linkedCalls.Any())
+				{
+					var callLinksToRemove = call.References.Select(x => x.TargetCallId).Where(y => !linkedCalls.Contains(y)).ToList();
+
+					foreach (var id in callLinksToRemove)
+					{
+						var callRef = call.References.First(x => x.TargetCallId == id);
+						call.References.Remove(callRef);
+
+						await _callsService.DeleteCallReferenceAsync(callRef, cancellationToken);
+					}
+
+					foreach (var id in linkedCalls)
+					{
+						if (id == call.CallId)
+							continue; // Can't link to current call.
+
+						if (!call.References.Any(x => x.TargetCallId == id))
+						{
+							CallReference reference = new CallReference();
+							reference.TargetCallId = id;
+							reference.AddedOn = DateTime.UtcNow;
+							reference.AddedByUserId = UserId;
+
+							if (collection.ContainsKey($"linkedCallNote_{id}"))
+								reference.Note = collection[$"linkedCallNote_{id}"];
+
+							call.References.Add(reference);
+						}
+					}
+				}
+
+
+				var contacts = new List<CallContact>();
+				if (!String.IsNullOrWhiteSpace(model.PrimaryContact))
+				{
+					CallContact contact = new CallContact();
+					contact.DepartmentId = DepartmentId;
+					contact.ContactId = model.PrimaryContact;
+					contact.CallContactType = 0;
+
+					contacts.Add(contact);
+				}
+
+				if (model.AdditionalContacts != null && model.AdditionalContacts.Any())
+				{
+					foreach (var additionalContact in model.AdditionalContacts)
+					{
+						if (!String.IsNullOrWhiteSpace(additionalContact))
+						{
+							CallContact contact = new CallContact();
+							contact.DepartmentId = DepartmentId;
+							contact.ContactId = additionalContact;
+							contact.CallContactType = 1;
+
+							contacts.Add(contact);
+						}
+					}
+				}
+
+				// Without Security > View Contacts the form has no contact pickers, so the call keeps the contacts it has.
+				if (ClaimsAuthorizationHelper.CanViewContacts())
+				{
+					await _callsService.DeleteCallContactsAsync(call.CallId);
+					call.Contacts = contacts;
+				}
+
+				// Handle scheduled dispatch
+			if (model.ScheduleDispatchDate.HasValue)
+			{
+				var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+				var dispatchUtc = DateTimeHelpers.ConvertToUtc(
+					DateTime.SpecifyKind(model.ScheduleDispatchDate.Value, DateTimeKind.Unspecified),
+					department.TimeZone);
+
+				// Only validate and apply when the dispatch date actually changed
+				if (!call.DispatchOn.HasValue || dispatchUtc != call.DispatchOn.Value)
+				{
+					// Validate dispatch is at least 15 minutes in the future
+					if (dispatchUtc <= DateTime.UtcNow.AddMinutes(15))
+					{
+						ModelState.AddModelError("ScheduleDispatchDate", _dispatchLocalizer["ScheduleDispatchValidationError"].Value);
+						return View("UpdateCall", model);
+					}
+					call.DispatchOn = dispatchUtc;
+					call.HasBeenDispatched = false;
+
+					// A pending call given a dispatch time becomes a scheduled call: the scheduled-calls worker sends it then.
+					if (call.State == (int)CallStates.Pending)
+						call.State = (int)CallStates.Active;
+				}
+			}
+			else if (call.DispatchOn.HasValue && Shows(NewCallFieldKeys.DispatchOn))
+			{
+				// User cleared a previously scheduled dispatch (a hidden field was never on the form to clear)
+				call.DispatchOn = null;
+				call.HasBeenDispatched = false;
+			}
+				await _callsService.SaveCallAsync(call, cancellationToken);
+
+				// Attach weather alerts as call notes if enabled (deduplication handled inside)
+				await _weatherAlertService.AttachWeatherAlertsToCallAsync(call, cancellationToken);
+
+				// Save UDF field values for the updated call.
+				// Keys named "udf_<id>" carry the submitted value; keys named "udf_<id>_exists"
+				// are hidden sentinels posted for every rendered UDF field regardless of whether
+				// the user filled it in. When only the sentinel is present (no "udf_<id>" key),
+				// we must still emit an entry with Value = empty so the service clears any
+				// previously stored value.
+				var udfValues = collection.Keys
+					.Where(k => k.StartsWith("udf_") && !k.EndsWith("_exists"))
+					.Select(k => new UdfFieldValue
+					{
+						UdfFieldId = k.Substring(4),
+						Value = collection[k]
+					})
+					.ToList();
+
+				// For every sentinel whose "udf_<id>" key was NOT posted, add a clearing entry.
+				var submittedIds = new HashSet<string>(udfValues.Select(v => v.UdfFieldId));
+				var clearingValues = collection.Keys
+					.Where(k => k.StartsWith("udf_") && k.EndsWith("_exists"))
+					.Select(k => k.Substring(4, k.Length - 4 - "_exists".Length))
+					.Where(id => !submittedIds.Contains(id))
+					.Select(id => new UdfFieldValue
+					{
+						UdfFieldId = id,
+						Value = string.Empty
+					});
+				udfValues.AddRange(clearingValues);
+
+				if (udfValues.Any())
+				{
+					bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+					bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+					await _userDefinedFieldsService.SaveFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Call, call.CallId.ToString(), udfValues, UserId, isDeptAdmin, isGroupAdmin, cancellationToken);
+				}
+
+				var savedUserIds = new HashSet<string>((call.Dispatches ?? Enumerable.Empty<CallDispatch>()).Select(x => x.UserId));
+				var savedGroupIds = new HashSet<int>((call.GroupDispatches ?? Enumerable.Empty<CallDispatchGroup>()).Select(x => x.DepartmentGroupId));
+				var savedUnitIds = new HashSet<int>((call.UnitDispatches ?? Enumerable.Empty<CallDispatchUnit>()).Select(x => x.UnitId));
+				var savedRoleIds = new HashSet<int>((call.RoleDispatches ?? Enumerable.Empty<CallDispatchRole>()).Select(x => x.RoleId));
+
+				var cancelledUserIds = existingDispatches.Select(x => x.UserId)
+					.Where(y => !savedUserIds.Contains(y)).ToList();
+				var cancelledGroupIds = existingGroupDispatches.Select(x => x.DepartmentGroupId)
+					.Where(y => !savedGroupIds.Contains(y)).ToList();
+				var cancelledUnitIds = existingUnitDispatches.Select(x => x.UnitId)
+					.Where(y => !savedUnitIds.Contains(y)).ToList();
+				var cancelledRoleIds = existingRoleDispatches.Select(x => x.RoleId)
+					.Where(y => !savedRoleIds.Contains(y)).ToList();
+
+				var newUserIds = dispatchingUserIds.Where(id => !existingDispatches.Any(d => d.UserId == id)).ToList();
+				var newGroupIds = dispatchingGroupIds.Where(id => !existingGroupDispatches.Any(d => d.DepartmentGroupId == id)).ToList();
+				var newUnitIds = dispatchingUnitIds.Where(id => !existingUnitDispatches.Any(d => d.UnitId == id)).ToList();
+				var newRoleIds = dispatchingRoleIds.Where(id => !existingRoleDispatches.Any(d => d.RoleId == id)).ToList();
+
+				// Only a call that has gone out notifies anyone or moves statuses: a pending call, or a scheduled call
+				// before its time, sends the edited list when it is dispatched.
+				var shouldApplyDispatchStatuses = call.State == (int)CallStates.Active &&
+					(call.HasBeenDispatched.GetValueOrDefault() || !call.DispatchOn.HasValue || call.DispatchOn.Value <= DateTime.UtcNow);
+				if (shouldApplyDispatchStatuses && (cancelledGroupIds.Any() || cancelledUnitIds.Any()))
+				{
+					await _callDispatchStatusService.ApplyReleaseStatusesAsync(call, cancelledGroupIds, cancelledUnitIds, cancellationToken);
+				}
+
+				if (shouldApplyDispatchStatuses && (newGroupIds.Any() || newUnitIds.Any()))
+				{
+					await _callDispatchStatusService.ApplyDispatchStatusesAsync(call, newGroupIds, newUnitIds, cancellationToken);
+				}
+
+				_eventAggregator.SendMessage<CallUpdatedEvent>(new CallUpdatedEvent() { DepartmentId = DepartmentId, Call = call });
+
+				// Send cancel notifications to removed entities
+				if (shouldApplyDispatchStatuses && model.NotifyCancelledEntities)
+				{
+					if (cancelledUserIds.Any() || cancelledGroupIds.Any() || cancelledUnitIds.Any() || cancelledRoleIds.Any())
+					{
+						var departmentNumber = await _departmentSettingsService.GetTextToCallNumberForDepartmentAsync(DepartmentId);
+
+						// Build set of still-dispatched user IDs for dedup
+						var stillDispatchedUserIds = new HashSet<string>((call.Dispatches ?? Enumerable.Empty<CallDispatch>()).Select(x => x.UserId));
+						foreach (var gd in call.GroupDispatches ?? Enumerable.Empty<CallDispatchGroup>())
+						{
+							var members = await _departmentGroupsService.GetAllMembersForGroupAsync(gd.DepartmentGroupId);
+							foreach (var m in members) stillDispatchedUserIds.Add(m.UserId);
+						}
+						foreach (var rd in call.RoleDispatches ?? Enumerable.Empty<CallDispatchRole>())
+						{
+							var members = await _personnelRolesService.GetAllMembersOfRoleAsync(rd.RoleId);
+							foreach (var m in members) stillDispatchedUserIds.Add(m.UserId);
+						}
+
+						var notifiedUserIds = new HashSet<string>();
+
+						// Cancel personnel
+						foreach (var userId in cancelledUserIds)
+						{
+							if (!stillDispatchedUserIds.Contains(userId) && notifiedUserIds.Add(userId))
+							{
+								var cd = new CallDispatch { CallId = call.CallId, UserId = userId };
+								await _communicationService.SendCancelCallAsync(call, cd, departmentNumber, DepartmentId);
+							}
+						}
+
+						// Cancel group members
+						foreach (var groupId in cancelledGroupIds)
+						{
+							var members = await _departmentGroupsService.GetAllMembersForGroupAsync(groupId);
+							foreach (var member in members)
+							{
+								if (!stillDispatchedUserIds.Contains(member.UserId) && notifiedUserIds.Add(member.UserId))
+								{
+									var cd = new CallDispatch { CallId = call.CallId, UserId = member.UserId };
+									await _communicationService.SendCancelCallAsync(call, cd, departmentNumber, DepartmentId);
+								}
+							}
+						}
+
+						// Cancel role members
+						foreach (var roleId in cancelledRoleIds)
+						{
+							var members = await _personnelRolesService.GetAllMembersOfRoleAsync(roleId);
+							foreach (var member in members)
+							{
+								if (!stillDispatchedUserIds.Contains(member.UserId) && notifiedUserIds.Add(member.UserId))
+								{
+									var cd = new CallDispatch { CallId = call.CallId, UserId = member.UserId };
+									await _communicationService.SendCancelCallAsync(call, cd, departmentNumber, DepartmentId);
+								}
+							}
+						}
+
+						// Cancel units
+						foreach (var unitId in cancelledUnitIds)
+						{
+							var cdu = new CallDispatchUnit { CallId = call.CallId, UnitId = unitId };
+							await _communicationService.SendCancelUnitCallAsync(call, cdu, departmentNumber);
+						}
+					}
+				}
+
+				// Auto-dispatch newly added entities when RebroadcastCall is not checked
+				if (!model.RebroadcastCall && shouldApplyDispatchStatuses)
+				{
+					if (newUserIds.Any() || newGroupIds.Any() || newUnitIds.Any() || newRoleIds.Any())
+					{
+						var cqi = new CallQueueItem();
+						cqi.Call = call;
+						cqi.SetBroadcastDispatches(newUserIds, newGroupIds, newUnitIds, newRoleIds);
+
+						if (newGroupIds.Any() || newUnitIds.Any() || newRoleIds.Any())
+							cqi.Profiles = (await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId)).Select(x => x.Value).ToList();
+						else
+							cqi.Profiles = await _userProfileService.GetSelectedUserProfilesAsync(newUserIds);
+
+						await _queueService.EnqueueCallBroadcastAsync(cqi, cancellationToken);
+					}
+				}
+
+				if (model.RebroadcastCall && shouldApplyDispatchStatuses)
+				{
+					var cqi = new CallQueueItem();
+					cqi.Call = call;
+
+					// If we have any group, unit or role dispatches just bet the farm and all all profiles for now.
+					if (dispatchingGroupIds.Any() || dispatchingUnitIds.Any() || dispatchingRoleIds.Any())
+						cqi.Profiles = (await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId)).Select(x => x.Value).ToList();
+					else if (cqi.Call.Dispatches != null && cqi.Call.Dispatches.Any())
+						cqi.Profiles = await _userProfileService.GetSelectedUserProfilesAsync(cqi.Call.Dispatches.Select(x => x.UserId).ToList());
+					else
+						cqi.Profiles = new List<UserProfile>();
+
+
+					if (dispatchingUserIds.Any() || dispatchingGroupIds.Any() || dispatchingUnitIds.Any() || dispatchingRoleIds.Any())
+						await _queueService.EnqueueCallBroadcastAsync(cqi, cancellationToken);
+				}
+
+				//	scope.Complete();
+				//}
+
+				// "Save and Dispatch Now" on a pending or scheduled call: the edits above are saved, now send it.
+				if (model.DispatchNow && _pendingCallsService.IsWaitingForDispatch(call))
+				{
+					var outcome = await _pendingCallsService.DispatchNowAsync(call, UserId, cancellationToken);
+
+					if (outcome != DispatchNowOutcome.Dispatched)
+					{
+						TempData["DispatchNowError"] = DescribeDispatchNowOutcome(outcome);
+						return RedirectToAction("UpdateCall", "Dispatch", new { Area = "User", callId = call.CallId });
+					}
+
+					TempData["DispatchNowMessage"] = _dispatchLocalizer["DispatchNowSucceeded"].Value;
+					return RedirectToAction("ViewCall", "Dispatch", new { Area = "User", callId = call.CallId });
+				}
+
+				if (call.State == (int)CallStates.Pending)
+					return RedirectToAction("PendingCalls", "Dispatch", new { Area = "User" });
+
+				return RedirectToAction("Dashboard", "Dispatch", new { Area = "User" });
+			}
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// Sends a waiting call (pending, or scheduled and not yet sent) right now to everyone on its dispatch list.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> DispatchCallNow([FromForm] int callId, [FromForm] string returnTo, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, true, true, true, true, true, true, true, true, true);
+			var outcome = await _pendingCallsService.DispatchNowAsync(call, UserId, cancellationToken);
+			var dispatched = outcome == DispatchNowOutcome.Dispatched;
+
+			if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+				return Json(new
+				{
+					success = dispatched,
+					message = dispatched ? _dispatchLocalizer["DispatchNowSucceeded"].Value : DescribeDispatchNowOutcome(outcome),
+					// Only a call with nobody to send to needs the edit page; any other failure leaves the dispatcher on the list.
+					noRecipients = outcome == DispatchNowOutcome.NoRecipients
+				});
+
+			if (dispatched)
+				TempData["DispatchNowMessage"] = _dispatchLocalizer["DispatchNowSucceeded"].Value;
+			else
+				TempData["DispatchNowError"] = DescribeDispatchNowOutcome(outcome);
+
+			// No recipients: the dispatcher has to choose them first, which happens on the edit page.
+			if (outcome == DispatchNowOutcome.NoRecipients)
+				return RedirectToAction("UpdateCall", "Dispatch", new { Area = "User", callId });
+
+			if (returnTo == "pending")
+				return RedirectToAction("PendingCalls", "Dispatch", new { Area = "User" });
+			if (returnTo == "scheduled")
+				return RedirectToAction("ScheduledCalls", "Dispatch", new { Area = "User" });
+
+			return RedirectToAction("ViewCall", "Dispatch", new { Area = "User", callId });
+		}
+
+		private string DescribeDispatchNowOutcome(DispatchNowOutcome outcome)
+		{
+			switch (outcome)
+			{
+				case DispatchNowOutcome.NoRecipients:
+					return _dispatchLocalizer["DispatchNowNoRecipients"].Value;
+				case DispatchNowOutcome.QueueFailed:
+					return _dispatchLocalizer["DispatchNowQueueFailed"].Value;
+				case DispatchNowOutcome.NotWaiting:
+					return _dispatchLocalizer["DispatchNowNotWaiting"].Value;
+				default:
+					return string.Empty;
+			}
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Delete)]
+		public async Task<IActionResult> DeleteCall(int callId)
+		{
+			if (!await _authorizationService.CanUserDeleteCallAsync(UserId, callId, DepartmentId))
+				return Unauthorized();
+
+			var model = new DeleteCallView();
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Delete)]
+		public async Task<IActionResult> DeleteCall(DeleteCallView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserDeleteCallAsync(UserId, model.CallId, DepartmentId))
+				return Unauthorized();
+
+			if (ModelState.IsValid)
+			{
+				var call = await _callsService.GetCallByIdAsync(model.CallId);
+				call.DeletedOn = DateTime.UtcNow;
+				call.DeletedByUserId = UserId;
+				call.DeletedReason = model.DeleteCallNotes;
+				call.IsDeleted = true;
+
+				await _callsService.SaveCallAsync(call, cancellationToken);
+
+				_eventAggregator.SendMessage<CallUpdatedEvent>(new CallUpdatedEvent() { DepartmentId = DepartmentId, Call = call });
+			}
+
+			return RedirectToAction("Dashboard", "Dispatch", new { Area = "User" });
+		}
+
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> ViewCall(int callId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var model = new ViewCallView();
+			model.Call = await _callsService.GetCallByIdAsync(callId);
+			model = await FillViewCallView(model);
+			model.CallPriority = (CallPriority)model.Call.Priority;
+			model.Stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+			model.Protocols = await _protocolsService.GetAllProtocolsForDepartmentAsync(DepartmentId);
+			model.ChildCalls = await _callsService.GetChildCallsForCallAsync(callId);
+
+			// Show the note boxes and the Add File / Add Image buttons only when the POST behind them would be accepted.
+			model.CanAddCallData = await _authorizationService.CanUserAddCallDataAsync(UserId, callId, DepartmentId);
+			model.CanAttachCallFiles = model.CanAddCallData && await _authorizationService.CanUserEditCallAsync(UserId, callId);
+
+			// Re-open is offered only when its POST would be accepted (the close rule, see ReOpenCall).
+			ViewData["IsWaitingForDispatch"] = _pendingCallsService.IsWaitingForDispatch(model.Call);
+			ViewData["CanReOpenCall"] = model.Call.State != (int)CallStates.Active && model.Call.State != (int)CallStates.Pending &&
+				User.HasClaim(ResgridClaimTypes.Resources.Call, ResgridClaimTypes.Actions.Update) &&
+				await _authorizationService.CanUserCloseCallAsync(UserId, callId, DepartmentId);
+
+			// Contacts plan Phase A (A6): Site Info panel. Contact identity/notes render REDACTED in a
+			// protected department (no grant server-side); pre-plan and hazard text is not cataloged.
+			// Security > View Contacts: without it the tab shows no site information.
+			model.SiteInfo = ClaimsAuthorizationHelper.CanViewContacts()
+				? await _contactsService.GetCallSiteInfoAsync(callId, DepartmentId)
+				: null;
+			if (model.SiteInfo != null && model.SiteInfo.Contacts.Any())
+			{
+				await _protectedReadService.ResolveContactsForReadAsync(DepartmentId, model.SiteInfo.Contacts.Select(x => x.Contact).ToList(), null, UserId);
+				var siteAlertNotes = model.SiteInfo.Contacts.SelectMany(x => x.AlertNotes).ToList();
+				if (siteAlertNotes.Any())
+					await _protectedReadService.ResolveContactNotesForReadAsync(DepartmentId, siteAlertNotes, null, UserId);
+
+				// Catalog v12: pre-plan text, hazard text and attachment names render REDACTED; RevealCall fills them in.
+				var sitePreplans = model.SiteInfo.Contacts.Where(x => x.Preplan != null).Select(x => x.Preplan).ToList();
+				if (sitePreplans.Any())
+					await _protectedReadService.ResolveContactPreplansForReadAsync(DepartmentId, sitePreplans, null, UserId);
+				var siteHazards = model.SiteInfo.Contacts.SelectMany(x => x.Hazards).ToList();
+				if (siteHazards.Any())
+					await _protectedReadService.ResolveContactPreplanHazardsForReadAsync(DepartmentId, siteHazards, null, UserId);
+				var siteAttachments = model.SiteInfo.Contacts.SelectMany(x => x.Attachments).ToList();
+				if (siteAttachments.Any())
+					await _protectedReadService.ResolveContactAttachmentsForReadAsync(DepartmentId, siteAttachments, null, UserId);
+			}
+			model.Call = await _callsService.PopulateCallData(model.Call, true, true, true, true, true, true, true, true, true, true);
+
+			// ADP (plan 7.2): server-rendered pages always render protected values as REDACTED — a
+			// grant lives only in the browser's memory, so the reveal is client-side (step-up modal
+			// then RevealCall). Resolution with no grant redacts and strips child ciphertext.
+			var protectedRead = await _protectedReadService.ResolveForReadAsync(DepartmentId, model.Call, null, UserId);
+			model.Call = protectedRead.Call;
+			model.IsProtectedCall = protectedRead.IsProtected;
+			model.ProtectedReason = protectedRead.ProtectedReason;
+			model.RedactedFields = protectedRead.RedactedFields?.ToList() ?? new List<string>();
+
+			var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call.DestinationPoiId);
+			var destinationInfo = BuildDestinationInfo(destinationPoi);
+			model.DestinationName = destinationInfo.Name;
+			model.DestinationAddress = destinationInfo.Address;
+			model.DestinationTypeName = destinationInfo.TypeName;
+
+			if (model.Stations == null)
+				model.Stations = new List<DepartmentGroup>();
+
+			model.VideoFeeds = model.Call.VideoFeeds != null
+				? model.Call.VideoFeeds.Where(f => !f.IsDeleted).ToList()
+				: new List<CallVideoFeed>();
+
+			// Redacted coordinates/address never reach the map or the geocoder (a REDACTED
+			// placeholder is not splittable and must not leave the server as a lookup).
+			if (!String.IsNullOrEmpty(model.Call.GeoLocationData) &&
+				model.Call.GeoLocationData != ProtectedDataEnvelope.RedactionValue)
+			{
+				string[] loc = model.Call.GeoLocationData.Split(char.Parse(","));
+				model.Latitude = loc[0];
+				model.Longitude = loc[1];
+			}
+			else if (!String.IsNullOrEmpty(model.Call.Address) &&
+				model.Call.Address != ProtectedDataEnvelope.RedactionValue)
+			{
+				string coordinates = await _geoLocationProvider.GetLatLonFromAddress(model.Call.Address);
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					model.Latitude = coordinates.Split(char.Parse(","))[0];
+					model.Longitude = coordinates.Split(char.Parse(","))[1];
+				}
+			}
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// ADP client-side reveal (plan 7.2): returns the decrypted cataloged fields of one call for
+		/// a caller holding a currently-valid Protected Data Grant (issued by
+		/// DataProtection/VerifyStepUp, presented via the X-Resgrid-Protected-Grant header, held in
+		/// JS memory only). Redaction outcomes return the machine-readable reason instead of values.
+		/// </summary>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> RevealCall([FromForm] int callId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+			if (call == null || call.DepartmentId != DepartmentId)
+				return NotFound();
+
+			string grantToken = Request.Headers["X-Resgrid-Protected-Grant"];
+			var resolved = await _protectedReadService.ResolveForReadAsync(DepartmentId, call, grantToken, UserId);
+
+			if (resolved.IsProtected && resolved.ProtectedReason != null)
+				return Json(new { success = false, error = resolved.ProtectedReason });
+
+			var fields = Resgrid.Services.ProtectedReadService.CallFieldAccessors
+				.ToDictionary(a => a.Key, a => a.Value.Get(resolved.Call));
+
+			// Catalog v12: the Site Info tab marks each linked contact's pre-plan and hazard values with the
+			// row id as a suffix, so the same step-up reveals the premises knowledge with the call.
+			// Security > View Contacts, as on the call page: no site information without it.
+			var siteInfo = ClaimsAuthorizationHelper.CanViewContacts()
+				? await _contactsService.GetCallSiteInfoAsync(callId, DepartmentId)
+				: null;
+			if (siteInfo != null && siteInfo.Contacts.Any())
+			{
+				var sitePreplans = siteInfo.Contacts.Where(x => x.Preplan != null).Select(x => x.Preplan).ToList();
+				var siteHazards = siteInfo.Contacts.SelectMany(x => x.Hazards).ToList();
+				var preplanRead = sitePreplans.Any()
+					? await _protectedReadService.ResolveContactPreplansForReadAsync(DepartmentId, sitePreplans, grantToken, UserId)
+					: null;
+				var hazardRead = siteHazards.Any()
+					? await _protectedReadService.ResolveContactPreplanHazardsForReadAsync(DepartmentId, siteHazards, grantToken, UserId)
+					: null;
+
+				if (preplanRead != null && preplanRead.IsProtected && preplanRead.ProtectedReason != null)
+					return Json(new { success = false, error = preplanRead.ProtectedReason });
+				if (hazardRead != null && hazardRead.IsProtected && hazardRead.ProtectedReason != null)
+					return Json(new { success = false, error = hazardRead.ProtectedReason });
+
+				foreach (var preplan in sitePreplans)
+					ContactsController.AddPreplanFields(fields, preplan, suffixed: true);
+			}
+
+			// The call's user-defined fields are cataloged too, and both the view and the edit form
+			// mark them for this module. Revealing the call while its custom fields keep showing the
+			// placeholder is a half-reveal of one record.
+			// The reveal must hide exactly what the hosting page hides: a grant is step-up proof,
+			// never a field-visibility decision.
+			bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+			bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+
+			var resolvedUdf = await ProtectedUdfRevealHelper.AddUdfValuesAsync(fields, _userDefinedFieldsService,
+				_protectedReadService, DepartmentId, UdfEntityType.Call, callId.ToString(), grantToken, UserId,
+				isDeptAdmin, isGroupAdmin);
+
+			// The UDF resolve is a SEPARATE grant validation, and it is the one that can fail on its
+			// own: a record whose own cataloged columns are all empty produces no slots, so its
+			// resolve returns without ever checking the grant. If the custom fields are enveloped,
+			// this call is where an expired grant actually surfaces - and dropping the reason would
+			// answer success with placeholders the client silently declines to write, so the member
+			// clicks Reveal and nothing happens. Null when the record has no custom values at all.
+			if (resolvedUdf != null && resolvedUdf.IsProtected && resolvedUdf.ProtectedReason != null)
+				return Json(new { success = false, error = resolvedUdf.ProtectedReason });
+
+			return Json(new { success = true, fields });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> AddArchivedCall()
+		{
+			var model = new NewCallView();
+			model.Call = new Resgrid.Model.Call();
+			model = await FillNewCallView(model);
+			model.Call.LoggedOn = DateTime.UtcNow.TimeConverter(model.Department);
+			model.Call.ReportingUserId = UserId;
+			model.CallStates = model.CallState.ToSelectList();
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Create)]
+		public async Task<IActionResult> AddArchivedCall(NewCallView model, IFormCollection collection, CancellationToken cancellationToken)
+		{
+			model = await FillNewCallView(model);
+			model.CallStates = model.CallState.ToSelectList();
+			model.Call.ReportingUserId = UserId;
+
+			// The timestamp is the point of an archived call: it is entered in the department's time. Only a form that
+			// posted none falls back to now (this used to overwrite every entered time with now).
+			if (model.Call.LoggedOn == default(DateTime))
+				model.Call.LoggedOn = DateTime.UtcNow.TimeConverter(model.Department);
+
+			var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call?.DestinationPoiId);
+
+			if (model.Call?.DestinationPoiId.HasValue == true && model.Call.DestinationPoiId.Value > 0 && destinationPoi == null)
+				ModelState.AddModelError("Call.DestinationPoiId", _dispatchLocalizer["InvalidDestinationPoi"].Value);
+
+			// As on NewCall: the pin is posted only as Latitude/Longitude, so anything bound into GeoLocationData is dropped.
+			model.Call.GeoLocationData = null;
+
+			if (model.HasInvalidPin())
+				ModelState.AddModelError(nameof(model.Latitude), _dispatchLocalizer["InvalidCallCoordinates"].Value);
+
+			// The department's field policy covers archived calls too. One has already happened, so it has no dispatch
+			// time to require.
+			ApplyNewCallFieldPolicy(model, collection, NewCallFieldKeys.DispatchOn);
+
+			if (ModelState.IsValid)
+			{
+				model.Call.ReportingUserId = UserId;
+				model.Call.DepartmentId = DepartmentId;
+				model.Call.Priority = (int)model.CallPriority;
+				model.Call.State = 0;
+				model.Call.LoggedOn = DateTimeHelpers.ConvertToUtc(DateTime.SpecifyKind(model.Call.LoggedOn, DateTimeKind.Unspecified), model.Department.TimeZone);
+				model.Call.CallFormData = null;
+				model.Call.NatureOfCall = System.Net.WebUtility.HtmlDecode(model.Call.NatureOfCall);
+				model.Call.Notes = System.Net.WebUtility.HtmlDecode(model.Call.Notes);
+
+				if (!String.IsNullOrWhiteSpace(model.What3Word))
+					model.Call.W3W = model.What3Word;
+
+				model.Call.DestinationPoiId = destinationPoi?.PoiId;
+
+				if (model.Call.Type == _dispatchLocalizer["NoType"].Value)
+					model.Call.Type = null;
+
+				var pin = model.PostedGeoLocation();
+				if (pin != null)
+					model.Call.GeoLocationData = pin;
+				// Address typed with no pin placed: locate it the same way the v4 SaveCall does, so the call
+				// still gets a map in the web and mobile apps.
+				else if (!string.IsNullOrWhiteSpace(model.Call.Address))
+					model.Call.GeoLocationData = await _geoLocationProvider.GetLatLonFromAddress(model.Call.Address);
+
+				// 42 CFR Part 2 consent is a dispatcher-set flag; subject identifiers come only from integrations.
+				var part2ConsentValue = collection["Call.Part2ConsentOnFile"].FirstOrDefault();
+				model.Call.Part2ConsentOnFile = !string.IsNullOrEmpty(part2ConsentValue) && part2ConsentValue.Contains("true", StringComparison.OrdinalIgnoreCase);
+				model.Call.SubjectIdentifiers = null;
+
+				var indoorMapZoneId = collection["IndoorMapZoneId"].FirstOrDefault();
+				if (!String.IsNullOrWhiteSpace(indoorMapZoneId))
+				{
+					model.Call.IndoorMapZoneId = indoorMapZoneId;
+					model.Call.IndoorMapFloorId = collection["IndoorMapFloorId"].FirstOrDefault();
+				}
+
+				model.Call.Protocols = PostedProtocolIds(collection)
+					.Select(id => new CallProtocol
+					{
+						DispatchProtocolId = id,
+						Data = collection.ContainsKey($"protocolCode_{id}") ? collection[$"protocolCode_{id}"].ToString() : null
+					})
+					.ToList();
+
+				// Only contacts the form offered (this department's, and only with Security > View Contacts).
+				var offeredContacts = model.Contacts ?? new List<Contact>();
+				model.Call.Contacts = new List<CallContact>();
+
+				if (!String.IsNullOrWhiteSpace(model.PrimaryContact) && offeredContacts.Any(x => x.ContactId == model.PrimaryContact))
+					model.Call.Contacts.Add(new CallContact { DepartmentId = DepartmentId, ContactId = model.PrimaryContact, CallContactType = 0 });
+
+				foreach (var additionalContact in (model.AdditionalContacts ?? new List<string>()).Where(x => offeredContacts.Any(c => c.ContactId == x)).Distinct())
+					model.Call.Contacts.Add(new CallContact { DepartmentId = DepartmentId, ContactId = additionalContact, CallContactType = 1 });
+
+				List<string> dispatchingUserIds = new List<string>();
+				List<int> dispatchingGroupIds = new List<int>();
+				List<int> dispatchingUnitIds = new List<int>();
+				List<int> dispatchingRoleIds = new List<int>();
+				List<int> linkedCalls = new List<int>();
+
+				foreach (var key in collection.Keys)
+				{
+					if (key.ToString().StartsWith("dispatchUser_"))
+					{
+						string userId = key.ToString().Replace("dispatchUser_", "");
+						dispatchingUserIds.Add(userId);
+					}
+					else if (key.ToString().StartsWith("dispatchGroup_"))
+					{
+						var groupId = int.Parse(key.ToString().Replace("dispatchGroup_", ""));
+						dispatchingGroupIds.Add(groupId);
+					}
+					else if (key.ToString().StartsWith("dispatchUnit_"))
+					{
+						var unitId = int.Parse(key.ToString().Replace("dispatchUnit_", ""));
+
+						// Only a unit the form offered: a current (non-deleted) unit of this department the editor can see.
+						if (model.Units != null && model.Units.Any(u => u.UnitId == unitId))
+							dispatchingUnitIds.Add(unitId);
+					}
+					else if (key.ToString().StartsWith("dispatchRole_"))
+					{
+						var roleId = int.Parse(key.ToString().Replace("dispatchRole_", ""));
+						dispatchingRoleIds.Add(roleId);
+					}
+					else if (key.ToString().StartsWith("linkedCall_"))
+					{
+						var linkedCallId = int.Parse(key.ToString().Replace("linkedCall_", ""));
+						linkedCalls.Add(linkedCallId);
+					}
+				}
+
+				// Add all users dispatch's
+				if (dispatchingUserIds.Any())
+				{
+					model.Call.Dispatches = new Collection<CallDispatch>();
+
+					foreach (var userId in dispatchingUserIds)
+					{
+						var member = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId, false);
+						if (member == null || member.IsDisabled.GetValueOrDefault() || member.IsDeleted)
+							continue;
+
+						CallDispatch cd = new CallDispatch();
+						cd.UserId = userId;
+
+						model.Call.Dispatches.Add(cd);
+					}
+				}
+
+				// Add all groups dispatch's
+				if (dispatchingGroupIds.Any())
+				{
+					model.Call.GroupDispatches = new List<CallDispatchGroup>();
+
+					foreach (var id in dispatchingGroupIds)
+					{
+						CallDispatchGroup dispatch = new CallDispatchGroup();
+						dispatch.DepartmentGroupId = id;
+
+						model.Call.GroupDispatches.Add(dispatch);
+					}
+				}
+
+				// Add all unit dispatch's
+				if (dispatchingUnitIds.Any())
+				{
+					model.Call.UnitDispatches = new List<CallDispatchUnit>();
+
+					foreach (var id in dispatchingUnitIds)
+					{
+						CallDispatchUnit dispatch = new CallDispatchUnit();
+						dispatch.UnitId = id;
+
+						model.Call.UnitDispatches.Add(dispatch);
+					}
+				}
+
+				// Add all role dispatch's
+				if (dispatchingRoleIds.Any())
+				{
+					model.Call.RoleDispatches = new List<CallDispatchRole>();
+
+					foreach (var id in dispatchingRoleIds)
+					{
+						CallDispatchRole dispatch = new CallDispatchRole();
+						dispatch.RoleId = id;
+
+						model.Call.RoleDispatches.Add(dispatch);
+					}
+				}
+
+				model.Call.References = new List<CallReference>();
+				if (linkedCalls.Any())
+				{
+					foreach (var id in linkedCalls)
+					{
+						if (!model.Call.References.Any(x => x.TargetCallId == id))
+						{
+							CallReference reference = new CallReference();
+							reference.TargetCallId = id;
+							reference.AddedOn = DateTime.UtcNow;
+							reference.AddedByUserId = UserId;
+
+							if (collection.ContainsKey($"linkedCallNote_{id}"))
+								reference.Note = collection[$"linkedCallNote_{id}"];
+
+							model.Call.References.Add(reference);
+						}
+					}
+				}
+
+				model.Call.CallSource = (int)CallSources.User;
+				model.Call.ClosedByUserId = UserId;
+				model.Call.ClosedOn = DateTime.UtcNow;
+				model.Call.CompletedNotes = System.Net.WebUtility.HtmlDecode(model.ClosedCallNotes);
+				model.Call.State = (int)model.CallState;
+
+				if (!string.IsNullOrWhiteSpace(model.Call.GeoLocationData) && model.Call.GeoLocationData.Length > 1 && string.IsNullOrWhiteSpace(model.Call.Address))
+				{
+					try
+					{
+						model.Call.Address = await _geoLocationProvider.GetAproxAddressFromLatLong(double.Parse(model.Latitude), double.Parse(model.Longitude));
+					}
+					catch { /* If No addy, no addy */ }
+				}
+				var call = await _callsService.SaveCallAsync(model.Call, cancellationToken);
+
+				// Save UDF field values for the archived call.
+				// Keys named "udf_<id>" carry the submitted value; keys named "udf_<id>_exists"
+				// are hidden sentinels posted for every rendered UDF field regardless of whether
+				// the user filled it in. When only the sentinel is present (no "udf_<id>" key),
+				// we must still emit an entry with Value = empty so the service clears any
+				// previously stored value.
+				var udfValues = collection.Keys
+					.Where(k => k.StartsWith("udf_") && !k.EndsWith("_exists"))
+					.Select(k => new UdfFieldValue
+					{
+						UdfFieldId = k.Substring(4),
+						Value = collection[k]
+					})
+					.ToList();
+
+				// For every sentinel whose "udf_<id>" key was NOT posted, add a clearing entry.
+				var submittedIds = new HashSet<string>(udfValues.Select(v => v.UdfFieldId));
+				var clearingValues = collection.Keys
+					.Where(k => k.StartsWith("udf_") && k.EndsWith("_exists"))
+					.Select(k => k.Substring(4, k.Length - 4 - "_exists".Length))
+					.Where(id => !submittedIds.Contains(id))
+					.Select(id => new UdfFieldValue
+					{
+						UdfFieldId = id,
+						Value = string.Empty
+					});
+				udfValues.AddRange(clearingValues);
+
+				if (udfValues.Any())
+				{
+					bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+					bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+					await _userDefinedFieldsService.SaveFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Call, call.CallId.ToString(), udfValues, UserId, isDeptAdmin, isGroupAdmin, cancellationToken);
+				}
+
+				_eventAggregator.SendMessage<CallAddedEvent>(new CallAddedEvent() { DepartmentId = DepartmentId, Call = call });
+
+				if (model.ReCalcuateCallNumbers)
+				{
+					// The numbering year the archived call falls in, which is a fiscal year when the department numbers by one.
+					await _callsService.RegenerateCallNumbersAsync(DepartmentId, call.LoggedOn, cancellationToken);
+				}
+
+				return RedirectToAction("ArchivedCalls", "Dispatch", new { Area = "User" });
+			}
+
+			return View("AddArchivedCall", model);
+		}
+
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> CallData(int callId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var model = new ViewCallView();
+			model.Call = await _callsService.GetCallByIdAsync(callId);
+			model.CallPriority = (CallPriority)model.Call.Priority;
+			model = await FillViewCallView(model);
+			model.Call = (await _protectedReadService.ResolveForReadAsync(DepartmentId, model.Call, null, UserId)).Call;
+			model.CanAddCallData = await _authorizationService.CanUserAddCallDataAsync(UserId, callId, DepartmentId);
+			model.CanAttachCallFiles = model.CanAddCallData && await _authorizationService.CanUserEditCallAsync(UserId, callId);
+
+			if (!String.IsNullOrEmpty(model.Call.GeoLocationData) &&
+				model.Call.GeoLocationData != ProtectedDataEnvelope.RedactionValue)
+			{
+				string[] loc = model.Call.GeoLocationData.Split(char.Parse(","));
+				model.Latitude = loc[0];
+				model.Longitude = loc[1];
+			}
+			else if (!String.IsNullOrEmpty(model.Call.Address) &&
+				model.Call.Address != ProtectedDataEnvelope.RedactionValue)
+			{
+				string coordinates = await _geoLocationProvider.GetLatLonFromAddress(model.Call.Address);
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					model.Latitude = coordinates.Split(char.Parse(","))[0];
+					model.Longitude = coordinates.Split(char.Parse(","))[1];
+				}
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> CloseCall(int callId)
+		{
+			if (!await _authorizationService.CanUserCloseCallAsync(UserId, callId, DepartmentId))
+				return Unauthorized();
+
+			CloseCallView model = new CloseCallView();
+			model = await FillCloseCallView(model);
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			model.CallId = call.CallId;
+
+			// A call run under an active incident command is closed from the command first; say so up front.
+			if (await _callClosureService.GetBlockingIncidentCommandAsync(DepartmentId, call.CallId) != null)
+			{
+				model.IsBlockedByIncidentCommand = true;
+				ModelState.AddModelError(string.Empty, _dispatchLocalizer["CloseBlockedByIncidentCommand"].Value);
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> CloseCall(CloseCallView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserCloseCallAsync(UserId, model.CallId, DepartmentId))
+				return Unauthorized();
+
+			model = await FillCloseCallView(model);
+			var call = await _callsService.GetCallByIdAsync(model.CallId);
+
+			if (call == null || call.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			if (await _callClosureService.GetBlockingIncidentCommandAsync(DepartmentId, call.CallId) != null)
+			{
+				model.IsBlockedByIncidentCommand = true;
+				ModelState.AddModelError(string.Empty, _dispatchLocalizer["CloseBlockedByIncidentCommand"].Value);
+			}
+
+			if (ModelState.IsValid)
+			{
+				call = await _callsService.PopulateCallData(call, true, true, true, true, true, true, true, true, true);
+
+				// Captured before the state changes: a pending call, or a scheduled call that never went out, had no
+				// dispatch statuses applied, so there are none to release (and nobody to tell it closed).
+				var shouldApplyReleaseStatuses = call.State == (int)CallStates.Active &&
+					(call.HasBeenDispatched.GetValueOrDefault() || !call.DispatchOn.HasValue || call.DispatchOn.Value <= DateTime.UtcNow);
+
+				call.ClosedByUserId = UserId;
+				call.ClosedOn = DateTime.UtcNow;
+				call.CompletedNotes = System.Net.WebUtility.HtmlDecode(model.ClosedCallNotes);
+				call.State = (int)model.CallState;
+
+				await _callsService.SaveCallAsync(call, cancellationToken);
+				_eventAggregator.SendMessage<CallClosedEvent>(new CallClosedEvent() { DepartmentId = DepartmentId, Call = call });
+
+				if (shouldApplyReleaseStatuses && ((call.GroupDispatches != null && call.GroupDispatches.Any()) || (call.UnitDispatches != null && call.UnitDispatches.Any())))
+				{
+					await _callDispatchStatusService.ApplyReleaseStatusesAsync(call, cancellationToken: cancellationToken);
+				}
+
+				// "Send Notification": tell everyone on the call, and the incident command team, that it is closed.
+				if (model.SendNotification && shouldApplyReleaseStatuses)
+					await _callClosureService.NotifyCallClosedAsync(call, UserId, cancellationToken);
+
+				return RedirectToAction("Dashboard", "Dispatch", new { Area = "User" });
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> FlagCallNote(int callId, int callNoteId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, false, false, true, false, false, false, false, false, false);
+			var department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId);
+
+			if (call.CallNotes == null || !call.CallNotes.Any())
+				return Unauthorized();
+
+			var note = call.CallNotes.FirstOrDefault(x => x.CallNoteId == callNoteId);
+			var names = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false);
+
+			if (note == null)
+				return Unauthorized();
+
+			FlagCallNoteView model = new FlagCallNoteView();
+			model.CallId = call.CallId;
+			model.CallNoteId = note.CallNoteId;
+			model.CallNote = ProtectedDataEnvelope.SafeDisplay(note.Note);
+			var moderationRequest = await _moderationService.GetReporterRequestAsync(DepartmentId, UserId,
+				ModerationItemType.CallNote, note.CallNoteId.ToString(CultureInfo.InvariantCulture));
+			var ownReport = moderationRequest?.Reports?.FirstOrDefault();
+			model.IsFlagged = moderationRequest != null;
+			model.FlagNote = ownReport?.Note;
+			model.ModerationStatus = moderationRequest?.Status;
+			model.ModerationAdminNote = moderationRequest?.AdminNote;
+			model.AddedOn = note.Timestamp.FormatForDepartment(department);
+			model.AddedBy = names.FirstOrDefault(x => x.UserId == note.UserId)?.Name;
+
+			if (ownReport != null)
+			{
+				model.FlaggedOn = ownReport.ReportedOn.FormatForDepartment(department);
+				model.FlaggedBy = names.FirstOrDefault(x => x.UserId == ownReport.ReportedByUserId)?.Name;
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> FlagCallNote(FlagCallNoteView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, model.CallId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(model.CallId);
+
+			if (call == null)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, false, false, true, false, false, false, false, false, false);
+			var department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId);
+
+			if (call.CallNotes == null || !call.CallNotes.Any())
+				return Unauthorized();
+
+			var note = call.CallNotes.FirstOrDefault(x => x.CallNoteId == model.CallNoteId);
+			var names = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false);
+
+			if (note == null)
+				return Unauthorized();
+
+			if (ModelState.IsValid)
+			{
+				await _moderationService.FlagAsync(DepartmentId, UserId, ModerationItemType.CallNote,
+					note.CallNoteId.ToString(CultureInfo.InvariantCulture), ModerationReason.Other, model.FlagNote,
+					BuildModerationContext("Reporter"), cancellationToken);
+
+				return RedirectToAction("ViewCall", "Dispatch", new { Area = "User", callId = model.CallId });
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> FlagCallImage(int callId, int callAttachmentId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, false, true, false, false, false, false, false, false, false);
+			var department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId);
+
+			if (call.Attachments == null || !call.Attachments.Any())
+				return Unauthorized();
+
+			var attachment = call.Attachments.FirstOrDefault(x => x.CallAttachmentId == callAttachmentId);
+
+			if (attachment == null || attachment.IsDeleted || attachment.CallAttachmentType != (int)CallAttachmentTypes.Image)
+				return Unauthorized();
+
+			var names = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false);
+
+			var model = new FlagCallImageView();
+			model.CallId = call.CallId;
+			model.CallAttachmentId = attachment.CallAttachmentId;
+			model.FileName = ProtectedDataEnvelope.SafeDisplay(attachment.FileName);
+			var moderationRequest = await _moderationService.GetReporterRequestAsync(DepartmentId, UserId,
+				ModerationItemType.CallImage, attachment.CallAttachmentId.ToString(CultureInfo.InvariantCulture));
+			var ownReport = moderationRequest?.Reports?.FirstOrDefault();
+			model.IsFlagged = moderationRequest != null;
+			model.FlagNote = ownReport?.Note;
+			model.ModerationStatus = moderationRequest?.Status;
+			model.ModerationAdminNote = moderationRequest?.AdminNote;
+			model.AddedOn = attachment.Timestamp.HasValue
+				? attachment.Timestamp.Value.FormatForDepartment(department)
+				: string.Empty;
+			model.AddedBy = names.FirstOrDefault(x => x.UserId == attachment.UserId)?.Name;
+
+			if (ownReport != null)
+			{
+				model.FlaggedOn = ownReport.ReportedOn.FormatForDepartment(department);
+				model.FlaggedBy = names.FirstOrDefault(x => x.UserId == ownReport.ReportedByUserId)?.Name;
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> FlagCallImage(FlagCallImageView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, model.CallId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(model.CallId);
+
+			if (call == null)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, false, true, false, false, false, false, false, false, false);
+
+			if (call.Attachments == null || !call.Attachments.Any())
+				return Unauthorized();
+
+			var attachment = call.Attachments.FirstOrDefault(x => x.CallAttachmentId == model.CallAttachmentId);
+
+			if (attachment == null || attachment.IsDeleted || attachment.CallAttachmentType != (int)CallAttachmentTypes.Image)
+				return Unauthorized();
+
+			if (ModelState.IsValid)
+			{
+				await _moderationService.FlagAsync(DepartmentId, UserId, ModerationItemType.CallImage,
+					attachment.CallAttachmentId.ToString(CultureInfo.InvariantCulture), ModerationReason.Other,
+					model.FlagNote, BuildModerationContext("Reporter"), cancellationToken);
+
+				return RedirectToAction("ViewCall", "Dispatch", new { Area = "User", callId = model.CallId });
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> FlagCallFile(int callId, int callAttachmentId)
+		{
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, false, true, false, false, false, false, false, false, false);
+			var department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId);
+
+			if (call.Attachments == null || !call.Attachments.Any())
+				return Unauthorized();
+
+			var attachment = call.Attachments.FirstOrDefault(x => x.CallAttachmentId == callAttachmentId && (x.CallAttachmentType == 1 || x.CallAttachmentType == 3 || x.CallAttachmentType == 4));
+
+			if (attachment == null)
+				return Unauthorized();
+
+			var names = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false);
+
+			var model = new FlagCallFileView();
+			model.CallId = call.CallId;
+			model.CallAttachmentId = attachment.CallAttachmentId;
+			model.FileName = ProtectedDataEnvelope.SafeDisplay(attachment.FileName);
+			model.FileType = attachment.CallAttachmentType;
+			model.IsFlagged = attachment.IsFlagged;
+			model.FlagNote = attachment.FlaggedReason;
+			model.AddedOn = attachment.Timestamp.HasValue
+				? attachment.Timestamp.Value.FormatForDepartment(department)
+				: string.Empty;
+			model.AddedBy = names.FirstOrDefault(x => x.UserId == attachment.UserId)?.Name;
+
+			if (attachment.IsFlagged)
+			{
+				model.FlaggedOn = attachment.FlaggedOn.HasValue
+					? attachment.FlaggedOn.Value.FormatForDepartment(department)
+					: string.Empty;
+				model.FlaggedBy = names.FirstOrDefault(x => x.UserId == attachment.FlaggedByUserId)?.Name;
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> FlagCallFile(FlagCallFileView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, model.CallId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(model.CallId);
+
+			if (call == null)
+				return Unauthorized();
+
+			call = await _callsService.PopulateCallData(call, false, true, false, false, false, false, false, false, false);
+
+			if (call.Attachments == null || !call.Attachments.Any())
+				return Unauthorized();
+
+			var attachment = call.Attachments.FirstOrDefault(x => x.CallAttachmentId == model.CallAttachmentId && (x.CallAttachmentType == 1 || x.CallAttachmentType == 3 || x.CallAttachmentType == 4));
+
+			if (attachment == null)
+				return Unauthorized();
+
+			if (ModelState.IsValid)
+			{
+				attachment.IsFlagged = model.IsFlagged;
+
+				if (attachment.IsFlagged)
+				{
+					attachment.FlaggedReason = model.FlagNote;
+					attachment.FlaggedOn = DateTime.UtcNow;
+					attachment.FlaggedByUserId = UserId;
+				}
+				else
+				{
+					attachment.FlaggedReason = null;
+					attachment.FlaggedOn = null;
+					attachment.FlaggedByUserId = null;
+				}
+
+				await _callsService.SaveCallAttachmentAsync(attachment, cancellationToken);
+
+				return RedirectToAction("ViewCall", "Dispatch", new { Area = "User", callId = model.CallId });
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> AddCallNote([FromBody] AddCallNoteInput model, CancellationToken cancellationToken)
+		{
+			// Leaving this here for a mental note. Adding a note to call isn't updating the call, so we don't need to check for edit permissions.
+			// But some users might be expecting this behavior, so I'll leave this here commented out for now and if I get a lot of requests for it, I'll add it back in
+			// as a full permission.
+			//if (!await _authorizationService.CanUserEditCallAsync(UserId, model.CallId))
+			//	Unauthorized();
+
+			if (ModelState.IsValid && model.CallId > 0)
+			{
+				var call = await _callsService.GetCallByIdAsync(model.CallId);
+
+				if (call == null)
+					return new StatusCodeResult((int)HttpStatusCode.NotFound);
+
+				if (!await _authorizationService.CanUserViewCallAsync(UserId, model.CallId))
+					return Unauthorized();
+
+				// Add Call Data (Security > Permissions): viewing a call does not by itself allow writing to it.
+				if (!await _authorizationService.CanUserAddCallDataAsync(UserId, model.CallId, DepartmentId))
+					return Unauthorized();
+
+				var note = new CallNote();
+				note.UserId = UserId;
+				note.CallId = model.CallId;
+				note.Note = model.Note;
+				note.Timestamp = DateTime.UtcNow;
+				note.Source = (int)CallNoteSources.Web;
+
+				await _callsService.SaveCallNoteAsync(note, cancellationToken);
+
+				return new StatusCodeResult((int)HttpStatusCode.OK);
+			}
+
+			return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetCallNotes(int callId)
+		{
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			if (call == null)
+				return new StatusCodeResult((int)HttpStatusCode.NotFound);
+
+			if (call.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			call.Department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId);
+			call = await _callsService.PopulateCallData(call, false, false, true, false, false, false, false, false, false);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+			var callNoteIds = call.CallNotes
+				.Select(x => x.CallNoteId.ToString(CultureInfo.InvariantCulture))
+				.ToList();
+			var reporterCallNoteRequests = await _moderationService.GetReporterRequestsAsync(DepartmentId, UserId,
+				ModerationItemType.CallNote, callNoteIds);
+			var flaggedCallNoteIds = reporterCallNoteRequests.Select(x => x.ItemId).ToHashSet(StringComparer.Ordinal);
+			List<CallNoteJson> callNotes = new List<CallNoteJson>();
+
+			foreach (var callNote in call.CallNotes)
+			{
+				var name = personnelNames.FirstOrDefault(x => x.UserId == callNote.UserId);
+
+				if (name != null)
+				{
+					CallNoteJson note = new CallNoteJson();
+					note.CallNoteId = callNote.CallNoteId;
+					note.IsFlagged = flaggedCallNoteIds.Contains(callNote.CallNoteId.ToString(CultureInfo.InvariantCulture));
+					note.Name = name.Name;
+					note.Timestamp = callNote.Timestamp.TimeConverter(call.Department).FormatForDepartment(call.Department);
+					// Rendered as HTML by the call view; markup from any save path (v4 API, older clients) is sanitized here.
+					note.Note = StringHelpers.SanitizeHtmlForDisplay(ProtectedDataEnvelope.SafeDisplay(callNote.Note));
+					note.UserId = callNote.UserId;
+
+					if (callNote.Latitude.HasValue && callNote.Longitude.HasValue)
+					{
+						note.Location = $"{callNote.Latitude.Value},{callNote.Longitude.Value}";
+						note.Latitude = callNote.Latitude;
+						note.Longitude = callNote.Longitude;
+					}
+					else
+					{
+						note.Location = _dispatchLocalizer["NoLocation"].Value;
+					}
+
+					callNotes.Add(note);
+				}
+			}
+
+			return Json(callNotes);
+		}
+
+		/// <summary>Previous calls at this call's location or with its contacts (the call page's Location History tab).</summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallLocationHistory(int callId)
+		{
+			var history = await _callLocationHistoryService.GetHistoryForCallAsync(DepartmentId, UserId, callId);
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			return Json(await CallLocationHistoryJson.FromAsync(history, department, _callsService, _departmentsService, _locationHistoryLocalizer));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetCheckInTimerStatuses(int callId)
+		{
+			var call = await _callsService.GetCallByIdAsync(callId);
+			if (call == null || call.DepartmentId != DepartmentId)
+				return NotFound();
+
+			var statuses = await _checkInTimerService.GetActiveTimerStatusesForCallAsync(call);
+
+			// Resolve target names from dispatched entities
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+			var units = await _unitsService.GetUnitsForDepartmentAsync(DepartmentId);
+			call = await _callsService.PopulateCallData(call, true, false, false, false, true, false, false, false, false);
+
+			var result = statuses.Select(s =>
+			{
+				string targetTypeText = DispatchDisplayHelper.GetLocalizedCheckInTimerTargetType((CheckInTimerTargetType)s.TargetType, _dispatchLocalizer, _commonLocalizer);
+				string targetName = targetTypeText;
+
+				if (s.TargetType == (int)CheckInTimerTargetType.Personnel)
+				{
+					// List dispatched personnel names
+					if (call.Dispatches != null && call.Dispatches.Any())
+					{
+						var names = call.Dispatches
+							.Select(d => personnelNames.FirstOrDefault(p => p.UserId == d.UserId))
+							.Where(n => n != null)
+							.Select(n => n.Name)
+							.ToList();
+						if (names.Any())
+							targetName = string.Join(", ", names);
+					}
+				}
+				else if (s.TargetType == (int)CheckInTimerTargetType.UnitType)
+				{
+					// List dispatched unit names matching the unit type
+					if (call.UnitDispatches != null && call.UnitDispatches.Any() && units != null)
+					{
+						var unitNames = call.UnitDispatches
+							.Select(d => units.FirstOrDefault(u => u.UnitId == d.UnitId))
+							.Where(u => u != null)
+							.Select(u => u.Name)
+							.ToList();
+						if (unitNames.Any())
+							targetName = string.Join(", ", unitNames);
+					}
+				}
+
+				return new
+				{
+					s.TargetType,
+					TargetTypeName = targetTypeText,
+					TargetName = targetName,
+					s.UnitId,
+					s.LastCheckIn,
+					s.DurationMinutes,
+					s.WarningThresholdMinutes,
+					s.ElapsedMinutes,
+					s.Status
+				};
+			}).ToList();
+
+			return Json(result);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetCheckInHistory(int callId)
+		{
+			var call = await _callsService.GetCallByIdAsync(callId);
+			if (call == null || call.DepartmentId != DepartmentId)
+				return NotFound();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+			var units = await _unitsService.GetUnitsForDepartmentIncludingDeletedAsync(DepartmentId);
+			var records = await _checkInTimerService.GetCheckInsForCallAsync(callId);
+
+			var result = records.Select(r =>
+			{
+				var personName = personnelNames.FirstOrDefault(p => p.UserId == r.UserId);
+				string unitName = null;
+				if (r.UnitId.HasValue && units != null)
+				{
+					var unit = units.FirstOrDefault(u => u.UnitId == r.UnitId.Value);
+					unitName = unit?.Name;
+				}
+
+				return new
+				{
+					r.CheckInRecordId,
+					r.CallId,
+					r.CheckInType,
+					CheckInTypeName = DispatchDisplayHelper.GetLocalizedCheckInTimerTargetType((CheckInTimerTargetType)r.CheckInType, _dispatchLocalizer, _commonLocalizer),
+					PerformedBy = personName?.Name ?? r.UserId,
+					UnitName = unitName,
+					Timestamp = r.Timestamp.TimeConverterToString(department),
+					r.Note
+				};
+			}).ToList();
+
+			return Json(result);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> PerformCheckIn([FromBody] PerformCheckInInput input, CancellationToken cancellationToken)
+		{
+			if (input == null || input.CallId <= 0)
+				return BadRequest();
+
+			var call = await _callsService.GetCallByIdAsync(input.CallId);
+			if (call == null || call.DepartmentId != DepartmentId)
+				return NotFound();
+
+			if (!call.CheckInTimersEnabled || call.State != (int)CallStates.Active)
+				return BadRequest();
+
+			var record = new CheckInRecord
+			{
+				DepartmentId = DepartmentId,
+				CallId = input.CallId,
+				CheckInType = input.CheckInType,
+				UserId = UserId,
+				UnitId = input.UnitId,
+				Latitude = input.Latitude,
+				Longitude = input.Longitude,
+				Note = input.Note
+			};
+
+			var saved = await _checkInTimerService.PerformCheckInAsync(record, cancellationToken);
+			return Json(new { Id = saved.CheckInRecordId });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> CallExport(int callId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var model = new CallExportView();
+			model.Call = await _callsService.GetCallByIdAsync(callId);
+			model.CallLogs = await _workLogsService.GetCallLogsForCallAsync(callId);
+
+			// calllogs.narrative is cataloged; without this the export renders rgdp ciphertext for a
+			// protected department.
+			await _protectedReadService.ResolveCallLogsForReadAsync(DepartmentId, model.CallLogs,
+				Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(model.Call.DepartmentId, false);
+			model.UnitStates = (await _unitsService.GetUnitStatesForCallAsync(model.Call.DepartmentId, callId)).OrderBy(y => y.Timestamp).ThenBy(x => x.UnitId).ToList();
+			model.ActionLogs = (await _actionLogsService.GetActionLogsForCallAsync(model.Call.DepartmentId, callId)).OrderBy(y => y.Timestamp).ThenBy(x => x.UserId).ToList();
+			model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId);
+			// Point-in-time export: the call's units as dispatched, deleted ones included.
+			model.Units = await _unitsService.GetUnitsForDepartmentIncludingDeletedAsync(DepartmentId);
+			model.Call = await _callsService.PopulateCallData(model.Call, true, true, true, true, true, true, true, true, true);
+			model.Call = (await _protectedReadService.ResolveForReadAsync(DepartmentId, model.Call, null, UserId)).Call;
+			var callDestination = await GetValidatedDestinationPoiAsync(model.Call.DestinationPoiId);
+			var callDestinationInfo = BuildDestinationInfo(callDestination);
+			model.DestinationName = callDestinationInfo.Name;
+			model.DestinationAddress = callDestinationInfo.Address;
+			model.DestinationTypeName = callDestinationInfo.TypeName;
+			model.Names = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+			model.ChildCalls = await _callsService.GetChildCallsForCallAsync(callId);
+			// Contacts View (Security > Permissions) governs the contact block, as on the call page.
+			if (ClaimsAuthorizationHelper.CanViewContacts())
+				model.Contacts = await _contactsService.GetAllContactsForDepartmentAsync(DepartmentId);
+			else
+			{
+				model.Contacts = new List<Contact>();
+				model.Call.Contacts = null;
+			}
+			model.CheckInRecords = await _checkInTimerService.GetCheckInsForCallAsync(callId);
+			model.TimerConfigs = await _checkInTimerService.ResolveAllTimersForCallAsync(model.Call);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> CallExportEx(string query)
+		{
+			if (String.IsNullOrWhiteSpace(query))
+				return NotFound();
+
+			string decryptedQuery = "";
+			string decodedQuery = "";
+			try
+			{
+				decodedQuery = Encoding.UTF8.GetString(Convert.FromBase64String(query)).Trim();
+				decryptedQuery = SymmetricEncryption.Decrypt(decodedQuery, Config.SystemBehaviorConfig.ExternalLinkUrlParamPassphrase);
+			}
+			catch (Exception ex)
+			{
+				return NotFound();
+			}
+
+			if (!decryptedQuery.Contains("|"))
+			{
+				// Legacy query, just the call id
+				var callId = SymmetricEncryption.Decrypt(decodedQuery, Config.SystemBehaviorConfig.ExternalLinkUrlParamPassphrase);
+
+				if (String.IsNullOrWhiteSpace(callId))
+					return Unauthorized();
+
+				var call = await _callsService.GetCallByIdAsync(int.Parse(callId));
+
+				if (call == null)
+					return Unauthorized();
+
+				if (!await _authorizationService.CanUserViewCallAsync(UserId, call.CallId))
+					return Unauthorized();
+
+				var model = new CallExportView();
+				model.Call = await _callsService.PopulateCallData(call, true, true, true, true, true, true, true, true, true);
+				model.Call = (await _protectedReadService.ResolveForReadAsync(call.DepartmentId, model.Call, null, UserId)).Call;
+				var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call.DestinationPoiId);
+				var destinationInfo = BuildDestinationInfo(destinationPoi);
+				model.DestinationName = destinationInfo.Name;
+				model.DestinationAddress = destinationInfo.Address;
+				model.DestinationTypeName = destinationInfo.TypeName;
+				model.CallLogs = await _workLogsService.GetCallLogsForCallAsync(call.CallId);
+				await _protectedReadService.ResolveCallLogsForReadAsync(call.DepartmentId, model.CallLogs,
+					Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+				model.Department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId, false);
+				model.UnitStates = (await _unitsService.GetUnitStatesForCallAsync(call.DepartmentId, call.CallId)).OrderBy(y => y.Timestamp).ThenBy(x => x.UnitId).ToList();
+				model.ActionLogs = (await _actionLogsService.GetActionLogsForCallAsync(call.DepartmentId, call.CallId)).OrderBy(y => y.Timestamp).ThenBy(x => x.UserId).ToList();
+				model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(call.DepartmentId);
+				model.Units = await _unitsService.GetUnitsForDepartmentIncludingDeletedAsync(call.DepartmentId);
+				model.Names = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(call.DepartmentId);
+				model.ChildCalls = await _callsService.GetChildCallsForCallAsync(call.CallId);
+				model.Contacts = await _contactsService.GetAllContactsForDepartmentAsync(DepartmentId);
+				model.CheckInRecords = await _checkInTimerService.GetCheckInsForCallAsync(call.CallId);
+				model.TimerConfigs = await _checkInTimerService.ResolveAllTimersForCallAsync(model.Call);
+
+				return View(model);
+			}
+			else
+			{
+				var items = decryptedQuery.Split(char.Parse("|"));
+
+				if (String.IsNullOrWhiteSpace(items[0]) || items[0] == "0")
+					return Unauthorized();
+
+				var call = await _callsService.GetCallByIdAsync(int.Parse(items[0]));
+
+				if (call == null)
+					return Unauthorized();
+
+				if (!await _authorizationService.CanUserViewCallAsync(UserId, call.CallId))
+					return Unauthorized();
+
+				var model = new CallExportView();
+				model.Call = await _callsService.PopulateCallData(call, true, true, true, true, true, true, true, true, true);
+				model.Call = (await _protectedReadService.ResolveForReadAsync(call.DepartmentId, model.Call, null, UserId)).Call;
+				var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call.DestinationPoiId);
+				var destinationInfo = BuildDestinationInfo(destinationPoi);
+				model.DestinationName = destinationInfo.Name;
+				model.DestinationAddress = destinationInfo.Address;
+				model.DestinationTypeName = destinationInfo.TypeName;
+				model.CallLogs = await _workLogsService.GetCallLogsForCallAsync(call.CallId);
+				await _protectedReadService.ResolveCallLogsForReadAsync(call.DepartmentId, model.CallLogs,
+					Request.Headers["X-Resgrid-Protected-Grant"].ToString(), UserId);
+				model.Department = await _departmentsService.GetDepartmentByIdAsync(call.DepartmentId, false);
+				model.UnitStates = (await _unitsService.GetUnitStatesForCallAsync(call.DepartmentId, call.CallId)).OrderBy(y => y.Timestamp).ThenBy(x => x.UnitId).ToList();
+				model.ActionLogs = (await _actionLogsService.GetActionLogsForCallAsync(call.DepartmentId, call.CallId)).OrderBy(y => y.Timestamp).ThenBy(x => x.UserId).ToList();
+				model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(call.DepartmentId);
+				model.Units = await _unitsService.GetUnitsForDepartmentIncludingDeletedAsync(call.DepartmentId);
+				model.Names = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(call.DepartmentId);
+				model.ChildCalls = await _callsService.GetChildCallsForCallAsync(call.CallId);
+				model.Contacts = await _contactsService.GetAllContactsForDepartmentAsync(DepartmentId);
+				model.CheckInRecords = await _checkInTimerService.GetCheckInsForCallAsync(call.CallId);
+				model.TimerConfigs = await _checkInTimerService.ResolveAllTimersForCallAsync(model.Call);
+
+				if (!String.IsNullOrWhiteSpace(items[2]) && items[2] != "0")
+				{
+					model.Station = await _departmentGroupsService.GetGroupByIdAsync(int.Parse(items[2]));
+
+					string startLat = "";
+					string startLon = "";
+
+					if (!String.IsNullOrWhiteSpace(model.Station.Latitude) && !String.IsNullOrWhiteSpace(model.Station.Longitude))
+					{
+						startLat = model.Station.Latitude;
+						startLon = model.Station.Longitude;
+					}
+					else if (model.Station.Address != null)
+					{
+						var location = await _geoLocationProvider.GetLatLonFromAddress(model.Station.Address.FormatAddress());
+
+						if (!String.IsNullOrWhiteSpace(location))
+						{
+							var locationParts = location.Split(char.Parse(","));
+							startLat = locationParts[0];
+							startLon = locationParts[1];
+						}
+					}
+
+					string endLat = "";
+					string endLon = "";
+
+					if (!String.IsNullOrWhiteSpace(call.GeoLocationData) &&
+						!ProtectedDataEnvelope.HasEnvelopePrefix(call.GeoLocationData))
+					{
+						var callCocationParts = call.GeoLocationData.Split(char.Parse(","));
+						if (callCocationParts.Length == 2)
+						{
+							endLat = callCocationParts[0];
+							endLon = callCocationParts[1];
+						}
+					}
+
+					model.StartLat = startLat;
+					model.StartLon = startLon;
+					model.EndLat = endLat;
+					model.EndLon = endLon;
+				}
+
+
+				return View(model);
+			}
+		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> CallExportPdf(string query)
+		{
+			if (String.IsNullOrWhiteSpace(query))
+				return Unauthorized();
+
+			//var decryptedQuery = SymmetricEncryption.Decrypt(query, Config.SystemBehaviorConfig.ExternalLinkUrlParamPassphrase);
+
+			var client = new RestClient(Config.SystemBehaviorConfig.ResgridBaseUrl);
+			var request = new RestRequest($"User/Dispatch/CallExportEx?query={HttpUtility.UrlEncode(query)}", Method.Get);
+
+			var response = await client.ExecuteAsync(request);
+
+			if (!string.IsNullOrWhiteSpace(response.Content))
+			{
+				Regex rRemScript = new Regex(@"<script[^>]*>[\s\S]*?</script>");
+				var content = rRemScript.Replace(response.Content, "");
+
+				var file = _pdfProvider.ConvertHtmlToPdf(content);
+
+				MemoryStream output = new MemoryStream();
+				output.Write(file, 0, file.Length);
+				output.Position = 0;
+
+				return File(output, "application/pdf");
+			}
+
+			return NotFound();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_Update)]
+		public async Task<IActionResult> ReOpenCall([FromForm] int callId, CancellationToken cancellationToken)
+		{
+			// Re-opening undoes a close (it clears who closed the call, when and why), so it needs what closing needs.
+			if (!await _authorizationService.CanUserCloseCallAsync(UserId, callId, DepartmentId))
+				return Unauthorized();
+
+			var call = await _callsService.ReOpenCallByIdAsync(callId, cancellationToken);
+			_eventAggregator.SendMessage<CallUpdatedEvent>(new CallUpdatedEvent() { DepartmentId = DepartmentId, Call = call });
+
+			return RedirectToAction("Dashboard", "Dispatch", new { Area = "User" });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallDispatchAudio(int callId)
+		{
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+			call = await _callsService.PopulateCallData(call, false, true, false, false, false, false, false, false, false);
+
+			if (call.Attachments != null && call.Attachments.Count > 0)
+			{
+				var audio = call.Attachments.First().Data;
+
+				// An enveloped payload (protected department) is ciphertext, not audio.
+				if (audio != null && !Resgrid.Services.ProtectedReadService.IsBinaryEnveloped(audio))
+					return File(audio, "audio/mpeg");
+			}
+
+			return RedirectToAction("Dashboard");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetActiveCallsForGrid()
+		{
+			var calls = new List<CallJson>();
+
+			var activeCalls = (await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId, await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId)))
+				.Where(x => !x.DispatchOn.HasValue || x.DispatchOn.Value <= DateTime.UtcNow || x.HasBeenDispatched == true)
+				.OrderBy(x => x.LoggedOn);
+
+			var genericCall = new CallJson()
+			{
+				DispatchTime = DateTime.UtcNow,
+				Priority = _dispatchLocalizer["CallPriorityLow"].Value,
+				Name = _dispatchLocalizer["GenericCall"].Value
+			};
+			calls.Add(genericCall);
+
+			foreach (var call in activeCalls)
+			{
+				var jsonCall = new CallJson();
+				jsonCall.CallId = call.CallId;
+				jsonCall.DispatchTime = call.LoggedOn;
+				jsonCall.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(DepartmentId, call.Priority, _dispatchLocalizer);
+				jsonCall.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+
+				calls.Add(jsonCall);
+			}
+
+			return Json(calls);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetAllCallsForGrid()
+		{
+			var calls = new List<CallJson>();
+
+			var activeCalls = (await _callsService.GetAllCallsByDepartmentAsync(DepartmentId)).OrderBy(x => x.LoggedOn);
+
+			foreach (var call in activeCalls)
+			{
+				var jsonCall = new CallJson();
+				jsonCall.CallId = call.CallId;
+				jsonCall.DispatchTime = call.LoggedOn;
+				jsonCall.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(DepartmentId, call.Priority, _dispatchLocalizer);
+				jsonCall.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				jsonCall.State = DispatchDisplayHelper.GetLocalizedCallState(call.State, _dispatchLocalizer, _commonLocalizer);
+
+				calls.Add(jsonCall);
+			}
+
+			return Json(calls);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public PartialViewResult SmallActiveCallGrid()
+		{
+			return PartialView("_SmallActiveCallsGridPartial");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public PartialViewResult SmallCallGrid()
+		{
+			return PartialView("_SmallCallsGridPartial");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallById(int callId)
+		{
+			// A call of this department the member may view, as on the call page.
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var call = new CallJson();
+			var savedCall = await _callsService.GetCallByIdAsync(callId);
+			savedCall.Department = await _departmentsService.GetDepartmentByIdAsync(savedCall.DepartmentId);
+
+			call.CallId = savedCall.CallId;
+			call.DispatchTime = savedCall.LoggedOn.TimeConverter(savedCall.Department);
+			call.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(savedCall.DepartmentId, savedCall.Priority, _dispatchLocalizer);
+			call.PriorityEnum = (CallPriority)savedCall.Priority;
+			call.Name = ProtectedDataEnvelope.SafeDisplay(savedCall.Name);
+			call.State = DispatchDisplayHelper.GetLocalizedCallState(savedCall.State, _dispatchLocalizer, _commonLocalizer);
+			// The new-log page puts the nature into its editor as HTML.
+			call.Nature = StringHelpers.SanitizeHtmlForDisplay(ProtectedDataEnvelope.SafeDisplay(savedCall.NatureOfCall));
+			call.Address = ProtectedDataEnvelope.SafeDisplay(savedCall.Address);
+
+			return Json(call);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetPersonnelForCall(int callId)
+		{
+			// A call of this department the member may view, as on the call page.
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			List<CallPersonnelForJson> personnelJson = new List<CallPersonnelForJson>();
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedMinusDisabledAsync(DepartmentId);
+			var call = await _callsService.GetCallByIdAsync(callId);
+
+			// Security > View Personnel: only the people the member may see, as on the personnel list.
+			var viewableUserIds = await _authorizationService.GetViewablePersonIdsAsync(UserId, users.Select(x => x.UserId), DepartmentId);
+
+			foreach (var user in users)
+			{
+				if (!viewableUserIds.Contains(user.UserId))
+					continue;
+
+				CallPersonnelForJson person = new CallPersonnelForJson();
+				person.UserId = user.UserId;
+
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+				if (group != null)
+					person.Group = group.Name;
+
+				var roles = await _personnelRolesService.GetRolesForUserAsync(user.UserId, DepartmentId);
+				person.Roles = new List<string>();
+				foreach (var role in roles)
+				{
+					person.Roles.Add(role.Name);
+				}
+
+				person.Dispatched = call.HasUserBeenDispatched(user.UserId);
+
+				if (person.Dispatched)
+					person.CheckValue = "checked";
+
+				personnelJson.Add(person);
+			}
+
+			return Json(personnelJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetAllDispatchesForCall(int callId)
+		{
+			// A call of this department the member may view, as on the call page.
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			List<CallDispatchJson> dispatchJson = new List<CallDispatchJson>();
+			var users = await _departmentsService.GetAllUsersForDepartmentUnlimitedMinusDisabledAsync(DepartmentId);
+			var call = await _callsService.GetCallByIdAsync(callId);
+			call = await _callsService.PopulateCallData(call, true, true, true, true, true, true, true, true, true);
+
+			foreach (var userDispatch in call.Dispatches)
+			{
+				CallDispatchJson dispatch = new CallDispatchJson();
+				dispatch.DisptachCode = $"#dispatchUser_{userDispatch.UserId}";
+
+				dispatchJson.Add(dispatch);
+			}
+
+			foreach (var groupDispatch in call.GroupDispatches)
+			{
+				CallDispatchJson dispatch = new CallDispatchJson();
+				dispatch.DisptachCode = $"#dispatchGroup_{groupDispatch.DepartmentGroupId}";
+
+				dispatchJson.Add(dispatch);
+			}
+
+			foreach (var roleDispatch in call.RoleDispatches)
+			{
+				CallDispatchJson dispatch = new CallDispatchJson();
+				dispatch.DisptachCode = $"#dispatchRole_{roleDispatch.RoleId}";
+
+				dispatchJson.Add(dispatch);
+			}
+
+			foreach (var unitDispatch in call.UnitDispatches)
+			{
+				CallDispatchJson dispatch = new CallDispatchJson();
+				dispatch.DisptachCode = $"#dispatchUnit_{unitDispatch.UnitId}";
+
+				dispatchJson.Add(dispatch);
+			}
+
+			return Json(dispatchJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetMapDataForCall(int callId)
+		{
+			// A call of this department the member may view, as on the call page.
+			if (!await _authorizationService.CanUserViewCallAsync(UserId, callId))
+				return Unauthorized();
+
+			var serializerSettings = new JsonSerializerSettings
+			{
+				ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(),
+				NullValueHandling = NullValueHandling.Include,
+				Formatting = Formatting.Indented,
+				Converters = new JsonConverter[]
+				{
+					new Newtonsoft.Json.Converters.IsoDateTimeConverter(),
+					new Newtonsoft.Json.Converters.StringEnumConverter()
+				},
+			};
+
+			var call = await _callsService.GetCallByIdAsync(callId);
+			var coordiantes = await _departmentSettingsService.GetMapCenterCoordinatesAsync(await _departmentsService.GetDepartmentByIdAsync(DepartmentId));
+			var model = new BigBoardMapModel();
+			model.CenterLat = coordiantes.Latitude.Value;
+			model.CenterLon = coordiantes.Longitude.Value;
+
+			if (!String.IsNullOrWhiteSpace(call.GeoLocationData) &&
+				!ProtectedDataEnvelope.HasEnvelopePrefix(call.GeoLocationData))
+			{
+				string[] coordinates = call.GeoLocationData.Split(char.Parse(","));
+
+				if (coordinates.Count() == 2)
+				{
+					double newLat;
+					double newLon;
+					if (double.TryParse(coordinates[0], out newLat) && double.TryParse(coordinates[1], out newLon))
+					{
+						model.CenterLat = newLat;
+						model.CenterLon = newLon;
+					}
+				}
+
+				var markerInfo = new MapMakerInfo();
+				markerInfo.Latitude = model.CenterLat;
+				markerInfo.Longitude = model.CenterLon;
+				markerInfo.Title = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				model.MapMakerInfos.Add(markerInfo);
+			}
+
+			var result = JsonConvert.SerializeObject(model, Formatting.Indented, serializerSettings);
+			return Content(result, "application/json");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> CallsYTD()
+		{
+			List<CallWeekJson> callWeeks = new List<CallWeekJson>();
+
+			CultureInfo culture = new CultureInfo("en-us");
+			Calendar calendar = culture.Calendar;
+
+			var calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, new DateTime(DateTime.UtcNow.Year, 1, 1, 0, 0, 1), new DateTime(DateTime.UtcNow.Year, 12, 31, 23, 59, 59));
+
+			// Week
+			//    Call Type
+			//        Call Count
+
+			for (int i = 1; i <= 52; i++)
+			{
+				var weekCalls =
+					calls.Where(x => calendar.GetWeekOfYear(x.LoggedOn, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) == i).GroupBy(x => x.Type);
+
+				foreach (var weekCall in weekCalls)
+				{
+					var callWeek = new CallWeekJson();
+					callWeek.WeekNumber = i;
+
+					string type = "Call";
+					if (!String.IsNullOrWhiteSpace(weekCall.Key))
+						type = weekCall.Key;
+
+					callWeek.Type = type;
+					callWeek.Count = weekCall.ToList().Count;
+
+					callWeeks.Add(callWeek);
+				}
+			}
+
+			return Json(callWeeks);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> CallsTypesInRange(string startDate, string endDate)
+		{
+			List<CallTypesJson> callTypes = new List<CallTypesJson>();
+
+			if (!String.IsNullOrWhiteSpace(startDate) && !String.IsNullOrWhiteSpace(endDate))
+			{
+				var calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, DateTime.Parse(System.Net.WebUtility.UrlDecode((startDate.Replace("&#x202F;", " ")))), DateTime.Parse(System.Net.WebUtility.UrlDecode(endDate.Replace("&#x202F;", " "))));
+
+				var groupedCalls = calls.GroupBy(x => x.Type);
+				foreach (var grouppedCall in groupedCalls)
+				{
+					string key = _dispatchLocalizer["NoType"].Value;
+					if (!String.IsNullOrWhiteSpace(grouppedCall.Key))
+						key = ProtectedDataEnvelope.SafeDisplay(grouppedCall.Key);
+
+					callTypes.Add(new CallTypesJson() { Count = grouppedCall.ToList().Count, Type = key });
+				}
+			}
+
+			return Json(callTypes);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> CallsStatesInRange(string startDate, string endDate)
+		{
+			List<CallTypesJson> callTypes = new List<CallTypesJson>();
+
+			if (String.IsNullOrWhiteSpace(startDate) || String.IsNullOrWhiteSpace(endDate))
+				return Json(callTypes);
+
+			if (!String.IsNullOrWhiteSpace(startDate) && !String.IsNullOrWhiteSpace(endDate))
+			{
+				// Temp fix, trying to locate where &#x202F; is coming from and why it's not properly urlencoded instead. -SJ
+				var startDateTime = DateTime.Parse(System.Net.WebUtility.UrlDecode(startDate.Replace("&#x202F;", " ")));
+				var endDateTime = DateTime.Parse(System.Net.WebUtility.UrlDecode(endDate.Replace("&#x202F;", " ")));
+
+				var calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, startDateTime, endDateTime);
+
+				var groupedCallStates = calls.GroupBy(x => x.State);
+				foreach (var grouppedCall in groupedCallStates)
+				{
+					callTypes.Add(new CallTypesJson() { Count = grouppedCall.ToList().Count, Type = DispatchDisplayHelper.GetLocalizedCallState(grouppedCall.Key, _dispatchLocalizer, _commonLocalizer) });
+				}
+			}
+
+			return Json(callTypes);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+
+		public async Task<IActionResult> GetActiveCallsList()
+		{
+			List<CallListJson> callsJson = new List<CallListJson>();
+
+			var calls = (await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId, await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId)))
+				.Where(x => !x.DispatchOn.HasValue || x.DispatchOn.Value <= DateTime.UtcNow || x.HasBeenDispatched == true)
+				.OrderByDescending(x => x.LoggedOn);
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var callTypes = await _callsService.GetCallTypesForDepartmentAsync(DepartmentId);
+			var numberSort = await CallNumberSortKeysAsync(DepartmentId);
+
+			foreach (var call in calls)
+			{
+				var callJson = new CallListJson();
+				callJson.TypeIconUrl = TypeIconHtml.Url(CallTypeLink.Find(call, callTypes));
+				callJson.CallId = call.CallId;
+				callJson.Number = call.Number;
+				callJson.NumberSort = numberSort(call.Number);
+				callJson.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				callJson.State = DispatchDisplayHelper.GetLocalizedCallState(call.State, _dispatchLocalizer, _commonLocalizer);
+				callJson.StateColor = _callsService.CallStateToColor((CallStates)call.State);
+				callJson.Timestamp = call.LoggedOn.TimeConverterToString(department);
+				callJson.LoggedOn = new DateTimeOffset(DateTime.SpecifyKind(call.LoggedOn, DateTimeKind.Utc)).ToUnixTimeSeconds();
+				callJson.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(DepartmentId, call.Priority, _dispatchLocalizer);
+				callJson.Color = await _callsService.CallPriorityToColorAsync(call.Priority, DepartmentId);
+				callJson.CanDeleteCall = await _authorizationService.CanUserDeleteCallAsync(UserId, call.CallId, DepartmentId);
+				callJson.CanCloseCall = await _authorizationService.CanUserCloseCallAsync(UserId, call.CallId, DepartmentId);
+
+				if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin() || call.ReportingUserId == UserId)
+					callJson.CanUpdateCall = true;
+				else
+					callJson.CanUpdateCall = false;
+
+				callsJson.Add(callJson);
+			}
+
+			return Json(callsJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetArchivedCallsList(string year)
+		{
+			List<CallListJson> callsJson = new List<CallListJson>();
+
+			List<Resgrid.Model.Call> calls;
+			var normalizedYear = string.IsNullOrWhiteSpace(year) || year.Trim().Equals("null", StringComparison.OrdinalIgnoreCase) ? null : year.Trim();
+			if (normalizedYear == null)
+				calls = await _callsService.GetClosedCallsByDepartmentAsync(DepartmentId);
+			else
+				calls = await _callsService.GetClosedCallsByDepartmentYearAsync(DepartmentId, normalizedYear);
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var callTypes = await _callsService.GetCallTypesForDepartmentAsync(DepartmentId);
+			var numberSort = await CallNumberSortKeysAsync(DepartmentId);
+
+			foreach (var call in calls)
+			{
+				var callJson = new CallListJson();
+				callJson.TypeIconUrl = TypeIconHtml.Url(CallTypeLink.Find(call, callTypes));
+				callJson.CallId = call.CallId;
+				callJson.Number = call.Number;
+				callJson.NumberSort = numberSort(call.Number);
+				callJson.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				callJson.State = DispatchDisplayHelper.GetLocalizedCallState(call.State, _dispatchLocalizer, _commonLocalizer);
+				callJson.StateColor = _callsService.CallStateToColor((CallStates)call.State);
+				callJson.Timestamp = call.LoggedOn.TimeConverterToString(department);
+				callJson.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(DepartmentId, call.Priority, _dispatchLocalizer);
+				callJson.Color = await _callsService.CallPriorityToColorAsync(call.Priority, DepartmentId);
+
+				if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin() || call.ReportingUserId == UserId)
+					callJson.CanDeleteCall = true;
+				else
+					callJson.CanDeleteCall = false;
+
+				callsJson.Add(callJson);
+			}
+
+			return Json(callsJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetScheduledCallsList()
+		{
+			List<CallListJson> callsJson = new List<CallListJson>();
+
+			// Scheduled calls are active calls, so group-scoped dispatch trims them as it does the active list.
+			var calls = (await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId,
+				await _callsService.GetAllNonDispatchedScheduledCallsByDepartmentIdAsync(DepartmentId)))
+				.OrderBy(x => x.DispatchOn);
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var numberSort = await CallNumberSortKeysAsync(DepartmentId);
+
+			foreach (var call in calls)
+			{
+				var callJson = new CallListJson();
+				callJson.CallId = call.CallId;
+				callJson.Number = call.Number;
+				callJson.NumberSort = numberSort(call.Number);
+				callJson.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				callJson.State = DispatchDisplayHelper.GetLocalizedCallState(call.State, _dispatchLocalizer, _commonLocalizer);
+				callJson.StateColor = _callsService.CallStateToColor((CallStates)call.State);
+				callJson.Timestamp = call.LoggedOn.TimeConverterToString(department);
+				callJson.LoggedOn = new DateTimeOffset(DateTime.SpecifyKind(call.LoggedOn, DateTimeKind.Utc)).ToUnixTimeSeconds();
+				callJson.DispatchOn = call.DispatchOn.HasValue ? new DateTimeOffset(DateTime.SpecifyKind(call.DispatchOn.Value, DateTimeKind.Utc)).ToUnixTimeSeconds() : 0;
+				callJson.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(DepartmentId, call.Priority, _dispatchLocalizer);
+				callJson.Color = await _callsService.CallPriorityToColorAsync(call.Priority, DepartmentId);
+				callJson.CanDeleteCall = await _authorizationService.CanUserDeleteCallAsync(UserId, call.CallId, DepartmentId);
+				callJson.CanCloseCall = await _authorizationService.CanUserCloseCallAsync(UserId, call.CallId, DepartmentId);
+
+				if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin() || call.ReportingUserId == UserId)
+					callJson.CanUpdateCall = true;
+				else
+					callJson.CanUpdateCall = false;
+
+				callsJson.Add(callJson);
+			}
+
+			return Json(callsJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetPendingCallsList()
+		{
+			List<CallListJson> callsJson = new List<CallListJson>();
+
+			var calls = await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId,
+				await _callsService.GetPendingCallsByDepartmentIdAsync(DepartmentId));
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var numberSort = await CallNumberSortKeysAsync(DepartmentId);
+
+			foreach (var call in calls.OrderBy(x => x.LoggedOn))
+			{
+				var callJson = new CallListJson();
+				callJson.CallId = call.CallId;
+				callJson.Number = call.Number;
+				callJson.NumberSort = numberSort(call.Number);
+				callJson.Name = ProtectedDataEnvelope.SafeDisplay(call.Name);
+				callJson.Address = ProtectedDataEnvelope.SafeDisplay(call.Address);
+				callJson.State = DispatchDisplayHelper.GetLocalizedCallState(call.State, _dispatchLocalizer, _commonLocalizer);
+				callJson.StateColor = _callsService.CallStateToColor((CallStates)call.State);
+				callJson.Timestamp = call.LoggedOn.TimeConverterToString(department);
+				callJson.LoggedOn = new DateTimeOffset(DateTime.SpecifyKind(call.LoggedOn, DateTimeKind.Utc)).ToUnixTimeSeconds();
+				callJson.Priority = await DispatchDisplayHelper.GetLocalizedCallPriorityAsync(DepartmentId, call.Priority, _dispatchLocalizer);
+				callJson.Color = await _callsService.CallPriorityToColorAsync(call.Priority, DepartmentId);
+				callJson.CanDeleteCall = await _authorizationService.CanUserDeleteCallAsync(UserId, call.CallId, DepartmentId);
+				callJson.CanCloseCall = await _authorizationService.CanUserCloseCallAsync(UserId, call.CallId, DepartmentId);
+				callJson.CanUpdateCall = await _authorizationService.CanUserEditCallAsync(UserId, call.CallId);
+
+				callsJson.Add(callJson);
+			}
+
+			return Json(callsJson);
+		}
+
+		/// <summary>
+		/// How many calls are waiting to be dispatched, for the badges on the Calls dashboard.
+		/// </summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetWaitingCallCounts()
+		{
+			var pending = await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId,
+				await _callsService.GetPendingCallsByDepartmentIdAsync(DepartmentId));
+			var scheduled = await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId,
+				await _callsService.GetAllNonDispatchedScheduledCallsByDepartmentIdAsync(DepartmentId));
+
+			return Json(new { pending = pending.Count(), scheduled = scheduled.Count() });
+		}
+
+		/// <summary>Sort keys for the department's call numbers, so the call grids order them as issued under any numbering pattern.</summary>
+		private async Task<Func<string, string>> CallNumberSortKeysAsync(int departmentId)
+		{
+			return CallNumberFormat.SortKeys(CallNumberFormat.EffectivePattern(await _departmentSettingsService.GetCallNumberingConfigAsync(departmentId)));
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> AttachCallFile(FileAttachInput model, IFormFile fileToUpload, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserEditCallAsync(UserId, model.CallId))
+				return Unauthorized();
+
+			if (!await _authorizationService.CanUserAddCallDataAsync(UserId, model.CallId, DepartmentId))
+				return Unauthorized();
+
+			if (fileToUpload == null || fileToUpload.Length <= 0)
+				ModelState.AddModelError("fileToUpload", _dispatchLocalizer["AttachFileRequired"].Value);
+			else
+			{
+				var extenion = FileHelper.GetFileExtensionWithoutDot(fileToUpload.FileName);
+
+				if (extenion != "jpg" && extenion != "jpeg" && extenion != "png" && extenion != "gif" && extenion != "gif" && extenion != "pdf" && extenion != "doc"
+					&& extenion != "docx" && extenion != "ppt" && extenion != "pptx" && extenion != "pps" && extenion != "ppsx" && extenion != "odt"
+					&& extenion != "xls" && extenion != "xlsx" && extenion != "mp3" && extenion != "m4a" && extenion != "ogg" && extenion != "wav"
+					&& extenion != "mp4" && extenion != "m4v" && extenion != "mov" && extenion != "wmv" && extenion != "avi" && extenion != "mpg" && extenion != "txt")
+					ModelState.AddModelError("fileToUpload", _dispatchLocalizer["DocumentTypeNotImportable", extenion].Value);
+
+				if (fileToUpload.Length > 10000000)
+					ModelState.AddModelError("fileToUpload", _dispatchLocalizer["FileTooLarge10Mb"].Value);
+			}
+
+			if (ModelState.IsValid)
+			{
+				var attachment = new CallAttachment();
+				attachment.CallId = model.CallId;
+				attachment.UserId = UserId;
+				attachment.Name = model.FriendlyName;
+				attachment.FileName = fileToUpload.FileName;
+				attachment.CallAttachmentType = (int)CallAttachmentTypes.File;
+				attachment.Timestamp = DateTime.UtcNow;
+
+				byte[] uploadedFile = new byte[fileToUpload.OpenReadStream().Length];
+				fileToUpload.OpenReadStream().Read(uploadedFile, 0, uploadedFile.Length);
+
+				attachment.Data = uploadedFile;
+				attachment.Size = (int)fileToUpload.Length;
+
+				await _callsService.SaveCallAttachmentAsync(attachment, cancellationToken);
+			}
+
+			return RedirectToAction("CallData", new { callId = model.CallId });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallFile(int callAttachmentId)
+		{
+			var attachment = await _callsService.GetCallAttachmentAsync(callAttachmentId);
+
+			if (attachment.Call.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			// ADP: an enveloped payload/name is ciphertext — the MVC surface has no per-download
+			// grant flow yet, so a protected file is simply not served here.
+			if ((attachment.Data != null && Resgrid.Services.ProtectedReadService.IsBinaryEnveloped(attachment.Data)) ||
+				ProtectedDataEnvelope.HasEnvelopePrefix(attachment.FileName))
+				return NotFound();
+
+			return new FileContentResult(attachment.Data, FileHelper.GetContentTypeByExtension(Path.GetExtension(attachment.FileName)))
+			{
+				FileDownloadName = attachment.FileName
+			};
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCoordinatesFromW3W(string words)
+		{
+			var result = await _geoLocationProvider.GetCoordinatesFromW3W(words) ?? new Coordinates();
+
+			return Json(result);
+		}
+
+		public async Task<IActionResult> GetTopActiveCalls()
+		{
+			var model = new TopActiveCallsView();
+			model.Calls = await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId, await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId));
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			return PartialView("_ActiveTopCallsPartial", model);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetCallImage(int callId, int attachmentId, string token)
+		{
+			var callAttachment = await _callsService.GetCallAttachmentAsync(attachmentId);
+
+			if (callAttachment == null || callAttachment.CallId != callId || callAttachment.Call == null ||
+				callAttachment.IsDeleted || callAttachment.Data == null)
+				return NotFound();
+
+			// Authorized when the caller is an authenticated member of the call's department,
+			// or when presenting a valid per-image capability token (used by anonymous CallExportEx pages).
+			var isAuthorized = false;
+
+			if (User?.Identity != null && User.Identity.IsAuthenticated && callAttachment.Call.DepartmentId == DepartmentId)
+				isAuthorized = true;
+			else if (IsValidCallImageToken(callId, attachmentId, token))
+				isAuthorized = true;
+
+			if (!isAuthorized)
+				return Unauthorized();
+
+			// ADP: never serve an enveloped (ciphertext) image payload.
+			if (Resgrid.Services.ProtectedReadService.IsBinaryEnveloped(callAttachment.Data))
+				return NotFound();
+
+			return File(callAttachment.Data, "image/jpeg");
+		}
+
+		private ChatModerationContext BuildModerationContext(string actorRole)
+		{
+			return new ChatModerationContext
+			{
+				IpAddress = HttpContext?.Connection?.RemoteIpAddress?.ToString(),
+				UserAgent = Request?.Headers["User-Agent"].ToString(),
+				TraceId = HttpContext?.TraceIdentifier,
+				ActorRole = actorRole
+			};
+		}
+
+		private static bool IsValidCallImageToken(int callId, int attachmentId, string token)
+		{
+			if (String.IsNullOrWhiteSpace(token))
+				return false;
+
+			try
+			{
+				var decoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token)).Trim();
+				var decrypted = SymmetricEncryption.Decrypt(decoded, Config.SystemBehaviorConfig.ExternalLinkUrlParamPassphrase);
+				var parts = decrypted.Split('|');
+
+				if (parts.Length != 3)
+					return false;
+
+				if (!Int32.TryParse(parts[0], out var tokenCallId) || tokenCallId != callId)
+					return false;
+
+				if (!Int32.TryParse(parts[1], out var tokenAttachmentId) || tokenAttachmentId != attachmentId)
+					return false;
+
+				if (!Int64.TryParse(parts[2], out var expiryEpoch) || expiryEpoch < DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+					return false;
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallTypes()
+		{
+			List<CallTypeJson> callTypesJson = new List<CallTypeJson>();
+
+			var types = await _callsService.GetCallTypesForDepartmentAsync(DepartmentId);
+
+			if (types != null && types.Any())
+			{
+				foreach (var type in types)
+				{
+					CallTypeJson json = new CallTypeJson();
+					json.Id = type.CallTypeId;
+					json.Name = type.Type;
+
+					callTypesJson.Add(json);
+				}
+			}
+
+			return Json(callTypesJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetAlertNotesForContact(string contactId)
+		{
+			List<ContactNoteJson> contactNotesJson = new List<ContactNoteJson>();
+
+			// Security > View Contacts: without it the call forms show no contact alerts (the pickers are empty too).
+			if (!ClaimsAuthorizationHelper.CanViewContacts())
+				return Json(contactNotesJson);
+
+			var contact = await _contactsService.GetContactByIdAsync(contactId);
+
+			if (contact != null && contact.DepartmentId == DepartmentId)
+			{
+				var notes = await _contactsService.GetContactNotesByContactIdAsync(contactId, DepartmentId, false);
+				var types = await _contactsService.GetContactNoteTypesByDepartmentIdAsync(DepartmentId);
+				var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+				if (notes != null && notes.Any())
+				{
+					foreach (var note in notes)
+					{
+						if (note.ShouldAlert)
+						{
+							ContactNoteJson json = new ContactNoteJson();
+							json.Id = note.ContactNoteTypeId;
+							json.ContactId = contactId;
+							json.Note = StringHelpers.SanitizeHtmlForDisplay(ProtectedDataEnvelope.SafeDisplay(note.Note));
+							json.ShouldAlert = note.ShouldAlert;
+							json.AddedOn = note.AddedOn.FormatForDepartment(department, true);
+							json.AddedBy = await UserHelper.GetFullNameForUser(note.AddedByUserId);
+
+							if (!string.IsNullOrWhiteSpace(note.ContactNoteTypeId))
+							{
+								var type = types.FirstOrDefault(x => x.ContactNoteTypeId == note.ContactNoteTypeId);
+								if (type != null)
+								{
+									json.TypeName = type.Name;
+									json.TypeColor = type.Color;
+								}
+							}
+
+							contactNotesJson.Add(json);
+						}
+					}
+				}
+
+				// Contacts plan Phase A: ShouldAlert premise hazards ride the same alert modal as alert notes.
+				// ADP catalog v12: no grant server-side, so enveloped text reads as REDACTED.
+				var hazards = await _contactsService.GetHazardsByContactIdAsync(contactId, DepartmentId);
+				await _protectedReadService.ResolveContactPreplanHazardsForReadAsync(DepartmentId, hazards, null, UserId);
+				foreach (var hazard in hazards.Where(x => x.ShouldAlert))
+				{
+					ContactNoteJson json = new ContactNoteJson();
+					json.Id = hazard.ContactPreplanHazardId;
+					json.ContactId = contactId;
+					json.Note = string.IsNullOrWhiteSpace(hazard.Description) ? hazard.Title : $"{hazard.Title}: {hazard.Description}";
+					if (!string.IsNullOrWhiteSpace(hazard.LocationDescription))
+						json.Note += $" ({hazard.LocationDescription})";
+					json.ShouldAlert = true;
+					json.AddedOn = hazard.AddedOn.FormatForDepartment(department, true);
+					json.AddedBy = string.IsNullOrWhiteSpace(hazard.AddedByUserId) ? "" : await UserHelper.GetFullNameForUser(hazard.AddedByUserId);
+					json.TypeName = $"{_dispatchLocalizer["PremiseHazard"].Value} - {(ContactPreplanHazardSeverities)hazard.Severity}";
+					json.TypeColor = ContactsController.HazardSeverityColor(hazard.Severity);
+					contactNotesJson.Add(json);
+				}
+			}
+
+			return Json(contactNotesJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallPriorities()
+		{
+			List<CallPriorityJson> callPrioritiesJson = new List<CallPriorityJson>();
+
+			var priorities = await _callsService.GetActiveCallPrioritiesForDepartmentAsync(DepartmentId);
+
+			if (priorities != null && priorities.Any())
+			{
+				foreach (var priority in priorities)
+				{
+					CallPriorityJson json = new CallPriorityJson();
+					json.Id = priority.DepartmentCallPriorityId;
+					json.Name = priority.Name;
+
+					callPrioritiesJson.Add(json);
+				}
+			}
+
+			return Json(callPrioritiesJson);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCallsForSelectList(string term)
+		{
+			CallSelectListJson callSelectJson = new CallSelectListJson();
+			callSelectJson.results = new List<CallSelectListJsonResult>();
+
+			var calls = await _callsService.GetAllCallsByDepartmentDateRangeAsync(DepartmentId, DateTime.UtcNow.AddDays(-14), DateTime.UtcNow);
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			calls = calls.OrderByDescending(x => x.LoggedOn).ToList();
+
+			if (calls != null && calls.Any())
+			{
+				foreach (var call in calls)
+				{
+					CallSelectListJsonResult json = new CallSelectListJsonResult();
+					json.id = call.CallId;
+					json.text = $"{call.Number} - {DispatchDisplayHelper.GetLocalizedCallState(call.State, _dispatchLocalizer, _commonLocalizer)} - {call.LoggedOn.FormatForDepartment(department)} - {call.Name}";
+
+					if (String.IsNullOrWhiteSpace(term) || json.text.Contains(term))
+						callSelectJson.results.Add(json);
+				}
+			}
+
+			return Json(callSelectJson);
+		}
+
+		#region Private Helpers
+		/// <summary>Security &gt; View Units: the units the member may see, the same filter the units list and v4 dispatch data apply.</summary>
+		private async Task<List<Unit>> GetViewableUnitsAsync(List<Unit> units)
+		{
+			var viewable = new List<Unit>();
+
+			foreach (var unit in units ?? new List<Unit>())
+			{
+				if (await _authorizationService.CanUserViewUnitViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+					viewable.Add(unit);
+			}
+
+			return viewable;
+		}
+
+		private static List<UnitState> FilterToUnits(List<UnitState> states, List<Unit> units)
+		{
+			if (states == null)
+				return null;
+
+			var unitIds = new HashSet<int>(units.Select(x => x.UnitId));
+			return states.Where(x => unitIds.Contains(x.UnitId)).ToList();
+		}
+
+		private async Task<NewCallView> FillNewCallView(NewCallView model)
+		{
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+			model.CenterCoordinates = await _departmentSettingsService.GetMapCenterCoordinatesAsync(model.Department);
+			model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(model.Department.DepartmentId);
+			model.Units = await GetViewableUnitsAsync(await _unitsService.GetUnitsForDepartmentAsync(model.Department.DepartmentId));
+			model.UnitStatuses = await _customStateService.GetAllActiveUnitStatesForDepartmentAsync(model.Department.DepartmentId);
+
+			var priorites = await _callsService.GetActiveCallPrioritiesForDepartmentAsync(model.Department.DepartmentId);
+			//model.CallPriorities = model.CallPriority.ToSelectList();
+			model.CallPriorities = new SelectList(priorites, "DepartmentCallPriorityId", "Name", priorites.FirstOrDefault(x => x.IsDefault));
+			model.UnGroupedUsers = new List<IdentityUser>();
+
+			List<CallType> types = new List<CallType>();
+			types.Add(new CallType { CallTypeId = 0, Type = _dispatchLocalizer["NoType"].Value });
+			types.AddRange(await _callsService.GetCallTypesForDepartmentAsync(DepartmentId));
+			model.CallTypes = new SelectList(types, "Type", "Type");
+
+			var templates = await _templatesService.GetAllCallQuickTemplatesForDepartmentAsync(DepartmentId);
+			if (templates != null)
+				model.CallTemplates = new SelectList(templates, "CallQuickTemplateId", "Name");
+
+			var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(model.Department.DepartmentId);
+
+			List<string> groupedUserIds = new List<string>();
+
+			foreach (var dg in model.Groups)
+			{
+				foreach (var u in dg.Members)
+				{
+					groupedUserIds.Add(u.UserId);
+				}
+			}
+
+			var ungroupedUsers = from u in allUsers
+								 where !(groupedUserIds.Contains(u.UserId))
+								 select u;
+
+			foreach (var u in ungroupedUsers)
+			{
+				model.UnGroupedUsers.Add(allUsers.Where(x => x.UserId == u.UserId).FirstOrDefault());
+			}
+
+			model.Call.ReportingUserId = UserId;
+
+			// Forms module is disabled: leaving NewCallFormData empty drops the call form button,
+			// its modal and the formRender call from the new/archived call views. Form data already
+			// on existing calls is untouched and still renders read-only on the call detail view.
+
+			// Security > View Contacts: without it the contact pickers are left empty.
+			model.Contacts = ClaimsAuthorizationHelper.CanViewContacts()
+				? await _contactsService.GetAllContactsForDepartmentAsync(DepartmentId)
+				: new List<Contact>();
+			if (model.Contacts != null && model.Contacts.Any())
+			{
+				SelectListItem selListItem = new SelectListItem() { Value = "", Text = _dispatchLocalizer["SelectContact"].Value };
+				List<SelectListItem> newList = new List<SelectListItem>();
+				newList.Add(selListItem);
+				newList.AddRange(new SelectList(model.Contacts, "ContactId", "Name"));
+
+				//Return the list of selectlistitems as a selectlist
+				model.ContactsList = new SelectList(newList, "Value", "Text", null);
+
+				//model.ContactsList = new SelectList(model.Contacts, "ContactId", "Name");
+			}
+
+			model.DestinationPois = await GetDestinationPoiSelectListAsync(model.Call?.DestinationPoiId);
+
+			// The same policy ApplyNewCallFieldPolicyAsync enforces on post: hidden fields are not rendered, required
+			// ones are marked.
+			model.FieldPolicy = await _departmentSettingsService.GetNewCallFieldPolicyAsync(DepartmentId) ?? new NewCallFieldPolicy();
+
+			var udfDefinition = await _userDefinedFieldsService.GetActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Call);
+			if (udfDefinition != null)
+			{
+				bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+				bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+				var udfFields = await _userDefinedFieldsService.GetVisibleFieldsForActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Call, isDeptAdmin, isGroupAdmin);
+				model.UdfFormHtml = _udfRenderingService.GenerateHtmlFormFields(udfDefinition, udfFields, new List<UdfFieldValue>());
+			}
+
+			return model;
+		}
+
+		private async Task<UpdateCallView> FillUpdateCallView(UpdateCallView model)
+		{
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+			model.CenterCoordinates = await _departmentSettingsService.GetMapCenterCoordinatesAsync(model.Department);
+			model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(model.Department.DepartmentId);
+			model.Units = await GetViewableUnitsAsync(await _unitsService.GetUnitsForDepartmentAsync(model.Department.DepartmentId));
+			model.UnitStates = FilterToUnits(await _unitsService.GetAllLatestStatusForUnitsByDepartmentIdAsync(model.Department.DepartmentId), model.Units);
+
+			var priorites = await _callsService.GetActiveCallPrioritiesForDepartmentAsync(model.Department.DepartmentId);
+			model.CallPriorities = new SelectList(priorites, "DepartmentCallPriorityId", "Name", priorites.FirstOrDefault(x => x.IsDefault));
+			model.UnGroupedUsers = new List<IdentityUser>();
+
+			List<CallType> types = new List<CallType>();
+			types.Add(new CallType { CallTypeId = 0, Type = _dispatchLocalizer["NoType"].Value });
+			types.AddRange(await _callsService.GetCallTypesForDepartmentAsync(DepartmentId));
+			model.CallTypes = new SelectList(types, "Type", "Type");
+
+			var templates = await _templatesService.GetAllCallQuickTemplatesForDepartmentAsync(DepartmentId);
+			if (templates != null)
+				model.CallTemplates = new SelectList(templates, "CallQuickTemplateId", "Name");
+
+			// Forms module is disabled, see FillNewCallView. UpdateCall never copies CallFormData
+			// from the posted model onto the stored call, so existing form data survives an edit.
+
+			var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(model.Department.DepartmentId);
+
+			List<string> groupedUserIds = new List<string>();
+
+			foreach (var dg in model.Groups)
+			{
+				foreach (var u in dg.Members)
+				{
+					groupedUserIds.Add(u.UserId);
+				}
+			}
+
+			var ungroupedUsers = from u in allUsers
+								 where !(groupedUserIds.Contains(u.UserId))
+								 select u;
+
+			foreach (var u in ungroupedUsers)
+			{
+				model.UnGroupedUsers.Add(allUsers.Where(x => x.UserId == u.UserId).FirstOrDefault());
+			}
+
+			// Security > View Contacts: without it the contact pickers are left empty (and UpdateCall keeps the call's contacts).
+			model.Contacts = ClaimsAuthorizationHelper.CanViewContacts()
+				? await _contactsService.GetAllContactsForDepartmentAsync(DepartmentId)
+				: new List<Contact>();
+			if (model.Contacts != null && model.Contacts.Any())
+			{
+				SelectListItem selListItem = new SelectListItem() { Value = "", Text = _dispatchLocalizer["SelectContact"].Value };
+				List<SelectListItem> newList = new List<SelectListItem>();
+				newList.Add(selListItem);
+				newList.AddRange(new SelectList(model.Contacts, "ContactId", "Name"));
+
+				model.ContactsList = new SelectList(newList, "Value", "Text", null);
+				model.AdditionalContacts = new List<string>();
+
+				if (model.Call.Contacts != null && model.Call.Contacts.Any())
+				{
+					var primaryContact = model.Call.Contacts.FirstOrDefault(x => x.CallContactType == 0);
+
+					if (primaryContact != null)
+					{
+						model.PrimaryContact = primaryContact.ContactId;
+					}
+
+					var additionalContacts = model.Call.Contacts.Where(x => x.CallContactType == 1);
+
+					if (additionalContacts != null && additionalContacts.Any())
+					{
+						foreach (var contact in additionalContacts)
+						{
+							model.AdditionalContacts.Add(contact.ContactId);
+						}
+					}
+				}
+			}
+
+			model.DestinationPois = await GetDestinationPoiSelectListAsync(model.Call?.DestinationPoiId);
+			model.FieldPolicy = await _departmentSettingsService.GetNewCallFieldPolicyAsync(DepartmentId) ?? new NewCallFieldPolicy();
+
+			// The edit form used to open with an empty indoor location and post that back, clearing the zone on every save.
+			if (!string.IsNullOrWhiteSpace(model.Call?.IndoorMapZoneId))
+				model.IndoorMapZoneName = (await _indoorMapService.GetZoneByIdAsync(model.Call.IndoorMapZoneId))?.Name;
+
+			if (model.Call != null && model.Call.CallId > 0)
+			{
+				var udfDefinition = await _userDefinedFieldsService.GetActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Call);
+				if (udfDefinition != null)
+				{
+					bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+					bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+					var udfFields = await _userDefinedFieldsService.GetVisibleFieldsForActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Call, isDeptAdmin, isGroupAdmin);
+					var udfValues = await _userDefinedFieldsService.GetFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Call, model.Call.CallId.ToString());
+					var visibleFieldIds = udfFields.Select(f => f.UdfFieldId).ToHashSet();
+					var filteredValues = (udfValues ?? new List<UdfFieldValue>()).Where(v => visibleFieldIds.Contains(v.UdfFieldId)).ToList();
+					model.UdfFormHtml = _udfRenderingService.GenerateHtmlFormFields(udfDefinition, udfFields, filteredValues);
+				}
+			}
+
+			model.RunCardsEnabled = await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, model.Department.DepartmentId);
+
+			return model;
+		}
+
+		private async Task<ViewCallView> FillViewCallView(ViewCallView model)
+		{
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+
+			model.Groups = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(model.Department.DepartmentId);
+			model.CallPriorities = model.CallPriority.ToSelectList();
+
+			// The Incident Report control posts to IncidentReports/Start, which 404s when Records is not usable for
+			// the department; the button has to know that as well as whether the member may create a record.
+			model.RecordsUsable = (await _recordsCutoverService.GetModuleStateAsync(model.Department.DepartmentId)).RecordsUsable;
+			model.ProtectionEnforced = model.RecordsUsable && await _recordsProtection.IsEnforcedAsync(model.Department.DepartmentId);
+			model.UnGroupedUsers = new List<IdentityUser>();
+
+			model.UnitStates = (await _unitsService.GetUnitStatesForCallAsync(model.Call.DepartmentId, model.Call.CallId)).OrderBy(y => y.Timestamp).ToList();
+			model.ActionLogs = (await _actionLogsService.GetActionLogsForCallAsync(model.Call.DepartmentId, model.Call.CallId)).OrderBy(y => y.Timestamp).ToList();
+
+			// The call-scoped state query joins the unit but not its station, which the Units tab's Group column reads.
+			foreach (var unitState in model.UnitStates.Where(x => x.Unit != null && x.Unit.StationGroup == null && x.Unit.StationGroupId.HasValue))
+				unitState.Unit.StationGroup = model.Groups?.FirstOrDefault(g => g.DepartmentGroupId == unitState.Unit.StationGroupId.Value);
+
+			model.UserGroupRoles = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(model.Call.DepartmentId, true, true, true);
+
+			var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(model.Department.DepartmentId);
+
+			List<string> groupedUserIds = new List<string>();
+
+			foreach (var dg in model.Groups)
+			{
+				foreach (var u in dg.Members)
+				{
+					groupedUserIds.Add(u.UserId);
+				}
+			}
+
+			var ungroupedUsers = from u in allUsers
+								 where !(groupedUserIds.Contains(u.UserId))
+								 select u;
+
+			foreach (var u in ungroupedUsers)
+			{
+				model.UnGroupedUsers.Add(allUsers.Where(x => x.UserId == u.UserId).FirstOrDefault());
+			}
+
+
+			// The call's units as dispatched, deleted ones included (the view lists only dispatched units).
+			var units = await _unitsService.GetUnitsForDepartmentIncludingDeletedAsync(model.Call.DepartmentId);
+
+			if (units != null)
+				model.Units = units;
+			else
+				model.Units = new List<Unit>();
+
+			model.UnitTypes = await _unitsService.GetUnitTypesForDepartmentAsync(model.Call.DepartmentId) ?? new List<UnitType>();
+
+			// Security > View Contacts: without it the call's Contacts tab lists none.
+			var contacts = ClaimsAuthorizationHelper.CanViewContacts()
+				? await _contactsService.GetAllContactsForDepartmentAsync(model.Call.DepartmentId)
+				: null;
+
+			if (contacts != null)
+				model.Contacts = contacts;
+			else
+				model.Contacts = new List<Contact>();
+
+			var destinationPoi = await GetValidatedDestinationPoiAsync(model.Call?.DestinationPoiId);
+			var destinationInfo = BuildDestinationInfo(destinationPoi);
+			model.DestinationName = destinationInfo.Name;
+			model.DestinationAddress = destinationInfo.Address;
+			model.DestinationTypeName = destinationInfo.TypeName;
+
+			var udfDefinition = await _userDefinedFieldsService.GetActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Call);
+			if (udfDefinition != null)
+			{
+				bool isDeptAdmin = ClaimsAuthorizationHelper.IsUserDepartmentAdmin();
+				bool isGroupAdmin = await _departmentGroupsService.IsUserAGroupAdminAsync(UserId, DepartmentId);
+				var udfFields = await _userDefinedFieldsService.GetVisibleFieldsForActiveDefinitionAsync(DepartmentId, (int)UdfEntityType.Call, isDeptAdmin, isGroupAdmin);
+				var udfValues = await _userDefinedFieldsService.GetFieldValuesForEntityAsync(DepartmentId, (int)UdfEntityType.Call, model.Call.CallId.ToString());
+				var visibleFieldIds = udfFields.Select(f => f.UdfFieldId).ToHashSet();
+				var filteredValues = (udfValues ?? new List<UdfFieldValue>()).Where(v => visibleFieldIds.Contains(v.UdfFieldId)).ToList();
+				model.UdfReadOnlyHtml = _udfRenderingService.GenerateReadOnlyHtml(udfDefinition, udfFields, filteredValues);
+			}
+
+			return model;
+		}
+
+		private async Task<List<SelectListItem>> GetDestinationPoiSelectListAsync(int? selectedPoiId)
+		{
+			var selectListItems = new List<SelectListItem>
+			{
+				new SelectListItem
+				{
+					Value = "",
+					Text = _dispatchLocalizer["NoDestination"].Value
+				}
+			};
+
+			var destinationPois = await _mappingService.GetDestinationPOIsForDepartmentAsync(DepartmentId);
+
+			if (destinationPois == null || !destinationPois.Any())
+				return selectListItems;
+
+			var groups = new Dictionary<string, SelectListGroup>(StringComparer.OrdinalIgnoreCase);
+
+			foreach (var poi in destinationPois.OrderBy(x => x.Type?.Name).ThenBy(x => x.Name).ThenBy(x => x.Address).ThenBy(x => x.Note))
+			{
+				var groupName = !String.IsNullOrWhiteSpace(poi.Type?.Name) ? poi.Type.Name : _dispatchLocalizer["Pois"].Value;
+
+				if (!groups.ContainsKey(groupName))
+					groups[groupName] = new SelectListGroup { Name = groupName };
+
+				var title = PoiDisplayHelper.GetSelectionLabel(poi, groupName);
+
+				selectListItems.Add(new SelectListItem
+				{
+					Value = poi.PoiId.ToString(),
+					Text = title,
+					Selected = selectedPoiId.HasValue && selectedPoiId.Value == poi.PoiId,
+					Group = groups[groupName]
+				});
+			}
+
+			return selectListItems;
+		}
+
+		private async Task<Poi> GetValidatedDestinationPoiAsync(int? destinationPoiId)
+		{
+			if (!destinationPoiId.HasValue || destinationPoiId.Value <= 0)
+				return null;
+
+			return await _mappingService.GetDestinationPOIByIdAsync(DepartmentId, destinationPoiId.Value);
+		}
+
+		private static (string Name, string Address, string TypeName) BuildDestinationInfo(Poi destinationPoi)
+		{
+			if (destinationPoi == null)
+				return (null, null, null);
+
+			return (PoiDisplayHelper.GetDisplayName(destinationPoi, destinationPoi.Type?.Name), destinationPoi.Address, PoiDisplayHelper.GetTypeName(destinationPoi));
+		}
+
+		private async Task<CloseCallView> FillCloseCallView(CloseCallView model)
+		{
+			model.Department = await _departmentsService.GetDepartmentByUserIdAsync(UserId);
+			model.User = _usersService.GetUserById(UserId);
+
+			model.CallStates = model.CallState.ToSelectList();
+
+			return model;
+		}
+		#endregion Private Helpers
+	}
+}

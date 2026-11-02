@@ -1,0 +1,38 @@
+{
+  "database": "resgrid_academy",
+  "department_id": 51,
+  "work_order_id": "e6158298-a817-4d92-b075-a7d7ed331b5e",
+  "title": "TRAINING ONLY — Assigned software practice",
+  "number_year": 2099,
+  "number_sequence": 1,
+  "current_status": 2,
+  "assignment_accepted_on": null,
+  "unit_targeted": false,
+  "set_unit_out_of_service": false,
+  "delivery": "Fixture assignment only; no provider or physical maintenance operation",
+  "prepared_at": "2026-10-26T18:38:53.267956+00:00",
+  "seed_script": "scenarios/responder_assigned_work_order.py",
+  "seed_script_sha256": "6999f0e19434a982ba55ad4e0945a5c562ea61a236545d9029b6a2ca460594f6",
+  "sql_sha256": "c1af6cd5c6a3c4d9f0a75c7fa72793a89d97bdfa692a0b724c09d061a1274101",
+  "source_contract": [
+    "Core/Resgrid.Model/WorkOrders/WorkOrderModels.cs",
+    "Core/Resgrid.Services/WorkOrdersService.cs"
+  ],
+  "ui_actions": [
+    {
+      "action": "Viewed assigned fixture and actual Accept assignment; Steps read-only",
+      "capture_id": "190-assigned-order-before-acceptance",
+      "captured_at": "2026-10-26T19:40:48.755Z",
+      "screenshot_sha256": "bc245d0ed60a4599938151645a9440ae16d83dd565a60595cd35c3acf599e2f6",
+      "url": "http://localhost:19102/work-orders/e6158298-a817-4d92-b075-a7d7ed331b5e"
+    },
+    {
+      "action": "Actual normal-UI assignment acceptance and In progress transition persisted in Activity; no completion/physical work",
+      "capture_id": "193-assigned-order-accepted-activity",
+      "captured_at": "2026-10-26T19:43:42.993Z",
+      "screenshot_sha256": "0af5b22531e529086342514fc31295034e656e1355fecf534ea46d4851f4cd12",
+      "url": "http://localhost:19102/work-orders/e6158298-a817-4d92-b075-a7d7ed331b5e"
+    }
+  ],
+  "last_actual_ui_update": "2026-10-26T19:48:13.167857+00:00"
+}

@@ -1,0 +1,739 @@
+{
+  "schema_version": 1,
+  "id": "core-customer-billing-review",
+  "status": "source-reviewed_only_not_frozen_or_video_qualified",
+  "raw_manifests": [
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/manifest.json",
+      "sha256": "536b818fd75257956d00b63f8b22c91c0601dcbe3a527a20a73c73ef83d591a4"
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/manifest.json",
+      "sha256": "b00967b2fc09932ff58bf3414a9b6210af3985350e1fe013308b1e1e21352bf0"
+    }
+  ],
+  "screenshots": [
+    {
+      "id": "001-invoicing-catalog-no-invoices",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.jpg",
+      "sha256": "e63175e351e0e3aa3e56ff6394352ff7a0a4cb61f62ce675639ac9bac76a1309",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Index",
+        "captured_at": "2026-10-29T05:28:53.004Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.dom.txt",
+      "dom_sha256": "ff65c2550a6781736ab700e72a99dde46dc485104384d149925aa4605f4a73bb",
+      "visible_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices.",
+        "Number",
+        "Status",
+        "Filter"
+      ],
+      "required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices.",
+        "Number",
+        "Status",
+        "Filter"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual empty fictional customer-invoice list. Zero invoices/balances do not prove a payment or settlement. New invoice is visible but unused; no draft or number consumed."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "e63175e351e0e3aa3e56ff6394352ff7a0a4cb61f62ce675639ac9bac76a1309",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "002-billing-identity-empty-defaults",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.jpg",
+      "sha256": "0524296ecca3b1d17ada2ad2591d121410ead5f4cafc5fda8990b84d5d4d81e1",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Settings",
+        "captured_at": "2026-10-29T05:29:01.732Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.dom.txt",
+      "dom_sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "visible_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address",
+        "Address",
+        "City",
+        "State / province",
+        "Postal code",
+        "Country"
+      ],
+      "required_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address",
+        "Address",
+        "City",
+        "State / province",
+        "Postal code",
+        "Country"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Identity form fields are blank. GET may construct unsaved defaults; this is not saved billing-identity proof. Only Billing identity tab is offered; no provider configuration/result is shown."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "0524296ecca3b1d17ada2ad2591d121410ead5f4cafc5fda8990b84d5d4d81e1",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "003-billing-registrations-readonly",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.jpg",
+      "sha256": "58fd7123de6ec2f2677eab5a0671708747ca3fef074caba93c8cd195eb8082c0",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Settings",
+        "captured_at": "2026-10-29T05:29:12.243Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.dom.txt",
+      "dom_sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "visible_labels": [
+        "Registrations",
+        "Tax registration number",
+        "Secondary tax registration",
+        "SAM UEI",
+        "CAGE code",
+        "Workers' comp account",
+        "Invoice footer"
+      ],
+      "required_labels": [
+        "Registrations",
+        "Tax registration number",
+        "Secondary tax registration",
+        "SAM UEI",
+        "CAGE code",
+        "Workers' comp account",
+        "Invoice footer"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "All registration fields pictured are empty. Do not infer registrations or legal/tax coverage. Invoice footer field is blank."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "58fd7123de6ec2f2677eab5a0671708747ca3fef074caba93c8cd195eb8082c0",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "004-footer-pay-link-display-preferences",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.jpg",
+      "sha256": "8f9d0b7d2a9ca4e9c0ed77f29920591f5f95ab203daa5cc53974cf94da2dea7a",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Settings#WorkersCompAccountNumber",
+        "captured_at": "2026-10-29T05:29:12.453Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.dom.txt",
+      "dom_sha256": "8fe91e124329fcf7688a6621c46aec917deecbebc5f3910021099237cfd2964f",
+      "visible_labels": [
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices",
+        "Save"
+      ],
+      "required_labels": [
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices",
+        "Save"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual displayed link-expiry30 and checked display preference are form values, not successful link generation, payment connection, invoice document or provider collection. Save untouched."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "8f9d0b7d2a9ca4e9c0ed77f29920591f5f95ab203daa5cc53974cf94da2dea7a",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "005-rate-card-catalog-empty",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.jpg",
+      "sha256": "0734f513705f2d4a268e8b454e71f8b3df6eccba9d72a76ea994afaf5d54d742",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/RateCards",
+        "captured_at": "2026-10-29T05:29:26.344Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.dom.txt",
+      "dom_sha256": "830812e7fed17327acb0418beb00c882391c0b0c8a9bebff414e82eda5f40367",
+      "visible_labels": [
+        "Rate Cards",
+        "New rate card",
+        "No rate cards yet."
+      ],
+      "required_labels": [
+        "Rate Cards",
+        "New rate card",
+        "No rate cards yet."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual catalog is empty. Help describes department default versus customer-pinned card; no card/rate saved."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "0734f513705f2d4a268e8b454e71f8b3df6eccba9d72a76ea994afaf5d54d742",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "006-new-rate-card-unsaved-preview",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.jpg",
+      "sha256": "d5db3f12c9a138d327fe96de2c5f5d0edc3a29f25617ec7bbeb22ab92e8f6081",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/EditRateCard",
+        "captured_at": "2026-10-29T05:29:48.783Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.dom.txt",
+      "dom_sha256": "4f41b71b2f4fd09b0c0731ad7adeb776f0bf490f19e9c7ee04063097fcc82104",
+      "visible_labels": [
+        "New rate card",
+        "Name",
+        "Description",
+        "Department default (used when a customer has no pinned rate card)",
+        "Active",
+        "Save the rate card before adding items.",
+        "Cancel",
+        "Save"
+      ],
+      "required_labels": [
+        "New rate card",
+        "Name",
+        "Description",
+        "Department default (used when a customer has no pinned rate card)",
+        "Active",
+        "Save the rate card before adding items.",
+        "Cancel",
+        "Save"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "New unsaved card form; blank Name/Description, department default unchecked, Active checked. Rate card items panel says save first. Cancel/Save controls are pictured; neither any Save nor rate item operation is claimed."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "d5db3f12c9a138d327fe96de2c5f5d0edc3a29f25617ec7bbeb22ab92e8f6081",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "007-aging-no-outstanding-invoices",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.jpg",
+      "sha256": "5f128a5e8fc7a530e488458921f87ec2bf51dccbd58581c715bbc1e7c0c667e8",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/Aging",
+        "captured_at": "2026-10-29T05:30:00.391Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.dom.txt",
+      "dom_sha256": "73de2f599f4d72b3b3470a050fdbb4ecd479eb5b7ee4c02da322c5b7fee5b725",
+      "visible_labels": [
+        "Accounts receivable aging",
+        "Aging",
+        "Current",
+        "1-30 days past due",
+        "31-60 days past due",
+        "61-90 days past due",
+        "90+ days past due",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "required_labels": [
+        "Accounts receivable aging",
+        "Aging",
+        "Current",
+        "1-30 days past due",
+        "31-60 days past due",
+        "61-90 days past due",
+        "90+ days past due",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "All actual aging buckets zero, with an As of timestamp. Empty No outstanding invoices is not proof customers paid or a collection was performed. Populated per-currency detail is not demonstrated."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "5f128a5e8fc7a530e488458921f87ec2bf51dccbd58581c715bbc1e7c0c667e8",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "008-existing-fictional-customer-contact",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.jpg",
+      "sha256": "8f0fc2595968ba7639a64f2c465dcf826bca3e9069fe8a96a2e602af0db35d84",
+      "width": 1280,
+      "height": 720,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Contacts",
+        "captured_at": "2026-10-29T05:30:08.044Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.dom.txt",
+      "dom_sha256": "973b2f31541ff4a13d4401682da7b7007289b09eb7fc3c1ff56cda09dd9037ab",
+      "visible_labels": [
+        "Contacts",
+        "Academy Logistics Desk (fictional)",
+        "View",
+        "Location\\Company"
+      ],
+      "required_labels": [
+        "Contacts",
+        "Academy Logistics Desk (fictional)",
+        "View",
+        "Location\\Company"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Existing company contact and its View control visible; no new contact or directory edit in this lesson. Company row is bottom of viewport but full name/View are readable."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "8f0fc2595968ba7639a64f2c465dcf826bca3e9069fe8a96a2e602af0db35d84",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "009-customer-billing-no-profile",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.jpg",
+      "sha256": "7ba626e40159935056765928764d386be7a8959d12796327242b1aa1000587f2",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Contacts/View?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8",
+        "captured_at": "2026-10-29T05:42:36.983Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.dom.txt",
+      "dom_sha256": "5edde24b110ffb112ae7bcc841f9555ad9680832b333645da43bf8b741dfebac",
+      "visible_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Billing",
+        "Billing profile",
+        "No billing profile yet. Save one to start invoicing this contact.",
+        "Set up billing profile",
+        "Invoices",
+        "No invoices."
+      ],
+      "required_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Billing",
+        "Billing profile",
+        "No billing profile yet. Save one to start invoicing this contact.",
+        "Set up billing profile",
+        "Invoices",
+        "No invoices."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Settled contact Billing section states no profile yet and no invoices. Directory category is numeric; do not narrate it as the named category. Fictional display email is not a billing-address readback; no email value is used by the candidate."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "7ba626e40159935056765928764d386be7a8959d12796327242b1aa1000587f2",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "010-unsaved-customer-terms-discount-rate-defaults",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.jpg",
+      "sha256": "7e6b921cb756277bd57fa1bbdf89a96a75f18c4df3aadc6f1d32d9d4a8e2f9db",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8#TermsNetDays",
+        "captured_at": "2026-10-29T05:43:51.569Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.dom.txt",
+      "dom_sha256": "a284dd6b0eaf62e1df62c95f4697ec15fb9e69c5378b36aac5518ddbde976d0b",
+      "visible_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Default rate schedule",
+        "Use the department default",
+        "Purchase order number required on invoices",
+        "Active (new invoices may be created)",
+        "Use the contact's mailing address"
+      ],
+      "required_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Default rate schedule",
+        "Use the department default",
+        "Purchase order number required on invoices",
+        "Active (new invoices may be created)",
+        "Use the contact's mailing address"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Unsaved customer-profile defaults, not stored profile proof. Terms30 and blank discount; default card and schedule; PO unchecked; Active checked. Top Terms input reaches viewport boundary; only reading labels/value is taught, no fill interaction. BillingEmail input stays outside the viewport; its value is not inspected or retained in reviewed metadata."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "7e6b921cb756277bd57fa1bbdf89a96a75f18c4df3aadc6f1d32d9d4a8e2f9db",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "011-unsaved-address-tax-components-save-controls",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.jpg",
+      "sha256": "1f22ccb635dbd1cb69d08ad4f72d6d4ff69e1bd25185e5a5d1f6de7963afa314",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8#Notes",
+        "captured_at": "2026-10-29T05:43:51.778Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.dom.txt",
+      "dom_sha256": "0ba758149921b442a95d5ad5b49e0250c6b3a0abfc4165fabb8e5d8892839441",
+      "visible_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax",
+        "Tax exempt",
+        "Tax rate %",
+        "Tax components",
+        "Name",
+        "Rate %",
+        "Registration number",
+        "Notes",
+        "Cancel",
+        "Save"
+      ],
+      "required_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax",
+        "Tax exempt",
+        "Tax rate %",
+        "Tax components",
+        "Name",
+        "Rate %",
+        "Registration number",
+        "Notes",
+        "Cancel",
+        "Save"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Lower unsaved profile form only; no persisted address/tax profile, tax determination, invoice or Send result. BillingEmail remains outside viewport and is not read. PO label at top is clipped; use010 for it. Save/Cancel fully visible."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "1f22ccb635dbd1cb69d08ad4f72d6d4ff69e1bd25185e5a5d1f6de7963afa314",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "012-department-menu-subscription-entry",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.jpg",
+      "sha256": "c2dba9d00551401da3de7f5bc9aa60bb8a807d35407ae078b6a416e9ad3fa29f",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing",
+        "captured_at": "2026-10-29T05:44:20.467Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.dom.txt",
+      "dom_sha256": "15733db9df50d48cf545380606bcd7a1c6ab57e06b94bbb717a7b7fe38a7ac81",
+      "visible_labels": [
+        "Subscription & Billing",
+        "Department Settings",
+        "Security & Permissions",
+        "Invoicing"
+      ],
+      "required_labels": [
+        "Subscription & Billing",
+        "Department Settings",
+        "Security & Permissions",
+        "Invoicing"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Actual department menu Subscription & Billing launcher is pictured. No security/settings item selected and no provider/account change."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "c2dba9d00551401da3de7f5bc9aa60bb8a807d35407ae078b6a416e9ad3fa29f",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "013-local-subscription-distinct-from-customer-invoicing",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.jpg",
+      "sha256": "5c4f27bdf9648e9192d39c80ff3a813efc57afd22e44f94facc23594825124c5",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Subscription",
+        "captured_at": "2026-10-29T05:45:16.011Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.dom.txt",
+      "dom_sha256": "009f6fe9af0cae0eb50f795f36c0feecb0510fc21c4927e2cc881633e97a8e25",
+      "visible_labels": [
+        "Subscription Plan & Billing",
+        "Legacy Plan",
+        "Entities",
+        "Warning"
+      ],
+      "required_labels": [
+        "Subscription Plan & Billing",
+        "Legacy Plan",
+        "Entities",
+        "Warning"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Legacy local training-plan screen; values and add-on snippets are not current commercial pricing/capacity recommendations. No purchase/cancel/renewal/billing-info operation performed."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "5c4f27bdf9648e9192d39c80ff3a813efc57afd22e44f94facc23594825124c5",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "014-entities-tab-legacy-plan-readonly",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.jpg",
+      "sha256": "a6b08ecbcc2137b052a6205f867249497e30338f52daabeeb396049e8e00d6b3",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Subscription",
+        "captured_at": "2026-10-29T05:45:47.654Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.dom.txt",
+      "dom_sha256": "c40ab4be1e7a4e054fe8111c5f02958efc1dbdb97aec707208e0cc9432fc2331",
+      "visible_labels": [
+        "Subscription Plan & Billing",
+        "Entities",
+        "Active Legacy Subscription"
+      ],
+      "required_labels": [
+        "Subscription Plan & Billing",
+        "Entities",
+        "Active Legacy Subscription"
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Entities tab shows Active Legacy Subscription notice, not a modern entity-capacity selection form. Legacy14/Unlimited is not taught as the actual all-plan capacity rule. No provider/plan operation."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "a6b08ecbcc2137b052a6205f867249497e30338f52daabeeb396049e8e00d6b3",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    },
+    {
+      "id": "016-fresh-invoicing-no-invoices",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.jpg",
+      "sha256": "26152be556d7e838dcd60bc6814c0d092c0446483aa2d00abfdf9139329b5d4a",
+      "width": 1434,
+      "height": 773,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Invoicing",
+        "captured_at": "2026-10-29T05:45:48.552Z"
+      },
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.dom.txt",
+      "dom_sha256": "a4579333f40829cab202f5482fb0f633d3d44ffe4edfde8fcca7dafb90e19df9",
+      "visible_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "visible_controls": [],
+      "eligible_for_lesson": true,
+      "source_limits": [
+        "Fresh invoice list still0invoices/0outstanding/0overdue. It establishes no invoice was created in this read-only exercise, not a stored customer-profile success. The separate015contact fade is excluded."
+      ],
+      "state": "Bounded read-only billing source; no settings, profile, rate, invoice, payment or subscription write.",
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex /root/core_configuration_coverage",
+        "reviewed_at": "2026-10-29T05:56:37Z",
+        "sha256": "26152be556d7e838dcd60bc6814c0d092c0446483aa2d00abfdf9139329b5d4a",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "notes": "Contact sheet and every original1280x720/1434x773image individually viewed. Literal foreground labels checked against relevant non-email DOM portions. BillingEmail value intentionally not inspected."
+      }
+    }
+  ],
+  "rejected_sources": [
+    {
+      "id": "015-fresh-customer-still-no-billing-profile",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/015-fresh-customer-still-no-billing-profile.jpg",
+      "sha256": "fbb0a37a1e849733f526b500cae22d830bd1e6333cd976cc5bb89f6ef3dfc5e1",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/015-fresh-customer-still-no-billing-profile.dom.txt",
+      "dom_sha256": "5edde24b110ffb112ae7bcc841f9555ad9680832b333645da43bf8b741dfebac",
+      "reason": "Fade/transition with pale content. Excluded as settled source or fresh profile-success proof;009 is the readable settled no-profile baseline."
+    }
+  ]
+}

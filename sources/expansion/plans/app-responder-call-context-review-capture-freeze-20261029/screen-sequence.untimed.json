@@ -1,0 +1,553 @@
+{
+  "lesson_id": "app-responder-call-context-review",
+  "timing_assigned": false,
+  "scenes": [
+    {
+      "scene_id": "01",
+      "title": "Find the incident you mean",
+      "narration": "Begin on Calls in an authorized Responder session. The cards bring together a call number, name, location and assigned resources. Read those details before choosing any response. In this fictional department, enter Warehouse in Search calls. The list narrows to TRAINING — Warehouse alarm, numbered DEMO-0001, at Training site one in Chicago. Check the name, number and address together; a familiar word in a search result is not enough to identify an incident. The search changes the displayed list. It does not rename a call, dispatch anyone or change your personal status.",
+      "screens": [
+        {
+          "span_id": "01-01",
+          "capture_id": "006-readable-calls-list-and-search",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/006-readable-calls-list-and-search.jpg",
+          "source_sha256": "d82eb0d785bc3ca51262446829d3c9ad8af346bad3b619dd47333b0b313d1569",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/006-readable-calls-list-and-search.dom.txt",
+          "dom_sha256": "a327d8a9edb399f03d9a4de056cd6caa375627ddf3e92c925fa8ede46eac3e4f",
+          "narration_exact": "Begin on Calls in an authorized Responder session. The cards bring together a call number, name, location and assigned resources. Read those details before choosing any response. In this fictional department, enter Warehouse in Search calls.",
+          "required_pixel_labels": [
+            "Calls",
+            "Search calls..."
+          ],
+          "timing_seconds": null
+        },
+        {
+          "span_id": "01-02",
+          "capture_id": "007-readable-warehouse-search-result",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/007-readable-warehouse-search-result.jpg",
+          "source_sha256": "ce5e70e5eb4faf7b435e51bd90c37ae2203fe8afb95143e756b93b36a9246537",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/007-readable-warehouse-search-result.dom.txt",
+          "dom_sha256": "ce510cab224ba5a2e20e7956f200726bdc329a521ac0e49103fd52d7b199177d",
+          "narration_exact": "The list narrows to TRAINING — Warehouse alarm, numbered DEMO-0001, at Training site one in Chicago. Check the name, number and address together; a familiar word in a search result is not enough to identify an incident. The search changes the displayed list. It does not rename a call, dispatch anyone or change your personal status.",
+          "required_pixel_labels": [
+            "Warehouse",
+            "#DEMO-0001"
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "006-readable-calls-list-and-search",
+        "007-readable-warehouse-search-result"
+      ]
+    },
+    {
+      "scene_id": "02",
+      "title": "Read the nature and location in context",
+      "narration": "Open that card to reach Call Details. The same name and number remain at the top, followed by the nature of the call. Here it describes reported smoke at an unoccupied training warehouse and a Squad Three search demonstration. The map provides context for the stored incident location. It does not establish where your device is or whether a crew has arrived. Route is available beside Notes, Images and Files, but we leave it untouched while reviewing the information already supplied.",
+      "screens": [
+        {
+          "span_id": "02-01",
+          "capture_id": "010-loaded-warehouse-identity-and-location",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/010-loaded-warehouse-identity-and-location.jpg",
+          "source_sha256": "a8ef956def7448f609541cf0843f315488297fc33e4978c011ec934658e19643",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/010-loaded-warehouse-identity-and-location.dom.txt",
+          "dom_sha256": "8d8f45be69d0a652cb5d824567df9e74e62758a3b4165b185dc4039fc664afb1",
+          "narration_exact": "Open that card to reach Call Details. The same name and number remain at the top, followed by the nature of the call. Here it describes reported smoke at an unoccupied training warehouse and a Squad Three search demonstration. The map provides context for the stored incident location. It does not establish where your device is or whether a crew has arrived. Route is available beside Notes, Images and Files, but we leave it untouched while reviewing the information already supplied.",
+          "required_pixel_labels": [
+            "Call Details",
+            "TRAINING — Warehouse alarm (DEMO-0001)",
+            "Exercise: reported smoke at an unoccupied training warehouse. Squad 3 assigned for a search demonstration."
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "010-loaded-warehouse-identity-and-location"
+      ]
+    },
+    {
+      "scene_id": "03",
+      "title": "Check the Info fields and training note",
+      "narration": "On Info, scroll until Priority, Timestamp, Type, Address and Note are visible together. This example shows Urgent and Structure Fire. Its timestamp is October twenty-fifth at eleven forty-nine in the morning; that displayed time is not an arrival report. Check the address against the intended training site. The note explicitly identifies a fictional Academy exercise and says not to dispatch real resources. Read qualifiers like this along with the headline, rather than carrying an assumption from the call list into your next action.",
+      "screens": [
+        {
+          "span_id": "03-01",
+          "capture_id": "009-call-info-priority-type-address",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/009-call-info-priority-type-address.jpg",
+          "source_sha256": "40ca38129263e7ed3551f81aefedcd84388edae699244522b2c0649fcf955427",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/009-call-info-priority-type-address.dom.txt",
+          "dom_sha256": "8d8f45be69d0a652cb5d824567df9e74e62758a3b4165b185dc4039fc664afb1",
+          "narration_exact": "On Info, scroll until Priority, Timestamp, Type, Address and Note are visible together. This example shows Urgent and Structure Fire. Its timestamp is October twenty-fifth at eleven forty-nine in the morning; that displayed time is not an arrival report. Check the address against the intended training site. The note explicitly identifies a fictional Academy exercise and says not to dispatch real resources. Read qualifiers like this along with the headline, rather than carrying an assumption from the call list into your next action.",
+          "required_pixel_labels": [
+            "Info",
+            "Priority",
+            "Urgent",
+            "Timestamp",
+            "Type",
+            "Structure Fire",
+            "Address",
+            "Note",
+            "Fictional exercise for Resgrid Academy. Do not dispatch real resources."
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "010-loaded-warehouse-identity-and-location",
+        "009-call-info-priority-type-address"
+      ]
+    },
+    {
+      "scene_id": "04",
+      "title": "Separate assignments from a response",
+      "narration": "Choose Dispatched and bring all the resource rows into view. Kelly Severide and Joe Cruz appear as User entries associated with Squad Three. Squad Three also has its own Unit entry, associated with Firehouse Fifty-one. The Group and Type labels help distinguish a person from a vehicle or team resource. This is the recorded dispatch assignment for the call. A name in this list does not, by itself, prove that person acknowledged the call, changed status, reached the location or received an external notification.",
+      "screens": [
+        {
+          "span_id": "04-01",
+          "capture_id": "013-dispatched-resource-rows-complete",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/013-dispatched-resource-rows-complete.jpg",
+          "source_sha256": "f2dbf92d4492a85f7af6305255f51680147030f9592f5a3e8a7d2d0beadbbb08",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/013-dispatched-resource-rows-complete.dom.txt",
+          "dom_sha256": "673b99af990faeebdf4a4f9801426c3d5ac512357b9047f78d3d9aa5ea5f5a85",
+          "narration_exact": "Choose Dispatched and bring all the resource rows into view. Kelly Severide and Joe Cruz appear as User entries associated with Squad Three. Squad Three also has its own Unit entry, associated with Firehouse Fifty-one. The Group and Type labels help distinguish a person from a vehicle or team resource. This is the recorded dispatch assignment for the call. A name in this list does not, by itself, prove that person acknowledged the call, changed status, reached the location or received an external notification.",
+          "required_pixel_labels": [
+            "Dispatched",
+            "Kelly Severide",
+            "Joe Cruz",
+            "Squad 3",
+            "Type: User",
+            "Type: Unit"
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "009-call-info-priority-type-address",
+        "013-dispatched-resource-rows-complete"
+      ]
+    },
+    {
+      "scene_id": "05",
+      "title": "Interpret the available protocol and activity views",
+      "narration": "Protocols and Activity answer different questions. In Protocols, this call currently returns No protocols attached to this call. Activity returns No timeline events available. Read each result in the context of the selected incident. Neither message supplies a missing procedure or confirms an arrival. An empty activity view is not a reason to invent a response history. If important guidance or chronology is missing, resolve that through your authorized coordination process before treating the information as complete.",
+      "screens": [
+        {
+          "span_id": "05-01",
+          "capture_id": "013-dispatched-resource-rows-complete",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/013-dispatched-resource-rows-complete.jpg",
+          "source_sha256": "f2dbf92d4492a85f7af6305255f51680147030f9592f5a3e8a7d2d0beadbbb08",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/013-dispatched-resource-rows-complete.dom.txt",
+          "dom_sha256": "673b99af990faeebdf4a4f9801426c3d5ac512357b9047f78d3d9aa5ea5f5a85",
+          "narration_exact": "Protocols and Activity answer different questions.",
+          "required_pixel_labels": [
+            "Protocols",
+            "Activity"
+          ],
+          "timing_seconds": null
+        },
+        {
+          "span_id": "05-02",
+          "capture_id": "011-call-protocols-current-result",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/011-call-protocols-current-result.jpg",
+          "source_sha256": "22c258a4a9d3a3a9188f6b862aa49cb34d7a0841e2644a963b2b5c77a802fe8e",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/011-call-protocols-current-result.dom.txt",
+          "dom_sha256": "f358b40ce704cd18fa065e136538b4118f3004497605e30e3c52b394d124293e",
+          "narration_exact": "In Protocols, this call currently returns No protocols attached to this call.",
+          "required_pixel_labels": [
+            "Protocols",
+            "No protocols attached to this call"
+          ],
+          "timing_seconds": null
+        },
+        {
+          "span_id": "05-03",
+          "capture_id": "014-call-activity-existing-software-events",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+          "source_sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+          "dom_sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f",
+          "narration_exact": "Activity returns No timeline events available. Read each result in the context of the selected incident. Neither message supplies a missing procedure or confirms an arrival. An empty activity view is not a reason to invent a response history. If important guidance or chronology is missing, resolve that through your authorized coordination process before treating the information as complete.",
+          "required_pixel_labels": [
+            "Activity",
+            "No timeline events available"
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "013-dispatched-resource-rows-complete",
+        "011-call-protocols-current-result",
+        "014-call-activity-existing-software-events"
+      ]
+    },
+    {
+      "scene_id": "06",
+      "title": "Inspect notes without posting",
+      "narration": "Choose Notes to inspect Call Notes. This example says No notes found. The search box can help find an existing note when there are entries. Below it, Add a new note and Add Note belong to the writing workflow. We leave the field blank and use Cancel, so this inspection adds nothing to the incident. Reading the original note on Info and checking the separate Call Notes list are useful complementary checks; do not assume they are the same piece of information.",
+      "screens": [
+        {
+          "span_id": "06-01",
+          "capture_id": "014-call-activity-existing-software-events",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+          "source_sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+          "dom_sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f",
+          "narration_exact": "Choose Notes",
+          "required_pixel_labels": [
+            "Notes"
+          ],
+          "timing_seconds": null
+        },
+        {
+          "span_id": "06-02",
+          "capture_id": "015-call-notes-readonly-empty",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/015-call-notes-readonly-empty.jpg",
+          "source_sha256": "eb853347be8326e804c044ce6409107de184afea11754b46a8a677b6051d9bfc",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/015-call-notes-readonly-empty.dom.txt",
+          "dom_sha256": "3b983d364dd05352814ffb043cd9fabad6bf4328e2ffe13c5ebf9f2ed219f751",
+          "narration_exact": "to inspect Call Notes. This example says No notes found. The search box can help find an existing note when there are entries. Below it, Add a new note and Add Note belong to the writing workflow. We leave the field blank and use Cancel, so this inspection adds nothing to the incident. Reading the original note on Info and checking the separate Call Notes list are useful complementary checks; do not assume they are the same piece of information.",
+          "required_pixel_labels": [
+            "Call Notes",
+            "No notes found",
+            "Add a new note...",
+            "Add Note",
+            "Cancel"
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "014-call-activity-existing-software-events",
+        "015-call-notes-readonly-empty"
+      ]
+    },
+    {
+      "scene_id": "07",
+      "title": "Check which supporting material exists",
+      "narration": "The Images and Files buttons open separate supporting views. Call Images currently says No images available. Call Files says No files available and explains that none have been added to this call. These are the results shown for this incident, not demonstrations of uploading, downloading or taking a photograph. Check the call identity before relying on an attachment from any source, and use only approved material when a later task genuinely requires adding one.",
+      "screens": [
+        {
+          "span_id": "07-01",
+          "capture_id": "014-call-activity-existing-software-events",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+          "source_sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+          "dom_sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f",
+          "narration_exact": "The Images and Files buttons open separate supporting views.",
+          "required_pixel_labels": [
+            "Images",
+            "Files"
+          ],
+          "timing_seconds": null
+        },
+        {
+          "span_id": "07-02",
+          "capture_id": "016-call-images-readonly-empty",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/016-call-images-readonly-empty.jpg",
+          "source_sha256": "9e85be785308dea7c893280111a32610865bea6345f28426f93e2b6ac6f3db37",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/016-call-images-readonly-empty.dom.txt",
+          "dom_sha256": "ea204547c1061587028ee671a8bad595ba8a1befe6783fcee099a2961fc7541a",
+          "narration_exact": "Call Images currently says No images available.",
+          "required_pixel_labels": [
+            "Call Images",
+            "No images available"
+          ],
+          "timing_seconds": null
+        },
+        {
+          "span_id": "07-03",
+          "capture_id": "017-call-files-readonly-empty",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/017-call-files-readonly-empty.jpg",
+          "source_sha256": "9f82fc88dd678e2297bc22f31de84ec0332e5ded7a65c911dcfe408e61faa62a",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/017-call-files-readonly-empty.dom.txt",
+          "dom_sha256": "f382075a3fd41288fe667903591d2da26cc8b75e73659e3acc90f7dd0d601427",
+          "narration_exact": "Call Files says No files available and explains that none have been added to this call. These are the results shown for this incident, not demonstrations of uploading, downloading or taking a photograph. Check the call identity before relying on an attachment from any source, and use only approved material when a later task genuinely requires adding one.",
+          "required_pixel_labels": [
+            "Call Files",
+            "No files available"
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "014-call-activity-existing-software-events",
+        "016-call-images-readonly-empty",
+        "014-call-activity-existing-software-events",
+        "017-call-files-readonly-empty"
+      ]
+    },
+    {
+      "scene_id": "08",
+      "title": "Keep review and response decisions distinct",
+      "narration": "On Home, this example shows three Active Calls and zero Calls I’m On. Those counts answer different questions. The Status controls include Responding, Not Responding, On Scene and Standing By; the Standing By choice remains outlined during this review. We do not press a response button. Use the same read-before-response pattern for fire and EMS, community-care or mental-health teams, search and rescue, security patrols, wildland contractors and industrial teams. Find the correct incident, read its context and assignments, and identify missing information before making an authorized operational response.",
+      "screens": [
+        {
+          "span_id": "08-01",
+          "capture_id": "019-home-response-visibility-readback",
+          "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/019-home-response-visibility-readback.jpg",
+          "source_sha256": "3e126ff98f7029eed60200403a86158b9ecd08e4e01403d0c7a31999fc56e865",
+          "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/019-home-response-visibility-readback.dom.txt",
+          "dom_sha256": "9f15129149207a8e220daae990235f1bb76fa4228c058c06bb3ae69e9b27afa3",
+          "narration_exact": "On Home, this example shows three Active Calls and zero Calls I’m On. Those counts answer different questions. The Status controls include Responding, Not Responding, On Scene and Standing By; the Standing By choice remains outlined during this review. We do not press a response button. Use the same read-before-response pattern for fire and EMS, community-care or mental-health teams, search and rescue, security patrols, wildland contractors and industrial teams. Find the correct incident, read its context and assignments, and identify missing information before making an authorized operational response.",
+          "required_pixel_labels": [
+            "Home",
+            "Status",
+            "Responding",
+            "Not Responding",
+            "On Scene",
+            "Standing By",
+            "3",
+            "ACTIVE CALLS",
+            "0",
+            "CALLS I'M ON"
+          ],
+          "timing_seconds": null
+        }
+      ],
+      "accepted_context_refs": [
+        "019-home-response-visibility-readback"
+      ]
+    }
+  ],
+  "untimed_spans": [
+    {
+      "scene_id": "01",
+      "span_id": "01-01",
+      "capture_id": "006-readable-calls-list-and-search",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/006-readable-calls-list-and-search.jpg",
+      "source_sha256": "d82eb0d785bc3ca51262446829d3c9ad8af346bad3b619dd47333b0b313d1569",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/006-readable-calls-list-and-search.dom.txt",
+      "dom_sha256": "a327d8a9edb399f03d9a4de056cd6caa375627ddf3e92c925fa8ede46eac3e4f",
+      "narration_exact": "Begin on Calls in an authorized Responder session. The cards bring together a call number, name, location and assigned resources. Read those details before choosing any response. In this fictional department, enter Warehouse in Search calls.",
+      "required_pixel_labels": [
+        "Calls",
+        "Search calls..."
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "01",
+      "span_id": "01-02",
+      "capture_id": "007-readable-warehouse-search-result",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/007-readable-warehouse-search-result.jpg",
+      "source_sha256": "ce5e70e5eb4faf7b435e51bd90c37ae2203fe8afb95143e756b93b36a9246537",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/007-readable-warehouse-search-result.dom.txt",
+      "dom_sha256": "ce510cab224ba5a2e20e7956f200726bdc329a521ac0e49103fd52d7b199177d",
+      "narration_exact": "The list narrows to TRAINING — Warehouse alarm, numbered DEMO-0001, at Training site one in Chicago. Check the name, number and address together; a familiar word in a search result is not enough to identify an incident. The search changes the displayed list. It does not rename a call, dispatch anyone or change your personal status.",
+      "required_pixel_labels": [
+        "Warehouse",
+        "#DEMO-0001"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "02",
+      "span_id": "02-01",
+      "capture_id": "010-loaded-warehouse-identity-and-location",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/010-loaded-warehouse-identity-and-location.jpg",
+      "source_sha256": "a8ef956def7448f609541cf0843f315488297fc33e4978c011ec934658e19643",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/010-loaded-warehouse-identity-and-location.dom.txt",
+      "dom_sha256": "8d8f45be69d0a652cb5d824567df9e74e62758a3b4165b185dc4039fc664afb1",
+      "narration_exact": "Open that card to reach Call Details. The same name and number remain at the top, followed by the nature of the call. Here it describes reported smoke at an unoccupied training warehouse and a Squad Three search demonstration. The map provides context for the stored incident location. It does not establish where your device is or whether a crew has arrived. Route is available beside Notes, Images and Files, but we leave it untouched while reviewing the information already supplied.",
+      "required_pixel_labels": [
+        "Call Details",
+        "TRAINING — Warehouse alarm (DEMO-0001)",
+        "Exercise: reported smoke at an unoccupied training warehouse. Squad 3 assigned for a search demonstration."
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "03",
+      "span_id": "03-01",
+      "capture_id": "009-call-info-priority-type-address",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/009-call-info-priority-type-address.jpg",
+      "source_sha256": "40ca38129263e7ed3551f81aefedcd84388edae699244522b2c0649fcf955427",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/009-call-info-priority-type-address.dom.txt",
+      "dom_sha256": "8d8f45be69d0a652cb5d824567df9e74e62758a3b4165b185dc4039fc664afb1",
+      "narration_exact": "On Info, scroll until Priority, Timestamp, Type, Address and Note are visible together. This example shows Urgent and Structure Fire. Its timestamp is October twenty-fifth at eleven forty-nine in the morning; that displayed time is not an arrival report. Check the address against the intended training site. The note explicitly identifies a fictional Academy exercise and says not to dispatch real resources. Read qualifiers like this along with the headline, rather than carrying an assumption from the call list into your next action.",
+      "required_pixel_labels": [
+        "Info",
+        "Priority",
+        "Urgent",
+        "Timestamp",
+        "Type",
+        "Structure Fire",
+        "Address",
+        "Note",
+        "Fictional exercise for Resgrid Academy. Do not dispatch real resources."
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "04",
+      "span_id": "04-01",
+      "capture_id": "013-dispatched-resource-rows-complete",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/013-dispatched-resource-rows-complete.jpg",
+      "source_sha256": "f2dbf92d4492a85f7af6305255f51680147030f9592f5a3e8a7d2d0beadbbb08",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/013-dispatched-resource-rows-complete.dom.txt",
+      "dom_sha256": "673b99af990faeebdf4a4f9801426c3d5ac512357b9047f78d3d9aa5ea5f5a85",
+      "narration_exact": "Choose Dispatched and bring all the resource rows into view. Kelly Severide and Joe Cruz appear as User entries associated with Squad Three. Squad Three also has its own Unit entry, associated with Firehouse Fifty-one. The Group and Type labels help distinguish a person from a vehicle or team resource. This is the recorded dispatch assignment for the call. A name in this list does not, by itself, prove that person acknowledged the call, changed status, reached the location or received an external notification.",
+      "required_pixel_labels": [
+        "Dispatched",
+        "Kelly Severide",
+        "Joe Cruz",
+        "Squad 3",
+        "Type: User",
+        "Type: Unit"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "05",
+      "span_id": "05-01",
+      "capture_id": "013-dispatched-resource-rows-complete",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/013-dispatched-resource-rows-complete.jpg",
+      "source_sha256": "f2dbf92d4492a85f7af6305255f51680147030f9592f5a3e8a7d2d0beadbbb08",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/013-dispatched-resource-rows-complete.dom.txt",
+      "dom_sha256": "673b99af990faeebdf4a4f9801426c3d5ac512357b9047f78d3d9aa5ea5f5a85",
+      "narration_exact": "Protocols and Activity answer different questions.",
+      "required_pixel_labels": [
+        "Protocols",
+        "Activity"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "05",
+      "span_id": "05-02",
+      "capture_id": "011-call-protocols-current-result",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/011-call-protocols-current-result.jpg",
+      "source_sha256": "22c258a4a9d3a3a9188f6b862aa49cb34d7a0841e2644a963b2b5c77a802fe8e",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/011-call-protocols-current-result.dom.txt",
+      "dom_sha256": "f358b40ce704cd18fa065e136538b4118f3004497605e30e3c52b394d124293e",
+      "narration_exact": "In Protocols, this call currently returns No protocols attached to this call.",
+      "required_pixel_labels": [
+        "Protocols",
+        "No protocols attached to this call"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "05",
+      "span_id": "05-03",
+      "capture_id": "014-call-activity-existing-software-events",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+      "source_sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+      "dom_sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f",
+      "narration_exact": "Activity returns No timeline events available. Read each result in the context of the selected incident. Neither message supplies a missing procedure or confirms an arrival. An empty activity view is not a reason to invent a response history. If important guidance or chronology is missing, resolve that through your authorized coordination process before treating the information as complete.",
+      "required_pixel_labels": [
+        "Activity",
+        "No timeline events available"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "06",
+      "span_id": "06-01",
+      "capture_id": "014-call-activity-existing-software-events",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+      "source_sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+      "dom_sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f",
+      "narration_exact": "Choose Notes",
+      "required_pixel_labels": [
+        "Notes"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "06",
+      "span_id": "06-02",
+      "capture_id": "015-call-notes-readonly-empty",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/015-call-notes-readonly-empty.jpg",
+      "source_sha256": "eb853347be8326e804c044ce6409107de184afea11754b46a8a677b6051d9bfc",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/015-call-notes-readonly-empty.dom.txt",
+      "dom_sha256": "3b983d364dd05352814ffb043cd9fabad6bf4328e2ffe13c5ebf9f2ed219f751",
+      "narration_exact": "to inspect Call Notes. This example says No notes found. The search box can help find an existing note when there are entries. Below it, Add a new note and Add Note belong to the writing workflow. We leave the field blank and use Cancel, so this inspection adds nothing to the incident. Reading the original note on Info and checking the separate Call Notes list are useful complementary checks; do not assume they are the same piece of information.",
+      "required_pixel_labels": [
+        "Call Notes",
+        "No notes found",
+        "Add a new note...",
+        "Add Note",
+        "Cancel"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "07",
+      "span_id": "07-01",
+      "capture_id": "014-call-activity-existing-software-events",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+      "source_sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+      "dom_sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f",
+      "narration_exact": "The Images and Files buttons open separate supporting views.",
+      "required_pixel_labels": [
+        "Images",
+        "Files"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "07",
+      "span_id": "07-02",
+      "capture_id": "016-call-images-readonly-empty",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/016-call-images-readonly-empty.jpg",
+      "source_sha256": "9e85be785308dea7c893280111a32610865bea6345f28426f93e2b6ac6f3db37",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/016-call-images-readonly-empty.dom.txt",
+      "dom_sha256": "ea204547c1061587028ee671a8bad595ba8a1befe6783fcee099a2961fc7541a",
+      "narration_exact": "Call Images currently says No images available.",
+      "required_pixel_labels": [
+        "Call Images",
+        "No images available"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "07",
+      "span_id": "07-03",
+      "capture_id": "017-call-files-readonly-empty",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/017-call-files-readonly-empty.jpg",
+      "source_sha256": "9f82fc88dd678e2297bc22f31de84ec0332e5ded7a65c911dcfe408e61faa62a",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/017-call-files-readonly-empty.dom.txt",
+      "dom_sha256": "f382075a3fd41288fe667903591d2da26cc8b75e73659e3acc90f7dd0d601427",
+      "narration_exact": "Call Files says No files available and explains that none have been added to this call. These are the results shown for this incident, not demonstrations of uploading, downloading or taking a photograph. Check the call identity before relying on an attachment from any source, and use only approved material when a later task genuinely requires adding one.",
+      "required_pixel_labels": [
+        "Call Files",
+        "No files available"
+      ],
+      "timing_seconds": null
+    },
+    {
+      "scene_id": "08",
+      "span_id": "08-01",
+      "capture_id": "019-home-response-visibility-readback",
+      "source_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/019-home-response-visibility-readback.jpg",
+      "source_sha256": "3e126ff98f7029eed60200403a86158b9ecd08e4e01403d0c7a31999fc56e865",
+      "dom_file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/019-home-response-visibility-readback.dom.txt",
+      "dom_sha256": "9f15129149207a8e220daae990235f1bb76fa4228c058c06bb3ae69e9b27afa3",
+      "narration_exact": "On Home, this example shows three Active Calls and zero Calls I’m On. Those counts answer different questions. The Status controls include Responding, Not Responding, On Scene and Standing By; the Standing By choice remains outlined during this review. We do not press a response button. Use the same read-before-response pattern for fire and EMS, community-care or mental-health teams, search and rescue, security patrols, wildland contractors and industrial teams. Find the correct incident, read its context and assignments, and identify missing information before making an authorized operational response.",
+      "required_pixel_labels": [
+        "Home",
+        "Status",
+        "Responding",
+        "Not Responding",
+        "On Scene",
+        "Standing By",
+        "3",
+        "ACTIVE CALLS",
+        "0",
+        "CALLS I'M ON"
+      ],
+      "timing_seconds": null
+    }
+  ],
+  "span_count": 14,
+  "limits": [
+    "Exact prose segments and ordered actual screens only; no speech time is inferred.",
+    "Short control phrases can continue an already-held prior screen. Actual generated speech cues or genuine transcript anchors, readable holds and complete frame review are required before any timed edit.",
+    "Redundant historical context refs need not force additional editorial cuts. No required visual label or spoken word is removed."
+  ]
+}

@@ -1,0 +1,486 @@
+{
+  "id": "core-groups-units-administration",
+  "title": "Create groups, stations and a unit with deliberate crew positions",
+  "app": "Core",
+  "audience": [
+    "department administrators",
+    "resource coordinators"
+  ],
+  "summary": "Create an organizational parent, a Station group, a Support unit type and a two-position unit; verify saved relationships, inspect unchanged staffing, and find the unit through the group tree.",
+  "prerequisites": [
+    "Use a fictional practice department and existing authorized group/unit/type permissions.",
+    "Prepare unique training names and an illustrative coordinate pair; preserve all current members and unit crews.",
+    "Have the intended personnel role available for the unit position; do not change actual staffing in this exercise."
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Separate coordination groups, stations and response vehicles; verify definitions before staffing.",
+    "Community care and mental health": "Organize operational teams/bases without patient detail or clinical authorization claims.",
+    "Search and rescue": "Distinguish coordination, staging bases and resources.",
+    "Security": "Inspect patrol templates and choose deliberate local positions rather than applying them blindly.",
+    "Wildland": "Separate seasonal coordination groups, bases and resource types.",
+    "Industrial response": "Distinguish facility groups from response vehicles and their seat requirements."
+  },
+  "source_files": [
+    "Web/Resgrid.Web/Areas/User/Controllers/GroupsController.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Groups/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Groups/NewGroup.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml",
+    "Web/Resgrid.Web/Areas/User/Models/Groups/NewGroupView.cs",
+    "Web/Resgrid.Web/Areas/User/Models/Groups/EditGroupView.cs",
+    "Web/Resgrid.Web/wwwroot/js/app/internal/groups/resgrid.groups.newgroup.js",
+    "Web/Resgrid.Web/wwwroot/js/app/internal/groups/resgrid.groups.editgroup.js",
+    "Core/Resgrid.Model/DepartmentGroup.cs",
+    "Core/Resgrid.Model/Helpers/DepartmentGroupHierarchy.cs",
+    "Core/Resgrid.Services/DepartmentGroupsService.cs",
+    "Core/Resgrid.Services/AddressService.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/DepartmentController.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Units/EditUnit.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Units/UnitStaffing.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Units/_UnitRoleTemplatesModal.cshtml",
+    "Web/Resgrid.Web/Areas/User/Models/Units/NewUnitView.cs",
+    "Web/Resgrid.Web/wwwroot/js/app/internal/units/resgrid.units.newunit.js",
+    "Web/Resgrid.Web/wwwroot/js/app/internal/units/resgrid.units.editunit.js",
+    "Core/Resgrid.Services/UnitsService.cs",
+    "Core/Resgrid.Model/Unit.cs",
+    "Core/Resgrid.Model/UnitRole.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/TypesController.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Types/NewUnitType.cshtml",
+    "Core/Resgrid.Model/UnitType.cs",
+    "Core/Resgrid.Model/UnitTypeClasses.cs",
+    "Providers/Resgrid.Providers.Messaging/NovuProvider.cs",
+    "Core/Resgrid.Localization/Areas/User/Groups/Groups.en.resx",
+    "Core/Resgrid.Localization/Areas/User/Units/Units.en.resx",
+    "Core/Resgrid.Localization/Areas/User/Department/DepartmentTypes.en.resx",
+    "Core/Resgrid.Config/ChatConfig.cs",
+    "Core/Resgrid.Config/ConfigProcessor.cs",
+    "Providers/Resgrid.Providers.Messaging/NovuRequestRetry.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Units/Index.cshtml",
+    "Web/Resgrid.Web/wwwroot/js/app/internal/units/resgrid.units.index.js"
+  ],
+  "scenes": [
+    {
+      "id": "groups",
+      "title": "Inspect groups and their hierarchy",
+      "route": "/User/Personnel/Roles#rolesTable",
+      "capture_refs": [
+        "001-department-menu-stations-and-groups",
+        "002-existing-six-group-catalog"
+      ],
+      "required_labels": [
+        "Stations & Groups",
+        "Groups",
+        "Add New Group",
+        "Type",
+        "Parent",
+        "Members"
+      ],
+      "narration": "Open the department menu and choose Stations and Groups. The table separates each group’s type, parent, and member count. Our fictional Chicago Fire department already has a station and organizational groups beneath it. We will add an empty coordination parent and a separate station beneath that parent. Read the existing rows first so the new exercise is easy to identify and the original memberships remain intact.",
+      "practice": "Identify the existing parent relationships before adding your own fictional group.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Only open department menu foreground; no background-role operation. Stations & Groups/Types are actual launchers.",
+        "Six original groups/types/parents/member counts, read only. Dispatch/message columns are local generated aliases, not delivery evidence."
+      ]
+    },
+    {
+      "id": "org",
+      "title": "Prepare an organizational parent",
+      "route": "/User/Groups",
+      "capture_refs": [
+        "002-existing-six-group-catalog",
+        "003-new-organizational-group-blank",
+        "004-prepared-organizational-root-empty-members"
+      ],
+      "required_labels": [
+        "Add New Group",
+        "Organizational Group",
+        "Group Name",
+        "TRAINING ONLY - Community coordination 20261028",
+        "Parent Group",
+        "None"
+      ],
+      "narration": "Choose Add New Group and keep Organizational Group selected. Enter Training Only, Community Coordination, followed by the exercise date. Parent Group remains None, making this a top-level group. Group Admins and Group Users stay empty. These fields describe different membership responsibilities; choosing an administrator is a permission decision. We are preparing a structure, so we do not move a person from an existing group or assign an administrator.",
+      "practice": "Prepare an empty organizational root with a unique training name and Parent None.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Six original groups/types/parents/member counts, read only. Dispatch/message columns are local generated aliases, not delivery evidence.",
+        "Blank Organizational default and empty member/admin selectors; no printer configuration.",
+        "Prepared own root name/Organizational/ParentNone/empty selectors and SaveGroup. Not stored yet."
+      ]
+    },
+    {
+      "id": "org-read",
+      "title": "Save and reopen the empty group",
+      "route": "/User/Groups/NewGroup",
+      "capture_refs": [
+        "004-prepared-organizational-root-empty-members",
+        "006-fresh-organizational-root-readback"
+      ],
+      "required_labels": [
+        "Save Group",
+        "Edit Group",
+        "TRAINING ONLY - Community coordination 20261028",
+        "Parent Group",
+        "None",
+        "Group Admins",
+        "Group Users"
+      ],
+      "narration": "Use Save Group. The fresh Edit Group readback retains its full name and Parent None, and displays the Organizational type read-only. Both membership selectors remain empty. The page explains that a person can belong to only one group at a time. When maintaining a populated group, let its existing selections load before saving: the form submits the complete member and administrator selection.",
+      "practice": "Reopen the saved root and check its type, parent and empty membership.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Prepared own root name/Organizational/ParentNone/empty selectors and SaveGroup. Not stored yet.",
+        "Fresh saved own root Name/Organizational/ParentNone/empty selectors; PrintCallsOFF. No secondSave."
+      ]
+    },
+    {
+      "id": "station",
+      "title": "Prepare a station under the new parent",
+      "route": "/User/Groups",
+      "capture_refs": [
+        "002-existing-six-group-catalog",
+        "007-new-station-group-physical-location-help",
+        "008-prepared-station-name-and-parent"
+      ],
+      "required_labels": [
+        "Add New Group",
+        "Station Group",
+        "Group Name",
+        "TRAINING ONLY - Community base 20261028",
+        "Parent Group",
+        "TRAINING ONLY - Community coordination 20261028",
+        "Station Address"
+      ],
+      "narration": "Create another group and select Station Group. Name it Training Only, Community Base, with the exercise date, and choose the new coordination group as its parent. A station requires a physical reference location. The form offers address fields, a coordinate pair, or a what3words address. We will use an explicitly illustrative Chicago coordinate pair. The parent describes the organizational relationship; it does not replace the station’s own location.",
+      "practice": "Prepare a Station group with your own organizational group as its parent.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Six original groups/types/parents/member counts, read only. Dispatch/message columns are local generated aliases, not delivery evidence.",
+        "Station selected; physical-location help and address/GPS alternatives. GPS hints partly clipped; no validation error or saved location.",
+        "Prepared Stationname and own parent. Address unused; Country defaultUnitedStates is not a verified address."
+      ]
+    },
+    {
+      "id": "coordinates",
+      "title": "Enter a complete illustrative coordinate pair",
+      "route": "/User/Groups/NewGroup#Latitude",
+      "capture_refs": [
+        "009-station-example-coordinate-alternative",
+        "010-station-save-control-empty-members"
+      ],
+      "required_labels": [
+        "Gps Coordinates",
+        "41.8500",
+        "-87.6500",
+        "what3words Address",
+        "Group Admins",
+        "Group Users",
+        "Save Group"
+      ],
+      "narration": "In Gps Coordinates, enter latitude forty-one point eight five and longitude minus eighty-seven point six five. Enter both values together. The street fields are unused and what3words stays blank. This is a typed station reference, not a device-location reading or proof that anyone arrived there. Keep the member and administrator selectors empty and leave printing unconfigured. Use Save Group once after checking the prepared values.",
+      "practice": "Save the complete fictional pair with no membership or provider setup changes.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Complete typed illustrative pair41.8500,-87.6500, blankW3W, empty people/printer. No deviceGPS/geocode/map proof.",
+        "Actual SaveGroup with empty member/admin sets. No new membership/admin right/printer selection."
+      ]
+    },
+    {
+      "id": "station-read",
+      "title": "Verify the saved station and relationship",
+      "route": "/User/Groups",
+      "capture_refs": [
+        "011-saved-station-and-parent-catalog",
+        "012-fresh-station-hierarchy-readback",
+        "013-fresh-station-coordinate-readback"
+      ],
+      "required_labels": [
+        "Group Name",
+        "TRAINING ONLY - Community coordination 20261028",
+        "TRAINING ONLY - Community base 20261028",
+        "Organizational",
+        "Station",
+        "Parent",
+        "0",
+        "Edit",
+        "41.8500",
+        "-87.6500",
+        "Print Calls to Printer"
+      ],
+      "narration": "The returned catalog shows both new groups with zero members. The organizational root has no parent, while the station names that root as its parent. Use the station’s Edit control to check its full name and relationship again. Scroll to verify the saved coordinate pair, blank what3words field, and clear Print Calls to Printer option. This readback checks the particular fields we stored without changing the station type or configuring printing.",
+      "practice": "Compare the catalog relationship with the station’s reopened name, parent and coordinates.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Both new full catalog rows,0members, ownStationparentORG; original6 preserved. Edit launchers visible.",
+        "Fresh saved Stationtype/name/parent/coordinate pair. Disabled type radios; no conversion/update.",
+        "Fresh saved pair, blankW3W, PrintCallsOFF and empty people. Save visible but not pressed on readback."
+      ]
+    },
+    {
+      "id": "unit-plan",
+      "title": "Separate a unit definition from its crew",
+      "route": "/User/Units",
+      "capture_refs": [
+        "014-unit-catalog-and-group-tree-baseline",
+        "015-new-unit-empty-name-type-station-roles"
+      ],
+      "required_labels": [
+        "Units",
+        "New Unit",
+        "Type",
+        "here",
+        "Station",
+        "No Station",
+        "Roles",
+        "Add Role",
+        "Required Personnel Role"
+      ],
+      "narration": "Open Units and choose New Unit. The form separates Name, Type, Station, and the unit’s role positions. No Station is available, but our exercise will use the station we just created. A role position defines a seat; it does not select the person occupying that seat. Before completing this unit, use the type link to create a distinct training vehicle type that will be recognizable in the unit list.",
+      "practice": "Identify the type, station and seat-definition controls before creating the unit.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Existing Unit list and normal NewUnit/UnitStaffing launchers. Bottom seventh unit/count offscreen; no status/timestamp change claim.",
+        "Blank NewUnit defaults/NoStation/empty roles table and here type link. No unit stored."
+      ]
+    },
+    {
+      "id": "type",
+      "title": "Create a useful unit type",
+      "route": "/User/Units/NewUnit",
+      "capture_refs": [
+        "015-new-unit-empty-name-type-station-roles",
+        "016-unit-types-catalog-launcher",
+        "017-new-unit-type-class-and-default-actions",
+        "018-prepared-community-unit-type-support-class"
+      ],
+      "required_labels": [
+        "here",
+        "New Unit Type",
+        "Unit Type Name",
+        "TRAINING ONLY - Community response vehicle",
+        "Class",
+        "Support",
+        "Standard Actions",
+        "Map Icon",
+        "Van",
+        "No file chosen"
+      ],
+      "narration": "From the Unit Types section, choose New Unit Type. Enter Training Only, Community Response Vehicle. Set Class to Support; the help explains that class is used for reports, defaults, and integrations, separately from the display name. Keep Actions on Standard Actions and choose Van for Map Icon. The optional custom-icon file remains empty. These choices define the new type without changing an existing type or a department status set.",
+      "practice": "Prepare an own Support type with Standard Actions and the built-in Van icon.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Blank NewUnit defaults/NoStation/empty roles table and here type link. No unit stored.",
+        "Actual unit-type catalog/NewUnitType launcher. Existing5type rows read only; unrelated priority content not discussed.",
+        "Blank new type/default fields and class help. Save clipped/offscreen; use019.",
+        "Prepared own type Support/StandardActions/Van/no file. Actual greenVan preview is visible; it is a built-in preview, not a custom upload or real map."
+      ]
+    },
+    {
+      "id": "type-read",
+      "title": "Save the built-in icon and verify the type",
+      "route": "/User/Types/NewUnitType#IconFile",
+      "capture_refs": [
+        "019-unit-type-preview-and-save-control",
+        "020-saved-community-unit-type-catalog",
+        "021-fresh-community-unit-type-readback"
+      ],
+      "required_labels": [
+        "Preview",
+        "Van",
+        "Light map",
+        "Dark map",
+        "Save",
+        "TRAINING ONLY - Community response vehicle",
+        "Default Unit Actions",
+        "Edit",
+        "Support",
+        "Standard Actions"
+      ],
+      "narration": "The preview now shows the built-in green Van symbol on light and dark backgrounds and in a list. No custom image has been uploaded. Save, then read the new type row in the catalog. It shows the full name, Default Unit Actions, and Van. Open Edit to verify Support, Standard Actions, and the Van choice again. This confirms the type configuration; it is not a demonstration of a vehicle’s live map location.",
+      "practice": "Verify the saved type’s full name, class, actions and built-in icon.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Actual Van preview and Save fully visible; no custom file. Raw cautious preview note is superseded by independent visible Van inspection.",
+        "Saved own type full name/DefaultUnitActions/Van row. Class must be read in021, not inferred from this table.",
+        "Fresh full type name/Support/StandardActions/Van/no custom file. Save belowviewport; no type update."
+      ]
+    },
+    {
+      "id": "seats",
+      "title": "Define two distinct positions",
+      "route": "/User/Units",
+      "capture_refs": [
+        "014-unit-catalog-and-group-tree-baseline",
+        "015-new-unit-empty-name-type-station-roles",
+        "022-prepared-unit-type-station-and-two-seat-definitions"
+      ],
+      "required_labels": [
+        "New Unit",
+        "Name",
+        "TRAINING ONLY - Community van 20261028",
+        "Type",
+        "Station",
+        "Add Role",
+        "Coordination seat",
+        "TRAINING ONLY - Community response navigator",
+        "Optional support seat",
+        "-- None --",
+        "Required?"
+      ],
+      "narration": "Return to New Unit and name the vehicle Training Only, Community Van, with the exercise date. Select the new type and station. Add two positions with different names. Coordination Seat requires the existing Community Response Navigator personnel role, and its Required box is checked. Optional Support Seat has no personnel-role restriction and its Required box is clear. These are the unit’s seat definitions. No person is assigned by creating either row.",
+      "practice": "Prepare the two seat definitions and compare their personnel-role conditions.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Existing Unit list and normal NewUnit/UnitStaffing launchers. Bottom seventh unit/count offscreen; no status/timestamp change claim.",
+        "Blank NewUnit defaults/NoStation/empty roles table and here type link. No unit stored.",
+        "Prepared unit/two seats, required personnel-role name fully readable. Closed Type/Station names truncate; use021/026 for fullType and028 for fullStation."
+      ]
+    },
+    {
+      "id": "templates",
+      "title": "Inspect a template without applying it",
+      "route": "/User/Units/NewUnit",
+      "capture_refs": [
+        "022-prepared-unit-type-station-and-two-seat-definitions",
+        "023-role-template-security-category-preview",
+        "025-prepared-unit-ready-save-after-modal-settled"
+      ],
+      "required_labels": [
+        "Browse Templates",
+        "Unit Role Templates",
+        "Security Companies",
+        "Security Patrol",
+        "Use these roles",
+        "Close",
+        "Coordination seat",
+        "Optional support seat"
+      ],
+      "narration": "Browse Templates opens reusable starting layouts. Here the Security Companies cards show examples such as Security Patrol and Alarm Response Team. Use These Roles would add a template’s positions to the form for review before saving. For this exercise, choose Close instead. The settled unit form still contains our two prepared positions. Inspect a template’s suggested roles deliberately rather than assuming its names or suggested qualifications match your department.",
+      "practice": "Inspect and close a template, leaving the two prepared positions unchanged.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Prepared unit/two seats, required personnel-role name fully readable. Closed Type/Station names truncate; use021/026 for fullType and028 for fullStation.",
+        "Foreground template gallery only. Security category selector truncates, but card tags SecurityCompanies/readable titles/usebuttons/Close are complete. No Use these roles action.",
+        "Settled complete prepared2seat form and Save; Type/Station text still truncated. No people assigned; not yet stored."
+      ]
+    },
+    {
+      "id": "unit-read",
+      "title": "Save the unit and reopen its definition",
+      "route": "/User/Units/NewUnit",
+      "capture_refs": [
+        "025-prepared-unit-ready-save-after-modal-settled",
+        "026-saved-own-unit-filtered-catalog",
+        "027-fresh-unit-type-station-and-seat-readback",
+        "028-station-selection-full-name-readback"
+      ],
+      "required_labels": [
+        "Save",
+        "TRAINING ONLY - Community van 20261028",
+        "TRAINING ONLY - Community response vehicle",
+        "Edit",
+        "Coordination seat",
+        "Optional support seat",
+        "Station",
+        "TRAINING ONLY - Community base 20261028"
+      ],
+      "narration": "Use Save on the prepared unit. The returned list shows its full name and training vehicle type. Open Edit and check that both positions and their Required choices remain. Open the Station dropdown to read the complete selected Community Base name; the closed field truncates it. We are verifying the stored definition without pressing Update. The list’s Available display alone does not establish crew readiness or prove a newly recorded status event.",
+      "practice": "Reopen the saved unit and verify its full station selection and both seat definitions.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Settled complete prepared2seat form and Save; Type/Station text still truncated. No people assigned; not yet stored.",
+        "Actual saved unit full name/type/Van glyph. Available is a display, not proof of stored active-state readiness or staffing. Timestamp is not asserted as a stored event.",
+        "Fresh unit/two seat definitions. Closed Type/Station text clipped; do not promote fullDOM options as visible. No Update.",
+        "Normal opened Station dropdown shows full selected ownStation/NoStation/Firehouse51; no selection change. Dropdown obscures first seat name; use027 for it."
+      ]
+    },
+    {
+      "id": "staffing",
+      "title": "Inspect staffing without changing assignments",
+      "route": "/User/Units",
+      "capture_refs": [
+        "026-saved-own-unit-filtered-catalog",
+        "029-staffing-existing-engine-crew-readonly",
+        "030-required-seat-member-selector-readonly",
+        "032-staffing-unchanged-after-readonly-lookup"
+      ],
+      "required_labels": [
+        "Unit Staffing",
+        "Engine 51",
+        "Christopher Herrmann",
+        "Fully Staffed",
+        "TRAINING ONLY - Community van 20261028",
+        "Not Staffed",
+        "Coordination seat",
+        "Optional support seat",
+        "Not Occupied",
+        "Save"
+      ],
+      "narration": "Open Unit Staffing to distinguish positions from assigned people. Engine fifty-one retains Herrmann in its one configured seat. The new van is Not Staffed, and both positions are Not Occupied. Opening a person selector does not itself prove that the listed people hold the required role. We close it without selecting anyone. Save on this page replaces staffing selections across the department, so we leave it untouched and preserve every existing assignment.",
+      "practice": "Read the new unit’s empty seats and existing crew, then leave without saving staffing.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Actual saved unit full name/type/Van glyph. Available is a display, not proof of stored active-state readiness or staffing. Timestamp is not asserted as a stored event.",
+        "Read-only staffing: Engine51 one configured seat/Herrmann; own2NotOccupied/NotStaffed. FullyStaffed is relative to configured seats, not physical attendance or full operational readiness.",
+        "Opened own required-seat picker lists visible nonmatching people too; it is NOT a qualification filter. Casey is offscreen. No selection or save. Lower list clipped; do not claim all14visible.",
+        "Closed lookup,8selected values unchanged according to retained parent audit. No globalSave. No stored timestamp/other backend invariant claim."
+      ]
+    },
+    {
+      "id": "hierarchy",
+      "title": "Find the unit through its parent and station",
+      "route": "/User/Units",
+      "capture_refs": [
+        "026-saved-own-unit-filtered-catalog",
+        "033-own-organizational-tree-includes-station-unit",
+        "034-own-station-tree-saved-unit-association"
+      ],
+      "required_labels": [
+        "All Units",
+        "TRAINING ONLY - Community coordination 20261028",
+        "TRAINING ONLY - Community base 20261028",
+        "TRAINING ONLY - Community van 20261028",
+        "TRAINING ONLY - Community response vehicle",
+        "Showing 1 to 1 of 1 entries"
+      ],
+      "narration": "Finish with the group tree on Units. Expand and select the Community Coordination parent. Its view includes the vehicle assigned to the child Community Base station. Select that station directly and the same unit appears. This demonstrates the saved relationship from organizational parent to station to unit. These tree choices filter the view; they do not move a unit, assign a crew member, or change its status.",
+      "practice": "Find the saved unit through both its parent group and its station.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Actual saved unit full name/type/Van glyph. Available is a display, not proof of stored active-state readiness or staffing. Timestamp is not asserted as a stored event.",
+        "Actual parent selection includes own unit under childStation; Search clear. Only this parent/one-child case shown, not every arbitrary tree depth.",
+        "Actual selected childStation shows same saved unit/type; no station reassignment, status action or timestamp persistence claim."
+      ]
+    },
+    {
+      "id": "adapt",
+      "title": "Apply the structure across sectors",
+      "route": "/User/Units",
+      "capture_refs": [
+        "034-own-station-tree-saved-unit-association",
+        "011-saved-station-and-parent-catalog"
+      ],
+      "required_labels": [
+        "Group Name",
+        "TRAINING ONLY - Community coordination 20261028",
+        "TRAINING ONLY - Community base 20261028",
+        "TRAINING ONLY - Community van 20261028",
+        "TRAINING ONLY - Community response vehicle"
+      ],
+      "narration": "Chicago Fire can separate a coordination structure from a station and its vehicles. Community care and mental health teams can organize operational teams and bases without patient detail. Search and rescue can distinguish coordination groups, staging bases, and resources; security teams can structure patrol resources; wildland teams can organize seasonal bases; and industrial response teams can separate facility groups from response vehicles. In each setting, verify saved relationships and seat requirements, then manage actual staffing as a separate, deliberate operation.",
+      "practice": "Sketch a fictional parent, station, type and unit suited to your sector before changing real configuration.",
+      "capture_intent": "Control-first actual source order; distinguish prepared forms, normal saves, fresh readbacks and read-only selections.",
+      "source_limits": [
+        "Actual selected childStation shows same saved unit/type; no station reassignment, status action or timestamp persistence claim.",
+        "Both new full catalog rows,0members, ownStationparentORG; original6 preserved. Edit launchers visible."
+      ]
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_review_required": true,
+  "whole_group_unit_module_complete": false
+}

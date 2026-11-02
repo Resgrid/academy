@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-27T21:52:05.505777+00:00",
+  "source_pins": [
+    {
+      "file": "Unit/node_modules/expo-file-system/src/legacy/ExponentFileSystem.web.ts",
+      "sha256": "9486b1a41d74cc2f4c19e49a8a40a9517d2edba4a3867d1da1f2b1571e83017a"
+    },
+    {
+      "file": "Unit/node_modules/expo-file-system/src/legacy/ExponentFileSystemShim.ts",
+      "sha256": "4adb18be27fc58e0e4f68f8569abe6e778c7001c627d610c53bdd3799e67eb08"
+    },
+    {
+      "file": "Unit/node_modules/expo-file-system/src/legacy/FileSystem.ts",
+      "sha256": "46b2c457480345d91b2c7bab27fa83ca2b3b13351798c3759c38c5da3b94bb7f"
+    },
+    {
+      "file": "Unit/node_modules/expo-image-manipulator/src/web/ImageManipulatorImageRef.web.ts",
+      "sha256": "af2249a040490ea4892f3cc0f606766743d37affb93604aa196a329a585b18b5"
+    },
+    {
+      "file": "Unit/node_modules/expo-image-manipulator/src/web/utils.web.ts",
+      "sha256": "1b818d3c8c64f4036456a4ab02b6df6cd19226c0f73b6761cad1ba30bf5a896d"
+    }
+  ],
+  "installed_versions": {
+    "expo-file-system": "57.0.7",
+    "expo-image-manipulator": "57.0.20"
+  },
+  "confirmed_contract": "Legacy web filesystem shim has no readAsStringAsync; wrapper throws UnavailabilityError. Web ImageManipulator saveAsync supportsbase64:true and returns bare base64 from its Blob.",
+  "observation_authority": "Parent reported normal software-fixture gallery selection and Uploading→Upload with no saved result. No runtime exception or successful persisted image is asserted by this offline source review.",
+  "fix_scope": "Use existing isWeb utility. Request manipulator base64 only on web; native options/read path preserved. Reject missing payload and retain preview/note on failure.",
+  "runtime_status": "Applied by parent; actual browser saved-image result remains pending."
+}

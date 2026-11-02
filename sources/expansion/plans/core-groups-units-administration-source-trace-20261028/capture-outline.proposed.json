@@ -1,0 +1,82 @@
+{
+  "kind": "bounded_capture_mutation_plan",
+  "source_only": true,
+  "scenario": "groups-units-fictional-creation.proposed.json",
+  "ordered_operations": [
+    {
+      "id": "baseline",
+      "route": "/User/Groups",
+      "action": "Capture real group list/counts/types/parents and AddNewGroup launcher; preserve existing rows.",
+      "mutation": false
+    },
+    {
+      "id": "org-form",
+      "route": "/User/Groups/NewGroup",
+      "action": "Show GroupTypeOrganizational/GroupName/ParentNone, empty admin/member selectors and normal SaveGroup. Prepare own parent name.",
+      "mutation": "own create only"
+    },
+    {
+      "id": "org-readback",
+      "route": "normal group list → own Edit",
+      "action": "Show returned own row, fresh name/type/ParentNone/empty selectors. If maintenance is useful, rename ONLY own unused group and fresh-read it; otherwise inspect without save.",
+      "mutation": "optional own Name only"
+    },
+    {
+      "id": "station-form",
+      "route": "/User/Groups/NewGroup",
+      "action": "Select StationGroup and own parent. Show address/GPS/W3W alternatives. Optionally attempt normal Save with name but no location for real validation; no created-row claim for validation. Then prepare complete fictional coordinate pair, W3W/address blank.",
+      "mutation": "validation attempt plus own create only"
+    },
+    {
+      "id": "station-save-readback",
+      "route": "SaveGroup → normal list → own Edit",
+      "action": "Capture SaveGroup before result, then fresh Stationtype/parent/both coordinates/empty membership, disabled type radios. No provider or map-position claim.",
+      "mutation": "own station create only"
+    },
+    {
+      "id": "membership-boundary",
+      "route": "own group Edit",
+      "action": "Inspect GroupAdmins/GroupUsers normal picker and single-group help; if empty due assigned members, show empty result. Cancel without any membership/admin selection.",
+      "mutation": false
+    },
+    {
+      "id": "type",
+      "route": "/User/Department/Types → NewUnitType",
+      "action": "Capture normal launcher, own type name/ClassNone/StandardActions/Defaulticon/no customfile and Save. Fresh-own type readback; preserve all existing type/status definitions.",
+      "mutation": "optional own type create only"
+    },
+    {
+      "id": "new-unit",
+      "route": "/User/Units → NewUnit",
+      "action": "Show Name,Type,Station list with only stations/NoStation and own Station; AddRole → uniqueExerciseNavigator seat, own existingPersonnelRole51007, Requiredchecked. Show Save before result. BrowseTemplates may be inspected/closed but not applied.",
+      "mutation": "own new unit/seat definition only"
+    },
+    {
+      "id": "unit-readback",
+      "route": "normal list → own Edit",
+      "action": "Verify actual own name/type/station/seat/required flag after leaving/reopening. Do not save Edit unless an explicit own-only correction is necessary. No crew/status outcome assumed.",
+      "mutation": false
+    },
+    {
+      "id": "crew-safety",
+      "route": "/User/Units/UnitStaffing",
+      "action": "Read-only actual baseline crew/configured seats; explain positions vs people. Do NOT Save. Verify Engine51/Herrmann remains unchanged using actual readback.",
+      "mutation": false
+    }
+  ],
+  "strongest_next_captures": [
+    "Empty organizational create→saved fresh Edit",
+    "Station blank-location validation (if desired)→complete manual pair→saved type/parent/pair readback",
+    "Empty selector/single-group boundary without changing existing memberships",
+    "Own type→own unit/required-seat definition→fresh readback",
+    "Read-only current UnitStaffing; no Save"
+  ],
+  "never_infer": [
+    "A selected value persisted without fresh readback",
+    "GroupAdmins selection is harmless: it changes group administrative rights",
+    "An empty NewGroup picker is a broken lookup when everyone is already grouped",
+    "Creating a seat assigns a person or proves fully staffed",
+    "Novu subscriber registration proves notification delivery",
+    "Typed coordinates establish device location or route safety"
+  ]
+}

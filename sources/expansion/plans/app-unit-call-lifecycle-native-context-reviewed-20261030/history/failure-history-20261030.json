@@ -1,0 +1,19 @@
+{
+  "kind": "Native source qualification helper failure history",
+  "not_a_source_or_pixel_approval": true,
+  "attempts": [
+    {
+      "operation": "First unchanged native-validator call",
+      "failure": "Caller omitted required primary_app argument. No validation report generated.",
+      "resolution": "Passed actual primary application Unit without modifying validator."
+    },
+    {
+      "operation": "Second report serialization after all23 native validations",
+      "failure": "Dependencies contained PosixPath objects; report encoding failed, leaving an empty attempt file.",
+      "retained_empty_attempt": "history/empty-validator-report-attempt-20261030.txt",
+      "resolution": "Converted dependency paths to public source-relative strings before opening output. Wrote new current-validator-report-v2.json only after successful encoding and validation."
+    }
+  ],
+  "current_complete_report": "current-validator-report-v2.json",
+  "media_or_ready_or_site_changed": false
+}

@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "app": "Core",
+  "status": "untimed source-only capture plan, not narration/freeze/video",
+  "control_first": true,
+  "parent_reported_existing_state": {
+    "kind": "parent_reported_actual_UI_operations_not_independently_replayed",
+    "recorded_at": "2026-10-29T00:11:27.486647+00:00",
+    "department_id": 51,
+    "employer": {
+      "first_profile": true,
+      "legal_name_only": true,
+      "coverage": "Not declared",
+      "integrated_enterprise": false,
+      "tax_contact_addresses_headcounts": "blank"
+    },
+    "establishment": {
+      "id": "969f772a-1811-4e94-ab84-5f85ddedeedb",
+      "code": "TRN-COMM-28",
+      "name": "TRAINING ONLY Community coordination base (parent-described; actual screenshot text authoritative)",
+      "state": "IL",
+      "major_activity": "fictional software exercise",
+      "active_from": "2026-10-28",
+      "active_to": null,
+      "time_zone": "America/Chicago",
+      "headquarters": false,
+      "prior_file": false,
+      "address_naics_affiliate": "blank"
+    },
+    "worker": {
+      "id": "ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "member": "Matthew Casey",
+      "external_worker_key": "blank",
+      "display_label": "blank"
+    },
+    "employment": {
+      "id": "e75c2179-9f2f-459d-a47f-62b1617b48d9",
+      "kind": "Volunteer",
+      "start": "2026-10-28",
+      "end": "2026-10-28",
+      "employment_type": "Unknown",
+      "exemption": "Unknown",
+      "california_basis": "Not a California employee",
+      "default_establishment_id": "969f772a-1811-4e94-ab84-5f85ddedeedb",
+      "personnel_role_id": 51007,
+      "contractor": "blank",
+      "affiliate": "blank"
+    },
+    "limits": [
+      "No screenshots in this package were independently reviewed by this source trace. Parent actual captured UI requires separate pixel review.",
+      "Parent reports own assignment saved/fresh GET. No compensation, work-entry, resource profile or cost run saved by this agent; new planned work entry not yet attested."
+    ],
+    "assignment": {
+      "id": "a87a1c21-5741-4d6f-b959-cfeb359a24f7",
+      "job_title": "TRAINING ONLY Coordination exercise (parent-described; actual pixels authoritative)",
+      "effective_on": "2026-10-28",
+      "expires_on": "2026-10-28",
+      "establishment_id": "969f772a-1811-4e94-ab84-5f85ddedeedb",
+      "work_country": "US",
+      "work_subdivision": "IL",
+      "work_mode": "Non-remote",
+      "CRD_SOC_MARS_mapping_provenance": "blank",
+      "saved_and_fresh_GET": "parent reported, not independently replayed by source agent"
+    }
+  },
+  "shots": [
+    {
+      "id": "foundation",
+      "route": "/User/Workforce/Index",
+      "normal_control_entry": "Workforce sidebar entry",
+      "required_labels": [
+        "Workforce",
+        "Employer",
+        "Establishments",
+        "Workers",
+        "Employments"
+      ],
+      "capture_intent": "Dashboard and exact actual counts after parent-created foundation. Do not claim reporting readiness.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "employer-readback",
+      "route": "/User/Workforce/Employer",
+      "normal_control_entry": "Employer tab",
+      "required_labels": [
+        "Employer profile",
+        "Legal name",
+        "Coverage status",
+        "Save"
+      ],
+      "capture_intent": "Show the existing own legal-name-only profile and Not declared coverage without changing or saving again.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "establishment-readback",
+      "route": "/User/Workforce/Establishments",
+      "normal_control_entry": "Establishments tab; own Edit pencil",
+      "required_labels": [
+        "Establishments",
+        "Code",
+        "Name",
+        "State",
+        "Active from",
+        "Active to",
+        "Time zone",
+        "Save"
+      ],
+      "capture_intent": "Show launcher/list then saved own establishment form in multiple honest viewport captures; do not fill identifiers.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "member-link",
+      "route": "/User/Workforce/Workers",
+      "normal_control_entry": "Workers tab; Add worker form",
+      "required_labels": [
+        "Workers",
+        "Member",
+        "External worker key",
+        "Display label",
+        "Add worker"
+      ],
+      "capture_intent": "Retain initial parent create/control/result captures; fresh worker row is one linked member, not an account invitation.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "employment-readback",
+      "route": "/User/Workforce/Worker?id=ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "normal_control_entry": "Own worker row; employment Edit pencil",
+      "required_labels": [
+        "Employments",
+        "Add employment",
+        "Worker kind",
+        "Start",
+        "End",
+        "Default establishment",
+        "Personnel role"
+      ],
+      "capture_intent": "Show the existing one-day Volunteer period and existing role reference. Capture fields/Save without further baseline edit.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "assignment-launcher",
+      "route": "/User/Workforce/Worker?id=ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "normal_control_entry": "Own employment panel Add assignment",
+      "required_labels": [
+        "Add assignment",
+        "Job title",
+        "Work mode"
+      ],
+      "capture_intent": "Control-first launcher before entering the Add assignment form.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "assignment-form",
+      "route": "/User/Workforce/Worker?id=ea3ba456-ee5d-4a53-b61e-46c658f63b5a&assignment=e75c2179-9f2f-459d-a47f-62b1617b48d9:new",
+      "normal_control_entry": "Add assignment",
+      "required_labels": [
+        "Effective",
+        "Expires",
+        "Job title",
+        "Establishment",
+        "Work mode",
+        "Work location",
+        "Save"
+      ],
+      "capture_intent": "Use one-day Oct28, existing own establishment, TRAINING ONLY - Community coordination software exercise, Non-remote, US/IL. Blank CRD/SOC/MARS classifications; capture default CA vs deliberately entered IL only if visible.",
+      "mutation_scope": "optional new own assignment only",
+      "verification_or_stop": "Save once then fresh Worker GET, assignment table and own Edit reopen verify exact values. Stop on unexpected existing assignment/overlap or product validation."
+    },
+    {
+      "id": "compensation-navigation",
+      "route": "/User/Workforce/Compensation?employmentId=e75c2179-9f2f-459d-a47f-62b1617b48d9",
+      "normal_control_entry": "Own employment Compensation button",
+      "required_labels": [
+        "Compensation",
+        "Employee profiles",
+        "Add profile",
+        "Default profiles"
+      ],
+      "capture_intent": "Show employee context and default-profile distinction; do not add a department/role default.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Review actual foreground pixels at full viewport; keep controls first, then saved result. Do not infer offscreen labels from DOM."
+    },
+    {
+      "id": "compensation-form-readonly",
+      "route": "/User/Workforce/CompensationProfile?employmentId=e75c2179-9f2f-459d-a47f-62b1617b48d9",
+      "normal_control_entry": "Add profile",
+      "required_labels": [
+        "Pay basis",
+        "Currency",
+        "Base amount",
+        "Regular hourly equivalent",
+        "Rate multipliers",
+        "Pay components",
+        "Employer cost components",
+        "Save"
+      ],
+      "capture_intent": "Read-only form survey with protected amounts blank, no Save/Approve required. Explain only available controls.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Cancel normally. If protection refuses or fields redact, retain honest availability limit; no new grant/security configuration."
+    },
+    {
+      "id": "work-entry-readonly",
+      "route": "/User/Workforce/WorkEntries?edit=new",
+      "normal_control_entry": "Work entries tab then Add work entry",
+      "required_labels": [
+        "Add work entry",
+        "Date",
+        "Worker",
+        "Hours",
+        "Hours type",
+        "Establishment",
+        "Work mode",
+        "Country",
+        "State / province",
+        "Approved payroll cost",
+        "Approved",
+        "Save"
+      ],
+      "capture_intent": "First show date-filtered list and Add form. Parent authorized a separate fictional2-hour Regular entry for Casey/day/own establishment, software External source+unique id, ApprovedOFF and no approved payroll cost or call/deployment. Capture each field/Save then fresh row and reopen only after actual UI save.",
+      "mutation_scope": "parent-authorized new fictional2-hour own row; not executed by this agent",
+      "verification_or_stop": "Never fill approved payroll cost or mark Approved; no original call/deployment link. Cancel if fields are not completely visible or preservation is unclear."
+    },
+    {
+      "id": "resource-cost-readonly",
+      "route": "/User/Workforce/ResourceCosts?edit=new",
+      "normal_control_entry": "Resource costs tab then Add resource profile",
+      "required_labels": [
+        "Resource profiles",
+        "Add resource profile",
+        "Subject type",
+        "Unit",
+        "Name",
+        "Effective",
+        "Expires",
+        "Currency",
+        "Depreciation",
+        "Approved",
+        "Save"
+      ],
+      "capture_intent": "Read-only view of available subjects, dates/allocation/component controls. Distinguish internal profile from Unit inventory or dispatch readiness.",
+      "mutation_scope": "none",
+      "verification_or_stop": "Cancel; do not inadvertently approve or overwrite a current profile/components list."
+    },
+    {
+      "id": "cost-runs-readonly",
+      "route": "/User/Workforce/CostRuns",
+      "normal_control_entry": "Cost runs tab",
+      "required_labels": [
+        "Cost runs",
+        "New run",
+        "Deployment",
+        "Calculate deployment cost",
+        "Bid",
+        "Estimate bid cost",
+        "Call #",
+        "Calculate call cost"
+      ],
+      "capture_intent": "Show Calculate/Estimate controls as actions that write runs; do not click in a baseline survey. Existing run details may be read if access allows.",
+      "mutation_scope": "none",
+      "verification_or_stop": "No Calculate/Estimate/Freeze/Delete. Later owned fictional context must first have explicit inputs and no historical runs to replace."
+    }
+  ]
+}

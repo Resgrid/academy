@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "proposed_lesson_id": "core-customer-billing-review",
+  "working_title": "Review customer billing defaults and subscription capacity",
+  "audience": "Existing authorized department billing administrators",
+  "purpose": "Inspect customer identity/profile/defaults/aging and distinguish these from Resgrid subscription capacity using existing fictional data.",
+  "status": "source_only_not_canonical_not_frozen_not_captured",
+  "scenes": [
+    {
+      "id": "B01-customer-invoicing",
+      "app": "Core",
+      "route": "/User/Invoicing/Index",
+      "capture_intent": "Open Workforce & Business Operations → Invoicing; read list/status/customer/number filters and any access banner.",
+      "required_visible_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings"
+      ],
+      "ordinary_read_only_actions": [
+        "Use ordinary module menu",
+        "Capture actual filters and actual empty/existing list without edits"
+      ],
+      "result_to_record": "Real current list or gate.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "No new invoice, subscription, entitlement or payment writes. Empty list is not a paid/settled state."
+      ]
+    },
+    {
+      "id": "B02-billing-identity",
+      "app": "Core",
+      "route": "/User/Invoicing/Settings",
+      "capture_intent": "Use Billing settings tab and inspect identity/remit fields without change.",
+      "required_visible_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address"
+      ],
+      "ordinary_read_only_actions": [
+        "Open visible Billing settings tab",
+        "Capture safe identity fields; leave registrations blank/unchanged"
+      ],
+      "result_to_record": "Actual displayed values or unsaved-default state.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Do not expose real registration/account data. A GET-created default model is not persisted identity proof."
+      ]
+    },
+    {
+      "id": "B03-footer-link-preferences",
+      "app": "Core",
+      "route": "/User/Invoicing/Settings",
+      "capture_intent": "Read invoice-footer and pay-link display/expiry settings, with no Save.",
+      "required_visible_labels": [
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices"
+      ],
+      "ordinary_read_only_actions": [
+        "Normal scroll to footer and link preferences",
+        "Capture all discussed controls"
+      ],
+      "result_to_record": "Current displayed preferences.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Conditional document effects explained from source only; no generated PDF, created pay link, provider or payment claim."
+      ]
+    },
+    {
+      "id": "B04-online-availability-only",
+      "app": "Core",
+      "route": "/User/Invoicing/Settings?tab=online",
+      "capture_intent": "Only if actual tab exists, inspect unavailable/connection status; otherwise record absence honestly.",
+      "required_visible_labels": [
+        "Online payments"
+      ],
+      "ordinary_read_only_actions": [
+        "Read tab/status only if offered"
+      ],
+      "result_to_record": "Actual availability state; omitted scene if tab absent.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "No Connect, disconnect, enable, payment-method Save, provider dashboard or hosted checkout. No secrets/account identifiers captured."
+      ]
+    },
+    {
+      "id": "B05-existing-customer-entry",
+      "app": "Core",
+      "route": "/User/Contacts/View?contactId=<actual-existing-fictional-company>",
+      "capture_intent": "Use existing Academy Logistics Desk (fictional), Billing tab/profile launcher.",
+      "required_visible_labels": [
+        "Billing profile",
+        "Set up billing profile"
+      ],
+      "ordinary_read_only_actions": [
+        "Find exact existing fictional company via Contacts",
+        "Open its Billing view and actual profile launcher"
+      ],
+      "result_to_record": "Actual existing/no-profile state and launcher.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Do not recreate/modify Contact. If no profile, capture “No billing profile yet” as an uninitialized state, not saved defaults."
+      ]
+    },
+    {
+      "id": "B06-customer-defaults",
+      "app": "Core",
+      "route": "/User/Invoicing/BillingProfile?contactId=<actual-existing-fictional-company>",
+      "capture_intent": "Read terms/discount/rate card/active/PO preferences without change.",
+      "required_visible_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Use the department default",
+        "Active (new invoices may be created)",
+        "Purchase order number required on invoices"
+      ],
+      "ordinary_read_only_actions": [
+        "Open actual Billing profile",
+        "Use normal scrolling/observed anchor to frame Terms below the email input",
+        "Do not type, toggle or Save"
+      ],
+      "result_to_record": "Actual form values and saved-vs-new status.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Honor recorder credential-field guard; do not include a painted filled email input or relax the guard. PO flag has no traced enforcement promise. Terms due-date effect occurs at Mark Sent, which is not performed."
+      ]
+    },
+    {
+      "id": "B07-address-tax-defaults",
+      "app": "Core",
+      "route": "/User/Invoicing/BillingProfile?contactId=<actual-existing-fictional-company>",
+      "capture_intent": "Read billing-address source and tax preference controls.",
+      "required_visible_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax exempt"
+      ],
+      "ordinary_read_only_actions": [
+        "Normal scroll to actual address/tax controls",
+        "Leave all fields unchanged"
+      ],
+      "result_to_record": "Current displayed choices; no tax/registration content entered.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "No tax/legal advice or calculated-invoice outcome. Use only existing fictional public addresses; no real identifiers."
+      ]
+    },
+    {
+      "id": "B08-rates-and-aging",
+      "app": "Core",
+      "route": "/User/Invoicing/RateCards",
+      "capture_intent": "Show rate-card catalog, then Aging through actual tabs.",
+      "required_visible_labels": [
+        "Rate Cards",
+        "Default",
+        "Active",
+        "Aging"
+      ],
+      "ordinary_read_only_actions": [
+        "Read existing rate-card list without New/Edit Save",
+        "Use Aging tab",
+        "Capture actual bucket/currency/As-of and empty-state if present"
+      ],
+      "result_to_record": "Real rate availability and current aging state.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Do not create rates/debt/payments to populate a report. No outstanding invoices is not proof of completed collections."
+      ]
+    },
+    {
+      "id": "B09-subscription-distinction",
+      "app": "Core",
+      "route": "/User/Subscription/Index",
+      "capture_intent": "Open department-menu Subscription Plan & Billing separately and read current plan/capacity/add-ons.",
+      "required_visible_labels": [
+        "Subscription Plan & Billing",
+        "Entities"
+      ],
+      "ordinary_read_only_actions": [
+        "Use actual department-menu Subscription entry",
+        "Capture actual plan name/count/limits, safe existing tab views only"
+      ],
+      "result_to_record": "Fresh actual capacity evidence; current values authoritative.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "No price/recommendation claim from local demo$0 or historical14/Unlimited. No Upgrade/Buy/Cancel/Change billing info/provider or payment-history identity exposure. Current source grants admins, not exclusively managing member."
+      ]
+    },
+    {
+      "id": "B10-practical-review",
+      "app": "Core",
+      "route": "/User/Invoicing/Index",
+      "capture_intent": "Return to customer invoicing and summarize department identity/customer defaults/subscription separation.",
+      "required_visible_labels": [
+        "Invoicing",
+        "Invoices"
+      ],
+      "ordinary_read_only_actions": [
+        "Return by ordinary navigation; no Save"
+      ],
+      "result_to_record": "Actual stable view and no billing mutations.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "All saved profile/identity, issued-invoice or financial outcomes remain unproven by this read-only plan."
+      ]
+    }
+  ],
+  "six_sector_examples": [
+    {
+      "sector": "Chicago Fire / fire operations",
+      "report_example": "Compare fictional recorded call and apparatus timestamps; do not equate them with physical response verification.",
+      "billing_example": "Review practice customer defaults and capacity without charging for an exercise."
+    },
+    {
+      "sector": "Community care and mental health response",
+      "report_example": "Review aggregate software workload with no patient detail or clinical interpretation.",
+      "billing_example": "Separate coordination customer contact data from any clinical or coverage determination."
+    },
+    {
+      "sector": "Search and rescue",
+      "report_example": "Review exercise resource history without publishing a real subject location.",
+      "billing_example": "Read logistics-customer settings without claiming reimbursement or deploying resources."
+    },
+    {
+      "sector": "Security",
+      "report_example": "Read fictional staffing/status snapshots without certifying presence at a protected site.",
+      "billing_example": "Review contract-customer defaults without opening a live payment or changing rates."
+    },
+    {
+      "sector": "Wildland",
+      "report_example": "Compare recorded software resource activity without claiming payroll or reimbursement readiness.",
+      "billing_example": "Keep billing identity, own-provider setup and subscription entitlement separate."
+    },
+    {
+      "sector": "Industrial response",
+      "report_example": "Read exercise summaries without certifying inspection, work, safety or regulatory compliance.",
+      "billing_example": "Use only fictional customer details and leave amounts, registrations and payment controls unchanged."
+    }
+  ],
+  "stop_conditions": [
+    "Missing normal feature/module/permission/add-on access: retain the gate, no enrollment or workaround",
+    "Real billing identifiers or filled credential-like inputs painted in frame",
+    "No customer profile: teach uninitialized form only, no saved/issued/payment proof",
+    "No online tab: omit its controls and record availability boundary"
+  ]
+}

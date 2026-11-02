@@ -1,0 +1,2338 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "lesson": "07-mapping",
+  "title": "Make location information useful and current",
+  "status": "BLOCKED; no replacement master, actual evidence/timing plan incomplete",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "cb39581479391b1438805c064c31160b5ba8fda776888118c5abadb3ca984d4b",
+    "normalised_words_sha256": "e418718f99f9b8154f100e0e54fe59ce2c1ddf0492ca352b6fc71bc9e8054eca",
+    "word_count": 522,
+    "source_scene_count": 13,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/07-mapping.mp4",
+      "sha256": "dae4587cd7e53bf6f75f2dec706180ce46d8480d145fd90f64013292c71727ca",
+      "exists": true,
+      "duration_seconds": 214.97,
+      "bytes": 6380214
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/07-mapping.m4a",
+      "sha256": "acb8c60a6c0f4d973fbd0c6dc8baeef21733af020b888e76f94b806cbc44f74f",
+      "exists": true,
+      "duration_seconds": 213.44,
+      "bytes": 4307785
+    },
+    "existing_video_aac_packet_payload_sha256": "109061ded9bd8aac8155bce4ed2f8aacc1d3bab16a08fda1eb25bc4c84a2ea79",
+    "srt": {
+      "file": "sources/media/07-mapping.srt",
+      "sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "cue_count": 72
+    },
+    "vtt": {
+      "file": "sources/media/07-mapping.vtt",
+      "sha256": "462f08abcfdcf3872bc7330ddfe16141cf5e70b883107d89fba88565c8196cdf"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/07-mapping-raw.srt",
+      "sha256": "97059802085a9836345f4b3fd92b528bd0f0995fc7514a9caadd7a773e973fdb"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/07-mapping-validation.json",
+      "sha256": "ff0367491430da317f5b3ac2faa83087837e8050ffd27d449fc1f2424b6352ce",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 73,
+      "reported_match_ratio": 0.9972,
+      "reported_duration_seconds": 218.84,
+      "reported_raw_audio_seconds": 213.44,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 214.954,
+    "caption_last_end_seconds": 214.729,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "priority_findings": [
+    {
+      "finding": "TTL contradicts scenario",
+      "actual": "Personnel TTL0; visible help says0 disables expiration. Unit TTL0 in separate view.",
+      "narrated": "60-minute personnel expiration",
+      "decision": "Do not show0 as60 or count explanatory help as saved state."
+    },
+    {
+      "finding": "Current media differs from retained validation",
+      "current_video_duration_seconds": 214.97,
+      "current_caption_cues": 72,
+      "current_caption_last_end_seconds": 214.729,
+      "course_metadata_duration_seconds": 214.954,
+      "older_validation_duration_seconds": 218.84,
+      "older_validation_cues": 73,
+      "raw_audio_duration_seconds": 213.44,
+      "older_validation_transition_pause_seconds": 0.45,
+      "older_validation_transition_count": 12,
+      "older_validation_formula_seconds": 218.84,
+      "decision": "Older validation does not describe current hashes; exact historical discrepancy unverified. Re-QA actual final AAC/SRT or regenerate a documented assembly; never pair raw213.44 audio directly with final captions."
+    },
+    {
+      "finding": "Weather instructions do not match controls",
+      "actual": "Zone form uses center/radius; Settings has severity/time scheduling, not a recipient picker. Service sends auto-messages to eligible department members.",
+      "narrated": "Draw zones and choose who is alerted.",
+      "proposed_narration_only": "Configure each monitoring zone with its center location and radius. Review the display severity and delivery schedule in Weather Alert Settings, and confirm the department recipient policy.",
+      "decision": "Requires narration correction plus fresh real speech/cues before a faithful replacement; do not fabricate drawing/audience UI."
+    }
+  ],
+  "source_pins": "sources/expansion/plans/legacy-source-file-pins.json",
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "existing_capture_candidates": [
+    {
+      "capture_id": "core-config-022-mapping-populated-current",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-022-mapping-populated-current.jpg",
+      "image_sha256": "89956b9c9dd8f93cc23a7841232719cfc877cda95c7ca8b958540e38937c66c6",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/Mapping",
+      "captured_at": "2026-10-26T20:02:39.133Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Mapping",
+          "Map Icon Legend",
+          "Map Visualizations",
+          "Custom Maps",
+          "Manage Layers",
+          "Hydrants",
+          "Manage POIs",
+          "Hide labels",
+          "Show calls",
+          "Show stations",
+          "Show units",
+          "Show personnel",
+          "Show POIs",
+          "Layers"
+        ],
+        "observed_values": {},
+        "limit": "Actual cartography and map controls; extent is over the Atlantic, resource labels are crowded/partly clipped. Does not prove readable unit/person identities, marker ages or location provenance.",
+        "reviewed_at": "2026-10-26T21:00:32.583227+00:00",
+        "method": "Stored original JPEG inspected; source pixels and source manifest unchanged. Only listed observations confirmed."
+      }
+    },
+    {
+      "capture_id": "196-map-incident-pins-local",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/196-map-incident-pins-local.jpg",
+      "image_sha256": "f240644ff1a60a2b41e18dc02d918c5ba9c56b4d138840d024665a8bd48de777",
+      "width": 1434,
+      "height": 795,
+      "url": "http://localhost:19102/map",
+      "captured_at": "2026-10-26T19:49:39.613Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Map",
+          "TRAINING — Warehouse alarm",
+          "TRAINING — Community medical standby"
+        ],
+        "observed_values": {},
+        "limit": "Actual street cartography and training call pins after manual pan/zoom; co-located personnel labels overlap and are excluded. No marker-age comparison.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "legacy-core-048-mapping-settings-personnel-stable",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-048-mapping-settings-personnel-stable.jpg",
+      "image_sha256": "a14ad5cf56f143aabc2113611b9def838efc30d492058bf7d608775de945432a",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Department/MappingSettings",
+      "captured_at": "2026-10-25T18:59:10.872Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Mapping and BigBoard Settings",
+          "Personnel Mapping Settings",
+          "Allow Status with No Location Data to hide previous location",
+          "TTL In Minutes for Personnel Locations",
+          "Units Mapping Settings"
+        ],
+        "observed_values": {
+          "personnel_ttl_minutes": 0
+        },
+        "limit": "Personnel TTL value is0, not narrated60. Visible help explicitly says0 disables TTL/keeps stale positions without an age limit. Unit TTL is clipped. No saved60 or expired-marker result.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "legacy-core-052-mapping-map-style-choices",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-052-mapping-map-style-choices.jpg",
+      "image_sha256": "71542ff4dad52ba654e365f2cdc704ba171f8713b93fe48c69cff0e3d734a6cb",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Department/MappingSettings",
+      "captured_at": "2026-10-25T18:59:44.272Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "TTL In Minutes for Unit Locations",
+          "Map Style",
+          "Day Map Style",
+          "Night Map Style"
+        ],
+        "observed_values": {
+          "unit_ttl_minutes": 0,
+          "day_style": "Automatic (Streets)",
+          "night_style": "Automatic (Dark)"
+        },
+        "limit": "Read-only state. No TTL60 change, provider style application or marker expiration proof.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "core-config-028-poi-empty-baseline",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-028-poi-empty-baseline.jpg",
+      "image_sha256": "b9fdd0a9de2bb38144146969b2d0b0af936ddd4b11ca744878201a7ffd60ceb8",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/Mapping/POIs",
+      "captured_at": "2026-10-26T20:03:32.866Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "core-config-029-poi-type-options-readonly",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-029-poi-type-options-readonly.jpg",
+      "image_sha256": "1972c1269992ca7b536d76658f67e653320e4934b686f96cc591c38bddc833a8",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/Mapping/AddPOIType",
+      "captured_at": "2026-10-26T20:03:41.411Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "core-config-030-poi-icon-preview-readonly",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-030-poi-icon-preview-readonly.jpg",
+      "image_sha256": "fb393f4b2b7e44defd000dfaac3f1fc2d1beba2f1464a970c9ad9f5d5ae35289",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/Mapping/AddPOIType",
+      "captured_at": "2026-10-26T20:03:41.456Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "157-map-poi-list",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/157-map-poi-list.jpg",
+      "image_sha256": "157b208adb734ab8aa6756f68c7b8dd01d707474fd6193595e583dae4ad16f0a",
+      "width": 1434,
+      "height": 773,
+      "url": "http://localhost:19102/map",
+      "captured_at": "2026-10-26T18:11:55.144Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Map",
+          "POIs",
+          "0 POIs",
+          "No POIs found"
+        ],
+        "observed_values": {
+          "poi_count": 0
+        },
+        "limit": "Actual empty POI list; search layout overlaps. No station/hospital POI saved.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "legacy-core-058-weather-zones",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-058-weather-zones.jpg",
+      "image_sha256": "2bc7b483e3a1c249cac5f556d724136fe730a06ab4805f0c96720d9d17866256",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/WeatherAlerts/Zones",
+      "captured_at": "2026-10-25T19:00:04.706Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Monitoring Zones",
+          "Add Monitoring Zone",
+          "Zone Name",
+          "Zone Code",
+          "Center Location",
+          "Radius (miles)",
+          "Options",
+          "Primary Zone",
+          "Active",
+          "Save Zone",
+          "Cancel"
+        ],
+        "observed_values": {
+          "radius_miles": 25,
+          "active_checked": true,
+          "primary_zone_checked": false,
+          "configured_zones": 0
+        },
+        "limit": "Actual center/radius zone form. No drawing canvas, recipient picker, saved zone, provider alert or delivered notification. The old manifest label Alert Zones is not used as a literal title observation here.",
+        "reviewed_at": "2026-10-26T21:00:32.583227+00:00",
+        "method": "Stored original JPEG inspected; source pixels and source manifest unchanged. Only listed observations confirmed."
+      }
+    },
+    {
+      "capture_id": "158-weather-alerts-filters",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/158-weather-alerts-filters.jpg",
+      "image_sha256": "45cded7c0e8e69d69367b126cf4e45efca3ebb89eb24dd5cee7765e6652323bb",
+      "width": 1434,
+      "height": 773,
+      "url": "http://localhost:19102/weather-alerts",
+      "captured_at": "2026-10-26T18:11:59.657Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "All",
+          "Extreme",
+          "Severe",
+          "Moderate",
+          "Minor",
+          "No active weather alerts"
+        ],
+        "observed_values": {
+          "active_alerts": 0
+        },
+        "limit": "Actual empty severity filters; not zone geometry, recipient selection, live provider event or delivery.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "core-config-023-map-layer-chooser",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-023-map-layer-chooser.jpg",
+      "image_sha256": "aaa6105e5f9d3c0777869b1f0f5cfd3e1ca6a8d8f4b5769f91f2108131575a71",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/Mapping",
+      "captured_at": "2026-10-26T20:02:53.596Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Mapping",
+          "Layers",
+          "Hydrants"
+        ],
+        "observed_values": {
+          "hydrants_checked": true
+        },
+        "limit": "Actual expanded Layers control with Hydrants checked; no custom layer geometry or successful new overlay is demonstrated.",
+        "reviewed_at": "2026-10-26T21:00:32.583227+00:00",
+        "method": "Stored original JPEG inspected; source pixels and source manifest unchanged. Only listed observations confirmed."
+      }
+    },
+    {
+      "capture_id": "legacy-core-011-mapping-new-layer",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-011-mapping-new-layer.jpg",
+      "image_sha256": "569de9fcd08ff0de589f096829cd8d3b9cc4ba63113527b49ccc78f46c0017c7",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Mapping/NewLayer",
+      "captured_at": "2026-10-25T18:55:20.545Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "New Layer",
+          "Name",
+          "Is Visible By Default",
+          "Is Destination",
+          "Color",
+          "Layer Elements"
+        ],
+        "observed_values": {
+          "color": "#0080ff"
+        },
+        "limit": "Actual blank layer form and drawing toolbar; no saved geometry, loaded layer or text/geometry verification. Save is below viewport; icons are not assigned invented names.",
+        "reviewed_at": "2026-10-26T21:00:32.583227+00:00",
+        "method": "Stored original JPEG inspected; source pixels and source manifest unchanged. Only listed observations confirmed."
+      }
+    },
+    {
+      "capture_id": "legacy-core-012-mapping-layer-editor",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-012-mapping-layer-editor.jpg",
+      "image_sha256": "6aca083c49984acff1ec2b0463d9d39f6210ee4a3a868c8f4824a9c216384679",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Mapping/NewLayer",
+      "captured_at": "2026-10-25T18:55:38.854Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "057-settings-native-capability-controls",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/057-settings-native-capability-controls.jpg",
+      "image_sha256": "2313667c83ca00d53b3815a5f9f22ef8d038a9e45cf051eb47b48c0ceaf1d0a4",
+      "width": 1434,
+      "height": 773,
+      "url": "http://localhost:19102/settings",
+      "captured_at": "2026-10-26T17:00:46.096Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "Keep Alive",
+          "Realtime Geolocation",
+          "Background Geolocation",
+          "BT Handset",
+          "No device selected"
+        ],
+        "observed_values": {
+          "native_switches": "off in retained view"
+        },
+        "limit": "Actual preference view only; no OS location permissions, tracking, push/audio/Bluetooth hardware success.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "197-map-call-pin-details",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/197-map-call-pin-details.jpg",
+      "image_sha256": "180a2df055c77f4f3dfba373bd0cc7c2afa829ebca241515a40c840267275229",
+      "width": 1434,
+      "height": 795,
+      "url": "http://localhost:19102/map",
+      "captured_at": "2026-10-26T19:49:50.351Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "TRAINING — Warehouse alarm",
+          "Route",
+          "View Call Details",
+          "Set as Current Call"
+        ],
+        "observed_values": {
+          "fictional_coordinates": [
+            41.8682,
+            -87.6591
+          ]
+        },
+        "limit": "Actual call-pin detail sheet; external Route action unexercised. No current-location/GPS/arrival proof.",
+        "reviewed_at": "2026-10-26T20:55:00.405855+00:00",
+        "method": "Stored original JPEG inspected; screenshot bytes unchanged. Only listed values/labels are independently confirmed."
+      }
+    },
+    {
+      "capture_id": "core-config-031-custom-maps-empty-baseline",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-031-custom-maps-empty-baseline.jpg",
+      "image_sha256": "52939b6fc82820ba4cb21ddeb109baf0289d551357d8c5103d1611734543a742",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/CustomMaps",
+      "captured_at": "2026-10-26T20:03:46.541Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "core-config-032-custom-map-bounds-readonly",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/core-configuration/core-config-032-custom-map-bounds-readonly.jpg",
+      "image_sha256": "4c404b9f0117ed12d83a4631954615074616b99a275bfbaa7aebe3b8bbfb77db",
+      "width": 1434,
+      "height": 739,
+      "url": "http://127.0.0.1:18967/User/CustomMaps/New",
+      "captured_at": "2026-10-26T20:03:53.456Z",
+      "source_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json",
+      "source_manifest_sha256": "756546b2e5a991c31c1e03439435a84122272ecbd6fb4e0c1e29c73f4024c422",
+      "excluded_by_owner": false,
+      "bounded_independent_review": {
+        "verified_labels": [
+          "New Custom Map",
+          "Map Type",
+          "Name",
+          "Description",
+          "Draw Bounds"
+        ],
+        "observed_values": {
+          "map_type": "Indoor"
+        },
+        "limit": "Actual new-map form and existing geographic bounds canvas only. Blank name; no uploaded image, saved custom map or floor/region alignment. Save control is outside viewport.",
+        "reviewed_at": "2026-10-26T21:00:32.583227+00:00",
+        "method": "Stored original JPEG inspected; source pixels and source manifest unchanged. Only listed observations confirmed."
+      }
+    },
+    {
+      "capture_id": "legacy-core-055-custom-maps",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-055-custom-maps.jpg",
+      "image_sha256": "a9998d15b3fb5b1266fb61c22fc0bf5dd6bf826c562035f11f140efc986d0776",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/CustomMaps/Index",
+      "captured_at": "2026-10-25T18:59:54.286Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "legacy-core-032-permissions",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-032-permissions.jpg",
+      "image_sha256": "3577923b4d823c23acf16cfdcbd5ca8d210436931bf127a6682f16b31f991fc7",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Security/Index",
+      "captured_at": "2026-10-25T18:57:57.866Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "legacy-core-046-notes",
+      "app": "Core",
+      "image_file": "sources/captures/expansion/legacy/legacy-core-046-notes.jpg",
+      "image_sha256": "2cabecdd17112c16ef0025b5ba9a0b5b090d8ea3ba1340b778e04e6eae443b0f",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Notes/Index",
+      "captured_at": "2026-10-25T18:59:01.054Z",
+      "source_manifest": "sources/captures/expansion/legacy/manifest-core-legacy.json",
+      "source_manifest_sha256": "adaf655509b6a033d487b696f4aa1a0ec2e6f28392f60ef0aa0f6189b29a3c53",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "090-reference-notes-list",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/090-reference-notes-list.jpg",
+      "image_sha256": "1ecc705e36f6b9c55bfbe9d58540144bdcc6c33314e4070f6269e989a9fdda5a",
+      "width": 1434,
+      "height": 773,
+      "url": "http://localhost:19102/notes",
+      "captured_at": "2026-10-26T17:15:06.699Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    },
+    {
+      "capture_id": "091-reference-note-rich-text",
+      "app": "Responder",
+      "image_file": "sources/captures/expansion/responder/091-reference-note-rich-text.jpg",
+      "image_sha256": "415143b47e1548574a802d1a168505a29a194b125a6b56468bfdaed21c10c1f1",
+      "width": 1434,
+      "height": 773,
+      "url": "http://localhost:19102/notes",
+      "captured_at": "2026-10-26T17:15:17.397Z",
+      "source_manifest": "sources/captures/expansion/responder/manifest.json",
+      "source_manifest_sha256": "b094f53e64bbce9aaabc7aa2b0017c5b41edcf173b9188cef4b84cd59c7f53d0",
+      "excluded_by_owner": false,
+      "bounded_independent_review": null
+    }
+  ],
+  "missing_shot_groups": [
+    {
+      "id": "M01",
+      "title": "Location age: saved personnel60 and reviewed unit setting",
+      "actual_cue_ids": [
+        8,
+        15,
+        29,
+        35,
+        41,
+        47,
+        53,
+        58
+      ],
+      "source_route": "/User/Department/MappingSettings",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "TTL In Minutes for Personnel Locations",
+        "TTL In Minutes for Unit Locations",
+        "Save"
+      ],
+      "existing_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Current existing view is0; capture the actual60 value only if a coordinated fictional-department setting change is authorized, saved and freshly reopened.",
+        "Capture the unit location-age setting fully, with its actual value; do not substitute the clipped bottom of048.",
+        "Show a real, explicitly simulated recent/stale record and resulting marker behavior if narration claims expiration."
+      ],
+      "limits": [
+        "The visible60 is explanatory help, not the saved input. Zero disables TTL in this actual screen.",
+        "Changing a shared department setting requires coordination and restoration; no setting is changed by this plan."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/Department/MappingSettings.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Controllers/DepartmentController.cs"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M02",
+      "title": "Stations/hospitals POI create, persist and view",
+      "actual_cue_ids": [
+        7,
+        18,
+        19,
+        20,
+        60,
+        71
+      ],
+      "source_route": "/User/Mapping/POIs -> AddPOIType -> ViewType?poiTypeId=<actual> -> AddPOI?poiTypeId=<actual> -> Mapping",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Add POI Type",
+        "Name",
+        "Is Destination",
+        "Latitude",
+        "Longitude",
+        "Address",
+        "Note"
+      ],
+      "existing_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture a saved fictional station POI and hospital POI through actual type/coordinate forms; retain actual IDs and saved values.",
+        "Capture readable placed POI pins and a detail popup/list; existing zero-POI/type forms do not demonstrate adding locations."
+      ],
+      "limits": [
+        "Use declared simulated coordinates, no current-device location permission or external dispatch.",
+        "Names/source controls above are source candidates; only visually reviewed current screenshot labels may enter renderer requirements."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/AddPOI.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M03",
+      "title": "Weather wording correction and actual monitoring settings",
+      "actual_cue_ids": [
+        23,
+        24,
+        25,
+        62,
+        65
+      ],
+      "source_route": "/User/WeatherAlerts/Zones and /User/WeatherAlerts/Settings",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Zone Name",
+        "Zone Code",
+        "Center Location",
+        "Radius (miles)",
+        "Primary Zone",
+        "Active",
+        "Save Zone"
+      ],
+      "existing_capture_refs": [
+        "Core:legacy-core-058-weather-zones:2bc7b483e3a1",
+        "Responder:158-weather-alerts-filters:45cded7c0e8e"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Cue25 cannot be illustrated faithfully: it says draw zones/choose audience, but actual zone UI is center/radius and contains no drawing canvas or recipient picker.",
+        "Propose revised narration explaining center/radius plus severity/time schedule and department recipient policy; new speech/cues need actual generation and QA before replacement.",
+        "Capture current source/settings and saved training-only zone if authorized; capture actual saved severity/window state separately without enabling external notification providers."
+      ],
+      "limits": [
+        "Current Settings has severity schedules/exclusions/call-integration, not a group/user picker. WeatherAlertService.GetAllMembersForDepartmentAsync sends auto-messages to non-disabled/non-deleted members; recipient behavior is source-backed, not exercised.",
+        "An empty Responder severity list is not weather delivery or zone coverage proof. No actual provider alert is asserted."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/WeatherAlerts/Zones.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/WeatherAlerts/Settings.cshtml",
+        "Core/Core/Resgrid.Services/WeatherAlertService.cs"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M04",
+      "title": "Draw and save a layer, then apply it",
+      "actual_cue_ids": [
+        26,
+        27,
+        62,
+        64,
+        71
+      ],
+      "source_route": "/User/Mapping/NewLayer -> Layers -> Mapping",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Name",
+        "Is Visible By Default",
+        "Is Destination",
+        "Color",
+        "Layer Elements"
+      ],
+      "existing_capture_refs": [
+        "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+        "Core:legacy-core-011-mapping-new-layer:569de9fcd08f",
+        "Core:legacy-core-012-mapping-layer-editor:6aca083c4998"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture actual fictional geometry during supported drawing, Save, saved list/detail and the loaded layer on the map.",
+        "Review readability and alignment on the resulting map. Existing toolbar/Hydrants checkbox is not proof of a new layer."
+      ],
+      "limits": [
+        "Do not derive an icon name from its picture; any icon-only action needs actual DOM semantics and hash-bound image review."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/NewLayer.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/Index.cshtml"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M05",
+      "title": "Responder sharing preference versus native permission",
+      "actual_cue_ids": [
+        28,
+        34,
+        40,
+        46,
+        52,
+        66
+      ],
+      "source_route": "/settings",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Realtime Geolocation",
+        "Background Geolocation",
+        "Keep Alive"
+      ],
+      "existing_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Existing actual Settings view can show the preference names and off states, not that members have permitted or transmitted location.",
+        "A native OS-permission/tracking demonstration is unavailable under current no-real-GPS constraint. Reword to explicit browser/native limits or arrange a separately authorized actual-device demonstration."
+      ],
+      "limits": [
+        "No browser geolocation permission, real location grant, background tracking or device hardware is exercised.",
+        "Do not relabel Keep Alive as a location permission."
+      ],
+      "source_files": [
+        "Responder/src/app/(app)/settings.tsx"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M06",
+      "title": "Directions and responding-resource route result",
+      "actual_cue_ids": [
+        32,
+        33
+      ],
+      "source_route": "/User/Mapping/LiveRouting?callId=<actual> or StationRouting?stationId=<actual>&callId=<actual>",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Distance",
+        "Duration"
+      ],
+      "existing_capture_refs": [
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture the actual route page, readable geometry/distance/duration/instructions and actual known endpoints.",
+        "LiveRouting explicitly requests browser geolocation and therefore cannot be exercised under the no-GPS constraint. A supported station-to-call route uses stored coordinates, but must be described correctly and genuinely render."
+      ],
+      "limits": [
+        "Existing Responder Route button is only an available control; no external navigation handoff or route success occurred.",
+        "Core routing source uses configured OSRM and real response; never draw replacement route geometry or treat a blank/error page as a route."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/LiveRouting.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/StationRouting.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M07",
+      "title": "Custom image layer import and alignment",
+      "actual_cue_ids": [
+        38,
+        39,
+        64,
+        67,
+        68
+      ],
+      "source_route": "/User/CustomMaps/New -> Layers?id=<actual> -> RegionEditor?id=<actual> or Import?id=<actual>",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Map Type",
+        "Name",
+        "Description",
+        "Draw Bounds",
+        "Layer Image",
+        "Add Layer"
+      ],
+      "existing_capture_refs": [
+        "Core:core-config-031-custom-maps-empty-baseline:52939b6fc828",
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117",
+        "Core:legacy-core-055-custom-maps:a9998d15b3fb"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture a saved fictional custom map, supported local image selection/upload, saved layer and real region/alignment editor.",
+        "Capture current/reference revision context and actual alignment; blank new-map bounds UI does not establish upload or alignment."
+      ],
+      "limits": [
+        "File chooser permission is separately blocked; no alternate upload transport or injected file state.",
+        "If file-URL access remains rejected, keep upload as a missing shot; never substitute an illustration for the application screen."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/CustomMaps/New.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/CustomMaps/Layers.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/CustomMaps/RegionEditor.cshtml"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M08",
+      "title": "Indoor floor plan and zone result",
+      "actual_cue_ids": [
+        44,
+        45,
+        67,
+        68
+      ],
+      "source_route": "/User/IndoorMaps/Floors?id=<actual> -> ZoneEditor?id=<actual>",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Floor Name",
+        "Floor Plan Image",
+        "Add Floor",
+        "Zone Editor"
+      ],
+      "existing_capture_refs": [
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture actual building/floor selection, floor image, saved zone geometry and source/reference context through IndoorMaps.",
+        "The New Custom Map type Indoor screen is a separate UI and is not an IndoorMaps floor or zone result."
+      ],
+      "limits": [
+        "No actual indoor positioning or navigation is asserted. Uploaded floor plans are reference material. File chooser remains subject to the actual permission boundary."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/IndoorMaps/Floors.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/IndoorMaps/ZoneEditor.cshtml"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M09",
+      "title": "Planned route and actual unit assignment",
+      "actual_cue_ids": [
+        50,
+        51,
+        62
+      ],
+      "source_route": "/User/Routes/Edit?id=<actual> -> Directions?id=<actual> -> StartRoute?id=<actual>",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Unit",
+        "Assign Unit"
+      ],
+      "existing_capture_refs": [],
+      "exact_missing_shots_or_correction": [
+        "Capture a saved fictional route, actual stops, Directions and actual assignment control/result if assignment is narrated.",
+        "Source exposes Unit assignment, including assign-at-start; avoid implying an arbitrary individual-person assignment control."
+      ],
+      "limits": [
+        "No route execution, physical patrol or arrival proof exists. Preserve shared Engine51/Herrmann seat and ongoing scenarios."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/Routes/Edit.cshtml",
+        "Core/Web/Resgrid.Web/Areas/User/Views/Routes/StartRoute.cshtml"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M10",
+      "title": "Readable location source/age and recent-vs-stale comparison",
+      "actual_cue_ids": [
+        3,
+        4,
+        9,
+        10,
+        14,
+        64,
+        70
+      ],
+      "source_route": "/User/Mapping and real resource location/detail/history UI",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Mapping",
+        "Show units",
+        "Show personnel"
+      ],
+      "existing_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture readable resource identity plus actual server-provided position timestamp/source and a clearly simulated stale comparison.",
+        "Show expected expiration only after actual saved TTL and fixture age are verified; static call coordinates do not establish current personnel/unit position."
+      ],
+      "limits": [
+        "Current Core resource labels are crowded; Responder call pins are static incidents, not live GPS fixes.",
+        "No false physical arrival, real-device tracking or elapsed-time claim; use honest simulated-fixture provenance."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M11",
+      "title": "Actual department mapping access",
+      "actual_cue_ids": [
+        16,
+        17,
+        21,
+        22,
+        30,
+        31,
+        36,
+        37,
+        42,
+        43,
+        48,
+        49,
+        54,
+        55
+      ],
+      "source_route": "/User/Security/Index and actual department module/role controls",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Permissions"
+      ],
+      "existing_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "exact_missing_shots_or_correction": [
+        "Capture the actual intended role/module/location-visibility state that gates the shown feature, without changing security or enrolling MFA.",
+        "Repeated generic availability lines have a retained source narration-correction proposal; they are not evidence that every mapping submodule shares one permission."
+      ],
+      "limits": [
+        "No security settings or grants are changed. A successful map view demonstrates that session view only."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    },
+    {
+      "id": "M12",
+      "title": "Record an actual mapping follow-up",
+      "actual_cue_ids": [
+        69,
+        71,
+        72
+      ],
+      "source_route": "/User/Notes/NewNote or an already supported equivalent note editor",
+      "source_control_candidates_unverified_unless_reviewed": [
+        "Title",
+        "Category",
+        "Body"
+      ],
+      "existing_capture_refs": [
+        "Core:legacy-core-046-notes:2cabecdd1711",
+        "Responder:090-reference-notes-list:1ecc705e36f6",
+        "Responder:091-reference-note-rich-text:415143b47e15"
+      ],
+      "exact_missing_shots_or_correction": [
+        "If keeping the practice instruction, capture a public-safe TRAINING mapping follow-up note including the observed issue, named fictional owner and review date in the actual Body, then reopen the saved note.",
+        "No existing capture proves this mapping follow-up. Do not invent dedicated owner/review-date fields in the map UI."
+      ],
+      "limits": [
+        "This is an explicitly fictional software-practice note, not evidence that actual map data is current."
+      ],
+      "source_files": [
+        "Core/Web/Resgrid.Web/Areas/User/Views/Notes/NewNote.cshtml"
+      ],
+      "status": "partial_or_missing; no completed operational scene"
+    }
+  ],
+  "actual_cue_screen_gap_map": [
+    {
+      "id": 1,
+      "start": 0.029,
+      "end": 1.779,
+      "text": "Welcome to Resgrid Academy.",
+      "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 2,
+      "start": 2.18,
+      "end": 6.25,
+      "text": "In this lesson, we will make location information useful and current.",
+      "text_sha256": "6bba9cef79b8d1b7e49cde9852fe806bb39a0a1c5e646cd2d37cd9834a4ea2d3",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 3,
+      "start": 6.699,
+      "end": 11.06,
+      "text": "A map can mislead when old positions remain visible or useful sites",
+      "text_sha256": "f354deecdb5632aa4b06dfe1149f9a110c125e72f910dcbf4688bc00c6db5f3e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 4,
+      "start": 11.09,
+      "end": 12.619,
+      "text": "and reference layers are missing.",
+      "text_sha256": "af41c06e20131b530a55b08e7d022b17c714770dbd4a93d28d3ea5239f25a324",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 5,
+      "start": 13.06,
+      "end": 16.19,
+      "text": "We will explain the features, the setup decisions, and a",
+      "text_sha256": "e81ab5e8a7d3f89c3c2904902e3e1cba467afa49546505b3163c11c6525c28e1",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 6,
+      "start": 16.19,
+      "end": 18.129,
+      "text": "practical way to check the result.",
+      "text_sha256": "1ba25c999800aedfbbb5764d88a2d6c0551ab3478f936f377bf5e8914d613b73",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 7,
+      "start": 18.719,
+      "end": 22.709,
+      "text": "A department adds its stations and hospitals as points of interest and",
+      "text_sha256": "0ad4ea66fda71f6d3752506f90ce1b8607a23afe55144e66da972abfb005a732",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73"
+      ],
+      "missing_requirement_ids": [
+        "M02"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 8,
+      "start": 22.709,
+      "end": 27.729,
+      "text": "lets personnel locations expire after 60 minutes so old positions disappear.",
+      "text_sha256": "0bfe297fadff76e4f9bc83177b2ce2cc40b2c144e5a92a3fefdd63cd4afac553",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 9,
+      "start": 28.229,
+      "end": 32.24,
+      "text": "A current map shows where responders and apparatus are and puts important",
+      "text_sha256": "2f40e89754481db9bec41552789133705d218dcb2c336d04ce161eddf7e439f4",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 10,
+      "start": 32.24,
+      "end": 34.25,
+      "text": "locations in front of dispatchers.",
+      "text_sha256": "ba37eadf613929df75976f4a8062db11f7db6d6bd5ca36bf65caa74384ba7d7e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 11,
+      "start": 34.78,
+      "end": 38.679,
+      "text": "The examples in this series use a fictional department and are teaching",
+      "text_sha256": "3059d3c51632c06ba8eb16a1a8b9f77c21fd6ae769066295627ad95e3acf1bca",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 12,
+      "start": 38.679,
+      "end": 40.98,
+      "text": "scenarios, not default settings.",
+      "text_sha256": "2316b9b48729ef8e05abd557d4876c25502aa2b281cb9dabcfa0721bcda2f886",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 13,
+      "start": 41.62,
+      "end": 42.16,
+      "text": "Mapping.",
+      "text_sha256": "efe987a316c232bde7e901a7f1d45d8be91cdfcb8cef2b6a43a44b52a6a78846",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 14,
+      "start": 42.54,
+      "end": 45.429,
+      "text": "The live map of personnel, units and calls.",
+      "text_sha256": "40593da1bd732c34b4dd15271643edcf4fdf05c37299f6fc9ce23812d644ecc4",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 15,
+      "start": 45.79,
+      "end": 49.109,
+      "text": "Set how long locations stay on the map in the mapping settings.",
+      "text_sha256": "048bfbb55d58378cf9b30a8110046d5259ec232524995023a1e35c505aaae018",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 16,
+      "start": 49.469,
+      "end": 51.72,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 17,
+      "start": 52.14,
+      "end": 54.14,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 18,
+      "start": 54.989,
+      "end": 56.089,
+      "text": "Points of Interest.",
+      "text_sha256": "9cfdd4b30d32e786abd00517bb076e9b39afd340c5d706698b8df40cdb8faa0d",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73"
+      ],
+      "missing_requirement_ids": [
+        "M02"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 19,
+      "start": 56.55,
+      "end": 60.31,
+      "text": "Points of interest such as stations, hospitals and hydrants.",
+      "text_sha256": "0ea3ebedad525f7713c8c33e1181634a2827c03dc03e6a290b990c61c9578714",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73"
+      ],
+      "missing_requirement_ids": [
+        "M02"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 20,
+      "start": 60.73,
+      "end": 63.029,
+      "text": "Add the locations dispatchers need to see.",
+      "text_sha256": "0a839cd5205a766bcc10590c2f1551578941a1a0f3be796429956a4b853e3874",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73"
+      ],
+      "missing_requirement_ids": [
+        "M02"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 21,
+      "start": 63.519,
+      "end": 65.769,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 22,
+      "start": 66.239,
+      "end": 68.239,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 23,
+      "start": 68.869,
+      "end": 70.46,
+      "text": "Weather zones and alerts.",
+      "text_sha256": "155656bc49f323e606d47d841a112901d84452d42fbbd5ad8ea76aedeb81fc65",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-058-weather-zones:2bc7b483e3a1",
+        "Responder:158-weather-alerts-filters:45cded7c0e8e"
+      ],
+      "missing_requirement_ids": [
+        "M03"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 24,
+      "start": 70.909,
+      "end": 73.41,
+      "text": "Weather alert zones and alert notifications.",
+      "text_sha256": "ca5a08fd95fae7be3e431752e802d8c4eedfe08752cd2c4c64d62b282faa0f9b",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-058-weather-zones:2bc7b483e3a1",
+        "Responder:158-weather-alerts-filters:45cded7c0e8e"
+      ],
+      "missing_requirement_ids": [
+        "M03"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 25,
+      "start": 73.89,
+      "end": 76.629,
+      "text": "Draw the zones you cover and choose who is alerted.",
+      "text_sha256": "548bd4aa1c44c18229196afc25cb8926d3dce650cc5a666685288c783a06f68c",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-058-weather-zones:2bc7b483e3a1",
+        "Responder:158-weather-alerts-filters:45cded7c0e8e"
+      ],
+      "missing_requirement_ids": [
+        "M03"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 26,
+      "start": 77.329,
+      "end": 78.22,
+      "text": "Map Layers.",
+      "text_sha256": "6f5accabd6f85e147b389c80e21180aed81db7f43a01cf3e7dfd2094434300bf",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+        "Core:legacy-core-011-mapping-new-layer:569de9fcd08f",
+        "Core:legacy-core-012-mapping-layer-editor:6aca083c4998"
+      ],
+      "missing_requirement_ids": [
+        "M04"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 27,
+      "start": 78.579,
+      "end": 80.96,
+      "text": "Add your own shapes and overlays to the map.",
+      "text_sha256": "ac8986d5febb7b69394e2756ed96b74773a91a469d8a552b25056ad2b2dea2f5",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+        "Core:legacy-core-011-mapping-new-layer:569de9fcd08f",
+        "Core:legacy-core-012-mapping-layer-editor:6aca083c4998"
+      ],
+      "missing_requirement_ids": [
+        "M04"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 28,
+      "start": 81.54,
+      "end": 85.829,
+      "text": "Confirm members allow location sharing in the Responder app, and decide how",
+      "text_sha256": "39c1fa6c0d6e50113e75ae923d067522a32127ffa22e0d2a591a4fd764ac7f19",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "missing_requirement_ids": [
+        "M05"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 29,
+      "start": 85.829,
+      "end": 87.76,
+      "text": "long a position should stay on the map.",
+      "text_sha256": "2fe71f6d83873cddb8eb0a133c05059ccc29f610ac21223703b49853fccfd77e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 30,
+      "start": 88.25,
+      "end": 90.43,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 31,
+      "start": 90.84,
+      "end": 92.76,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 32,
+      "start": 93.449,
+      "end": 94.27,
+      "text": "Live Routing.",
+      "text_sha256": "d3763ec882d9abdbb64958487c48611a7206f5d3d88a3040a8132ce1488a6712",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M06"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 33,
+      "start": 94.679,
+      "end": 97.4,
+      "text": "Directions and routes for responding resources.",
+      "text_sha256": "495e3607fe0268b65f52a5d16af91d8575fad69289ed3e78419bce88f0633901",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M06"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 34,
+      "start": 97.78,
+      "end": 102.06,
+      "text": "Confirm members allow location sharing in the Responder app, and decide how",
+      "text_sha256": "39c1fa6c0d6e50113e75ae923d067522a32127ffa22e0d2a591a4fd764ac7f19",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "missing_requirement_ids": [
+        "M05"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 35,
+      "start": 102.06,
+      "end": 104.02,
+      "text": "long a position should stay on the map.",
+      "text_sha256": "2fe71f6d83873cddb8eb0a133c05059ccc29f610ac21223703b49853fccfd77e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 36,
+      "start": 104.39,
+      "end": 106.67,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 37,
+      "start": 107.13,
+      "end": 109.149,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 38,
+      "start": 109.819,
+      "end": 111.13,
+      "text": "Custom map layers.",
+      "text_sha256": "62dcd99dd3ec05973526f6279847bac0cca0ccbe81f857ecf2101273eb83295c",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-031-custom-maps-empty-baseline:52939b6fc828",
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117",
+        "Core:legacy-core-055-custom-maps:a9998d15b3fb"
+      ],
+      "missing_requirement_ids": [
+        "M07"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 39,
+      "start": 111.54,
+      "end": 115.029,
+      "text": "Upload your own map images, such as a campus or venue map.",
+      "text_sha256": "b5833b6f803cb81baa804fb3b72fe4e0166c7945daa79ac6dea3f5d41ff0431b",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-031-custom-maps-empty-baseline:52939b6fc828",
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117",
+        "Core:legacy-core-055-custom-maps:a9998d15b3fb"
+      ],
+      "missing_requirement_ids": [
+        "M07"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 40,
+      "start": 115.46,
+      "end": 119.739,
+      "text": "Confirm members allow location sharing in the Responder app, and decide how",
+      "text_sha256": "39c1fa6c0d6e50113e75ae923d067522a32127ffa22e0d2a591a4fd764ac7f19",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "missing_requirement_ids": [
+        "M05"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 41,
+      "start": 119.739,
+      "end": 121.63,
+      "text": "long a position should stay on the map.",
+      "text_sha256": "2fe71f6d83873cddb8eb0a133c05059ccc29f610ac21223703b49853fccfd77e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 42,
+      "start": 122.109,
+      "end": 124.55,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 43,
+      "start": 124.97,
+      "end": 126.96,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 44,
+      "start": 127.6,
+      "end": 128.59,
+      "text": "Indoor maps.",
+      "text_sha256": "faae642a8d501d561e079a73ea2790f3b5833c198bb20baee742b9d4b1d706aa",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117"
+      ],
+      "missing_requirement_ids": [
+        "M08"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 45,
+      "start": 129.019,
+      "end": 131.149,
+      "text": "Floor plans and zones for buildings.",
+      "text_sha256": "2678b18440e4e445a53761342a3733618b29387ce5fb1d98ecf5c65030982f55",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117"
+      ],
+      "missing_requirement_ids": [
+        "M08"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 46,
+      "start": 131.56,
+      "end": 135.87,
+      "text": "Confirm members allow location sharing in the Responder app, and decide how",
+      "text_sha256": "39c1fa6c0d6e50113e75ae923d067522a32127ffa22e0d2a591a4fd764ac7f19",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "missing_requirement_ids": [
+        "M05"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 47,
+      "start": 135.87,
+      "end": 137.759,
+      "text": "long a position should stay on the map.",
+      "text_sha256": "2fe71f6d83873cddb8eb0a133c05059ccc29f610ac21223703b49853fccfd77e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 48,
+      "start": 138.23,
+      "end": 140.53,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 49,
+      "start": 141.03,
+      "end": 143.15,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 50,
+      "start": 143.769,
+      "end": 144.369,
+      "text": "Routes.",
+      "text_sha256": "c3e31d909b110aeb12e404215430bfc6c2159cd5a3f359ac80f6d7164594cd7a",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [
+        "M09"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 51,
+      "start": 144.779,
+      "end": 148.28,
+      "text": "Planned routes, such as patrols, and who is assigned to them.",
+      "text_sha256": "d7e3fc14a2c44decd3bbf39779225e6c3fd8433fa2f9a54bba60a0381efd81f7",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [
+        "M09"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 52,
+      "start": 148.769,
+      "end": 153.08,
+      "text": "Confirm members allow location sharing in the Responder app, and decide how",
+      "text_sha256": "39c1fa6c0d6e50113e75ae923d067522a32127ffa22e0d2a591a4fd764ac7f19",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "missing_requirement_ids": [
+        "M05"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 53,
+      "start": 153.08,
+      "end": 154.969,
+      "text": "long a position should stay on the map.",
+      "text_sha256": "2fe71f6d83873cddb8eb0a133c05059ccc29f610ac21223703b49853fccfd77e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 54,
+      "start": 155.429,
+      "end": 157.809,
+      "text": "Availability also depends on Mapping.",
+      "text_sha256": "ba4b73de5260cf77eaafbd6670c779fdc9a644941b198c838c63063f267004cb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 55,
+      "start": 158.269,
+      "end": 160.43,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-032-permissions:3577923b4d82"
+      ],
+      "missing_requirement_ids": [
+        "M11"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 56,
+      "start": 161.039,
+      "end": 163.73,
+      "text": "For the training scenario, work in this order.",
+      "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 57,
+      "start": 164.12,
+      "end": 164.799,
+      "text": "Step 1.",
+      "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 58,
+      "start": 165.23,
+      "end": 168.24,
+      "text": "Review personnel and unit location-age settings.",
+      "text_sha256": "d0246f18132d21d113e3403ad64b5dbed8bef7964e37187a4028bdd1a8b62cc6",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-048-mapping-settings-personnel-stable:a14ad5cf56f1",
+        "Core:legacy-core-052-mapping-map-style-choices:71542ff4dad5"
+      ],
+      "missing_requirement_ids": [
+        "M01"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 59,
+      "start": 168.619,
+      "end": 169.4,
+      "text": "Step 2.",
+      "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 60,
+      "start": 169.73,
+      "end": 172.54,
+      "text": "Add stations and hospitals as points of interest.",
+      "text_sha256": "5fc6a2031e8e7a5200be11fa5d26161d5a5fca408d0b1dff439374425549d3bb",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73"
+      ],
+      "missing_requirement_ids": [
+        "M02"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 61,
+      "start": 172.9,
+      "end": 173.66,
+      "text": "Step 3.",
+      "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 62,
+      "start": 174.03,
+      "end": 178.66,
+      "text": "Add a relevant map layer, planned route, or weather zone and review its audience.",
+      "text_sha256": "3d5d4a712fa56d37c35ccb8be1c36a596e141c6ecf6720b1ccfe89dc76f1381c",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-058-weather-zones:2bc7b483e3a1",
+        "Responder:158-weather-alerts-filters:45cded7c0e8e",
+        "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+        "Core:legacy-core-011-mapping-new-layer:569de9fcd08f",
+        "Core:legacy-core-012-mapping-layer-editor:6aca083c4998"
+      ],
+      "missing_requirement_ids": [
+        "M03",
+        "M04",
+        "M09"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 63,
+      "start": 179.309,
+      "end": 180.819,
+      "text": "Now verify the result.",
+      "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6"
+      ],
+      "missing_requirement_ids": [],
+      "status": "genuine context-screen candidate; assembly QA still pending",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 64,
+      "start": 181.23,
+      "end": 185.829,
+      "text": "Check marker age and source, POI placement, reference-layer alignment,",
+      "text_sha256": "8f7d2f2f1a9f49dc8468b64fc673b9c64653675168bcb8e4c7d6fdcc7afb9400",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+        "Core:legacy-core-011-mapping-new-layer:569de9fcd08f",
+        "Core:legacy-core-012-mapping-layer-editor:6aca083c4998",
+        "Core:core-config-031-custom-maps-empty-baseline:52939b6fc828",
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117",
+        "Core:legacy-core-055-custom-maps:a9998d15b3fb",
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M04",
+        "M07",
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 65,
+      "start": 186.009,
+      "end": 188.249,
+      "text": "and the intended weather-alert coverage.",
+      "text_sha256": "49dbb98dbbafaa5626f3111e96241e97be67dbf394125fa7b7f28f63c7a0753a",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-058-weather-zones:2bc7b483e3a1",
+        "Responder:158-weather-alerts-filters:45cded7c0e8e"
+      ],
+      "missing_requirement_ids": [
+        "M03"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 66,
+      "start": 188.7,
+      "end": 193.299,
+      "text": "A common problem to watch for: Location sharing requires client permission.",
+      "text_sha256": "5394e420dddbf7f2e236f173e118a2fef4a64adb608fa5b46c32a6e0d17424e1",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Responder:057-settings-native-capability-controls:2313667c83ca"
+      ],
+      "missing_requirement_ids": [
+        "M05"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 67,
+      "start": 193.839,
+      "end": 197.819,
+      "text": "Uploaded floor plans are reference material; verify currency and",
+      "text_sha256": "f04acc5e8677cf2c780e680c0185b0c89fa4cb370544b73ca8e1a45e79b1e7be",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-031-custom-maps-empty-baseline:52939b6fc828",
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117",
+        "Core:legacy-core-055-custom-maps:a9998d15b3fb"
+      ],
+      "missing_requirement_ids": [
+        "M07",
+        "M08"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 68,
+      "start": 197.819,
+      "end": 199.739,
+      "text": "alignment before relying on them.",
+      "text_sha256": "b3ad584833122cc6e5b3da8ce16b62b27e04e6d807276a93e072c1eeb0d2641c",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-031-custom-maps-empty-baseline:52939b6fc828",
+        "Core:core-config-032-custom-map-bounds-readonly:4c404b9f0117",
+        "Core:legacy-core-055-custom-maps:a9998d15b3fb"
+      ],
+      "missing_requirement_ids": [
+        "M07",
+        "M08"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 69,
+      "start": 200.399,
+      "end": 202.019,
+      "text": "Your practice task is simple.",
+      "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-046-notes:2cabecdd1711",
+        "Responder:090-reference-notes-list:1ecc705e36f6",
+        "Responder:091-reference-note-rich-text:415143b47e15"
+      ],
+      "missing_requirement_ids": [
+        "M12"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 70,
+      "start": 202.53,
+      "end": 206.709,
+      "text": "Follow a sample unit and compare a recent position with a stale position.",
+      "text_sha256": "4b6a9e1bf70664d820e00d0dee90eeca68250a3f298163b557a7a7a64f8d4cb0",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+        "Responder:196-map-incident-pins-local:f240644ff1a6",
+        "Responder:197-map-call-pin-details:180a2df055c7"
+      ],
+      "missing_requirement_ids": [
+        "M10"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    },
+    {
+      "id": 71,
+      "start": 207.16,
+      "end": 210.509,
+      "text": "Record missing POIs and outdated reference layers.",
+      "text_sha256": "1812bde423d872d35597f2f1f8f8deabae8d79495af1b49eb769126ff84e07c5",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:core-config-028-poi-empty-baseline:b9fdd0a9de2b",
+        "Core:core-config-029-poi-type-options-readonly:1972c1269992",
+        "Core:core-config-030-poi-icon-preview-readonly:fb393f4b2b7e",
+        "Responder:157-map-poi-list:157b208adb73",
+        "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+        "Core:legacy-core-011-mapping-new-layer:569de9fcd08f",
+        "Core:legacy-core-012-mapping-layer-editor:6aca083c4998",
+        "Core:legacy-core-046-notes:2cabecdd1711",
+        "Responder:090-reference-notes-list:1ecc705e36f6",
+        "Responder:091-reference-note-rich-text:415143b47e15"
+      ],
+      "missing_requirement_ids": [
+        "M02",
+        "M04",
+        "M12"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": true,
+      "timing_note": "Retained cue bounds only; no inferred word timestamps. Multiple separately located controls may need genuine speech anchors or corrected speech/captions."
+    },
+    {
+      "id": 72,
+      "start": 210.929,
+      "end": 214.729,
+      "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+      "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+      "actual_cue_source_sha256": "90f19053999c9a0c3767561b5131ef12c0a5c0f000f604f8894d539b4e4ddc57",
+      "candidate_capture_refs": [
+        "Core:legacy-core-046-notes:2cabecdd1711",
+        "Responder:090-reference-notes-list:1ecc705e36f6",
+        "Responder:091-reference-note-rich-text:415143b47e15"
+      ],
+      "missing_requirement_ids": [
+        "M12"
+      ],
+      "status": "blocked/action-specific screen/result missing",
+      "within_cue_word_anchors_required": false,
+      "timing_note": "Existing unchanged cue bounds; no arbitrary timing proposed."
+    }
+  ],
+  "speech_alignment_limits": {
+    "multi_screen_cue_ids_needing_genuine_speech_anchors_or_rewrite": [
+      28,
+      34,
+      40,
+      46,
+      52,
+      64,
+      71
+    ],
+    "caption_timestamps_copied_unchanged": true,
+    "word_timings_invented": false,
+    "normalized_words_match_source": true,
+    "current_audio_signal_listening_and_caption_alignment_QA": "not performed by this source-only audit"
+  },
+  "required_assembly_sequence": [
+    "Resolve source/UI narration mismatches without changing original audio blindly.",
+    "Capture and review missing real application controls, saved values and results after human browser clearance and within current action permissions.",
+    "Pin final approved narration/audio/SRT and real speech anchors; validate exact script, full decode, per-cue signal and listening.",
+    "Create an explicit actual cue-to-image plan using full legible screenshots and current strict source gate; no illustrated substitutes or UI inset.",
+    "Render1080p H264/AAC with SRT/VTT/chapters/poster, bind source/output hashes and inspect decoded frames across all spoken controls.",
+    "Collect separate genuine browser beginning/middle/end playback with captions, correct video hash/dimensions/ready state/no errors.",
+    "Only a complete gate result may be considered for publication; this audit never marks it publishable."
+  ],
+  "browser_playback_proof": "pending; no browser used while explicitly blocked",
+  "publishable": false
+}

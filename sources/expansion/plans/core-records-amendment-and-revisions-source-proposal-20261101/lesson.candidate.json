@@ -1,0 +1,131 @@
+{
+  "id": "core-records-amendment-and-revisions",
+  "app": "Core",
+  "title": "Correct a finalized record and compare its revisions",
+  "summary": "Open an amendment, save a working correction, finalize it with a reason and attestation, then compare the change and inspect both saved revisions.",
+  "audience": ["Authorized record authors", "Department administrators", "Records supervisors"],
+  "prerequisites": [
+    "An authorized Core session and an appropriate finalized record with Amend offered.",
+    "A truthful, specific correction and the department's record-review procedure.",
+    "A fictional training record for practice. The demonstrated correction changes only a software-exercise course code."
+  ],
+  "scenes": [
+    {
+      "id": "01", "title": "Verify the finalized record before amending",
+      "narration": "Open the intended record and verify its identity before making a correction. This Training example is Finalized, with record number T R N, twenty twenty-six, zero zero zero two, and draft reference D, Y X S nine three. Its Course entry ends with the code Academy, R E C, twenty-nine. Read the recorded author, group and narrative as well. This is explicitly a fictional software exercise. Once you have confirmed the intended record and your authority to correct it, choose Amend.",
+      "practice": "Verify the intended finalized training record, its identity and original course code before choosing Amend.",
+      "required_labels": ["View Record", "Finalized", "TRN-2026-0002", "D-YXS93", "Course", "ACADEMY-REC-29", "Amend"],
+      "capture_refs": ["001-own-finalized-record-before-amend"]
+    },
+    {
+      "id": "02", "title": "Read the amendment working-copy warning",
+      "narration": "The editor identifies the same Training record and displays an important notice: an amendment is in progress, and the last finalized revision remains authoritative until the amendment is finalized. Read that distinction before editing. Station slash group, External ID, dates, Course, Course code, Location and Narrative are shown here. Opening this editor has not, by itself, replaced the finalized version with a newly signed correction.",
+      "practice": "Read the amendment warning and identify the Course code field without treating the working copy as a new finalized revision.",
+      "required_labels": ["Training TRN-2026-0002", "An amendment is in progress. The last finalized revision remains authoritative until the amendment is finalized.", "Station / group", "External ID", "Course", "Course code", "Location", "Narrative"],
+      "capture_refs": ["002-open-amendment-editor"]
+    },
+    {
+      "id": "03", "title": "Make the specific field correction",
+      "narration": "Edit only the field that needs correction. Here, Course code changes from Academy, R E C, twenty-nine, to Academy, R E C, twenty-nine A. The Course title, fictional workspace and software-only narrative remain unchanged. A focused correction is easier to review later than an unexplained rewrite of unrelated details. Check the new field value and the amendment notice before moving to the save controls.",
+      "practice": "Correct the fictional course code and verify the unchanged surrounding context and amendment warning.",
+      "required_labels": ["Training TRN-2026-0002", "Course code", "ACADEMY-REC-29A", "An amendment is in progress. The last finalized revision remains authoritative until the amendment is finalized."],
+      "capture_refs": ["003-software-course-code-correction"]
+    },
+    {
+      "id": "04", "title": "Save the correction as a working draft",
+      "narration": "At the bottom of the editor, review Reason code, Reason and the available save actions. This example uses Training Correction as its reason code. The attestation is still unchecked. Choose Save draft to retain the working correction without finalizing it. Save and finalize is a separate action. The complete reason and attestation will be reviewed again in the finalization panel before the amendment is signed.",
+      "practice": "Identify Reason code, Reason, the unchecked attestation and Save draft, then distinguish it from Save and finalize.",
+      "required_labels": ["Reason code", "TRAINING-CORRECTION", "Reason", "Save draft", "Save and finalize", "I attest that this record is accurate and complete to the best of my knowledge."],
+      "capture_refs": ["004-amendment-reason-before-save"]
+    },
+    {
+      "id": "05", "title": "Check the saved working-copy result",
+      "narration": "The reopened record shows the corrected Course entry ending in twenty-nine A, while the amendment-in-progress notice remains. Its existing Finalized badge does not remove that warning. Read the two together: a saved working correction and the authoritative finalized revision are distinct. Edit and Abandon amendment are available above, and the separate Finalize panel asks for a reason and attestation. This example continues with the intended correction rather than abandoning it.",
+      "practice": "Verify the saved course-code correction, retained identity and amendment warning before proceeding to Finalize.",
+      "required_labels": ["TRN-2026-0002", "D-YXS93", "Finalized", "ACADEMY-REC-29A", "An amendment is in progress. The last finalized revision remains authoritative until the amendment is finalized.", "Edit", "Abandon amendment", "Finalize", "Reason code", "Reason"],
+      "capture_refs": ["005-fresh-saved-amendment-working-copy"]
+    },
+    {
+      "id": "06", "title": "Review the reason and truthful attestation",
+      "narration": "In Finalize, the reason code is Training Correction and the full Reason says, Correct fictional course code only. Read the attestation before selecting it: the record must be accurate and complete to the best of your knowledge. This recorded attestation concerns the explicitly fictional software record, with no physical training or response claimed. Once the correction, reason and attestation are appropriate, choose Finalize to complete this amendment.",
+      "practice": "Review the complete reason and accurate attestation before deliberately finalizing the fictional correction.",
+      "required_labels": ["Finalize", "Reason code", "TRAINING-CORRECTION", "Reason", "Correct fictional course code only.", "I attest that this record is accurate and complete to the best of my knowledge."],
+      "capture_refs": ["007-amendment-reason-attestation-prepared"]
+    },
+    {
+      "id": "07", "title": "Verify the amended identity and field value",
+      "narration": "After finalization, the reopened record is marked Amended. The record number and draft reference are retained, and the Course entry still ends in twenty-nine A. Verify this actual returned state rather than assuming that an earlier draft save completed the amendment. Keeping the record's identity while retaining its revision history makes a correction easier for another authorized reviewer to follow.",
+      "practice": "Verify Amended, the retained record number and draft reference, and the corrected course-code value.",
+      "required_labels": ["TRN-2026-0002", "D-YXS93", "Amended", "Course", "ACADEMY-REC-29A"],
+      "capture_refs": ["008-fresh-amended-number-retained"]
+    },
+    {
+      "id": "08", "title": "Open the comparison from the correct History row",
+      "narration": "In History, read the numbered transitions. Revision two is Amended with the Training Correction reason code; revision one remains Finalized beneath it. The rows identify the actor and date. Use Compare with previous on the amended row to review what changed between those two saved versions. Verify the intended row before choosing the comparison action.",
+      "practice": "Identify the Amended and Finalized rows and choose Compare with previous for revision two.",
+      "required_labels": ["History", "2", "Amended (TRAINING-CORRECTION)", "1", "Finalized", "View", "Compare with previous"],
+      "capture_refs": ["001-history-compare-launcher"]
+    },
+    {
+      "id": "09", "title": "Read the actual before-and-after difference",
+      "narration": "Revision comparison explicitly says Revision one compared with revision two. Read Field, Before and After across the same row. Details dot Course Code changes from Academy, R E C, twenty-nine, to the version ending twenty-nine A. This comparison shows one changed field for this correction. Compare the actual values with the stated reason before drawing a conclusion about the amendment. This walkthrough is reading the comparison page; it does not perform a PDF export.",
+      "practice": "Read the revision pair and the CourseCode Before and After values from the actual comparison table.",
+      "required_labels": ["Revision comparison", "Revision 1 compared with revision 2", "Field", "Before", "After", "Details.CourseCode", "ACADEMY-REC-29", "ACADEMY-REC-29A"],
+      "capture_refs": ["002-actual-course-code-comparison"]
+    },
+    {
+      "id": "10", "title": "Open the amended revision's saved content",
+      "narration": "Return to the record and find revision two's Amended row in History. Choose View on that row to inspect its saved content. This is a different question from the comparison: the comparison identifies differences, while View opens the selected revision's complete rendered record. Keep the row number and transition together so you open the version you actually intend to inspect.",
+      "practice": "Choose the View link belonging to the Amended revision-two row.",
+      "required_labels": ["TRN-2026-0002", "History", "2", "Amended (TRAINING-CORRECTION)", "View"],
+      "capture_refs": ["003-revision-two-view-launcher"]
+    },
+    {
+      "id": "11", "title": "Verify revision two's recorded details",
+      "narration": "The opened page identifies the department, record number and revision two. Under Details, Course Code contains the corrected value ending twenty-nine A. The fictional location and truthful software-only narrative are retained. Attachments lists the recorded file metadata, including the exercise handout. Read the revision heading before treating a saved page as the current version or comparing it with another copy.",
+      "practice": "Verify revision two in the heading, the corrected Course Code and the retained software-exercise context.",
+      "required_labels": ["Complete department record TRN-2026-0002 — revision 2", "Details", "Course Code", "ACADEMY-REC-29A", "Fictional software workspace", "Attachments", "academy-record-entry-handout.txt"],
+      "capture_refs": ["004-current-revision-two-html"]
+    },
+    {
+      "id": "12", "title": "Choose the original finalized revision",
+      "narration": "Return to History again and find revision one's Finalized row. Choose View on that original row. The presence of an amended revision above it has not removed this earlier saved version from the history. Selecting the correct row lets an authorized reviewer inspect the original content alongside the later correction.",
+      "practice": "Choose the View link belonging to the original Finalized revision-one row.",
+      "required_labels": ["TRN-2026-0002", "History", "1", "Finalized", "View"],
+      "capture_refs": ["005-revision-one-view-launcher"]
+    },
+    {
+      "id": "13", "title": "Verify the original value remains in revision one",
+      "narration": "The original page identifies revision one and retains the earlier Course Code ending twenty-nine, without the added A. Its software-exercise narrative and attachment metadata are still present. Reading both saved versions and their comparison makes the correction traceable: you can identify the original value, the amended value and the stated correction reason without rewriting the earlier saved snapshot.",
+      "practice": "Verify revision one and its original Course Code, then distinguish it from revision two's corrected value.",
+      "required_labels": ["Complete department record TRN-2026-0002 — revision 1", "Details", "Course Code", "ACADEMY-REC-29", "Fictional software workspace", "Attachments", "academy-record-entry-handout.txt"],
+      "capture_refs": ["006-original-revision-one-html"]
+    },
+    {
+      "id": "14", "title": "Keep corrections understandable across departments",
+      "narration": "The same careful correction and revision checks can support authorized documentation in community paramedicine or mental health response teams, search-and-rescue organizations, security companies, wildland contractors and industrial emergency teams, as well as Fire and EMS departments. Use a specific reason, keep the attestation truthful and inspect the saved result. A working draft, a finalized amendment, a comparison and an earlier revision each serve a different purpose when explaining what a record said and how it changed.",
+      "practice": "Apply the identity, reason, attestation and revision checks to an appropriate fictional record for your own department.",
+      "required_labels": ["TRN-2026-0002", "History", "Amended (TRAINING-CORRECTION)", "Finalized", "Compare with previous"],
+      "capture_refs": ["001-history-compare-launcher"]
+    }
+  ],
+  "sector_examples": [
+    {"sector": "Fire / EMS", "scenario": "Correct an appropriate training record while retaining its original saved revision and a specific amendment reason."},
+    {"sector": "Community response", "scenario": "Review an authorized documentation correction and its saved revisions using fictional practice data."},
+    {"sector": "Search and rescue", "scenario": "Make a focused correction to mission-support documentation and verify the actual before-and-after values."},
+    {"sector": "Security", "scenario": "Keep an authorized service-record correction understandable through its reason, transition and saved snapshots."},
+    {"sector": "Wildland", "scenario": "Correct a documented exercise field while preserving the earlier record content for review."},
+    {"sector": "Industrial", "scenario": "Review the original and amended versions of an emergency-team software exercise record."}
+  ],
+  "scope_limits": [
+    "The October29 amendment and the November1 read-only revision rechecks concern the same fictional record0795ea02-2d42-4940-8d1a-d95094281f75 and its unchanged revision-one/revision-two IDs.",
+    "The demonstrated mutation corrects a fictional course code only. No physical training, response, personnel time or unit time is claimed.",
+    "The earlier editor Reason input contains clipped text; this lesson does not claim its full value is legible. The complete finalization reason is shown in a separate actual screen.",
+    "The History comparison/View launchers were brought into view through ordinary keyboard focus in Chrome's normal viewport. Some unrelated page content is clipped and is excluded from the teaching labels.",
+    "No new amendment, signature, access grant, record deletion or PDF export was performed during the later read-only recheck.",
+    "This is an operational Training record example; it does not certify every record definition or an external submission workflow.",
+    "Source candidate only; complete natural narration, actual captions, genuine hearing and all final encoded/browser checks are still required."
+  ],
+  "export_ready": false,
+  "publication_mode": "source_candidate_only"
+}

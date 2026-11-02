@@ -1,0 +1,620 @@
+{
+  "app": "IC",
+  "updated_at": "2026-10-26T16:59:44.540104+00:00",
+  "state": "browser_extension_interface_blocked",
+  "accepted_screenshot_count": 24,
+  "asset_hash_check": "passed",
+  "scene_count": 29,
+  "complete_video_count": 0,
+  "blocking_observation": "Chrome reported an extension UI open after username entry during fresh login. Password fill did not complete; no sign-in submitted in this attempt. No further browser calls performed.",
+  "resume_order": [
+    "Human closes blocking extension interface and explicitly resumes.",
+    "Fresh sign-in; confirm fictional department 51.",
+    "Reopen existing warehouse 51001 command board and verify prior lanes, resources, roles and timer persistence.",
+    "Confirm Chicago map geometry using app controls; reject fallback geography, error/loading overlays and blank maps.",
+    "Capture remaining IC scenes with controls in viewport, then update only four IC scripts from observations.",
+    "Capture Dispatch five scripts in a separate dedicated tab."
+  ],
+  "restrictions": [
+    "Do not close existing warehouse training call or command.",
+    "Call creation remains on hold until parent confirms numbering work complete.",
+    "No real location permission, native hardware/provider success claims, MFA/password/payment changes or external provider sends.",
+    "Do not work around Chrome extension UI restrictions."
+  ],
+  "scenes": [
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-01",
+      "title": "Establish or reopen command",
+      "route": "/calls",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-07-calls",
+        "ic-08-command-start",
+        "ic-09-command-board"
+      ],
+      "required_labels": [
+        "Start Command Board",
+        "Blank Board"
+      ],
+      "labels_needing_actual_visible_capture": [],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-02",
+      "title": "Switch boards and inspect ended history",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-09-command-board"
+      ],
+      "required_labels": [
+        "Command Board",
+        "View Call"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "View Call"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-03",
+      "title": "Set command information and key locations",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-24-command-information"
+      ],
+      "required_labels": [
+        "Details",
+        "Incident Name",
+        "ICP / HQ",
+        "Staging",
+        "Rehab"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Details"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-04",
+      "title": "Build lanes, leads and requirements",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-12-lane-form",
+        "ic-13-lane-limits",
+        "ic-15-assigned-lanes",
+        "ic-23-worktime-rotation"
+      ],
+      "required_labels": [
+        "Add Lane",
+        "Lane Limits (optional)",
+        "Primary Lead",
+        "Secondary Lead"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Primary Lead",
+        "Secondary Lead"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-05",
+      "title": "Assign, move and release resources",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-14-resource-picker",
+        "ic-15-assigned-lanes",
+        "ic-19-add-resource",
+        "ic-20-external-person",
+        "ic-21-resource-pool",
+        "ic-22-unit-details",
+        "ic-23-worktime-rotation"
+      ],
+      "required_labels": [
+        "Resources",
+        "Add Resource",
+        "Assign Resource",
+        "View Details"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Resources",
+        "View Details"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-06",
+      "title": "Functional roles and tactical objectives",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-18-role-assignment"
+      ],
+      "required_labels": [
+        "ICS Role Assignments",
+        "Tactical Objectives",
+        "Add"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "ICS Role Assignments",
+        "Tactical Objectives"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-07",
+      "title": "Request and track incident needs",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Needs",
+        "Add Need",
+        "Save Fill",
+        "Mark Filled"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Needs",
+        "Add Need",
+        "Save Fill",
+        "Mark Filled"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-08",
+      "title": "Accountability, PAR and incident timers",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-16-timer-form",
+        "ic-17-running-timer",
+        "ic-21-resource-pool",
+        "ic-23-worktime-rotation"
+      ],
+      "required_labels": [
+        "Accountability",
+        "Activate Check-In Timers",
+        "Timers & PAR",
+        "Add Timer"
+      ],
+      "labels_needing_actual_visible_capture": [],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-command-board",
+      "scene_id": "app-ic-command-board-scene-09",
+      "title": "Notes, files, command log and handover",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Notes",
+        "Incident Files",
+        "Incident Log",
+        "Transfer",
+        "End Command"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Notes",
+        "Incident Files",
+        "Incident Log",
+        "Transfer",
+        "End Command"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-01",
+      "title": "Incident voice and transmission history",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Voice Channels",
+        "Add Channel",
+        "Join",
+        "Leave",
+        "Close All"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Voice Channels",
+        "Add Channel",
+        "Join",
+        "Leave",
+        "Close All"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-02",
+      "title": "Command chat, direct messages and assistant",
+      "route": "/command",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Command",
+        "All Leads",
+        "Dispatch",
+        "Message Commander"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Command",
+        "All Leads",
+        "Dispatch",
+        "Message Commander"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-03",
+      "title": "Text conversation, threads and notification delivery",
+      "route": "/chat",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "New Direct Message",
+        "New Group",
+        "Reply in thread"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "New Direct Message",
+        "New Group",
+        "Reply in thread"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-04",
+      "title": "Field records and attachments",
+      "route": "/records",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Records",
+        "New Record",
+        "Keep on this device",
+        "Save and send"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Records",
+        "New Record",
+        "Keep on this device",
+        "Save and send"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-05",
+      "title": "Record deployments, connectors and operations",
+      "route": "/operations",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Time",
+        "Expenses",
+        "Signatures"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Time",
+        "Expenses",
+        "Signatures"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-06",
+      "title": "Preferences, account security and platform differences",
+      "route": "/settings",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-05-shared-device",
+        "ic-10-settings-account",
+        "ic-11-settings-preferences"
+      ],
+      "required_labels": [
+        "Settings",
+        "Login Info",
+        "Sign-in and security",
+        "Shared device"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Login Info",
+        "Sign-in and security"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-07",
+      "title": "Work offline and inspect the queue",
+      "route": "/settings/offline-queue",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-10-settings-account"
+      ],
+      "required_labels": [
+        "Sync Queue",
+        "Sync Now",
+        "Retry Failed",
+        "Clear Done"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Sync Queue",
+        "Sync Now",
+        "Retry Failed",
+        "Clear Done"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-communications-records-offline",
+      "scene_id": "app-ic-communications-records-offline-scene-08",
+      "title": "Finish the working session deliberately",
+      "route": "/settings",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Logout"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Logout"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-mapping-reference",
+      "scene_id": "app-ic-mapping-reference-scene-01",
+      "title": "Use the main map with the right context",
+      "route": "/",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Map"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Map"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-mapping-reference",
+      "scene_id": "app-ic-mapping-reference-scene-02",
+      "title": "Inspect one resource position",
+      "route": "/resource-map",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-22-unit-details"
+      ],
+      "required_labels": [
+        "View on Map"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "View on Map"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-mapping-reference",
+      "scene_id": "app-ic-mapping-reference-scene-03",
+      "title": "Frame the incident and add shared markup",
+      "route": "/command-map/[callId]",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Save View",
+        "Line",
+        "Area",
+        "Text",
+        "Done"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Save View",
+        "Line",
+        "Area",
+        "Text",
+        "Done"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-mapping-reference",
+      "scene_id": "app-ic-mapping-reference-scene-04",
+      "title": "Additional tactical and custom maps",
+      "route": "/maps",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Custom Maps",
+        "Indoor Maps",
+        "Active Layers"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Custom Maps",
+        "Indoor Maps",
+        "Active Layers"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-mapping-reference",
+      "scene_id": "app-ic-mapping-reference-scene-05",
+      "title": "Indoor floors, zones and the call handoff",
+      "route": "/maps/indoor/[id]",
+      "intended_capture": "Capture floor selection, zone details and the New Call handoff; explicitly inspect whether zone data appears. Do not assert automatic prefill or zone association.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Dispatch to this zone"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Dispatch to this zone"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-mapping-reference",
+      "scene_id": "app-ic-mapping-reference-scene-06",
+      "title": "Preplans, POIs and incident weather",
+      "route": "/contacts",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Details",
+        "Notes",
+        "Pre-Plan",
+        "Files",
+        "Calls"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Details",
+        "Notes",
+        "Pre-Plan",
+        "Files",
+        "Calls"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-orientation",
+      "scene_id": "app-ic-orientation-scene-01",
+      "title": "Start with the command role",
+      "route": "/onboarding",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-01-onboarding"
+      ],
+      "required_labels": [
+        "Next",
+        "Skip"
+      ],
+      "labels_needing_actual_visible_capture": [],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-orientation",
+      "scene_id": "app-ic-orientation-scene-02",
+      "title": "Connect and verify access",
+      "route": "/login",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-02-login",
+        "ic-03-server",
+        "ic-04-sso",
+        "ic-25-login-styled"
+      ],
+      "required_labels": [
+        "Username",
+        "Password"
+      ],
+      "labels_needing_actual_visible_capture": [],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-orientation",
+      "scene_id": "app-ic-orientation-scene-03",
+      "title": "Prepare a shared command device",
+      "route": "/login/shared-device",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-02-login",
+        "ic-05-shared-device",
+        "ic-25-login-styled"
+      ],
+      "required_labels": [
+        "Shared device"
+      ],
+      "labels_needing_actual_visible_capture": [],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-orientation",
+      "scene_id": "app-ic-orientation-scene-04",
+      "title": "Find the call and inspect its context",
+      "route": "/calls",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [
+        "ic-07-calls"
+      ],
+      "required_labels": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity",
+        "Site Info",
+        "History"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity",
+        "Site Info",
+        "History"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-orientation",
+      "scene_id": "app-ic-orientation-scene-05",
+      "title": "Create or update an authorized call",
+      "route": "/call/new",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Name",
+        "Nature",
+        "Priority",
+        "Type",
+        "Destination POI"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Name",
+        "Nature",
+        "Priority",
+        "Type",
+        "Destination POI"
+      ],
+      "operational_completion": "not_verified"
+    },
+    {
+      "lesson_id": "app-ic-orientation",
+      "scene_id": "app-ic-orientation-scene-06",
+      "title": "Readiness, check-ins and supporting media",
+      "route": "/call/[id]",
+      "intended_capture": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "accepted_refs": [],
+      "required_labels": [
+        "Readiness",
+        "Check-In",
+        "Quick Check-In",
+        "History"
+      ],
+      "labels_needing_actual_visible_capture": [
+        "Readiness",
+        "Check-In",
+        "Quick Check-In",
+        "History"
+      ],
+      "operational_completion": "not_verified"
+    }
+  ]
+}

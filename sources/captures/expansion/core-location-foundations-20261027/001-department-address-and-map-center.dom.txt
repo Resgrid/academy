@@ -1,0 +1,257 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Department Settings" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - strong: Department Settings
+- button "Calls & Dispatch": Calls & Dispatch
+- button "Operations": Operations
+- button "Customization": Customization
+- button "Integrations": Integrations
+- form:
+  - list
+  - generic: Department Name
+  - textbox "Name of the Department": Firehouse 51 — Training Department
+  - generic: Organization type
+  - combobox
+  - combobox "Fire Department":
+    - textbox "Fire Department"
+  - generic: Describes your organization. Every template, pack and module stays available whichever type you choose.
+  - text: Does your organization do several kinds of work? Select every sector that applies in the operating profile to get setup suggestions for each.
+  - link "Department operating profile":
+    - /url: /User/Department/OperatingProfile
+  - generic: Time Zone
+  - combobox
+  - combobox "(GMT-06:00) Central Time (US & Canada)":
+    - textbox "(GMT-06:00) Central Time (US & Canada)"
+  - generic: Use 24-Hour Time
+  - checkbox [checked]
+  - generic: Account Owner
+  - combobox
+  - combobox "Wallace Boden":
+    - textbox "Wallace Boden"
+  - generic: Disable Auto-Available
+  - checkbox
+  - generic: Disables automatic availability behavior. Review staffing/status reset interactions before changing it.
+  - generic: Disable automatically setting personnel's status to Available after an hour
+  - generic: Enable Modern Notifications
+  - checkbox [checked]
+  - generic: Use supported modern notification behavior. Verify each consumer and channel; provider acceptance is not delivery.
+  - generic: When enabled, push notifications will use the modern notification sounds instead of the legacy sounds for all users in this department.
+  - generic: Require password resets by email
+  - checkbox
+  - generic: Use single-use recovery links for administrator-initiated member password resets, instead of selecting a replacement password.
+  - generic: Prevents department and group administrators from choosing or seeing a member's new password. Reset actions send the member a short-lived, single-use email link instead. Existing sessions are revoked after the member successfully changes the password.
+  - generic: Require Security PIN
+  - checkbox
+  - generic: Require the member security PIN for sensitive supported chatbot and SMS actions, including members who have not opted in.
+  - generic: Require every member to confirm dangerous or department-wide assistant/text actions with their personal 4-digit security PIN. Members without a PIN get a randomly generated one (viewable on their profile page).
+  - generic: TTS Language
+  - combobox
+  - combobox "English - American (en-us)":
+    - textbox "English - American (en-us)"
+  - generic: Text-to-speech language for supported voice notifications. Confirm supported voices and pronunciation with a human-run test.
+  - generic: Select the eSpeak-NG language or dialect to use for this department's voice prompts.
+  - heading "Sorting" [level=3]
+  - generic: Personnel Sorting
+  - combobox
+  - combobox "Default":
+    - textbox "Default"
+  - generic: Sort order for personnel lists; does not change availability, access or dispatch priority.
+  - generic: Unit Sorting
+  - combobox
+  - combobox "Default":
+    - textbox "Default"
+  - generic: Sort order for unit lists; does not change unit eligibility or dispatch recommendation ranking.
+  - generic: Call Sorting
+  - combobox
+  - combobox "Default":
+    - textbox "Default"
+  - generic: Sort order for displayed calls; does not reorder provider delivery or change call priority.
+  - heading "Address" [level=3]
+  - paragraph: This is the address of your department; it could be the address of a single station or your district office. This address is used to help locate your district and area, and is used as a fallback for some operations (i.e. centering the big board).
+  - generic: Street
+  - textbox: 1000 Training Avenue (fictional)
+  - generic: City
+  - textbox: Chicago
+  - generic: State/Province
+  - textbox: IL
+  - generic: Zip/Postal Code
+  - textbox: "60607"
+  - generic: Country
+  - combobox
+  - combobox "United States":
+    - textbox "United States"
+  - generic: Default Map Center GPS Coordinates
+  - textbox "Mapping Center Latitude": "41.8721"
+  - text: "Latitude (Decimal Notation: i.e. 39.1517)"
+  - textbox "Mapping Center Longitude": "-87.6523"
+  - text: "Longitude (Decimal Notation: i.e. -119.4571)"
+  - generic: Explicit board-center coordinates take precedence over address geocoding. Partial coordinates do not overwrite the saved center.
+  - generic: Every map in Resgrid and the mobile apps opens here. Leave both blank and we will work it out from the department address above the next time you save; fill them in to pin an exact spot, which is never overwritten.
+  - link "Cancel":
+    - /url: /User/Home/Dashboard
+  - button "Save"
+  - heading "Personnel Staffing Reset" [level=5]
+  - paragraph: If you need to reset all your personnel's staffing level every day, you can configure it here. An example would be resetting staffing to unavailable every day so that for red-flag days you are sure personnel that are marked available happened after the reset.
+  - generic: Reset Staffing Daily?
+  - generic: ON OFF
+  - generic: Time to Reset Staffing
+  - textbox
+  - generic: Reset Staffing Level To
+  - combobox
+  - combobox "Unavailable":
+    - textbox "Unavailable"
+  - heading "Personnel Status Reset" [level=5]
+  - paragraph: If you need to reset all your personnel's statuses every day, you can configure it here. An example would be resetting status to "Standing By" every day so that you know personnel status is reset.
+  - generic: Reset Status Daily?
+  - generic: ON OFF
+  - generic: Time to Reset Status
+  - textbox
+  - generic: Reset Status To
+  - combobox
+  - combobox "Available":
+    - textbox "Available"
+  - heading "Supress (Mute) For These Staffing Levels" [level=5]
+  - paragraph: Select the Personnel Staffing Levels below that will be prevented from receiving any notifications, dispatches, alerts, messages, or any other communication. Most commonly these are your "Off Duty" or "On Leave" staffing levels.
+  - generic: Enable Staffing Supress
+  - generic: ON OFF
+  - generic: Staffing levels suppressed in supported notifications. Suppression can change who hears an alert and is not evidence of delivery.
+  - listbox:
+    - option: Available
+    - option: Delayed
+    - option: Unavailable
+    - option: Committed
+    - option: On Shift
+    - option: Any "Available" status
+    - option: Any "Delayed" status
+    - option: Any "Unavailable" status
+    - option: Any "Committed" status
+    - option: Any "On Shift" status
+    - option: Any "Off Duty" status
+    - option: Any "On Call" status
+  - combobox:
+    - list:
+      - searchbox
+  - heading "Force Department Update" [level=5]
+  - paragraph: Resgrid caches some department data to increase performance. Some examples of data that is cached is staffing levels, department settings, personnel roles\groups\names. If you have issues where some department data is incorrect you might want to clear your departments cache.
+  - button "Force Department Update"
+  - heading "Delete Your Department" [level=5]
+  - paragraph: Request deletion of your department. This is a permanent and non-reversable operation that takes 25 days to complete and needs to run after hours. During the wait period you can cancel the request if you choose.
+  - link "Request Department Deletion":
+    - /url: /User/Department/DeleteDepartment
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

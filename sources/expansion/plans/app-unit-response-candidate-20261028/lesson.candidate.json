@@ -1,0 +1,713 @@
+{
+  "id": "app-unit-02-response-and-checks",
+  "title": "Unit: create, update and work a training call",
+  "app": "Unit",
+  "audience": [
+    "Vehicle and apparatus crews",
+    "Response team leaders"
+  ],
+  "summary": "Follow a fictional call through creation, contact edits, notes, image upload, response statuses, recipient changes, and closure.",
+  "scenes": [
+    {
+      "id": "call-details",
+      "title": "Prepare a clear training incident",
+      "required_labels": [
+        "New Call",
+        "Create New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Type"
+      ],
+      "narration": "Unit gives a vehicle or response team a shared workspace for its calls. When your account permits call creation, New Call opens Create New Call. Give the incident a useful Name and Nature, then choose the appropriate Priority and Type. Here the name identifies a training walkthrough, the priority is Routine, and the type is Investigation. An outreach team, security patrol, or industrial response crew can use descriptions that fit its own work.",
+      "practice": "Prepare a fictional incident with the intended classification.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-009-new-call-reviewed-required-fields"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "location",
+      "title": "Review the incident location",
+      "required_labels": [
+        "Call Location",
+        "Address",
+        "GPS Coordinates",
+        "Destination POI"
+      ],
+      "narration": "In Call Location, review Address and GPS Coordinates as separate fields. Our exercise uses a supplied fictional address and a manually entered coordinate pair. The Destination POI is still unselected. Keep the incident location and any later destination distinct: an access point, staging area, or receiving site may represent a different place. The other location methods shown here require their own verified lookup; this exercise does not demonstrate those lookups.",
+      "practice": "Verify the supplied training point and whether a destination is required.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-005-explicit-simulated-location-inputs"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "initial-recipients",
+      "title": "Choose a limited practice audience",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Everyone",
+        "Wallace Boden",
+        "1 selected",
+        "Confirm"
+      ],
+      "narration": "In Select Dispatch Recipients, choose the intended training recipient. Wallace Boden is selected here, while Everyone remains off. Review the selection count, then choose Confirm. A department should agree its practice audience before creating an exercise. The recipient picker gives you a chance to check that scope rather than sending a training call to every available person.",
+      "practice": "Confirm the selected person and avoid unintended broadcast selection.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-007-single-fictional-dispatch-recipient"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "create",
+      "title": "Review the final form before creation",
+      "required_labels": [
+        "External ID",
+        "Dispatch Time",
+        "Dispatch To",
+        "1 selected",
+        "Create"
+      ],
+      "narration": "Review the lower form before Create. External ID contains an exercise reference, Dispatch To shows one selected recipient, and Dispatch Time is blank for this unscheduled exercise. Check the fields your department requires, then create the call. A saved call and the receipt of an external notification are separate results; this walkthrough checks the saved incident in the app.",
+      "practice": "Review the reference, timing, and recipient count before Create.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-011-precreate-one-recipient-no-schedule"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "find-created",
+      "title": "Find and identify the saved incident",
+      "required_labels": [
+        "Calls",
+        "51011",
+        "#FD51-2026-0003",
+        "TRAINING ONLY - Unit response walkthrough"
+      ],
+      "narration": "Return to Calls and locate the saved training incident. In this recording, searching for internal call ID five one zero one one finds the exercise. Confirm the displayed department number, title, and location before opening it. The returned number is F D fifty-one, twenty twenty-six, zero zero zero three. Use your own returned identifiers when repeating the exercise; do not assume the next number.",
+      "practice": "Find the saved call and compare its displayed identity with your exercise.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-followup-20261027-005-own-call-search-dark-after-fresh-bundle"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "edit-action",
+      "title": "Open the incident editing action",
+      "required_labels": [
+        "Edit Call",
+        "Close Call"
+      ],
+      "narration": "The call actions offer Edit Call and Close Call as separate choices. Choose Edit Call for a correction while the incident remains active. We will update the exercise contact instructions first and handle closure later. This helps keep a routine correction separate from ending an incident that other people may still be working.",
+      "practice": "Locate Edit Call and distinguish it from Close Call.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-013-own-call-edit-close-actions"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "save-contact",
+      "title": "Save corrected contact instructions",
+      "required_labels": [
+        "Edit Call",
+        "Contact Info",
+        "External ID",
+        "Save"
+      ],
+      "narration": "In Edit Call, update Contact Info with concise instructions. Our training text directs the crew to the fictional coordinator at the east exercise entrance. Check the External ID so you are still editing the intended exercise, then choose Save. An entrance or meeting-point correction can be useful for community care, event response, and contractor work without changing the incident classification.",
+      "practice": "Save one permitted correction on the intended training call.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-015-contact-edit-before-save"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-contact",
+      "title": "Read back the corrected contact information",
+      "required_labels": [
+        "Contact",
+        "External ID",
+        "Contact Name",
+        "Contact Info"
+      ],
+      "narration": "Reopen Contact in Call Details. Compare the External ID, Contact Name, and Contact Info with the exercise you edited. The new east-entrance instructions are present in the saved readback. Checking this view is how you distinguish a completed correction from text that was only entered into the form.",
+      "practice": "Verify the saved contact text after returning to the incident.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-016-saved-contact-fresh-readback"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "add-note",
+      "title": "Record a useful incident note",
+      "required_labels": [
+        "Call Notes",
+        "Add New Note",
+        "Add Note"
+      ],
+      "narration": "Use Call Notes for an update that should remain in the incident conversation. Enter the message under Add New Note, review it, and select Add Note. Our fictional access note identifies the exercise entrance and coordinator. Keep an incident note distinct from the contact fields and from a later status-update note; each has its own context.",
+      "practice": "Add a short exercise note in Call Notes.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-017-access-note-before-add"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-note",
+      "title": "Verify the stored note and its context",
+      "required_labels": [
+        "Call Notes",
+        "Wallace Boden",
+        "Add New Note"
+      ],
+      "narration": "Reopen Call Notes and verify the saved message, author, and timestamp. The access note now appears as an entry rather than only in Add New Note. This gives the next operator a useful record of the update. For search teams or security staff, use the same habit to make an agreed handover instruction easy to find.",
+      "practice": "Read the saved note before adding another update.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-actions-20261027-018-stored-note-fresh-reopen"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "upload-image",
+      "title": "Review an image before uploading",
+      "required_labels": [
+        "Add New Image",
+        "Image Note",
+        "Upload"
+      ],
+      "narration": "In Add New Image, review the selected picture and its Image Note before Upload. This example uses a sample software icon, and the note identifies it as training content rather than an incident photograph. Use only material your department permits. The preview is the place to catch an incorrect selection before attaching it to the incident.",
+      "practice": "Review a permitted sample image and explanatory note before Upload.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-followup-20261027-006-image-preview-explicit-fresh-bundle"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-image",
+      "title": "Confirm the image is stored on the call",
+      "required_labels": [
+        "Call Images",
+        "Add Image"
+      ],
+      "narration": "Reopen Call Images and confirm that the sample picture appears with its stored timestamp. A preview by itself would not establish that the image was saved. Review the resulting call gallery after an upload, especially when several similar training files are available. An industrial team might use an approved equipment image; another department might use a permitted exercise-site image.",
+      "practice": "Verify the intended image in the reopened gallery.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-followup-20261027-007-stored-image-reopened"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "choose-status",
+      "title": "Choose the response status",
+      "required_labels": [
+        "Select Status",
+        "Responding",
+        "Next"
+      ],
+      "narration": "The response workflow opens Select Status. Read the configured choices and choose Responding for this exercise, then continue with Next. The available states and their destination or note requirements come from department configuration. The following views show the choices offered in this training department, so inspect your own configured labels rather than relying only on a button color.",
+      "practice": "Read the status choices and select the appropriate exercise status.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-002-set-active-select-status"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "responding-destination",
+      "title": "Associate the response with the correct call",
+      "required_labels": [
+        "Select Destination for Responding",
+        "Calls",
+        "Next"
+      ],
+      "narration": "Select Destination for Responding lets you choose the context for the status. Under Calls, verify the training call number and title before Next. The view also offers No Destination, Stations, and POIs. Use the option that fits the actual assignment; responding to a call and responding to a station convey different information to the department.",
+      "practice": "Verify the selected exercise call before continuing.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-003-responding-own-call-destination"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "submit-responding",
+      "title": "Review the response note and submit",
+      "required_labels": [
+        "Add Note",
+        "Note (optional):",
+        "Responding · FD51-2026-0003 - TRAINING ONLY - Unit response walkthrough",
+        "Submit"
+      ],
+      "narration": "In Add Note, check the Responding summary and incident identity. Add a useful optional note, then choose Submit. Our message identifies this as a software training update. Review this final step carefully: choosing a state earlier in the workflow is separate from submitting the completed update.",
+      "practice": "Check the status and call summary before submitting the note.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-004-responding-note-before-submit"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-responding",
+      "title": "Verify the saved unit response",
+      "required_labels": [
+        "Engine 51",
+        "Responding",
+        "#FD51-2026-0003"
+      ],
+      "narration": "Review the unit panel after submission. Engine 51 now shows Responding, and the selected incident is the training call. Check both the unit identity and call identity so the update is associated with the intended apparatus and assignment. The software status supports coordination; your organization still governs the physical response and reporting procedure.",
+      "practice": "Confirm the unit, saved status, and selected incident together.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-006-responding-saved-own-call-sidebar"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "on-scene-destination",
+      "title": "Choose the context for the next status",
+      "required_labels": [
+        "Select Destination for On Scene",
+        "Calls",
+        "Next"
+      ],
+      "narration": "For the next exercise update, Select Destination for On Scene again asks for the call context. Verify the same practice incident before Next. Notice that this path has two steps in the recorded configuration, while the earlier response path had three. Follow the controls actually offered for the chosen status.",
+      "practice": "Check the call context when changing to the next configured state.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-007-on-scene-own-call-destination"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "submit-on-scene",
+      "title": "Review and submit the next status note",
+      "required_labels": [
+        "Add Note",
+        "On Scene · FD51-2026-0003 - TRAINING ONLY - Unit response walkthrough",
+        "Submit"
+      ],
+      "narration": "Review the On Scene summary and optional note in Add Note, then choose Submit. The note explicitly identifies this as a simulated software selection. In everyday use, report a status according to your department procedure and the actual assignment. Useful status notes help a coordinator understand the change without having to reconstruct it from several other screens.",
+      "practice": "Review the intended state and note before the final submission.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-008-on-scene-training-note-submit"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-on-scene",
+      "title": "Verify the new saved status",
+      "required_labels": [
+        "Engine 51",
+        "On Scene",
+        "#FD51-2026-0003"
+      ],
+      "narration": "Check the unit panel again. Engine 51 now shows On Scene for the same training incident. Verifying the saved result is especially useful on a shared vehicle device, where the next operator needs a clear picture of the selected apparatus and its assignment.",
+      "practice": "Confirm the saved result on the unit panel.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-009-on-scene-saved-sidebar"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "activity",
+      "title": "Review the incident activity history",
+      "required_labels": [
+        "Activity",
+        "Responding",
+        "On Scene"
+      ],
+      "narration": "Open Activity to review the recorded changes. The history includes the Responding and On Scene entries, their timestamps, and the notes supplied in the exercise. Use this view to review the sequence of updates. These are recorded software events; they do not independently establish a device position or physical arrival.",
+      "practice": "Compare the two saved events with the notes you submitted.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-010-refetched-activity-responding-on-scene"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "add-unit-recipient",
+      "title": "Add the apparatus to the recipient selection",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Units (2)",
+        "Engine 51",
+        "2 selected",
+        "Confirm"
+      ],
+      "narration": "When the incident needs an additional resource, Edit Call can change its recipient selection. In Select Dispatch Recipients, select the intended Engine 51 unit under Units, review the selection count, and Confirm. A unit and a group are different recipient choices. Check the actual unit name rather than assuming that a station group represents only that apparatus.",
+      "practice": "Add the intended unit without selecting its entire group.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-013-edit-dispatch-add-unit-not-group"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "save-recipients",
+      "title": "Save the revised recipient scope",
+      "required_labels": [
+        "Edit Call",
+        "Dispatch To",
+        "2 selected",
+        "Save"
+      ],
+      "narration": "Back in Edit Call, Dispatch To now shows two selected recipients. Check the rest of the form, then Save. Confirming the picker updates the form; saving the form completes the incident edit. Keep those two steps distinct when teaching a new operator.",
+      "practice": "Save the reviewed recipient change on the incident.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-014-edit-two-recipients-before-save"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-recipients",
+      "title": "Verify the saved dispatched resources",
+      "required_labels": [
+        "Dispatched",
+        "Wallace Boden",
+        "Type: User",
+        "Engine 51",
+        "Type: Unit"
+      ],
+      "narration": "Open Dispatched and review the saved entries. Wallace Boden is listed as a User, and Engine 51 is listed as a Unit. This verifies the resulting recipient scope and makes the person-versus-apparatus distinction visible. A dispatched resource list is separate from the vehicle crew assignments covered in the Unit access and crew lesson.",
+      "practice": "Check that the saved list contains the intended person and unit.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-completion-20261027-016-dispatched-readback-clean"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "close",
+      "title": "Review closure type, note, and notifications",
+      "required_labels": [
+        "Close Call",
+        "Close Type",
+        "Closed",
+        "Close Note",
+        "Notify everyone on the call"
+      ],
+      "narration": "Use Close Call when the authorized exercise is finished. Review Close Type, add a useful Close Note, and check Notify everyone on the call before submitting. We use Closed and leave the notification option off for this local practice. A real department should choose the closing audience deliberately, because this option can notify the people and resources associated with the incident.",
+      "practice": "Review all closure choices before closing the agreed exercise.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-close-20261027-001-close-own-call-closed-note-notify-off"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "verify-closed-list",
+      "title": "Check the active call list after closure",
+      "required_labels": [
+        "Calls",
+        "Search calls...",
+        "#DEMO-0003",
+        "#DEMO-0002",
+        "#DEMO-0001"
+      ],
+      "narration": "Review the main Calls list after closure with the search cleared. The exercise call has left the active list, while the three original training calls remain. Check the call list separately from the unit panel: ending an incident and reviewing the apparatus context are related checks, with different displayed fields.",
+      "practice": "Verify the active list without confusing it with the selected unit context.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-response-close-20261027-002-closed-call-removed-original-three-open"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    },
+    {
+      "id": "final-unit-context",
+      "title": "Verify the final apparatus context",
+      "required_labels": [
+        "Engine 51",
+        "Released",
+        "No Active Call"
+      ],
+      "narration": "Finish by checking the unit panel. This final readback shows Engine 51 as Released with No Active Call. Verify the intended call selection and status under your department workflow before handing over the device. The same habits apply to fire and EMS vehicles, community response teams, search and rescue units, security patrols, wildland contractors, and industrial response crews.",
+      "practice": "Review the final unit identity, status, and call context before handover.",
+      "capture_evidence": {
+        "status": "existing_independent_source_review_reused",
+        "capture_refs": [
+          "unit-post-close-verification-20261027-002-released-no-active-call-original-three"
+        ],
+        "source_review": {
+          "captures/expansion/unit-response-actions-20261027/review/reviewed-source-subset-20261027.json": "a6b90c0aba9a2f6d1e4fe7e3bcd5cf402bbf9d3c5b56549f826ac625c0dfece5",
+          "captures/expansion/unit-response-followup-20261027/review/reviewed-source-subset-20261027.json": "ca5eb1d4e0240535fce8e8ae3b580d4cdd65de911043202f703656a25a5a7125",
+          "captures/expansion/unit-response-completion-20261027/review/reviewed-source-subset-20261027.json": "1167a9b409a9e23f1bd9e79ad6c4ead4f7204993ad63cf20b39ca85ce93230fc",
+          "captures/expansion/unit-response-close-20261027/review/reviewed-source-subset-20261027.json": "0a71e6b7fd02ca4996d52802f4a8032c00f977ce2c1471ec5fac81ea4c0fe13e",
+          "captures/expansion/unit-post-close-verification-20261027/review/reviewed-source-subset-20261027.json": "b379f508c145d4de13dcb9cc8a9ef68eec4e6d6a82c2ac5581d56ca017bf186a"
+        }
+      },
+      "timing_status": "untimed; actual speech export required"
+    }
+  ],
+  "narration_word_count": 1444,
+  "export_ready": false,
+  "authoring_status": "source_backed_candidate_with_explicit_capture_gaps",
+  "do_not_generate_narration_yet": true,
+  "capture_gaps": [
+    {
+      "operation": "New Call launcher",
+      "before_scene": "call-details",
+      "required_capture": "Foreground Calls action, including the actual accessible name of the plus/New Call control, followed by the opened form. Do not invent a literal label for an icon."
+    },
+    {
+      "operation": "Set Active entry",
+      "before_scene": "choose-status",
+      "required_capture": "An unobscured call header and Set Active action. The current raw screenshot has the call-actions sheet open; its dimmed background action is deliberately excluded from the reviewed subset."
+    },
+    {
+      "operation": "Clear selection / Deselect confirmation",
+      "before_scene": "final-unit-context",
+      "required_capture": "If the finished lesson teaches this operation, capture the actual web confirmation and settled state through the normal UI. Current footage verifies the final state only; it does not picture the confirmation."
+    }
+  ],
+  "scope_notes": [
+    "Existing coherent historical exercise51011/FD51-2026-0003; it is now closed. No historical source was edited, reopened or reseeded.",
+    "A new capture session must preserve chronology and call identity, or explicitly separate its scenario; do not substitute another incident as proof of this historical action.",
+    "The final Released/No Active Call image is an observed later readback. Do not imply that closing the call by itself performed every selection/status cleanup operation.",
+    "Checklists, personnel check-ins, crew setup, routes, inventory, provider routing and native hardware/offline behavior are outside this candidate; retain the completed companion lessons and remaining feature work."
+  ],
+  "completed_companions": [
+    "app-unit-01-access-and-crew",
+    "app-unit-readiness-checklists",
+    "app-unit-personnel-checkins"
+  ]
+}

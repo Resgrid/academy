@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Manage this named, isolated Academy stack. No global Docker changes or deletion."""
-from settings import load
+from settings import load, profile
+from source_profiles import PROFILE_DEFAULTS, load_source_set, managed_source, prepare_core, select_profile, summary, verify_pin
 import argparse, datetime, json, os, pathlib, re, shutil, subprocess, sys, time, urllib.request
 ROOT=pathlib.Path(__file__).resolve().parent
 PROFILE=load(); STACK=PROFILE['name']; WEB_PORT=PROFILE['ports']['web']
@@ -8,13 +9,14 @@ core_pointer=ROOT/'private/core-path.json'
 core_default=json.loads(core_pointer.read_text())['path'] if core_pointer.exists() else str(ROOT/'checkout')
 REPO=pathlib.Path(os.environ.get('RESGRID_CORE_PATH', core_default)).resolve()
 DOCKER=shutil.which('docker')
-if not DOCKER: raise SystemExit('Docker must be installed and available on PATH.')
-SERVICES=['postgres','redis','rabbit','mail','billing','web','api','eventing','worker','loopback','gateway']
+SERVICES=['postgres','redis','rabbit','mail','object-store','billing','web','api','eventing','worker','loopback','gateway']
 APPS=['billing','web','api','eventing','worker','loopback','gateway']
 PROJECTS={'web':'Web/Resgrid.Web/Resgrid.Web.csproj','console':'Tools/Resgrid.Console/Resgrid.Console.csproj','api':'Web/Resgrid.Web.Services/Resgrid.Web.Services.csproj','eventing':'Web/Resgrid.Web.Eventing/Resgrid.Web.Eventing.csproj','worker':'Workers/Resgrid.Workers.Console/Resgrid.Workers.Console.csproj'}
 def run(args,**kw):
  return subprocess.run(args,check=True,text=True,**kw)
-def docker(*args,**kw): return run([DOCKER,*args],**kw)
+def docker(*args,**kw):
+ if not DOCKER: raise ValueError('Docker must be installed and available on PATH.')
+ return run([DOCKER,*args],**kw)
 def compose(*args,**kw): return docker('compose','--project-name',STACK,'--env-file',str(ROOT/'.env'),'-f',str(ROOT/'compose.yaml'),*args,**kw)
 def start(names):
  env=dict(os.environ); env['PATH']=str(pathlib.Path(DOCKER).parent)+os.pathsep+env.get('PATH','')
@@ -23,6 +25,8 @@ def sql(query,db='resgrid_academy'):
  return docker('exec','-i',STACK+'-postgres-1','psql','-v','ON_ERROR_STOP=1','-U','academy','-d',db,'-At',input=query,capture_output=True).stdout.strip()
 def prepare():
  run([sys.executable,str(ROOT/'prepare.py')]);run([sys.executable,str(ROOT/'prepare_tls.py')])
+def initialize_object_store():
+ compose('run','--rm','--no-deps','--entrypoint','python','billing','/stack/_services/billing/initialize_object_store.py')
 def health():
  states={}
  for service in SERVICES:
@@ -82,6 +86,9 @@ def stage():
  docker('cp',str(ROOT/'private/loopback.conf'),name+':/mnt/config/loopback.conf')
  print('Staged only Academy named volumes. Start applications after staging.')
 def build():
+ source_name,pinned=select_profile(ROOT)
+ source_set=load_source_set(source_name);verify_pin(pinned,source_set)
+ prepare_core(REPO,ROOT,source_set,allow_apply=False)
  (ROOT/'logs').mkdir(exist_ok=True)
  for component,project in PROJECTS.items():
   with (ROOT/'logs'/('build-'+component+'.log')).open('w') as log:
@@ -90,16 +97,29 @@ def build():
  # Restore only the two files pinned by this checkout's libman.json.
  import tarfile
  with tarfile.open(ROOT/'vendor/deltablot-dropzone-7.3.1.tgz') as archive:
-  for name in ['dropzone.css','min/dropzone.min.js']:
-   target=ROOT/'publish/web/wwwroot/lib/deltablot/dropzone/dist'/name
+  import hashlib
+  expected=json.loads((ROOT/'vendor/asset-manifest.json').read_text())['sha256']
+  for source_name,target_name in [('dropzone.css','dropzone.css'),('dropzone-min.js','dropzone-min.js'),('dropzone-min.js','min/dropzone.min.js')]:
+   data=archive.extractfile('package/dist/'+source_name).read()
+   if hashlib.sha256(data).hexdigest()!=expected[source_name]: raise ValueError('Pinned frontend asset hash mismatch: '+source_name)
+   target=ROOT/'publish/web/wwwroot/lib/deltablot/dropzone/dist'/target_name
    target.parent.mkdir(parents=True,exist_ok=True)
-   target.write_bytes(archive.extractfile('package/dist/'+name).read())
+   target.write_bytes(data)
+ from restore_codemirror import restore as restore_editor
+ restore_editor(ROOT/'publish/web/wwwroot/lib/codemirror')
  target=ROOT/'publish/billing';target.mkdir(parents=True,exist_ok=True)
  shutil.copy2(ROOT/'billing_fixture.py',target/'billing_fixture.py')
+ shutil.copy2(ROOT/'initialize_object_store.py',target/'initialize_object_store.py')
  prepare()
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['start','stop','status','health','build','stage','seed']);a=p.parse_args()
- if a.action=='start':compose('create',*SERVICES);start([STACK+'-'+s+'-1' for s in SERVICES]);health()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['plan','start','stop','status','health','build','stage','seed']);p.add_argument('--source-profile',choices=['legacy','expansion']);a=p.parse_args()
+ source_name,pinned=select_profile(ROOT,a.source_profile);source_set=load_source_set(source_name);verify_pin(pinned,source_set)
+ if a.action=='plan':
+  planned_stack=PROFILE if (ROOT/'private/stack.json').exists() else profile(*PROFILE_DEFAULTS[source_name])
+  planned_core=REPO if core_pointer.exists() or os.environ.get('RESGRID_CORE_PATH') else (managed_source(ROOT,'Core') if source_name=='expansion' else REPO)
+  print(json.dumps({'stack':planned_stack,'core_checkout':str(planned_core),'source_set':summary(source_set),'notice':'Read-only plan; no Docker, credentials, source checkout, patch or seed action.'},indent=2));return
+ if a.source_profile and not pinned:raise SystemExit('Run setup_demo.py --source-profile '+source_name+' first to pin this selection; existing state was preserved.')
+ if a.action=='start':compose('create',*SERVICES);start([STACK+'-'+s+'-1' for s in SERVICES]);initialize_object_store();health()
  elif a.action=='stop':compose('stop',*APPS)
  elif a.action=='status':docker('ps','-a','--filter','label=com.docker.compose.project='+STACK,'--format','{{.Names}} {{.Status}}')
  elif a.action=='health':health()

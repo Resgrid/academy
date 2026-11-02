@@ -1,0 +1,1125 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Events;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Repositories;
+using Resgrid.Model.Search;
+using Resgrid.Model.Services;
+
+namespace Resgrid.Services
+{
+	public class UnitsService : IUnitsService
+	{
+		private readonly IUnitsRepository _unitsRepository;
+		private readonly IUnitStatesRepository _unitStatesRepository;
+		private readonly IUnitLogsRepository _unitLogsRepository;
+		private readonly IUnitTypesRepository _unitTypesRepository;
+		private readonly IUnitRolesRepository _unitRolesRepository;
+		private readonly IUnitStateRoleRepository _unitStateRoleRepository;
+		private readonly Lazy<IMongoRepository<UnitsLocation>> _unitLocationRepository;
+		private readonly IUnitLocationsDocRepository _unitLocationsDocRepository;
+		private readonly Lazy<IUnitLocationsMongoRepository> _unitLocationsMongoRepository;
+		private readonly ISubscriptionsService _subscriptionsService;
+		private readonly IUserStateService _userStateService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly ICustomStateService _customStateService;
+		private readonly IUnitActiveRolesRepository _unitActiveRolesRepository;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly ILimitsService _limitsService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+
+		// Lazy: defers the protected-write graph (broker client) until a state save actually needs it.
+		private readonly Lazy<IProtectedWriteService> _protectedWriteService;
+
+		// Lazy: the Records cutover guard (RMS plan section 4.1) is consulted only on a legacy UnitLog write.
+		private readonly Lazy<IRecordsCutoverService> _recordsCutoverService;
+		private readonly ICallStatusAttributionService _callStatusAttributionService;
+
+		private readonly Lazy<ISearchProjectionService> _searchProjections;
+
+		// Lazy: closing a finished call needs the calls and dispatch-status graph, which itself depends on this service.
+		private readonly Lazy<ICallAutoCloseService> _callAutoCloseService;
+
+		// Deleting a unit drops its push subscriber; the department supplies the code the subscriber is keyed by.
+		private readonly INovuProvider _novuProvider;
+		private readonly Lazy<IDepartmentsService> _departmentsService;
+		private readonly ITypeIconsRepository _typeIconsRepository;
+
+		// Lazy: the awaiting-resources check needs the calls and dispatch graph, which itself depends on this service.
+		private readonly Lazy<IOutstandingRequirementsService> _outstandingRequirementsService;
+
+		public UnitsService(IUnitsRepository unitsRepository, IUnitStatesRepository unitStatesRepository,
+			IUnitLogsRepository unitLogsRepository, IUnitTypesRepository unitTypesRepository, ISubscriptionsService subscriptionsService,
+			IUnitRolesRepository unitRolesRepository, IUnitStateRoleRepository unitStateRoleRepository, IUserStateService userStateService,
+			IEventAggregator eventAggregator, ICustomStateService customStateService, Lazy<IMongoRepository<UnitsLocation>> unitLocationRepository,
+			IUnitLocationsDocRepository unitLocationsDocRepository, Lazy<IUnitLocationsMongoRepository> unitLocationsMongoRepository,
+			IUnitActiveRolesRepository unitActiveRolesRepository,
+			IDepartmentGroupsService departmentGroupsService, ILimitsService limitsService, IPersonnelRolesService personnelRolesService,
+			Lazy<IProtectedWriteService> protectedWriteService, Lazy<IRecordsCutoverService> recordsCutoverService,
+			ICallStatusAttributionService callStatusAttributionService, Lazy<ISearchProjectionService> searchProjections = null,
+			Lazy<ICallAutoCloseService> callAutoCloseService = null, INovuProvider novuProvider = null,
+			Lazy<IDepartmentsService> departmentsService = null, ITypeIconsRepository typeIconsRepository = null,
+			Lazy<IOutstandingRequirementsService> outstandingRequirementsService = null)
+		{
+			_outstandingRequirementsService = outstandingRequirementsService;
+			_callAutoCloseService = callAutoCloseService;
+			_novuProvider = novuProvider;
+			_departmentsService = departmentsService;
+			_typeIconsRepository = typeIconsRepository;
+			_recordsCutoverService = recordsCutoverService;
+			_callStatusAttributionService = callStatusAttributionService;
+			_unitsRepository = unitsRepository;
+			_unitStatesRepository = unitStatesRepository;
+			_unitLogsRepository = unitLogsRepository;
+			_unitTypesRepository = unitTypesRepository;
+			_subscriptionsService = subscriptionsService;
+			_unitRolesRepository = unitRolesRepository;
+			_unitStateRoleRepository = unitStateRoleRepository;
+			_userStateService = userStateService;
+			_eventAggregator = eventAggregator;
+			_customStateService = customStateService;
+			_unitLocationRepository = unitLocationRepository;
+			_unitLocationsDocRepository = unitLocationsDocRepository;
+			_unitLocationsMongoRepository = unitLocationsMongoRepository;
+			_unitActiveRolesRepository = unitActiveRolesRepository;
+			_departmentGroupsService = departmentGroupsService;
+			_limitsService = limitsService;
+			_personnelRolesService = personnelRolesService;
+			_protectedWriteService = protectedWriteService;
+			_searchProjections = searchProjections;
+		}
+
+		public async Task<List<Unit>> GetAllAsync()
+		{
+			var items = await _unitsRepository.GetAllAsync();
+
+			if (items != null && items.Any())
+				return items.ToList();
+
+			return new List<Unit>();
+		}
+
+		public Task<Unit> SaveUnitAsync(Unit unit, CancellationToken cancellationToken = default(CancellationToken))
+			=> SaveUnitAsync(unit, Resgrid.Model.Onboarding.ImportEffectPolicy.Interactive, cancellationToken);
+
+		public async Task<Unit> SaveUnitAsync(Unit unit, Resgrid.Model.Onboarding.ImportEffectPolicy effects, CancellationToken cancellationToken)
+		{
+			var saved = await _unitsRepository.SaveOrUpdateAsync(unit, cancellationToken);
+			await _limitsService.InvalidateDepartmentsEntityLimitsCache(unit.DepartmentId);
+
+			// An import resyncs the apps once per run and refreshes the unit matrices once per chunk (wizard plan section 11.5).
+			if (effects.RaiseDomainEvents)
+				_eventAggregator.SendMessage<DepartmentSettingsUpdateEvent>(new DepartmentSettingsUpdateEvent() { DepartmentId = saved.DepartmentId });
+
+			// The unit visibility matrix is keyed by unit id and by station group; a new unit is absent
+			// from it and a re-stationed unit is filed under the wrong group until it is rebuilt.
+			if (effects.ImmediateSecurityRefresh)
+				SendUnitVisibilityRefresh(saved.DepartmentId);
+
+			if (effects.ImmediateSearchProjection && _searchProjections != null) await _searchProjections.Value.ProjectUnitAsync(saved, cancellationToken);
+			return saved;
+		}
+
+		/// <summary>
+		/// Both unit matrices are derived from the department's unit list and each unit's station group,
+		/// so any unit create/update/delete invalidates both.
+		/// </summary>
+		private void SendUnitVisibilityRefresh(int departmentId)
+		{
+			_eventAggregator.SendMessage<SecurityRefreshEvent>(new SecurityRefreshEvent()
+			{
+				DepartmentId = departmentId,
+				Type = SecurityCacheTypes.WhoCanViewUnits
+			});
+
+			_eventAggregator.SendMessage<SecurityRefreshEvent>(new SecurityRefreshEvent()
+			{
+				DepartmentId = departmentId,
+				Type = SecurityCacheTypes.WhoCanViewUnitLocations
+			});
+		}
+
+		public async Task<UnitLog> SaveUnitLogAsync(UnitLog unitLog, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			// UnitLogs carry no DepartmentId; scope the Records cutover guard through the owning Unit (RMS plan section 4.1).
+			var owningUnit = await _unitsRepository.GetByIdAsync(unitLog.UnitId);
+			if (owningUnit != null)
+				await _recordsCutoverService.Value.EnsureLegacyWriteAllowedAsync(owningUnit.DepartmentId, "UnitsService.SaveUnitLogAsync");
+
+			// Rich text the unit log views render as HTML: scripts, handlers and frames are never stored.
+			unitLog.Narrative = StringHelpers.SanitizeHtmlForStorage(unitLog.Narrative);
+
+			var saved = await _unitLogsRepository.SaveOrUpdateAsync(unitLog, cancellationToken);
+
+			// ADP write safety net (plan 4.2/19.2, catalog v9). Runs AFTER the save because the AAD
+			// row key is the identity pk, then re-persists the enveloped row. Fails closed by
+			// throwing rather than leaving the value in plaintext.
+			var departmentId = saved.Unit?.DepartmentId
+				?? (await _unitsRepository.GetByIdAsync(saved.UnitId))?.DepartmentId ?? 0;
+
+			var protectedWrite = await _protectedWriteService.Value.PrepareUnitLogWriteAsync(departmentId, saved,
+				null, null, workloadCaller: true, cancellationToken);
+			if (!protectedWrite.Success)
+				throw new InvalidOperationException($"Protected write blocked ({protectedWrite.Reason}); unit log {saved.UnitLogId} has transient plaintext pending re-encryption.");
+			if (protectedWrite.Changed)
+				saved = await _unitLogsRepository.SaveOrUpdateAsync(saved, cancellationToken);
+
+			return saved;
+		}
+
+		public async Task<List<Unit>> GetUnitsForDepartmentAsync(int departmentId)
+		{
+			List<Unit> systemUnts = new List<Unit>();
+			var units = (await _unitsRepository.GetAllUnitsByDepartmentIdAsync(departmentId)).ToList();
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentUnlimitedThinAsync(departmentId);
+			var limit = await _limitsService.GetLimitsForEntityPlanWithFallbackAsync(departmentId);
+
+			if (units != null && units.Any())
+			{
+				if (units.Count() > limit.UnitsLimit)
+					units = units.Take(limit.UnitsLimit).ToList();
+
+				foreach (var unit in units)
+				{
+					//unit.Roles = await GetRolesForUnitAsync(unit.UnitId);
+
+					if (unit.StationGroupId.HasValue)
+						unit.StationGroup = groups.FirstOrDefault(x => x.DepartmentGroupId == unit.StationGroupId.Value);
+
+					systemUnts.Add(unit);
+				}
+			}
+
+			return systemUnts;
+		}
+
+		public async Task<List<Unit>> GetUnitsForDepartmentUnlimitedAsync(int departmentId)
+		{
+			var units = await _unitsRepository.GetAllUnitsByDepartmentIdAsync(departmentId);
+			var groups = await _departmentGroupsService.GetAllGroupsForDepartmentUnlimitedThinAsync(departmentId);
+
+			if (units != null && units.Any())
+			{
+				foreach (var unit in units)
+				{
+					//unit.Roles = await GetRolesForUnitAsync(unit.UnitId);
+
+					if (unit.StationGroupId.HasValue)
+						unit.StationGroup = groups.FirstOrDefault(x => x.DepartmentGroupId == unit.StationGroupId.Value);
+				}
+			}
+
+			return units.ToList();
+		}
+
+		public async Task<List<Unit>> GetUnitsForDepartmentIncludingDeletedAsync(int departmentId)
+		{
+			var units = (await _unitsRepository.GetAllUnitsByDepartmentIdIncludingDeletedAsync(departmentId))?.ToList() ?? new List<Unit>();
+
+			if (units.Any(x => x.StationGroupId.HasValue))
+			{
+				var groups = await _departmentGroupsService.GetAllGroupsForDepartmentUnlimitedThinAsync(departmentId);
+
+				foreach (var unit in units.Where(x => x.StationGroupId.HasValue))
+					unit.StationGroup = groups?.FirstOrDefault(x => x.DepartmentGroupId == unit.StationGroupId.Value);
+			}
+
+			return units;
+		}
+
+		public async Task<Unit> GetUnitByIdAsync(int unitId)
+		{
+			return await _unitsRepository.GetByIdAsync(unitId);
+		}
+
+		public async Task<bool> DeleteUnitAsync(int unitId, string deletedByUserId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var unit = await _unitsRepository.GetByIdAsync(unitId);
+
+			if (unit == null)
+				return false;
+
+			if (unit.IsDeleted)
+				return true;
+
+			// Soft delete: calls, unit states, logs, certifications, tracking, inventory and records all reference the
+			// row (a hard delete failed on any unit that had ever been dispatched), and reports must keep resolving it.
+			unit.IsDeleted = true;
+			unit.DeletedOn = DateTime.UtcNow;
+			unit.DeletedByUserId = deletedByUserId;
+			await _unitsRepository.SaveOrUpdateAsync(unit, cancellationToken);
+
+			// Nobody rides a deleted unit: release its current crew. Its seat definitions, states and logs stay.
+			await _unitActiveRolesRepository.DeleteActiveRolesByUnitIdAsync(unit.UnitId, cancellationToken);
+			await NotifyActiveRolesUpdatedAsync(unit.DepartmentId, unit.UnitId);
+			if (_searchProjections != null) await _searchProjections.Value.RemoveAsync(unit.DepartmentId, SearchEntityTypes.Unit, unit.UnitId.ToString(), cancellationToken);
+			await _limitsService.InvalidateDepartmentsEntityLimitsCache(unit.DepartmentId);
+
+			_eventAggregator.SendMessage<DepartmentSettingsUpdateEvent>(new DepartmentSettingsUpdateEvent() { DepartmentId = unit.DepartmentId });
+			SendUnitVisibilityRefresh(unit.DepartmentId);
+
+			await RemoveUnitPushSubscriberAsync(unit);
+
+			return true;
+		}
+
+		/// <summary>
+		/// A deleted unit takes no more pushes. Its devices are never told the unit is gone (the Unit app just drops
+		/// the stale selection), so the unit's Novu subscriber is deleted here, taking every rig's native token and
+		/// every browser's web token with it. Best-effort: the unit is already deleted whatever Novu answers.
+		/// </summary>
+		private async Task RemoveUnitPushSubscriberAsync(Unit unit)
+		{
+			if (_novuProvider == null || _departmentsService == null)
+				return;
+
+			try
+			{
+				var department = await _departmentsService.Value.GetDepartmentByIdAsync(unit.DepartmentId, false);
+				if (string.IsNullOrWhiteSpace(department?.Code))
+					return;
+
+				if (!await _novuProvider.DeleteUnitSubscriber(unit.UnitId, department.Code))
+					Logging.LogError($"UnitsService.DeleteUnitAsync: the push subscriber for deleted unit {unit.UnitId} (department {unit.DepartmentId}) could not be removed; its devices may keep receiving its pushes.");
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, $"Removing the push subscriber for deleted unit {unit.UnitId}");
+			}
+		}
+
+		public async Task<UnitState> GetLastUnitStateByUnitIdAsync(int unitId)
+		{
+			var userState = await _unitStatesRepository.GetLastUnitStateByUnitIdAsync(unitId);
+
+			if (userState != null)
+			{
+				// Dapper maps the state and its Unit, not the crew collection. Records verifies staffing
+				// against this exact saved state; a role from an older state must never authorize the caller.
+				var roles = userState.UnitStateId > 0
+					? await _unitStateRoleRepository.GetRolesForUnitStatesAsync(new[] { userState.UnitStateId })
+					: Enumerable.Empty<UnitStateRole>();
+				userState.Roles = (roles ?? Enumerable.Empty<UnitStateRole>())
+					.Where(r => r != null && r.UnitStateId == userState.UnitStateId).ToList();
+				return userState;
+			}
+
+			var state = new UnitState();
+			state.UnitId = unitId;
+			state.Timestamp = DateTime.UtcNow;
+			state.State = (int)UnitStateTypes.Available;
+
+			return state;
+		}
+
+		public async Task<UnitState> GetLastUnitStateBeforeIdAsync(int unitId, int unitStateId)
+		{
+			var state = await _unitStatesRepository.GetLastUnitStateBeforeIdAsync(unitId, unitStateId);
+
+			if (state != null)
+				return state;
+
+
+			state = new UnitState();
+			state.UnitId = unitId;
+			state.Timestamp = DateTime.Now.ToUniversalTime();
+			state.State = (int)UnitStateTypes.Available;
+
+			return state;
+		}
+
+		public async Task<List<UnitState>> GetAllLatestStatusForUnitsByDepartmentIdAsync(int departmentId)
+		{
+			var states = new List<UnitState>();
+			var units = await GetUnitsForDepartmentAsync(departmentId);
+			var currentStates = await _unitStatesRepository.GetLatestUnitStatesForDepartmentAsync(departmentId);
+
+			foreach (var unit in units)
+			{
+				var currentState = currentStates.FirstOrDefault(x => x.UnitId == unit.UnitId);
+				if (currentState != null)
+				{
+					currentState.Unit = unit;
+					states.Add(currentState);
+				}
+				else
+				{
+					var state = new UnitState();
+					state.UnitId = unit.UnitId;
+					state.Timestamp = DateTime.UtcNow;
+					state.State = (int)UnitStateTypes.Available;
+					state.Unit = unit;
+
+					states.Add(state);
+				}
+			}
+
+			return states;
+		}
+
+		public async Task<List<UnitState>> GetAllStatesForUnitAsync(int unitId)
+		{
+			var unitStates = (from us in await _unitStatesRepository.GetAllStatesByUnitIdAsync(unitId)
+				orderby us.Timestamp descending
+				select us).ToList();
+
+			return unitStates;
+		}
+
+		public async Task<UnitState> GetUnitStateByIdAsync(int unitStateId)
+		{
+			return await _unitStatesRepository.GetUnitStateByUnitStateIdAsync(unitStateId);
+		}
+
+		public async Task<List<UnitType>> GetUnitTypesForDepartmentAsync(int departmentId)
+		{
+			var types = await _unitTypesRepository.GetAllByDepartmentIdAsync(departmentId);
+
+			return types.ToList();
+		}
+
+		public async Task<Unit> GetUnitByNameDepartmentIdAsync(int departmentId, string name)
+		{
+			return await _unitsRepository.GetUnitByNameDepartmentIdAsync(departmentId, name);
+		}
+
+		public async Task<UnitType> GetUnitTypeByIdAsync(int unitTypeId)
+		{
+			return await _unitTypesRepository.GetByIdAsync(unitTypeId);
+		}
+
+		public async Task<UnitType> AddUnitTypeAsync(int departmentId, string name, int? mapIconType, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return await AddUnitTypeAsync(departmentId, name, 0, mapIconType, cancellationToken);
+		}
+
+		public async Task<UnitType> GetUnitTypeByNameAsync(int departmentId, string type)
+		{
+			return await _unitTypesRepository.GetUnitByNameDepartmentIdAsync(departmentId, type);
+		}
+
+		public async Task<UnitType> AddUnitTypeAsync(int departmentId, string name, int customStatesId, int? mapIconType, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var type = new UnitType();
+			type.DepartmentId = departmentId;
+			type.Type = name;
+
+			if (customStatesId != 0)
+				type.CustomStatesId = customStatesId;
+
+			if (mapIconType.HasValue && mapIconType.Value >= 0)
+				type.MapIconType = mapIconType;
+
+			return await _unitTypesRepository.SaveOrUpdateAsync(type, cancellationToken);
+		}
+
+		public async Task<UnitType> SaveUnitTypeAsync(UnitType unitType, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return await _unitTypesRepository.SaveOrUpdateAsync(unitType, cancellationToken);
+		}
+
+		public async Task<bool> DeleteUnitTypeAsync(int unitTypeId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var type = await GetUnitTypeByIdAsync(unitTypeId);
+
+			if (type != null)
+			{
+				var deleted = await _unitTypesRepository.DeleteAsync(type, cancellationToken);
+
+				// TypeIcons has no foreign key to the type, so its uploaded icon goes with it once the type is gone.
+				if (deleted && _typeIconsRepository != null)
+					await _typeIconsRepository.DeleteForTypeAsync(type.DepartmentId, TypeIconKinds.UnitType, type.UnitTypeId, null, cancellationToken);
+
+				return deleted;
+			}
+
+			return false;
+		}
+
+		public async Task<UnitState> SetUnitStateAsync(int unitId, int unitStateType, int departmentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var previousState = await GetLastUnitStateByUnitIdAsync(unitId);
+
+			var state = new UnitState();
+			state.UnitId = unitId;
+			state.State = unitStateType;
+			state.Timestamp = DateTime.UtcNow;
+
+			var activeRoles = await GetActiveRolesForUnitAsync(state.UnitId);
+
+			if (activeRoles != null && activeRoles.Any())
+			{
+				state.Roles = new List<UnitStateRole>();
+				foreach (var activeRole in activeRoles)
+				{
+					UnitStateRole role = new UnitStateRole();
+					role.Role = activeRole.Role;
+					role.UserId = activeRole.UserId;
+
+					state.Roles.Add(role);
+				}
+			}
+
+			// No destination is sent on this path: link the state to the call the unit is working, if there is one.
+			await _callStatusAttributionService.AttributeUnitStateAsync(state, previousState, departmentId);
+			StatusWriteActor.Stamp(state);
+
+			var saved = await _unitStatesRepository.SaveOrUpdateAsync(state, cancellationToken);
+
+			// ADP write safety net (plan 4.2/19.2), catalog v2: unit-state note, geolocation and the
+			// typed coordinates are cataloged operational fields. Runs AFTER the save so the identity
+			// pk exists (it is the AAD row key), then re-persists the enveloped row. Every caller —
+			// v4 API, apps, unit tracking ingress, workers — is covered here rather than per-caller.
+			var protectedWrite = await _protectedWriteService.Value.PrepareUnitStateWriteAsync(departmentId,
+				saved, null, null, workloadCaller: true, cancellationToken);
+			if (!protectedWrite.Success)
+			{
+				AnnounceUnitStateSavedWithoutProtection(departmentId, saved, previousState, false);
+				throw new InvalidOperationException($"Protected write blocked ({protectedWrite.Reason}); unit state {saved.UnitStateId} has transient plaintext pending re-encryption.");
+			}
+			if (protectedWrite.Changed)
+				saved = await _unitStatesRepository.SaveOrUpdateAsync(saved, cancellationToken);
+
+			_eventAggregator.SendMessage<UnitStatusEvent>(new UnitStatusEvent { DepartmentId = departmentId, Status = saved, PreviousStatus = previousState });
+
+			await CloseCallsFinishedByAsync(departmentId, saved, previousState, cancellationToken);
+
+			// Calls awaiting resources (conditional run cards), as for every other status save. It never throws.
+			if (_outstandingRequirementsService != null)
+				await _outstandingRequirementsService.Value.OnUnitStateSavedAsync(departmentId, saved, previousState, cancellationToken);
+
+			return saved;
+		}
+
+		public async Task<UnitState> SetUnitStateAsync(UnitState state, int departmentId, CancellationToken cancellationToken = default(CancellationToken), bool autoGenerated = false)
+		{
+			var previousState = await GetLastUnitStateByUnitIdAsync(state.UnitId);
+
+			if (state.Accuracy > 100000)
+				state.Accuracy = 100000;
+
+			if (state.Roles == null || !state.Roles.Any())
+			{
+				var activeRoles = await GetActiveRolesForUnitAsync(state.UnitId);
+
+				if (activeRoles != null && activeRoles.Any())
+				{
+					state.Roles = new List<UnitStateRole>();
+					foreach (var activeRole in activeRoles)
+					{
+						UnitStateRole role = new UnitStateRole();
+						role.Role = activeRole.Role;
+						role.UserId = activeRole.UserId;
+
+						state.Roles.Add(role);
+					}
+				}
+			}
+
+			// Every client and server path lands here: a state sent without a destination is linked to the call the unit
+			// is working (previous state's open call, or its one open dispatch), and a sent destination is marked explicit.
+			await _callStatusAttributionService.AttributeUnitStateAsync(state, previousState, departmentId);
+			// Who submitted it and from where (M0260), from the request or job scope; a caller-stamped state keeps its own.
+			StatusWriteActor.Stamp(state);
+
+			var saved = await _unitStatesRepository.SaveOrUpdateAsync(state, cancellationToken);
+
+			// ADP write safety net (plan 4.2/19.2), catalog v2: unit-state note, geolocation and the
+			// typed coordinates are cataloged operational fields. Runs AFTER the save so the identity
+			// pk exists (it is the AAD row key), then re-persists the enveloped row. Every caller —
+			// v4 API, apps, unit tracking ingress, workers — is covered here rather than per-caller.
+			var protectedWrite = await _protectedWriteService.Value.PrepareUnitStateWriteAsync(departmentId,
+				saved, null, null, workloadCaller: true, cancellationToken);
+			if (!protectedWrite.Success)
+			{
+				AnnounceUnitStateSavedWithoutProtection(departmentId, saved, previousState, autoGenerated);
+				throw new InvalidOperationException($"Protected write blocked ({protectedWrite.Reason}); unit state {saved.UnitStateId} has transient plaintext pending re-encryption.");
+			}
+			if (protectedWrite.Changed)
+				saved = await _unitStatesRepository.SaveOrUpdateAsync(saved, cancellationToken);
+
+			_eventAggregator.SendMessage<UnitStatusEvent>(new UnitStatusEvent { DepartmentId = departmentId, Status = saved, PreviousStatus = previousState, AutoGenerated = autoGenerated });
+
+			// Statuses Resgrid sets itself (dispatch and release statuses) never close a call: only a unit reporting does.
+			if (!autoGenerated)
+				await CloseCallsFinishedByAsync(departmentId, saved, previousState, cancellationToken);
+
+			// Calls awaiting a resource (conditional run cards): a unit freed by Resgrid itself (released from a call) is
+			// exactly the moment that matters, so this runs for automatic statuses too. It never throws.
+			if (_outstandingRequirementsService != null)
+				await _outstandingRequirementsService.Value.OnUnitStateSavedAsync(departmentId, saved, previousState, cancellationToken);
+
+			return saved;
+		}
+
+		/// <summary>
+		/// Closes the call the unit just finished when it was the call's last unit and the department turned that on
+		/// (<see cref="DepartmentSettingTypes.CloseCallWhenUnitsClear"/>). The status is already saved and announced, so a
+		/// failure here only leaves the call open.
+		/// </summary>
+		private async Task CloseCallsFinishedByAsync(int departmentId, UnitState saved, UnitState previousState, CancellationToken cancellationToken)
+		{
+			if (_callAutoCloseService == null)
+				return;
+
+			try
+			{
+				await _callAutoCloseService.Value.CloseCallsFinishedByUnitStateAsync(departmentId, saved, previousState, cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, $"Closing the call finished by unit {saved?.UnitId} failed; the call stays open.");
+			}
+		}
+
+		/// <summary>
+		/// A unit state is an insert, so it is saved before the protected write can run (the AAD row key is its
+		/// identity) and a blocked write leaves the row in place as the unit's latest status. Every reader already
+		/// shows it, so it is still announced: without the event the web dashboard (which reloads) showed the new
+		/// status while BigBoard and the Dispatch app, which refetch only on the push, kept the old one. The
+		/// announcement carries none of the fields the write was meant to seal, so nothing downstream (workflows,
+		/// webhooks) receives the plaintext the broker could not envelope.
+		/// </summary>
+		private void AnnounceUnitStateSavedWithoutProtection(int departmentId, UnitState saved, UnitState previousState, bool autoGenerated)
+		{
+			_eventAggregator.SendMessage<UnitStatusEvent>(new UnitStatusEvent
+			{
+				DepartmentId = departmentId,
+				Status = WithoutProtectedFields(saved),
+				PreviousStatus = WithoutProtectedFields(previousState),
+				AutoGenerated = autoGenerated
+			});
+		}
+
+		/// <summary>
+		/// The status itself (which unit, which state, when, who, where it was headed, and where it was: positions are
+		/// operational, 2026-10-17) without its note, the one protected unit-state field.
+		/// </summary>
+		private static UnitState WithoutProtectedFields(UnitState state)
+		{
+			if (state == null)
+				return null;
+
+			return new UnitState
+			{
+				UnitStateId = state.UnitStateId,
+				UnitId = state.UnitId,
+				State = state.State,
+				Timestamp = state.Timestamp,
+				LocalTimestamp = state.LocalTimestamp,
+				DestinationId = state.DestinationId,
+				DestinationType = state.DestinationType,
+				DestinationSource = state.DestinationSource,
+				SetByUserId = state.SetByUserId,
+				SetByOrigin = state.SetByOrigin,
+				GeoLocationData = state.GeoLocationData,
+				Latitude = state.Latitude,
+				Longitude = state.Longitude,
+				Accuracy = state.Accuracy,
+				Altitude = state.Altitude,
+				AltitudeAccuracy = state.AltitudeAccuracy,
+				Speed = state.Speed,
+				Heading = state.Heading,
+				// Flat copies: a role's UnitState back-reference would carry the unscrubbed row along.
+				Roles = state.Roles?.Select(r => new UnitStateRole
+				{
+					UnitStateRoleId = r.UnitStateRoleId,
+					UnitStateId = r.UnitStateId,
+					Role = r.Role,
+					UserId = r.UserId
+				}).ToList()
+			};
+		}
+
+		public async Task<List<UnitLog>> GetLogsForUnitAsync(int unitId)
+		{
+			var logs = await _unitLogsRepository.GetAllLogsByUnitIdAsync(unitId);
+
+			return logs.ToList();
+		}
+
+		public async Task<List<UnitRole>> GetRolesForUnitAsync(int unitId)
+		{
+			var roles = await _unitRolesRepository.GetAllRolesByUnitIdAsync(unitId);
+
+			if (roles != null && roles.Any())
+				return roles.ToList();
+			else
+				return new List<UnitRole>();
+		}
+
+		public async Task<UnitRole> GetRoleByIdAsync(int unitRoleId)
+		{
+			return await _unitRolesRepository.GetByIdAsync(unitRoleId);
+		}
+
+		public async Task<List<UnitRole>> GetAllRolesForDepartmentAsync(int departmentId)
+		{
+			var roles = await _unitRolesRepository.GetAllRolesByDepartmentIdAsync(departmentId);
+
+			if (roles != null && roles.Any())
+				return roles.ToList();
+			else
+				return new List<UnitRole>();
+		}
+
+		public async Task<List<UnitRole>> SetRolesForUnitAsync(int unitId, List<UnitRole> roles, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (unitId <= 0)
+				throw new ArgumentException("UnitId cannot be null", "unitId");
+
+			if (roles == null || roles.Count == 0)
+				throw new ArgumentException("Unit Roles cannot be null or empty", "roles");
+
+			await ClearRolesForUnitAsync(unitId, cancellationToken);
+
+			foreach (var role in roles)
+			{
+				role.UnitId = unitId;
+				await _unitRolesRepository.SaveOrUpdateAsync(role, cancellationToken);
+			}
+
+			return roles;
+		}
+
+		public async Task<bool> ClearRolesForUnitAsync(int unitId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (unitId <= 0)
+				throw new ArgumentException("UnitId cannot be null", "unitId");
+
+			var savedRoles = await GetRolesForUnitAsync(unitId);
+
+			if (savedRoles != null && savedRoles.Any())
+			{
+				foreach (var savedRole in savedRoles)
+				{
+					await _unitRolesRepository.DeleteAsync(savedRole, cancellationToken);
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public async Task<bool> ClearGroupForUnitsAsync(int departmentGroupId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (departmentGroupId <= 0)
+				throw new ArgumentException("DepartmentGroupId cannot be null", "departmentGroupId");
+
+			// Deleted units still reference the group, and the group row is about to go.
+			var units = await _unitsRepository.GetAllUnitsByGroupIdIncludingDeletedAsync(departmentGroupId);
+			var touchedDepartmentIds = new HashSet<int>();
+
+			foreach (var unit in units)
+			{
+				unit.StationGroupId = null;
+				unit.StationGroup = null;
+
+
+				var saved = await _unitsRepository.SaveOrUpdateAsync(unit, cancellationToken);
+
+				if (saved != null)
+				{
+					touchedDepartmentIds.Add(saved.DepartmentId);
+					// Direct repository save: the projection carries the station group, so refresh it as SaveUnitAsync does.
+					if (_searchProjections != null) await _searchProjections.Value.ProjectUnitAsync(saved, cancellationToken);
+				}
+			}
+
+			// Un-stationing a unit moves it out of its station group's bucket in both unit matrices;
+			// without a rebuild the group's old viewers keep seeing it.
+			foreach (var departmentId in touchedDepartmentIds)
+				SendUnitVisibilityRefresh(departmentId);
+
+			return true;
+		}
+
+		public async Task<UnitStateRole> AddUnitStateRoleForEventAsync(int unitStateId, string userId, int roleId, string unitName, DateTime timestamp, string roleName = "Unknown", CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (unitStateId <= 0)
+				throw new ArgumentException("Unit State Id cannot be 0", "unitStateId");
+
+			if (String.IsNullOrWhiteSpace(userId))
+				throw new ArgumentException("User Id cannot be an empty Guid", "userId");
+
+			if (roleId <= 0)
+				throw new ArgumentException("Role Id cannot be 0", "roleId");
+
+			var unitStateRole = new UnitStateRole();
+			unitStateRole.UnitStateId = unitStateId;
+			unitStateRole.UserId = userId;
+			unitStateRole.Role = roleName;
+
+			return await _unitStateRoleRepository.SaveOrUpdateAsync(unitStateRole, cancellationToken);
+		}
+
+		public async Task<bool> AddAllUnitStateRolesAsync(List<UnitStateRole> roles, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (roles != null && roles.Any())
+			{
+				foreach (var unitStateRole in roles)
+				{
+					await _unitStateRoleRepository.SaveOrUpdateAsync(unitStateRole, cancellationToken);
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public async Task<bool> DeleteStatesForUnitAsync(int unitId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var unitStates = await _unitStatesRepository.GetAllStatesByUnitIdAsync(unitId);
+
+			if (unitStates != null && unitStates.Any())
+			{
+				foreach (var unitState in unitStates)
+				{
+					await _unitStatesRepository.DeleteAsync(unitState, cancellationToken);
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public async Task<List<Unit>> GetAllUnitsForTypeAsync(int departmentId, string type)
+		{
+			var units = await _unitsRepository.GetAllUnitsForTypeAsync(departmentId, type);
+
+			return units.ToList();
+		}
+
+		public async Task<List<Unit>> GetAllUnitsForGroupAsync(int groupId)
+		{
+			var units = await _unitsRepository.GetAllUnitsByGroupIdAsync(groupId);
+
+			return units.ToList();
+		}
+
+		public async Task<List<UnitState>> GetUnitStatesForCallAsync(int departmentId, int callId)
+		{
+			// Every state that names the call counts (Cancelled, Delayed, a custom status whose destination
+			// setting was later changed, ...): the call record is an audit trail, not a filtered view. Only
+			// untyped legacy rows whose status targets stations are dropped, see CallStatusLinkage.
+			var customStates = await _customStateService.GetAllCustomStatesForDepartmentAsync(departmentId);
+			var statusLookup = CallStatusLinkage.BuildStatusLookup(_customStateService.GetDefaultUnitStatuses(), customStates, CustomStateTypes.Unit);
+
+			var unitStates = (await _unitStatesRepository.GetAllStatesByCallIdAsync(departmentId, callId) ?? Enumerable.Empty<UnitState>())
+				.Where(us => us.BelongsToCall(statusLookup))
+				.ToList();
+
+			// Plus what the call's dispatched units did while working it without naming the call (flagged Inferred).
+			unitStates.AddRange(await _callStatusAttributionService.GetInferredUnitStatesForCallAsync(departmentId, callId) ?? new List<UnitState>());
+
+			return unitStates;
+		}
+
+		public async Task<Dictionary<int, int>> GetCustomUnitStateBaseTypesAsync(int departmentId)
+		{
+			var customStates = await _customStateService.GetAllCustomStatesForDepartmentAsync(departmentId);
+
+			return CallStatusLinkage.BuildUnitBaseTypeMap(customStates);
+		}
+
+		public async Task<int?> ResolveUnitStatusAsync(int departmentId, int unitId, IReadOnlyList<ActionBaseTypes> baseTypes)
+		{
+			if (baseTypes == null || baseTypes.Count == 0)
+				return null;
+
+			CustomState set = null;
+			var unit = await GetUnitByIdAsync(unitId);
+
+			if (unit != null && unit.DepartmentId == departmentId && !String.IsNullOrWhiteSpace(unit.Type))
+			{
+				var unitType = await GetUnitTypeByNameAsync(departmentId, unit.Type);
+
+				if (unitType?.CustomStatesId != null && unitType.CustomStatesId.Value > 0)
+				{
+					set = await _customStateService.GetCustomSateByIdAsync(unitType.CustomStatesId.Value);
+					if (set != null && set.IsDeleted)
+						set = null;
+				}
+			}
+
+			if (set != null)
+				return StatusTargetResolver.ResolveUnit(StatusTarget.Default, set, baseTypes, 0).Value;
+
+			foreach (var baseType in baseTypes)
+			{
+				var builtIn = StatusTargetResolver.BuiltInUnitStatusFor(baseType);
+				if (builtIn.HasValue)
+					return builtIn;
+			}
+
+			return null;
+		}
+
+		public async Task<UnitLocationWriteResult> AddUnitLocationAsync(UnitsLocation location, int departmentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (location == null)
+				throw new ArgumentNullException(nameof(location));
+
+			UnitLocationWriteResult result;
+
+			if (Config.DataConfig.DocDatabaseType == Config.DatabaseTypes.Postgres)
+			{
+				if (String.IsNullOrWhiteSpace(location.PgId))
+					result = await _unitLocationsDocRepository.InsertAsync(location, cancellationToken);
+				else
+					result = await _unitLocationsDocRepository.UpdateAsync(location, cancellationToken);
+			}
+			else
+			{
+				if (location.Id.Timestamp == 0)
+					result = await _unitLocationsMongoRepository.Value.InsertAsync(location, cancellationToken);
+				else
+					result = await _unitLocationsMongoRepository.Value.UpdateAsync(location, cancellationToken);
+			}
+
+			if (result.Status == UnitLocationWriteStatus.Inserted)
+			{
+				await _eventAggregator.SendMessageAsync(new UnitLocationUpdatedEvent
+				{
+					DepartmentId = departmentId,
+					UnitId = result.Location.UnitId.ToString(),
+					Latitude = (double)result.Location.Latitude,
+					Longitude = (double)result.Location.Longitude,
+					RecordId = result.Location.GetId(),
+					Timestamp = result.Location.Timestamp,
+				});
+			}
+
+			return result;
+		}
+
+		public async Task<UnitsLocation> GetLatestUnitLocationAsync(int unitId, DateTime? timestamp = null)
+		{
+			try
+			{
+				if (Config.DataConfig.DocDatabaseType == Config.DatabaseTypes.Postgres)
+					return await _unitLocationsDocRepository.GetLatestLocationsByUnitIdAsync(unitId);
+
+				var location = _unitLocationRepository.Value.AsQueryable().Where(x => x.UnitId == unitId).OrderByDescending(y => y.Timestamp).FirstOrDefault();
+
+				//var layers = await _personnelLocationRepository.FilterByAsync(filter => filter.DepartmentId == departmentId && filter.Type == (int)type && filter.IsDeleted == false);
+
+				return location;
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex);
+			}
+
+			return null;
+		}
+
+		public Task<List<UnitsLocation>> GetLatestUnitLocationsAsync(int departmentId) => ReadLatestLocationsAsync(departmentId, false);
+
+		public Task<List<UnitsLocation>> ReadLatestLocationsForAdministrationAsync(int departmentId) => ReadLatestLocationsAsync(departmentId, true);
+
+		private async Task<List<UnitsLocation>> ReadLatestLocationsAsync(int departmentId, bool requireComplete)
+		{
+			try
+			{
+				if (Config.DataConfig.DocDatabaseType == Config.DatabaseTypes.Postgres)
+					return await _unitLocationsDocRepository.GetLatestLocationsByDepartmentIdAsync(departmentId);
+
+				//var locations = _unitLocationRepository.AsQueryable().Where(x => x.DepartmentId == departmentId).OrderByDescending(y => y.Timestamp).GroupBy(x => x.UnitId);//.FirstOrDefault();
+
+				var locations = _unitLocationRepository.Value
+									.AsQueryable()
+									.Where(x => x.DepartmentId == departmentId).OrderByDescending(y => y.Timestamp)
+									.GroupBy(pv => pv.UnitId, (key, group) => new
+									{
+										key,
+										LatestLocation = group.First()
+									});
+
+				//var locations2 = _unitLocationRepository
+				//					.AsQueryable()
+				//					.Where(x => x.DepartmentId == departmentId).OrderByDescending(y => y.Timestamp);
+
+				//var locations = _unitLocationRepository.AsQueryable()
+				//.Where(x => x.DepartmentId == departmentId)
+				//.OrderByDescending(y => y.Timestamp)
+				//.GroupBy(s => new { s.UnitId })
+				//.Select(n => new
+				//{
+				//	Value = n.Key,
+				//	Location = n.First()
+				//}).ForEachAsync();
+
+				//var layers = await _personnelLocationRepository.FilterByAsync(filter => filter.DepartmentId == departmentId && filter.Type == (int)type && filter.IsDeleted == false);
+
+				//if (locations != null)
+				//	return locations.OrderBy(y => y.Timestamp)
+				//					.GroupBy(x => x.UnitId)
+				//					.Select(y => y.First()).ToList();
+
+				if (locations != null)
+					return locations.Select(x => x.LatestLocation).ToList();
+
+				return null;
+			}
+			catch (Exception ex)
+			{
+				if (requireComplete) throw;
+				Logging.LogException(ex);
+			}
+
+			return new List<UnitsLocation>();
+		}
+
+		public async Task<List<UnitStateRole>> GetCurrentRolesForUnitAsync(int unitId)
+		{
+			var items = await _unitStateRoleRepository.GetCurrentRolesForUnitAsync(unitId);
+
+			if (items != null && items.Any())
+				return items.ToList();
+
+			return new List<UnitStateRole>();
+		}
+
+		public async Task<List<UnitActiveRole>> GetActiveRolesForUnitAsync(int unitId)
+		{
+			var items = await _unitActiveRolesRepository.GetActiveRolesByUnitIdAsync(unitId);
+
+			if (items != null && items.Any())
+				return items.ToList();
+
+			return new List<UnitActiveRole>();
+		}
+
+		public async Task<List<UnitActiveRole>> GetAllActiveRolesForUnitsByDepartmentIdAsync(int departmentId)
+		{
+			var items = await _unitActiveRolesRepository.GetAllActiveRolesForUnitsByDepartmentIdAsync(departmentId);
+
+			if (items != null && items.Any())
+				return items.ToList();
+
+			return new List<UnitActiveRole>();
+		}
+
+		public async Task<UnitActiveRole> SaveActiveRoleAsync(UnitActiveRole role, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return await _unitActiveRolesRepository.SaveOrUpdateAsync(role, cancellationToken, true);
+		}
+
+		public async Task<bool> DeleteActiveRolesForUnitAsync(int unitId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return await _unitActiveRolesRepository.DeleteActiveRolesByUnitIdAsync(unitId, cancellationToken);
+		}
+
+		public async Task NotifyActiveRolesUpdatedAsync(int departmentId, int unitId)
+		{
+			if (departmentId <= 0)
+				return;
+
+			try
+			{
+				await _eventAggregator.SendMessageAsync(new UnitActiveRolesUpdatedEvent { DepartmentId = departmentId, UnitId = unitId });
+			}
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, $"Unit active roles update could not be published for department {departmentId}, unit {unitId}.");
+			}
+		}
+
+		public async Task<bool> IsUserQualifiedForUnitRoleAsync(UnitRole role, string userId, int departmentId)
+		{
+			// No qualification configured for the seat -> anyone may fill it.
+			if (role == null || !role.PersonnelRoleId.HasValue)
+				return true;
+
+			if (String.IsNullOrWhiteSpace(userId))
+				return false;
+
+			var userRoles = await _personnelRolesService.GetRolesForUserAsync(userId, departmentId);
+
+			return userRoles != null && userRoles.Any(x => x != null && x.PersonnelRoleId == role.PersonnelRoleId.Value);
+		}
+
+		public async Task<UnitRoleStaffingResult> GetUnitStaffingAsync(int unitId)
+		{
+			var unit = await GetUnitByIdAsync(unitId);
+
+			if (unit == null)
+				return new UnitRoleStaffingResult { UnitId = unitId };
+
+			var definedRoles = await GetRolesForUnitAsync(unitId);
+			var activeRoles = await GetActiveRolesForUnitAsync(unitId);
+
+			var roleNames = await BuildPersonnelRoleNameLookupAsync(unit.DepartmentId);
+			var userRoleMap = await _personnelRolesService.GetAllRolesForUsersInDepartmentAsync(unit.DepartmentId);
+
+			return UnitRoleStaffingResult.Calculate(unitId, definedRoles, activeRoles,
+				(uId, personnelRoleId) => UserHoldsPersonnelRole(userRoleMap, uId, personnelRoleId), roleNames);
+		}
+
+		public async Task<Dictionary<int, UnitRoleStaffingResult>> GetUnitStaffingForDepartmentAsync(int departmentId)
+		{
+			var results = new Dictionary<int, UnitRoleStaffingResult>();
+
+			var units = await GetUnitsForDepartmentAsync(departmentId);
+
+			if (units == null || !units.Any())
+				return results;
+
+			var activeRoles = await GetAllActiveRolesForUnitsByDepartmentIdAsync(departmentId);
+			var roleNames = await BuildPersonnelRoleNameLookupAsync(departmentId);
+			var userRoleMap = await _personnelRolesService.GetAllRolesForUsersInDepartmentAsync(departmentId);
+
+			// Load every unit's defined roles for the whole department in a single query and group them
+			// by unit, instead of querying roles per unit inside the loop (avoids an N+1).
+			var allRoles = await _unitRolesRepository.GetAllRolesByDepartmentIdAsync(departmentId);
+			var rolesByUnit = (allRoles ?? Enumerable.Empty<UnitRole>())
+				.GroupBy(r => r.UnitId)
+				.ToDictionary(g => g.Key, g => g.ToList());
+
+			foreach (var unit in units)
+			{
+				var definedRoles = rolesByUnit.TryGetValue(unit.UnitId, out var unitRoles) ? unitRoles : new List<UnitRole>();
+
+				results[unit.UnitId] = UnitRoleStaffingResult.Calculate(unit.UnitId, definedRoles, activeRoles,
+					(uId, personnelRoleId) => UserHoldsPersonnelRole(userRoleMap, uId, personnelRoleId), roleNames);
+			}
+
+			return results;
+		}
+
+		private async Task<Dictionary<int, string>> BuildPersonnelRoleNameLookupAsync(int departmentId)
+		{
+			var lookup = new Dictionary<int, string>();
+			var allRoles = await _personnelRolesService.GetAllRolesForDepartmentAsync(departmentId);
+
+			if (allRoles != null)
+			{
+				foreach (var role in allRoles)
+				{
+					if (role != null && !lookup.ContainsKey(role.PersonnelRoleId))
+						lookup[role.PersonnelRoleId] = role.Name;
+				}
+			}
+
+			return lookup;
+		}
+
+		private static bool UserHoldsPersonnelRole(Dictionary<string, List<PersonnelRole>> userRoleMap, string userId, int personnelRoleId)
+		{
+			return !String.IsNullOrWhiteSpace(userId)
+				&& userRoleMap != null
+				&& userRoleMap.TryGetValue(userId, out var roles)
+				&& roles != null
+				&& roles.Any(r => r != null && r.PersonnelRoleId == personnelRoleId);
+		}
+	}
+}

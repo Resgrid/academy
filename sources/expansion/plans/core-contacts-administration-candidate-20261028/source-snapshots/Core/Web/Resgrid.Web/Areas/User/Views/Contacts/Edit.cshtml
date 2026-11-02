@@ -1,0 +1,448 @@
+@model Resgrid.Web.Areas.User.Models.Contacts.EditContactView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Contacts.Contacts> localizer
+@{
+    ViewData["Title"] = "Resgrid | " + @localizer["EditContact"];
+}
+@{
+    // ADP reveal (plan 7.2): one descriptor shared by the banner in the body and the
+    // step-up wiring in the Scripts section. Declared unconditionally so the section
+    // closure can see it; both partials only render when the page is protected.
+    var adpReveal = new Resgrid.Web.Areas.User.Models.AdpRevealView
+    {
+        BannerTitle = commonLocalizer["AdpProtectedContact"],
+        RevealController = "Contacts",
+        RevealAction = "RevealContact",
+        RevealData = new Dictionary<string, string> { { "contactId", Model.Contact.ContactId } }
+    };
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/clib/croppic/css/croppic.css" />
+}
+
+<form id="editContactForm" class="form-horizontal" role="form" asp-controller="Contacts" asp-action="Edit" asp-route-area="User" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Contact.ContactId)
+
+    @*
+        ADP: the coordinate inputs are split into latitude/longitude, and a protected contact's
+        coordinates render as the REDACTED placeholder, which does not split - so those inputs are
+        empty for a value the editor was never shown. Round-tripping the placeholder here is what
+        lets the POST tell "never revealed" apart from "deliberately cleared".
+    *@
+    @Html.HiddenFor(m => m.Contact.EntranceGpsCoordinates)
+    @Html.HiddenFor(m => m.Contact.ExitGpsCoordinates)
+    @Html.HiddenFor(m => m.Contact.LocationGpsCoordinates)
+
+    @if (Model.IsProtectedContact)
+    {
+        <div class="row">
+            <div class="col-xs-12" style="padding: 15px 30px 0 30px;">
+                <partial name="_AdpRevealBanner" model="adpReveal" />
+            </div>
+        </div>
+    }
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>@localizer["EditContact"]</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+                </li>
+                <li class="active">
+                    <strong>@localizer["EditContact"]</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-sm-8">
+        </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            @{
+                                var validationErrors = ViewData.ModelState.Values.Where(E => E.Errors.Count > 0)
+                                .SelectMany(E => E.Errors)
+                                .Select(E => E.ErrorMessage)
+                                .ToList();
+                            }
+                            <span style="color:red;font-weight:bold;">@localizer["ErrorSpan"]</span>
+                            <br />
+                            <ul>
+                                @foreach (var error in validationErrors)
+                                {
+                                    <li style="color:red;">@error</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInUp">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["ContactTypeLabel"]</label>
+                            <div class="col-sm-10">
+                                <input type="radio" asp-for="Contact.ContactType" value="0" title="Person " />&nbsp;@commonLocalizer["Person"]&nbsp;&nbsp;
+                                <input type="radio" asp-for="Contact.ContactType" value="1" title="Location or Company " />&nbsp;@localizer["Company"]
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@commonLocalizer["Category"]</label>
+                            <div class="col-sm-10">
+                                <select asp-for="Contact.ContactCategoryId" asp-items="@((SelectList)ViewBag.Categories)" class="form-control">
+                                    <option value="">@commonLocalizer["None"]</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["FirstNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["FirstNamePlaceholder"]" asp-for="Contact.FirstName" data-adp-field="contacts.firstname" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["LastNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["LastNamePlaceholder"]" asp-for="Contact.LastName" data-adp-field="contacts.lastname"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MiddleNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MiddleNamePlaceholder"]" asp-for="Contact.MiddleName" data-adp-field="contacts.middlename"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["CompanyNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["CompanyNamePlaceholder"]" asp-for="Contact.CompanyName" data-adp-field="contacts.companyname"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["OtherNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["OtherNamePlaceholder"]" asp-for="Contact.OtherName" data-adp-field="contacts.othername"></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["EmailAddressLabel"]</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" placeholder="@localizer["EmailAddressPlaceholder"]" asp-for="Contact.Email" data-adp-field="contacts.email">
+                                <span class="help-block m-b-none">@localizer["EmailAddressHelper"]</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["CellPhoneLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control js-phone-validate" placeholder="@localizer["CellPhonePlaceholder"]" asp-for="Contact.CellPhoneNumber" data-adp-field="contacts.cellphonenumber"><span asp-validation-for="Contact.CellPhoneNumber" class="text-danger"></span><div class="js-phone-feedback small"></div></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["HomePhoneLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control js-phone-validate" placeholder="@localizer["HomePhonePlaceholder"]" asp-for="Contact.HomePhoneNumber" data-adp-field="contacts.homephonenumber"><span asp-validation-for="Contact.HomePhoneNumber" class="text-danger"></span><div class="js-phone-feedback small"></div></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["FaxPhoneLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control js-phone-validate" placeholder="@localizer["FaxPhonePlaceholder"]" asp-for="Contact.FaxPhoneNumber" data-adp-field="contacts.faxphonenumber"><span asp-validation-for="Contact.FaxPhoneNumber" class="text-danger"></span><div class="js-phone-feedback small"></div></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["OfficePhoneLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control js-phone-validate" placeholder="@localizer["OfficePhonePlaceholder"]" asp-for="Contact.OfficePhoneNumber" data-adp-field="contacts.officephonenumber"><span asp-validation-for="Contact.OfficePhoneNumber" class="text-danger"></span><div class="js-phone-feedback small"></div></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <h3>
+                            @localizer["DataHeader"]
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["DescriptionLabel"]</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" asp-for="Contact.Description">
+
+                                <div id="description-container" style="width:100%; height: 300px;">
+                                    @Html.SanitizedHtml(Model.Contact.Description)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["OtherInfoLabel"]</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" asp-for="Contact.OtherInfo">
+
+                                <div id="otherInfo-container" style="width:100%; height: 300px;">
+                                    @Html.SanitizedHtml(Model.Contact.OtherInfo)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <h3>
+                            @localizer["OtherContactHeader"]
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["WebsiteNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["WebsitePlaceholder"]" asp-for="Contact.Website"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["TwitterLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["TwitterPlaceholder"]" asp-for="Contact.Twitter"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["FacebookLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["FacebookPlaceholder"]" asp-for="Contact.Facebook"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["LinkedInLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["LinkedInPlaceholder"]" asp-for="Contact.LinkedIn"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["InstagramLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["InstagramPlaceholder"]" asp-for="Contact.Instagram"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["ThreadsLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["ThreadsPlaceholder"]" asp-for="Contact.Threads"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["BlueskyLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["BlueskyPlaceholder"]" asp-for="Contact.Bluesky"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MastodonLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MastodonPlaceholder"]" asp-for="Contact.Mastodon"></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <h3>
+                            @localizer["LocationHeader"]
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["LocationGpsLabel"]</label>
+                            <div class="col-sm-10">
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="@localizer["LocationGpsLatitudePlaceholder"]" asp-for="LocationGpsLatitude">
+                                    <span class="help-inline">@localizer["LocationGpsLatitudePlaceholderHelp"]</span>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="@localizer["LocationGpsLongitudePlaceholder"]" asp-for="LocationGpsLongitude">
+                                    <span class="help-inline">@localizer["LocationGpsLongitudePlaceholderHelp"]</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["EntranceGpsLabel"]</label>
+                            <div class="col-sm-10">
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="@localizer["EntranceGpsLatitudePlaceholder"]" asp-for="EntranceGpsLatitude">
+                                    <span class="help-inline">@localizer["EntranceGpsLatitudePlaceholderHelp"]</span>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="@localizer["EntranceGpsLongitudePlaceholder"]" asp-for="EntranceGpsLongitude">
+                                    <span class="help-inline">@localizer["EntranceGpsLongitudePlaceholderHelp"]</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["ExitGpsLabel"]</label>
+                            <div class="col-sm-10">
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="@localizer["ExitGpsLatitudePlaceholder"]" asp-for="ExitGpsLatitude">
+                                    <span class="help-inline">@localizer["ExitGpsLatitudePlaceholderHelp"]</span>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" placeholder="@localizer["ExitGpsLongitudePlaceholder"]" asp-for="ExitGpsLongitude">
+                                    <span class="help-inline">@localizer["ExitGpsLongitudePlaceholderHelp"]</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <h3>
+                            @localizer["PhysicalAddressHeader"]
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["AddressLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["AddressPlaceholder"]" asp-for="PhysicalAddress1"><span asp-validation-for="PhysicalAddress1" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["CityLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["CityPlaceholder"]" asp-for="PhysicalCity"><span asp-validation-for="PhysicalCity" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["StateLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["StatePlaceholder"]" asp-for="PhysicalState"><span asp-validation-for="PhysicalState" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["PostalCodeLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["PostalCodePlaceholder"]" asp-for="PhysicalPostalCode"><span asp-validation-for="PhysicalPostalCode" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["CountryLabel"]</label>
+                            <div class="col-sm-10"><select asp-for="PhysicalCountry" asp-items="ViewBag.Countries" style="padding-left: 0; width: 100%;"></select></div>
+                        </div>
+
+                        <h3>
+                            @localizer["MailingAddressHeader"]
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["SameAsPhysical"]</label>
+                            <div class="col-sm-10"><input type="checkbox" asp-for="MailingAddressSameAsPhysical"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingAddressLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingAddressPlaceholder"]" asp-for="MailingAddress1"><span asp-validation-for="MailingAddress1" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingCityLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingCityPlaceholder"]" asp-for="MailingCity"><span asp-validation-for="MailingCity" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingStateLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingStatePlaceholder"]" asp-for="MailingState"><span asp-validation-for="MailingState" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingPostalCodeLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingPostalCodePlaceholder"]" asp-for="MailingPostalCode"><span asp-validation-for="MailingPostalCode" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingCountryLabel"]</label>
+                            <div class="col-sm-10"><select asp-for="MailingCountry" asp-items="ViewBag.Countries" style="padding-left: 0; width: 100%;"></select></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        @if (!string.IsNullOrEmpty(Model.UdfFormHtml))
+                        {
+                            <div class="hr-line-dashed"></div>
+                            <h3>Custom Fields</h3>
+                            @Html.Raw(Model.UdfFormHtml)
+                            <div class="hr-line-dashed"></div>
+                        }
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white" asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["Cancel"]</a>
+                                <button class="btn btn-primary" type="submit">@commonLocalizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+@section Scripts
+{
+    @if (Model.IsProtectedContact)
+    {
+    <script type="text/javascript">
+        // ADP reveal, the fields a data-adp-field marker cannot reach (plan 7.2).
+        //
+        // Two shapes need help. The GPS coordinates are stored as one "lat,long" string but edited
+        // through two inputs, so the marker on the hidden round-trip field cannot fill them. And
+        // Description / OtherInfo are Quill editors whose DOM belongs to Quill, not to the input the
+        // form posts. Without this the page reveals its plain inputs and leaves these showing the
+        // placeholder - a half-reveal of one record.
+        (function () {
+            var REDACTED = 'REDACTED';
+
+            var coordinates = [
+                { key: 'contacts.locationgpscoordinates', lat: '#LocationGpsLatitude', lng: '#LocationGpsLongitude' },
+                { key: 'contacts.entrancegpscoordinates', lat: '#EntranceGpsLatitude', lng: '#EntranceGpsLongitude' },
+                { key: 'contacts.exitgpscoordinates', lat: '#ExitGpsLatitude', lng: '#ExitGpsLongitude' }
+            ];
+
+            var editors = [
+                { key: 'contacts.description', container: '#description-container' },
+                { key: 'contacts.otherinfo', container: '#otherInfo-container' }
+            ];
+
+            function usable(value) {
+                // Same rule the reveal module applies: never paint a placeholder or ciphertext that
+                // failed to decrypt server-side into the page.
+                return typeof value === 'string' && value !== '' && value !== REDACTED
+                    && value.indexOf('rgdp:') !== 0 && value.indexOf('rgdpb:') !== 0;
+            }
+
+            function quill(container) {
+                var element = document.querySelector(container);
+                return (element && typeof Quill !== 'undefined' && Quill.find) ? Quill.find(element) : null;
+            }
+
+            window.resgridAdpPageRevealed = function (values) {
+                if (!values)
+                    return;
+
+                $.each(coordinates, function (_, pair) {
+                    var value = values[pair.key];
+                    if (!usable(value))
+                        return;
+
+                    // Anything that is not a well-formed pair is left alone rather than guessed at:
+                    // writing half of a coordinate would post a broken location back.
+                    var parts = value.split(',');
+                    if (parts.length !== 2)
+                        return;
+
+                    $(pair.lat).val($.trim(parts[0]));
+                    $(pair.lng).val($.trim(parts[1]));
+                    $(pair.lat).add(pair.lng).data('adp-page-revealed', true);
+                });
+
+                $.each(editors, function (_, editor) {
+                    var value = values[editor.key];
+                    if (!usable(value))
+                        return;
+
+                    var instance = quill(editor.container);
+                    if (!instance)
+                        return;
+
+                    // Quill's own API, so the revealed HTML is parsed into its document model rather
+                    // than injected as markup, and the submit handler picks it up unchanged.
+                    instance.clipboard.dangerouslyPasteHTML(value);
+                    $(editor.container).data('adp-page-revealed', true);
+                });
+            };
+
+            window.resgridAdpPageConcealed = function () {
+                $.each(coordinates, function (_, pair) {
+                    var $lat = $(pair.lat);
+                    if (!$lat.data('adp-page-revealed'))
+                        return;
+
+                    $lat.val('').removeData('adp-page-revealed');
+                    $(pair.lng).val('').removeData('adp-page-revealed');
+                });
+
+                $.each(editors, function (_, editor) {
+                    var $container = $(editor.container);
+                    if (!$container.data('adp-page-revealed'))
+                        return;
+
+                    var instance = quill(editor.container);
+                    if (instance)
+                        instance.setText(REDACTED);
+
+                    $container.removeData('adp-page-revealed');
+                });
+            };
+        })();
+    </script>
+
+        <partial name="_AdpRevealScripts" model="adpReveal" />
+    }
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/app/resgrid.phonevalidate.js"></script>
+
+    <script>
+        var sameAddress = '@Model.MailingAddressSameAsPhysical';
+    </script>
+    <script src="~/js/app/internal/contacts/resgrid.contacts.add.js" type="text/javascript"></script>
+}

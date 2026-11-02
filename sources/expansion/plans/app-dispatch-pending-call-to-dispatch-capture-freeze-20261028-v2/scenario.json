@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "dispatch-pending-call-training",
+  "mode": "manual normal UI replay; this file performs no action",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "isolated_local_transport_verified_required": true,
+    "preserve_original_three_calls": true,
+    "preserve_original_command_boards": true,
+    "new_call_limit": 1,
+    "allow_real_device_location": false,
+    "provider_delivery_claim": false,
+    "account_or_permission_changes": false
+  },
+  "new_call": {
+    "name_template": "TRAINING ONLY - Academy pending dispatch {{unique_run_id}}",
+    "unique_run_id": "Generate a new human-readable timestamp or suffix for this replay; do not reuse a prior exercise title.",
+    "nature": "Software-only pending-call exercise in the fictional local department. No operational response.",
+    "priority": "Routine",
+    "type": "Investigation",
+    "save_as_pending": true,
+    "proposed_recipient": "Wallace Boden",
+    "everyone_selected": false,
+    "expected_selected_count": 1,
+    "location_and_destination": "Leave blank only if the current department policy permits it; otherwise enter permitted fictional values through normal visible controls. Never force hidden state."
+  },
+  "identity_readback": {
+    "after_save": "Open the matching newly saved pending row and read its full displayed name and number. Read its numeric ID from that actual open Call Details URL.",
+    "url_pattern": "/call/<fresh numeric ID>",
+    "retain_variables": ["own_call_title", "own_call_number", "own_call_id", "observed_own_call_url"],
+    "historical_capture_identity_is_not_a_replay_target": true,
+    "fail_closed": "Stop before dispatch or close if the opened name/number/URL do not identify the one call created by this replay. Never substitute a historical call or construct a URL with an old captured ID."
+  },
+  "replay_steps": [
+    "Unlock or sign in normally if needed; keep credentials, recovery data and private identifiers out of screenshots.",
+    "Read the current active/pending/scheduled counts and original call names. Open Calls > New Call.",
+    "Fill a unique TRAINING ONLY title and the fictional nature. Select Routine and Investigation; satisfy current required fields. Read back the exact values before any submit.",
+    "Turn on Save as pending (do not dispatch yet). Select Recipients, search Wallace Boden, choose only that member, confirm 1 selected and leave Everyone unchecked.",
+    "Review the actual pending switch, one proposed member and full Save Pending Call control, then save through the normal UI.",
+    "Locate the matching new Pending row. Open it to read the full name/number and fresh numeric ID from the observed URL; retain these only for this replay.",
+    "Verify Pending—not yet dispatched and the proposed Wallace Boden in Dispatched. That tab name alone is not release proof.",
+    "Return to Pending Calls, choose Dispatch for this own record and explicitly review the picker. If demonstrating0selected, deselect Boden and record disabled Confirm, then select him again and verify 1 selected before Confirm.",
+    "After Confirm, verify removal from Pending and reopen the same own call through normal UI or its observed URL. Read the saved recipient and active-only Dispatch additional resources control; do not send an additional dispatch.",
+    "Open Close Call only for the retained own title/number/ID. Choose Closed and enter a new explicit TRAINING ONLY completion note. Turn Notify everyone on the call OFF, read back all values and close.",
+    "Verify the original active-call count/names remain, pending/scheduled counts are restored, and the unique exercise title has no active match. Inspect the retained own record if useful; do not claim a Closed badge or close-note readback unless actually displayed.",
+    "Clear searches. Preserve every raw image, DOM and failure; dismiss development warnings only through their own Close controls and recapture clean operational views."
+  ],
+  "capture_acceptance": [
+    "All spoken controls must be fully visible in the corresponding genuine screenshot.",
+    "Queue columns may ellipsize the identity; use opened Call Details for the full name/number.",
+    "Reject loading, error, development-warning and credential-bearing frames as operational footage.",
+    "Do not manufacture a creation notification-OFF flag; the recorded notification switch belongs to Close Call.",
+    "A browser confirmation or native dialog must be captured only if that platform actually presents it.",
+    "Saved application state does not establish provider or peer delivery, physical response, native hardware, GPS or offline persistence."
+  ],
+  "historical_recording_references": {
+    "raw_manifest": "captures/expansion/dispatch-pending-20261028/manifest.json",
+    "action_ledger": "captures/expansion/dispatch-pending-20261028/action-ledger.json",
+    "reviewed_subset": "captures/expansion/dispatch-pending-20261028/review/reviewed-source-subset-20261028.json",
+    "identity_note": "These files document the completed historical recording only; replay identity must be read fresh."
+  }
+}

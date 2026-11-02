@@ -1,0 +1,140 @@
+{
+  "kind": "source_only_holder_mapping_and_actual_ui_capture_preparation",
+  "checked_at": "2026-10-28T20:28:43.124628+00:00",
+  "app": "Unit",
+  "browser_or_db_operations": false,
+  "source_inputs": [
+    {
+      "file": "demo/seed.py",
+      "sha256": "219233b39368d9dd13983c327261ffce865c6db0e35eeaae4495227edd5c94d5"
+    },
+    {
+      "file": "demo/fixtures.json",
+      "sha256": "005ff2b3193113b876fee08a9a4a88fd6d254dfca85c9514f8172ad48cfea699"
+    },
+    {
+      "file": "captures/expansion/legacy/operations/manifest-core-legacy-operations.json",
+      "sha256": "8cf89af4b6068d08ffee2f72b61ae2b3e53967d2e678c25284158103e1a93651"
+    }
+  ],
+  "source_files": [
+    {
+      "source": "Unit/src/app/(app)/inventory/index.tsx",
+      "sha256": "d1e59c82e5e4f498fcbf894735b95107e207e4c5eb094b8ded466ce2219a1a51"
+    },
+    {
+      "source": "Unit/src/app/(app)/inventory/count/[id].tsx",
+      "sha256": "3f242c728bcdb2f054580cc46a2bf817623b33ecf60846fa400acea5f49d5a98"
+    },
+    {
+      "source": "Unit/src/stores/inventory/store.ts",
+      "sha256": "9734a230e950ddf3383e1e53708eee92ee8cf49a9db8efd0eb00e15e64644dff"
+    },
+    {
+      "source": "Unit/src/api/inventory/inventory.ts",
+      "sha256": "e5f8de839f828fc2a90e606562134c3e73f669f33edd0020d3dc43265f87906f"
+    },
+    {
+      "source": "Unit/src/lib/inventory/count.ts",
+      "sha256": "da773d455c92a148fc7937449c30ca2b0f7015d31e4ca1079e336fc96e85e724"
+    },
+    {
+      "source": "Unit/src/translations/en.json",
+      "sha256": "a5f220e4d9204ff38f40b266219f841c2ba939dc9208b9cd8a3544b2a09cd3a4"
+    },
+    {
+      "source": "Unit/node_modules/react-native-web/dist/exports/Alert/index.js",
+      "sha256": "2538de6c07ef508dde31685cbeec067f022da93ab5e7b69260bb05031c6ead8b"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryCounts.cs",
+      "sha256": "77e527e1205b4fc13b389f6a2812856e4d455929e87985eec71566a534aa687a"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryIssuance.cs",
+      "sha256": "e43b0815fa502444452e37f252362023efd8663436f4d299228d8d0ce956b485"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryLegacyMigration.cs",
+      "sha256": "a4d02283809c20d6e25cedae5ab49ec669aaac97b9d7fd634b051fb00d85791e"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryCatalog.cs",
+      "sha256": "0a8b9e7bdd6348f7a6fc12f2823645ae46376cd39c4963f27c59aa862e05293a"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryAuthorizationService.cs",
+      "sha256": "192587aa3361e1542c61feeea9158417c6824e286133992b2274d9aa8377017b"
+    }
+  ],
+  "finding": {
+    "seed_assignment": "demo/seed.py puts inventory entries with i<2 on Ambulance 61; fixture order is Nitrile gloves then Training oxygen cylinder. Other two entries belong to Firehouse51 station.",
+    "migration": "MigrateLegacyAsync creates a typed Unit holder with source.UnitId preserved. NewLegacyLocation labels that holder simply Unit. The displayed location name is not the apparatus identity.",
+    "retained_transfer": "Legacy actual operation inventory-transfer moved five Academy training battery packs from Station to the existing generic Unit holder. It did not create a new Engine51 location.",
+    "inference_bound": "Taken together, retained source and action provenance identify the five-pack destination as the migrated Ambulance61 holder. This is not a fresh server-state query and cannot exclude a later unrecorded movement. Confirm the current Unit UI before recording any stock claim.",
+    "reported_current_observation": "Parent normal UI currently shows Inventory · Engine51 and No inventory is assigned to this unit. No count was started. This is parent-reported provenance, not a new child capture.",
+    "api_model": "No old/new API split: Unit uses modern v4 /Inventory/GetAccess and /Inventory/GetUnitEquipment. Access locates a nondeleted Unit-type root whose UnitId equals active unit and no parent/container; equipment matches effective holder.UnitId.",
+    "absence_bound": "No inventory assigned means returned locations are empty; permissions/visibility or absent holder can produce that screen. It is not a physical inventory observation."
+  },
+  "next_normal_ui_sequence": [
+    {
+      "step": 1,
+      "action": "Confirm current apparatus, then use Settings → Active Unit to select Ambulance61 through normal permitted UI. Open Inventory; focusing reloads selected-unit access/equipment.",
+      "required_capture": [
+        "Inventory · Ambulance 61",
+        "actual item and lot/quantity values",
+        "selected unit context"
+      ],
+      "guard": "Do not change roster, status, permissions or inventory assignments merely to force this screen."
+    },
+    {
+      "step": 2,
+      "action": "Inspect Recent counts. If an appropriate Draft already exists, open it instead of creating a duplicate. Otherwise inspect Count the inventory and optional Where to count / Whole unit selector, then Start count once.",
+      "required_capture": [
+        "Recent counts if present",
+        "Count the inventory",
+        "Start count",
+        "actual selected location"
+      ],
+      "guard": "Start count appears only with Enabled, Migrated, CanCount and a visible unit location."
+    },
+    {
+      "step": 3,
+      "action": "Inspect every generated line, Expected value, lot/serial and difference/progress summary. Quantity lines use numeric entry, One less/One more and Matches; serialized lines use Present/Missing only when actually present.",
+      "required_capture": [
+        "actual item name",
+        "Expected value with unit",
+        "visible numeric field or serialized controls",
+        "difference/progress summary"
+      ],
+      "guard": "Do not invent serialized items or treat a software count as physical stock inspection."
+    },
+    {
+      "step": 4,
+      "action": "For a permitted training draft, record explicit software-only matching observations as intended; Save progress, navigate back normally, reopen the same Draft and verify persisted counted values.",
+      "required_capture": [
+        "prepared counted values",
+        "Save progress",
+        "reopened Draft stored values"
+      ],
+      "guard": "Saving progress stores observations; it does not post a stock adjustment."
+    },
+    {
+      "step": 5,
+      "action": "Treat Complete and Cancel count as separate later operations; require an actual working confirmation plus stored resulting state before claiming them.",
+      "required_capture": [
+        "Complete or Cancel count",
+        "actual confirmation if available",
+        "fresh completed/canceled result"
+      ],
+      "guard": "Current web Alert is an installed no-op; do not use hidden calls/API/store or make a native confirmation claim."
+    }
+  ],
+  "web_and_authority_limits": [
+    "Count Complete and Cancel count directly call react-native Alert.alert; installed react-native-web Alert.alert is an empty function. Their web confirmation/result remains unsupported unless separately fixed and actually retested.",
+    "Complete is disabled until every line is observed. Differences post on completion, not Save progress. A controlled-item difference may wait for a second-person witness on the web; Unit does not provide independent witness signing.",
+    "Counts use optimistic revision and snapshot guards. Changed stock can reject the snapshot; do not bypass conflicts.",
+    "No provider, camera, GPS, real stock inspection, MFA or role changes are part of this source-only preparation."
+  ],
+  "qualification": "No count tutorial, canonical, voice, video or publication is frozen by this report. Existing Unit03 route/inventory draft remains incomplete."
+}

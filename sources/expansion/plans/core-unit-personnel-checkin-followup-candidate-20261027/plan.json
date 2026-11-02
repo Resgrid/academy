@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "candidate_id": "core-unit-personnel-checkin-followup-candidate-20261027",
+  "title": "Confirm a personnel software check-in and review its history",
+  "status": "source-supported untimed candidate only",
+  "canonical_lesson": false,
+  "publication_approved": false,
+  "export_ready": false,
+  "narration_written": false,
+  "audio_created": false,
+  "rendered": false,
+  "reviewed_subsets": [
+    {
+      "file": "captures/expansion/unit-checkin-actions-20261027/review/reviewed-source-subset-20261027.json",
+      "sha256": "5674fbabed56a5b8790a90b52d1144e96cc733eeca785153f6d4ea9f3c2824fd"
+    },
+    {
+      "file": "captures/expansion/core-checkin-readback-close-20261027/review/reviewed-source-subset-20261027.json",
+      "sha256": "01b11c876debb685825aa2fc915d597e70c7ecd3d982b3b656e5b1e3e3945f59"
+    }
+  ],
+  "earlier_setup_candidate": {
+    "file": "expansion/plans/core-personnel-checkin-candidate-20261027/plan.json",
+    "sha256": "c32a1c1b8514a0290113a006c93c928360e388eda366ebda7995fe2f0f9688e2",
+    "unchanged_dated_history": true
+  },
+  "prerequisites": [
+    "Use the existing authorized fictional Department51 call51012, FD51-2026-0004, Investigation/Routine/Boden only; per-call timers enabled under the existing matching60-minute Personnel override. This follow-up does not change policy.",
+    "Fresh reviewed Unit UTC presentation support and normal login/unit selection; no authentication or permission bypass.",
+    "Realtime Geolocation and BackgroundGeolocation OFF through normal Settings under parent provenance. These batches do not provide a Settings screenshot; no GPS/location claims."
+  ],
+  "scenes": [
+    {
+      "order": 1,
+      "id": "own-call",
+      "title": "Identify the practice call without changing unit state",
+      "capture_refs": [
+        {
+          "id": "004-fresh-bundle-call-list-released",
+          "app": "Unit",
+          "file": "captures/expansion/unit-checkin-actions-20261027/004-fresh-bundle-call-list-released.jpg",
+          "sha256": "b95fd39277bda150b07449bc558a0e84b08090bf2c6c25a3f163a4d29c6cf115",
+          "dom_file": "captures/expansion/unit-checkin-actions-20261027/004-fresh-bundle-call-list-released.dom.txt",
+          "dom_sha256": "897d0d001b11391afb32b2e8b867b6199612770f0405df157d513cb8aae207e5",
+          "url": "http://localhost:19103/calls",
+          "captured_at": "2026-10-28T00:47:27.407Z"
+        }
+      ],
+      "required_visible_labels": [
+        "Calls",
+        "Engine 51",
+        "Released",
+        "1 of 1 Roles",
+        "No Active Call",
+        "#FD51-2026-0004",
+        "TRAINING ONLY - Community care check-in exercise"
+      ],
+      "teaching_points": [
+        "Identify own call by its returned department number and training title.",
+        "Read the existing sidebar state/count; selecting a call for viewing is separate from setting it active."
+      ],
+      "limits": [
+        "No SetActive, unit-status or staffing operation; original-three complete list is not visible in004."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 2,
+      "id": "positive-age",
+      "title": "Read the current Personnel timer",
+      "capture_refs": [
+        {
+          "id": "005-correct-utc-saved-personnel-age",
+          "app": "Unit",
+          "file": "captures/expansion/unit-checkin-actions-20261027/005-correct-utc-saved-personnel-age.jpg",
+          "sha256": "4eef4ec2a733e2db9e48434d4babec0cc37b542f786abf77bc254ad1c01afda3",
+          "dom_file": "captures/expansion/unit-checkin-actions-20261027/005-correct-utc-saved-personnel-age.dom.txt",
+          "dom_sha256": "97b3d80b30edb77138751dd1e4edc31c66c00642362e73386df0dcd04ed3da4a",
+          "url": "http://localhost:19103/call/51012",
+          "captured_at": "2026-10-28T00:47:47.944Z"
+        }
+      ],
+      "required_visible_labels": [
+        "Check-In",
+        "Personnel",
+        "Last check-in: 10 min ago",
+        "10/60 min",
+        "OK",
+        "Check In",
+        "History"
+      ],
+      "teaching_points": [
+        "Use the Check-In pane and read the positive saved-record age and elapsed/duration display."
+      ],
+      "limits": [
+        "Elapsed snapshot, not a fixed policy value. Maps and physical position excluded."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 3,
+      "id": "first-history",
+      "title": "Read the earlier stored note",
+      "capture_refs": [
+        {
+          "id": "006-correct-local-history-saved-note",
+          "app": "Unit",
+          "file": "captures/expansion/unit-checkin-actions-20261027/006-correct-local-history-saved-note.jpg",
+          "sha256": "23c3d4ce310f93eec3f3152640a1bb7a49e65e1cf7170fc98e21c0b3dbddca75",
+          "dom_file": "captures/expansion/unit-checkin-actions-20261027/006-correct-local-history-saved-note.dom.txt",
+          "dom_sha256": "7e99d28024d0ca8604e0eaa399cae6d5d8dfb4edefe136cf7c99af8cb9fe8269",
+          "url": "http://localhost:19103/call/51012",
+          "captured_at": "2026-10-28T00:47:59.002Z"
+        }
+      ],
+      "required_visible_labels": [
+        "History",
+        "Personnel",
+        "TRAINING ONLY - Scheduled software check-in for the fictional community-care exercise. No physical arrival, safety assessment, or device-location verification.",
+        "10/27/2026, 5:37:13 PM"
+      ],
+      "teaching_points": [
+        "Open History and distinguish its saved note/time from the timer card or prepared text."
+      ],
+      "limits": [
+        "Local timestamp as displayed; fictional UUID is not a learner identity control."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 4,
+      "id": "prepare-followup",
+      "title": "Prepare a Personnel follow-up note",
+      "capture_refs": [
+        {
+          "id": "007-followup-personnel-checkin-note-form",
+          "app": "Unit",
+          "file": "captures/expansion/unit-checkin-actions-20261027/007-followup-personnel-checkin-note-form.jpg",
+          "sha256": "6f63352e9ff33efa678afe09e255251ef4335d6e8ece39b5c10b81606e914ca7",
+          "dom_file": "captures/expansion/unit-checkin-actions-20261027/007-followup-personnel-checkin-note-form.dom.txt",
+          "dom_sha256": "eb3a0913564b69760d02d1ea975cecea05d35c223728a33beb898b146a902056",
+          "url": "http://localhost:19103/call/51012",
+          "captured_at": "2026-10-28T00:48:32.912Z"
+        }
+      ],
+      "required_visible_labels": [
+        "Check In",
+        "Select check-in type",
+        "Personnel",
+        "Add note",
+        "TRAINING ONLY - Follow-up software check-in after reviewing history. No physical arrival, safety assessment, or device-location verification.",
+        "Confirm Check-In"
+      ],
+      "teaching_points": [
+        "Use the normal Personnel Check In form and review the complete software-only note before Confirm Check-In."
+      ],
+      "limits": [
+        "Prepared form alone is not persistence. Parent recorded one normal Confirm; no screenshot/video of the actual click is invented. Quick Check-In/other targets not demonstrated."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 5,
+      "id": "reset-and-history",
+      "title": "Verify the new elapsed value and saved record",
+      "capture_refs": [
+        {
+          "id": "008-followup-checkin-counter-reset",
+          "app": "Unit",
+          "file": "captures/expansion/unit-checkin-actions-20261027/008-followup-checkin-counter-reset.jpg",
+          "sha256": "904858502f31f92b1a23efd8971cde60c833e5de759a2b57c91dcce9fb0bfd01",
+          "dom_file": "captures/expansion/unit-checkin-actions-20261027/008-followup-checkin-counter-reset.dom.txt",
+          "dom_sha256": "0687c682d7ea36e63127727805107b792a03b9aef6d5f7fa1732a7c47cb21033",
+          "url": "http://localhost:19103/call/51012",
+          "captured_at": "2026-10-28T00:48:39.423Z"
+        },
+        {
+          "id": "009-followup-note-saved-history",
+          "app": "Unit",
+          "file": "captures/expansion/unit-checkin-actions-20261027/009-followup-note-saved-history.jpg",
+          "sha256": "35856996c8d80932c437a814a5750054ebe38b2d5229f2dff666af657615f36a",
+          "dom_file": "captures/expansion/unit-checkin-actions-20261027/009-followup-note-saved-history.dom.txt",
+          "dom_sha256": "3639d202b0a260d565d7f96dbeadcbae0a69dc0b1cee7854adab960bf0e6719c",
+          "url": "http://localhost:19103/call/51012",
+          "captured_at": "2026-10-28T00:48:40.033Z"
+        }
+      ],
+      "required_visible_labels": [
+        "Last check-in: 0 min ago",
+        "0/60 min",
+        "OK",
+        "History",
+        "TRAINING ONLY - Follow-up software check-in after reviewing history. No physical arrival, safety assessment, or device-location verification.",
+        "10/27/2026, 5:48:32 PM",
+        "TRAINING ONLY - Scheduled software check-in for the fictional community-care exercise. No physical arrival, safety assessment, or device-location verification.",
+        "10/27/2026, 5:37:13 PM"
+      ],
+      "teaching_points": [
+        "Read the actual zero elapsed result, then open History to verify both distinct stored notes/times.",
+        "Tie the result to the new saved follow-up rather than the pre-record default0min rejected in002."
+      ],
+      "limits": [
+        "CurrentOK only; no warning/overdue, toast, physical arrival or device-location verification."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 6,
+      "id": "core-readback",
+      "title": "Review the same record in Core",
+      "capture_refs": [
+        {
+          "id": "001-followup-personnel-counter-readback",
+          "app": "Core",
+          "file": "captures/expansion/core-checkin-readback-close-20261027/001-followup-personnel-counter-readback.jpg",
+          "sha256": "b52de7ab100ca185fef1ed52d81ad23cc05c77cc2a2dae670a487e76857e3cec",
+          "dom_file": "captures/expansion/core-checkin-readback-close-20261027/001-followup-personnel-counter-readback.dom.txt",
+          "dom_sha256": "8771a0a93c6518234c9dd1e6e6524b28cf30657f3bdfd17ade4627fd2a110f6e",
+          "url": "http://127.0.0.1:18967/User/Dispatch/ViewCall?callId=51012",
+          "captured_at": "2026-10-28T00:49:09.595Z"
+        },
+        {
+          "id": "002-followup-personnel-note-core-history",
+          "app": "Core",
+          "file": "captures/expansion/core-checkin-readback-close-20261027/002-followup-personnel-note-core-history.jpg",
+          "sha256": "55cd5cfc2a01b6b4d1f11f2c21494674b93ce020485757860bd722bce3a31792",
+          "dom_file": "captures/expansion/core-checkin-readback-close-20261027/002-followup-personnel-note-core-history.dom.txt",
+          "dom_sha256": "5b34d9e1b50e40fd36d352ea89be623c4b2325253963d3e9b39d0e3c7ee774f4",
+          "url": "http://127.0.0.1:18967/User/Dispatch/ViewCall?callId=51012",
+          "captured_at": "2026-10-28T00:49:09.930Z"
+        }
+      ],
+      "required_visible_labels": [
+        "FD51-2026-0004",
+        "Check-In Timers",
+        "Wallace Boden",
+        "Personnel",
+        "59:22",
+        "OK",
+        "Show Check-In History",
+        "Timestamp",
+        "Who",
+        "Type",
+        "Note",
+        "10/27/2026 19:48:32",
+        "TRAINING ONLY - Follow-up software check-in after reviewing history. No physical arrival, safety assessment, or device-location verification."
+      ],
+      "teaching_points": [
+        "Read the actual near60 remaining snapshot, then the complete attributed history note.",
+        "Retain Unit local and Core department-format timestamps as their own displays."
+      ],
+      "limits": [
+        "No Core Check In submission or GPS request. Core001full note clipped→002; Core002title offscreen→001. Earlier full note clipped in002. No warning or timezone-conversion claim."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 7,
+      "id": "prepare-close",
+      "title": "Prepare closure for this practice call only",
+      "capture_refs": [
+        {
+          "id": "003-close-own-exercise-notification-off",
+          "app": "Core",
+          "file": "captures/expansion/core-checkin-readback-close-20261027/003-close-own-exercise-notification-off.jpg",
+          "sha256": "93a9b4c954dda06556223fa534661606108714cd0721b2d2d2b487feddfa077b",
+          "dom_file": "captures/expansion/core-checkin-readback-close-20261027/003-close-own-exercise-notification-off.dom.txt",
+          "dom_sha256": "310210db1df96c94b70f9064d5ffc2129800bacb6f62517bec6a6370d51af67d",
+          "url": "http://127.0.0.1:18967/User/Dispatch/CloseCall?callId=51012",
+          "captured_at": "2026-10-28T00:49:28.925Z"
+        }
+      ],
+      "required_visible_labels": [
+        "Close Call",
+        "Completed Type",
+        "Closed",
+        "Send Notification",
+        "Completed Notes",
+        "TRAINING ONLY - Community-care software check-in exercise complete. Two personnel check-in notes verified in Unit and Core history. No physical response, patient data or field safety assessment."
+      ],
+      "teaching_points": [
+        "Review Closed, unchecked Send Notification and the complete explicit training-only completed note before the ordinary close action."
+      ],
+      "limits": [
+        "Prepared state only. Parent submitted once; saved state follows. No other call or unit-status action and no notification-delivery claim."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    },
+    {
+      "order": 8,
+      "id": "closed-history",
+      "title": "Verify closure while preserving the original calls",
+      "capture_refs": [
+        {
+          "id": "004-original-three-active-calls-preserved",
+          "app": "Core",
+          "file": "captures/expansion/core-checkin-readback-close-20261027/004-original-three-active-calls-preserved.jpg",
+          "sha256": "db7b3bae78d64d5c7c88d5683cbf8e812448e212efdcb689a04f8bced960d97b",
+          "dom_file": "captures/expansion/core-checkin-readback-close-20261027/004-original-three-active-calls-preserved.dom.txt",
+          "dom_sha256": "4ef897ff001385124d3b483d78cc8b51026c480c323cdb34f44ae0e6bbda97d3",
+          "url": "http://127.0.0.1:18967/User/Dispatch/Dashboard",
+          "captured_at": "2026-10-28T00:49:34.825Z"
+        },
+        {
+          "id": "005-closed-own-exercise-preserved-history",
+          "app": "Core",
+          "file": "captures/expansion/core-checkin-readback-close-20261027/005-closed-own-exercise-preserved-history.jpg",
+          "sha256": "dbdd2df714cf7f1514ba27340391fa3eee3d37cfc2489357b9d419f1b48f8e06",
+          "dom_file": "captures/expansion/core-checkin-readback-close-20261027/005-closed-own-exercise-preserved-history.dom.txt",
+          "dom_sha256": "1d5abcc782131cc6742bfb3f6f2b03ac030ac66afe181bd19b1c4a336a97124a",
+          "url": "http://127.0.0.1:18967/User/Dispatch/ViewCall?callId=51012",
+          "captured_at": "2026-10-28T00:49:45.417Z"
+        }
+      ],
+      "required_visible_labels": [
+        "Active Calls",
+        "DEMO-0003",
+        "DEMO-0002",
+        "DEMO-0001",
+        "Showing 1 to 3 of 3 entries",
+        "FD51-2026-0004",
+        "Closed",
+        "Closed By:",
+        "Wallace Boden",
+        "Closed On:",
+        "10/27/2026 19:49:28",
+        "Completed Notes:",
+        "TRAINING ONLY - Community-care software check-in exercise complete. Two personnel check-in notes verified in Unit and Core history. No physical response, patient data or field safety assessment.",
+        "Check-In Timers",
+        "10/27/2026 19:48:32"
+      ],
+      "teaching_points": [
+        "Check the original-three ActiveCalls table, then review the closed own-call number, closing notes and retained history."
+      ],
+      "limits": [
+        "Final Unit Released/NoActive was reported as live AX only after close, without a final screenshot. No native Deselect success, release causality, new location or warning behavior."
+      ],
+      "timing_status": "untimed; no audio/cue duration or timing estimate",
+      "script_status": "outline only; no narration"
+    }
+  ],
+  "remaining_gaps_for_broader_claims": [
+    "Actual warning/overdue transitions remain unsupported; source/client threshold mismatch is not addressed by a UTC presentation fix.",
+    "No final Unit after-close screenshot; live AX observation is parent provenance only.",
+    "No demonstrated Core Check In submission, Unit Quick Check-In, Unit/IC/PAR targets, offline/native-device behavior, GPS/arrival or notification delivery.",
+    "Inline maps are excluded. A separate actual Settings screenshot would be needed to narrate geolocation controls as demonstrated footage."
+  ],
+  "historical_limit_handling": "Do not edit earlier Core54:12no-reset review/candidate. This separate new follow-up supplies fresh Unit0/60 plus Core59:22 remaining and saved follow-up history, within its own exact capture hashes."
+}

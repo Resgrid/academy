@@ -1,0 +1,156 @@
+(node:42196) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/app/records/__tests__/contract.test.tsx
+  ● Records screens use the Core wire contract › sends a fresh UUID as both ClientRecordId and IdempotencyKey through the actual store
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      101 |         await waitFor(() => expect(createRecordDraft).toHaveBeenCalledTimes(1));
+      102 |         const request = (createRecordDraft as jest.Mock).mock.calls[0][0];
+    > 103 |         expect(randomUUID).toHaveBeenCalledTimes(1);
+          |                            ^
+      104 |         expect(request.ClientRecordId).toBe(GUID);
+      105 |         expect(request.ClientRecordId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      106 |         expect(request.IdempotencyKey).toBe(request.ClientRecordId);
+
+      at Object.toHaveBeenCalledTimes (src/app/records/__tests__/contract.test.tsx:103:28)
+      at asyncGeneratorStep (../../../../../Responder/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../../Responder/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Records screens use the Core wire contract › passes returned nested Summary/Notes into the form without writing a record
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Returned summary"
+    Received string:    "{}"
+
+      154 |         });
+      155 |         render(<RecordScreen />);
+    > 156 |         await waitFor(() => expect(screen.getByTestId('returned-values').props.children).toContain('Returned summary'));
+          |                      ^
+      157 |         expect(screen.getByTestId('returned-values').props.children).toContain('Returned notes');
+      158 |         expect(screen.getByTestId('returned-values').props.children).not.toContain('redacted');
+      159 |         expect(createRecordDraft).not.toHaveBeenCalled();
+
+      at Object.<anonymous> (src/app/records/__tests__/contract.test.tsx:156:22)
+      at asyncGeneratorStep (../../../../../Responder/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../../Responder/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at ../../../../../Responder/node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at Object.<anonymous> (../../../../../Responder/node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12)
+
+FAIL src/lib/records/__tests__/wire-contract.test.ts
+  ● Core Records wire contract › matches the three actual Core classification values and keeps unknown fields restricted
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   0,
+        1,
+        2,
+    +   3,
+      ]
+
+       5 | describe('Core Records wire contract', () => {
+       6 |     it('matches the three actual Core classification values and keeps unknown fields restricted', () => {
+    >  7 |         expect([RmsFieldClassification.Standard, RmsFieldClassification.Restricted, RmsFieldClassification.Protected]).toEqual([0, 1, 2]);
+         |                                                                                                                        ^
+       8 |         for (const [number, restricted, protectedField] of [
+       9 |             [0, false, false],
+      10 |             [1, true, false],
+
+      at Object.toEqual (src/lib/records/__tests__/wire-contract.test.ts:7:120)
+
+  ● Core Records wire contract › maps nested sections and repeating rows without merging their identities
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:57:34)
+
+  ● Core Records wire contract › does not map withheld cells or field keys even if unexpected raw content is present
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:67:34)
+
+  ● Core Records wire contract › preserves flat-array prefill callers and both withholding flags
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+      Array [
+        "summary::::call",
+    +   "summary::::legacy-private",
+    +   "summary::::private",
+      ]
+
+       95 |             { SectionKey: 'summary', FieldKey: 'private', Withheld: true, Value: 'not copied' },
+       96 |         ]);
+    >  97 |         expect(Object.keys(mapped)).toEqual([cellKey('summary', 'call')]);
+          |                                     ^
+       98 |         expect(mapped[cellKey('summary', 'call')]).toMatchObject({ ReferenceType: 'call', ReferenceId: '51001' });
+       99 |         expect(toValueMap({ Cells: [{ SectionKey: 'summary', FieldKey: 'summary', Value: 'Legacy wrapper' }] })[cellKey('summary', 'summary')].Value).toBe('Legacy wrapper');
+      100 |     });
+
+      at Object.toEqual (src/lib/records/__tests__/wire-contract.test.ts:97:37)
+
+  ● Core Records wire contract › keeps raw units, currency and a zero offset without deriving values from display/numbers
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:103:34)
+
+  ● Core Records wire contract › does not invent absent sections, rows, cells or identities
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:116:30)
+
+Test Suites: 2 failed, 2 total
+Tests:       8 failed, 1 passed, 9 total
+Snapshots:   0 total
+Time:        0.721 s, estimated 1 s
+Ran all test suites within paths "src/lib/records/__tests__/wire-contract.test.ts", "src/app/records/__tests__/contract.test.tsx".

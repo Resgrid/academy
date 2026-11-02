@@ -1,0 +1,160 @@
+Wallace Boden
+ Home
+ Calls
+ Personnel
+ Units
+ Contacts
+ Mapping
+ Shifts
+Records
+ Reports
+ Documents
+ Calendar
+ Notes
+ Trainings
+ Inventory
+Readiness
+Workforce & Business Ops
+0
+ 
+4
+Firehouse 51 — Training Department 
+ 
+Help 
+ 
+ 
+Mapping and BigBoard Settings
+Home  Department Settings  Mapping and BigBoard Settings
+Personnel Mapping Settings
+Allow Status with No Location Data to hide previous location
+Allow a personnel status without a location to replace the previous location-bearing state. This can remove a marker.
+If enabled and a status comes in for that user (i.e. Standing By) without a geolocation it'll hide the users location on the map. Otherwise the last location of the user will be shown even if it's older.
+TTL In Minutes for Personnel Locations
+Maximum personnel location age in minutes. Zero keeps stale positions visible without an age limit; assess actual ping ages.
+In Minutes, how long locations are valid for to be shown in the map. I.e. a value of 60 would mean a marker for a person would show on the maps for up to 60 minutes, afterwards would not be shown. Setting 0 disables TTL and a location, no matter how old, will be shown on the map.
+Units Mapping Settings
+Allow Unit Status with No Location Data to hide previous location
+Allow a unit status without a location to overwrite earlier location data. Check hardware and app updates together.
+If enabled and a status comes in for that unit (i.e. In Quarters) without a geolocation it'll hide the units location on the map. Otherwise the last location of the user will be shown even if it's older.
+TTL In Minutes for Unit Locations
+Maximum unit location age in minutes. Zero retains stale unit locations indefinitely in supported map consumers.
+In Minutes, how long locations are valid for to be shown in the map. I.e. a value of 60 would mean a marker for a unit would show on the maps for up to 60 minutes, afterwards would not be shown. Setting 0 disables TTL and a location, no matter how old, will be shown on the map.
+Map Style
+The base map your department sees on every map in Resgrid: the website, Dispatch, Responder, Unit, IC and BigBoard.
+This Resgrid server has no Mapbox token for the website, so website maps keep the standard map. The style you choose still applies in the apps.
+Day Map Style
+Automatic (Streets)
+Streets
+Outdoors (terrain)
+Light
+Dark
+Satellite
+Satellite with Streets
+Navigation Day
+Navigation Night
+American Memory
+Basic
+Basic Overcast
+Blueprint
+Bubble
+Cali Terrain
+Decimal
+Finland Topo
+Frank
+Ice Cream
+Lè Shine
+Mineral
+Minimo
+Moonlight
+Neon Glow
+North Star
+Pencil
+Standard Oil Company
+Mapbox Streets Japan
+Unicorn
+Mapbox base map every department map shows in a light theme, on the website and in all apps. Automatic is Streets; the website needs a server Mapbox token, and the department Mapbox override replaces it everywhere.
+Used on the website, and in the apps when the device is in light mode. Community styles are designer maps from the Mapbox gallery; several show little street detail, so check the preview before using one for dispatch.
+Night Map Style
+Automatic (Dark)
+Streets
+Outdoors (terrain)
+Light
+Dark
+Satellite
+Satellite with Streets
+Navigation Day
+Navigation Night
+American Memory
+Basic
+Basic Overcast
+Blueprint
+Bubble
+Cali Terrain
+Decimal
+Finland Topo
+Frank
+Ice Cream
+Lè Shine
+Mineral
+Minimo
+Moonlight
+Neon Glow
+North Star
+Pencil
+Standard Oil Company
+Mapbox Streets Japan
+Unicorn
+Base map the apps show in dark mode. Automatic pairs with the day style (Dark for road maps, Navigation Night for Navigation Day; Outdoors and satellite unchanged). The website always uses the day style.
+Used in the apps when the device is in dark mode. Automatic picks the night version of the day style.
+Department Mapbox Override
+Use Department Mapbox Map
+Use the department map provider override. Turning it off on the owning screen removes the stored style and token.
+When enabled, this department's own Mapbox style and public token replace the Map Style above everywhere: the department website views (even when the system stays on Leaflet) and the Dispatch, Responder, Unit, IC and BigBoard apps, which load the token and style the next time they fetch their configuration. The custom style is used in both light and dark mode.
+Mapbox Style Url
+Custom map style reference. Verify the provider style and credential together; disabling the override deletes this value.
+Supported values are `mapbox://styles/...` or `https://api.mapbox.com/styles/v1/...`.
+Mapbox Public Access Token
+Map-provider access token. Only presence is reported. Disabling the override deletes it and requires re-entry to restore.
+Use a public (pk.) Mapbox token intended for website and mobile client-side map rendering for this department. It is sent to every member's browser and app; never use a secret (sk.) token.
+Unit Status Timers
+Highlight a unit on the Big Board when it has been sitting in a status too long — for example, dispatched for more than four minutes without reporting that it has departed. Leave both columns at 0 to time nothing.
+Status	Warn after (minutes)	Alert after (minutes)
+Dispatched	
+	
+
+Responding	
+	
+
+En Route	
+	
+
+On Scene	
+	
+
+Staging	
+	
+
+At Patient	
+	
+
+Transporting	
+	
+
+At Hospital	
+	
+
+Returning	
+	
+Reason when acknowledging
+Optional
+Required for alerts
+Required for warnings and alerts
+Whether acknowledging or muting a status timer alert needs a reason: optional, required for alerts, or required for warnings and alerts. It does not change the timers or the unit status.
+Whether a dispatcher must enter a reason when acknowledging or muting a status timer alert on the Big Board. The reason stays with the alert for follow-up on recurring delays.
+Cancel Save
+✨
+Assistant
+ 
+💬
+Chat
+Copyright Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

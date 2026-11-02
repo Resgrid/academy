@@ -1,0 +1,3657 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Resgrid.Config;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Events;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using Resgrid.Web.Areas.User.Models;
+using Resgrid.Web.Areas.User.Models.Departments;
+using Resgrid.Web.Areas.User.Models.Departments.CallSettings;
+using Resgrid.Web.Areas.User.Models.Departments.Text;
+using Resgrid.Web.Areas.User.Models.Departments.UnitSettings;
+using Resgrid.Web.Areas.User.Models.Home;
+using Resgrid.Web.Areas.User.Models.Settings;
+using Resgrid.Web.Helpers;
+using Resgrid.Services;
+using Microsoft.AspNetCore.Authorization;
+using Resgrid.Web.Models.AccountViewModels;
+using Resgrid.Model.Providers;
+using AuditEvent = Resgrid.Model.Events.AuditEvent;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
+using Resgrid.Web.Attributes;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	public partial class DepartmentController : SecureBaseController
+	{
+		#region Private Members and Constructors
+
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUsersService _usersService;
+		private readonly IActionLogsService _actionLogsService;
+		private readonly IEmailService _emailService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IDeleteService _deleteService;
+		private readonly IInvitesService _invitesService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IAddressService _addressService;
+		private readonly ISubscriptionsService _subscriptionsService;
+		private readonly ILimitsService _limitsService;
+		private readonly ICallsService _callsService;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly IUnitsService _unitsService;
+		private readonly ICertificationService _certificationService;
+		private readonly INumbersService _numbersService;
+		private readonly IScheduledTasksService _scheduledTasksService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly ICustomStateService _customStateService;
+		private readonly ICqrsProvider _cqrsProvider;
+		private readonly IPrinterProvider _printerProvider;
+		private readonly IQueueService _queueService;
+		private readonly IDocumentsService _documentsService;
+		private readonly INotesService _notesService;
+		private readonly IContactsService _contactsService;
+		private readonly ICheckInTimerService _checkInTimerService;
+		private readonly ISecurityPinService _securityPinService;
+		private readonly IRunCardsService _runCardsService;
+		private readonly IFeatureToggleService _featureToggleService;
+		private readonly Resgrid.Model.AiDispatch.IAiDispatchEnrichmentService _aiDispatchService;
+		private readonly IDepartmentProfileMediaService _departmentProfileMediaService;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.Department.Department> _departmentLocalizer;
+		private readonly IStringLocalizer<Resgrid.Localization.Areas.User.CustomStatuses.CustomStatuses> _statusLocalizer;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly ICallNumberingService _callNumberingService;
+		private readonly IDocumentNumberingService _documentNumberingService;
+
+		public DepartmentController(IDepartmentsService departmentsService, IUsersService usersService, IActionLogsService actionLogsService,
+			IEmailService emailService, IDepartmentGroupsService departmentGroupsService, IUserProfileService userProfileService, IDeleteService deleteService,
+			IInvitesService invitesService, Model.Services.IAuthorizationService authorizationService, IAddressService addressService, ISubscriptionsService subscriptionsService,
+			ILimitsService limitsService, ICallsService callsService, IDepartmentSettingsService departmentSettingsService, IUnitsService unitsService,
+			ICertificationService certificationService, INumbersService numbersService, IScheduledTasksService scheduledTasksService, IPersonnelRolesService personnelRolesService,
+			IEventAggregator eventAggregator, ICustomStateService customStateService, ICqrsProvider cqrsProvider, IPrinterProvider printerProvider, IQueueService queueService,
+			IDocumentsService documentsService, INotesService notesService, IContactsService contactsService, ICheckInTimerService checkInTimerService,
+			ISecurityPinService securityPinService, IRunCardsService runCardsService, IFeatureToggleService featureToggleService,
+			IDepartmentProfileMediaService departmentProfileMediaService, IStringLocalizer<Resgrid.Localization.Areas.User.Department.Department> departmentLocalizer,
+			Resgrid.Model.AiDispatch.IAiDispatchEnrichmentService aiDispatchService, IProtectedReadService protectedReadService,
+			ICallNumberingService callNumberingService, IDocumentNumberingService documentNumberingService,
+			IStringLocalizer<Resgrid.Localization.Areas.User.CustomStatuses.CustomStatuses> statusLocalizer = null)
+		{
+			_departmentsService = departmentsService;
+			_usersService = usersService;
+			_actionLogsService = actionLogsService;
+			_emailService = emailService;
+			_departmentGroupsService = departmentGroupsService;
+			_userProfileService = userProfileService;
+			_deleteService = deleteService;
+			_invitesService = invitesService;
+			_authorizationService = authorizationService;
+			_addressService = addressService;
+			_subscriptionsService = subscriptionsService;
+			_limitsService = limitsService;
+			_callsService = callsService;
+			_departmentSettingsService = departmentSettingsService;
+			_unitsService = unitsService;
+			_certificationService = certificationService;
+			_numbersService = numbersService;
+			_scheduledTasksService = scheduledTasksService;
+			_personnelRolesService = personnelRolesService;
+			_eventAggregator = eventAggregator;
+			_customStateService = customStateService;
+			_cqrsProvider = cqrsProvider;
+			_printerProvider = printerProvider;
+			_queueService = queueService;
+			_documentsService = documentsService;
+			_notesService = notesService;
+			_contactsService = contactsService;
+			_checkInTimerService = checkInTimerService;
+			_securityPinService = securityPinService;
+			_runCardsService = runCardsService;
+			_featureToggleService = featureToggleService;
+			_departmentProfileMediaService = departmentProfileMediaService;
+			_departmentLocalizer = departmentLocalizer;
+			_statusLocalizer = statusLocalizer;
+			_aiDispatchService = aiDispatchService;
+			_protectedReadService = protectedReadService;
+			_callNumberingService = callNumberingService;
+			_documentNumberingService = documentNumberingService;
+		}
+
+		#endregion Private Members and Constructors
+
+		#region Invites
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Invites()
+		{
+			var model = new InvitesView();
+			model.Invites = await _invitesService.GetAllInvitesForDepartmentAsync(DepartmentId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			if (model.Invites == null)
+				model.Invites = new List<Invite>();
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		[RequiresRecentTwoFactor]
+		public async Task<IActionResult> Invites(InvitesView model, CancellationToken cancellationToken)
+		{
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			List<string> emails = new List<string>();
+			string[] rawEmails = model.EmailAddresses.Split(char.Parse(","));
+
+			foreach (var s in rawEmails)
+			{
+				if (!String.IsNullOrEmpty(s.Trim()))
+					emails.Add(s.Trim());
+			}
+
+			foreach (var email in emails)
+			{
+				if (await _invitesService.GetInviteByEmailAsync(email) != null)
+				{
+					ModelState.AddModelError("EmailAddresses", string.Format("{0} already has a pending or completed invite.", email));
+				}
+			}
+
+			foreach (var email in emails)
+			{
+				if (!StringHelpers.ValidateEmail(email))
+				{
+					ModelState.AddModelError("EmailAddresses", string.Format("{0} does not appear to be valid. Check the address and try again.", email));
+				}
+			}
+
+			foreach (var email in emails)
+			{
+				var user = _usersService.GetUserByEmail(email);
+				if (user != null)
+				{
+					ModelState.AddModelError("EmailAddresses",
+						string.Format(
+							"The email address {0} is already in use in this department or another. Email address can only be used once per account in the system. If the user previously has a Resgrid account they need to be added via the Add a Person page.",
+							email));
+				}
+			}
+
+			if (ModelState.IsValid)
+			{
+				await _invitesService.CreateInvitesAsync(model.Department, UserId, emails, cancellationToken);
+
+				return RedirectToAction("Invites", "Department", new { Area = "User" });
+			}
+
+			model.Invites = await _invitesService.GetAllInvitesForDepartmentAsync(DepartmentId);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ResendInvite(int? inviteId, CancellationToken cancellationToken)
+		{
+			if (inviteId.HasValue == false)
+				return RedirectToAction("Invites", "Department", new { Area = "User" });
+
+			if (await _authorizationService.CanUserManageInviteAsync(UserId, inviteId.Value))
+				await _invitesService.ResendInviteAsync(inviteId.Value, cancellationToken);
+
+			return RedirectToAction("Invites", "Department", new { Area = "User" });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteInvite(int? inviteId, CancellationToken cancellationToken)
+		{
+			if (inviteId.HasValue == false)
+				return RedirectToAction("Invites", "Department", new { Area = "User" });
+
+			if (await _authorizationService.CanUserManageInviteAsync(UserId, inviteId.Value))
+				await _invitesService.DeleteInviteAsync(inviteId.Value, cancellationToken);
+
+			return RedirectToAction("Invites", "Department", new { Area = "User" });
+		}
+
+		#endregion Invites
+
+		#region Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Settings()
+		{
+			DepartmentSettingsModel model = new DepartmentSettingsModel();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.SetUsers(await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId, false, true),
+				await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId));
+
+			// Default to PST so there is at least something. Sorry everyone else.
+			if (String.IsNullOrWhiteSpace(model.Department.TimeZone))
+				model.Department.TimeZone = "Pacific Standard Time";
+
+			// Preselect the catalog spelling when an older sign-up stored a different case.
+			model.Department.DepartmentType = DepartmentTypeCatalog.Find(model.Department.DepartmentType)?.Value ?? model.Department.DepartmentType;
+
+			ViewBag.Countries = new SelectList(Countries.CountryNames);
+			ViewBag.TimeZones = new SelectList(TimeZones.Zones, "Key", "Value");
+			ViewBag.Users = new SelectList(model.Users, "Key", "Value");
+
+			PersonnelSortOrders personnelSortOrders = PersonnelSortOrders.Default;
+			model.PersonnelSortTypes = personnelSortOrders.ToSelectListInt();
+
+			UnitSortOrders unitSortTypes = UnitSortOrders.Default;
+			model.UnitSortTypes = unitSortTypes.ToSelectListInt();
+
+			CallSortOrders callSortTypes = CallSortOrders.Default;
+			model.CallSortTypes = callSortTypes.ToSelectListInt();
+
+			if (model.Department.Use24HourTime.HasValue)
+				model.Use24HourTime = model.Department.Use24HourTime.Value;
+			else
+				model.Use24HourTime = false;
+
+			var address = await _departmentSettingsService.GetBigBoardCenterAddressDepartmentAsync(DepartmentId);
+			var zoomLevel = await _departmentSettingsService.GetBigBoardMapZoomLevelForDepartmentAsync(DepartmentId);
+			var refreshTimer = await _departmentSettingsService.GetBigBoardRefreshTimeForDepartmentAsync(DepartmentId);
+			var mapCenterGpsCoordilates = await _departmentSettingsService.GetBigBoardCenterGpsCoordinatesDepartmentAsync(DepartmentId);
+			var mapHideUnavailable = await _departmentSettingsService.GetBigBoardHideUnavailableDepartmentAsync(DepartmentId);
+			var activeCallRssKey = await _departmentSettingsService.GetRssKeyForDepartmentAsync(DepartmentId);
+			model.DisableAutoAvailable = await _departmentSettingsService.GetDisableAutoAvailableForDepartmentAsync(DepartmentId);
+			model.EnableModernNotifications = await _departmentSettingsService.GetModernNotificationsEnabledAsync(DepartmentId);
+			model.RequirePasswordResetViaEmail = await _departmentSettingsService.GetRequirePasswordResetViaEmailAsync(DepartmentId);
+			model.ForceChatbotSecurityPin = await _departmentSettingsService.GetForceChatbotSecurityPinAsync(DepartmentId);
+			model.TtsLanguage = await _departmentSettingsService.GetTtsLanguageForDepartmentAsync(DepartmentId);
+			model.TtsLanguages = BuildTtsLanguageSelectList(model.TtsLanguage);
+
+			var personnelSortOrder = await _departmentSettingsService.GetDepartmentPersonnelSortOrderAsync(DepartmentId);
+			model.PersonnelSort = (int)personnelSortOrder;
+
+			var callSortOrder = await _departmentSettingsService.GetDepartmentCallSortOrderAsync(DepartmentId);
+			model.CallsSort = (int)callSortOrder;
+
+			var unitsSortOrder = await _departmentSettingsService.GetDepartmentUnitsSortOrderAsync(DepartmentId);
+			model.UnitsSort = (int)unitsSortOrder;
+
+			var staffingLevels = await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+			model.Staffings = staffingLevels == null ? _customStateService.GetDefaultPersonStaffings() : staffingLevels.GetActiveDetails();
+
+			model.SuppressStaffingInfo = await _departmentSettingsService.GetDepartmentStaffingSuppressInfoAsync(DepartmentId, false);
+
+			if (model.SuppressStaffingInfo != null)
+			{
+				model.EnableStaffingSupress = model.SuppressStaffingInfo.EnableSupressStaffing;
+			}
+
+			var actionLogs = await _customStateService.GetActivePersonnelStateForDepartmentAsync(DepartmentId);
+
+			if (zoomLevel.HasValue)
+				model.MapZoomLevel = zoomLevel.Value.ToString();
+			else
+				model.MapZoomLevel = "10";
+
+			if (refreshTimer.HasValue)
+				model.RefreshTime = refreshTimer.Value.ToString();
+			else
+				model.RefreshTime = "30";
+
+			if (mapHideUnavailable.HasValue)
+				model.MapHideUnavailable = mapHideUnavailable.Value;
+
+			if (!String.IsNullOrWhiteSpace(activeCallRssKey))
+				model.ActiveCallRssKey = activeCallRssKey;
+
+			if (!String.IsNullOrWhiteSpace(mapCenterGpsCoordilates))
+			{
+				string[] coordinates = mapCenterGpsCoordilates.Split(char.Parse(","));
+
+				if (coordinates.Count() == 2)
+				{
+					model.MapCenterGpsCoordinatesLatitude = StringHelpers.SanitizeCoordinatesString(coordinates[0]);
+					model.MapCenterGpsCoordinatesLongitude = StringHelpers.SanitizeCoordinatesString(coordinates[1]);
+				}
+			}
+
+			if (model.Department.Address == null)
+			{
+				if (model.Department.AddressId.HasValue)
+					model.Department.Address = await _addressService.GetAddressByIdAsync(model.Department.AddressId.Value);
+				else
+					model.Department.Address = new Address();
+			}
+
+			if (address != null)
+			{
+				model.MapCenterPointAddressAddress1 = address.Address1;
+				model.MapCenterPointAddressCity = address.City;
+				model.MapCenterPointAddressState = address.State;
+				model.MapCenterPointAddressPostalCode = address.PostalCode;
+				model.MapCenterPointAddressCountry = address.Country;
+			}
+
+			// Staffing Reset
+			var tasks = await _scheduledTasksService.GetScheduledTasksByUserTypeAsync(model.Department.ManagingUserId, (int)TaskTypes.DepartmentStaffingReset);
+			if (tasks != null && tasks.Count > 0)
+			{
+				model.EnableStaffingReset = true;
+				model.TimeToResetStaffing = tasks[0].Time;
+				model.ResetStaffingTo = tasks[0].Data;
+			}
+			else
+			{
+				model.EnableStaffingReset = false;
+			}
+
+			model.StaffingLevels = await BuildStaffingResetOptionsAsync(staffingLevels, model.ResetStaffingTo);
+
+			// Status Reset
+			var statusTask = await _scheduledTasksService.GetScheduledTasksByUserTypeAsync(model.Department.ManagingUserId, (int)TaskTypes.DepartmentStatusReset);
+			if (statusTask != null && statusTask.Count > 0)
+			{
+				model.EnableStatusReset = true;
+				model.TimeToResetStatus = statusTask[0].Time;
+				model.ResetStatusTo = statusTask[0].Data;
+			}
+			else
+			{
+				model.EnableStatusReset = false;
+			}
+
+			model.StatusLevels = await BuildStatusResetOptionsAsync(actionLogs, model.ResetStatusTo);
+
+			// The organization type is one label; a department doing several kinds of work records them in the operating profile.
+			ViewBag.CanConfigureOperatingProfile = await CanEditOperatingProfileAsync();
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		[RequiresRecentTwoFactor]
+		public async Task<IActionResult> Settings(DepartmentSettingsModel model, IFormCollection form, CancellationToken cancellationToken)
+		{
+			var auditEvent = new AuditEvent();
+			auditEvent.DepartmentId = DepartmentId;
+			auditEvent.UserId = UserId;
+			auditEvent.Type = AuditLogTypes.DepartmentSettingsChanged;
+			auditEvent.Successful = true;
+			auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+			auditEvent.ServerName = Environment.MachineName;
+			auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+
+			Department d = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			auditEvent.Before = d.CloneJsonToString();
+
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, d.DepartmentId))
+				return Unauthorized();
+
+			d.TimeZone = model.Department.TimeZone;
+			d.Name = model.Department.Name;
+			d.Use24HourTime = model.Use24HourTime;
+
+			if (DepartmentTypeCatalog.TryResolveSelection(d.DepartmentType, model.Department.DepartmentType, out var departmentType))
+			{
+				d.DepartmentType = departmentType;
+			}
+			else
+			{
+				// Redisplay the saved type, not the refused one (the picker reads the attempted value first).
+				ModelState.AddModelError("Department.DepartmentType", _departmentLocalizer["OrgTypeInvalid"]);
+				ModelState.SetModelValue("Department.DepartmentType", d.DepartmentType, d.DepartmentType);
+				model.Department.DepartmentType = d.DepartmentType;
+			}
+
+			ViewBag.Countries = new SelectList(Countries.CountryNames);
+			ViewBag.TimeZones = new SelectList(TimeZones.Zones, "Key", "Value");
+			ViewBag.Users = new SelectList(model.Users, "Key", "Value");
+
+			PersonnelSortOrders personnelSortOrders = PersonnelSortOrders.Default;
+			model.PersonnelSortTypes = personnelSortOrders.ToSelectListInt();
+
+			UnitSortOrders unitSortTypes = UnitSortOrders.Default;
+			model.UnitSortTypes = unitSortTypes.ToSelectListInt();
+
+			CallSortOrders callSortTypes = CallSortOrders.Default;
+			model.CallSortTypes = callSortTypes.ToSelectListInt();
+			model.TtsLanguage = NormalizeTtsLanguage(model.TtsLanguage);
+			model.TtsLanguages = BuildTtsLanguageSelectList(model.TtsLanguage);
+
+			var staffingLevels = await _customStateService.GetActiveStaffingLevelsForDepartmentAsync(DepartmentId);
+			model.Staffings = staffingLevels == null ? _customStateService.GetDefaultPersonStaffings() : staffingLevels.GetActiveDetails();
+
+			var actionLogs = await _customStateService.GetActivePersonnelStateForDepartmentAsync(DepartmentId);
+
+			// The reset choices are the department's meanings and statuses, plus the value saved now (a value saved before
+			// meanings stays valid); a posted value outside them is refused rather than written to the scheduled task.
+			var savedResetDepartment = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var savedStaffingReset = (await _scheduledTasksService.GetScheduledTasksByUserTypeAsync(savedResetDepartment.ManagingUserId, (int)TaskTypes.DepartmentStaffingReset))?.FirstOrDefault()?.Data;
+			var savedStatusReset = (await _scheduledTasksService.GetScheduledTasksByUserTypeAsync(savedResetDepartment.ManagingUserId, (int)TaskTypes.DepartmentStatusReset))?.FirstOrDefault()?.Data;
+			var staffingResetOptions = await BuildStaffingResetOptionsAsync(staffingLevels, savedStaffingReset);
+			var statusResetOptions = await BuildStatusResetOptionsAsync(actionLogs, savedStatusReset);
+			model.StaffingLevels = SelectResetOption(staffingResetOptions, model.ResetStaffingTo);
+			model.StatusLevels = SelectResetOption(statusResetOptions, model.ResetStatusTo);
+
+			Address departmentAddress = null;
+			if (model.Department.Address.AddressId != 0)
+			{
+				// IDOR fix: verify the submitted address ID belongs to the authenticated user's department
+				if (d.AddressId.HasValue && d.AddressId.Value == model.Department.Address.AddressId)
+				{
+					departmentAddress = await _addressService.GetAddressByIdAsync(model.Department.Address.AddressId);
+					departmentAddress.Address1 = model.Department.Address.Address1;
+					departmentAddress.City = model.Department.Address.City;
+					departmentAddress.State = model.Department.Address.State;
+					departmentAddress.PostalCode = model.Department.Address.PostalCode;
+					departmentAddress.Country = model.Department.Address.Country;
+				}
+				else
+				{
+					// The submitted AddressId does not belong to this department; treat as a new address
+					departmentAddress = model.Department.Address;
+					departmentAddress.AddressId = 0;
+				}
+			}
+			else
+				departmentAddress = model.Department.Address;
+
+			model.User = _usersService.GetUserById(UserId);
+			model.SetUsers(await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId, false, true),
+				await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId));
+
+			if (!String.IsNullOrWhiteSpace(model.MapZoomLevel))
+			{
+				int mapZoomLevel;
+				if (int.TryParse(model.MapZoomLevel, out mapZoomLevel))
+				{
+					if (mapZoomLevel < 0 || mapZoomLevel > 15)
+						ModelState.AddModelError("MapZoomLevel", "Map zoom level must be between 0 and 15.");
+				}
+				else
+				{
+					ModelState.AddModelError("MapZoomLevel", "Map zoom level must be an integer number.");
+				}
+			}
+
+			if (!String.IsNullOrWhiteSpace(model.RefreshTime))
+			{
+				int refreshTime;
+				if (int.TryParse(model.RefreshTime, out refreshTime))
+				{
+					if (refreshTime < 5 || refreshTime > 120)
+						ModelState.AddModelError("RefreshTime", "Map refresh time must be between 5 and 120.");
+				}
+				else
+				{
+					ModelState.AddModelError("RefreshTime", "Map refresh time must be between 5 and 120.");
+				}
+			}
+
+			if (!String.IsNullOrWhiteSpace(model.MapCenterPointAddressAddress1))
+			{
+				if (String.IsNullOrWhiteSpace(model.MapCenterPointAddressCity) || String.IsNullOrWhiteSpace(model.MapCenterPointAddressCountry))
+					ModelState.AddModelError("MapCenterPointAddressAddress1", "You need to specify a city and country if you have an address.");
+			}
+
+			if (model.EnableStaffingReset)
+			{
+				if (String.IsNullOrWhiteSpace(model.TimeToResetStaffing))
+					ModelState.AddModelError("TimeToResetStaffing", "If you want to reset staffing levels you need to supply a time to reset them.");
+
+				if (!staffingResetOptions.Any(x => x.Value == model.ResetStaffingTo))
+					ModelState.AddModelError(nameof(model.ResetStaffingTo), "Pick a staffing meaning or staffing level to reset everyone to.");
+			}
+
+			if (model.EnableStatusReset)
+			{
+				if (String.IsNullOrWhiteSpace(model.TimeToResetStatus))
+					ModelState.AddModelError("TimeToResetStatus", "If you want to reset status levels you need to supply a time to reset them.");
+
+				if (!statusResetOptions.Any(x => x.Value == model.ResetStatusTo))
+					ModelState.AddModelError(nameof(model.ResetStatusTo), "Pick a status meaning or status to reset everyone to.");
+			}
+
+			if (!IsSupportedTtsLanguage(model.TtsLanguage))
+			{
+				ModelState.AddModelError(nameof(model.TtsLanguage), "TTS language must be one of the supported eSpeak-NG languages.");
+			}
+
+			if (!String.IsNullOrWhiteSpace(model.MapCenterGpsCoordinatesLatitude) && !LocationHelpers.IsValidLatitude(model.MapCenterGpsCoordinatesLatitude))
+			{
+				ModelState.AddModelError("MapCenterGpsCoordinatesLatitude", "Map Center Latitude value seems invalid, MUST be decimal format.");
+			}
+
+			if (!String.IsNullOrWhiteSpace(model.MapCenterGpsCoordinatesLongitude) && !LocationHelpers.IsValidLongitude(model.MapCenterGpsCoordinatesLongitude))
+			{
+				ModelState.AddModelError("MapCenterGpsCoordinatesLongitude", "Map Center Longitude value seems invalid, MUST be decimal format.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				departmentAddress = await _addressService.SaveAddressAsync(departmentAddress, cancellationToken);
+				d.AddressId = departmentAddress.AddressId;
+
+				await _departmentsService.UpdateDepartmentAsync(d, cancellationToken);
+				auditEvent.After = d.CloneJsonToString();
+
+				_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+				model.Message = "Department settings save successful, you may have to log out and log back in for everything to take effect.";
+
+				model.Department = d;
+
+				if (!String.IsNullOrWhiteSpace(model.MapZoomLevel))
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.MapZoomLevel, DepartmentSettingTypes.BigBoardMapZoomLevel, cancellationToken);
+
+				if (!String.IsNullOrWhiteSpace(model.RefreshTime))
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.RefreshTime, DepartmentSettingTypes.BigBoardPageRefresh, cancellationToken);
+
+				// The Settings view renders no Big Board fields. Zoom and refresh are skipped above when not posted, but an
+				// unposted bool binds as false, so this one is written only when the form carries it.
+				if (form != null && form.ContainsKey(nameof(model.MapHideUnavailable)))
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.MapHideUnavailable.ToString(), DepartmentSettingTypes.BigBoardHideUnavailable,
+						cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.DisableAutoAvailable.ToString(), DepartmentSettingTypes.DisabledAutoAvailable,
+					cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.EnableModernNotifications.ToString(), DepartmentSettingTypes.EnableModernNotifications,
+					cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.RequirePasswordResetViaEmail.ToString(),
+					DepartmentSettingTypes.RequirePasswordResetViaEmail, cancellationToken);
+
+				var forcePinWasEnabled = await _departmentSettingsService.GetForceChatbotSecurityPinAsync(DepartmentId, bypassCache: true);
+
+				// Turning the forced-PIN requirement on: give every member without a PIN a random one so
+				// they can complete PIN-protected chatbot/text actions immediately. Provision BEFORE
+				// persisting the enabled setting — if generation fails the setting stays off, so a
+				// later save re-detects the transition and retries PIN generation.
+				if (model.ForceChatbotSecurityPin && !forcePinWasEnabled)
+					await _securityPinService.EnsurePinsForDepartmentAsync(DepartmentId, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.ForceChatbotSecurityPin.ToString(), DepartmentSettingTypes.ForceChatbotSecurityPin,
+					cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.TtsLanguage, DepartmentSettingTypes.TtsLanguage,
+					cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.PersonnelSort.ToString(), DepartmentSettingTypes.PersonnelSortOrder,
+					cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitsSort.ToString(), DepartmentSettingTypes.UnitsSortOrder, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.CallsSort.ToString(), DepartmentSettingTypes.CallsSortOrder, cancellationToken);
+
+				// Coordinates the operator typed are stored verbatim. Leaving both blank means "work it
+				// out from our address" -- the service geocodes it and stores the result, so a department
+				// that never touches these fields still gets every map centred on itself instead of on
+				// the system default. A hand-set pin is never overwritten by the geocoder.
+				var savedMapCenter = await _departmentSettingsService.SaveMapCenterCoordinatesAsync(DepartmentId,
+					model.MapCenterGpsCoordinatesLatitude, model.MapCenterGpsCoordinatesLongitude, departmentAddress, cancellationToken);
+
+				if (savedMapCenter != null)
+				{
+					model.MapCenterGpsCoordinatesLatitude = savedMapCenter.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+					model.MapCenterGpsCoordinatesLongitude = savedMapCenter.Longitude.Value.ToString(CultureInfo.InvariantCulture);
+				}
+
+				model.SuppressStaffingInfo = new DepartmentSuppressStaffingInfo();
+
+				if (form.ContainsKey("staffingLevelsToSupress") && form["staffingLevelsToSupress"].Any())
+				{
+					model.SuppressStaffingInfo.StaffingLevelsToSupress.AddRange(form["staffingLevelsToSupress"].ToString().Split(char.Parse(",")).Select(x => int.Parse(x)).ToList());
+				}
+
+				model.SuppressStaffingInfo.EnableSupressStaffing = model.EnableStaffingSupress;
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, ObjectSerialization.Serialize(model.SuppressStaffingInfo), DepartmentSettingTypes.StaffingSuppressStaffingLevels, cancellationToken);
+
+				if (!String.IsNullOrWhiteSpace(model.MapCenterPointAddressAddress1))
+				{
+					var address = await _departmentSettingsService.GetBigBoardCenterAddressDepartmentAsync(DepartmentId);
+
+					if (address == null)
+					{
+						Address newAddress = new Address();
+						newAddress.Address1 = model.MapCenterPointAddressAddress1;
+						newAddress.City = model.MapCenterPointAddressCity;
+						newAddress.State = model.MapCenterPointAddressState;
+						newAddress.PostalCode = model.MapCenterPointAddressPostalCode;
+						newAddress.Country = model.MapCenterPointAddressCountry;
+
+						newAddress = await _addressService.SaveAddressAsync(newAddress, cancellationToken);
+						await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, newAddress.AddressId.ToString(), DepartmentSettingTypes.BigBoardMapCenterAddress,
+							cancellationToken);
+					}
+					else
+					{
+						address.Address1 = model.MapCenterPointAddressAddress1;
+						address.City = model.MapCenterPointAddressCity;
+						address.State = model.MapCenterPointAddressState;
+						address.PostalCode = model.MapCenterPointAddressPostalCode;
+						address.Country = model.MapCenterPointAddressCountry;
+
+						await _addressService.SaveAddressAsync(address, cancellationToken);
+					}
+				}
+
+				if (model.EnableStaffingReset)
+				{
+					var task = new ScheduledTask();
+					task.Active = true;
+					task.TaskType = (int)TaskTypes.DepartmentStaffingReset;
+					task.Data = model.ResetStaffingTo;
+					task.AddedOn = DateTime.UtcNow;
+					task.Time = model.TimeToResetStaffing;
+					task.Monday = true;
+					task.Tuesday = true;
+					task.Wednesday = true;
+					task.Thursday = true;
+					task.Friday = true;
+					task.Saturday = true;
+					task.Sunday = true;
+					// IDOR fix: use server-authoritative values, not model-bound ones
+					task.UserId = d.ManagingUserId;
+					task.DepartmentId = DepartmentId;
+
+					await _scheduledTasksService.DeleteDepartmentStaffingResetJobAsync(DepartmentId, cancellationToken);
+					await _scheduledTasksService.SaveScheduledTaskAsync(task, cancellationToken);
+				}
+				else
+				{
+					model.ResetStaffingTo = null;
+					model.TimeToResetStaffing = String.Empty;
+					await _scheduledTasksService.DeleteDepartmentStaffingResetJobAsync(DepartmentId, cancellationToken);
+				}
+
+				if (model.EnableStatusReset)
+				{
+					var task = new ScheduledTask();
+					task.Active = true;
+					task.TaskType = (int)TaskTypes.DepartmentStatusReset;
+					task.Data = model.ResetStatusTo;
+					task.AddedOn = DateTime.UtcNow;
+					task.Time = model.TimeToResetStatus;
+					task.Monday = true;
+					task.Tuesday = true;
+					task.Wednesday = true;
+					task.Thursday = true;
+					task.Friday = true;
+					task.Saturday = true;
+					task.Sunday = true;
+					// IDOR fix: use server-authoritative values, not model-bound ones
+					task.UserId = d.ManagingUserId;
+					task.DepartmentId = DepartmentId;
+
+					await _scheduledTasksService.DeleteDepartmentStatusResetJob(DepartmentId, cancellationToken);
+					await _scheduledTasksService.SaveScheduledTaskAsync(task, cancellationToken);
+				}
+				else
+				{
+					model.ResetStatusTo = null;
+					model.TimeToResetStatus = String.Empty;
+					await _scheduledTasksService.DeleteDepartmentStatusResetJob(DepartmentId, cancellationToken);
+				}
+
+				_eventAggregator.SendMessage<DepartmentSettingsChangedEvent>(new DepartmentSettingsChangedEvent() { DepartmentId = DepartmentId });
+
+				await _departmentsService.InvalidateAllDepartmentsCache(DepartmentId);
+
+				return RedirectToAction("Settings", "Department", new { Area = "User" });
+			}
+
+			// Load staffing suppression info for view rendering, but preserve the user's submitted EnableStaffingSupress value
+			model.SuppressStaffingInfo = await _departmentSettingsService.GetDepartmentStaffingSuppressInfoAsync(DepartmentId, false);
+			ViewBag.CanConfigureOperatingProfile = await CanEditOperatingProfileAsync();
+
+			return View(model);
+		}
+
+		private static SelectList BuildTtsLanguageSelectList(string selectedLanguage)
+		{
+			var normalizedSelectedLanguage = NormalizeTtsLanguage(selectedLanguage);
+			var languages = EspeakVoiceCatalog.Voices
+				.Select(x => new SelectListItem
+				{
+					Text = x.DisplayName,
+					Value = x.Identifier
+				})
+				.ToList();
+
+			if (!string.IsNullOrWhiteSpace(normalizedSelectedLanguage) &&
+				languages.All(x => !string.Equals(x.Value, normalizedSelectedLanguage, StringComparison.OrdinalIgnoreCase)))
+			{
+				languages.Insert(0, new SelectListItem
+				{
+					Text = EspeakVoiceCatalog.GetDisplayName(normalizedSelectedLanguage),
+					Value = normalizedSelectedLanguage
+				});
+			}
+
+			return new SelectList(languages, "Value", "Text", normalizedSelectedLanguage);
+		}
+
+		private static string NormalizeTtsLanguage(string ttsLanguage)
+		{
+			if (EspeakVoiceCatalog.TryNormalizeIdentifier(ttsLanguage, out var normalizedLanguage))
+				return normalizedLanguage;
+
+			if (!string.IsNullOrWhiteSpace(ttsLanguage))
+				return ttsLanguage.Trim();
+
+			return GetConfiguredDefaultTtsLanguage();
+		}
+
+		private static bool IsSupportedTtsLanguage(string ttsLanguage)
+		{
+			if (EspeakVoiceCatalog.TryNormalizeIdentifier(ttsLanguage, out _))
+				return true;
+
+			return string.Equals(NormalizeTtsLanguage(ttsLanguage), GetConfiguredDefaultTtsLanguage(), StringComparison.OrdinalIgnoreCase);
+		}
+
+		private static string GetConfiguredDefaultTtsLanguage()
+		{
+			if (EspeakVoiceCatalog.TryNormalizeIdentifier(TtsConfig.DefaultVoice, out var normalizedLanguage))
+				return normalizedLanguage;
+
+			if (!string.IsNullOrWhiteSpace(TtsConfig.DefaultVoice))
+				return TtsConfig.DefaultVoice.Trim();
+
+			return EspeakVoiceCatalog.DefaultIdentifier;
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Api()
+		{
+			DepartmentSettingsModel model = new DepartmentSettingsModel();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			var activeCallRssKey = await _departmentSettingsService.GetRssKeyForDepartmentAsync(DepartmentId);
+			if (!String.IsNullOrWhiteSpace(activeCallRssKey))
+				model.ActiveCallRssKey = activeCallRssKey;
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProvisionApiKey(CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			DepartmentSettingsModel model = new DepartmentSettingsModel();
+
+			Department d = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			d.ApiKey = Guid.NewGuid().ToString("N");
+			await _departmentsService.UpdateDepartmentAsync(d, cancellationToken);
+
+			model.Department = d;
+
+			return RedirectToAction("Api", "Department", new { Area = "User" });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProvisionApiKeyAsync(CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			Department d = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			d.ApiKey = Guid.NewGuid().ToString("N");
+			await _departmentsService.UpdateDepartmentAsync(d, cancellationToken);
+
+			return Content(d.ApiKey);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProvisionActiveCallRssKey(CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, Guid.NewGuid().ToString("N"), DepartmentSettingTypes.RssFeedKeyForActiveCalls,
+				cancellationToken);
+
+			return RedirectToAction("Api", "Department", new { Area = "User" });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Address()
+		{
+			SettingsAddressModel model = new SettingsAddressModel();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			if (model.Department.Address == null)
+			{
+				if (model.Department.AddressId.HasValue)
+					model.Department.Address = await _addressService.GetAddressByIdAsync(model.Department.AddressId.Value);
+				else
+					model.Department.Address = new Address();
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Address(SettingsAddressModel model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			// IDOR fix: always load the department from the server using the authenticated user's DepartmentId
+			var currentDepartment = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			Address address = null;
+
+			if (model.Department.Address.AddressId != 0)
+			{
+				// IDOR fix: only allow editing the address if its ID matches the one stored on the department record
+				if (!currentDepartment.AddressId.HasValue || currentDepartment.AddressId.Value != model.Department.Address.AddressId)
+					return Unauthorized();
+
+				address = await _addressService.GetAddressByIdAsync(model.Department.Address.AddressId);
+				address.AddressId = model.Department.Address.AddressId;
+				address.Address1 = model.Department.Address.Address1;
+				address.City = model.Department.Address.City;
+				address.State = model.Department.Address.State;
+				address.PostalCode = model.Department.Address.PostalCode;
+				address.Country = model.Department.Address.Country;
+			}
+			else
+				address = model.Department.Address;
+
+			model.Department = currentDepartment;
+			model.User = _usersService.GetUserById(UserId);
+
+
+			if (ModelState.IsValid)
+			{
+				//using (var scope = new TransactionScope())
+				//{
+				address = await _addressService.SaveAddressAsync(address, cancellationToken);
+
+				model.Department.AddressId = address.AddressId;
+				await _departmentsService.UpdateDepartmentAsync(model.Department, cancellationToken);
+
+				//	scope.Complete();
+				//}
+				model.Message = "Department address settings save successful";
+
+				return View(model);
+			}
+
+			model.ErrorMessage = "Unable to save the address.";
+
+			return View(model);
+		}
+
+		#endregion Settings
+
+		#region Department Profile (RMS plan section 4.10.1)
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Profile()
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			return View(await BuildProfileModelAsync());
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Profile(DepartmentProfileModel model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			if (!ModelState.IsValid)
+			{
+				var invalid = await BuildProfileModelAsync();
+				invalid.ErrorMessage = _departmentLocalizer["ProfileSaveFailed"];
+				return View(invalid);
+			}
+
+			// The profile row is loaded server-side; only the identity fields are copied from the form.
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var profile = await _departmentProfileMediaService.GetOrCreateProfileAsync(DepartmentId, cancellationToken);
+			var before = ProfileSnapshot(profile);
+
+			profile.Name = Clean(model.Name) ?? department?.Name;
+			profile.ShortName = Clean(model.ShortName);
+			profile.Code = Clean(model.Code) ?? department?.Code;
+			profile.Description = Clean(model.Description);
+			profile.PhoneNumber = Clean(model.PhoneNumber);
+			profile.Website = Clean(model.Website);
+			profile.Facebook = Clean(model.Facebook);
+			profile.Twitter = Clean(model.Twitter);
+			profile.Instagram = Clean(model.Instagram);
+			profile.YouTube = Clean(model.YouTube);
+			profile.LinkedIn = Clean(model.LinkedIn);
+			profile.UseDepartmentBrandingInEmails = model.UseDepartmentBrandingInEmails;
+
+			await _departmentProfileMediaService.SaveProfileAsync(profile, cancellationToken);
+			SendProfileAudit(before, ProfileSnapshot(profile));
+
+			var saved = await BuildProfileModelAsync();
+			saved.Message = _departmentLocalizer["ProfileSaved"];
+			return View(saved);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProfileLogo(IFormFile logo, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			DepartmentProfileModel result;
+			if (logo == null || logo.Length == 0)
+			{
+				result = await BuildProfileModelAsync();
+				result.ErrorMessage = _departmentLocalizer["ProfileLogoRequired"];
+				return View("Profile", result);
+			}
+
+			try
+			{
+				using var stream = new MemoryStream();
+				await logo.CopyToAsync(stream, cancellationToken);
+				await _departmentProfileMediaService.UploadLogoAsync(DepartmentId, UserId, Path.GetFileName(logo.FileName), logo.ContentType, stream.ToArray(), cancellationToken);
+				SendProfileAudit(null, JsonConvert.SerializeObject(new { Logo = "uploaded " + Path.GetFileName(logo.FileName) }));
+
+				result = await BuildProfileModelAsync();
+				result.Message = _departmentLocalizer["ProfileLogoSaved"];
+			}
+			catch (DepartmentLogoRejectedException ex)
+			{
+				result = await BuildProfileModelAsync();
+				result.ErrorMessage = ex.Message;
+			}
+
+			return View("Profile", result);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> RemoveProfileLogo(CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			await _departmentProfileMediaService.RemoveLogoAsync(DepartmentId, UserId, cancellationToken);
+			SendProfileAudit(null, JsonConvert.SerializeObject(new { Logo = "removed" }));
+
+			var result = await BuildProfileModelAsync();
+			result.Message = _departmentLocalizer["ProfileLogoRemoved"];
+			return View("Profile", result);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> RegenerateProfileMediaKey(CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			await _departmentProfileMediaService.RegenerateMediaKeyAsync(DepartmentId, UserId, cancellationToken);
+			SendProfileAudit(null, JsonConvert.SerializeObject(new { MediaKey = "regenerated" }));
+
+			var result = await BuildProfileModelAsync();
+			result.Message = _departmentLocalizer["ProfileKeyRegenerated"];
+			return View("Profile", result);
+		}
+
+		/// <summary>Authenticated rendition serving for the profile page previews.</summary>
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProfileMedia(int kind)
+		{
+			if (!Enum.IsDefined(typeof(DepartmentProfileMediaKind), kind))
+				return NotFound();
+
+			var media = await _departmentProfileMediaService.GetMediaAsync(DepartmentId, (DepartmentProfileMediaKind)kind);
+			if (media?.Data == null || media.Data.Length == 0)
+				return NotFound();
+
+			Response.Headers["Cache-Control"] = "private, max-age=300";
+			return File(media.Data, media.ContentType ?? "application/octet-stream");
+		}
+
+		/// <summary>
+		/// Anonymous masthead for email clients (RMS plan section 4.10.1): keyed by the department's unguessable
+		/// MediaKey, long-cached with an ETag, and serving nothing but the EmailMasthead rendition.
+		/// </summary>
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> PublicMasthead(string key)
+		{
+			var media = await _departmentProfileMediaService.GetPublicMastheadAsync(key);
+			if (media?.Data == null || media.Data.Length == 0)
+				return NotFound();
+
+			var etag = "\"" + media.Checksum + "\"";
+			if (Request.Headers.TryGetValue("If-None-Match", out var ifNoneMatch) && ifNoneMatch.ToString() == etag)
+				return StatusCode(304);
+
+			Response.Headers["Cache-Control"] = "public, max-age=31536000, immutable";
+			Response.Headers["ETag"] = etag;
+			return File(media.Data, media.ContentType ?? "image/png");
+		}
+
+		private async Task<DepartmentProfileModel> BuildProfileModelAsync()
+		{
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var profile = await _departmentProfileMediaService.GetOrCreateProfileAsync(DepartmentId);
+			var branding = await _departmentProfileMediaService.GetBrandingAsync(DepartmentId);
+
+			return new DepartmentProfileModel
+			{
+				Department = department,
+				Profile = profile,
+				Branding = branding,
+				Name = profile.Name ?? department?.Name,
+				ShortName = profile.ShortName,
+				Code = profile.Code ?? department?.Code,
+				Description = profile.Description,
+				PhoneNumber = profile.PhoneNumber,
+				Website = profile.Website,
+				Facebook = profile.Facebook,
+				Twitter = profile.Twitter,
+				Instagram = profile.Instagram,
+				YouTube = profile.YouTube,
+				LinkedIn = profile.LinkedIn,
+				UseDepartmentBrandingInEmails = profile.UseDepartmentBrandingInEmails,
+				PublicMastheadUrl = branding.HasLogo && !string.IsNullOrWhiteSpace(branding.MediaKey) ? DepartmentProfileMediaService.PublicMastheadUrl(branding.MediaKey) : null
+			};
+		}
+
+		private static string Clean(string value)
+		{
+			return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+		}
+
+		private static string ProfileSnapshot(DepartmentProfile profile)
+		{
+			return JsonConvert.SerializeObject(new
+			{
+				profile.Name, profile.ShortName, profile.Code, profile.Description, profile.PhoneNumber, profile.Website,
+				profile.Facebook, profile.Twitter, profile.Instagram, profile.YouTube, profile.LinkedIn, profile.UseDepartmentBrandingInEmails
+			});
+		}
+
+		private void SendProfileAudit(string before, string after)
+		{
+			_eventAggregator.SendMessage<AuditEvent>(new AuditEvent
+			{
+				DepartmentId = DepartmentId,
+				UserId = UserId,
+				Type = AuditLogTypes.DepartmentSettingsChanged,
+				Before = before,
+				After = after,
+				Successful = true,
+				IpAddress = IpAddressHelper.GetRequestIP(Request, true),
+				ServerName = Environment.MachineName,
+				UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}"
+			});
+		}
+
+		#endregion Department Profile
+
+		#region User States
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SetUserResponding(string userId)
+		{
+			if (!await IsMemberOfThisDepartmentAsync(userId))
+				return Unauthorized();
+
+			var departmentId = (await _departmentsService.GetDepartmentByUserIdAsync(UserId)).DepartmentId;
+			await _actionLogsService.SetUserActionAsync(userId, departmentId,
+				await _customStateService.ResolvePersonnelStatusAsync(departmentId, ActionBaseTypes.Responding) ?? (int)ActionTypes.Responding);
+
+			return RedirectToAction("Index", "Personnel", new { area = "User" });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SetUserNotResponding(string userId)
+		{
+			if (!await IsMemberOfThisDepartmentAsync(userId))
+				return Unauthorized();
+
+			var departmentId = (await _departmentsService.GetDepartmentByUserIdAsync(UserId)).DepartmentId;
+			await _actionLogsService.SetUserActionAsync(userId, departmentId,
+				await _customStateService.ResolvePersonnelStatusAsync(departmentId, ActionBaseTypes.NotResponding) ?? (int)ActionTypes.NotResponding);
+
+			return RedirectToAction("Index", "Personnel", new { area = "User" });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SetUserStandingBy(string userId)
+		{
+			if (!await IsMemberOfThisDepartmentAsync(userId))
+				return Unauthorized();
+
+			var departmentId = (await _departmentsService.GetDepartmentByUserIdAsync(UserId)).DepartmentId;
+			await _actionLogsService.SetUserActionAsync(userId, departmentId,
+				await _customStateService.ResolvePersonnelStatusAsync(departmentId, ActionBaseTypes.Available) ?? (int)ActionTypes.StandingBy);
+
+			return RedirectToAction("Index", "Personnel", new { area = "User" });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SetUserOnScene(string userId)
+		{
+			if (!await IsMemberOfThisDepartmentAsync(userId))
+				return Unauthorized();
+
+			var departmentId = (await _departmentsService.GetDepartmentByUserIdAsync(UserId)).DepartmentId;
+			await _actionLogsService.SetUserActionAsync(userId, departmentId,
+				await _customStateService.ResolvePersonnelStatusAsync(departmentId, ActionBaseTypes.OnScene) ?? (int)ActionTypes.OnScene);
+
+			return RedirectToAction("Index", "Personnel", new { area = "User" });
+		}
+
+		/// <summary>An admin sets statuses for their own department's people only, never another department's user by id.</summary>
+		private async Task<bool> IsMemberOfThisDepartmentAsync(string userId)
+		{
+			if (String.IsNullOrWhiteSpace(userId))
+				return false;
+
+			var member = await _departmentsService.GetDepartmentMemberAsync(userId, DepartmentId);
+
+			return member != null && member.DepartmentId == DepartmentId && !member.IsDeleted;
+		}
+
+		#endregion User States
+
+		#region Call Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> CallSettings()
+		{
+			var model = new CallSettingsView();
+			model.EmailSettings = await _departmentsService.GetDepartmentEmailSettingsAsync(DepartmentId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+
+			var internalDispatchEmail = await _departmentSettingsService.GetDispatchEmailForDepartmentAsync(DepartmentId);
+			if (!String.IsNullOrWhiteSpace(internalDispatchEmail))
+				model.InternalDispatchEmail = $"{internalDispatchEmail}@{Config.InboundEmailConfig.DispatchDomain}";
+
+			if (model.EmailSettings == null)
+			{
+				model.EmailSettings = new DepartmentCallEmail();
+				model.EmailSettings.Port = 110;
+			}
+			else
+			{
+				model.CallType = model.EmailSettings.FormatType;
+			}
+
+			if (model.CallType == 0)
+				model.CallType = (int)CallEmailTypes.Generic;
+
+			var callPruning = await _departmentsService.GetDepartmentCallPruningSettingsAsync(DepartmentId);
+
+			if (callPruning != null)
+			{
+				if (callPruning.PruneEmailImportedCalls.HasValue)
+					model.PruneEmailCalls = callPruning.PruneEmailImportedCalls.Value;
+
+				if (callPruning.EmailImportCallPruneInterval.HasValue)
+					model.MinutesTillPrune = callPruning.EmailImportCallPruneInterval.Value;
+			}
+
+			await FillCallNumberingAsync(model);
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// The call numbering section: the saved pattern (the legacy one until a department saves its own) and the sequence a
+		/// call logged now falls in, with the number it would receive.
+		/// </summary>
+		private async Task FillCallNumberingAsync(CallSettingsView model)
+		{
+			var config = await _departmentSettingsService.GetCallNumberingConfigAsync(DepartmentId, true);
+			var now = DateTime.UtcNow;
+			var next = await _callNumberingService.GetNextAsync(DepartmentId, config, now);
+			var department = model.Department ?? await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+
+			model.CallNumberPattern = CallNumberFormat.EffectivePattern(config);
+			model.CallNumberSequenceWidth = CallNumberFormat.EffectiveWidth(config.SequenceWidth);
+			var yearStart = config.YearStart();
+			model.CallNumberYearStartMonth = yearStart.Month;
+			model.CallNumberYearStartDay = yearStart.Day;
+			model.CallNumberYearLabel = (int)yearStart.Label;
+			model.CallNumberScopeKey = next.ScopeKey;
+			model.CallNumberNextNumber = next.NextNumber;
+			model.CallNumberCurrentNextSequence = next.NextSequence;
+			model.CallNumberResetPeriod = next.Period;
+			model.CallNumberNextSequence = null;
+			model.CallNumberPreviewDate = string.IsNullOrWhiteSpace(department?.TimeZone) ? now : DateTimeHelpers.GetLocalDateTime(now, department.TimeZone);
+		}
+
+		/// <summary>
+		/// Builds the time-in-status threshold grid. Only the base types a dispatcher would plausibly
+		/// time are offered -- there is no value in warning that a unit has been "available" too long.
+		/// </summary>
+		private async Task<List<UnitStatusThresholdRow>> BuildUnitStatusThresholdRowsAsync()
+		{
+			var stored = await _departmentSettingsService.GetUnitStatusThresholdsAsync(DepartmentId);
+			var rows = new List<UnitStatusThresholdRow>();
+
+			foreach (var baseType in UnitStatusThresholds.TimeableBaseTypes)
+			{
+				var threshold = stored.Find((int)baseType);
+
+				rows.Add(new UnitStatusThresholdRow
+				{
+					BaseType = (int)baseType,
+					WarnMinutes = threshold != null ? threshold.WarnSeconds / 60 : 0,
+					AlertMinutes = threshold != null ? threshold.AlertSeconds / 60 : 0
+				});
+			}
+
+			return rows;
+		}
+
+		/// <summary>
+		/// Builds the new-call field policy grid for the settings screen: every configurable built-in
+		/// field, pre-ticked from the department's stored policy. Fields with no stored rule default to
+		/// visible and optional, matching how the form behaved before the setting existed.
+		/// </summary>
+		private async Task<List<NewCallFieldPolicyRow>> BuildNewCallFieldRowsAsync()
+		{
+			var policy = await _departmentSettingsService.GetNewCallFieldPolicyAsync(DepartmentId);
+			var rows = new List<NewCallFieldPolicyRow>();
+
+			foreach (var key in NewCallFieldKeys.All)
+			{
+				rows.Add(new NewCallFieldPolicyRow
+				{
+					Key = key,
+					Visible = policy.IsVisible(key),
+					Required = policy.IsRequired(key)
+				});
+			}
+
+			return rows;
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> CallSettings(CallSettingsView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			model.CallTypes = await _callsService.GetCallTypesForDepartmentAsync(DepartmentId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+
+			var internalDispatchEmail = await _departmentSettingsService.GetDispatchEmailForDepartmentAsync(DepartmentId);
+			if (!String.IsNullOrWhiteSpace(internalDispatchEmail))
+				model.InternalDispatchEmail = $"{internalDispatchEmail}@{Config.InboundEmailConfig.DispatchDomain}";
+
+			//if (model.CallType <= 0)
+			//	ModelState.AddModelError("", "You need to select a email type from the list. If you don't see your email type, contact us to get it added.");
+
+			//if (String.IsNullOrWhiteSpace(model.EmailSettings.Hostname) && !String.IsNullOrWhiteSpace(_emailService.TestEmailSettings(model.EmailSettings)))
+			//	ModelState.AddModelError("", "Call Email Settings appear incorrect. Check your email settings and try again.");
+
+			if (ModelState.IsValid)
+			{
+				DepartmentCallEmail emailSettings = await _departmentsService.GetDepartmentEmailSettingsAsync(DepartmentId);
+				model.EmailSettings.DepartmentId = DepartmentId;
+				model.EmailSettings.FormatType = model.CallType;
+
+				if (emailSettings == null)
+					emailSettings = new DepartmentCallEmail();
+
+				emailSettings.DepartmentId = DepartmentId;
+				// The screen edits the email format (and call numbering) only. A stored POP3 mailbox is not on the form, so it is
+				// kept rather than blanked by a save. (Mailbox polling is not scheduled today; the row is kept so it is not lost.)
+				if (Request.HasFormContentType && Request.Form.ContainsKey("EmailSettings.Hostname"))
+				{
+					emailSettings.Hostname = model.EmailSettings.Hostname;
+					emailSettings.Password = model.EmailSettings.Password;
+					emailSettings.Port = model.EmailSettings.Port;
+					emailSettings.Username = model.EmailSettings.Username;
+					emailSettings.UseSsl = model.EmailSettings.UseSsl;
+				}
+				emailSettings.FormatType = model.EmailSettings.FormatType;
+
+				model.EmailSettings = await _departmentsService.SaveDepartmentEmailSettingsAsync(emailSettings, cancellationToken);
+
+				DepartmentCallPruning pruningSettings = await _departmentsService.GetDepartmentCallPruningSettingsAsync(DepartmentId);
+
+				if (pruningSettings == null)
+					pruningSettings = new DepartmentCallPruning();
+
+				pruningSettings.DepartmentId = DepartmentId;
+				pruningSettings.PruneEmailImportedCalls = model.PruneEmailCalls;
+				pruningSettings.EmailImportCallPruneInterval = model.MinutesTillPrune;
+
+				pruningSettings = await _departmentsService.SaveDepartmentCallPruningAsync(pruningSettings, cancellationToken);
+
+				if (pruningSettings.PruneEmailImportedCalls.HasValue)
+					model.PruneEmailCalls = pruningSettings.PruneEmailImportedCalls.Value;
+
+				if (pruningSettings.EmailImportCallPruneInterval.HasValue)
+					model.MinutesTillPrune = pruningSettings.EmailImportCallPruneInterval.Value;
+
+				await _departmentsService.InvalidateAllDepartmentsCache(DepartmentId);
+
+				model.Message = _departmentLocalizer["CallSettingsSaved"];
+
+				await SaveCallNumberingAsync(model, cancellationToken);
+				return View(model);
+			}
+
+			await FillCallNumberingAsync(model);
+			return View(model);
+		}
+
+		/// <summary>
+		/// Saves setting 115 and any raised next number, then shows what was saved rather than what was posted: the sequence can
+		/// change with the pattern, and a raised number left in its box would be resubmitted. A refused pattern stays for correcting.
+		/// </summary>
+		private async Task SaveCallNumberingAsync(CallSettingsView model, CancellationToken cancellationToken)
+		{
+			var before = await _departmentSettingsService.GetCallNumberingConfigAsync(DepartmentId, true);
+			var beforeNext = await _callNumberingService.GetNextAsync(DepartmentId, before, DateTime.UtcNow);
+			var result = await _callNumberingService.SaveAsync(DepartmentId, UserId, new CallNumberingUpdate
+			{
+				Pattern = model.CallNumberPattern,
+				SequenceWidth = model.CallNumberSequenceWidth,
+				ScopeKey = model.CallNumberScopeKey,
+				NextSequence = model.CallNumberNextSequence,
+				YearStartMonth = model.CallNumberYearStartMonth,
+				YearStartDay = model.CallNumberYearStartDay,
+				YearLabel = model.CallNumberYearLabel
+			}, cancellationToken);
+
+			var rejected = result.PatternRejected || result.YearStartRejected;
+			var rejectedPattern = rejected ? model.CallNumberPattern : null;
+			var rejectedYearStart = rejected ? new[] { model.CallNumberYearStartMonth, model.CallNumberYearStartDay, model.CallNumberYearLabel } : null;
+			await FillCallNumberingAsync(model);
+
+			if (!rejected)
+			{
+				var after = await _departmentSettingsService.GetCallNumberingConfigAsync(DepartmentId, true);
+				SendProfileAudit(JsonConvert.SerializeObject(new { CallNumberPattern = CallNumberFormat.EffectivePattern(before), CallNumberSequenceWidth = CallNumberFormat.EffectiveWidth(before.SequenceWidth), CallNumberYearStart = YearStartAudit(before.YearStart()), beforeNext.NextNumber }),
+					JsonConvert.SerializeObject(new { CallNumberPattern = CallNumberFormat.EffectivePattern(after), CallNumberSequenceWidth = CallNumberFormat.EffectiveWidth(after.SequenceWidth), CallNumberYearStart = YearStartAudit(after.YearStart()), model.CallNumberNextNumber }));
+			}
+
+			var errors = new List<string>();
+			if (result.PatternRejected)
+				errors.Add(_departmentLocalizer["CallNumberPatternInvalid"]);
+			if (result.YearStartRejected)
+				errors.Add(_departmentLocalizer["CallNumberYearStartInvalid"]);
+			if (result.BelowCurrent != null)
+				errors.Add(_departmentLocalizer["CallNumberNextBelowCurrent", result.BelowCurrent.NextNumber]);
+			if (result.NextNotApplied)
+				errors.Add(_departmentLocalizer["CallNumberNextPatternChanged"]);
+			if (errors.Count > 0)
+				model.ErrorMessage = string.Join(" ", errors);
+
+			// A refused save keeps what was typed (pattern and year start) for correcting.
+			foreach (var key in ModelState.Keys.Where(k => k.StartsWith("CallNumber", StringComparison.Ordinal) && (!rejected || !RejectedCallNumberFields.Contains(k))).ToList())
+				ModelState.Remove(key);
+			if (rejectedPattern != null)
+				model.CallNumberPattern = rejectedPattern;
+			if (rejectedYearStart != null)
+			{
+				model.CallNumberYearStartMonth = rejectedYearStart[0];
+				model.CallNumberYearStartDay = rejectedYearStart[1];
+				model.CallNumberYearLabel = rejectedYearStart[2];
+			}
+		}
+
+		private static readonly HashSet<string> RejectedCallNumberFields = new HashSet<string>(StringComparer.Ordinal)
+		{
+			nameof(CallSettingsView.CallNumberPattern), nameof(CallSettingsView.CallNumberYearStartMonth),
+			nameof(CallSettingsView.CallNumberYearStartDay), nameof(CallSettingsView.CallNumberYearLabel)
+		};
+
+		/// <summary>The year start as the audit log records it, e.g. "11-01 EndYear"; "01-01" is the calendar year.</summary>
+		private static string YearStartAudit(NumberingYearStart yearStart)
+		{
+			return yearStart.Month.ToString("D2", CultureInfo.InvariantCulture) + "-" + yearStart.Day.ToString("D2", CultureInfo.InvariantCulture)
+				+ (yearStart.IsCalendarYear ? string.Empty : " " + yearStart.Label);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DocumentNumbering()
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var model = new DocumentNumberingView();
+			await FillDocumentNumberingAsync(model);
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DocumentNumbering(DocumentNumberingView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var before = await _departmentSettingsService.GetDocumentNumberingConfigAsync(DepartmentId, true);
+			var result = await _documentNumberingService.SaveAsync(DepartmentId, UserId, new DocumentNumberingUpdate
+			{
+				YearStartMonth = model.YearStartMonth,
+				YearStartDay = model.YearStartDay,
+				YearLabel = model.YearLabel,
+				Patterns = (model.Rows ?? new List<DocumentNumberRow>()).Where(r => r != null).Select(r => r.ToUpdate()).ToList()
+			}, cancellationToken);
+
+			var posted = model.Rows ?? new List<DocumentNumberRow>();
+			var postedYearStart = new[] { model.YearStartMonth, model.YearStartDay, model.YearLabel };
+			// Show what was saved, not what was posted: a raised number left in its box would be resubmitted. A refused year start
+			// or pattern stays in its box for correcting.
+			ModelState.Clear();
+			model = new DocumentNumberingView();
+			await FillDocumentNumberingAsync(model);
+
+			if (result.YearStartRejected)
+			{
+				model.YearStartMonth = postedYearStart[0];
+				model.YearStartDay = postedYearStart[1];
+				model.YearLabel = postedYearStart[2];
+			}
+			foreach (var row in model.Rows)
+			{
+				var typed = posted.FirstOrDefault(p => p != null && p.Kind == row.Kind);
+				if (typed != null && (result.YearStartRejected || result.PatternsRejected.Contains(row.Kind)))
+				{
+					row.Pattern = typed.Pattern;
+					row.SequenceWidth = typed.SequenceWidth;
+				}
+			}
+
+			if (!result.YearStartRejected)
+			{
+				var after = await _departmentSettingsService.GetDocumentNumberingConfigAsync(DepartmentId, true);
+				SendProfileAudit(JsonConvert.SerializeObject(DocumentNumberingAudit(before)), JsonConvert.SerializeObject(DocumentNumberingAudit(after)));
+			}
+
+			var errors = new List<string>();
+			if (result.YearStartRejected)
+				errors.Add(_departmentLocalizer["DocumentNumberingYearStartInvalid"]);
+			if (result.PatternsRejected.Count > 0)
+				errors.Add(_departmentLocalizer["DocumentNumberingPatternsRejected"] + " (" + string.Join(", ", result.PatternsRejected.Select(DocumentNumberKindLabel)) + ")");
+			if (result.BelowCurrent.Count > 0)
+				errors.Add(_departmentLocalizer["DocumentNumberingBelowCurrent"] + " (" + string.Join(", ", result.BelowCurrent.Select(s => s.NextNumber)) + ")");
+			if (result.NotApplied > 0)
+				errors.Add(_departmentLocalizer["DocumentNumberingNotApplied"]);
+			if (errors.Count > 0)
+				model.ErrorMessage = string.Join(" ", errors);
+			// A refused year start saves nothing; otherwise anything listed above was held back from a save that went through.
+			if (!result.YearStartRejected)
+				model.Message = _departmentLocalizer[errors.Count == 0 ? "DocumentNumberingSaved" : "DocumentNumberingPartlySaved"];
+
+			return View(model);
+		}
+
+		/// <summary>The year start and each work order, invoice, bid and daily time report row as saved, with what it issues next.</summary>
+		private async Task FillDocumentNumberingAsync(DocumentNumberingView model)
+		{
+			var config = await _departmentSettingsService.GetDocumentNumberingConfigAsync(DepartmentId, true);
+			var yearStart = config.YearStart();
+			var now = DateTime.UtcNow;
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+
+			model.YearStartMonth = yearStart.Month;
+			model.YearStartDay = yearStart.Day;
+			model.YearLabel = (int)yearStart.Label;
+			model.PreviewDate = string.IsNullOrWhiteSpace(department?.TimeZone) ? now : DateTimeHelpers.GetLocalDateTime(now, department.TimeZone);
+			model.Rows = (await _documentNumberingService.GetStatusesAsync(DepartmentId, false, now))
+				.Select(s => DocumentNumberRow.From(s, DocumentNumberKindLabel(s.Kind))).ToList();
+		}
+
+		private string DocumentNumberKindLabel(string kind)
+		{
+			switch (kind)
+			{
+				case DocumentNumberKinds.WorkOrder: return _departmentLocalizer["DocumentNumberKindWorkOrder"];
+				case DocumentNumberKinds.Invoice: return _departmentLocalizer["DocumentNumberKindInvoice"];
+				case DocumentNumberKinds.Bid: return _departmentLocalizer["DocumentNumberKindBid"];
+				case DocumentNumberKinds.TimeReport: return _departmentLocalizer["DocumentNumberKindTimeReport"];
+				default: return kind;
+			}
+		}
+
+		private static object DocumentNumberingAudit(DocumentNumberingConfig config)
+		{
+			return new
+			{
+				DocumentNumberingYearStart = YearStartAudit(config.YearStart()),
+				DocumentNumberPatterns = (config.Patterns ?? new List<DocumentNumberPattern>()).Where(p => p != null)
+					.OrderBy(p => p.Kind, StringComparer.Ordinal).Select(p => p.Kind + " " + p.Pattern + " /" + p.SequenceWidth).ToList()
+			};
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> GetCallEmailTypes()
+		{
+			List<CallEmailTypesForJson> callEmailTypes = new List<CallEmailTypesForJson>();
+			var values = Enum.GetValues(typeof(CallEmailTypes)).Cast<CallEmailTypes>();
+
+			foreach (var v in values)
+			{
+				switch (v)
+				{
+					case CallEmailTypes.CalFireECC:
+						CallEmailTypesForJson calFireEcc = new CallEmailTypesForJson();
+						calFireEcc.Id = (int)v;
+						calFireEcc.Name = "CAL FIRE ECC";
+						calFireEcc.Code = v.ToString();
+						callEmailTypes.Add(calFireEcc);
+						break;
+					case CallEmailTypes.CarencroFire:
+						CallEmailTypesForJson carencroFire = new CallEmailTypesForJson();
+						carencroFire.Id = (int)v;
+						carencroFire.Name = "Carencro";
+						carencroFire.Code = v.ToString();
+						callEmailTypes.Add(carencroFire);
+						break;
+					case CallEmailTypes.Resgrid:
+						CallEmailTypesForJson resgrid = new CallEmailTypesForJson();
+						resgrid.Id = (int)v;
+						resgrid.Name = "Resgrid";
+						resgrid.Code = v.ToString();
+						callEmailTypes.Add(resgrid);
+						break;
+					case CallEmailTypes.GrandBlanc:
+						CallEmailTypesForJson grandBlanc = new CallEmailTypesForJson();
+						grandBlanc.Id = (int)v;
+						grandBlanc.Name = "Grand Blanc";
+						grandBlanc.Code = v.ToString();
+						callEmailTypes.Add(grandBlanc);
+						break;
+					case CallEmailTypes.Generic:
+						CallEmailTypesForJson generic = new CallEmailTypesForJson();
+						generic.Id = (int)v;
+						generic.Name = "Generic";
+						generic.Code = v.ToString();
+						callEmailTypes.Add(generic);
+						break;
+					case CallEmailTypes.LowestoftCoastGuard:
+						CallEmailTypesForJson lowestoftCoastGuard = new CallEmailTypesForJson();
+						lowestoftCoastGuard.Id = (int)v;
+						lowestoftCoastGuard.Name = "Lowestoft";
+						lowestoftCoastGuard.Code = v.ToString();
+						callEmailTypes.Add(lowestoftCoastGuard);
+						break;
+					case CallEmailTypes.UnionFire:
+						CallEmailTypesForJson unionFire = new CallEmailTypesForJson();
+						unionFire.Id = (int)v;
+						unionFire.Name = "Union Fire";
+						unionFire.Code = v.ToString();
+						callEmailTypes.Add(unionFire);
+						break;
+					case CallEmailTypes.ParklandCounty:
+						CallEmailTypesForJson parklandCounty = new CallEmailTypesForJson();
+						parklandCounty.Id = (int)v;
+						parklandCounty.Name = "Parkland Cty";
+						parklandCounty.Code = v.ToString();
+						callEmailTypes.Add(parklandCounty);
+						break;
+					case CallEmailTypes.GenericPage:
+						CallEmailTypesForJson genericPage = new CallEmailTypesForJson();
+						genericPage.Id = (int)v;
+						genericPage.Name = "Generic Page";
+						genericPage.Code = v.ToString();
+						callEmailTypes.Add(genericPage);
+						break;
+					case CallEmailTypes.Brockport:
+						CallEmailTypesForJson brockport = new CallEmailTypesForJson();
+						brockport.Id = (int)v;
+						brockport.Name = "Brockport";
+						brockport.Code = v.ToString();
+						callEmailTypes.Add(brockport);
+						break;
+					case CallEmailTypes.HancockCounty:
+						CallEmailTypesForJson hancock = new CallEmailTypesForJson();
+						hancock.Id = (int)v;
+						hancock.Name = "Hancock Cty";
+						hancock.Code = v.ToString();
+						callEmailTypes.Add(hancock);
+						break;
+					case CallEmailTypes.CalFireSCU:
+						CallEmailTypesForJson calFireSCU = new CallEmailTypesForJson();
+						calFireSCU.Id = (int)v;
+						calFireSCU.Name = "CAL FIRE SCU";
+						calFireSCU.Code = v.ToString();
+						callEmailTypes.Add(calFireSCU);
+						break;
+					case CallEmailTypes.Connect:
+						CallEmailTypesForJson connect = new CallEmailTypesForJson();
+						connect.Id = (int)v;
+						connect.Name = "Connect";
+						connect.Code = v.ToString();
+						callEmailTypes.Add(connect);
+						break;
+					case CallEmailTypes.SpottedDog:
+						CallEmailTypesForJson spottedDog = new CallEmailTypesForJson();
+						spottedDog.Id = (int)v;
+						spottedDog.Name = "Spotted Dog";
+						spottedDog.Code = v.ToString();
+						callEmailTypes.Add(spottedDog);
+						break;
+					case CallEmailTypes.PortJervis:
+						CallEmailTypesForJson portJervis = new CallEmailTypesForJson();
+						portJervis.Id = (int)v;
+						portJervis.Name = "PortJervis";
+						portJervis.Code = v.ToString();
+						callEmailTypes.Add(portJervis);
+						break;
+					case CallEmailTypes.Yellowhead:
+						CallEmailTypesForJson yellowhead = new CallEmailTypesForJson();
+						yellowhead.Id = (int)v;
+						yellowhead.Name = "Yellowhead";
+						yellowhead.Code = v.ToString();
+						callEmailTypes.Add(yellowhead);
+						break;
+					case CallEmailTypes.ParklandCounty2:
+						CallEmailTypesForJson parklandCounty2 = new CallEmailTypesForJson();
+						parklandCounty2.Id = (int)v;
+						parklandCounty2.Name = "Parkland Cty2";
+						parklandCounty2.Code = v.ToString();
+						callEmailTypes.Add(parklandCounty2);
+						break;
+					case CallEmailTypes.FourPartPipe:
+						CallEmailTypesForJson fourPartPipe = new CallEmailTypesForJson();
+						fourPartPipe.Id = (int)v;
+						fourPartPipe.Name = "Four Part Pipe";
+						fourPartPipe.Code = v.ToString();
+						callEmailTypes.Add(fourPartPipe);
+						break;
+					case CallEmailTypes.RandR:
+						CallEmailTypesForJson randr = new CallEmailTypesForJson();
+						randr.Id = (int)v;
+						randr.Name = "R&R";
+						randr.Code = v.ToString();
+						callEmailTypes.Add(randr);
+						break;
+					case CallEmailTypes.Active911:
+						CallEmailTypesForJson active911 = new CallEmailTypesForJson();
+						active911.Id = (int)v;
+						active911.Name = "Active911";
+						active911.Code = v.ToString();
+						callEmailTypes.Add(active911);
+						break;
+					case CallEmailTypes.OttawaCounty:
+						CallEmailTypesForJson ottawaCounty = new CallEmailTypesForJson();
+						ottawaCounty.Id = (int)v;
+						ottawaCounty.Name = "OttawaCounty";
+						ottawaCounty.Code = v.ToString();
+						callEmailTypes.Add(ottawaCounty);
+						break;
+					case CallEmailTypes.OttawaKingstonToronto:
+						CallEmailTypesForJson ottawaKingstonToronto = new CallEmailTypesForJson();
+						ottawaKingstonToronto.Id = (int)v;
+						ottawaKingstonToronto.Name = "OttawaKingstonToronto";
+						ottawaKingstonToronto.Code = v.ToString();
+						callEmailTypes.Add(ottawaKingstonToronto);
+						break;
+					case CallEmailTypes.AI:
+						// Enhanced AI (Enrich mode): offered only when rollout, module and entitlement allow it. A department that
+						// loses access keeps working, because the AI format builds the same call as Generic.
+						if (await _aiDispatchService.IsAvailableAsync(DepartmentId))
+						{
+							CallEmailTypesForJson ai = new CallEmailTypesForJson();
+							ai.Id = (int)v;
+							ai.Name = "Generic with AI enrichment (Enhanced AI)";
+							ai.Code = v.ToString();
+							callEmailTypes.Add(ai);
+						}
+						break;
+				}
+			}
+
+			return Json(callEmailTypes);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ClearDepartmentCache()
+		{
+			CqrsEvent clearDepartmentCacheEvent = new CqrsEvent();
+			clearDepartmentCacheEvent.Type = (int)CqrsEventTypes.ClearDepartmentCache;
+			clearDepartmentCacheEvent.Data = DepartmentId.ToString();
+
+			await _cqrsProvider.EnqueueCqrsEventAsync(clearDepartmentCacheEvent);
+
+			return Json("true");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteCallEmailSettings(CancellationToken cancellationToken)
+		{
+			await _departmentsService.DeleteDepartmentEmailSettingsAsync(DepartmentId, cancellationToken);
+
+			return RedirectToAction("CallSettings");
+		}
+
+		#endregion Call Settings
+
+		#region Unit Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> UnitSettings()
+		{
+			UnitSettingsView model = new UnitSettingsView();
+			model.UnitTypes = await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId);
+
+			return View(model);
+		}
+		#endregion Unit Settings
+
+		#region Types
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> Types()
+		{
+			var model = new DepartmentTypesView();
+			model.CertificationTypes = await _certificationService.GetAllCertificationTypesByDepartmentAsync(DepartmentId);
+			model.UnitTypes = await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId);
+			model.CallTypes = await _callsService.GetCallTypesForDepartmentAsync(DepartmentId);
+			model.DocumentCategories = await _documentsService.GetAllCategoriesByDepartmentIdAsync(DepartmentId);
+			model.NoteCategories = await _notesService.GetAllCategoriesByDepartmentIdAsync(DepartmentId);
+			model.ContactNoteTypes = await _contactsService.GetContactNoteTypesByDepartmentIdAsync(DepartmentId);
+
+			var states = new List<CustomState>();
+			states.Add(new CustomState
+			{
+				Name = "Standard Actions"
+			});
+			states.AddRange(await _customStateService.GetAllActiveUnitStatesForDepartmentAsync(DepartmentId));
+			model.States = states;
+
+			model.CallPriorites = await _callsService.GetActiveCallPrioritiesForDepartmentAsync(DepartmentId);
+
+			if (model.CallPriorites == null || !model.CallPriorites.Any())
+			{
+				model.CallPriorites = _callsService.GetDefaultCallPriorities();
+
+				//Sounds don't need to come back to the UI
+				foreach (var priority in model.CallPriorites)
+				{
+					priority.PushNotificationSound = null;
+					priority.ShortNotificationSound = null;
+				}
+			}
+
+			return View(model);
+		}
+
+		#endregion Types
+
+		#region Text Messaging
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> TextSettings()
+		{
+			var model = new TextSetupModel();
+
+			model.CanProvisionNumber = await _limitsService.CanDepartmentProvisionNumberAsync(DepartmentId);
+			model.DepartmentTextToCallNumber = await _departmentSettingsService.GetTextToCallNumberForDepartmentAsync(DepartmentId);
+			model.DepartmentTextToCallSourceNumbers = await _departmentSettingsService.GetTextToCallSourceNumbersForDepartmentAsync(DepartmentId);
+			model.EnableTextToCall = await _departmentSettingsService.GetDepartmentIsTextCallImportEnabledAsync(DepartmentId);
+			model.EnableTextCommand = await _departmentSettingsService.GetDepartmentIsTextCommandEnabledAsync(DepartmentId);
+
+			var textImportFormat = await _departmentSettingsService.GetTextToCallImportFormatForDepartmentAsync(DepartmentId);
+			if (textImportFormat.HasValue)
+				model.TextCallType = textImportFormat.Value;
+
+			return View(model);
+		}
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> TextSettings(TextSetupModel model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			model.CanProvisionNumber = await _limitsService.CanDepartmentProvisionNumberAsync(DepartmentId);
+			model.DepartmentTextToCallNumber = await _departmentSettingsService.GetTextToCallNumberForDepartmentAsync(DepartmentId);
+
+			var textImportFormat = await _departmentSettingsService.GetTextToCallImportFormatForDepartmentAsync(DepartmentId);
+			if (textImportFormat.HasValue)
+				model.TextCallType = textImportFormat.Value;
+
+			if (model.EnableTextCommand && model.EnableTextToCall && String.IsNullOrWhiteSpace(model.DepartmentTextToCallSourceNumbers))
+				ModelState.AddModelError("DepartmentTextToCallSourceNumbers",
+					"You have enabled Text-To-Call and Text Command, to prevent all personel command texts being imported as calls you must supply the phone numbers that text dispatches will orginiate from.");
+
+			if (ModelState.IsValid)
+			{
+				if (!String.IsNullOrWhiteSpace(model.DepartmentTextToCallSourceNumbers))
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.DepartmentTextToCallSourceNumbers, DepartmentSettingTypes.TextToCallSourceNumbers,
+						cancellationToken);
+				else
+					await _departmentSettingsService.DeleteSettingAsync(DepartmentId, DepartmentSettingTypes.TextToCallSourceNumbers, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.TextCallType.ToString(), DepartmentSettingTypes.TextToCallImportFormat,
+					cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.EnableTextToCall.ToString(), DepartmentSettingTypes.EnableTextToCall,
+					cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.EnableTextCommand.ToString(), DepartmentSettingTypes.EnableTextCommand,
+					cancellationToken);
+			}
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> GetAvailableNumbers(string country, string areaCode)
+		{
+			return Json(await _numbersService.GetAvailableNumbers(country, areaCode));
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProvisionNumber(string msisdn, string country, CancellationToken cancellationToken)
+		{
+			if (!await _limitsService.CanDepartmentProvisionNumberAsync(DepartmentId))
+				return RedirectToAction("Unauthorized", "Public", new { Area = "" });
+
+			var success = await _numbersService.ProvisionNumberAsync(DepartmentId, msisdn, country);
+
+			if (success)
+			{
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, "0", DepartmentSettingTypes.TextToCallImportFormat, cancellationToken);
+				return RedirectToAction("TextSettings");
+			}
+
+			return RedirectToAction("ProvisionFailed");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ProvisionDefaultNumberAsync(string country, string areaCode, CancellationToken cancellationToken)
+		{
+			if (!await _limitsService.CanDepartmentProvisionNumberAsync(DepartmentId))
+				return RedirectToAction("Unauthorized", "Public", new { Area = "" });
+
+			var numbers = await _numbersService.GetAvailableNumbers(country, areaCode);
+
+			if (numbers.Count > 0)
+			{
+				var success = await _numbersService.ProvisionNumberAsync(DepartmentId, numbers.First().msisdn, country);
+
+				if (success)
+				{
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, "0", DepartmentSettingTypes.TextToCallImportFormat, cancellationToken);
+
+					return Content(numbers.First().msisdn);
+				}
+			}
+
+			return Content("Could not provision number");
+		}
+
+		public async Task<IActionResult> ProvisionFailed()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> GetCallTextTypes()
+		{
+			var callEmailTypes = new List<CallEmailTypesForJson>();
+			var values = Enum.GetValues(typeof(CallTextTypes)).Cast<CallTextTypes>();
+
+			foreach (var v in values)
+			{
+				switch (v)
+				{
+					case CallTextTypes.Generic:
+						var generic = new CallEmailTypesForJson();
+						generic.Id = (int)v;
+						generic.Name = "Generic";
+						generic.Code = v.ToString();
+						callEmailTypes.Add(generic);
+						break;
+				}
+			}
+
+			return Json(callEmailTypes);
+		}
+
+		#endregion Text Messaging
+
+		#region Stations Grid
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> GetStationsForGrid()
+		{
+			var stations = new List<StationJson>();
+
+			var groups = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+
+			foreach (var group in groups)
+			{
+				var station = new StationJson();
+				station.GroupId = group.DepartmentGroupId;
+				station.Name = group.Name;
+
+				stations.Add(station);
+			}
+
+			return Json(stations);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public PartialViewResult SmallStationGroupsGrid()
+		{
+			return PartialView("_SmallStationGroupsGridPartial");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> GetDepartmentTypes()
+		{
+			return Json(new SelectList(DepartmentTypeCatalog.Values));
+		}
+
+		#endregion Stations Grid
+
+		#region Recipients
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> GetRecipientsForGrid(int filter = 0, bool filterSelf = false, bool filterNotInGroup = false, int ignoreGroupId = 0)
+		{
+			var result = new List<RecipientJson>();
+
+			// Repositories swallow DB exceptions and return null; treat as empty so a
+			// transient failure degrades to an empty grid instead of a 500.
+			var stations = await _departmentGroupsService.GetAllGroupsForDepartmentAsync(DepartmentId) ?? new List<DepartmentGroup>();
+			var roles = await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId) ?? new List<PersonnelRole>();
+			var profiles = await _userProfileService.GetAllProfilesForDepartmentAsync(DepartmentId) ?? new Dictionary<string, UserProfile>();
+
+			if (filter == 0 || filter == 1)
+			{
+				foreach (var s in stations)
+				{
+					var respondingTo = new RecipientJson();
+					respondingTo.Id = s.DepartmentGroupId.ToString();
+					respondingTo.Type = "Group";
+					respondingTo.Name = s.Name;
+
+					result.Add(respondingTo);
+				}
+			}
+
+			if (filter == 0 || filter == 2)
+			{
+				foreach (var r in roles)
+				{
+					var respondingTo = new RecipientJson();
+					respondingTo.Id = r.PersonnelRoleId.ToString();
+					respondingTo.Type = "Role";
+					respondingTo.Name = r.Name;
+
+					result.Add(respondingTo);
+				}
+			}
+
+			if (filter == 0 || filter == 3)
+			{
+				var groupUsers = stations.Where(x => x.DepartmentGroupId != ignoreGroupId).SelectMany(x => x.Members);
+
+				foreach (var p in profiles)
+				{
+					if (p.Value != null)
+					{
+						var respondingTo = new RecipientJson();
+						respondingTo.Id = p.Value.UserId.ToString();
+						respondingTo.Type = "Person";
+						respondingTo.Name = p.Value.FullName.AsFirstNameLastName;
+
+						if ((filterSelf && p.Value.UserId != UserId) ||
+						    (filterNotInGroup && !groupUsers.Any(x => x.UserId == p.Value.UserId)) ||
+						    (!filterSelf && !filterNotInGroup))
+							result.Add(respondingTo);
+						//else
+						//	result.Add(respondingTo);
+					}
+				}
+			}
+
+			return Json(result);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public PartialViewResult RecipientsGrid()
+		{
+			return PartialView("_RecipientsGridPartial");
+		}
+
+		#endregion Recipients
+
+		#region Aync Site Parts
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> GetSubscriptionLimitWarning()
+		{
+			if (!String.IsNullOrWhiteSpace(Config.NoticeConfig.DashboardToastNotice))
+				return Json(new { title = "System Notice", message = Config.NoticeConfig.DashboardToastNotice });
+
+			if (!await _limitsService.ValidateDepartmentIsWithinLimitsAsync(DepartmentId))
+				return Json(new
+				{
+					title = "Department Limits", message = "The department is at or has exceeded some limits for the current subscription plan. Some functionality may be impacted."
+				});
+
+			return Json(new { title = "", message = "" });
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<PartialViewResult> TopIconsArea()
+		{
+			TopIconsModel model = new TopIconsModel();
+			await model.SetMessages(UserId, DepartmentId);
+
+			return PartialView("_TopIconsPartial", model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> UpgradeButton()
+		{
+			if (!Config.SystemBehaviorConfig.RedirectHomeToLogin)
+			{
+				var plan = await _subscriptionsService.GetCurrentPlanForDepartmentAsync(DepartmentId);
+
+				if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin() && plan != null && plan.PlanId == 1)
+					return PartialView("_TopUpgradePartial");
+			}
+
+			return Content("<span></span>");
+		}
+
+		#endregion Aync Site Parts
+
+		#region Async Validation Methods
+
+		//[HttpPost]
+		//[Authorize(Policy = ResgridResources.Department_View)]
+		//public async Task<IActionResult> TestEmailSettings(EmailTestInput input)
+		//{
+		//	string returnText = "";
+
+		//	if (ModelState.IsValid)
+		//	{
+		//		var email = new DepartmentCallEmail();
+		//		email.Hostname = input.Hostname;
+		//		email.Port = input.Port;
+		//		email.UseSsl = input.Encryption;
+		//		email.Username = input.Username;
+		//		email.Password = input.Password;
+
+		//		returnText = await _emailService.TestEmailSettings(email);
+		//	}
+		//	else
+		//	{
+		//		returnText = "Please supply a hostname, username and password.";
+		//	}
+
+		//	return Content(returnText);
+		//}
+
+		[HttpPost]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> ValidateAddress(Address address)
+		{
+			string returnText = "";
+
+			//SJ: Disabling for now.
+			var result = await _addressService.IsAddressValidAsync(address);
+
+			if (result.ServiceSuccess && !result.AddressValid)
+				returnText = "Address looks like it might be invalid. Verify it before you continue.";
+
+			return Content(returnText);
+		}
+
+		#endregion Async Validation Methods
+
+		#region Setup Wizard
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		// The legacy modal and its untyped multi-entity SubmitSetupWizard writer were removed; each change is
+		// made on its owning, validated screen from the Setup Wizard journey.
+		public IActionResult SetupWizard() => RedirectToAction("SetupWizard", "AdminAssist", new { Area = "User" });
+
+		#endregion Setup Wizard
+
+		#region Shift Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ShiftSettings()
+		{
+			var model = new ShiftSettingsView();
+			model.AllowSignupsForMultipleShiftGroups = await _departmentSettingsService.GetAllowSignupsForMultipleShiftGroupsAsync(DepartmentId);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ShiftSettings(ShiftSettingsView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			if (ModelState.IsValid)
+			{
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.AllowSignupsForMultipleShiftGroups.ToString(),
+					DepartmentSettingTypes.AllowSignupsForMultipleShiftGroups, cancellationToken);
+
+				model.SaveSuccess = true;
+				return View(model);
+			}
+
+			model.SaveSuccess = false;
+			return View(model);
+		}
+
+		#endregion Shift Settings
+
+		#region Dispatch Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DispatchSettings()
+		{
+			var model = new DispatchSettingsView();
+
+			await PopulateDispatchSettingsSelectionsAsync(model);
+
+			model.DispatchShiftInsteadOfGroup = await _departmentSettingsService.GetDispatchShiftInsteadOfGroupAsync(DepartmentId);
+			model.AutoSetStatusForShiftPersonnel = await _departmentSettingsService.GetAutoSetStatusForShiftDispatchPersonnelAsync(DepartmentId);
+
+			var scopeConfig = await _departmentSettingsService.GetGroupDispatchScopeConfigAsync(DepartmentId, true);
+			model.GroupDispatchScopeEnabled = scopeConfig.Enabled;
+			model.GroupDispatchScopeRoleIds = scopeConfig.DepartmentWideRoleIds ?? new List<int>();
+			model.ShiftDispatchStatus = await _departmentSettingsService.GetShiftCallDispatchPersonnelStatusToSetAsync(DepartmentId);
+			model.ShiftClearStatus = await _departmentSettingsService.GetShiftCallReleasePersonnelStatusToSetAsync(DepartmentId);
+			model.UnitDispatchAlsoDispatchToAssignedPersonnel = await _departmentSettingsService.GetUnitDispatchAlsoDispatchToAssignedPersonnelAsync(DepartmentId);
+			model.UnitDispatchAlsoDispatchToGroup = await _departmentSettingsService.GetUnitDispatchAlsoDispatchToGroupAsync(DepartmentId);
+			model.UnitDispatchStatus = (await _departmentSettingsService.GetUnitCallDispatchStatusTargetAsync(DepartmentId)).ToStoredValue();
+			model.UnitClearStatus = (await _departmentSettingsService.GetUnitCallReleaseStatusTargetAsync(DepartmentId)).ToStoredValue();
+			model.PersonnelOnUnitSetUnitStatus = await _departmentSettingsService.GetPersonnelOnUnitSetUnitStatusAsync(DepartmentId);
+			model.StatusHoldToConfirm = await _departmentSettingsService.GetStatusHoldToConfirmAsync(DepartmentId, true);
+			model.CloseCallWhenUnitsClear = await _departmentSettingsService.GetCloseCallWhenUnitsClearAsync(DepartmentId, true);
+			model.AutoEnableCheckInTimers = await _departmentSettingsService.GetCheckInTimersAutoEnableForNewCallsAsync(DepartmentId);
+			model.NewCallFields = await BuildNewCallFieldRowsAsync();
+
+			await PopulateDispatchSettingsSupportingDataAsync(model);
+			await PopulateDispatchSettingsUnitTypeOverridesAsync(model,
+				await _departmentSettingsService.GetUnitCallStatusOverridesByUnitTypeAsync(DepartmentId));
+			await PopulateUnitStatusTargetsAsync(model);
+
+			await PopulateRunCardRecommendationSettingsAsync(model);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DispatchSettings(DispatchSettingsView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			await PopulateDispatchSettingsSelectionsAsync(model);
+			await PopulateDispatchSettingsSupportingDataAsync(model);
+
+			if (ModelState.IsValid)
+			{
+				model.UnitDispatchStatus = NormalizeUnitDispatchStatus(model.UnitDispatchStatus);
+				model.UnitClearStatus = NormalizeUnitDispatchStatus(model.UnitClearStatus);
+				var unitTypeStatusOverrides = await BuildValidUnitTypeStatusOverridesAsync(model);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.DispatchShiftInsteadOfGroup.ToString(),
+					DepartmentSettingTypes.DispatchShiftInsteadOfGroup, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.AutoSetStatusForShiftPersonnel.ToString(),
+					DepartmentSettingTypes.AutoSetStatusForShiftDispatchPersonnel, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.ShiftDispatchStatus.ToString(),
+					DepartmentSettingTypes.ShiftCallDispatchPersonnelStatusToSet, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.ShiftClearStatus.ToString(),
+					DepartmentSettingTypes.ShiftCallReleasePersonnelStatusToSet, cancellationToken);
+
+				// Only this department's roles can be made department-wide.
+				var departmentRoleIds = new HashSet<int>(model.PersonnelRoles.Select(r => r.PersonnelRoleId));
+				await _departmentSettingsService.SetGroupDispatchScopeConfigAsync(DepartmentId, new GroupDispatchScopeConfig
+				{
+					Enabled = model.GroupDispatchScopeEnabled,
+					DepartmentWideRoleIds = (model.GroupDispatchScopeRoleIds ?? new List<int>()).Where(departmentRoleIds.Contains).ToList()
+				}, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitDispatchAlsoDispatchToAssignedPersonnel.ToString(),
+					DepartmentSettingTypes.UnitDispatchAlsoDispatchToAssignedPersonnel, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitDispatchAlsoDispatchToGroup.ToString(),
+					DepartmentSettingTypes.UnitDispatchAlsoDispatchToGroup, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitDispatchStatus.ToString(),
+					DepartmentSettingTypes.UnitCallDispatchStatusToSet, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitClearStatus.ToString(),
+					DepartmentSettingTypes.UnitCallReleaseStatusToSet, cancellationToken);
+				await _departmentSettingsService.SetUnitCallStatusOverridesByUnitTypeAsync(DepartmentId, unitTypeStatusOverrides, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.PersonnelOnUnitSetUnitStatus.ToString(),
+					DepartmentSettingTypes.PersonnelOnUnitSetUnitStatus, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.StatusHoldToConfirm.ToString(),
+					DepartmentSettingTypes.StatusHoldToConfirm, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.CloseCallWhenUnitsClear.ToString(),
+					DepartmentSettingTypes.CloseCallWhenUnitsClear, cancellationToken);
+
+				// Save check-in timer auto-enable setting
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.AutoEnableCheckInTimers.ToString(),
+					DepartmentSettingTypes.CheckInTimersAutoEnableForNewCalls, cancellationToken);
+
+				await _departmentSettingsService.SaveNewCallFieldPolicyAsync(DepartmentId, new NewCallFieldPolicy
+				{
+					Rules = (model.NewCallFields ?? new List<NewCallFieldPolicyRow>())
+						.Select(x => new NewCallFieldRule { Key = x.Key, Visible = x.Visible, Required = x.Required })
+						.ToList()
+				}, cancellationToken);
+
+				if (await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId))
+				{
+					// Conditional run cards: their fields are only on the page with the feature on; otherwise keep the stored values.
+					var conditionsEnabled = await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCardConditions, DepartmentId);
+					var storedConfig = await _departmentSettingsService.GetDispatchRecommendationConfigAsync(DepartmentId, true);
+
+					var mode = Enum.IsDefined(typeof(DispatchRecommendationModes), model.DispatchRecommendationMode)
+						? (DispatchRecommendationModes)model.DispatchRecommendationMode
+						: Model.DispatchRecommendationModes.Off;
+
+					await _departmentSettingsService.SetDispatchRecommendationModeAsync(DepartmentId, mode, cancellationToken);
+					await _departmentSettingsService.SetDispatchRecommendationAutoDispatchAsync(DepartmentId, model.DispatchRecommendationAutoDispatch, cancellationToken);
+					await _departmentSettingsService.SetDispatchRecommendationConfigAsync(DepartmentId, new DispatchRecommendationConfig
+					{
+						MaxLocationAgeSeconds = Math.Max(0, model.RecommendationMaxLocationAgeSeconds),
+						MaxRadiusMeters = Math.Max(0, model.RecommendationMaxRadiusMeters),
+						IncludeStaleLocations = model.RecommendationIncludeStaleLocations,
+						PersonnelMaxLocationAgeSeconds = Math.Max(0, model.RecommendationPersonnelMaxLocationAgeSeconds),
+						UseRoutedEta = model.RecommendationUseRoutedEta,
+						EtaShortlistSize = model.RecommendationEtaShortlistSize > 0 ? model.RecommendationEtaShortlistSize : DispatchRecommendationConfig.DefaultEtaShortlistSize,
+						RestPeriodMinutes = Math.Max(0, model.RecommendationRestPeriodMinutes),
+						UnitMinimumStaffingLevel = Math.Max(0, model.RecommendationUnitMinimumStaffingLevel),
+						MoveUpRecommendationsEnabled = model.RecommendationMoveUpEnabled,
+						InQuartersTurnoutSeconds = Math.Max(0, model.RecommendationInQuartersTurnoutSeconds),
+						MobileTurnoutSeconds = Math.Max(0, model.RecommendationMobileTurnoutSeconds),
+						PersonnelTurnoutSeconds = conditionsEnabled ? Math.Max(0, model.RecommendationPersonnelTurnoutSeconds) : storedConfig.PersonnelTurnoutSeconds,
+						WaitingCallAutoDispatch = conditionsEnabled ? model.RecommendationWaitingCallAutoDispatch : storedConfig.WaitingCallAutoDispatch,
+						WaitingCallMaxResponseSeconds = conditionsEnabled ? Math.Max(0, model.RecommendationWaitingCallMaxResponseSeconds) : storedConfig.WaitingCallMaxResponseSeconds
+					}, cancellationToken);
+
+					if (conditionsEnabled)
+						await _departmentSettingsService.SetDispatchResponseCodesAsync(DepartmentId,
+							ParseResponseCodes(model.ResponseCodesJson, model.ResponseCodesShowToCrews,
+								await _departmentSettingsService.GetDispatchResponseCodesAsync(DepartmentId, true)), cancellationToken);
+				}
+
+				ModelState.Clear();
+				model.UnitTypeStatusOverrides = new List<UnitTypeDispatchStatusOverrideView>();
+				await PopulateDispatchSettingsUnitTypeOverridesAsync(model, unitTypeStatusOverrides);
+				await PopulateUnitStatusTargetsAsync(model);
+				// Reload the code catalog as stored, so the page carries the ids the save assigned.
+				model.ResponseCodesJson = null;
+				await PopulateRunCardRecommendationSettingsAsync(model, false);
+				model.SaveSuccess = true;
+				return View(model);
+			}
+
+			await PopulateDispatchSettingsUnitTypeOverridesAsync(model);
+			await PopulateUnitStatusTargetsAsync(model);
+			await PopulateRunCardRecommendationSettingsAsync(model, false);
+
+			// A rejected post redisplays the operator's own ticks -- they round-trip through model
+			// binding. Only rebuild from storage when nothing came back at all.
+			if (model.NewCallFields == null || model.NewCallFields.Count == 0)
+				model.NewCallFields = await BuildNewCallFieldRowsAsync();
+
+			model.SaveSuccess = false;
+			return View(model);
+		}
+
+		/// <summary>
+		/// The posted response code table as the catalog: codes trimmed and capped, blank rows dropped, duplicates (same code)
+		/// dropped, and stored ids kept so dispatches and package rows that refer to a code keep naming it. A code removed from
+		/// the table is kept as retired when it existed, so history stays readable.
+		/// </summary>
+		private static DispatchResponseCodesConfig ParseResponseCodes(string json, bool showToCrews, DispatchResponseCodesConfig stored)
+		{
+			var config = new DispatchResponseCodesConfig { ShowToCrews = showToCrews };
+			var existing = (stored?.Codes ?? new List<DispatchResponseCode>()).Where(c => c != null).ToList();
+			var nextId = existing.Any() ? existing.Max(c => c.Id) + 1 : 1;
+
+			List<DispatchResponseCode> posted;
+			try
+			{
+				posted = string.IsNullOrWhiteSpace(json) ? new List<DispatchResponseCode>() : JsonConvert.DeserializeObject<List<DispatchResponseCode>>(json) ?? new List<DispatchResponseCode>();
+			}
+			catch (JsonException)
+			{
+				// A malformed table keeps the stored catalog rather than wiping it.
+				return new DispatchResponseCodesConfig { ShowToCrews = showToCrews, Codes = existing };
+			}
+
+			var sort = 0;
+			foreach (var code in posted.Where(c => c != null && !string.IsNullOrWhiteSpace(c.Code)))
+			{
+				var text = code.Code.Trim();
+				if (text.Length > DispatchResponseCodesConfig.MaximumCodeLength)
+					text = text.Substring(0, DispatchResponseCodesConfig.MaximumCodeLength);
+
+				if (config.Codes.Any(c => string.Equals(c.Code, text, StringComparison.OrdinalIgnoreCase)) || config.Codes.Count >= DispatchResponseCodesConfig.MaximumCodes)
+					continue;
+
+				var name = code.Name?.Trim();
+				if (name != null && name.Length > DispatchResponseCodesConfig.MaximumNameLength)
+					name = name.Substring(0, DispatchResponseCodesConfig.MaximumNameLength);
+
+				var description = code.Description?.Trim();
+				if (description != null && description.Length > DispatchResponseCodesConfig.MaximumDescriptionLength)
+					description = description.Substring(0, DispatchResponseCodesConfig.MaximumDescriptionLength);
+
+				// A row without a stored id (added on the page, or posted again before a reload) keeps the id of the stored
+				// code with the same text, so dispatches and package rows that refer to it keep naming it.
+				var id = code.Id > 0 && existing.Any(c => c.Id == code.Id)
+					? code.Id
+					: existing.FirstOrDefault(c => string.Equals(c.Code, text, StringComparison.OrdinalIgnoreCase) && config.Codes.All(x => x.Id != c.Id))?.Id ?? nextId++;
+
+				config.Codes.Add(new DispatchResponseCode
+				{
+					Id = id,
+					Code = text,
+					Name = name,
+					Description = description,
+					Color = DispatchResponseCodesConfig.NormalizeColor(code.Color),
+					SortOrder = sort++,
+					Retired = code.Retired
+				});
+			}
+
+			foreach (var removed in existing.Where(e => config.Codes.All(c => c.Id != e.Id)))
+			{
+				if (config.Codes.Count >= DispatchResponseCodesConfig.MaximumCodes)
+					break;
+
+				removed.Retired = true;
+				removed.SortOrder = sort++;
+				config.Codes.Add(removed);
+			}
+
+			return config;
+		}
+
+		private async Task PopulateRunCardRecommendationSettingsAsync(DispatchSettingsView model, bool loadValues = true)
+		{
+			model.RunCardsFeatureEnabled = await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId);
+
+			if (!model.RunCardsFeatureEnabled)
+				return;
+
+			if (loadValues)
+			{
+				model.DispatchRecommendationMode = (int)await _departmentSettingsService.GetDispatchRecommendationModeAsync(DepartmentId, true);
+				model.DispatchRecommendationAutoDispatch = await _departmentSettingsService.GetDispatchRecommendationAutoDispatchAsync(DepartmentId, true);
+
+				var config = await _departmentSettingsService.GetDispatchRecommendationConfigAsync(DepartmentId, true);
+				model.RecommendationMaxLocationAgeSeconds = config.MaxLocationAgeSeconds;
+				model.RecommendationMaxRadiusMeters = config.MaxRadiusMeters;
+				model.RecommendationIncludeStaleLocations = config.IncludeStaleLocations;
+				model.RecommendationPersonnelMaxLocationAgeSeconds = config.PersonnelMaxLocationAgeSeconds;
+				model.RecommendationUseRoutedEta = config.UseRoutedEta;
+				model.RecommendationEtaShortlistSize = config.EtaShortlistSize;
+				model.RecommendationRestPeriodMinutes = config.RestPeriodMinutes;
+				model.RecommendationUnitMinimumStaffingLevel = config.UnitMinimumStaffingLevel;
+				model.RecommendationMoveUpEnabled = config.MoveUpRecommendationsEnabled;
+				model.RecommendationInQuartersTurnoutSeconds = config.InQuartersTurnoutSeconds;
+				model.RecommendationMobileTurnoutSeconds = config.MobileTurnoutSeconds;
+				model.RecommendationPersonnelTurnoutSeconds = config.PersonnelTurnoutSeconds;
+				model.RecommendationWaitingCallAutoDispatch = config.WaitingCallAutoDispatch;
+				model.RecommendationWaitingCallMaxResponseSeconds = config.WaitingCallMaxResponseSeconds;
+			}
+
+			model.RunCardConditionsFeatureEnabled = await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCardConditions, DepartmentId);
+
+			if (model.RunCardConditionsFeatureEnabled && (loadValues || string.IsNullOrWhiteSpace(model.ResponseCodesJson)))
+			{
+				var codes = await _departmentSettingsService.GetDispatchResponseCodesAsync(DepartmentId, true) ?? new DispatchResponseCodesConfig();
+				model.ResponseCodesShowToCrews = codes.ShowToCrews;
+				model.ResponseCodesJson = JsonConvert.SerializeObject((codes.Codes ?? new List<DispatchResponseCode>()).OrderBy(c => c.SortOrder).Select(c => new
+				{
+					id = c.Id, code = c.Code, name = c.Name, description = c.Description, color = c.Color, retired = c.Retired
+				}));
+			}
+
+			model.DispatchRecommendationModes = new SelectList(new[]
+			{
+				new SelectListItem { Value = ((int)Model.DispatchRecommendationModes.Off).ToString(), Text = "Off (Manual Dispatch)" },
+				new SelectListItem { Value = ((int)Model.DispatchRecommendationModes.StationBased).ToString(), Text = "Station Based Dispatching" },
+				new SelectListItem { Value = ((int)Model.DispatchRecommendationModes.ClosestUnit).ToString(), Text = HttpContext.WithDepartmentTerms("Closest Unit Response") }
+			}, "Value", "Text", model.DispatchRecommendationMode);
+
+			model.StaffingLevelOptions = new SelectList(new[]
+			{
+				new SelectListItem { Value = "0", Text = "Off (No Staffing Gate)" },
+				new SelectListItem { Value = ((int)UnitStaffingLevel.PartiallyStaffed).ToString(), Text = "At Least Partially Staffed" },
+				new SelectListItem { Value = ((int)UnitStaffingLevel.Degraded).ToString(), Text = "At Least Degraded" },
+				new SelectListItem { Value = ((int)UnitStaffingLevel.FullyStaffed).ToString(), Text = "Fully Staffed Only" }
+			}, "Value", "Text", model.RecommendationUnitMinimumStaffingLevel);
+
+			model.StationCoverageRequirements = await _runCardsService.GetStationCoverageRequirementsForDepartmentAsync(DepartmentId);
+			model.StationGroups = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId) ?? new List<DepartmentGroup>();
+			model.PersonnelRoles = await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId) ?? new List<PersonnelRole>();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SaveStationCoverageRequirement([FromForm] int stationCoverageRequirementId, [FromForm] int departmentGroupId,
+			[FromForm] int? unitTypeId, [FromForm] int? personnelRoleId, [FromForm] int minimumAvailableCount, [FromForm] int? radiusMeters,
+			[FromForm] bool isEnabled, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			if (!await _featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, DepartmentId))
+				return Json(new { success = false, message = "Run cards are not enabled for this department." });
+
+			var stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+			if (stations == null || stations.All(s => s.DepartmentGroupId != departmentGroupId))
+				return Json(new { success = false, message = "Invalid station group." });
+
+			if ((!unitTypeId.HasValue && !personnelRoleId.HasValue) || (unitTypeId.HasValue && personnelRoleId.HasValue))
+				return Json(new { success = false, message = "Select a unit type or a personnel role (not both)." });
+
+			if (unitTypeId.HasValue)
+			{
+				var unitTypes = await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId);
+				if (unitTypes == null || unitTypes.All(t => t.UnitTypeId != unitTypeId.Value))
+					return Json(new { success = false, message = "Invalid unit type." });
+			}
+
+			if (personnelRoleId.HasValue)
+			{
+				var roles = await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId);
+				if (roles == null || roles.All(r => r.PersonnelRoleId != personnelRoleId.Value))
+					return Json(new { success = false, message = "Invalid personnel role." });
+			}
+
+			if (minimumAvailableCount < 1)
+				return Json(new { success = false, message = "Minimum available count must be at least 1." });
+
+			var requirement = new StationCoverageRequirement
+			{
+				StationCoverageRequirementId = stationCoverageRequirementId,
+				DepartmentId = DepartmentId,
+				DepartmentGroupId = departmentGroupId,
+				UnitTypeId = unitTypeId,
+				PersonnelRoleId = personnelRoleId,
+				MinimumAvailableCount = minimumAvailableCount,
+				RadiusMeters = radiusMeters.HasValue && radiusMeters.Value > 0 ? radiusMeters : null,
+				IsEnabled = isEnabled
+			};
+
+			if (stationCoverageRequirementId > 0)
+			{
+				var existing = await _runCardsService.GetStationCoverageRequirementsForDepartmentAsync(DepartmentId);
+				if (existing.All(r => r.StationCoverageRequirementId != stationCoverageRequirementId))
+					return Json(new { success = false, message = "Coverage requirement not found." });
+			}
+
+			var saved = await _runCardsService.SaveStationCoverageRequirementAsync(requirement, cancellationToken);
+
+			return Json(new { success = true, id = saved.StationCoverageRequirementId });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteStationCoverageRequirement([FromForm] int stationCoverageRequirementId, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var deleted = await _runCardsService.DeleteStationCoverageRequirementAsync(stationCoverageRequirementId, DepartmentId, cancellationToken);
+
+			return Json(new { success = deleted });
+		}
+
+		private async Task PopulateDispatchSettingsSelectionsAsync(DispatchSettingsView model)
+		{
+			model.StatusLevels = await GetPersonnelDispatchStatusSelectListAsync(model);
+			model.UnitStatusLevels = await GetUnitDispatchStatusSelectListAsync();
+		}
+
+		private async Task<SelectList> GetPersonnelDispatchStatusSelectListAsync(DispatchSettingsView model)
+		{
+			var actionLogs = await _customStateService.GetActivePersonnelStateForDepartmentAsync(DepartmentId);
+			if (actionLogs == null)
+			{
+				var statuses = model.UserStatusTypes.ToSelectListInt().ToList();
+				statuses.Insert(0, new SelectListItem() { Value = "-1", Text = "Default" });
+				return new SelectList(statuses, "Value", "Text");
+			}
+
+			List<CustomStateDetail> statusesWithDefault = new List<CustomStateDetail>();
+			statusesWithDefault.Add(new CustomStateDetail() { CustomStateDetailId = -1, ButtonText = "Default" });
+			statusesWithDefault.AddRange(actionLogs.GetActiveDetails());
+
+			return new SelectList(statusesWithDefault, "CustomStateDetailId", "ButtonText");
+		}
+
+		private Task<SelectList> GetUnitDispatchStatusSelectListAsync()
+		{
+			var statuses = new List<SelectListItem>
+			{
+				new SelectListItem { Value = "-1", Text = "Default" }
+			};
+
+			foreach (var state in Enum.GetValues(typeof(UnitStateTypes)).Cast<UnitStateTypes>())
+			{
+				statuses.Add(new SelectListItem
+				{
+					Value = ((int)state).ToString(),
+					Text = state.DisplayName()
+				});
+			}
+
+			return Task.FromResult(new SelectList(statuses, "Value", "Text"));
+		}
+
+		private async Task PopulateDispatchSettingsSupportingDataAsync(DispatchSettingsView model)
+		{
+			// Needed before the save (to validate the department-wide dispatch roles) and whether or not
+			// run cards are enabled; the run card section loads the same list for its own use.
+			model.PersonnelRoles = (await _personnelRolesService.GetRolesForDepartmentAsync(DepartmentId) ?? new List<PersonnelRole>())
+				.OrderBy(r => r.Name).ToList();
+			model.TimerConfigs = await _checkInTimerService.GetTimerConfigsForDepartmentAsync(DepartmentId);
+			model.TimerOverrides = await _checkInTimerService.GetTimerOverridesForDepartmentAsync(DepartmentId);
+			model.UnitTypes = (await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId))?.ToList() ?? new List<UnitType>();
+			model.CallTypes = await _callsService.GetCallTypesForDepartmentAsync(DepartmentId) ?? new List<CallType>();
+			model.StateNames = new Dictionary<string, string>();
+
+			var personnelStatuses = await _customStateService.GetCustomPersonnelStatusesOrDefaultsAsync(DepartmentId);
+			foreach (var s in personnelStatuses)
+				model.StateNames[s.CustomStateDetailId.ToString()] = s.ButtonText;
+
+			var unitDefaults = _customStateService.GetDefaultUnitStatuses();
+			foreach (var s in unitDefaults)
+				model.StateNames.TryAdd(s.CustomStateDetailId.ToString(), s.ButtonText);
+
+			foreach (var ut in model.UnitTypes)
+			{
+				if (ut.CustomStatesId.HasValue && ut.CustomStatesId.Value > 0)
+				{
+					var customState = await _customStateService.GetCustomSateByIdAsync(ut.CustomStatesId.Value);
+					if (customState != null)
+					{
+						foreach (var detail in customState.GetActiveDetails())
+							model.StateNames.TryAdd(detail.CustomStateDetailId.ToString(), detail.ButtonText);
+					}
+				}
+			}
+
+			foreach (var baseType in Enum.GetValues(typeof(ActionBaseTypes)).Cast<ActionBaseTypes>().Where(x => x != ActionBaseTypes.None))
+				model.StateNames.TryAdd(StatusMatch.BaseTypeToken((int)baseType), StatusMeaningLabel(MeaningName(baseType)));
+		}
+
+		/// <summary>The label of a "b{n}" status-meaning entry: every status, built-in or custom, with that base type.</summary>
+		/// <summary>The localized name of a status meaning (the Custom Statuses strings), or its display name without one.</summary>
+		private string MeaningName(ActionBaseTypes baseType)
+		{
+			var name = _statusLocalizer?[baseType.ToString()];
+			return name == null || name.ResourceNotFound ? baseType.DisplayName() : name.Value;
+		}
+
+		private string StatusMeaningLabel(string meaning)
+		{
+			return string.Format(_departmentLocalizer["StatusMeaningOption"], meaning);
+		}
+
+		private async Task PopulateDispatchSettingsUnitTypeOverridesAsync(DispatchSettingsView model,
+			IEnumerable<UnitTypeCallStatusOverride> savedOverrides = null)
+		{
+			var postedOverrides = model.UnitTypeStatusOverrides?
+				.Where(x => x != null)
+				.GroupBy(x => x.UnitTypeId)
+				.ToDictionary(x => x.Key, x => x.Last()) ?? new Dictionary<int, UnitTypeDispatchStatusOverrideView>();
+			var overrideLookup = savedOverrides?
+				.Where(x => x != null)
+				.GroupBy(x => x.UnitTypeId)
+				.ToDictionary(x => x.Key, x => x.Last()) ?? new Dictionary<int, UnitTypeCallStatusOverride>();
+
+			model.UnitTypeStatusOverrides = new List<UnitTypeDispatchStatusOverrideView>();
+
+			foreach (var unitType in model.UnitTypes
+				.Where(x => x.CustomStatesId.HasValue && x.CustomStatesId.Value > 0)
+				.OrderBy(x => x.Type))
+			{
+				var availableStatuses = new List<SelectListItem>
+				{
+					new SelectListItem { Value = "-1", Text = "Default" }
+				};
+
+				var customState = await _customStateService.GetCustomSateByIdAsync(unitType.CustomStatesId.Value);
+				if (customState != null && !customState.IsDeleted)
+				{
+					foreach (var detail in customState.GetActiveDetails())
+					{
+						availableStatuses.Add(new SelectListItem
+						{
+							Value = detail.CustomStateDetailId.ToString(),
+							Text = detail.ButtonText
+						});
+					}
+				}
+
+				var overrideRow = new UnitTypeDispatchStatusOverrideView
+				{
+					UnitTypeId = unitType.UnitTypeId,
+					UnitTypeName = unitType.Type,
+					AvailableStatuses = availableStatuses
+				};
+
+				if (postedOverrides.TryGetValue(unitType.UnitTypeId, out var postedOverride))
+				{
+					overrideRow.DispatchStatus = postedOverride.DispatchStatus;
+					overrideRow.ReleaseStatus = postedOverride.ReleaseStatus;
+				}
+				else if (overrideLookup.TryGetValue(unitType.UnitTypeId, out var savedOverride))
+				{
+					overrideRow.DispatchStatus = savedOverride.DispatchStatus;
+					overrideRow.ReleaseStatus = savedOverride.ReleaseStatus;
+				}
+
+				model.UnitTypeStatusOverrides.Add(overrideRow);
+			}
+		}
+
+		private async Task<List<UnitTypeCallStatusOverride>> BuildValidUnitTypeStatusOverridesAsync(DispatchSettingsView model)
+		{
+			var overrides = new List<UnitTypeCallStatusOverride>();
+
+			if (model.UnitTypeStatusOverrides == null || !model.UnitTypeStatusOverrides.Any())
+				return overrides;
+
+			var unitTypesById = model.UnitTypes
+				.Where(x => x.CustomStatesId.HasValue && x.CustomStatesId.Value > 0)
+				.ToDictionary(x => x.UnitTypeId);
+
+			foreach (var row in model.UnitTypeStatusOverrides)
+			{
+				if (!unitTypesById.TryGetValue(row.UnitTypeId, out var unitType))
+					continue;
+
+				var validStateIds = new HashSet<int>();
+				var customState = await _customStateService.GetCustomSateByIdAsync(unitType.CustomStatesId.Value);
+
+				if (customState != null && !customState.IsDeleted)
+				{
+					foreach (var detail in customState.GetActiveDetails())
+						validStateIds.Add(detail.CustomStateDetailId);
+				}
+
+				var dispatchStatus = validStateIds.Contains(row.DispatchStatus) ? row.DispatchStatus : -1;
+				var releaseStatus = validStateIds.Contains(row.ReleaseStatus) ? row.ReleaseStatus : -1;
+
+				if (dispatchStatus < 0 && releaseStatus < 0)
+					continue;
+
+				overrides.Add(new UnitTypeCallStatusOverride
+				{
+					UnitTypeId = row.UnitTypeId,
+					DispatchStatus = dispatchStatus,
+					ReleaseStatus = releaseStatus
+				});
+			}
+
+			return overrides;
+		}
+
+		/// <summary>
+		/// Keeps a posted unit dispatch / release choice only when it is one the page offers: default, leave unchanged, a
+		/// status meaning (base type), or a built-in status saved before status meanings existed.
+		/// </summary>
+		private static int NormalizeUnitDispatchStatus(int status)
+		{
+			var target = StatusTarget.FromStoredValue(status);
+
+			if (target.Kind == StatusTargetKind.BuiltIn && !Enum.IsDefined(typeof(UnitStateTypes), target.Value))
+				return StatusTarget.DefaultValue;
+
+			return target.ToStoredValue();
+		}
+
+		/// <summary>The status meanings a unit dispatch / release setting offers (every base type with a system meaning).</summary>
+		private static IEnumerable<ActionBaseTypes> UnitStatusTargetBaseTypes()
+		{
+			return Enum.GetValues(typeof(ActionBaseTypes)).Cast<ActionBaseTypes>()
+				.Where(x => x != ActionBaseTypes.None && x != ActionBaseTypes.NotResponding);
+		}
+
+		/// <summary>
+		/// "Reset Staffing Level To": a staffing meaning ("b{n}"), which the reset resolves to the department's level with that
+		/// meaning when it runs (so it follows renamed or replaced levels), or one of the department's levels. A meaning no level
+		/// has is left out. <paramref name="saved"/> is selected (a value no longer offered stays as its own entry, so saving
+		/// the page doesn't change it); with nothing saved, Unavailable is preselected.
+		/// </summary>
+		private async Task<List<SelectListItem>> BuildStaffingResetOptionsAsync(CustomState staffingSet, string saved)
+		{
+			var meanings = new List<(string Value, string Text)>();
+			foreach (StaffingBaseTypes meaning in Enum.GetValues(typeof(StaffingBaseTypes)))
+			{
+				if (meaning != StaffingBaseTypes.None && (await _customStateService.ResolvePersonnelStaffingAsync(DepartmentId, meaning)).HasValue)
+					meanings.Add((StatusMatch.BaseTypeToken((int)meaning), StaffingMeaningName(meaning)));
+			}
+
+			var levels = staffingSet != null
+				? staffingSet.GetActiveDetails().Select(x => (x.CustomStateDetailId.ToString(), x.ButtonText)).ToList()
+				: Enum.GetValues(typeof(UserStateTypes)).Cast<UserStateTypes>().Select(x => (((int)x).ToString(), x.DisplayName())).ToList();
+
+			return BuildResetOptions(meanings, _departmentLocalizer["ResetStaffingMeaningGroup"], levels, _departmentLocalizer["ResetStaffingOptionGroup"],
+				saved, StatusMatch.BaseTypeToken((int)StaffingBaseTypes.Unavailable),
+				raw => Enum.IsDefined(typeof(UserStateTypes), raw) ? ((UserStateTypes)raw).DisplayName() : null,
+				meaning => Enum.IsDefined(typeof(StaffingBaseTypes), meaning) ? StaffingMeaningName((StaffingBaseTypes)meaning) : null);
+		}
+
+		/// <summary>"Reset Status To": the same as <see cref="BuildStaffingResetOptionsAsync"/> for statuses; Available is preselected.</summary>
+		private async Task<List<SelectListItem>> BuildStatusResetOptionsAsync(CustomState personnelSet, string saved)
+		{
+			var meanings = new List<(string Value, string Text)>();
+			foreach (ActionBaseTypes meaning in Enum.GetValues(typeof(ActionBaseTypes)))
+			{
+				if (meaning != ActionBaseTypes.None && (await _customStateService.ResolvePersonnelStatusAsync(DepartmentId, meaning)).HasValue)
+					meanings.Add((StatusMatch.BaseTypeToken((int)meaning), MeaningName(meaning)));
+			}
+
+			var statuses = personnelSet != null
+				? personnelSet.GetActiveDetails().Select(x => (x.CustomStateDetailId.ToString(), x.ButtonText)).ToList()
+				: Enum.GetValues(typeof(ActionTypes)).Cast<ActionTypes>().Select(x => (((int)x).ToString(), x.DisplayName())).ToList();
+
+			return BuildResetOptions(meanings, _departmentLocalizer["ResetStatusMeaningGroup"], statuses, _departmentLocalizer["ResetStatusOptionGroup"],
+				saved, StatusMatch.BaseTypeToken((int)ActionBaseTypes.Available),
+				raw => Enum.IsDefined(typeof(ActionTypes), raw) ? ((ActionTypes)raw).DisplayName() : null,
+				meaning => Enum.IsDefined(typeof(ActionBaseTypes), meaning) ? MeaningName((ActionBaseTypes)meaning) : null);
+		}
+
+		private List<SelectListItem> BuildResetOptions(List<(string Value, string Text)> meanings, string meaningGroupName, List<(string Value, string Text)> options,
+			string optionGroupName, string saved, string defaultValue, Func<int, string> builtInName, Func<int, string> meaningName)
+		{
+			var meaningGroup = new SelectListGroup { Name = meaningGroupName };
+			var optionGroup = new SelectListGroup { Name = optionGroupName };
+
+			var items = meanings.Select(x => new SelectListItem { Value = x.Value, Text = x.Text, Group = meaningGroup })
+				.Concat(options.Select(x => new SelectListItem { Value = x.Value, Text = x.Text, Group = optionGroup }))
+				.ToList();
+
+			if (!String.IsNullOrWhiteSpace(saved) && items.All(x => x.Value != saved.Trim()))
+			{
+				var meaning = StatusMatch.BaseTypeOf(saved);
+				var name = meaning.HasValue ? meaningName(meaning.Value) : int.TryParse(saved, out var raw) ? builtInName(raw) : null;
+				items.Add(new SelectListItem { Value = saved.Trim(), Text = string.Format(_departmentLocalizer["ResetTargetSavedOption"], name ?? saved.Trim()) });
+			}
+
+			var selected = !String.IsNullOrWhiteSpace(saved) ? saved.Trim() : items.Any(x => x.Value == defaultValue) ? defaultValue : items.FirstOrDefault()?.Value;
+			return SelectResetOption(items, selected);
+		}
+
+		private static List<SelectListItem> SelectResetOption(List<SelectListItem> items, string selected)
+		{
+			foreach (var item in items)
+				item.Selected = item.Value == selected;
+
+			return items;
+		}
+
+		/// <summary>The localized name of a staffing meaning (the Custom Statuses strings), or its display name without one.</summary>
+		private string StaffingMeaningName(StaffingBaseTypes baseType)
+		{
+			var name = _statusLocalizer?["Staffing" + baseType];
+			return name == null || name.ResourceNotFound ? baseType.DisplayName() : name.Value;
+		}
+
+		private List<SelectListItem> BuildUnitStatusTargetOptions(int storedValue, bool isDispatch)
+		{
+			var current = StatusTarget.FromStoredValue(storedValue);
+			var meaningGroup = new SelectListGroup { Name = _departmentLocalizer["UnitStatusTargetMeaningGroup"] };
+
+			var options = new List<SelectListItem>
+			{
+				new SelectListItem
+				{
+					Value = StatusTarget.DefaultValue.ToString(),
+					Text = _departmentLocalizer[isDispatch ? "UnitStatusTargetDefaultDispatch" : "UnitStatusTargetDefaultRelease"]
+				},
+				new SelectListItem { Value = StatusTarget.LeaveUnchangedValue.ToString(), Text = _departmentLocalizer["UnitStatusTargetLeaveUnchanged"] }
+			};
+
+			foreach (var baseType in UnitStatusTargetBaseTypes())
+			{
+				options.Add(new SelectListItem
+				{
+					Value = StatusTarget.ForBaseType(baseType).ToStoredValue().ToString(),
+					Text = MeaningName(baseType),
+					Group = meaningGroup
+				});
+			}
+
+			// A built-in status saved before status meanings existed stays selectable, so saving the page doesn't change it.
+			if (current.Kind == StatusTargetKind.BuiltIn && Enum.IsDefined(typeof(UnitStateTypes), current.Value))
+			{
+				options.Add(new SelectListItem
+				{
+					Value = current.Value.ToString(),
+					Text = string.Format(_departmentLocalizer["UnitStatusTargetLegacy"], ((UnitStateTypes)current.Value).DisplayName())
+				});
+			}
+
+			foreach (var option in options)
+				option.Selected = option.Value == current.ToStoredValue().ToString();
+
+			return options;
+		}
+
+		/// <summary>
+		/// The dispatch and release choices, plus a warning for each unit type whose status set can't carry them out: no
+		/// option with the meaning (its units keep their status), or several (the first by order is used). A unit type with
+		/// its own override for the action is left out: the override is what it gets.
+		/// </summary>
+		private async Task PopulateUnitStatusTargetsAsync(DispatchSettingsView model)
+		{
+			model.UnitDispatchStatusTargets = BuildUnitStatusTargetOptions(model.UnitDispatchStatus, true);
+			model.UnitReleaseStatusTargets = BuildUnitStatusTargetOptions(model.UnitClearStatus, false);
+			model.UnitStatusTargetWarnings = new List<string>();
+
+			var dispatchTarget = StatusTarget.FromStoredValue(model.UnitDispatchStatus);
+			var releaseTarget = StatusTarget.FromStoredValue(model.UnitClearStatus);
+			var overrides = (model.UnitTypeStatusOverrides ?? new List<UnitTypeDispatchStatusOverrideView>()).ToDictionary(x => x.UnitTypeId);
+
+			foreach (var unitType in (model.UnitTypes ?? new List<UnitType>()).Where(x => x != null).OrderBy(x => x.Type))
+			{
+				CustomState set = null;
+				if (unitType.CustomStatesId.HasValue && unitType.CustomStatesId.Value > 0)
+				{
+					set = await _customStateService.GetCustomSateByIdAsync(unitType.CustomStatesId.Value);
+					if (set != null && set.IsDeleted)
+						set = null;
+				}
+
+				overrides.TryGetValue(unitType.UnitTypeId, out var row);
+
+				if (row != null && set != null)
+				{
+					AddUnitStatusOverrideMeaningWarning(model, unitType, set, row.DispatchStatus, true);
+					AddUnitStatusOverrideMeaningWarning(model, unitType, set, row.ReleaseStatus, false);
+				}
+
+				if (row == null || row.DispatchStatus < 0)
+					AddUnitStatusTargetWarning(model, unitType, set, StatusTargetResolver.ResolveUnit(dispatchTarget, set,
+						StatusTargetResolver.DispatchDefaultChain, (int)UnitStateTypes.Responding), true,
+						dispatchTarget.Kind == StatusTargetKind.Default ? StatusTargetResolver.DispatchDefaultChain : null);
+
+				if (row == null || row.ReleaseStatus < 0)
+					AddUnitStatusTargetWarning(model, unitType, set, StatusTargetResolver.ResolveUnit(releaseTarget, set,
+						StatusTargetResolver.ReleaseDefaultChain, (int)UnitStateTypes.Released), false,
+						releaseTarget.Kind == StatusTargetKind.Default ? StatusTargetResolver.ReleaseDefaultChain : null);
+			}
+		}
+
+		/// <summary>
+		/// An override that sets a status with no meaning. Status timers, release rules and run cards read statuses by meaning,
+		/// so units put there are invisible to them (customer report, 2026-10-17: dispatched units were never timed).
+		/// </summary>
+		private void AddUnitStatusOverrideMeaningWarning(DispatchSettingsView model, UnitType unitType, CustomState set, int overrideStatus, bool isDispatch)
+		{
+			if (overrideStatus < 0)
+				return;
+
+			var option = set.GetActiveDetails().FirstOrDefault(x => x.CustomStateDetailId == overrideStatus);
+
+			if (option == null || option.BaseType >= 0)
+				return;
+
+			model.UnitStatusTargetWarnings.Add(string.Format(_departmentLocalizer["UnitStatusOverrideNoMeaning"], unitType.Type, option.ButtonText,
+				_departmentLocalizer[isDispatch ? "UnitStatusTargetActionDispatch" : "UnitStatusTargetActionRelease"]));
+		}
+
+		private void AddUnitStatusTargetWarning(DispatchSettingsView model, UnitType unitType, CustomState set, StatusTargetResolution resolution, bool isDispatch,
+			IReadOnlyList<ActionBaseTypes> defaultChain)
+		{
+			if (resolution.Issue == StatusTargetIssue.None)
+				return;
+
+			var action = _departmentLocalizer[isDispatch ? "UnitStatusTargetActionDispatch" : "UnitStatusTargetActionRelease"];
+			// The default looks for several meanings in turn; name them all when none matched.
+			var meaning = resolution.Issue == StatusTargetIssue.NoMatchingOption && defaultChain != null
+				? string.Join(" / ", defaultChain.Select(MeaningName))
+				: resolution.BaseType.HasValue ? MeaningName(resolution.BaseType.Value) : string.Empty;
+
+			if (resolution.Issue == StatusTargetIssue.SeveralMatchingOptions)
+			{
+				model.UnitStatusTargetWarnings.Add(string.Format(_departmentLocalizer["UnitStatusTargetSeveral"], unitType.Type, set?.Name,
+					resolution.Matches.Count, meaning, string.Join(", ", resolution.Matches.Select(x => x.ButtonText)), resolution.Matches[0].ButtonText, action));
+			}
+			else if (set != null)
+			{
+				model.UnitStatusTargetWarnings.Add(string.Format(_departmentLocalizer["UnitStatusTargetNoMatch"], unitType.Type, set.Name, meaning, action));
+			}
+			else
+			{
+				model.UnitStatusTargetWarnings.Add(string.Format(_departmentLocalizer["UnitStatusTargetNoBuiltIn"], unitType.Type, meaning, action));
+			}
+		}
+
+		#endregion Dispatch Settings
+
+		#region Check-In Timer Settings
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SaveCheckInTimerConfig(string configId, int timerTargetType, int? unitTypeId,
+			int durationMinutes, int warningThresholdMinutes, bool isEnabled, string activeForStates, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var config = new CheckInTimerConfig
+			{
+				CheckInTimerConfigId = string.IsNullOrWhiteSpace(configId) ? null : configId,
+				DepartmentId = DepartmentId,
+				TimerTargetType = timerTargetType,
+				UnitTypeId = unitTypeId,
+				DurationMinutes = durationMinutes,
+				WarningThresholdMinutes = warningThresholdMinutes,
+				IsEnabled = isEnabled,
+				ActiveForStates = string.IsNullOrWhiteSpace(activeForStates) ? null : activeForStates,
+				CreatedByUserId = UserId
+			};
+
+			try
+			{
+				await _checkInTimerService.SaveTimerConfigAsync(config, cancellationToken);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch (UnauthorizedAccessException)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction("DispatchSettings");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteCheckInTimerConfig(string configId, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			try
+			{
+				await _checkInTimerService.DeleteTimerConfigAsync(configId, DepartmentId, cancellationToken);
+			}
+			catch (UnauthorizedAccessException)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction("DispatchSettings");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> SaveCheckInTimerOverride(string overrideId, int? callTypeId, int? callPriority,
+			int timerTargetType, int? unitTypeId, int durationMinutes, int warningThresholdMinutes, bool isEnabled, string activeForStates, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var ovr = new CheckInTimerOverride
+			{
+				CheckInTimerOverrideId = string.IsNullOrWhiteSpace(overrideId) ? null : overrideId,
+				DepartmentId = DepartmentId,
+				CallTypeId = callTypeId,
+				CallPriority = callPriority,
+				TimerTargetType = timerTargetType,
+				UnitTypeId = unitTypeId,
+				DurationMinutes = durationMinutes,
+				WarningThresholdMinutes = warningThresholdMinutes,
+				IsEnabled = isEnabled,
+				ActiveForStates = string.IsNullOrWhiteSpace(activeForStates) ? null : activeForStates,
+				CreatedByUserId = UserId
+			};
+
+			try
+			{
+				await _checkInTimerService.SaveTimerOverrideAsync(ovr, cancellationToken);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
+			return RedirectToAction("DispatchSettings");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteCheckInTimerOverride(string overrideId, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			try
+			{
+				await _checkInTimerService.DeleteTimerOverrideAsync(overrideId, DepartmentId, cancellationToken);
+			}
+			catch (UnauthorizedAccessException)
+			{
+				return NotFound();
+			}
+
+			return RedirectToAction("DispatchSettings");
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<IActionResult> GetActiveStatesForTimerTarget(int timerTargetType, int? unitTypeId)
+		{
+			var states = new List<object>();
+
+			if (timerTargetType == (int)CheckInTimerTargetType.UnitType)
+			{
+				// Unit-type target: check if the selected unit type has a custom state set
+				if (unitTypeId.HasValue)
+				{
+					var unitTypes = await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId);
+					var unitType = unitTypes?.FirstOrDefault(ut => ut.UnitTypeId == unitTypeId.Value);
+
+					if (unitType?.CustomStatesId != null && unitType.CustomStatesId.Value > 0)
+					{
+						var customState = await _customStateService.GetCustomSateByIdAsync(unitType.CustomStatesId.Value);
+						if (customState != null)
+						{
+							foreach (var detail in customState.GetActiveDetails())
+							{
+								states.Add(new { id = detail.CustomStateDetailId.ToString(), text = detail.ButtonText });
+							}
+						}
+					}
+				}
+
+				// If no custom states found, use defaults
+				if (!states.Any())
+				{
+					var defaults = _customStateService.GetDefaultUnitStatuses();
+					foreach (var d in defaults)
+					{
+						states.Add(new { id = d.CustomStateDetailId.ToString(), text = d.ButtonText });
+					}
+				}
+			}
+			else
+			{
+				// Personnel-based targets: use custom personnel statuses or defaults
+				var personnelStatuses = await _customStateService.GetCustomPersonnelStatusesOrDefaultsAsync(DepartmentId);
+				foreach (var s in personnelStatuses)
+				{
+					states.Add(new { id = s.CustomStateDetailId.ToString(), text = s.ButtonText });
+				}
+			}
+
+			// Every status with a meaning, built-in or the department's own, in any status set (StatusMatch).
+			foreach (var baseType in Enum.GetValues(typeof(ActionBaseTypes)).Cast<ActionBaseTypes>()
+				.Where(x => x != ActionBaseTypes.None && (timerTargetType != (int)CheckInTimerTargetType.UnitType || x != ActionBaseTypes.NotResponding)))
+			{
+				states.Add(new { id = StatusMatch.BaseTypeToken((int)baseType), text = StatusMeaningLabel(MeaningName(baseType)) });
+			}
+
+			return Json(states);
+		}
+
+		#endregion Check-In Timer Settings
+
+		#region Mapping Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> MappingSettings()
+		{
+			var model = new MappingSettingsView();
+
+			model.PersonnelLocationTTL = await _departmentSettingsService.GetMappingPersonnelLocationTTLAsync(DepartmentId);
+			model.UnitLocationTTL = await _departmentSettingsService.GetMappingUnitLocationTTLAsync(DepartmentId);
+			model.PersonnelAllowStatusWithNoLocationToOverwrite = await _departmentSettingsService.GetMappingPersonnelAllowStatusWithNoLocationToOverwriteAsync(DepartmentId);
+			model.UnitAllowStatusWithNoLocationToOverwrite = await _departmentSettingsService.GetMappingUnitAllowStatusWithNoLocationToOverwriteAsync(DepartmentId);
+			model.UseMapboxOverride = await _departmentSettingsService.GetMappingUseMapboxOverrideAsync(DepartmentId);
+			model.MapboxStyleUrl = await _departmentSettingsService.GetMappingMapboxStyleUrlAsync(DepartmentId);
+			model.MapboxAccessToken = await _departmentSettingsService.GetMappingMapboxAccessTokenAsync(DepartmentId);
+			model.MapStyle = await _departmentSettingsService.GetMappingMapStyleAsync(DepartmentId, true);
+			model.MapStyleNight = await _departmentSettingsService.GetMappingMapStyleNightAsync(DepartmentId, true);
+			model.UnitStatusThresholds = await BuildUnitStatusThresholdRowsAsync();
+			var thresholds = await _departmentSettingsService.GetUnitStatusThresholdsAsync(DepartmentId);
+			model.UnitStatusAlertNoteRequirement = thresholds.AcknowledgementNoteRequirement;
+			await PopulateUnitStatusTimerWarningsAsync(model, thresholds);
+			await PopulateMapStyleContextAsync(model);
+
+			return View(model);
+		}
+
+		/// <summary>
+		/// Warnings under the timers grid for timers that can never fire: unit statuses with no meaning, and statuses units get
+		/// on dispatch that have no meaning or whose meaning has no timer. None while no timer is set.
+		/// </summary>
+		private async Task PopulateUnitStatusTimerWarningsAsync(MappingSettingsView model, UnitStatusThresholds thresholds)
+		{
+			model.UnitStatusTimerWarnings = new List<string>();
+
+			if (thresholds == null || thresholds.IsEmpty)
+				return;
+
+			try
+			{
+				var report = UnitStatusTimerCoverage.Check(thresholds,
+					await _unitsService.GetUnitTypesForDepartmentAsync(DepartmentId),
+					await _customStateService.GetAllActiveCustomStatesForDepartmentAsync(DepartmentId),
+					await _departmentSettingsService.GetUnitCallDispatchStatusTargetAsync(DepartmentId),
+					await _departmentSettingsService.GetUnitCallStatusOverridesByUnitTypeAsync(DepartmentId));
+
+				foreach (var untimed in report.UntimedDispatchStatuses)
+				{
+					var unitTypes = string.Join(", ", untimed.UnitTypes.Select(x => x.Type));
+					var status = untimed.Option?.ButtonText ?? ((UnitStateTypes)untimed.BuiltInStatus.GetValueOrDefault()).DisplayName();
+
+					model.UnitStatusTimerWarnings.Add(untimed.HasMeaning
+						? string.Format(_departmentLocalizer["UnitStatusTimerDispatchNoTimer"], unitTypes, status, MeaningName((ActionBaseTypes)untimed.BaseType))
+						: string.Format(_departmentLocalizer["UnitStatusTimerDispatchNoMeaning"], unitTypes, status));
+				}
+
+				foreach (var set in report.SetsWithoutMeanings)
+					model.UnitStatusTimerWarnings.Add(string.Format(_departmentLocalizer["UnitStatusTimerSetNoMeaning"], set.Set.Name,
+						string.Join(", ", set.UnitTypes.Select(x => x.Type)), string.Join(", ", set.Options.Select(x => x.ButtonText))));
+			}
+			catch (Exception ex)
+			{
+				// The warnings are advice; the settings page still has to open without them.
+				Logging.LogException(ex, $"{nameof(PopulateUnitStatusTimerWarningsAsync)}: timer coverage check failed for departmentId {DepartmentId}.");
+			}
+		}
+
+		/// <summary>
+		/// Server-side facts the map style section needs on every render (GET, saved POST and rejected
+		/// POST alike): none of them round-trip through the form.
+		/// </summary>
+		private async Task PopulateMapStyleContextAsync(MappingSettingsView model)
+		{
+			model.WebsiteSupportsMapStyle = Config.MappingConfig.HasSystemMapboxAccessToken(Config.InfoConfig.WebsiteKey);
+			model.PreviewAccessToken = Config.MappingConfig.GetWebsiteMapboxPublicAccessToken();
+
+			// Same system default the config API seeds, so a department with no center still previews somewhere real.
+			model.PreviewLatitude = 39.14086268299356;
+			model.PreviewLongitude = -119.7583809782715;
+
+			try
+			{
+				var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+				var coordinates = await _departmentSettingsService.GetMapCenterCoordinatesAsync(department);
+
+				if (coordinates?.Latitude != null && coordinates.Longitude != null)
+				{
+					model.PreviewLatitude = coordinates.Latitude.Value;
+					model.PreviewLongitude = coordinates.Longitude.Value;
+				}
+			}
+			catch (Exception ex)
+			{
+				// A preview centred on the default is better than a settings page that will not open.
+				Logging.LogException(ex, $"{nameof(PopulateMapStyleContextAsync)}: map center lookup failed for departmentId {DepartmentId}.");
+			}
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> MappingSettings(MappingSettingsView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			if (model.UseMapboxOverride)
+			{
+				if (String.IsNullOrWhiteSpace(model.MapboxStyleUrl))
+					ModelState.AddModelError(nameof(model.MapboxStyleUrl), "A Mapbox style url is required when the department override is enabled for website and mobile map rendering.");
+
+				if (String.IsNullOrWhiteSpace(model.MapboxAccessToken))
+					ModelState.AddModelError(nameof(model.MapboxAccessToken), "A Mapbox public access token is required when the department override is enabled for website and mobile map rendering.");
+
+				if (!String.IsNullOrWhiteSpace(model.MapboxStyleUrl) && !Config.MappingConfig.IsSupportedMapboxStyleUrl(model.MapboxStyleUrl))
+					ModelState.AddModelError(nameof(model.MapboxStyleUrl), "The Mapbox style url must be a mapbox://styles/... value or a https://api.mapbox.com/styles/v1/... url.");
+
+				// The token is handed to every member's browser and app, so only a public token may be saved;
+				// a secret (sk.) token pasted here would otherwise sit in settings unused at best.
+				if (!String.IsNullOrWhiteSpace(model.MapboxAccessToken) && !Config.MappingConfig.IsPublicMapboxAccessToken(model.MapboxAccessToken))
+					ModelState.AddModelError(nameof(model.MapboxAccessToken), "The Mapbox access token must be a public token starting with pk. Never use a secret (sk.) token here: it is sent to every member's browser and app.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				var savedThresholds = await _departmentSettingsService.SaveUnitStatusThresholdsAsync(DepartmentId, new UnitStatusThresholds
+				{
+					Thresholds = (model.UnitStatusThresholds ?? new List<UnitStatusThresholdRow>())
+						.Select(x => new UnitStatusThreshold
+						{
+							BaseType = x.BaseType,
+							// Entered in minutes, stored in seconds — the board works in seconds and a
+							// dispatcher should never have to think in them. Clamped to the largest minute
+							// count that still converts: the form binds a raw int, and without the ceiling a
+							// posted value over int.MaxValue / 60 wraps negative and silently reads as 0.
+							WarnSeconds = Math.Min(Math.Max(0, x.WarnMinutes), int.MaxValue / 60) * 60,
+							AlertSeconds = Math.Min(Math.Max(0, x.AlertMinutes), int.MaxValue / 60) * 60
+						})
+						.ToList(),
+					AcknowledgementNoteRequirement = model.UnitStatusAlertNoteRequirement
+				}, cancellationToken);
+
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.PersonnelLocationTTL.ToString(),
+					DepartmentSettingTypes.MappingPersonnelLocationTTL, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitLocationTTL.ToString(),
+					DepartmentSettingTypes.MappingUnitLocationTTL, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.PersonnelAllowStatusWithNoLocationToOverwrite.ToString(),
+					DepartmentSettingTypes.MappingPersonnelAllowStatusWithNoLocationToOverwrite, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UnitAllowStatusWithNoLocationToOverwrite.ToString(),
+					DepartmentSettingTypes.MappingUnitAllowStatusWithNoLocationToOverwrite, cancellationToken);
+				await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.UseMapboxOverride.ToString(),
+					DepartmentSettingTypes.MappingUseMapboxOverride, cancellationToken);
+				await _departmentSettingsService.SaveMappingMapStylesAsync(DepartmentId, model.MapStyle, model.MapStyleNight, cancellationToken);
+
+				if (model.UseMapboxOverride)
+				{
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.MapboxStyleUrl?.Trim(),
+						DepartmentSettingTypes.MappingMapboxStyleUrl, cancellationToken);
+					await _departmentSettingsService.SaveOrUpdateSettingAsync(DepartmentId, model.MapboxAccessToken?.Trim(),
+						DepartmentSettingTypes.MappingMapboxAccessToken, cancellationToken);
+				}
+				else
+				{
+					await _departmentSettingsService.DeleteSettingAsync(DepartmentId, DepartmentSettingTypes.MappingMapboxStyleUrl, cancellationToken);
+					await _departmentSettingsService.DeleteSettingAsync(DepartmentId, DepartmentSettingTypes.MappingMapboxAccessToken, cancellationToken);
+				}
+
+				model.MapStyle = MapStylePresets.Normalize(model.MapStyle);
+				model.MapStyleNight = MapStylePresets.Normalize(model.MapStyleNight);
+				await PopulateUnitStatusTimerWarningsAsync(model, savedThresholds);
+				await PopulateMapStyleContextAsync(model);
+
+				model.SaveSuccess = true;
+				return View(model);
+			}
+
+			// A rejected post redisplays the operator's own numbers -- they round-trip through model
+			// binding. Only rebuild from storage when nothing came back at all.
+			if (model.UnitStatusThresholds == null || model.UnitStatusThresholds.Count == 0)
+				model.UnitStatusThresholds = await BuildUnitStatusThresholdRowsAsync();
+
+			await PopulateUnitStatusTimerWarningsAsync(model, await _departmentSettingsService.GetUnitStatusThresholdsAsync(DepartmentId));
+			await PopulateMapStyleContextAsync(model);
+
+			model.SaveSuccess = false;
+			return View(model);
+		}
+
+		#endregion Mapping Settings
+
+		#region Delete Department
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteDepartment()
+		{
+			DeleteDepartmentView model = new DeleteDepartmentView();
+			model.CurrentDeleteRequest = await _queueService.GetPendingDeleteDepartmentQueueItemAsync(DepartmentId);
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId);
+			model.RecordsImpact = await _deleteService.GetDepartmentDeletionRecordsImpactAsync(DepartmentId);
+
+			if (model.CurrentDeleteRequest != null)
+			{
+				model.Profile = await _userProfileService.GetProfileByUserIdAsync(model.CurrentDeleteRequest.QueuedByUserId);
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> DeleteDepartment(DeleteDepartmentView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			if (model.AreYouSure == false)
+				ModelState.AddModelError("AreYouSure", "You need to confirm the delete.");
+
+			if (ModelState.IsValid)
+			{
+				var result = await _deleteService.DeleteDepartment(DepartmentId, UserId, IpAddressHelper.GetRequestIP(Request, true),
+					$"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}", cancellationToken);
+
+				// The service decides who may delete the department (the managing member). Billing is only cancelled once it has
+				// accepted the request; a refused request must leave the subscription and add-ons untouched.
+				if (result != DeleteDepartmentResults.NoFailure)
+					return Unauthorized();
+
+				var stripeCustomer = await _departmentSettingsService.GetStripeCustomerIdForDepartmentAsync(DepartmentId);
+				var currentSub = await _subscriptionsService.GetActiveStripeSubscriptionAsync(stripeCustomer);
+				var pttSub = await _subscriptionsService.GetActivePTTStripeSubscriptionAsync(stripeCustomer);
+
+				if (pttSub != null)
+				{
+					PlanAddon addon = new PlanAddon();
+					await _subscriptionsService.ModifyPTTAddonSubscriptionAsync(stripeCustomer, 0, addon);
+				}
+
+				if (currentSub != null)
+				{
+					await _subscriptionsService.CancelSubscriptionAsync(stripeCustomer);
+				}
+
+				return RedirectToAction("Settings", "Department", new { area = "User" });
+			}
+
+			model.RecordsImpact = await _deleteService.GetDepartmentDeletionRecordsImpactAsync(DepartmentId);
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> CancelDepartmentDeleteRequest(CancellationToken cancellationToken)
+		{
+			var queueItem = await _queueService.GetPendingDeleteDepartmentQueueItemAsync(DepartmentId);
+
+			if (queueItem != null)
+			{
+				try
+				{
+					var profile = await _userProfileService.GetProfileByUserIdAsync(UserId);
+
+					if (profile == null)
+						return NotFound();
+
+					var cancelledItem = await _queueService.CancelPendingDepartmentDeletionRequest(DepartmentId, profile.FullName.AsFirstNameLastName, cancellationToken);
+
+					// Only audit when the cancellation actually persisted; a null result means no
+					// pending request was updated, so a success audit would be a false trail.
+					if (cancelledItem != null)
+					{
+						var auditEvent = new AuditEvent();
+						auditEvent.Before = queueItem.CloneJsonToString();
+						auditEvent.DepartmentId = DepartmentId;
+						auditEvent.UserId = UserId;
+						auditEvent.Type = AuditLogTypes.DeleteDepartmentRequestedCancelled;
+						auditEvent.After = cancelledItem.CloneJsonToString();
+						auditEvent.Successful = true;
+						auditEvent.IpAddress = IpAddressHelper.GetRequestIP(Request, true);
+						auditEvent.ServerName = Environment.MachineName;
+						auditEvent.UserAgent = $"{Request.Headers["User-Agent"]} {Request.Headers["Accept-Language"]}";
+						_eventAggregator.SendMessage<AuditEvent>(auditEvent);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logging.LogException(ex, $"DepartmentController::CancelDepartmentDeleteRequest failed for DepartmentId {DepartmentId} by UserId {UserId}");
+				}
+			}
+
+			return RedirectToAction("Settings", "Department", new { area = "User" });
+		}
+
+		#endregion Delete Department
+
+		#region Terminology
+		// The page names Resgrid's own terms next to the department's, so its text keeps Resgrid's wording.
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		[Resgrid.Web.Filters.SuppressDepartmentTerms]
+		public async Task<IActionResult> Terminology()
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			return View(TerminologyView.From(await _departmentSettingsService.GetDepartmentTerminologyAsync(DepartmentId, true)));
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		[Resgrid.Web.Filters.SuppressDepartmentTerms]
+		public async Task<IActionResult> Terminology(TerminologyView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			var before = await _departmentSettingsService.GetDepartmentTerminologyAsync(DepartmentId, true);
+			var posted = (model?.Terms ?? new List<TerminologyRow>()).Where(r => r != null && DepartmentTerms.IsKnown(r.Key))
+				.GroupBy(r => r.Key, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.Last(), StringComparer.Ordinal);
+
+			// Start from what is saved so a term missing from the post keeps its names; a name over the limit keeps the saved ones.
+			var config = new DepartmentTerminologyConfig();
+			var tooLong = new List<string>();
+			var badCharacters = false;
+			foreach (var term in DepartmentTerms.All)
+			{
+				if (!posted.TryGetValue(term.Key, out var row))
+				{
+					config.Set(term.Key, before.TextFor(term.Key), before.SavedSingularFor(term.Key));
+					continue;
+				}
+
+				var normalized = DepartmentTerms.Normalize(row.Text);
+				var normalizedSingular = term.HasSingular ? DepartmentTerms.Normalize(row.Singular) : null;
+				if (!DepartmentTerms.IsValidText(normalized) || !DepartmentTerms.IsValidText(normalizedSingular))
+				{
+					badCharacters |= DepartmentTerms.HasForbiddenCharacters(normalized) || DepartmentTerms.HasForbiddenCharacters(normalizedSingular);
+					tooLong.Add(term.Key);
+					config.Set(term.Key, before.TextFor(term.Key), before.SavedSingularFor(term.Key));
+					continue;
+				}
+
+				config.Set(term.Key, normalized, normalizedSingular);
+			}
+
+			await _departmentSettingsService.SetDepartmentTerminologyAsync(DepartmentId, config, cancellationToken);
+			SendProfileAudit(JsonConvert.SerializeObject(TerminologyAudit(before)), JsonConvert.SerializeObject(TerminologyAudit(config)));
+
+			// Show what was saved; a refused name stays in its box for correcting.
+			ModelState.Clear();
+			var view = TerminologyView.From(config);
+			foreach (var row in view.Terms.Where(r => tooLong.Contains(r.Key)))
+			{
+				row.Text = posted[row.Key].Text;
+				row.Singular = posted[row.Key].Singular;
+			}
+
+			if (tooLong.Count > 0)
+				view.ErrorMessage = badCharacters
+					? _departmentLocalizer["TerminologyInvalidCharacters"].Value
+					: string.Format(_departmentLocalizer["TerminologyTooLong"].Value, DepartmentTerms.MaxLength);
+			view.Message = _departmentLocalizer[tooLong.Count == 0 ? "TerminologySaved" : "TerminologyPartlySaved"];
+
+			return View(view);
+		}
+
+		private static Dictionary<string, string> TerminologyAudit(DepartmentTerminologyConfig config)
+		{
+			var audit = DepartmentTerms.All.Select(t => new { t.Key, Text = config?.TextFor(t.Key) }).Where(t => t.Text != null)
+				.ToDictionary(t => t.Key, t => t.Text, StringComparer.Ordinal);
+			foreach (var term in DepartmentTerms.All.Where(t => t.HasSingular))
+			{
+				var singular = config?.SavedSingularFor(term.Key);
+				if (singular != null)
+					audit[term.Key + ".singular"] = singular;
+			}
+
+			return audit;
+		}
+		#endregion Terminology
+
+		#region Module Settings
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ModuleSettings()
+		{
+			var model = new DepartmentModulesSettingView();
+			model.Modules = await _departmentSettingsService.GetDepartmentModuleSettingsAsync(DepartmentId);
+
+			model.MessagingEnabled = !model.Modules.MessagingDisabled;
+			model.MappingEnabled = !model.Modules.MappingDisabled;
+			model.ShiftsEnabled = !model.Modules.ShiftsDisabled;
+			model.LogsEnabled = !model.Modules.LogsDisabled;
+			model.ReportsEnabled = !model.Modules.ReportsDisabled;
+			model.DocumentsEnabled = !model.Modules.DocumentsDisabled;
+			model.CalendarEnabled = !model.Modules.CalendarDisabled;
+			model.NotesEnabled = !model.Modules.NotesDisabled;
+			model.TrainingEnabled = !model.Modules.TrainingDisabled;
+			model.InventoryEnabled = !model.Modules.InventoryDisabled;
+			model.MaintenanceEnabled = !model.Modules.MaintenanceDisabled;
+			model.ChecklistsEnabled = !model.Modules.ChecklistsDisabled;
+			model.BusinessOperationsEnabled = !model.Modules.BusinessOperationsDisabled;
+			model.AiEnabled = !model.Modules.AiDisabled;
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> ModuleSettings(DepartmentModulesSettingView model, CancellationToken cancellationToken)
+		{
+			if (!await _authorizationService.CanUserModifyDepartmentAsync(UserId, DepartmentId))
+				return Unauthorized();
+
+			if (ModelState.IsValid)
+			{
+				var modules = await _departmentSettingsService.GetDepartmentModuleSettingsAsync(DepartmentId);
+
+				modules.MessagingDisabled = !model.MessagingEnabled;
+				modules.MappingDisabled = !model.MappingEnabled;
+				modules.ShiftsDisabled = !model.ShiftsEnabled;
+				modules.LogsDisabled = !model.LogsEnabled;
+				modules.ReportsDisabled = !model.ReportsEnabled;
+				modules.DocumentsDisabled = !model.DocumentsEnabled;
+				modules.CalendarDisabled = !model.CalendarEnabled;
+				modules.NotesDisabled = !model.NotesEnabled;
+				modules.TrainingDisabled = !model.TrainingEnabled;
+				modules.InventoryDisabled = !model.InventoryEnabled;
+				modules.MaintenanceDisabled = !model.MaintenanceEnabled;
+				modules.ChecklistsDisabled = !model.ChecklistsEnabled;
+				modules.BusinessOperationsDisabled = !model.BusinessOperationsEnabled;
+				modules.AiDisabled = !model.AiEnabled;
+
+				await _departmentSettingsService.SetDepartmentModuleSettingsAsync(DepartmentId, modules, cancellationToken);
+
+				model.SaveSuccess = true;
+				return View(model);
+			}
+
+			model.SaveSuccess = false;
+			return View(model);
+		}
+		#endregion Module Settings
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Department_Update)]
+		public async Task<IActionResult> GetPrinterNetPrinters(string key)
+		{
+			return Json(await _printerProvider.GetPrinters(key));
+		}
+	}
+}

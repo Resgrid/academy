@@ -1,0 +1,56 @@
+{
+  "kind": "unadopted_native_v2_proposal_review",
+  "proposal_only": true,
+  "publishable": false,
+  "real_native_sample_validated": false,
+  "existing_gates_renderer_exporter_site_unchanged": true,
+  "tests": {
+    "new_v2_focused_passed": 21,
+    "combined_v1_v2_passed": 53,
+    "fixtures": "Synthetic temporary PNG/MachO/plist/receipts only; no app, simulator, browser, network or actual native evidence operated."
+  },
+  "files": [
+    {
+      "file": "production/proposals/native_capture_contract_v2.py",
+      "sha256": "88c4aa6b82b88a75625d53c5a44e231731b254ac0f4f9dec62f95ef1b0e1551a"
+    },
+    {
+      "file": "production/proposals/tests/test_native_capture_contract_v2.py",
+      "sha256": "41090387c94301fc2bf820b9b40b95f1e02bc2cd2a0cf80ccea20394630f67c5"
+    },
+    {
+      "file": "production/proposals/README.native-capture-contract-v2.md",
+      "sha256": "bca2086c6a085f9dbd3a412de47ab4a5cec07b1904c4dc0d9b4c22f6028cf21b"
+    },
+    {
+      "file": "production/proposals/native_capture_contract_v2.checkpoint.json",
+      "sha256": "8a5d09f3f5e1e142a9bb9d041790b3e5c27d09f8fc81fe21a5b858ccd5ae1259"
+    },
+    {
+      "file": "production/proposals/native_capture_contract_v1.py",
+      "sha256": "d44bd21e747e6ec583db7c8eb82cba92b1ecb2c8a449d286a3965b4dab7b87ad"
+    },
+    {
+      "file": "production/proposals/tests/test_native_capture_contract_v1.py",
+      "sha256": "bf7f00aa12c5046f594969eb31b45aaf59498cecfecb758374f98bca37352059"
+    }
+  ],
+  "api": [
+    "validate(document, roots, now=None)",
+    "propose_landscape_fit(document, roots, now=None)",
+    "stream_hash(byte_chunks)",
+    "review_digest(document)",
+    "build_digest(build)",
+    "source_identity_digest(build)"
+  ],
+  "rationale": [
+    "Stream receipts retain only complete decoded-body SHA/bytes/times and target digest/category; no key-bearing bundle body, URL/query/header/file retention.",
+    "Receipts explicitly do not authenticate client or prove execution; separate current-session load-set and binary/source/module identity review required; lazy entry-only coverage rejected.",
+    "Measured PNG pixels and native DPR/screen/window points must agree on both axes. Portrait trace cannot become landscape fit.",
+    "Fit keeps raw_pixel_scale distinct from output_pixels_per_logical_point, preserves fullPNG with no crop, minimum logical/output geometry and all source/metadata/build/label/review/fit digests.",
+    "Future actual master/frame/caption/legibility and playback gates remain independent and require root review before adoption."
+  ],
+  "current_native_owner_observation": "Owner reports a real landscape startup PNG but a blocking render error; it remains diagnostic, never operational footage. Logical geometry receipt and captured-load identity still require real verification.",
+  "adopted": false,
+  "root_review_required_before_any_integration": true
+}

@@ -1,0 +1,82 @@
+{
+  "database": "resgrid_academy",
+  "department_id": 51,
+  "name": "TRAINING — Academy signup practice",
+  "shift_id": 51003,
+  "shift_day_id": 51108,
+  "day": "2026-10-27",
+  "start_time": "13:00",
+  "end_time": "15:00",
+  "shift_group_id": 51003,
+  "department_group_id": 51001,
+  "required_role": "Chief",
+  "capacity_requirement": 2,
+  "requires_approval": false,
+  "standing_assignment_count": 0,
+  "current_enrollment_count": 0,
+  "seed_added_enrollments": 0,
+  "existing_staffing_preserved": true,
+  "delivery": "Fixture rows only; no provider, queue, email, SMS or push operation",
+  "prepared_at": "2026-10-26T18:38:53.044262+00:00",
+  "seed_script": "scenarios/responder_readiness.py",
+  "seed_script_sha256": "58c7dee9a34d549d8cf6e9eaebae84248d8d9c0ccb42641471abb8603b0888b5",
+  "sql_sha256": "1f0886154d643b684e70fcde89448b5ab5e69379ff347c46ff7412c6dae6cdcd",
+  "source_contract": [
+    "Core/Resgrid.Model/Shift.cs",
+    "Core/Resgrid.Model/ShiftGroupRole.cs",
+    "Core/Resgrid.Services/ShiftsService.Scheduling.cs",
+    "Web/Resgrid.Web.Services/Controllers/V4/ShiftsController.cs"
+  ],
+  "ui_actions": [
+    {
+      "action": "Reviewed team and confirmed actual fictional signup",
+      "capture_id": "100-signup-team-confirmation",
+      "captured_at": "2026-10-26T17:24:50.009Z",
+      "screenshot_sha256": "05cebfe988960ef21fb3c51ceaa536a19957a18748754a1c59af838a621d603b",
+      "url": "http://localhost:19102/shifts"
+    },
+    {
+      "action": "Actual roster contains Boden, one slot remains",
+      "capture_id": "101-signup-result",
+      "captured_at": "2026-10-26T17:24:57.892Z",
+      "screenshot_sha256": "38920c6a466dd654720e67b93c995fd5fc210d7083e6ee71a31a61846a6c31f6",
+      "url": "http://localhost:19102/shifts"
+    },
+    {
+      "action": "Opened withdrawal confirmation",
+      "capture_id": "102-signup-withdraw-confirmation",
+      "captured_at": "2026-10-26T17:25:26.722Z",
+      "screenshot_sha256": "14996f284568599b4a498714f091bcbfc98c6017f2e9246afde8751769b0942b",
+      "url": "http://localhost:19102/shifts"
+    },
+    {
+      "action": "Actual withdrawal removed Boden, two slots remain",
+      "capture_id": "103-signup-withdrawn-result",
+      "captured_at": "2026-10-26T17:25:41.834Z",
+      "screenshot_sha256": "6ac706dd84d33536b1b46f3df6e8d884dcccecf4c22d0476e70fa7e027768632",
+      "url": "http://localhost:19102/shifts"
+    },
+    {
+      "action": "Re-enrolled Boden through normal UI solely to inspect practice-day trade eligibility",
+      "capture_id": "185-trade-practice-signup",
+      "captured_at": "2026-10-26T19:37:23.459Z",
+      "screenshot_sha256": "0b5960691954d5b358b0203bcddec719e3e55eab85f20ecd7a0249761398b6e4",
+      "url": "http://localhost:19102/shifts"
+    },
+    {
+      "action": "Actual candidate list empty; Send request disabled, no trade created",
+      "capture_id": "188-trade-ineligible-dark",
+      "captured_at": "2026-10-26T19:38:46.563Z",
+      "screenshot_sha256": "8ad2288c3dfae84606fd22c8f6748cd63e200110c24dbb7f38fd466941cf58a8",
+      "url": "http://localhost:19102/shifts"
+    },
+    {
+      "action": "Withdrew only the new practice enrollment, restoring empty capacity2",
+      "capture_id": "189-practice-day-restored",
+      "captured_at": "2026-10-26T19:39:16.860Z",
+      "screenshot_sha256": "2677628f512f3b0a8d56426670fc965e2430d29fb71982ffc6822dae27f6927a",
+      "url": "http://localhost:19102/shifts"
+    }
+  ],
+  "last_actual_ui_update": "2026-10-26T19:48:13.167472+00:00"
+}

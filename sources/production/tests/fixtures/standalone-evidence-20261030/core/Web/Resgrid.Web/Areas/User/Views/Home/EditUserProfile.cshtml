@@ -1,0 +1,1039 @@
+﻿@inject Resgrid.Model.Services.IBusinessOperationsAccessService businessOperationsAccess
+@model Resgrid.Web.Areas.User.Models.EditProfileModel
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.DataProtection.DataProtection> adpLocalizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Home.EditProfile> localizer
+@{
+    var businessOperationsEnabled = await businessOperationsAccess.IsEnabledAsync(ClaimsAuthorizationHelper.GetDepartmentId());
+    // Same test as HomeController.CanSeeProfileContactDetails: email and phone numbers need View Personal Info unless
+    // this is the member's own profile or the editor is a department admin.
+    var canSeeContactDetails = Model.IsOwnProfile || ClaimsAuthorizationHelper.IsUserDepartmentAdmin() || ClaimsAuthorizationHelper.CanViewPII();
+    ViewData["Title"] = "Resgrid | Edit User Profile";
+}
+@{
+    // ADP reveal (plan 7.2): one descriptor shared by the banner in the body and the
+    // step-up wiring in the Scripts section. Declared unconditionally so the section
+    // closure can see it; both partials only render when the page is protected.
+    var adpReveal = new Resgrid.Web.Areas.User.Models.AdpRevealView
+    {
+        BannerTitle = commonLocalizer["AdpProtectedProfile"],
+        RevealController = "Home",
+        RevealAction = "RevealUserProfile",
+        RevealData = new Dictionary<string, string> { { "userId", Model.UserId } }
+    };
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/clib/croppic/css/croppic.css" />
+}
+
+<form id="edit_user" class="form-horizontal" role="form" asp-controller="Home" asp-action="EditUserProfile" asp-route-area="User" method="post">
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.Profile.UserProfileId)
+    @Html.HiddenFor(m => m.Profile.UserId)
+    @Html.HiddenFor(m => m.IsOwnProfile)
+    @Html.HiddenFor(m => m.IsFreePlan)
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-4">
+            <h2>@localizer["EditTitle"] @Model.FirstName @Model.LastName @localizer["ProfileTitle"]</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+                </li>
+                <li class="active">
+                    <strong>@localizer["Title"]</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-sm-8">
+            <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+                @if (Model.IsOwnProfile)
+                {
+                    <a class="btn btn-primary top-button" asp-controller="MessagingAccounts" asp-action="Index" asp-route-area="User">@commonLocalizer["ChatAccountsTitle"]</a>
+                    <a id="reportingButton" class="btn btn-primary top-button" title="Your Reporting" asp-controller="Profile" asp-action="Reporting" asp-route-area="User">@localizer["ReportDelivery"]</a>
+                    <a class="btn btn-primary top-button" asp-controller="AccountSecurity" asp-action="Sessions" asp-route-area="User">Active Sessions</a>
+                }
+                else if (Model.CanResetPassword && !Model.IsSsoManaged)
+                {
+                    var passwordActionLabel = Model.RequirePasswordResetViaEmail ? "Send Password Reset Email" : localizer["ChangeUserPassword"].Value;
+                    <a id="changePassword" class="btn btn-primary top-button" title="@passwordActionLabel" asp-controller="Profile" asp-action="ResetPasswordForUser" asp-route-area="User" asp-route-userId="@Model.UserId">@passwordActionLabel</a>
+                }
+                <a id="staffingScheduleButton" class="btn btn-primary top-button" title="Edit Staffing Schedule" asp-controller="Profile" asp-action="ViewSchedules" asp-route-area="User" asp-route-userId="@Model.UserId">@localizer["StaffingSchedule"]</a>
+                <a id="certificationsButton" class="btn btn-primary top-button" title="Edit Certifications" asp-controller="@(businessOperationsEnabled ? "Certifications" : "Profile")" asp-action="@(businessOperationsEnabled ? "Person" : "Certifications")" asp-route-area="User" asp-route-userId="@Model.UserId">@localizer["Certifications"]</a>
+            </div>
+        </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="wrapper wrapper-content animated fadeInUp">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            @{
+                                var validationErrors = ViewData.ModelState.Values.Where(E => E.Errors.Count > 0)
+                                .SelectMany(E => E.Errors)
+                                .Select(E => E.ErrorMessage)
+                                .ToList();
+                            }
+                            <span style="color:red;font-weight:bold;">@localizer["ErrorSpan"]</span>
+                            <br />
+                            <ul>
+                                @foreach (var error in validationErrors)
+                                {
+                                    <li style="color:red;">@error</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.IsProtectedProfile)
+    {
+        <div class="row">
+            <div class="col-lg-12" style="padding: 15px 30px 0 30px;">
+                <partial name="_AdpRevealBanner" model="adpReveal" />
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="wrapper wrapper-content animated fadeInUp">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["IDNumberLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["IDNumberPlaceholder"]" asp-for="Profile.IdentificationNumber" data-adp-field="departmentmembersensitivedata.identificationnumber"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["FirstNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["FirstNamePlaceholder"]" asp-for="FirstName" required=""></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["LastNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["LastNamePlaceholder"]" asp-for="LastName" required=""></div>
+                        </div>
+                        @if (canSeeContactDetails)
+                        {
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["EmailAddressLabel"]</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" placeholder="@localizer["EmailAddressPlaceholder"]" asp-for="Email" required="" readonly="@Model.IsEmailExternallyManaged">
+                                    @if (Model.IsEmailExternallyManaged)
+                                    {
+                                        <span class="help-block">This email address is managed by the linked SSO provider.</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.Email))
+                                    {
+                                        @if (Model.EmailVerified == true)
+                                        {
+                                            <span class="input-group-addon" title="@localizer["VerificationSuccessful"]">
+                                                <i class="fa fa-check-circle text-success"></i>
+                                            </span>
+                                        }
+                                        else if (Model.EmailVerified == false)
+                                        {
+                                            <span class="input-group-addon text-danger" title="@localizer["EmailNotVerifiedWarning"]">
+                                                <i class="fa fa-exclamation-circle"></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="input-group-addon text-muted" title="@localizer["GrandfatheredEmailWarning"]">
+                                                <i class="fa fa-info-circle"></i>
+                                            </span>
+                                        }
+                                    }
+                                </div>
+                                <span class="help-block m-b-none">@localizer["EmailAddressHelper"]</span>
+                                @if (!string.IsNullOrWhiteSpace(Model.Email) && Model.CanSelfVerify)
+                                {
+                                    @if (Model.EmailVerified == false)
+                                    {
+                                        <div class="alert alert-warning m-t-xs rg-verify-alert" id="emailVerifyAlert">
+                                            <strong><i class="fa fa-exclamation-triangle"></i> @localizer["EmailNotVerifiedWarning"]</strong>
+                                            <div class="m-t-xs rg-verify-widget">
+                                                <button type="button" class="btn btn-xs btn-warning rg-send-code rg-email-send-code" data-contact-type="0">@localizer["VerifyButtonLabel"]</button>
+                                                <span class="rg-email-code-entry" style="display:none;">
+                                                    <input type="text" class="form-control input-sm rg-email-verify-code" placeholder="@localizer["VerificationCodePlaceholder"]" maxlength="6" style="display:inline-block;width:160px;">
+                                                    <button type="button" class="btn btn-xs btn-primary rg-confirm-code rg-email-confirm-code" data-contact-type="0">@commonLocalizer["Save"]</button>
+                                                </span>
+                                                <span class="rg-email-verify-msg m-l-xs" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (Model.EmailVerified == null)
+                                    {
+                                        <div class="alert alert-info m-t-xs rg-verify-alert" id="emailVerifyAlert">
+                                            <i class="fa fa-info-circle"></i> @localizer["GrandfatheredEmailWarning"]
+                                            <div class="m-t-xs rg-verify-widget">
+                                                <button type="button" class="btn btn-xs btn-info rg-send-code rg-email-send-code" data-contact-type="0">@localizer["VerifyButtonLabel"]</button>
+                                                <span class="rg-email-code-entry" style="display:none;">
+                                                    <input type="text" class="form-control input-sm rg-email-verify-code" placeholder="@localizer["VerificationCodePlaceholder"]" maxlength="6" style="display:inline-block;width:160px;">
+                                                    <button type="button" class="btn btn-xs btn-primary rg-confirm-code rg-email-confirm-code" data-contact-type="0">@commonLocalizer["Save"]</button>
+                                                </span>
+                                                <span class="rg-email-verify-msg m-l-xs" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        }
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@commonLocalizer["Language"]</label>
+                            <div class="col-sm-10">
+                                <select asp-for="Profile.Language" asp-items="ViewBag.Languages" style="padding-left: 0; width: 100%;"></select>
+                                <span class="help-block m-b-none">@localizer["LanguagesHelp"]</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["TimeZoneLabel"]</label>
+                            <div class="col-sm-10"><select asp-for="Profile.TimeZone" asp-items="ViewBag.TimeZones" style="padding-left: 0; width: 100%;"></select></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        @if (canSeeContactDetails)
+                        {
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["HomeNumberLabel"]</label>
+                            <div class="col-sm-10">
+                                <div class="input-group full-width">
+                                    <input type="text" class="form-control js-phone-validate" data-region-source="PhysicalCountry" placeholder="@localizer["HomeNumberPlaceholder"]" asp-for="Profile.HomeNumber">
+                                    @if (!string.IsNullOrWhiteSpace(Model.Profile?.HomeNumber))
+                                    {
+                                        @if (Model.HomeNumberVerified == true)
+                                        {
+                                            <span class="input-group-addon" title="@localizer["VerificationSuccessful"]">
+                                                <i class="fa fa-check-circle text-success"></i>
+                                            </span>
+                                        }
+                                        else if (Model.HomeNumberVerified == false)
+                                        {
+                                            <span class="input-group-addon text-danger" title="@localizer["HomeNotVerifiedWarning"]">
+                                                <i class="fa fa-exclamation-circle"></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="input-group-addon text-muted" title="@localizer["GrandfatheredHomeWarning"]">
+                                                <i class="fa fa-info-circle"></i>
+                                            </span>
+                                        }
+                                    }
+                                </div>
+                                <span asp-validation-for="Profile.HomeNumber" class="text-danger"></span>
+                                <div class="js-phone-feedback small"></div>
+                                @if (!string.IsNullOrWhiteSpace(Model.Profile?.HomeNumber) && Model.CanSelfVerify)
+                                {
+                                    @if (Model.HomeNumberVerified == false)
+                                    {
+                                        <div class="alert alert-warning m-t-xs" id="homeVerifyAlert">
+                                            <strong><i class="fa fa-exclamation-triangle"></i> @localizer["HomeNotVerifiedWarning"]</strong>
+                                            <div class="m-t-xs" id="homeVerifyWidget">
+                                                <button type="button" class="btn btn-xs btn-warning rg-send-code" data-contact-type="2" id="btnSendHomeCode">@localizer["VerifyButtonLabel"]</button>
+                                                <span id="homeCodeEntry" style="display:none;">
+                                                    <input type="text" class="form-control input-sm" id="homeVerifyCode" placeholder="@localizer["VerificationCodePlaceholder"]" maxlength="6" style="display:inline-block;width:160px;">
+                                                    <button type="button" class="btn btn-xs btn-primary rg-confirm-code" data-contact-type="2" id="btnConfirmHomeCode">@commonLocalizer["Save"]</button>
+                                                </span>
+                                                <span id="homeVerifyMsg" class="m-l-xs" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (Model.HomeNumberVerified == null)
+                                    {
+                                        <div class="alert alert-info m-t-xs" id="homeVerifyAlert">
+                                            <i class="fa fa-info-circle"></i> @localizer["GrandfatheredHomeWarning"]
+                                            <div class="m-t-xs" id="homeVerifyWidget">
+                                                <button type="button" class="btn btn-xs btn-info rg-send-code" data-contact-type="2" id="btnSendHomeCode">@localizer["VerifyButtonLabel"]</button>
+                                                <span id="homeCodeEntry" style="display:none;">
+                                                    <input type="text" class="form-control input-sm" id="homeVerifyCode" placeholder="@localizer["VerificationCodePlaceholder"]" maxlength="6" style="display:inline-block;width:160px;">
+                                                    <button type="button" class="btn btn-xs btn-primary rg-confirm-code" data-contact-type="2" id="btnConfirmHomeCode">@commonLocalizer["Save"]</button>
+                                                </span>
+                                                <span id="homeVerifyMsg" class="m-l-xs" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MobileNumberLabel"]</label>
+                            <div class="col-sm-10">
+                                <div class="input-group full-width">
+                                    <input type="text" class="form-control js-phone-validate" data-region-source="PhysicalCountry" placeholder="@localizer["MobileNumberPlaceholder"]" asp-for="Profile.MobileNumber">
+                                    @if (!string.IsNullOrWhiteSpace(Model.Profile?.MobileNumber))
+                                    {
+                                        @if (Model.MobileNumberVerified == true)
+                                        {
+                                            <span class="input-group-addon" title="@localizer["VerificationSuccessful"]">
+                                                <i class="fa fa-check-circle text-success"></i>
+                                            </span>
+                                        }
+                                        else if (Model.MobileNumberVerified == false)
+                                        {
+                                            <span class="input-group-addon text-danger" title="@localizer["MobileNotVerifiedWarning"]">
+                                                <i class="fa fa-exclamation-circle"></i>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="input-group-addon text-muted" title="@localizer["GrandfatheredMobileWarning"]">
+                                                <i class="fa fa-info-circle"></i>
+                                            </span>
+                                        }
+                                    }
+                                </div>
+                                <span asp-validation-for="Profile.MobileNumber" class="text-danger"></span>
+                                <div class="js-phone-feedback small"></div>
+                                @if (!string.IsNullOrWhiteSpace(Model.Profile?.MobileNumber) && Model.CanSelfVerify)
+                                {
+                                    @if (Model.MobileNumberVerified == false)
+                                    {
+                                        <div class="alert alert-warning m-t-xs" id="mobileVerifyAlert">
+                                            <strong><i class="fa fa-exclamation-triangle"></i> @localizer["MobileNotVerifiedWarning"]</strong>
+                                            <div class="m-t-xs" id="mobileVerifyWidget">
+                                                <button type="button" class="btn btn-xs btn-warning rg-send-code" data-contact-type="1" id="btnSendMobileCode">@localizer["VerifyButtonLabel"]</button>
+                                                <span id="mobileCodeEntry" style="display:none;">
+                                                    <input type="text" class="form-control input-sm" id="mobileVerifyCode" placeholder="@localizer["VerificationCodePlaceholder"]" maxlength="6" style="display:inline-block;width:160px;">
+                                                    <button type="button" class="btn btn-xs btn-primary rg-confirm-code" data-contact-type="1" id="btnConfirmMobileCode">@commonLocalizer["Save"]</button>
+                                                </span>
+                                                <span id="mobileVerifyMsg" class="m-l-xs" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (Model.MobileNumberVerified == null)
+                                    {
+                                        <div class="alert alert-info m-t-xs" id="mobileVerifyAlert">
+                                            <i class="fa fa-info-circle"></i> @localizer["GrandfatheredMobileWarning"]
+                                            <div class="m-t-xs" id="mobileVerifyWidget">
+                                                <button type="button" class="btn btn-xs btn-info rg-send-code" data-contact-type="1" id="btnSendMobileCode">@localizer["VerifyButtonLabel"]</button>
+                                                <span id="mobileCodeEntry" style="display:none;">
+                                                    <input type="text" class="form-control input-sm" id="mobileVerifyCode" placeholder="@localizer["VerificationCodePlaceholder"]" maxlength="6" style="display:inline-block;width:160px;">
+                                                    <button type="button" class="btn btn-xs btn-primary rg-confirm-code" data-contact-type="1" id="btnConfirmMobileCode">@commonLocalizer["Save"]</button>
+                                                </span>
+                                                <span id="mobileVerifyMsg" class="m-l-xs" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MobileCarrierLabel"]</label>
+                            <div class="col-sm-10"><select asp-for="Carrier" asp-items="ViewBag.Carriers" style="padding-left: 0; width: 100%;"></select></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        @if (Model.IsOwnProfile)
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["SecurityPinLabel"]</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" style="max-width:160px;" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="@localizer["SecurityPinPlaceholder"]" asp-for="SecurityPin">
+                                    <span asp-validation-for="SecurityPin" class="text-danger"></span>
+                                    <span class="help-block m-b-none">@localizer["SecurityPinHelp"]</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["SecurityPinEnabledLabel"]</label>
+                                <div class="col-sm-10">
+                                    @if (Model.DepartmentForcesSecurityPin)
+                                    {
+                                        <input type="checkbox" checked="checked" disabled="disabled">
+                                        <input type="hidden" asp-for="SecurityPinEnabled" value="true">
+                                        <span class="help-block m-b-none">@localizer["SecurityPinForcedHelp"]</span>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" asp-for="SecurityPinEnabled">
+                                        <span class="help-block m-b-none">@localizer["SecurityPinEnabledHelp"]</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        }
+
+                        @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["GroupLabel"]</label>
+                                <div class="col-sm-10"><select asp-for="UserGroup" asp-items="Model.Groups" style="padding-left: 0; width: 100%;"></select></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["IsGroupAdminLabel"]</label>
+                                <div class="col-sm-10">
+                                    <input type="checkbox" asp-for="IsUserGroupAdmin">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        }
+                        @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin() || ClaimsAuthorizationHelper.IsUserGroupAdmin(Model.UserGroup))
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["RolesLabel"]</label>
+                                <div class="col-sm-10"><select id="roles" name="roles" style="width: 100%;"></select></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        }
+
+                        <h3>@adpLocalizer["EmergencyContactsHeader"]</h3>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <p class="text-muted">
+                                    @adpLocalizer["EmergencyContactsIntro"]
+                                </p>
+                                <table class="table table-striped" id="emergencyContactsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>@adpLocalizer["ContactNameLabel"]</th>
+                                            <th>@adpLocalizer["RelationshipLabel"]</th>
+                                            <th>@adpLocalizer["PhoneNumberLabel"]</th>
+                                            <th>@adpLocalizer["AlternateColumn"]</th>
+                                            <th>@adpLocalizer["EmailLabel"]</th>
+                                            <th>@adpLocalizer["PrimaryColumn"]</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="emergencyContactsBody"></tbody>
+                                </table>
+                                <button type="button" class="btn btn-sm btn-primary" id="addEmergencyContactBtn">@adpLocalizer["AddEmergencyContact"]</button>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <h3>
+                            @localizer["PhysicalAddressHeader"]
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["AddressLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["AddressPlaceholder"]" asp-for="PhysicalAddress1" data-adp-field="departmentmembersensitivedata.homeaddress1"><span asp-validation-for="PhysicalAddress1" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["CityLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["CityPlaceholder"]" asp-for="PhysicalCity" data-adp-field="departmentmembersensitivedata.homecity"><span asp-validation-for="PhysicalCity" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["StateLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["StatePlaceholder"]" asp-for="PhysicalState" data-adp-field="departmentmembersensitivedata.homestate"><span asp-validation-for="PhysicalState" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["PostalCodeLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["PostalCodePlaceholder"]" asp-for="PhysicalPostalCode" data-adp-field="departmentmembersensitivedata.homepostalcode"><span asp-validation-for="PhysicalPostalCode" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["CountryLabel"]</label>
+                            <div class="col-sm-10"><select asp-for="PhysicalCountry" asp-items="ViewBag.Countries" style="padding-left: 0; width: 100%;" data-adp-field="departmentmembersensitivedata.homecountry"></select></div>
+                        </div>
+
+                        <h3>
+                            Mailing Address
+                        </h3>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["SameAsPhysical"]</label>
+                            <div class="col-sm-10"><input type="checkbox" asp-for="MailingAddressSameAsPhysical"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingAddressLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingAddressPlaceholder"]" asp-for="MailingAddress1" data-adp-field="departmentmembersensitivedata.mailingaddress1"><span asp-validation-for="MailingAddress1" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingCityLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingCityPlaceholder"]" asp-for="MailingCity" data-adp-field="departmentmembersensitivedata.mailingcity"><span asp-validation-for="MailingCity" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingStateLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingStatePlaceholder"]" asp-for="MailingState" data-adp-field="departmentmembersensitivedata.mailingstate"><span asp-validation-for="MailingState" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingPostalCodeLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["MailingPostalCodePlaceholder"]" asp-for="MailingPostalCode" data-adp-field="departmentmembersensitivedata.mailingpostalcode"><span asp-validation-for="MailingPostalCode" class="text-danger"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["MailingCountryLabel"]</label>
+                            <div class="col-sm-10"><select asp-for="MailingCountry" asp-items="ViewBag.Countries" style="padding-left: 0; width: 100%;" data-adp-field="departmentmembersensitivedata.mailingcountry"></select></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin() && Model.Department.ManagingUserId != Model.UserId)
+                        {
+                            <h3>
+                                @localizer["DepartmentSettingsHeader"]
+                            </h3>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["UserTypeLabel"]</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label class="col-sm-2 control-label" style="padding-top:0px;">@localizer["NormalUserLabel"]</label>
+                                            <input type="radio" asp-for="IsDepartmentAdmin" value="false">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label class="col-sm-2 control-label" style="padding-top:0px;">@localizer["DepartmentAdminLabel"]</label>
+                                            <input type="radio" asp-for="IsDepartmentAdmin" value="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["DisableUserLabel"]</label>
+                                <div class="col-sm-10">
+                                    <input type="checkbox" asp-for="IsDisabled">
+                                    <span asp-validation-for="IsDisabled" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">@localizer["HideUserLabel"]</label>
+                                <div class="col-sm-10">
+                                    <input type="checkbox" asp-for="IsHidden">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        }
+
+                        @if (Model.IsOwnProfile)
+                        {
+                            <h3>
+                                @localizer["AccountInfoHeader"]
+                            </h3>
+                            @if (Model.CanManageLocalCredentials)
+                            {
+                                <div class="form-group"><div class="col-sm-10 col-sm-offset-2">
+                                    <a class="btn btn-primary" asp-controller="AccountSecurity" asp-action="ChangeUsername" asp-route-area="User">Change Username</a>
+                                    <a class="btn btn-primary" asp-controller="AccountSecurity" asp-action="ChangePassword" asp-route-area="User">Change Password</a>
+                                </div></div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info">Username and password are managed by your SSO provider. Use Active Sessions to review or revoke signed-in devices.</div>
+                            }
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UdfFormHtml))
+                        {
+                            <div class="hr-line-dashed"></div>
+                            <h3>Custom Fields</h3>
+                            @Html.Raw(Model.UdfFormHtml)
+                            <div class="hr-line-dashed"></div>
+                        }
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white" asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["Cancel"]</a>
+                                <button class="btn btn-primary" type="submit">@commonLocalizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="wrapper wrapper-content animated fadeInUp">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div id="gravatarSection" style="text-align: center; padding-top: 10px;">
+                            <div id="avatar" class="center" style="text-align: center;">
+                                @if (Model.HasCustomIamge)
+                                {
+                                    <img style="width: 100px; height: 100px; text-align: center;" src="@Model.ApiUrl/api/v4/Avatars/Get?id=@Model.UserId" onerror="this.src = '@Resgrid.Config.SystemBehaviorConfig.ResgridBaseUrl/images/defaultProfile.png'" />
+                                }
+                                else
+                                {
+                                    <img style="width: 100px; height: 100px; text-align: center;" src="~/images/defaultProfile.png" />
+                                }
+                            </div>
+                            <div>&nbsp;</div>
+                            <div id="avatar-text" style="color: #337ab7; cursor: pointer;">@localizer["SetPictureLabel"]</div>
+                            <div style="color: #777">@localizer["SetPictureHelpText"]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>@localizer["CallOptionsHeader"]</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["CallEmailLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendEmail">
+                                        <label class="onoffswitch-label" for="Profile_SendEmail">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (!Model.IsFreePlan)
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">@localizer["CallTextlLabel"]</label>
+                                <div class="col-sm-8">
+                                    <div class="switch">
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendSms">
+                                            <label class="onoffswitch-label" for="Profile_SendSms">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["CallPushlLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendPush">
+                                        <label class="onoffswitch-label" for="Profile_SendPush">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>@localizer["TelephoneHeader"]</h5>
+                    </div>
+                    <div class="ibox-content">
+                        @if (Model.CanEnableVoice)
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">@localizer["TelephoneEnable"]</label>
+                                <div class="col-sm-8">
+                                    <div class="switch">
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.VoiceForCall">
+                                            <label class="onoffswitch-label" for="Profile_VoiceForCall">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">@localizer["TelephoneCallHome"]</label>
+                                <div class="col-sm-8">
+                                    <div class="switch">
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.VoiceCallHome">
+                                            <label class="onoffswitch-label" for="Profile_VoiceCallHome">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">@localizer["TelephoneCallMobile"]</label>
+                                <div class="col-sm-8">
+                                    <div class="switch">
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.VoiceCallMobile">
+                                            <label class="onoffswitch-label" for="Profile_VoiceCallMobile">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger fade in">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h4>@localizer["TelephoneWrongPlanHeader"]</h4>
+                                <p>@localizer["TelephoneWrongPlanText"]</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>@localizer["MessageOptionsHeader"]</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["MessageEmailLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendMessageEmail">
+                                        <label class="onoffswitch-label" for="Profile_SendMessageEmail">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (!Model.IsFreePlan)
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">@localizer["MessageTextLabel"]</label>
+                                <div class="col-sm-8">
+                                    <div class="switch">
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendMessageSms">
+                                            <label class="onoffswitch-label" for="Profile_SendMessageSms">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["MessagePushLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendMessagePush">
+                                        <label class="onoffswitch-label" for="Profile_SendMessagePush">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>@localizer["NotificationHeader"]</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["NotificationEmailLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendNotificationEmail">
+                                        <label class="onoffswitch-label" for="Profile_SendNotificationEmail">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["NotificationPushLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.SendNotificationPush">
+                                        <label class="onoffswitch-label" for="Profile_SendNotificationPush">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["ModernApplicationSoundsLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.EnableModernApplicationSounds">
+                                        <label class="onoffswitch-label" for="Profile_EnableModernApplicationSounds">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <span class="help-block m-b-none">@localizer["ModernApplicationSoundsHelp"]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>@localizer["NotificationOtherHeader"]</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">@localizer["NewsletterLabel"]</label>
+                            <div class="col-sm-8">
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" class="onoffswitch-checkbox" asp-for="Profile.DoNotRecieveNewsletters">
+                                        <label class="onoffswitch-label" for="Profile_DoNotRecieveNewsletters">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.IsOwnProfile)
+                {
+                    @if (TempData["GdprSuccess"] != null)
+                    {
+                        <div class="alert alert-success fade in">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <p>@TempData["GdprSuccess"]</p>
+                        </div>
+                    }
+                    @if (TempData["GdprError"] != null)
+                    {
+                        <div class="alert alert-danger fade in">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <p>@TempData["GdprError"]</p>
+                        </div>
+                    }
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Your Personal Data (GDPR)</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>You can request a copy of all your personal data stored in Resgrid. The export will be prepared in the background and you will receive an email with a download link when it is ready (usually within 5 minutes).</p>
+                                </div>
+                            </div>
+                            @if (Model.ActiveDataExportRequest != null)
+                            {
+                                <div class="alert alert-info">
+                                    <strong>Request Status:</strong>
+                                    @{
+                                        var statusName = ((Resgrid.Model.GdprExportStatus)Model.ActiveDataExportRequest.Status).ToString();
+                                    }
+                                    <span class="label label-@(Model.ActiveDataExportRequest.Status == 2 ? "success" : Model.ActiveDataExportRequest.Status == 3 ? "danger" : "warning")">@statusName</span>
+                                    &mdash; Requested on @Model.ActiveDataExportRequest.RequestedOn.ToString("f")
+                                    @if (Model.ActiveDataExportRequest.Status == 2 && Model.ActiveDataExportRequest.TokenExpiresAt.HasValue)
+                                    {
+                                        <span>&mdash; Download link expires @Model.ActiveDataExportRequest.TokenExpiresAt.Value.ToString("f")</span>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gdprRequestModal">Request My Data</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (Model.IsOwnProfile)
+                {
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>@localizer["DeleteUserAccount"]</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class='row'>
+                                <div class="col-md-12">
+                                    <p>@localizer["DeleteUserAccountInfo"]</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-w-m btn-block btn-danger" asp-controller="Account" asp-action="DeleteAccount" asp-route-area="User">@localizer["DeleteUserAccount"]</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (Model.IsOwnProfile)
+{
+    <div class="modal fade" id="gdprRequestModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">Request My Data</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This will prepare a ZIP file containing all your personal data stored in Resgrid. You will receive an email with a download link when it is ready. The link expires after 7 days.</p>
+                    <p>Are you sure you want to submit this request?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <form method="post" asp-controller="Home" asp-action="RequestMyData" asp-route-area="User" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary">Yes, Request My Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="emergencyContactModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="emergencyContactModalTitle">@adpLocalizer["EmergencyContactTitle"]</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" id="emergencyContactError" style="display: none;"></div>
+                <input type="hidden" id="ecId" value="0" />
+                <div class="form-group">
+                    <label for="ecName">@adpLocalizer["ContactNameLabel"]</label>
+                    <input type="text" class="form-control" id="ecName" maxlength="250" />
+                </div>
+                <div class="form-group">
+                    <label for="ecRelationship">@adpLocalizer["RelationshipLabel"]</label>
+                    <input type="text" class="form-control" id="ecRelationship" maxlength="100" />
+                </div>
+                <div class="form-group">
+                    <label for="ecPhone">@adpLocalizer["PhoneNumberLabel"]</label>
+                    <input type="text" class="form-control" id="ecPhone" maxlength="50" />
+                </div>
+                <div class="form-group">
+                    <label for="ecAltPhone">@adpLocalizer["AlternatePhoneLabel"]</label>
+                    <input type="text" class="form-control" id="ecAltPhone" maxlength="50" />
+                </div>
+                <div class="form-group">
+                    <label for="ecEmail">@adpLocalizer["EmailLabel"]</label>
+                    <input type="text" class="form-control" id="ecEmail" maxlength="250" />
+                </div>
+                <div class="form-group">
+                    <label for="ecNotes">@adpLocalizer["NotesLabel"]</label>
+                    <textarea class="form-control" id="ecNotes" rows="2"></textarea>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="ecIsPrimary" /> @adpLocalizer["PrimaryContactLabel"]</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@adpLocalizer["CancelAction"]</button>
+                <button type="button" class="btn btn-primary" id="ecSaveBtn">@adpLocalizer["SaveAction"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @if (Model.IsProtectedProfile)
+    {
+        <partial name="_AdpRevealScripts" model="adpReveal" />
+
+        <script type="text/javascript">
+            // Emergency contacts are rendered by their own module from their own endpoint, which
+            // reads the same grant header. So the reveal does not write into those rows - it
+            // re-reads the list with the grant attached, and re-reads it WITHOUT one on conceal so
+            // the plaintext leaves the DOM at the same moment the marked fields do.
+            window.resgridAdpPageRevealed = function () {
+                resgridEmergencyContacts.reload();
+            };
+
+            window.resgridAdpPageConcealed = function () {
+                resgridEmergencyContacts.reload();
+            };
+        </script>
+    }
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/app/internal/profile/resgrid.emergencycontacts.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            resgridEmergencyContacts.init({
+                listUrl: '@Url.Action("GetEmergencyContacts", "Home", new { area = "User" })',
+                saveUrl: '@Url.Action("SaveEmergencyContact", "Home", new { area = "User" })',
+                deleteUrl: '@Url.Action("DeleteEmergencyContact", "Home", new { area = "User" })',
+                userId: '@Model.UserId',
+                beforeSend: function (xhr) {
+                    // Present only when the page rendered the reveal partial; the module treats a
+                    // missing hook as "no grant", which is the unprotected behaviour.
+                    if (window.resgridAdpReveal && window.resgridAdpReveal.applyGrantHeader)
+                        window.resgridAdpReveal.applyGrantHeader(xhr);
+                },
+                messages: {
+                    addTitle: @Html.ScriptJson(adpLocalizer["AddEmergencyContact"].Value),
+                    editTitle: @Html.ScriptJson(adpLocalizer["EditEmergencyContact"].Value),
+                    none: @Html.ScriptJson(adpLocalizer["NoEmergencyContacts"].Value),
+                    yes: @Html.ScriptJson(adpLocalizer["YesLabel"].Value),
+                    edit: @Html.ScriptJson(adpLocalizer["EditAction"].Value),
+                    remove: @Html.ScriptJson(adpLocalizer["DeleteAction"].Value),
+                    nameRequired: @Html.ScriptJson(adpLocalizer["NameRequired"].Value),
+                    saveFailed: @Html.ScriptJson(adpLocalizer["ContactSaveFailed"].Value),
+                    confirmRemove: @Html.ScriptJson(adpLocalizer["ConfirmRemoveContact"].Value)
+                },
+                antiForgeryToken: $('input[name="__RequestVerificationToken"]').first().val()
+            });
+        });
+    </script>
+
+    <script src="~/js/app/resgrid.phonevalidate.js"></script>
+
+    <script>
+        var sameAddress = '@Model.MailingAddressSameAsPhysical';
+        var rgVerifySendUrl = resgrid.absoluteBaseUrl + '/User/Home/SendContactVerificationCode';
+        var rgVerifyConfirmUrl = resgrid.absoluteBaseUrl + '/User/Home/ConfirmContactVerificationCode';
+        var rgVerifyLabels = {
+            sent: '@JsEncoder.Encode(localizer["VerificationCodeSent"].Value)',
+            voiceCallSent: '@JsEncoder.Encode(localizer["VerificationCodeVoiceCallSent"].Value)',
+            success: '@JsEncoder.Encode(localizer["VerificationSuccessful"].Value)',
+            failed: '@JsEncoder.Encode(localizer["VerificationFailed"].Value)',
+            contactNotConfigured: '@JsEncoder.Encode(localizer["VerificationContactNotConfigured"].Value)',
+            invalidContact: '@JsEncoder.Encode(localizer["VerificationInvalidContact"].Value)',
+            deliveryFailed: '@JsEncoder.Encode(localizer["VerificationDeliveryFailed"].Value)',
+            rateLimited: '@JsEncoder.Encode(localizer["VerificationRateLimited"].Value)'
+        };
+    </script>
+    <script src="~/clib/croppic/js/croppic.js" type="text/javascript"></script>
+    <script>
+        var croppicContainerModalOptions = {
+            uploadUrl: resgrid.absoluteBaseUrl + '/User/Profile/Upload?id=@Model.UserId',
+            cropUrl: resgrid.absoluteBaseUrl + '/User/Profile/Crop',
+            modal: true,
+            imgEyecandyOpacity: 0.4,
+            loaderHtml: '<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
+        }
+        var cropContainerModal = new Croppic('avatar', croppicContainerModalOptions);
+    </script>
+    <script src="~/js/app/internal/home/resgrid.home.edituserprofile.js" type="text/javascript"></script>
+}

@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "candidate_id": "core-personnel-checkin-candidate-20261027",
+  "title": "Enable and review personnel check-in timers in Core",
+  "status": "source-supported untimed planning candidate only",
+  "canonical_lesson": false,
+  "publication_approved": false,
+  "narration_written": false,
+  "audio_created": false,
+  "rendered": false,
+  "export_ready": false,
+  "audience": [
+    "department administrators reviewing existing policy",
+    "dispatchers creating a fictional practice call and reviewing check-in history"
+  ],
+  "scope": "Core call flag, readonly existing matching policy, current OK monitor, and persisted history readback. Unit entry is separately confirmed provenance; no demonstrated Unit submit workflow in this candidate.",
+  "reviewed_source_manifest": "captures/expansion/core-checkin-setup-20261027/review/reviewed-source-subset-20261027.json",
+  "reviewed_source_manifest_sha256": "83270aec107666282034b65cfd005e31f6d71a724b33558503bc7ae1424ebc97",
+  "source_files": [
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Dispatch/NewCall.cshtml",
+      "sha256": "7c92e6d91af90e0c60ac1ae800e0c376ebbaf08a645c992f5e3210693f63a5d6",
+      "relevant_line": 401
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Department/DispatchSettings.cshtml",
+      "sha256": "f5515c9f28860d2597dcfc647c2d20780ac039c21cc02d5142aabace937f2a90",
+      "relevant_line": 617
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Dispatch/ViewCall.cshtml",
+      "sha256": "cfab54cbe6213e5484eea89b8c9988396e2a1f8684a1d02808a85029fb00dcb5",
+      "relevant_line": 1097
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/wwwroot/js/app/internal/dispatch/resgrid.dispatch.checkin-timers.js",
+      "sha256": "3c66d8ae9c9594cddd9028ebca1504ed7ae4460373484eed6f0dd98524339275",
+      "relevant_line": 100
+    },
+    {
+      "repo": "Core",
+      "path": "Core/Resgrid.Services/CheckInTimerService.cs",
+      "sha256": "c55be35b6f412647e0728902ff72a62c0099b263aa56037f3a99465efe37b1a9",
+      "relevant_line": 394
+    }
+  ],
+  "scenes": [
+    {
+      "order": 1,
+      "id": "existing-policy",
+      "title": "Review existing policy without changing it",
+      "app": "Core",
+      "route": "/User/Department/DispatchSettings",
+      "capture_refs": [
+        "009-auto-enable-timers-existing-off",
+        "010-existing-personnel-override"
+      ],
+      "required_visible_labels": [
+        "Check-In Timer Settings",
+        "Auto-Enable Check-In Timers for New Calls",
+        "Call Type / Priority Overrides",
+        "Investigation",
+        "-- Any --",
+        "Personnel",
+        "60",
+        "5",
+        "Yes",
+        "All"
+      ],
+      "teaching_points": [
+        "Observe Auto-Enable OFF; read the saved Investigation/Any Personnel override row.",
+        "Explain the difference between a department rule and opting one call into that rule."
+      ],
+      "demonstration_limits": [
+        "No settings save/add/delete. Default-config empty table is not pictured; do not call the unsent30-minute Add form a saved default.",
+        "Warning5 is a configured value only; no transition demonstration."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 2,
+      "id": "fictional-identity",
+      "title": "Prepare an explicitly fictional community-care call",
+      "app": "Core",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "001-community-care-call-identity",
+        "002-fictional-nature-notes"
+      ],
+      "required_visible_labels": [
+        "New Call",
+        "TRAINING ONLY - Community care check-in exercise",
+        "Routine",
+        "Investigation",
+        "Call Identifier",
+        "ACADEMY-CHECKIN-20261027",
+        "Nature of the Call",
+        "Notes"
+      ],
+      "teaching_points": [
+        "Use the training-only name, Routine priority and Investigation type.",
+        "Keep narrative and notes explicit about simulated software practice; Reporter Contact Info remains blank."
+      ],
+      "demonstration_limits": [
+        "No patient data, clinical/safety guidance, real emergency or provider delivery claim."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 3,
+      "id": "manual-point",
+      "title": "Use the explicit training point",
+      "app": "Core",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "003-simulated-location-pin"
+      ],
+      "required_visible_labels": [
+        "Location",
+        "Lat",
+        "41.8721",
+        "Lng",
+        "-87.6523",
+        "Set Pin on Map"
+      ],
+      "teaching_points": [
+        "Review the manually supplied fictional Lat/Lng and local map pin.",
+        "Separate the call point from device-location/arrival verification."
+      ],
+      "demonstration_limits": [
+        "Full address clipped in003;006later supplies saved readback. No Find Address/what3words/device GPS/routing action."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 4,
+      "id": "recipient-and-enable",
+      "title": "Select the practice recipient and enable this call",
+      "app": "Core",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "004-boden-only-timer-exercise-recipient",
+        "005-enable-call-checkin-timers"
+      ],
+      "required_visible_labels": [
+        "Wallace Boden",
+        "Standing By",
+        "Available",
+        "Check-In Timers",
+        "Enable Check-In Timers",
+        "Create and Dispatch Call"
+      ],
+      "teaching_points": [
+        "Review the checked Boden row, then the checked per-call Enable Check-In Timers control.",
+        "Use normal Create and Dispatch Call for this authorized fictional recipient."
+      ],
+      "demonstration_limits": [
+        "Personnel heading is not pictured in004. Final Boden-only/no-unit selection is parent provenance; not every recipient list is fully visible.",
+        "This changes the new call, not global policy; no schedule/pending/consent/status change instruction."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 5,
+      "id": "created-call",
+      "title": "Verify the returned call identity",
+      "app": "Core",
+      "route": "/User/Dispatch/ViewCall?callId=51012",
+      "capture_refs": [
+        "006-created-call-view-identity"
+      ],
+      "required_visible_labels": [
+        "TRAINING ONLY - Community care check-in exercise",
+        "FD51-2026-0004",
+        "Active",
+        "Investigation",
+        "Routine",
+        "Fictional Academy outreach exercise site, Chicago, IL"
+      ],
+      "teaching_points": [
+        "Read the actual returned number and active call details.",
+        "Check the complete wrapped saved address against the fictional exercise."
+      ],
+      "demonstration_limits": [
+        "No inferred next counter, backend-wide original-call audit or unit staffing/status outcome."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 6,
+      "id": "initial-monitor",
+      "title": "Read the current timer and empty history",
+      "app": "Core",
+      "route": "/User/Dispatch/ViewCall?callId=51012",
+      "capture_refs": [
+        "008-timer-and-empty-history-full-context"
+      ],
+      "required_visible_labels": [
+        "Check-In Timers",
+        "Wallace Boden",
+        "Personnel",
+        "Time Remaining",
+        "58:20",
+        "OK",
+        "Show Check-In History",
+        "Timestamp",
+        "Who",
+        "Type",
+        "Note"
+      ],
+      "teaching_points": [
+        "Read the current Boden Personnel timer and OK state.",
+        "Expand Show Check-In History and identify its initial empty dash."
+      ],
+      "demonstration_limits": [
+        "Core Check In button visible but not submitted; no browser GPS action.",
+        "No initial60:00/reset/warning/overdue claims;007clipped source excluded."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 7,
+      "id": "saved-record",
+      "title": "Review the later saved personnel record",
+      "app": "Core",
+      "route": "/User/Dispatch/ViewCall?callId=51012",
+      "capture_refs": [
+        "012-complete-saved-checkin-note-history"
+      ],
+      "required_visible_labels": [
+        "Show Check-In History",
+        "Timestamp",
+        "Who",
+        "Type",
+        "Note",
+        "10/27/2026 19:37:13",
+        "Wallace Boden",
+        "Personnel"
+      ],
+      "teaching_points": [
+        "After the separate Unit entry, review the displayed saved timestamp, Who and Personnel type in Core.",
+        "Use normal page/history readback to distinguish a persisted record from prepared text."
+      ],
+      "demonstration_limits": [
+        "This Core batch does not show Unit navigation, confirm/submit, relative age or location permission behavior. Do not invent those steps."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    },
+    {
+      "order": 8,
+      "id": "full-note-and-limits",
+      "title": "Read the complete saved note and its limits",
+      "app": "Core",
+      "route": "/User/Dispatch/ViewCall?callId=51012",
+      "capture_refs": [
+        "012-complete-saved-checkin-note-history"
+      ],
+      "required_visible_labels": [
+        "TRAINING ONLY - Scheduled software check-in for the fictional community-care exercise. No physical arrival, safety assessment, or device-location verification.",
+        "OK"
+      ],
+      "teaching_points": [
+        "Read the complete scheduled software check-in note.",
+        "Keep saved-record evidence separate from physical arrival, safety assessment and device location."
+      ],
+      "demonstration_limits": [
+        "Visible timer54:12 does not prove a resetto60; warning behavior/source mismatch remains outside demonstrated scope.",
+        "011full-note clipping excluded. No legal/clinical advice or canonical narration/media readiness."
+      ],
+      "timing_status": "untimed; no audio or duration estimate",
+      "script_status": "outline only; no narration generated"
+    }
+  ],
+  "missing_shots_for_any_broader_lesson": [
+    "Separate genuine Unit submit/navigation footage after the UTC relative-age issue is resolved and independently reviewed.",
+    "A fresh actual countdown-reset result if reset is to be narrated; not demonstrated by Core54:12 here.",
+    "Actual warning/overdue transitions only after source/client behavior is reconciled and separately verified."
+  ],
+  "prohibited_inferences": [
+    "Prepared form equals saved call.",
+    "Saved personnel note equals location/arrival/safety verification.",
+    "Core history proves a Core submit or Unit button workflow.",
+    "Configured warning threshold proves UI transition behavior.",
+    "Unsent default form is a saved policy.",
+    "Unreviewed Unit negative-age values are acceptable footage."
+  ]
+}

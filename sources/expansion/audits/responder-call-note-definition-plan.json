@@ -1,0 +1,69 @@
+{
+  "planned_at": "2026-10-26T20:33:22.730290+00:00",
+  "status": "PLAN ONLY; no definition created, saved or published",
+  "authorization": "Parent authorized one harmless fictional department call-note definition through normal UI, limited to Responder/call context, after browser unblocks; no locked starter/security/MFA changes.",
+  "department": 51,
+  "name": "TRAINING ONLY — Call field note",
+  "classification": "Standard",
+  "surface_intent": {
+    "Responder": true,
+    "Unit": false,
+    "IncidentCommand": false,
+    "Dispatch": false,
+    "LaunchContexts": [
+      "call"
+    ],
+    "AllowOffline": false,
+    "AllowAttachments": true,
+    "RetainMediaLocation": false
+  },
+  "schema_candidate": {
+    "SchemaVersion": 1,
+    "Sections": [
+      {
+        "Key": "exercise",
+        "Label": "Training call note",
+        "Fields": [
+          {
+            "Key": "call_reference",
+            "Label": "Training call reference",
+            "Type": "CallReference",
+            "Required": false
+          },
+          {
+            "Key": "exercise_summary",
+            "Label": "Fictional exercise summary",
+            "Type": "LongText",
+            "Required": false,
+            "MaxLength": 2000
+          }
+        ]
+      }
+    ]
+  },
+  "normal_ui_steps": [
+    "Open the actual Record Definitions management page as authorized Boden; verify fictional department and no unexpected MFA challenge.",
+    "Create a new independent definition, preserving existing definitions/version/counters. Record actual returned key/version; do not assume IDs.",
+    "Use actual Name/Category/Description/PermittedSubjectTypes/LifecyclePreset/Classification/SchemaJson and client-surface controls only.",
+    "Validate and inspect Impact before any publish; do not finalize/attest a resulting practice record.",
+    "If the actual UI cannot express the authorized call-only context, stop that setup and report the source gap instead of injecting hidden fields or altering the database."
+  ],
+  "source_gap": {
+    "finding": "Current Edit.cshtml has no LaunchContexts control. RecordDefinitionsViewModels.ToDraftInput constructs ClientSurface without LaunchContexts; empty contexts resolve to none in FieldRecordsService. Thus the ordinary edited/published definition is not proven capable of a call-context launcher.",
+    "anchors": [
+      "Web/Resgrid.Web/Areas/User/Models/Records/RecordDefinitionsViewModels.cs:115",
+      "Web/Resgrid.Web/Areas/User/Views/RecordDefinitions/Edit.cshtml:81",
+      "Core/Resgrid.Services/Records/FieldRecordsService.cs:330"
+    ],
+    "alternative_requiring_scope_and_actual_UI_verification": "A none-context definition with genuine CallReference field might support a structured call link from global Records, but it is not the requested call-context launcher and is not yet captured."
+  },
+  "source_sha256": {
+    "Core/Resgrid.Model/Records/FieldRecordsContracts.cs": "1d640d8ac0006d90c158826072472bbf3046f5c32e36bfcf2f5a2b483a11a543",
+    "Core/Resgrid.Model/Records/RmsRecordDefinitions.cs": "fa9504d78b0474ad76e40da2113707b55208086af217aaaa6611cdb8e37adeab",
+    "Core/Resgrid.Services/Records/FieldRecordsService.cs": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f",
+    "Web/Resgrid.Web/Areas/User/Models/Records/RecordDefinitionsViewModels.cs": "a64c2e6c1771da0c5148cfbeb8cfaf392b31cad36abed182d740a4685987b15c",
+    "Web/Resgrid.Web/Areas/User/Views/RecordDefinitions/Edit.cshtml": "999444fcc9e623bb7fd25a87a6b75e8ad283b18137e6b6febd407a89d46c191b",
+    "Web/Resgrid.Web/Areas/User/Controllers/RecordDefinitionsController.cs": "333ed09124d7ea52043c255f37a9991e0669ffdbd41696458f882e0c6783563f"
+  },
+  "safety": "No SQL/HTTP auth/session injection, hidden-field mutation, locked allowlist changes or MFA bypass. No browser calls while extension UI blocks automation."
+}

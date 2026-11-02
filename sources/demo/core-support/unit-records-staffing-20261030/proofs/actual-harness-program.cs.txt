@@ -1,0 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using Resgrid.Tests.Rms;
+
+var results = new List<object>();
+var failures = 0;
+foreach (var test in typeof(FieldRecordUnitStaffingIntegrationTests).GetMethods().Where(m => m.GetCustomAttribute<TestAttribute>() != null).OrderBy(m => m.Name))
+{
+    var instance = new FieldRecordUnitStaffingIntegrationTests();
+    try {
+        instance.SetUp();
+        if (test.Invoke(instance, null) is Task task) await task;
+        results.Add(new { name = test.Name, passed = true });
+    } catch (Exception ex) {
+        var cause = ex is TargetInvocationException tie && tie.InnerException != null ? tie.InnerException : ex;
+        failures++;
+        results.Add(new { name = test.Name, passed = false, errorType = cause.GetType().FullName, error = cause.Message });
+    }
+}
+Console.WriteLine(JsonSerializer.Serialize(new { total=results.Count, failed=failures, results }, new JsonSerializerOptions { WriteIndented=true }));
+return failures == 0 ? 0 : 1;

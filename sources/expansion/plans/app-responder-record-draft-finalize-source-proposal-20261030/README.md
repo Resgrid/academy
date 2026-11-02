@@ -1,0 +1,15 @@
+# Responder existing-draft save and finalization source
+
+This is a new source-only narration proposal for **Responder: save and finalize an existing department record**. It contains eight paragraphs, 33 sentences and 471 words. Root must review the complete script before narration generation. No audio, speech timings, export, assembled video or publication approval was created here.
+
+The source reviewer personally viewed all ten actual resumed screenshots and accepted eight unchanged images: 001, 002, 003 and 006 through 010. `captures.reviewed.json` binds the accepted copies, their separate DOM snapshots and the unchanged raw manifest. `sentence-source-map.json` binds every proposed sentence to its actual image and relevant visible labels, without estimating timings.
+
+The supported sequence starts with an existing draft. It shows the original form, a deliberate Notes revision, the returned Saved message, retained Notes after normal readback, the empty and selected attestation states, direct finalization, the permanent record number, the completed entry in Recent and a fresh read-only readback. The separate Work draft remains visible in the list. No record creation is inferred from the existing draft.
+
+Capture 004 corroborates retained Notes after cold navigation but displays a stored definition slug instead of the friendly heading. It is excluded from learner holds; normal readback 006 supplies the saved-content and attestation view. Capture 005 shows an actual rejected Draft-to-ReadyForReview transition. It remains diagnostic evidence and receives no accepted or error-free success claim. Core's retained `RmsLifecycle.cs` explains why Quick Entry finalizes directly while the review presets have a separate review transition. The proposed narration does not discuss an unseen configuration screen or claim a successful review handoff.
+
+The original home-capture target included AMENDED, which is absent, and an older finalized badge is partly covered by the floating plus. Those are excluded from accepted visible-label claims. The reviewed home image is used to identify Drafts, Recent and the intended existing entry only.
+
+Attachment controls are visible before finalization and No attachments yet is retained throughout. No attachment selection, upload, classification, completion, interruption or resume was captured. Other outstanding Records coverage includes new-entry catalog selection and validation, a definition that supports an actual review handoff, work assignments, returned records, amendments and offline behavior. Those operations require their own genuine recordings rather than extending this script beyond the evidence.
+
+The saved source excerpts cover the isolated Responder record view, form, store and Core lifecycle table. Their identities are pinned by `source-freeze.json`. The runtime identity is explicitly attributed to the parent recording task; copying source excerpts is not a new runtime or native-device verification. Original source, app processes, sessions, credentials, data, canonical lessons, installed Academy files and Git state remain unchanged.

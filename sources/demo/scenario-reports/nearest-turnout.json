@@ -1,0 +1,124 @@
+{
+  "department_id": 51,
+  "scope": "fictional isolated training department only",
+  "operation": "actual Core UI Save; no direct database write",
+  "field": "RecommendationInQuartersTurnoutSeconds",
+  "before": 0,
+  "after": 120,
+  "other_fields": "not intentionally changed",
+  "effects": "station-origin nearest unit response includes two-minute turnout; no incident or notification created",
+  "historical_evidence": "existing run-card/workflow videos retain their original saved screenshots and source state",
+  "reopened_ui_verification": {
+    "passed": true,
+    "observed_value": 120,
+    "capture": "core-nearest-turnout-settings-saved"
+  },
+  "new_call_observation": {
+    "pin": [
+      41.8725,
+      -87.6524
+    ],
+    "unit": "Engine 51",
+    "status": "Released",
+    "origin": "Station location",
+    "estimated_response": "2 min (est.)",
+    "annotation": "incl. 120 s turnout",
+    "distance": "0.0 km",
+    "crew": "No crew assigned",
+    "capture": "core-nearest-engine-turnout-near",
+    "actual_dispatch": false
+  },
+  "far_point_observation": {
+    "pin": [
+      42.5,
+      -88.5
+    ],
+    "unit": "Engine 51",
+    "estimated_response": "195 min (est.)",
+    "annotation": "incl. 120 s turnout",
+    "distance": "98.8 km",
+    "selection_preserved": true,
+    "capture": "core-nearest-engine-turnout-far",
+    "actual_dispatch": false,
+    "actual_far_pin_fields": "core-nearest-far-pin-coordinate-fields",
+    "personnel": {
+      "member": "Christopher Herrmann",
+      "estimate": "193 min (est.)",
+      "distance": "98.8 km",
+      "source_label": "Live GPS",
+      "actual_source": "simulated training fix, not device GPS",
+      "capture": "core-nearest-far-personnel-comparison"
+    }
+  },
+  "crew_assignment": {
+    "method": "actual Core Unit Staffing UI",
+    "unit": "Engine 51",
+    "seat": "Officer / Team Lead",
+    "member": "Christopher Herrmann",
+    "before": "Not Occupied",
+    "save_clicked": true,
+    "all_other_unit_seats": "left empty as previously observed",
+    "reopened_verification": {
+      "passed": true,
+      "unit_badge": "Fully Staffed",
+      "meaning": "all configured seats occupied; this demonstration defines only one Officer / Team Lead seat",
+      "capture": "core-nearest-unit-staffing-saved-officer"
+    },
+    "notification_scope": "isolated training stack with provider sends disabled",
+    "new_call_result": {
+      "unit": "Engine 51",
+      "shift_coverage": "1/1 crew on shift",
+      "shift": "A Shift \u2014 Firehouse 51",
+      "member": "Christopher Herrmann",
+      "role_mix": "Officer x1",
+      "capture": "core-nearest-engine-crew-and-role-mix",
+      "real_call_saved": false
+    }
+  },
+  "created_call": {
+    "id": 51008,
+    "number": "26-4",
+    "name": "TRAINING ONLY \u2014 Nearest resource review",
+    "priority": "Routine",
+    "type": "Rescue",
+    "pin": [
+      41.8725,
+      -87.6524
+    ],
+    "selected_unit": "Engine 51",
+    "selected_person": "Christopher Herrmann",
+    "engine_status_after_save": "Responding",
+    "initial_seed_calls": "51001,51002,51003 left untouched",
+    "call_creation": "actual Core NewCall submit",
+    "provider_delivery": "not demonstrated; isolated training profile DoNotBroadcast=true",
+    "saved_dispatch_list_verified": {
+      "passed": true,
+      "units": [
+        "Engine 51"
+      ],
+      "personnel": [
+        "Christopher Herrmann"
+      ],
+      "capture": "core-nearest-saved-call-dispatched-resources",
+      "member_device_receipt": "not demonstrated"
+    },
+    "closeout": {
+      "actual_ui_close": true,
+      "send_notification": false,
+      "completed_notes": "TRAINING ONLY. Nearest-resource software walkthrough completed. No emergency or actual deployment.",
+      "engine_status_after_close": "Released",
+      "initial_three_active_calls_preserved": true,
+      "history_preserved": true
+    }
+  },
+  "continuity_recaptures": {
+    "reason": "near/far comparisons after saved crew assignment must retain populated role mix",
+    "far": "core-nearest-far-turnout-with-officer-crew",
+    "near": "core-nearest-near-turnout-with-officer-crew",
+    "prior_empty_crew_far": "retained as historical evidence only; do not cut after staffing chapter",
+    "station_selection": "core-nearest-selected-station-with-officer-crew",
+    "all_units_selection": "core-nearest-selected-units-with-officer-crew",
+    "new_near_origin_map": "core-nearest-near-station-position-with-turnout",
+    "ending_pin_restored_to_near": true
+  }
+}

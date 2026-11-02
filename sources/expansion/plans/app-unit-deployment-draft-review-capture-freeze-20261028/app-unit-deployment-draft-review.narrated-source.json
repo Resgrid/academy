@@ -1,0 +1,337 @@
+{
+  "id": "app-unit-deployment-draft-review",
+  "title": "Review deployment time and save a draft note",
+  "app": "Unit",
+  "audience": "Authorized Unit operators and deployment crew members reviewing their permitted time-report scope.",
+  "summary": "Review an existing deployment time draft, save and reopen one explanatory note, compare report scopes, and recognize expense, usage and F-42 review boundaries.",
+  "prerequisites": [
+    "An authorized Unit session with Deployments enabled and access to the intended deployment.",
+    "A permitted crew or personnel scope with an existing editable practice draft.",
+    "Permission to save the intended subject note and an understanding of your department time-report, expense and signature process."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the intended deployment",
+      "route": "/operations",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Deployments",
+        "Open",
+        "TRAINING ONLY — Academy field operations",
+        "TRAINING-ACAD-OPS",
+        "Active"
+      ],
+      "narration": "In Unit, open Deployments and use Open to review active assignments. This example opens TRAINING ONLY, Academy field operations. Read the deployment name and reference before continuing, especially when several crews share a vehicle. A fire or EMS crew can use this workspace to organize a deployment; the information shown here belongs to a fictional software exercise.",
+      "practice": "Identify the intended training deployment by its name and reference before opening it.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-003-deployments-open-training-list"
+        ]
+      },
+      "narration_word_count": 57
+    },
+    {
+      "id": "02",
+      "title": "Confirm the date, scope and existing draft",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Time",
+        "Date",
+        "10/26/2026",
+        "Crew: Engine 51 (TRAINING Engine 51)",
+        "Reports this day",
+        "Draft · 16 h"
+      ],
+      "narration": "Inside the deployment, the Time tab shows the Date, the selected crew, and Reports this day. Here, the displayed date is October twenty-sixth and the Engine Fifty-One crew already has a Draft report. Read that existing report before starting another one. Its deployment roster is separate from the apparatus staffing seats used for incident response.",
+      "practice": "Read the displayed date and crew scope, and identify the existing Draft without creating another report.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-004-deployment-time-date-crew-scope"
+        ]
+      },
+      "narration_word_count": 55
+    },
+    {
+      "id": "03",
+      "title": "Read the existing time entries",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "From",
+        "To",
+        "Unpaid break (min)",
+        "Agency supplied meals",
+        "Agency supplied accommodation",
+        "Wallace Boden (TRAINING Boden)",
+        "Engine 51 (TRAINING Engine 51)",
+        "Total 16 h",
+        "Apply to crew",
+        "Add entry"
+      ],
+      "narration": "Scroll through the existing entries and compare the From and To values, Unpaid break, and agency supplied meals and accommodation. The summary shows eight hours for the unit and eight for Boden, totaling sixteen hours across subjects. These are existing training values. Apply to crew and Add entry are separate editing choices; we leave the time entries and allowances as they are.",
+      "practice": "Compare each existing subject row with the total; inspect the controls without changing time, breaks or allowances.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-005-deployment-crew-time-fields"
+        ]
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "04",
+      "title": "Edit a note on the correct row",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Engine 51 (TRAINING Engine 51)",
+        "Agency supplied accommodation",
+        "TRAINING ONLY - Unit app walkthrough note on this fictional draft. No actual hours, work, expense, or payment claim."
+      ],
+      "narration": "In the Engine Fifty-One row, use the note field beneath the allowance switches. The example note identifies this as a training walkthrough and says it makes no actual hours, work, expense, or payment claim. Check the subject name before typing: a unit note and a personnel note belong to different entries. This edit changes the unit note while preserving the other displayed values.",
+      "practice": "In an authorized practice draft, identify the correct subject row before preparing a clearly fictional note.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-006-draft-unit-row-note-only-edit"
+        ]
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "05",
+      "title": "Save the draft entries",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Save entries",
+        "Submit report",
+        "Signatures",
+        "Not signed by the crew boss yet.",
+        "No agency signature recorded."
+      ],
+      "narration": "Scroll below the entries and choose Save entries to store the note. Submit report is a different action, and the Signatures section still says that the crew boss has not signed and no agency signature is recorded. Saving an explanatory draft note does not submit the report or provide an attestation. Keep those later actions separate when reviewing a practice draft.",
+      "practice": "Save only the intended note change; leave submission and signatures untouched.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-007-draft-note-save-entries-control"
+        ]
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "06",
+      "title": "Read warnings and reopen the saved value",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "A long shift has no break recorded. — Wallace Boden (TRAINING Boden)",
+        "A long shift has no break recorded. — Engine 51 (TRAINING Engine 51)",
+        "Draft",
+        "Engine 51 (TRAINING Engine 51)",
+        "TRAINING ONLY - Unit app walkthrough note on this fictional draft. No actual hours, work, expense, or payment claim."
+      ],
+      "narration": "After saving, this draft shows a long-shift warning for each subject because no break is recorded. Read these warnings before treating a report as complete; this example does not resolve them. Reopening the draft shows the same training note in the Engine Fifty-One row. That readback verifies the stored note, while the report remains Draft and the existing time values remain visible.",
+      "practice": "Read the warnings, then reopen the existing draft and compare the saved note. Do not claim that warnings were corrected.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-008-draft-save-result-break-warnings",
+          "unit-operations-20261027-009-reopened-draft-note-readback"
+        ]
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "07",
+      "title": "Compare personal and deployment scopes",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Time",
+        "My time",
+        "This time is already on report #1 for this day.",
+        "Whole deployment",
+        "No time report for this day.",
+        "Start time report"
+      ],
+      "narration": "On Time, My time displays a message that this time is already on report number one. Use that reference to find existing coverage instead of creating duplicate time. Whole deployment shows a separate scope with Start time report. That button would start another report; it is not an automatic total of every crew. In this review, we inspect the scope and leave the button untouched.",
+      "practice": "Compare scope messages and locate the existing report without starting another one.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-014-my-time-already-on-report",
+          "unit-operations-20261027-015-whole-deployment-scope-no-new-report"
+        ]
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "08",
+      "title": "Recognize the expense form without posting",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Expenses",
+        "No expenses for this day.",
+        "New expense",
+        "Fuel",
+        "Amount (USD)",
+        "Description",
+        "City",
+        "Take photo",
+        "Choose photo",
+        "Add expense"
+      ],
+      "narration": "The Expenses tab shows an empty day and a New expense form. The visible fields are Amount in U.S. dollars, Description, and City, with Fuel selected as the expense type. Take photo and Choose photo are attachment choices. We inspect these controls without opening a camera or adding an expense. A receipt, reimbursement, or payment is not demonstrated by an empty form.",
+      "practice": "Identify the expense fields and attachment choices; leave this training form empty and do not post a financial entry.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-010-expenses-empty-form-no-submission"
+        ]
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "09",
+      "title": "Review usage fields and display units",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Usage",
+        "Engine 51 (TRAINING Engine 51)",
+        "Incident",
+        "Start odometer",
+        "End odometer",
+        "Engine hours",
+        "Fuel",
+        "mi",
+        "gal",
+        "km",
+        "L",
+        "Add reading"
+      ],
+      "narration": "In Usage, confirm the selected resource and phase before reading Start odometer, End odometer, Engine hours, and Fuel. The first view shows miles and gallons. The unit controls can switch the empty form to kilometers and liters. This demonstrates the displayed unit choices, without recording a reading or converting measured quantities. Add reading remains separate from reviewing the form.",
+      "practice": "Compare the visible unit choices without entering readings or claiming vehicle movement or fuel use.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-011-usage-empty-imperial-controls",
+          "unit-operations-20261027-012-usage-metric-toggle-no-reading"
+        ]
+      },
+      "narration_word_count": 59
+    },
+    {
+      "id": "10",
+      "title": "Read the existing F-42 review state",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "F-42",
+        "NeedsReview",
+        "8 errors · 2 warnings",
+        "Validate",
+        "Draft F-42 from time reports",
+        "The F-42 is drafted from submitted time reports and checked against the CAL OES portal rules. Submission stays a manual, audited step on the web."
+      ],
+      "narration": "On F-42, this existing item says Needs Review, with eight errors and two warnings. Validate and Draft F-42 from time reports are available actions, but neither is performed in this review. The page explains that the draft uses submitted time reports and submission remains a manual, audited step on the web. An item with errors is not evidence of successful validation or portal acceptance.",
+      "practice": "Read the existing item state and distinguish review, validation, rebuilding and submission before proceeding under your department process.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-013-f42-existing-needs-review-no-validation"
+        ]
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "11",
+      "title": "Use the same draft discipline across services",
+      "route": "/operations/[deploymentId]",
+      "capture_intent": "Show the exact existing full application viewport(s) in order; retain each named foreground control for its spoken span.",
+      "required_labels": [
+        "Draft",
+        "Engine 51 (TRAINING Engine 51)",
+        "TRAINING ONLY - Unit app walkthrough note on this fictional draft. No actual hours, work, expense, or payment claim."
+      ],
+      "narration": "Return to the stored Draft note and use this same review discipline in other services. Community care teams can clarify a support assignment; search and rescue or security teams can explain a shift entry. Wildland and industrial response crews can distinguish equipment time from personnel time. In each case, choose the correct subject and preserve the difference between a saved explanation, submitted work, and an authorized signature.",
+      "practice": "Explain a deployment-note example for your service and identify which later actions require a separate authorized workflow.",
+      "capture_evidence": {
+        "status": "source_and_pixels_reviewed_no_media",
+        "capture_refs": [
+          "unit-operations-20261027-009-reopened-draft-note-readback"
+        ]
+      },
+      "narration_word_count": 67
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A mutual-aid engine or ambulance crew reviews a deployment draft.",
+      "practice": "Confirm the date and crew scope, compare subject totals, and save an explanatory training note without submitting or signing."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A mobile community care team documents context for a support assignment.",
+      "practice": "Use the correct subject note to distinguish an explanation from actual paid hours or reimbursable expenses."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search crew reviews a deployment containing vehicle and personnel time.",
+      "practice": "Read each subject row and the existing covered-by-report message before creating duplicate time."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A security patrol supervisor reviews a temporary support deployment.",
+      "practice": "Reopen a stored draft note and read warnings without treating a saved draft as an approved shift."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A wildland crew reviews an existing cost-recovery workspace.",
+      "practice": "Inspect usage units and F-42 review state; do not claim readings, validation, agency signatures or portal submission."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial response team documents a training deployment.",
+      "practice": "Keep equipment and personnel entries distinct, and inspect the expense form without creating a financial claim."
+    }
+  ],
+  "source_files": [
+    "Unit/src/app/(app)/operations/index.tsx",
+    "Unit/src/app/(app)/operations/[id].tsx",
+    "Unit/src/components/operations/time-report-editor.tsx",
+    "Unit/src/components/operations/scope-picker.tsx",
+    "Unit/src/components/operations/expenses-panel.tsx",
+    "Unit/src/components/operations/usage-form.tsx",
+    "Unit/src/components/operations/mars-panel.tsx",
+    "Unit/src/lib/operations/time.ts",
+    "Unit/src/stores/operations/store.ts",
+    "Unit/src/api/operations/operations.ts",
+    "Core/Core/Resgrid.Services/Invoicing/TimeTrackingService.cs"
+  ],
+  "authoring_status": "actual_capture_reviewed_narration_frozen",
+  "export_ready": false,
+  "narration_word_count": 677,
+  "scope_limits": [
+    "This separate candidate does not replace or complete the broad Unit04 field-workspace canonical.",
+    "Only an existing draft note was changed and freshly reopened; no report creation, hours, breaks, allowances, roster, signatures, submission, approval, expense, usage reading, billing or external portal action is claimed.",
+    "Existing warnings, duplicate-coverage message and F42 NeedsReview are deliberately explained as unresolved product states.",
+    "Historical On Scene/sidebar incident context is incidental to these October27 captures and is not narrated as current state.",
+    "These are browser screenshots. Camera, native hardware, GPS, offline operation and provider delivery are not exercised.",
+    "No audio, captions, cue timings, rendered video or playback proof is created by this candidate."
+  ],
+  "parent_content_review": {
+    "reviewed_at": "2026-10-28T20:37:32.423250+00:00",
+    "candidate_sha256": "b2c91049972d4e13a15d941928245c85c47a8d91c6b9ecff6b0ad86641371164",
+    "review": "Complete eleven-scene script checked against the independent original-size thirteen-image review. Parent additionally inspected the deployment list, Save entries and reopened Draft note originals. Narration claims note-only save/readback and bounded read-only views, with no changed hours, allowance, expense, reading, signature, submitted report or F42 validation claim.",
+    "media_ready": false
+  }
+}

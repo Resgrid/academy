@@ -1,0 +1,78 @@
+{
+  "recorded_at": "2026-11-02T04:16:57.997979+00:00",
+  "department_id": 51,
+  "fictional_training_only": true,
+  "credential_values_included": false,
+  "configuration_created_through_normal_Core_UI": {
+    "definition_key": "academy-ic-handover-20261101",
+    "name": "TRAINING ONLY - IC coordination note",
+    "category": "Academy software exercises",
+    "clone_from": "trn-community-software-20261029",
+    "published_version": 1,
+    "lifecycle": "QuickEntry",
+    "number_prefix": "ICNOTE",
+    "number_assignment": "OnFinalize",
+    "sequence_width": 4,
+    "reset_yearly": true,
+    "surfaces": {
+      "Responder": false,
+      "Unit": false,
+      "IncidentCommand": true,
+      "Dispatch": false
+    },
+    "allow_offline": false,
+    "allow_attachments": true,
+    "retain_media_location": false,
+    "schema": {
+      "SchemaVersion": 1,
+      "Sections": [
+        {
+          "Key": "details",
+          "Label": "Details",
+          "Fields": [
+            {
+              "Key": "summary",
+              "Label": "Summary",
+              "Type": "ShortText",
+              "Required": true
+            },
+            {
+              "Key": "notes",
+              "Label": "Notes",
+              "Type": "LongText"
+            }
+          ]
+        }
+      ]
+    },
+    "publication_approval": {
+      "reviewer": "User",
+      "question_item_id": "call_196014ec94ce4b3e852173a9c917497a",
+      "response": "Approve local IC definition publication"
+    },
+    "publication_result": "Version1published and published/read-only notice verified in actual UI. Browser confirmation command timed out; a read-only state check subsequently established completion. No repeated Publish submission."
+  },
+  "record_created_and_finalized_through_normal_IC_UI": {
+    "id": "4472586f-1321-4045-9562-0bb162f46fbb",
+    "draft_reference": "D-HGYT8",
+    "final_number": "ICNOTE-2026-0001",
+    "state": "FINALIZED",
+    "summary": "TRAINING ONLY - IC coordination handover software exercise",
+    "original_notes": "Fictional Academy exercise. Confirm the selected incident, Readiness evidence and Check-In timer state before the training handover. No real incident or client information.",
+    "revision_appended": "TRAINING UPDATE - Handover note reviewed for software practice.",
+    "attachments_added": 0,
+    "submitted_for_review": false,
+    "attested_for_fictional_software_record": true,
+    "verified_in_recent": true
+  },
+  "capture_roots": [
+    "captures/expansion/core-ic-record-surface-20261101",
+    "captures/expansion/ic-new-coordination-record-20261101"
+  ],
+  "replay": "Use a new unique training definition key/name for another recording. Clone the existing sample definition, set the pictured configuration, validate/save, review publication impact, publish through normal UI, then create/save/revise/finalize through IC. Record ids and draft references are allocated per run. This scenario documents the exact fixture and operations; it is not a database backup or a claim that the main seed command automatically replays this UI sequence.",
+  "source_limits": [
+    "Direct reload initially showed Offline—showing last synced data; capture007is excluded from server-persistence proof.",
+    "Opening the updated draft normally from the Records workspace subsequently showed its correct name and revised values without the offline notice.",
+    "No media upload, device permission, external notification or PDF export was demonstrated."
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "id": "app-dispatch-map-and-site-reference",
+  "title": "Dispatch: map layers and site references",
+  "app": "Dispatch",
+  "source_only": true,
+  "status": "Parent-approved source and narration freeze; actual audio and all media reviews remain unassigned.",
+  "audience": [
+    "Dispatchers and control-room coordinators",
+    "Team members authorized to read department mapping and site references"
+  ],
+  "summary": "Use a real map-layer comparison, POI filters and a fictional contact to find reference information and recognize missing records. Locate workspace settings without changing them.",
+  "prerequisites": [
+    "An existing authorized Dispatch session and permission to view the fictional local department. No sign-in flow is demonstrated.",
+    "The already configured Academy Staging layer/point and fictional warehouse contact used in these actual screens.",
+    "Only local display/search controls are exercised; original calls and department records remain unchanged."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start from the dispatch workspace",
+      "route": "/home → Menu",
+      "capture_refs": [
+        "002-console-clean-workspace",
+        "003-navigation-menu"
+      ],
+      "required_labels": [
+        "Resgrid Dispatch",
+        "Active Calls",
+        "Map",
+        "Notes",
+        "Menu",
+        "POIs",
+        "Contacts"
+      ],
+      "narration": "Dispatch brings calls, apparatus, personnel, a map, and reference notes into one workspace. This lesson follows a read-only reference check in a fictional training department. From Home, open the menu in the upper-left corner. Map, POIs, Protocols, and Contacts lead to different kinds of information. Choose the reference that answers your question before changing a call or assigning resources. We will use the map and site records without making a dispatch.",
+      "practice": "Find Map, POIs, Protocols and Contacts in the menu before opening a reference page."
+    },
+    {
+      "id": "02",
+      "title": "Use layers to simplify the map",
+      "route": "/map",
+      "capture_refs": [
+        "004-map-loaded-department-context",
+        "005-map-layers-staging-on",
+        "006-map-layer-staging-hidden-state",
+        "007-map-with-staging-layer-hidden",
+        "006-map-layer-staging-hidden-state",
+        "008-map-staging-layer-restored"
+      ],
+      "required_labels": [
+        "Chicago",
+        "🗂️",
+        "Map Layers",
+        "Academy Staging",
+        "Hide All",
+        "Show All"
+      ],
+      "narration": "Open Map for a larger view of the Chicago training area. The folder control in the lower-left corner opens Map Layers. Academy Staging is enabled in this example. Choose Hide All and inspect the changed layer switch, then close the panel to compare the map. The blue staging point disappears while the other incident and unit markers remain. Reopen the panel and choose Show All to restore the layer. These controls change what this map displays; they do not delete the point or dispatch a resource.",
+      "practice": "Compare the enabled and disabled layer views, then restore the original visible layers."
+    },
+    {
+      "id": "03",
+      "title": "Find a known point in the POI list",
+      "route": "/pois",
+      "capture_refs": [
+        "003-navigation-menu",
+        "009-poi-list-all-types",
+        "010-poi-filter-academy-staging",
+        "011-poi-search-staging"
+      ],
+      "required_labels": [
+        "POIs",
+        "Search POIs...",
+        "All types",
+        "Academy Staging",
+        "Staging",
+        "Academy Staging Point"
+      ],
+      "narration": "For a named reference, choose POIs from the menu. The list starts with All types and Name, A to Z. Select Academy Staging in the type selector, then enter Staging in Search POIs. The existing Academy Staging Point remains in the result. A type filter and a search work together, so check both when a point seems missing. This example has only one point; it does not demonstrate a change in sorting order.",
+      "practice": "Locate the staging point by its displayed type and name. Keep a filtered list separate from the full department catalog."
+    },
+    {
+      "id": "04",
+      "title": "Read the point as a stored reference",
+      "route": "/pois",
+      "capture_refs": [
+        "011-poi-search-staging"
+      ],
+      "required_labels": [
+        "Academy Staging Point",
+        "Academy Staging",
+        "DESTINATION",
+        "TRAINING ONLY - 1000 Training Avenue",
+        "Fictional exercise assembly point. No real deployment or access approval."
+      ],
+      "narration": "Read the card before using its location. It identifies Academy Staging Point, its Academy Staging type, a Destination badge, and a clearly marked training address. The note calls it a fictional exercise assembly point and says it provides no real deployment or access approval. Use those stored details to confirm you found the intended reference. A point on this map is not evidence that a device reported its position or that a crew reached the site.",
+      "practice": "Check the point name, type, training address and note together rather than relying on its map symbol alone."
+    },
+    {
+      "id": "05",
+      "title": "Check whether a protocol is available",
+      "route": "/protocols",
+      "capture_refs": [
+        "003-navigation-menu",
+        "013-protocols-empty-reference"
+      ],
+      "required_labels": [
+        "Protocols",
+        "Search protocols...",
+        "No protocols found",
+        "No protocols have been created for your department yet."
+      ],
+      "narration": "Protocols is a separate menu entry for departmental procedures. Here the page says No protocols found and explains that none have been created for the department. That is the available information for this exercise. There is no procedure to open or follow in this recording. Treat an empty reference page as something to resolve through your authorized departmental process, rather than assuming the app supplied the missing instructions.",
+      "practice": "Read the empty-state message and distinguish an unconfigured protocol list from an available procedure."
+    },
+    {
+      "id": "06",
+      "title": "Find and identify the site contact",
+      "route": "/contacts",
+      "capture_refs": [
+        "003-navigation-menu",
+        "014-contacts-directory-fictional",
+        "015-contact-search-warehouse",
+        "016-contact-details-fictional-site"
+      ],
+      "required_labels": [
+        "Contacts",
+        "Search contacts...",
+        "Warehouse",
+        "Training Warehouse (fictional)",
+        "Contact Details",
+        "Company",
+        "Contact Information",
+        "Email",
+        "Office Phone"
+      ],
+      "narration": "Open Contacts to find the site record. Enter Warehouse in Search contacts, then open Training Warehouse, marked fictional. Contact Details keeps that name and the Company category above its reference tabs. The Contact Information section shows an email address and office phone for this training record. Confirm the identity before reading further; a similar place name is not enough. We inspect the stored reference here without calling, emailing, opening an address link, or changing the contact.",
+      "practice": "Find the fictional warehouse and confirm its full name and category before using its supporting tabs."
+    },
+    {
+      "id": "07",
+      "title": "Read supporting context and its gaps",
+      "route": "/contacts → Contact Details",
+      "capture_refs": [
+        "016-contact-details-fictional-site",
+        "017-contact-notes-empty",
+        "018-contact-preplan-empty",
+        "019-contact-files-empty",
+        "020-contact-related-calls-empty"
+      ],
+      "required_labels": [
+        "Notes",
+        "Pre-Plan",
+        "Files",
+        "Calls",
+        "No notes found for this contact",
+        "No pre-incident plan has been recorded for this contact.",
+        "No files have been attached to this contact.",
+        "Related calls",
+        "No related calls"
+      ],
+      "narration": "The supporting tabs stay with the same contact. Open Notes: this warehouse has no notes in that tab. Pre-Plan explicitly says that no pre-incident plan has been recorded. Files says that no files have been attached. Check each message rather than assuming a tab contains material because its name is present. Calls opens Related calls, covering calls linked to this contact and calls at its linked occupancies. The example returns No related calls. That result describes this contact query; it does not mean the dispatch console has no active incidents.",
+      "practice": "Match each reference tab to its actual result. Record a missing reference as missing rather than describing an unshown plan, file or incident history."
+    },
+    {
+      "id": "08",
+      "title": "Locate settings and apply the reference pattern",
+      "route": "Menu → /settings",
+      "capture_refs": [
+        "024-navigation-menu-lower-reference",
+        "021-settings-app-info-account",
+        "022-settings-preferences-support-readonly"
+      ],
+      "required_labels": [
+        "Settings",
+        "App Info",
+        "App Name",
+        "Version",
+        "Environment",
+        "Preferences",
+        "Theme",
+        "Language",
+        "Keep Alive",
+        "Support"
+      ],
+      "narration": "Settings is lower in the menu. App Info identifies the app, version, and environment, which helps when requesting support. Scrolling reveals Preferences, including Theme, Language, and Keep Alive, followed by Support links. We leave those settings and links unchanged; this browser view does not prove a device wake lock or native hardware behavior. Apply the same map, point, and contact checks to fire and EMS, community-care or mental-health teams, search and rescue, security, wildland contractors, and industrial teams. The common task is finding the right place and recognizing which reference information is actually available.",
+      "practice": "Locate the app version and preference controls without changing an account, server or security setting. Choose a sector scenario and identify the references you would need."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "fire-ems",
+      "title": "Fire and EMS",
+      "scenario": "Use the displayed staging layer and fictional warehouse contact to rehearse a reference check before an exercise, without dispatching apparatus."
+    },
+    {
+      "sector": "community-response",
+      "title": "Community response and mental-health teams",
+      "scenario": "Use a fictional care-site or assembly point to practice selecting the correct place and recognizing missing contact reference information."
+    },
+    {
+      "sector": "search-and-rescue",
+      "title": "Search and rescue",
+      "scenario": "Use the point list and layer comparison to rehearse finding a rendezvous reference; no search deployment or physical GPS is demonstrated."
+    },
+    {
+      "sector": "security",
+      "title": "Security",
+      "scenario": "Identify a fictional site contact and distinguish its stored phone/email information from an actual communication or access authorization."
+    },
+    {
+      "sector": "wildland",
+      "title": "Wildland",
+      "scenario": "Practice locating a contractor staging reference and checking for an available preplan; the empty tab supplies no field procedure."
+    },
+    {
+      "sector": "industrial",
+      "title": "Industrial response",
+      "scenario": "Review a fictional assembly point, site contact and explicit missing files/history without treating the reference as a completed response."
+    }
+  ],
+  "source_files": [
+    "src/app/(app)/home.web.tsx",
+    "src/app/(app)/map.web.tsx",
+    "src/app/(app)/map.tsx",
+    "src/app/(app)/pois.tsx",
+    "src/app/(app)/contacts.tsx",
+    "src/app/(app)/protocols.tsx",
+    "src/app/(app)/settings.tsx",
+    "src/components/sidebar/side-menu.tsx",
+    "src/components/pois/poi-card.tsx",
+    "src/components/pois/poi-detail-screen.tsx",
+    "src/components/contacts/contact-details-sheet.tsx",
+    "src/components/contacts/contact-notes-list.tsx",
+    "src/components/contacts/contact-preplan-panel.tsx",
+    "src/components/contacts/contact-files-panel.tsx",
+    "src/components/calls/location-history-panel.tsx",
+    "src/lib/poi-display.ts",
+    "src/lib/poi-map-layers.ts",
+    "src/hooks/use-map-layers.ts",
+    "src/hooks/use-active-map-layers.ts",
+    "src/api/mapping/mapping.ts",
+    "src/api/contacts/contacts.ts",
+    "src/api/contacts/contactNotes.ts",
+    "src/api/contacts/contactPreplans.ts",
+    "src/api/contacts/contactFiles.ts",
+    "src/api/contacts/contactCallHistory.ts",
+    "src/translations/en.json"
+  ],
+  "scope_limits": [
+    "This is a bounded browser reference lesson, not complete Dispatch coverage. Published allocation, status/staffing and pending-call lessons remain separate.",
+    "Protocol/contact supporting views are actual empty states; no procedure, preplan, attachment, linked call or provider result is invented.",
+    "No device location, route provider, communication, active-unit change, account/security/shared/server save or external support action was performed.",
+    "Native maps/hardware, Keep Alive effectiveness, offline behavior and provider delivery need separate actual evidence.",
+    "POI detail012 and popup023 are excluded because their important text is unreadable; no source styling patch or artificial geography was used."
+  ],
+  "narration_frozen": true,
+  "parent_whole_script_approved": true,
+  "publication_approved": false,
+  "narration_word_count": 634
+}

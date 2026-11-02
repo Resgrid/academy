@@ -1,0 +1,105 @@
+{
+  "id": "core-personnel-role-requirements-unsaved-alternatives",
+  "kind": "proposed_source_grounded_capture_outline",
+  "source_only": true,
+  "executed": false,
+  "preserve": [
+    "Original6roles/order/members/icons",
+    "NewownRole51007members0",
+    "ExistingoneType51004MandatoryON/Anyblank/AllowtraineeOFF/grace7",
+    "GlobalOff/settings",
+    "Allmemberrecords/statuses/calls/units"
+  ],
+  "steps": [
+    {
+      "id": "launcher",
+      "route": "/User/Personnel/Roles",
+      "action": "Frame own new role row,0users and its Required certifications launcher. Do not open another role’s editor or reorder.",
+      "required_labels": [
+        "Required certifications"
+      ],
+      "expected_not_observed_here": "Own row identity and0members.",
+      "write": false
+    },
+    {
+      "id": "saved-rule",
+      "route": "/User/Certifications/RoleRequirements?roleId=51007",
+      "action": "Open normal launcher and capture saved one-row fields, Off notice, Add requirement, Save, Back to roles and Member eligibility/This role has no members. Scroll normally if controls require another viewport.",
+      "required_labels": [
+        "Type",
+        "Mandatory",
+        "Any-of group",
+        "Allow trainee",
+        "Grace override (days)",
+        "Add requirement",
+        "Save",
+        "Back to roles",
+        "Member eligibility",
+        "This role has no members."
+      ],
+      "fields": {
+        "row1_type": "TRAINING ONLY - Record review 20261028 (TRN-REVIEW-20261028)",
+        "mandatory": true,
+        "any_of_group": null,
+        "allow_trainee": false,
+        "grace_days": 7
+      },
+      "write": false
+    },
+    {
+      "id": "local-AND-preview",
+      "route": "same page, local unsaved form",
+      "action": "Click Add requirement once. Explicitly select a DISTINCT existing Person type in the new row, for example captured Driver / operator endorsement (DEMO-CERT-3). Keep both MandatoryON, both Any-of fields blank, both Allow traineeOFF. Preserve row1 grace7; use row2 grace7 only in the local preview. Capture both complete rows and group help. Do not Save or press Enter to submit.",
+      "required_labels": [
+        "Add requirement",
+        "Mandatory",
+        "Any-of group",
+        "Allow trainee",
+        "Grace override (days)"
+      ],
+      "source_meaning": "Two blank mandatory rows express A AND B if saved, but this is only an unsaved form illustration.",
+      "write": "local form only, no submit"
+    },
+    {
+      "id": "local-OR-preview",
+      "route": "same page, local unsaved form",
+      "action": "Enter1 in BOTH Any-of fields. Keep distinct types, both MandatoryON and both Allow traineeOFF. Frame the two complete rows, same group number and actual help text. Do not Save.",
+      "required_labels": [
+        "Any-of group",
+        "Mandatory",
+        "Allow trainee"
+      ],
+      "source_meaning": "The matching group numbers express A OR B if saved. Member eligibility is not recalculated by this local edit; with0members no person outcome is demonstrated.",
+      "write": "local form only, no submit"
+    },
+    {
+      "id": "discard-and-reopen",
+      "route": "Back to roles → own Required certifications",
+      "action": "Leave through the actual Back to roles link without Save, then reopen only own51007 normally. Capture the original single row with blank group/MandatoryON/AllowtraineeOFF/grace7. No Saved toast is expected for discarded preview.",
+      "required_labels": [
+        "Back to roles",
+        "Required certifications",
+        "Any-of group",
+        "Grace override (days)"
+      ],
+      "write": false
+    },
+    {
+      "id": "code-lock-readback",
+      "route": "/User/Certifications/Types → own Edit51004",
+      "action": "Capture current own type catalog requirement count, its Edit launcher, then actual readonly Code and explanatory help. Person scope should remain disabled because the record already exists. No type edit or Save.",
+      "required_labels": [
+        "Certification types",
+        "Requirements",
+        "Edit",
+        "Code",
+        "A role requirement references this type, so its code can no longer change.",
+        "Applies to",
+        "Person"
+      ],
+      "expected_not_observed_here": "Requirement1 and readonlyCode, unlike prior historical022–024. Actual fresh readback is required.",
+      "write": false
+    }
+  ],
+  "hard_boundary": "No Save in either local two-row preview. Saving replaces the set and would alter policy data; this outline is intentionally a preview/discard exercise, with all actual outcomes limited to fresh saved readback."
+}

@@ -1,0 +1,147 @@
+{
+  "id": "app-responder-work-order-assignment-review",
+  "app": "Responder",
+  "title": "Responder: review an assigned work order and verify acceptance",
+  "summary": "Read a work assignment, inspect the conditional hold and completion fields, then verify recorded acceptance and In progress activity.",
+  "audience": [
+    "Personnel receiving work orders",
+    "Maintenance coordinators",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "An authorized Responder session and an appropriate work-order assignment.",
+    "A fictional order for software practice and department procedures for accepting work and recording completion."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Read the intended assignment before accepting",
+      "narration": "Work orders keep an assignment and its updates together. Start by reading the intended order, its status, priority, station and due date. This recorded example is Training Only, Assigned software practice. It is Assigned, has Normal priority, uses the Inspection type and names Firehouse fifty-one as its station. The description makes it a fictional software exercise. Read the Steps section before accepting responsibility for the intended assignment.",
+      "practice": "Read the fictional order identity, Assigned status, Normal priority, station, due date and Steps.",
+      "required_labels": [
+        "Work orders",
+        "TRAINING ONLY — Assigned software practice",
+        "WO-2099-000001 · Assigned · Normal",
+        "Inspection",
+        "Station: Firehouse 51",
+        "Due 2026-10-27",
+        "Steps"
+      ],
+      "capture_refs": [
+        "190-assigned-order-before-acceptance"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Distinguish acceptance and conditional hold fields",
+      "narration": "Accept assignment is the green action below Steps. Change status is a separate section with its own Update status button. Log hours and Save hours are separate again. These controls answer different questions: accepting an assignment, recording its progress and logging time. Read the action you intend to take rather than using a status or time entry as a substitute for accepting the right work. The next view previews On hold in Change status. A Reason field appears below that choice, followed by Update status. The order header still says Assigned; selecting a proposed status in the form is different from saving that change. Use a clear reason when a permitted hold is appropriate for actual work. Here we are reviewing the offered fields without submitting a hold.",
+      "practice": "Distinguish Accept assignment, status and time updates; compare the On hold choice and Reason field with the still-Assigned header.",
+      "required_labels": [
+        "Accept assignment",
+        "Change status",
+        "Update status",
+        "Log hours",
+        "Save hours",
+        "On hold",
+        "Reason",
+        "WO-2099-000001 · Assigned · Normal"
+      ],
+      "capture_refs": [
+        "190-assigned-order-before-acceptance",
+        "191-assigned-order-on-hold-reason"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Read completion fields before making a declaration",
+      "narration": "The Completed form presents What was done to fix it, Cause and All steps are complete. The switch is off in this recorded preview, and Update status is below it. These fields help explain a completion decision; they should reflect the actual work and your department's review process. This exercise inspects the fields without declaring that an inspection or repair has been completed.",
+      "practice": "Identify the completion explanation, Cause, off All steps are complete switch and Update status.",
+      "required_labels": [
+        "Change status",
+        "Completed",
+        "What was done to fix it",
+        "Cause",
+        "All steps are complete",
+        "Update status"
+      ],
+      "capture_refs": [
+        "192-assigned-order-completion-inputs"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Return to the intended assignment action",
+      "narration": "After reviewing the available forms, return to the intended assignment. Check its title and Assigned status again. For this software exercise, use Accept assignment. Keep that choice separate from submitting the earlier hold or completion previews. The next screen will be used to verify what was actually recorded, rather than treating a button press as the result.",
+      "practice": "Verify the intended order again and identify Accept assignment; distinguish the earlier form previews from saved completion results.",
+      "required_labels": [
+        "Accept assignment",
+        "TRAINING ONLY — Assigned software practice",
+        "WO-2099-000001 · Assigned · Normal"
+      ],
+      "capture_refs": [
+        "190-assigned-order-before-acceptance"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Verify recorded acceptance and progress in Activity",
+      "narration": "The recorded Activity section now contains Assignment accepted and a later Status changed to In progress entry, each with a timestamp. Change status currently shows In progress. Acceptance and the progress transition are separate recorded events. Read those events when handing work over or checking who has taken responsibility. Log hours, comment and photo controls remain available, but this walkthrough verifies the recorded acceptance and progress only.",
+      "practice": "Read the actual Assignment accepted and Status changed to In progress events and their separate timestamps.",
+      "required_labels": [
+        "Activity",
+        "2026-10-26 19:40 · Assignment accepted",
+        "2026-10-26 19:43 · Status changed → In progress",
+        "In progress"
+      ],
+      "capture_refs": [
+        "193-assigned-order-accepted-activity"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Use the same review for different departments",
+      "narration": "The same assignment review helps security teams coordinate post equipment issues, wildland contractors organize crew support, and industrial emergency teams track standby equipment work. Search-and-rescue teams can coordinate support tasks, while community paramedicine and mental health response teams can manage appropriate outreach support work. Fire and EMS departments can use the same process for their assignments. Read the intended work, use the appropriate action and verify Activity before the next handover.",
+      "practice": "Apply assignment identity, action and recorded Activity checks to fictional support work for your department.",
+      "required_labels": [
+        "Activity",
+        "In progress"
+      ],
+      "capture_refs": [
+        "193-assigned-order-accepted-activity"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Review a fictional equipment-support assignment and its recorded acceptance."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate appropriate outreach-support work using clear assignment ownership."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Review mission-support equipment work and its actual Activity entries."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Verify the assigned post-support work before accepting it."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Keep crew-support work ownership and status updates understandable at handover."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Review standby equipment-support assignments and record accurate progress."
+    }
+  ],
+  "scope_limits": [
+    "Historical local Responder web captures of one fictional assigned order. No new application, work-order, time, photo or database action occurs in source preparation.",
+    "On hold and Completed are form previews only. The recorded result proves assignment acceptance and a separate In progress transition; physical work, completed repairs, saved holds, time entries, comments, photo upload and financial processing are not demonstrated.",
+    "Source candidate only; narration, actual timing and complete encoded/browser reviews remain required."
+  ],
+  "export_ready": false,
+  "publication_mode": "source_candidate_only"
+}

@@ -16,8 +16,8 @@ def profile(name=DEFAULT_NAME, web_port=18867):
         raise ValueError('Recording ports must be between 1024 and 65535.')
     return {'name': name, 'ports': ports}
 
-def load():
-    path = ROOT / 'private/stack.json'
+def load(root=ROOT):
+    path = Path(root) / 'private/stack.json'
     data = json.loads(path.read_text()) if path.exists() else profile()
     expected = profile(data['name'], data['ports']['web'])
     if data != expected:

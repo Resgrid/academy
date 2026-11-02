@@ -1,0 +1,476 @@
+{
+  "prepared_at": "2026-10-27T18:59:27.115923+00:00",
+  "lesson": "app-unit-01-access-and-crew",
+  "title": "Unit: access, shared devices, and your active crew",
+  "lesson_file": "sources/expansion/lessons/app-unit-01-access-and-crew.json",
+  "lesson_sha256": "b4d19c33b8a1631e5f9c8849870eb9bca0af941e3e5b7808e7302b0c61be4b07",
+  "narrated_source": "sources/expansion/plans/app-unit-01-access-and-crew.narrated-source.json",
+  "narrated_source_sha256": "b4d19c33b8a1631e5f9c8849870eb9bca0af941e3e5b7808e7302b0c61be4b07",
+  "status": "FROZEN narration and actual screenshot sequence; no audio/timings/render/playback yet",
+  "frozen": true,
+  "publishable": false,
+  "capture_manifest": "sources/captures/expansion/unit/access-and-crew-freeze.json",
+  "capture_manifest_sha256": "6986db9125aa7beca1af36021661ce9fba2f8fe12409584c03eb3a6daa814d34",
+  "mutable_source_manifest": "sources/captures/expansion/unit/manifest.json",
+  "mutable_source_manifest_sha256_at_freeze": "257ddb6a4e658beba6b9341eadbb8dbfb0624c6f772c983c3ec75404245dee80",
+  "scenes": [
+    {
+      "scene_id": "01-understand-the-person-and-the-apparatus",
+      "narration": "Unit follows the apparatus context selected on this device, while a named person signs in. Identify both before working. The active unit scopes status, roles, map context, routes, and inventory; review it in Settings at each handoff. This is useful for a SAR vehicle, community response team, or industrial standby. A vehicle-mounted tablet still needs the correct member and apparatus selection.",
+      "narration_sha256": "c83b37a3c31db60ea72b5774d970012e759e73226b35734c2da3847d11aee420",
+      "required_labels": [
+        "Settings"
+      ],
+      "ordered_capture_refs": [
+        "027-signed-in-no-unit-context",
+        "028-account-no-active-unit",
+        "039-engine51-available-header-crew"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "027-signed-in-no-unit-context",
+          "sha256": "014c0b4ef836debe5670666c70738d5c072a2426a02e3796edb41826b55a6f92"
+        },
+        {
+          "id": "028-account-no-active-unit",
+          "sha256": "7e433e5667483a76ffe1ed32df3f9215ae03922f91389152e848b8d0e6e77a4e"
+        },
+        {
+          "id": "039-engine51-available-header-crew",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5"
+        }
+      ],
+      "review": "027 proves a normal authenticated UI with no selected apparatus;028/039 provide actual Settings and Active Unit. No operator name is shown or inferred from assigned Herrmann.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "02-complete-first-launch-and-choose-the-server",
+      "narration": "Use Next or Skip on the first-launch introduction, then review Language and Server URL on sign-in. Select the correct listed server or the permitted custom address before entering credentials. The introduction describes features but does not prove every device permission is granted. Keep the server choice visible in the demonstration so a crew can recognize a training environment and avoid confusing it with another deployment.",
+      "narration_sha256": "45ffcf3deb8dc7b3e24842c995d06235b1f60dc76164be72a2f519000de18d76",
+      "required_labels": [
+        "Next",
+        "Skip",
+        "Server URL",
+        "en"
+      ],
+      "ordered_capture_refs": [
+        "001-onboarding-introduction",
+        "002-onboarding-notifications",
+        "003-onboarding-calls",
+        "004-login-empty-controls",
+        "005-server-url-local-training"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "001-onboarding-introduction",
+          "sha256": "fdbbfc247162ee65541224d3c927b9670036bd4f84388cd558917d00c66d082a"
+        },
+        {
+          "id": "002-onboarding-notifications",
+          "sha256": "b142db7744495206ea0ac59ddc3fd284cb72730a2f581f2a2f3a3a7e24813d80"
+        },
+        {
+          "id": "003-onboarding-calls",
+          "sha256": "f034b60a9fee4362b77d551ae143aab85a6fac21b0a6010470b7d5d6071a63cb"
+        },
+        {
+          "id": "004-login-empty-controls",
+          "sha256": "f4ff59ffde7c09d24bea06d0fd7735d2fa75bc021d75f267d33dc21ec3da94b6"
+        },
+        {
+          "id": "005-server-url-local-training",
+          "sha256": "da7c3ce46701628f534b108b67c692a3b48488631eccbdc32985ab6d550ddea1"
+        }
+      ],
+      "review": "Use actual Next/Skip on001-002 and final introduction003;004 has the real Language combobox painted value en.005 shows actual Custom/Server URL and local training origin. Keep en literal; any natural-language reference to Language needs later explicit reviewed cue correspondence, never invented pixels.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "03-sign-in-with-an-available-method",
+      "narration": "Use Username and Password and select Sign In for this training server. Sign in with SSO is an offered entry, but organization discovery and provider callbacks are unverified here. This lesson uses the ordinary credential flow. Additional verification depends on the methods the server offers; keep credential entry private and check the resulting apparatus context before working.",
+      "narration_sha256": "9306e6a8783a4d2111e0c276f92825fa4c2d9df87de6e57017e9a55fbc284b68",
+      "required_labels": [
+        "Username",
+        "Password",
+        "Sign In",
+        "Sign in with SSO"
+      ],
+      "ordered_capture_refs": [
+        "004-login-empty-controls",
+        "027-signed-in-no-unit-context"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "004-login-empty-controls",
+          "sha256": "f4ff59ffde7c09d24bea06d0fd7735d2fa75bc021d75f267d33dc21ec3da94b6"
+        },
+        {
+          "id": "027-signed-in-no-unit-context",
+          "sha256": "014c0b4ef836debe5670666c70738d5c072a2426a02e3796edb41826b55a6f92"
+        }
+      ],
+      "review": "Empty004 supplies Username/Password/Sign In and offered Sign in with SSO.027 is the ordinary human-completed sign-in result. Credential entry stays private; no SSO discovery/provider/MFA success is demonstrated.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "04-configure-a-shared-installation-deliberately",
+      "narration": "Choose Shared device when several members use the same installation. Turn on This is a shared device and enter Device label (optional), such as the training apparatus identifier, then Save. The setting takes effect at the next sign-in. It identifies the installation; it does not turn a person’s credentials into a shared crew password. Each member still follows the department’s session and verification policy.",
+      "narration_sha256": "6ebaa5064800277c8e4a86e0d528cd61cad5312cbb37cb01d762ca865b173dca",
+      "required_labels": [
+        "Shared device",
+        "This is a shared device",
+        "Device label (optional)",
+        "Save"
+      ],
+      "ordered_capture_refs": [
+        "006-shared-installation-setup",
+        "007-shared-installation-saved"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "006-shared-installation-setup",
+          "sha256": "d27430e29014699b3e650b4cd8e7fc53f88d49ce45b10d7908ece0e034aff710"
+        },
+        {
+          "id": "007-shared-installation-saved",
+          "sha256": "5e2fb2b6af9ba9442817ee3f38ea6017067d43da951657e33793fbab15db5aaf"
+        }
+      ],
+      "review": "006 shows real installation toggle, fictional label and Save;007 shows the saved label. The local setting is separate from server-supported shared-session policy.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "05-practice-lock-and-shift-handoff",
+      "narration": "Shared device identifies the saved installation. A normal reload in this exercise returned to Sign In. Follow the server’s supported sign-in procedure at handoff, verify the member, and recheck Active Unit before work. The label and sign-in boundary are demonstrated; shared-session locking, unlocking, operator switching, and shift ending remain unverified. Those branches require server-supported controls and permitted verification methods.",
+      "narration_sha256": "a5c3ce5433bcf82aede1f3abd300168d7ff077b1ffdfd57b11715815f6340277",
+      "required_labels": [
+        "Shared device",
+        "Sign In"
+      ],
+      "ordered_capture_refs": [
+        "006-shared-installation-setup",
+        "026-shared-device-lock-on-reload",
+        "031-current-unit-engine51-reopened"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "006-shared-installation-setup",
+          "sha256": "d27430e29014699b3e650b4cd8e7fc53f88d49ce45b10d7908ece0e034aff710"
+        },
+        {
+          "id": "026-shared-device-lock-on-reload",
+          "sha256": "f4d6ebb07c2a34ad7487393c4aa87f6693ba932529193695a2d81832d28a3da3"
+        },
+        {
+          "id": "031-current-unit-engine51-reopened",
+          "sha256": "ad4430e50dd330ff6a5ff69423724d861841673e376789c1a0327360570073e2"
+        }
+      ],
+      "review": "006 supplies literal Shared device;026 is specifically the empty normal Sign In reached after ordinary reload, not a successful shared-session lock view.031 supports the instruction to recheck apparatus. No Lock/Unlock/End shift/Switch operator success.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "06-select-the-apparatus-you-actually-have",
+      "narration": "In Settings, open Active Unit and choose the apparatus for this crew. Select Unit lists the units accessible to this member, and Current Unit helps confirm the result. If the expected unit is missing, ask an administrator to check station-group membership. Do not select a different vehicle merely to clear an empty state. The selection scopes several operational screens and should be checked at every handoff.",
+      "narration_sha256": "acd03d8705333dc8913b4a0a274bae4cc0089886b3797f7bbb00c7ece31cc20e",
+      "required_labels": [
+        "Active Unit",
+        "Select Unit",
+        "Current Unit"
+      ],
+      "ordered_capture_refs": [
+        "028-account-no-active-unit",
+        "029-select-unit-dark-list",
+        "031-current-unit-engine51-reopened",
+        "039-engine51-available-header-crew"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "028-account-no-active-unit",
+          "sha256": "7e433e5667483a76ffe1ed32df3f9215ae03922f91389152e848b8d0e6e77a4e"
+        },
+        {
+          "id": "029-select-unit-dark-list",
+          "sha256": "12a38beff8daaa1584f2ddb92227a43bc64ecacca58241325677eb610fffd15f"
+        },
+        {
+          "id": "031-current-unit-engine51-reopened",
+          "sha256": "ad4430e50dd330ff6a5ff69423724d861841673e376789c1a0327360570073e2"
+        },
+        {
+          "id": "039-engine51-available-header-crew",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5"
+        }
+      ],
+      "review": "028→029→031 is the actual None Selected/list/Current Unit Engine51 progression.031 reopened after automatic chooser closure;030 remains excluded.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "07-assign-the-actual-crew-roles",
+      "narration": "Open the roles card and inspect Unit Role Assignments. Officer / Team Lead already contains Christopher Herrmann. Save is disabled because the roster has not changed. The signed-in operator and assigned crew are separate. Review configured seats before an authorized crew change; role assignments describe apparatus functions, while account permissions and dated shift sign-ups remain separate. This exercise preserves Herrmann’s seat.",
+      "narration_sha256": "5f69636fd848732b8a41f8fe7b502ae8d8d80c91d705813f3711394760b239b0",
+      "required_labels": [
+        "Unit Role Assignments",
+        "Officer / Team Lead",
+        "Christopher Herrmann",
+        "Save"
+      ],
+      "ordered_capture_refs": [
+        "040-engine51-herrmann-assignment-preserved"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "040-engine51-herrmann-assignment-preserved",
+          "sha256": "4f3d2c7b9d5d05e91c7f0a25790a059c6be5774dbc825d09c7ccec96b9878184"
+        }
+      ],
+      "review": "040 shows existing Christopher Herrmann Officer / Team Lead, Standing By/On Shift labels and disabled Save. These personal labels are not physical crew readiness or qualification proof.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "08-read-the-unit-status-before-changing-it",
+      "narration": "The sidebar shows the active unit’s state. A quick status button opens that status’s destination or note steps; Set Active also opens Select Status. This department uses ordinary Submit. Two-second holding and next-status restrictions depend on configuration. Read the offered destinations and note before submitting, then confirm the saved unit state. Unit status remains separate from the operator’s personal staffing.",
+      "narration_sha256": "e7e42a292ceb5ec2393e9cf2bedc907c689fe791281bca8f9cbba59f252c0397",
+      "required_labels": [
+        "Select Status",
+        "Submit",
+        "Responding"
+      ],
+      "ordered_capture_refs": [
+        "039-engine51-available-header-crew",
+        "035-available-no-destination-step",
+        "038-available-correction-exact-readback",
+        "039-engine51-available-header-crew",
+        "020-practice-call-info",
+        "021-set-active-status-selection"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "039-engine51-available-header-crew",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5"
+        },
+        {
+          "id": "035-available-no-destination-step",
+          "sha256": "c08026c83d5cb55476b13a6b0bb89449731512662d8e48b247a88d93c9405728"
+        },
+        {
+          "id": "038-available-correction-exact-readback",
+          "sha256": "acc29df36d0180e934ac6d93cc8a98478ea5bb97875cc61947b7356acb2bcd4f"
+        },
+        {
+          "id": "020-practice-call-info",
+          "sha256": "5fc939b8d2f9157ade9b76e9c411cdc8681279c511544cdae2c2c243fbbc969f"
+        },
+        {
+          "id": "021-set-active-status-selection",
+          "sha256": "90b4e4f303404be12b432a657e75e0bbe7e0b1d57307c2ac522c098d2941fb48"
+        }
+      ],
+      "review": "039 shows actual Available header and quick buttons.035/038 show No Destination and exact correction note/Submit;039 is the saved Available outcome.020 Set Active/021 Select Status demonstrate the alternate entry. Ordinary Submit only; conditional hold and next-state variants remain unverified.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "09-understand-the-sidebar-incident-context",
+      "narration": "The call card shows the selected incident. View Call Details opens its full screen. Directions offers a mapping handoff, which is unexercised here. Deselect concerns app selection; incident closure is separate. Set Active selected our practice incident and opened Select Status. The unit’s response changed only after the status submission, so verify selection and response separately before describing the crew as dispatched or responding.",
+      "narration_sha256": "34c3a1cb910eff99166333dc63d3e72dfeae7afb7e17a0d2aedc8fa8a8576a6d",
+      "required_labels": [
+        "View Call Details",
+        "Directions",
+        "Deselect",
+        "Set Active",
+        "Select Status"
+      ],
+      "ordered_capture_refs": [
+        "025-engine51-response-header",
+        "020-practice-call-info",
+        "021-set-active-status-selection",
+        "022-responding-own-call-destination",
+        "023-responding-note-submit",
+        "025-engine51-response-header",
+        "039-engine51-available-header-crew"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "025-engine51-response-header",
+          "sha256": "11b2778a24113686f0184ba9fb90d5e6e915e00bbaa41cb8758f05ac763b1a91"
+        },
+        {
+          "id": "020-practice-call-info",
+          "sha256": "5fc939b8d2f9157ade9b76e9c411cdc8681279c511544cdae2c2c243fbbc969f"
+        },
+        {
+          "id": "021-set-active-status-selection",
+          "sha256": "90b4e4f303404be12b432a657e75e0bbe7e0b1d57307c2ac522c098d2941fb48"
+        },
+        {
+          "id": "022-responding-own-call-destination",
+          "sha256": "ac431ff3f68d2f31f3e0ffd6d23849f8c585bc0fb4a5db0be925fecea8daad20"
+        },
+        {
+          "id": "023-responding-note-submit",
+          "sha256": "9082c87851c746ede12efd99c844419d54da1d3f10a01d183ddd8fcf7ef3b545"
+        },
+        {
+          "id": "039-engine51-available-header-crew",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5"
+        }
+      ],
+      "review": "025 shows the genuine active historical practice call and the three icon-only actions with their actual DOM accessible names.020 Set Active→021/022/023 status flow→025 saved Responding.039 is later cleanup Available/NoActiveCall, after Responder closed only51009. Directions is offered but never invoked; Deselect result is unverified. Those icons require separate actual rendered-frame reviews later.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    },
+    {
+      "scene_id": "10-keep-account-security-and-recovery-visible",
+      "narration": "Sign-in and security shows Authenticator app, Passkeys for this app, and Recent verifications. This account says no passkeys are registered for this app. This lesson inspects configuration and recovery prerequisites without enrolling a method, replacing an authenticator, or changing credentials. Login Info opens empty Username and Password fields; Cancel returns without saving. Logout opens Confirm Logout; Cancel preserves the current session.",
+      "narration_sha256": "07d9aaef27d730a0130dd9f651077bc922131797a82583107e3423d14ca1d9cd",
+      "required_labels": [
+        "Sign-in and security",
+        "Authenticator app",
+        "Passkeys for this app",
+        "Recent verifications",
+        "Login Info",
+        "Username",
+        "Password",
+        "Cancel",
+        "Logout",
+        "Confirm Logout"
+      ],
+      "ordered_capture_refs": [
+        "039-engine51-available-header-crew",
+        "032-account-security-readonly",
+        "039-engine51-available-header-crew",
+        "033-login-info-empty-cancel",
+        "034-confirm-logout-cancel",
+        "039-engine51-available-header-crew"
+      ],
+      "capture_sha256s": [
+        {
+          "id": "039-engine51-available-header-crew",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5"
+        },
+        {
+          "id": "032-account-security-readonly",
+          "sha256": "e5a6fda9094f5f614ae445ff0fc600a425910ff7bd9a2bc0a1e0fc9b2a3a38f2"
+        },
+        {
+          "id": "033-login-info-empty-cancel",
+          "sha256": "1183a8015bfa1b6c3eb44a7aa9cc7b1429c4dd28ac456ddadf9c013b9c2add4d"
+        },
+        {
+          "id": "034-confirm-logout-cancel",
+          "sha256": "b4b1cc6333202eb9125b0b2c16513e240694c810f25ecb09e8f0443fbeae18d4"
+        }
+      ],
+      "review": "039 supplies actual Account entry rows.032 shows readonly security/current no-passkeys state.033 shows empty credential fields then Cancel;034 is actual Confirm Logout canceled. No enrollment, credential entry/save, recovery, factor change or sign-out result is claimed.",
+      "missing_required_labels": [],
+      "speech_cues": null,
+      "timing": "Pending genuine speech-timed captions; no durations/cue boundaries invented."
+    }
+  ],
+  "source_revision": {
+    "app": "Unit",
+    "head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+    "source_files": [
+      {
+        "file": "src/app/onboarding.tsx",
+        "sha256": "98f65392da1192d8732754a459f2a9790701bf4fb801ba0d65520e12f93fd1a7"
+      },
+      {
+        "file": "src/app/login/index.tsx",
+        "sha256": "84d6421751b0b0e7fd4162bb9f6cf9c03befd30704939e5aecbba0c43c2cca83"
+      },
+      {
+        "file": "src/app/login/sso.tsx",
+        "sha256": "866ec393fcb73a2f48a5845a9b4f8725d0617268555d6295d4db21914ca414fb"
+      },
+      {
+        "file": "src/app/login/shared-device.tsx",
+        "sha256": "c9c2e265882dc4e00f6df618b71b749749b5b79d3a57a9ce7ecc39220ccd0a56"
+      },
+      {
+        "file": "src/components/shared-session/shared-session-bar.tsx",
+        "sha256": "a0357857a5bb6ed9d51280d8b07f0649b1c318c3e0f2a3e24881dd3195141615"
+      },
+      {
+        "file": "src/components/shared-session/shared-session-lock-screen.tsx",
+        "sha256": "ac9e95c3246aa55e1a0a16391ee959194fd2020775227cd2dc3a8e442ad4629c"
+      },
+      {
+        "file": "src/components/settings/unit-selection-bottom-sheet.tsx",
+        "sha256": "ac9cf41bdc41366edfb6aeff76cecaee83e3d5c67eecb34e981f94d67514f2b4"
+      },
+      {
+        "file": "src/components/roles/roles-bottom-sheet.tsx",
+        "sha256": "de89407a3072c095ddaadf2a60cb660340112247b7b4993b0b9377ff307f2d59"
+      },
+      {
+        "file": "src/components/sidebar/sidebar-content.tsx",
+        "sha256": "9ab368da76eeffb5ac6bb7bb79dce697aa2aaf77d3c11ce9d35666fb7307f944"
+      },
+      {
+        "file": "src/app/(app)/account-security.tsx",
+        "sha256": "95a7cfc1917c0a89f14f19805ec688448372efdd3f56dc03fb7904c68f041fe9"
+      },
+      {
+        "file": "src/app/(app)/settings.tsx",
+        "sha256": "00c35c9f7b06ac2471485451c0f23dcf38a944fdf2906f299b5259790633949a"
+      },
+      {
+        "file": "src/components/settings/login-info-bottom-sheet.tsx",
+        "sha256": "25ba9b39743ff9d7fcd1b035877b2badf02ff9a3553f39f167d6d8c4e34972c3"
+      },
+      {
+        "file": "src/components/status/status-bottom-sheet.tsx",
+        "sha256": "aed3a7fe2ddb4d3de84739435ab62fb29d1b1f30393b4d2c255670576629fe7d"
+      },
+      {
+        "file": "src/translations/en.json",
+        "sha256": "a5f220e4d9204ff38f40b266219f841c2ba939dc9208b9cd8a3544b2a09cd3a4"
+      }
+    ]
+  },
+  "native_security_limits": [
+    "Organization SSO discovery/callback, additional MFA verification, passkey/authenticator enrollment/recovery and sign-out are unexercised; no credential or policy changes.",
+    "This installation label and normal Sign In boundary do not establish stable server shared-session Lock, unlock, operator switching, countdown, Stay signed in or End shift behavior. Those remain required follow-up app-coverage branches when legitimately offered.",
+    "Ordinary Submit is recorded. Configured hold/next-state restrictions remain separate follow-up scenarios; no hidden-store/serverflag/security edits.",
+    "Directions native/external handoff and Deselect confirmation/result are unexercised; actual icon controls are visible with reviewed browser DOM semantics only.",
+    "No device GPS/location permission, physical mobilization/readiness, camera/microphone/Bluetooth, native background behavior or external provider operation is claimed.",
+    "Call51009 Responding captures are historical. Later039 proves Engine51 Available/NoActiveCall after the authorized normal cleanup, with Herrmann1of1 preserved.036 remains rejected and its garbled history was corrected, not deleted."
+  ],
+  "engine_cleanup": {
+    "actual_state": "Available; No Active Call;1of1roles",
+    "proof": "039-engine51-available-header-crew",
+    "crew_proof": "040-engine51-herrmann-assignment-preserved",
+    "historical_response": "025 and prior captures show earlier Responding to now-closed51009; they are not final current state.",
+    "note_correction": "036 keyboard input was garbled and remains retained/rejected.038 is the explicit122-character ASCII correction, exact-readback before a subsequent ordinary Submit;039 confirms saved Available. No history deletion."
+  },
+  "audio": "Parent owns natural narration generation; no Descript project created or audio generated here.",
+  "cue_screen_mapping": "Ordered source sequence only; derive exact intervals only from actual exported speech cues/anchors. All named visible controls must match the exact selected source within each eventual cue. Do not show tiny inset application UI.",
+  "all_eight_words": 6473,
+  "remaining_capture_operations_for_narrated_scope": [],
+  "broader_app_follow_up_coverage": [
+    "Organization SSO discovery/callback, additional MFA verification, passkey/authenticator enrollment/recovery and sign-out are unexercised; no credential or policy changes.",
+    "This installation label and normal Sign In boundary do not establish stable server shared-session Lock, unlock, operator switching, countdown, Stay signed in or End shift behavior. Those remain required follow-up app-coverage branches when legitimately offered.",
+    "Ordinary Submit is recorded. Configured hold/next-state restrictions remain separate follow-up scenarios; no hidden-store/serverflag/security edits.",
+    "Directions native/external handoff and Deselect confirmation/result are unexercised; actual icon controls are visible with reviewed browser DOM semantics only.",
+    "No device GPS/location permission, physical mobilization/readiness, camera/microphone/Bluetooth, native background behavior or external provider operation is claimed.",
+    "Call51009 Responding captures are historical. Later039 proves Engine51 Available/NoActiveCall after the authorized normal cleanup, with Herrmann1of1 preserved.036 remains rejected and its garbled history was corrected, not deleted."
+  ]
+}

@@ -1,0 +1,1058 @@
+@model Resgrid.Web.Areas.User.Models.RunCards.EditRunCardModel
+@using Newtonsoft.Json
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Department.Department> localizer
+@{
+    ViewBag.Title = "Resgrid | " + localizer["RunCardsHeader"];
+
+    // Both payloads are emitted through Html.Raw into a script block and carry
+    // admin-entered free text (card/level names, type and role names, status button
+    // text), so escape HTML-significant characters to keep a name like "</script>"
+    // from breaking out of the block.
+    var jsonSettings = new JsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeHtml };
+
+    var cardJson = JsonConvert.SerializeObject(new
+    {
+        runCardId = Model.RunCard.RunCardId,
+        name = Model.RunCard.Name,
+        description = Model.RunCard.Description,
+        isDisabled = Model.RunCard.IsDisabled,
+        dispatchModeOverride = Model.RunCard.DispatchModeOverride,
+        autoDispatchOverride = Model.RunCard.AutoDispatchOverride,
+        minimumStaffingLevelOverride = Model.RunCard.MinimumStaffingLevelOverride,
+        homeStationGroupId = Model.RunCard.HomeStationGroupId,
+        relaxUnfilledRows = Model.RunCard.RelaxUnfilledRows,
+        waitingCallAutoDispatchOverride = Model.RunCard.WaitingCallAutoDispatchOverride,
+        triggers = (Model.RunCard.Triggers ?? new List<Resgrid.Model.RunCardTrigger>()).Select(t => new
+        {
+            runCardTriggerId = t.RunCardTriggerId,
+            triggerType = t.TriggerType,
+            priority = t.Priority,
+            callTypeId = t.CallTypeId
+        }),
+        alarmLevels = (Model.RunCard.AlarmLevels ?? new List<Resgrid.Model.RunCardAlarmLevel>()).Select(l => new
+        {
+            runCardAlarmLevelId = l.RunCardAlarmLevelId,
+            alarmLevel = l.AlarmLevel,
+            name = l.Name,
+            responsePackageId = l.ResponsePackageId,
+            decisionNodes = (l.DecisionNodes ?? new List<Resgrid.Model.RunCardDecisionNode>()).OrderBy(n => n.SortOrder).Select(n => new
+            {
+                nodeKey = n.NodeKey,
+                isRoot = n.IsRoot,
+                nodeKind = n.NodeKind,
+                label = n.Label,
+                conditionType = n.ConditionType,
+                subjectStatusFilter = n.SubjectStatusFilter,
+                subjectStatusBaseTypes = n.SubjectStatusBaseTypes,
+                referenceStatusFilter = n.ReferenceStatusFilter,
+                referenceStatusBaseTypes = n.ReferenceStatusBaseTypes,
+                thresholdSeconds = n.ThresholdSeconds,
+                requiredCount = n.RequiredCount,
+                yesNodeKey = n.YesNodeKey,
+                noNodeKey = n.NoNodeKey,
+                responsePackageId = n.ResponsePackageId,
+                adviceText = n.AdviceText,
+                subjectTargets = (n.SubjectTargets ?? new List<Resgrid.Model.RunCardTarget>()).Select(x => new { targetKind = x.TargetKind, targetRefId = x.TargetRefId }),
+                referenceTargets = (n.ReferenceTargets ?? new List<Resgrid.Model.RunCardTarget>()).Select(x => new { targetKind = x.TargetKind, targetRefId = x.TargetRefId })
+            }),
+            unitRequirements = (l.UnitRequirements ?? new List<Resgrid.Model.RunCardUnitRequirement>()).Select(r => new
+            {
+                runCardUnitRequirementId = r.RunCardUnitRequirementId,
+                unitTypeId = r.UnitTypeId,
+                requiredCount = r.RequiredCount
+            }),
+            roleRequirements = (l.RoleRequirements ?? new List<Resgrid.Model.RunCardRoleRequirement>()).Select(r => new
+            {
+                runCardRoleRequirementId = r.RunCardRoleRequirementId,
+                personnelRoleId = r.PersonnelRoleId,
+                requiredCount = r.RequiredCount
+            })
+        }),
+        selections = (Model.RunCard.AvailabilitySelections ?? new List<Resgrid.Model.RunCardAvailabilitySelection>()).Select(s => new
+        {
+            runCardAvailabilitySelectionId = s.RunCardAvailabilitySelectionId,
+            selectionType = s.SelectionType,
+            unitTypeId = s.UnitTypeId,
+            isCustomState = s.IsCustomState,
+            stateId = s.StateId
+        })
+    }, jsonSettings);
+
+    Func<Resgrid.Web.Areas.User.Models.RunCards.StatusOptionModel, object> statusOption = o => new
+    {
+        stateId = o.StateId,
+        isCustomState = o.IsCustomState,
+        text = o.Text,
+        isMeaning = o.IsMeaning,
+        meaningName = o.MeaningName,
+        availability = o.Availability
+    };
+
+    var lookupsJson = JsonConvert.SerializeObject(new
+    {
+        priorities = Model.CallPriorities.Items.Cast<Resgrid.Model.DepartmentCallPriority>().Select(p => new { id = p.DepartmentCallPriorityId, name = p.Name }),
+        callTypes = Model.CallTypes.Select(t => new { id = t.CallTypeId, name = t.Type }),
+        stations = Model.StationGroups.Select(s => new { id = s.DepartmentGroupId, name = s.Name }),
+        unitTypes = Model.UnitTypes.Select(t => new { id = t.UnitTypeId, name = t.Type }),
+        roles = Model.PersonnelRoles.Select(r => new { id = r.PersonnelRoleId, name = r.Name }),
+        unitStatusOptions = Model.UnitStatusOptions.ToDictionary(kv => kv.Key.ToString(), kv => kv.Value.Select(statusOption)),
+        unitMeaningOptions = Model.UnitMeaningOptions.Select(statusOption),
+        personnelStatusOptions = Model.PersonnelStatusOptions.Select(statusOption),
+        staffingOptions = Model.StaffingOptions.Select(statusOption),
+        conditionsEnabled = Model.ConditionsEnabled,
+        packages = Model.ResponsePackages.Select(p => new { id = p.ResponsePackageId, name = p.IsRetired ? p.Name + " (" + localizer["ResponsePackageRetiredBadge"].Value + ")" : p.Name }),
+        unitClasses = Enum.GetValues(typeof(Resgrid.Model.UnitTypeClasses)).Cast<Resgrid.Model.UnitTypeClasses>().Where(c => c != Resgrid.Model.UnitTypeClasses.None)
+            .Select(c => new { id = (int)c, name = localizer["RunCardTargetAnyClass", Resgrid.Framework.StringHelpers.GetDisplayString(c)].Value }),
+        baseTypes = Enum.GetValues(typeof(Resgrid.Model.ActionBaseTypes)).Cast<Resgrid.Model.ActionBaseTypes>().Where(b => b != Resgrid.Model.ActionBaseTypes.None)
+            .Select(b => new { id = (int)b, name = Resgrid.Framework.StringHelpers.GetDisplayString(b) })
+    }, jsonSettings);
+}
+
+@section Styles
+{
+    <style>
+        #tab-selections .rc-guide { margin-bottom: 18px; padding: 12px 16px; border: 1px solid #d6e9f5; border-left: 4px solid #23c6c8; border-radius: 4px; background: #f4f9fc; }
+        #tab-selections .rc-guide h4 { margin: 0 0 6px 0; }
+        #tab-selections .rc-guide ul { margin: 0; padding-left: 18px; }
+        #tab-selections .rc-guide li { margin-bottom: 3px; }
+        #tab-selections .rc-section { margin-bottom: 16px; border: 1px solid #e7eaec; border-radius: 4px; }
+        #tab-selections .rc-section-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #e7eaec; background: #f9fafb; }
+        #tab-selections .rc-section-head h4 { flex: 1 1 auto; margin: 0; }
+        #tab-selections .rc-section-body { padding: 12px 14px; }
+        #tab-selections .rc-help { margin-bottom: 10px; color: #676a6c; }
+        #tab-selections .rc-subsection, #tab-selections .rc-unit-body { padding: 10px 12px; border: 1px solid #eef0f2; border-radius: 4px; background: #fbfcfd; }
+        #tab-selections .rc-subsection-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 4px; }
+        #tab-selections .rc-actions { margin-left: auto; }
+        #tab-selections .rc-actions .btn { margin: 0 0 0 4px; }
+        #tab-selections .rc-group + .rc-group { margin-top: 12px; }
+        #tab-selections .rc-group-title { margin-bottom: 6px; font-weight: 600; }
+        #tab-selections .rc-group-title small { margin-left: 6px; font-weight: 400; color: #999; }
+        #tab-selections .rc-cols { display: flex; flex-wrap: wrap; gap: 12px; }
+        #tab-selections .rc-col { flex: 1 1 200px; min-width: 180px; }
+        #tab-selections .rc-col-title { margin-bottom: 6px; font-size: 12px; font-weight: 600; }
+        #tab-selections .rc-col-title small { display: block; font-weight: 400; color: #999; }
+        #tab-selections .rc-col--available .rc-col-title { color: #18a689; }
+        #tab-selections .rc-col--busy .rc-col-title { color: #c27c0e; }
+        #tab-selections .rc-col--unavailable .rc-col-title { color: #a94442; }
+        #tab-selections .rc-option { display: flex; align-items: center; gap: 8px; margin: 0 0 4px 0; padding: 4px 8px; border: 1px solid #e7eaec; border-radius: 4px; background: #fff; font-weight: 400; cursor: pointer; }
+        #tab-selections .rc-option:hover { border-color: #c4c9cc; }
+        #tab-selections .rc-option.is-on { border-color: #1ab394; background: #e8f7f3; }
+        #tab-selections .rc-option input { margin: 0; }
+        #tab-selections .rc-unit-row { padding: 8px 0; border-top: 1px solid #f0f0f0; }
+        #tab-selections .rc-unit-row-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        #tab-selections .rc-unit-name { min-width: 140px; font-weight: 600; }
+        #tab-selections .rc-unit-state { flex: 1 1 auto; color: #676a6c; }
+        #tab-selections .rc-unit-body { margin-top: 8px; }
+        #tab-selections .rc-unit-body .rc-actions { display: block; margin: 0 0 10px 0; }
+        #tab-selections .rc-unit-body .rc-actions .btn { margin: 0 4px 0 0; }
+    </style>
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-8">
+        <h2>@(Model.IsNew ? localizer["NewRunCardButton"] : Model.RunCard.Name)</h2>
+        <ol class="breadcrumb">
+            <li><a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a></li>
+            <li><a asp-controller="RunCards" asp-action="Index" asp-route-area="User">@localizer["RunCardsHeader"]</a></li>
+            <li class="active"><strong>@(Model.IsNew ? localizer["NewRunCardButton"] : Model.RunCard.Name)</strong></li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="alert alert-danger" id="saveError" style="display: none"></div>
+                    @if (TempData["TemplateApplied"] != null)
+                    {
+                        <div class="alert alert-info">@localizer["RunCardTemplateAppliedMessage"]</div>
+                    }
+                    <div class="alert alert-success" id="saveSuccess" style="display: none">@localizer["RunCardSavedMessage"]</div>
+                    @if (Model.RemovedReferenceCount > 0)
+                    {
+                        <div class="alert alert-warning">@localizer["RunCardDetachedReferencesRemoved", Model.RemovedReferenceCount]</div>
+                    }
+
+                    <div class="alert alert-warning" id="triggerRequired" role="alert" style="display: none">@localizer["RunCardTriggerRequired"]</div>
+
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-general">@localizer["RunCardGeneralTab"]</a></li>
+                            <li><a data-toggle="tab" href="#tab-triggers">@localizer["RunCardTriggersHeader"]</a></li>
+                            <li><a data-toggle="tab" href="#tab-alarms">@localizer["RunCardAlarmLevelsHeader"]</a></li>
+                            <li><a data-toggle="tab" href="#tab-selections">@localizer["RunCardSelectionsHeader"]</a></li>
+                            <li><a data-toggle="tab" href="#tab-test">@localizer["RunCardTestHeader"]</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-general" class="tab-pane active">
+                                <div class="panel-body form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["RunCardNameLabel"]</label>
+                                        <div class="col-sm-9"><input type="text" id="cardName" class="form-control" maxlength="100" /></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["RunCardDescriptionLabel"]</label>
+                                        <div class="col-sm-9"><input type="text" id="cardDescription" class="form-control" maxlength="500" /></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["RunCardDisabledLabel"]</label>
+                                        <div class="col-sm-9"><input type="checkbox" id="cardDisabled" /></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["DispatchRecommendationModeLabel"]</label>
+                                        <div class="col-sm-9">
+                                            <select id="cardModeOverride" class="form-control" style="width: 70%">
+                                                <option value="">@localizer["RunCardDefaultLabel"]</option>
+                                                <option value="0">@localizer["RunCardManualOnlyLabel"]</option>
+                                                <option value="1">Station Based</option>
+                                                <option value="2">Closest Unit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["DispatchAutoDispatchLabel"]</label>
+                                        <div class="col-sm-9">
+                                            <select id="cardAutoOverride" class="form-control" style="width: 70%">
+                                                <option value="">@localizer["RunCardDefaultLabel"]</option>
+                                                <option value="0">@localizer["RunCardPrePopulateLabel"]</option>
+                                                <option value="1">@localizer["RunCardAutoDispatchOptionLabel"]</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["StaffingGateLabel"]</label>
+                                        <div class="col-sm-9">
+                                            <select id="cardStaffingOverride" class="form-control" style="width: 70%">
+                                                <option value="">@localizer["RunCardDefaultLabel"]</option>
+                                                <option value="0">@localizer["RunCardNoGateLabel"]</option>
+                                                <option value="2">Partially Staffed</option>
+                                                <option value="3">Degraded</option>
+                                                <option value="4">Fully Staffed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["RunCardHomeStationLabel"]</label>
+                                        <div class="col-sm-9"><select id="cardHomeStation" class="form-control" style="width: 70%"></select></div>
+                                    </div>
+                                    @if (Model.ConditionsEnabled)
+                                    {
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">@localizer["RunCardRelaxUnfilledRowsLabel"]</label>
+                                            <div class="col-sm-9">
+                                                <input type="checkbox" id="cardRelaxUnfilledRows" />
+                                                <span class="help-block m-b-none">@localizer["RunCardRelaxUnfilledRowsHelp"]</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">@localizer["RunCardWaitingAutoDispatchLabel"]</label>
+                                            <div class="col-sm-9">
+                                                <select id="cardWaitingAutoDispatch" class="form-control" style="width: 70%">
+                                                    <option value="">@localizer["RunCardDefaultLabel"]</option>
+                                                    <option value="0">@localizer["RunCardWaitingAutoDispatchOff"]</option>
+                                                    <option value="1">@localizer["RunCardWaitingAutoDispatchOn"]</option>
+                                                </select>
+                                                <span class="help-block m-b-none">@localizer["RunCardWaitingAutoDispatchHelp"]</span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div id="tab-triggers" class="tab-pane">
+                                <div class="panel-body">
+                                    <p class="text-muted">@localizer["RunCardTriggersHelp"]</p>
+                                    <table class="table table-striped" id="triggersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>@localizer["RunCardTriggerTypeLabel"]</th>
+                                                <th>@localizer["CallPriority"]</th>
+                                                <th>@localizer["CallType"]</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-white" id="addTriggerButton">@localizer["RunCardAddTriggerButton"]</button>
+                                </div>
+                            </div>
+
+                            <div id="tab-alarms" class="tab-pane">
+                                <div class="panel-body">
+                                    <p class="text-muted">@localizer["RunCardAlarmLevelsHelp"]</p>
+                                    @if (Model.ConditionsEnabled)
+                                    {
+                                        <p class="text-muted">@localizer["RunCardDecisionGraphHelp"] <a asp-controller="RunCards" asp-action="Packages" asp-route-area="User">@localizer["ResponsePackagesHeader"]</a></p>
+                                    }
+                                    <div id="alarmLevels"></div>
+                                    <button type="button" class="btn btn-white" id="addAlarmLevelButton">@localizer["RunCardAddAlarmLevelButton"]</button>
+                                </div>
+                            </div>
+
+                            <div id="tab-selections" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="rc-guide">
+                                        <h4>@localizer["RunCardSelectionsGuideTitle"]</h4>
+                                        <ul>
+                                            <li>@localizer["RunCardSelectionsGuideDefault"]</li>
+                                            <li>@localizer["RunCardSelectionsGuideReplace"]</li>
+                                            <li>@localizer["RunCardSelectionsGuideStart"]</li>
+                                            <li>@localizer["RunCardSelectionsGuideMeanings"]</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="rc-section">
+                                        <div class="rc-section-head">
+                                            <h4>@localizer["RunCardSelectionsUnitsTitle"] <span id="rcUnitsSummary"></span></h4>
+                                            <button type="button" class="btn btn-white btn-xs rc-clear" data-type="1" data-scope="all">@localizer["RunCardSelectionsClear"]</button>
+                                        </div>
+                                        <div class="rc-section-body">
+                                            <p class="rc-help">@localizer["RunCardSelectionsUnitsHelp"]</p>
+                                            <div class="rc-subsection">
+                                                <div class="rc-subsection-head">
+                                                    <strong>@localizer["RunCardSelectionsAllUnitTypes"]</strong> <span id="rcUnitAllSummary"></span>
+                                                    <span class="rc-actions">
+                                                        <button type="button" class="btn btn-white btn-xs rc-start-standard" data-type="1" data-unit-type-id="">@localizer["RunCardSelectionsStartStandard"]</button>
+                                                        <button type="button" class="btn btn-white btn-xs rc-clear" data-type="1" data-unit-type-id="">@localizer["RunCardSelectionsClear"]</button>
+                                                    </span>
+                                                </div>
+                                                <p class="rc-help">@localizer["RunCardSelectionsAllUnitTypesHelp"]</p>
+                                                <div id="rcUnitAllOptions"></div>
+                                            </div>
+                                            <div class="rc-group-title" style="margin-top: 14px;">@localizer["RunCardSelectionsByUnitType"]</div>
+                                            <div id="rcUnitTypes"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rc-section">
+                                        <div class="rc-section-head">
+                                            <h4>@localizer["RunCardSelectionsPersonnelTitle"] <span id="rcPersonnelSummary"></span></h4>
+                                            <span class="rc-actions">
+                                                <button type="button" class="btn btn-white btn-xs rc-start-standard" data-type="2" data-unit-type-id="">@localizer["RunCardSelectionsStartStandard"]</button>
+                                                <button type="button" class="btn btn-white btn-xs rc-clear" data-type="2" data-unit-type-id="">@localizer["RunCardSelectionsClear"]</button>
+                                            </span>
+                                        </div>
+                                        <div class="rc-section-body">
+                                            <p class="rc-help">@localizer["RunCardSelectionsPersonnelHelp"]</p>
+                                            <div id="rcPersonnelOptions"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rc-section">
+                                        <div class="rc-section-head">
+                                            <h4>@localizer["RunCardStaffingSelectionsLabel"] <span id="rcStaffingSummary"></span></h4>
+                                            <span class="rc-actions">
+                                                <button type="button" class="btn btn-white btn-xs rc-start-standard" data-type="3" data-unit-type-id="">@localizer["RunCardSelectionsStartStandard"]</button>
+                                                <button type="button" class="btn btn-white btn-xs rc-clear" data-type="3" data-unit-type-id="">@localizer["RunCardSelectionsClear"]</button>
+                                            </span>
+                                        </div>
+                                        <div class="rc-section-body">
+                                            <p class="rc-help">@localizer["RunCardSelectionsStaffingHelp"]</p>
+                                            <div id="rcStaffingOptions"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tab-test" class="tab-pane">
+                                <div class="panel-body form-horizontal">
+                                    <p class="text-muted">@localizer["RunCardTestHelp"]</p>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["CallPriority"]</label>
+                                        <div class="col-sm-9"><select id="testPriority" class="form-control" style="width: 50%"></select></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">@localizer["CallType"]</label>
+                                        <div class="col-sm-9"><select id="testCallType" class="form-control" style="width: 50%"></select></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Latitude / Longitude</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="testLatitude" class="form-control" style="width: 24%; display: inline-block" placeholder="39.7392" />
+                                            <input type="text" id="testLongitude" class="form-control" style="width: 24%; display: inline-block" placeholder="-104.9903" />
+                                            <input type="number" id="testAlarmLevel" class="form-control" style="width: 15%; display: inline-block" min="1" value="1" title="@localizer["RunCardAlarmLevelsHeader"]" />
+                                            <button type="button" class="btn btn-primary" id="runTestButton">@localizer["RunCardRunTestButton"]</button>
+                                        </div>
+                                    </div>
+                                    <div id="testRendered" style="display: none"></div>
+                                    <a href="#" id="testRawToggle" style="display: none">@localizer["RunCardShowRawJson"]</a>
+                                    <pre id="testResults" style="display: none; max-height: 500px; overflow: auto"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <form id="saveCardForm">@Html.AntiForgeryToken()</form>
+                        <a class="btn btn-white" asp-controller="RunCards" asp-action="Index" asp-route-area="User">@commonLocalizer["Cancel"]</a>
+                        <button class="btn btn-primary" type="button" id="saveCardButton">@commonLocalizer["Save"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+<script src="~/js/app/internal/dispatch/resgrid.dispatch.runcarddecision.js"></script>
+<script>
+    $(function () {
+        var card = @Html.Raw(cardJson);
+        var lookups = @Html.Raw(lookupsJson);
+
+        card.triggers = card.triggers || [];
+        card.alarmLevels = card.alarmLevels || [];
+        card.selections = card.selections || [];
+
+        function optionList(items, selected, allowEmpty, emptyText) {
+            var html = allowEmpty ? '<option value="">' + (emptyText || '') + '</option>' : '';
+            $.each(items, function (i, item) {
+                var sel = (selected !== null && selected !== undefined && String(selected) === String(item.id)) ? ' selected' : '';
+                html += '<option value="' + item.id + '"' + sel + '>' + $('<span>').text(item.name).html() + '</option>';
+            });
+            return html;
+        }
+
+        // ── General tab ──
+        $('#cardName').val(card.name || '');
+        $('#cardDescription').val(card.description || '');
+        $('#cardDisabled').prop('checked', card.isDisabled === true);
+        $('#cardModeOverride').val(card.dispatchModeOverride === null || card.dispatchModeOverride === undefined ? '' : String(card.dispatchModeOverride));
+        $('#cardAutoOverride').val(card.autoDispatchOverride === null || card.autoDispatchOverride === undefined ? '' : String(card.autoDispatchOverride));
+        $('#cardStaffingOverride').val(card.minimumStaffingLevelOverride === null || card.minimumStaffingLevelOverride === undefined ? '' : String(card.minimumStaffingLevelOverride));
+        $('#cardHomeStation').html(optionList(lookups.stations, card.homeStationGroupId, true, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardNoHomeStationLabel"].Value))'));
+        $('#cardRelaxUnfilledRows').prop('checked', card.relaxUnfilledRows === true);
+        $('#cardWaitingAutoDispatch').val(card.waitingCallAutoDispatchOverride === null || card.waitingCallAutoDispatchOverride === undefined ? '' : String(card.waitingCallAutoDispatchOverride));
+
+        // ── Triggers tab ──
+        function renderTriggers() {
+            var $body = $('#triggersTable tbody').empty();
+            $('#triggerRequired').toggle(card.triggers.length === 0);
+            $('#saveCardButton').prop('disabled', card.triggers.length === 0);
+            $.each(card.triggers, function (index, trigger) {
+                var row = '<tr data-index="' + index + '">';
+                row += '<td><select class="form-control trigger-type">';
+                row += '<option value="0"' + (trigger.triggerType === 0 ? ' selected' : '') + '>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTriggerPriorityOption"].Value))</option>';
+                row += '<option value="1"' + (trigger.triggerType === 1 ? ' selected' : '') + '>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTriggerTypeOption"].Value))</option>';
+                row += '<option value="2"' + (trigger.triggerType === 2 ? ' selected' : '') + '>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTriggerBothOption"].Value))</option>';
+                row += '</select></td>';
+                row += '<td><select class="form-control trigger-priority">' + optionList(lookups.priorities, trigger.priority, true) + '</select></td>';
+                row += '<td><select class="form-control trigger-calltype">' + optionList(lookups.callTypes, trigger.callTypeId, true) + '</select></td>';
+                row += '<td><button type="button" class="btn btn-danger btn-xs remove-trigger">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(commonLocalizer["Delete"].Value))</button></td>';
+                row += '</tr>';
+                $body.append(row);
+            });
+        }
+
+        $('#addTriggerButton').on('click', function () {
+            card.triggers.push({ runCardTriggerId: 0, triggerType: 2, priority: null, callTypeId: null });
+            renderTriggers();
+        });
+
+        $('#triggersTable').on('click', '.remove-trigger', function () {
+            card.triggers.splice($(this).closest('tr').data('index'), 1);
+            renderTriggers();
+        });
+
+        $('#triggersTable').on('change', 'select', function () {
+            var index = $(this).closest('tr').data('index');
+            var $row = $(this).closest('tr');
+            card.triggers[index].triggerType = parseInt($row.find('.trigger-type').val(), 10);
+            var priority = $row.find('.trigger-priority').val();
+            var callType = $row.find('.trigger-calltype').val();
+            card.triggers[index].priority = priority === '' ? null : parseInt(priority, 10);
+            card.triggers[index].callTypeId = callType === '' ? null : parseInt(callType, 10);
+        });
+
+        // ── Alarm levels tab ──
+        function requirementRows(requirements, items, cssClass) {
+            var html = '';
+            $.each(requirements, function (i, requirement) {
+                var itemId = requirement.unitTypeId !== undefined ? requirement.unitTypeId : requirement.personnelRoleId;
+                html += '<div class="form-inline m-b-xs ' + cssClass + '" data-req-index="' + i + '">';
+                html += '<select class="form-control req-item">' + optionList(items, itemId, false) + '</select> ';
+                html += '<input type="number" class="form-control req-count" style="width: 80px" min="1" value="' + (requirement.requiredCount || 1) + '" /> ';
+                html += '<button type="button" class="btn btn-danger btn-xs remove-req">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(commonLocalizer["Delete"].Value))</button>';
+                html += '</div>';
+            });
+            return html;
+        }
+
+        function renderAlarmLevels() {
+            var $container = $('#alarmLevels').empty();
+            card.alarmLevels.sort(function (a, b) { return a.alarmLevel - b.alarmLevel; });
+
+            $.each(card.alarmLevels, function (index, level) {
+                var html = '<div class="panel panel-default" data-level-index="' + index + '">';
+                html += '<div class="panel-heading"><strong>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardAlarmLevelLabel"].Value)) ' + level.alarmLevel + '</strong> ';
+                html += '<input type="text" class="form-control level-name" style="width: 250px; display: inline-block" placeholder="@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardAlarmLevelNamePlaceholder"].Value))" value="' + $('<span>').text(level.name || '').html() + '" /> ';
+                html += '<button type="button" class="btn btn-danger btn-xs pull-right remove-level">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(commonLocalizer["Delete"].Value))</button></div>';
+                html += '<div class="panel-body">';
+                html += '<h5>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardUnitRequirementsLabel"].Value))</h5>';
+                html += '<div class="unit-reqs">' + requirementRows(level.unitRequirements || [], lookups.unitTypes, 'unit-req') + '</div>';
+                html += '<button type="button" class="btn btn-white btn-xs add-unit-req">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardAddUnitRequirementButton"].Value))</button>';
+                html += '<h5>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardRoleRequirementsLabel"].Value))</h5>';
+                html += '<div class="role-reqs">' + requirementRows(level.roleRequirements || [], lookups.roles, 'role-req') + '</div>';
+                html += '<button type="button" class="btn btn-white btn-xs add-role-req">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardAddRoleRequirementButton"].Value))</button>';
+                if (lookups.conditionsEnabled) {
+                    html += conditionalLevelHtml(level);
+                }
+                html += '</div></div>';
+                $container.append(html);
+            });
+        }
+
+        $('#addAlarmLevelButton').on('click', function () {
+            var next = card.alarmLevels.length > 0 ? Math.max.apply(null, card.alarmLevels.map(function (l) { return l.alarmLevel; })) + 1 : 1;
+            card.alarmLevels.push({ runCardAlarmLevelId: 0, alarmLevel: next, name: '', unitRequirements: [], roleRequirements: [] });
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('click', '.remove-level', function () {
+            card.alarmLevels.splice($(this).closest('.panel').data('level-index'), 1);
+            $.each(card.alarmLevels, function (i, level) { level.alarmLevel = i + 1; });
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('click', '.add-unit-req', function () {
+            // With nothing to pick, a row would post id 0, which the save rejects.
+            if (!lookups.unitTypes.length) { return; }
+            var level = card.alarmLevels[$(this).closest('.panel').data('level-index')];
+            level.unitRequirements = level.unitRequirements || [];
+            level.unitRequirements.push({ runCardUnitRequirementId: 0, unitTypeId: lookups.unitTypes[0].id, requiredCount: 1 });
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('click', '.add-role-req', function () {
+            if (!lookups.roles.length) { return; }
+            var level = card.alarmLevels[$(this).closest('.panel').data('level-index')];
+            level.roleRequirements = level.roleRequirements || [];
+            level.roleRequirements.push({ runCardRoleRequirementId: 0, personnelRoleId: lookups.roles[0].id, requiredCount: 1 });
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('click', '.remove-req', function () {
+            var level = card.alarmLevels[$(this).closest('.panel').data('level-index')];
+            var $req = $(this).closest('div[data-req-index]');
+            if ($req.hasClass('unit-req')) {
+                level.unitRequirements.splice($req.data('req-index'), 1);
+            } else {
+                level.roleRequirements.splice($req.data('req-index'), 1);
+            }
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('change', '.level-name', function () {
+            card.alarmLevels[$(this).closest('.panel').data('level-index')].name = $(this).val();
+        });
+
+        $('#alarmLevels').on('change', '.req-item, .req-count', function () {
+            var level = card.alarmLevels[$(this).closest('.panel').data('level-index')];
+            var $req = $(this).closest('div[data-req-index]');
+            var target = $req.hasClass('unit-req') ? level.unitRequirements[$req.data('req-index')] : level.roleRequirements[$req.data('req-index')];
+            var itemId = parseInt($req.find('.req-item').val(), 10);
+            if ($req.hasClass('unit-req')) { target.unitTypeId = itemId; } else { target.personnelRoleId = itemId; }
+            target.requiredCount = parseInt($req.find('.req-count').val(), 10) || 1;
+        });
+
+        // ── Conditional run cards: level package and decision graph ──
+        var nodeKeySeed = 0;
+        function newNodeKey() {
+            nodeKeySeed++;
+            return 'n' + Date.now().toString(36) + nodeKeySeed;
+        }
+
+        function esc(text) {
+            return $('<span>').text(text === null || text === undefined ? '' : text).html();
+        }
+
+        function targetOptions(targets) {
+            var chosen = {};
+            $.each(targets || [], function (i, t) { chosen[t.targetKind + ':' + (t.targetRefId === null || t.targetRefId === undefined ? '' : t.targetRefId)] = true; });
+            function opt(kind, ref, name) {
+                var value = kind + ':' + (ref === null ? '' : ref);
+                return '<option value="' + value + '"' + (chosen[value] ? ' selected' : '') + '>' + esc(name) + '</option>';
+            }
+            var html = '<optgroup label="@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTargetUnitsGroup"].Value))">' + opt(3, null, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTargetAnyUnit"].Value))');
+            $.each(lookups.unitClasses, function (i, c) { html += opt(2, c.id, c.name); });
+            $.each(lookups.unitTypes, function (i, u) { html += opt(1, u.id, u.name); });
+            html += '</optgroup><optgroup label="@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTargetPeopleGroup"].Value))">' + opt(5, null, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardTargetAnyPerson"].Value))');
+            $.each(lookups.roles, function (i, r) { html += opt(4, r.id, r.name); });
+            return html + '</optgroup>';
+        }
+
+        function readTargets($select) {
+            return ($select.val() || []).map(function (value) {
+                var parts = value.split(':');
+                return { targetKind: parseInt(parts[0], 10), targetRefId: parts[1] === '' ? null : parseInt(parts[1], 10) };
+            });
+        }
+
+        function statusFilterHtml(cssClass, filter, baseTypes) {
+            var options = [[0, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardStatusAnyAvailable"].Value))'], [1, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardStatusInQuarters"].Value))'], [2, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardStatusAwayFromQuarters"].Value))'], [3, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardStatusBaseTypes"].Value))']];
+            var html = '<select class="form-control input-sm ' + cssClass + '-filter" style="width: auto; display: inline-block">';
+            $.each(options, function (i, o) { html += '<option value="' + o[0] + '"' + ((filter || 0) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; });
+            html += '</select> ';
+            var selected = (baseTypes || '').split(',');
+            html += '<select multiple class="form-control input-sm ' + cssClass + '-basetypes" size="3" style="width: auto; display: ' + (filter === 3 ? 'inline-block' : 'none') + '">';
+            $.each(lookups.baseTypes, function (i, b) { html += '<option value="' + b.id + '"' + (selected.indexOf(String(b.id)) >= 0 ? ' selected' : '') + '>' + esc(b.name) + '</option>'; });
+            return html + '</select>';
+        }
+
+        function nodeChoices(level, current, selected) {
+            var html = '<option value="">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardNodeChoose"].Value))</option>';
+            $.each(level.decisionNodes || [], function (i, n) {
+                if (n.nodeKey === current) { return; }
+                var text = (n.nodeKind === 2 ? '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardOutcomePrefix"].Value)) ' : '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionPrefix"].Value)) ') + (n.label || n.nodeKey);
+                html += '<option value="' + esc(n.nodeKey) + '"' + (n.nodeKey === selected ? ' selected' : '') + '>' + esc(text) + '</option>';
+            });
+            return html;
+        }
+
+        function nodeHtml(level, node, nodeIndex) {
+            var html = '<div class="well well-sm decision-node" data-node-index="' + nodeIndex + '">';
+            html += '<div class="form-inline m-b-xs">';
+            html += '<label class="m-r-sm"><input type="radio" name="root_' + level.alarmLevel + '" class="node-root"' + (node.isRoot ? ' checked' : '') + '> @Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardNodeStartLabel"].Value))</label> ';
+            html += '<span class="label ' + (node.nodeKind === 2 ? 'label-primary' : 'label-info') + '">' + (node.nodeKind === 2 ? '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardOutcomePrefix"].Value))' : '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionPrefix"].Value))') + '</span> ';
+            html += '<input type="text" class="form-control input-sm node-label" maxlength="200" style="width: 320px" placeholder="@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardNodeLabelPlaceholder"].Value))" value="' + esc(node.label) + '" /> ';
+            html += '<button type="button" class="btn btn-danger btn-xs pull-right remove-node">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(commonLocalizer["Delete"].Value))</button>';
+            html += '</div>';
+
+            if (node.nodeKind === 2) {
+                html += '<div class="form-inline m-b-xs">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardOutcomePackageLabel"].Value)) <select class="form-control input-sm node-package">' + optionList(lookups.packages, node.responsePackageId, true, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardNoPackageOption"].Value))') + '</select></div>';
+                html += '<div>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardOutcomeAdviceLabel"].Value))<textarea class="form-control input-sm node-advice" maxlength="1000" rows="2">' + esc(node.adviceText) + '</textarea></div>';
+            } else {
+                var isBefore = node.conditionType !== 2;
+                html += '<div class="form-inline m-b-xs"><select class="form-control input-sm node-type">';
+                html += '<option value="1"' + (isBefore ? ' selected' : '') + '>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionArrivesBefore"].Value))</option>';
+                html += '<option value="2"' + (!isBefore ? ' selected' : '') + '>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionAvailableWithin"].Value))</option></select></div>';
+                html += '<div class="row m-b-xs"><div class="col-sm-6"><label>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionSubjectLabel"].Value))</label><select multiple class="form-control input-sm node-subject" size="5">' + targetOptions(node.subjectTargets) + '</select>' + statusFilterHtml('node-subject', node.subjectStatusFilter, node.subjectStatusBaseTypes) + '</div>';
+                if (isBefore) {
+                    html += '<div class="col-sm-6"><label>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionReferenceLabel"].Value))</label><select multiple class="form-control input-sm node-reference" size="5">' + targetOptions(node.referenceTargets) + '</select>' + statusFilterHtml('node-reference', node.referenceStatusFilter, node.referenceStatusBaseTypes) + '</div>';
+                }
+                html += '</div><div class="form-inline m-b-xs">';
+                html += (isBefore ? '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionMarginLabel"].Value))' : '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionWithinLabel"].Value))') + ' <input type="number" class="form-control input-sm node-threshold" min="0" max="7200" style="width: 100px" value="' + (node.thresholdSeconds === null || node.thresholdSeconds === undefined ? (isBefore ? 0 : 480) : node.thresholdSeconds) + '" /> ';
+                if (!isBefore) {
+                    html += '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionCountLabel"].Value)) <input type="number" class="form-control input-sm node-count" min="1" max="25" style="width: 70px" value="' + (node.requiredCount || 1) + '" /> ';
+                }
+                html += '</div><div class="form-inline">';
+                html += '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionYesLabel"].Value)) <select class="form-control input-sm node-yes">' + nodeChoices(level, node.nodeKey, node.yesNodeKey) + '</select> ';
+                html += '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardConditionNoLabel"].Value)) <select class="form-control input-sm node-no">' + nodeChoices(level, node.nodeKey, node.noNodeKey) + '</select>';
+                html += '</div>';
+            }
+
+            return html + '</div>';
+        }
+
+        function conditionalLevelHtml(level) {
+            level.decisionNodes = level.decisionNodes || [];
+            var html = '<hr/><div class="form-inline m-b-sm"><strong>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardLevelPackageLabel"].Value))</strong> ';
+            html += '<select class="form-control input-sm level-package">' + optionList(lookups.packages, level.responsePackageId, true, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardNoPackageOption"].Value))') + '</select></div>';
+            html += '<h5>@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardDecisionGraphLabel"].Value))</h5><div class="decision-nodes">';
+            $.each(level.decisionNodes, function (i, node) { html += nodeHtml(level, node, i); });
+            html += '</div><button type="button" class="btn btn-white btn-xs add-condition">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardAddConditionButton"].Value))</button> ';
+            html += '<button type="button" class="btn btn-white btn-xs add-outcome">@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(localizer["RunCardAddOutcomeButton"].Value))</button>';
+            return html;
+        }
+
+        function levelOf(element) {
+            return card.alarmLevels[$(element).closest('.panel').data('level-index')];
+        }
+
+        function nodeOf(element) {
+            return levelOf(element).decisionNodes[$(element).closest('.decision-node').data('node-index')];
+        }
+
+        $('#alarmLevels').on('change', '.level-package', function () {
+            var value = $(this).val();
+            levelOf(this).responsePackageId = value === '' ? null : parseInt(value, 10);
+        });
+
+        $('#alarmLevels').on('click', '.add-condition, .add-outcome', function () {
+            var level = levelOf(this);
+            level.decisionNodes = level.decisionNodes || [];
+            var outcome = $(this).hasClass('add-outcome');
+            level.decisionNodes.push({
+                nodeKey: newNodeKey(), isRoot: level.decisionNodes.length === 0, nodeKind: outcome ? 2 : 1, label: '',
+                conditionType: 1, subjectStatusFilter: 0, referenceStatusFilter: 0, thresholdSeconds: outcome ? null : 0, requiredCount: 1,
+                subjectTargets: [], referenceTargets: [], yesNodeKey: null, noNodeKey: null, responsePackageId: null, adviceText: ''
+            });
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('click', '.remove-node', function () {
+            var level = levelOf(this);
+            var removed = level.decisionNodes.splice($(this).closest('.decision-node').data('node-index'), 1)[0];
+            $.each(level.decisionNodes, function (i, n) {
+                if (n.yesNodeKey === removed.nodeKey) { n.yesNodeKey = null; }
+                if (n.noNodeKey === removed.nodeKey) { n.noNodeKey = null; }
+            });
+            if (removed.isRoot && level.decisionNodes.length) { level.decisionNodes[0].isRoot = true; }
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('change', '.node-root', function () {
+            var level = levelOf(this);
+            var index = $(this).closest('.decision-node').data('node-index');
+            $.each(level.decisionNodes, function (i, n) { n.isRoot = i === index; });
+        });
+
+        $('#alarmLevels').on('change', '.node-type', function () {
+            nodeOf(this).conditionType = parseInt($(this).val(), 10);
+            renderAlarmLevels();
+        });
+
+        $('#alarmLevels').on('change', '.node-subject-filter, .node-reference-filter', function () {
+            var $node = $(this).closest('.decision-node');
+            var reference = $(this).hasClass('node-reference-filter');
+            var filter = parseInt($(this).val(), 10);
+            $node.find(reference ? '.node-reference-basetypes' : '.node-subject-basetypes').toggle(filter === 3);
+        });
+
+        // Labels and selections are read on every change, so a re-render (adding a node) never loses an edit.
+        $('#alarmLevels').on('change', '.decision-node input, .decision-node select, .decision-node textarea', function () {
+            var node = nodeOf(this);
+            var $node = $(this).closest('.decision-node');
+            node.label = $node.find('.node-label').val();
+
+            if (node.nodeKind === 2) {
+                var packageValue = $node.find('.node-package').val();
+                node.responsePackageId = packageValue === '' || packageValue === undefined ? null : parseInt(packageValue, 10);
+                node.adviceText = $node.find('.node-advice').val();
+                return;
+            }
+
+            node.subjectTargets = readTargets($node.find('.node-subject'));
+            node.subjectStatusFilter = parseInt($node.find('.node-subject-filter').val(), 10) || 0;
+            node.subjectStatusBaseTypes = ($node.find('.node-subject-basetypes').val() || []).join(',');
+            if ($node.find('.node-reference').length) {
+                node.referenceTargets = readTargets($node.find('.node-reference'));
+                node.referenceStatusFilter = parseInt($node.find('.node-reference-filter').val(), 10) || 0;
+                node.referenceStatusBaseTypes = ($node.find('.node-reference-basetypes').val() || []).join(',');
+            }
+            var threshold = parseInt($node.find('.node-threshold').val(), 10);
+            node.thresholdSeconds = isNaN(threshold) ? 0 : threshold;
+            node.requiredCount = parseInt($node.find('.node-count').val(), 10) || 1;
+            node.yesNodeKey = $node.find('.node-yes').val() || null;
+            node.noNodeKey = $node.find('.node-no').val() || null;
+        });
+
+        $('#alarmLevels').on('change', '.node-label', function () {
+            renderAlarmLevels();
+        });
+
+        // ── Dispatchable statuses tab ──
+        // A selection set is a scope: unit statuses for all unit types (no unit type) or for one unit type, personnel
+        // statuses, or staffing levels. Anything selected in a scope replaces the standard availability rules there,
+        // and a unit type with its own selections ignores the all-unit-types ones (DispatchRecommendationService).
+        var selectionText = @Html.Raw(JsonConvert.SerializeObject(new Dictionary<string, string>
+        {
+            ["standard"] = localizer["RunCardSelectionsStandardRules"].Value,
+            ["selected"] = localizer["RunCardSelectionsSelectedCount"].Value,
+            ["followsAll"] = localizer["RunCardSelectionsFollowsAll"].Value,
+            ["ownRule"] = localizer["RunCardSelectionsOwnRule"].Value,
+            ["customize"] = localizer["RunCardSelectionsCustomize"].Value,
+            ["done"] = localizer["RunCardSelectionsDone"].Value,
+            ["startStandard"] = localizer["RunCardSelectionsStartStandard"].Value,
+            ["copyAll"] = localizer["RunCardSelectionsCopyAll"].Value,
+            ["clear"] = localizer["RunCardSelectionsClear"].Value,
+            ["meaningsTitle"] = localizer["RunCardSelectionsMeaningsTitle"].Value,
+            ["meaningsHelp"] = localizer["RunCardSelectionsMeaningsHelp"].Value,
+            ["specificTitle"] = localizer["RunCardSelectionsSpecificTitle"].Value,
+            ["specificHelp"] = localizer["RunCardSelectionsSpecificHelp"].Value,
+            ["colAvailable"] = localizer["RunCardSelectionsColumnAvailable"].Value,
+            ["colAvailableNote"] = localizer["RunCardSelectionsColumnAvailableNote"].Value,
+            ["colBusy"] = localizer["RunCardSelectionsColumnBusy"].Value,
+            ["colUnavailable"] = localizer["RunCardSelectionsColumnUnavailable"].Value,
+            ["noUnitTypes"] = localizer["RunCardSelectionsNoUnitTypes"].Value,
+            ["more"] = localizer["RunCardSelectionsMore"].Value
+        }, jsonSettings));
+
+        // AvailabilityClass: Unknown 0, Available 1, Committed 2, Unavailable 3, Delayed 4. The standard rules count
+        // Available and Delayed.
+        var selectionColumns = [
+            { key: 'available', classes: [1, 4], title: selectionText.colAvailable, note: selectionText.colAvailableNote },
+            { key: 'busy', classes: [2], title: selectionText.colBusy },
+            { key: 'unavailable', classes: [3, 0], title: selectionText.colUnavailable }
+        ];
+        var expandedUnitTypes = {};
+
+        function scopeKey(unitTypeId) {
+            return unitTypeId === null || unitTypeId === undefined ? '' : String(unitTypeId);
+        }
+
+        function sameSelection(a, b) {
+            return a.selectionType === b.selectionType && scopeKey(a.unitTypeId) === scopeKey(b.unitTypeId)
+                && a.isCustomState === b.isCustomState && a.stateId === b.stateId;
+        }
+
+        function selectionsIn(type, unitTypeId) {
+            return card.selections.filter(function (s) { return s.selectionType === type && scopeKey(s.unitTypeId) === scopeKey(unitTypeId); });
+        }
+
+        function hasSelection(type, unitTypeId, option) {
+            var probe = { selectionType: type, unitTypeId: unitTypeId, isCustomState: option.isCustomState, stateId: option.stateId };
+            return card.selections.some(function (s) { return sameSelection(s, probe); });
+        }
+
+        // A selection already on the card keeps its row id, so ticking it again never re-inserts it.
+        function setSelection(type, unitTypeId, option, on) {
+            var selection = { runCardAvailabilitySelectionId: 0, selectionType: type, unitTypeId: scopeKey(unitTypeId) === '' ? null : parseInt(scopeKey(unitTypeId), 10), isCustomState: option.isCustomState, stateId: option.stateId };
+            if (!on) {
+                card.selections = card.selections.filter(function (s) { return !sameSelection(s, selection); });
+            } else if (!hasSelection(type, unitTypeId, option)) {
+                card.selections.push(selection);
+            }
+        }
+
+        function clearScope(type, unitTypeId) {
+            card.selections = card.selections.filter(function (s) { return !(s.selectionType === type && scopeKey(s.unitTypeId) === scopeKey(unitTypeId)); });
+        }
+
+        function optionsFor(type, unitTypeId) {
+            if (type === 2) { return lookups.personnelStatusOptions; }
+            if (type === 3) { return lookups.staffingOptions; }
+            if (scopeKey(unitTypeId) !== '') { return lookups.unitStatusOptions[scopeKey(unitTypeId)] || []; }
+
+            // All unit types offers the meanings; anything else saved there (not something this editor creates) is
+            // still listed so it can be seen and removed.
+            var options = lookups.unitMeaningOptions.slice();
+            $.each(selectionsIn(1, null), function (i, s) {
+                if (options.some(function (o) { return o.isCustomState === s.isCustomState && o.stateId === s.stateId; })) { return; }
+                var known = null;
+                $.each(lookups.unitStatusOptions, function (typeId, typeOptions) {
+                    known = known || typeOptions.filter(function (o) { return o.isCustomState === s.isCustomState && o.stateId === s.stateId; })[0] || null;
+                });
+                options.push(known || { stateId: s.stateId, isCustomState: s.isCustomState, text: '#' + s.stateId, isMeaning: false, availability: 0 });
+            });
+            return options;
+        }
+
+        function optionLabel(option) {
+            return option.isMeaning ? option.meaningName : option.text;
+        }
+
+        function summaryHtml(count) {
+            return count
+                ? '<span class="label label-primary">' + esc(selectionText.selected.replace('{0}', count)) + '</span>'
+                : '<span class="label label-default">' + esc(selectionText.standard) + '</span>';
+        }
+
+        function optionHtml(type, unitTypeId, option) {
+            var on = hasSelection(type, unitTypeId, option);
+            return '<label class="rc-option' + (on ? ' is-on' : '') + '"><input type="checkbox" class="selection-check" data-selection-type="' + type
+                + '" data-unit-type-id="' + scopeKey(unitTypeId) + '" data-custom="' + option.isCustomState + '" data-state-id="' + option.stateId + '"'
+                + (on ? ' checked' : '') + ' /> <span>' + esc(optionLabel(option)) + '</span></label>';
+        }
+
+        function optionColumns(type, unitTypeId, options) {
+            var html = '<div class="rc-cols">';
+            $.each(selectionColumns, function (i, column) {
+                var items = options.filter(function (o) { return column.classes.indexOf(o.availability) >= 0; });
+                if (!items.length) { return; }
+                html += '<div class="rc-col rc-col--' + column.key + '"><div class="rc-col-title">' + esc(column.title) + (column.note ? '<small>' + esc(column.note) + '</small>' : '') + '</div>';
+                $.each(items, function (j, option) { html += optionHtml(type, unitTypeId, option); });
+                html += '</div>';
+            });
+            return html + '</div>';
+        }
+
+        // Meanings first: they keep working when a status set changes, so they are the better default.
+        function optionGroups(type, unitTypeId, options) {
+            var meanings = options.filter(function (o) { return o.isMeaning; });
+            var statuses = options.filter(function (o) { return !o.isMeaning; });
+            var html = '';
+            if (meanings.length) {
+                html += '<div class="rc-group"><div class="rc-group-title">' + esc(selectionText.meaningsTitle) + '<small>' + esc(selectionText.meaningsHelp) + '</small></div>' + optionColumns(type, unitTypeId, meanings) + '</div>';
+            }
+            if (statuses.length) {
+                html += '<div class="rc-group"><div class="rc-group-title">' + esc(selectionText.specificTitle) + '<small>' + esc(selectionText.specificHelp) + '</small></div>' + optionColumns(type, unitTypeId, statuses) + '</div>';
+            }
+            return html;
+        }
+
+        function selectedNames(type, unitTypeId) {
+            var options = optionsFor(type, unitTypeId);
+            var names = selectionsIn(type, unitTypeId).map(function (s) {
+                var option = options.filter(function (o) { return o.isCustomState === s.isCustomState && o.stateId === s.stateId; })[0];
+                return option ? option.text : '#' + s.stateId;
+            });
+            var shown = names.slice(0, 4).map(esc).join(', ');
+            return names.length > 4 ? shown + ' ' + esc(selectionText.more.replace('{0}', names.length - 4)) : shown;
+        }
+
+        function scopeButton(cssClass, type, unitTypeId, label) {
+            return '<button type="button" class="btn btn-white btn-xs ' + cssClass + '" data-type="' + type + '" data-unit-type-id="' + scopeKey(unitTypeId) + '">' + esc(label) + '</button>';
+        }
+
+        function unitTypeRowHtml(unitType, followsAll) {
+            var own = selectionsIn(1, unitType.id).length;
+            var open = !!expandedUnitTypes[unitType.id];
+            var state = own
+                ? '<span class="label label-primary">' + esc(selectionText.ownRule) + '</span> ' + selectedNames(1, unitType.id)
+                : followsAll
+                    ? '<span class="label label-info">' + esc(selectionText.followsAll) + '</span>'
+                    : '<span class="label label-default">' + esc(selectionText.standard) + '</span>';
+
+            var html = '<div class="rc-unit-row" data-unit-type-id="' + unitType.id + '"><div class="rc-unit-row-head">'
+                + '<span class="rc-unit-name">' + esc(unitType.name) + '</span><span class="rc-unit-state">' + state + '</span>'
+                + '<button type="button" class="btn btn-white btn-xs rc-toggle-unit" aria-expanded="' + open + '">' + esc(open ? selectionText.done : selectionText.customize) + '</button></div>';
+            if (open) {
+                html += '<div class="rc-unit-body"><div class="rc-actions">' + scopeButton('rc-start-standard', 1, unitType.id, selectionText.startStandard)
+                    + (followsAll ? scopeButton('rc-copy-all', 1, unitType.id, selectionText.copyAll) : '')
+                    + scopeButton('rc-clear', 1, unitType.id, selectionText.clear) + '</div>'
+                    + optionGroups(1, unitType.id, optionsFor(1, unitType.id)) + '</div>';
+            }
+            return html + '</div>';
+        }
+
+        function renderSelections() {
+            var generic = selectionsIn(1, null).length;
+            var unitTotal = card.selections.filter(function (s) { return s.selectionType === 1; }).length;
+
+            $('#rcUnitsSummary').html(summaryHtml(unitTotal));
+            $('#rcUnitAllSummary').html(summaryHtml(generic));
+            $('#rcUnitAllOptions').html(optionGroups(1, null, optionsFor(1, null)));
+            $('#rcUnitTypes').html(lookups.unitTypes.length
+                ? lookups.unitTypes.map(function (unitType) { return unitTypeRowHtml(unitType, generic > 0); }).join('')
+                : '<p class="text-muted">' + esc(selectionText.noUnitTypes) + '</p>');
+
+            $('#rcPersonnelSummary').html(summaryHtml(selectionsIn(2, null).length));
+            $('#rcPersonnelOptions').html(optionGroups(2, null, optionsFor(2, null)));
+            $('#rcStaffingSummary').html(summaryHtml(selectionsIn(3, null).length));
+            $('#rcStaffingOptions').html(optionGroups(3, null, optionsFor(3, null)));
+        }
+
+        function scopeOf(element) {
+            var $el = $(element);
+            var unitTypeId = String($el.attr('data-unit-type-id') || '');
+            return { type: parseInt($el.attr('data-type') || $el.attr('data-selection-type'), 10), unitTypeId: unitTypeId === '' ? null : parseInt(unitTypeId, 10) };
+        }
+
+        // Every change re-renders the tab (summaries and unit type states follow the selections), then puts focus back
+        // on the control that was used.
+        function rerenderKeepingFocus(selector) {
+            renderSelections();
+            $('#tab-selections').find(selector).first().trigger('focus');
+        }
+
+        $('#tab-selections').on('change', '.selection-check', function () {
+            var scope = scopeOf(this);
+            var option = { isCustomState: String($(this).attr('data-custom')) === 'true', stateId: parseInt($(this).attr('data-state-id'), 10) };
+            setSelection(scope.type, scope.unitTypeId, option, this.checked);
+            rerenderKeepingFocus('.selection-check[data-selection-type="' + scope.type + '"][data-unit-type-id="' + scopeKey(scope.unitTypeId)
+                + '"][data-custom="' + option.isCustomState + '"][data-state-id="' + option.stateId + '"]');
+        });
+
+        // Starting from the standard rules ticks the meanings they count as available, so a dispatcher can add to
+        // them (Returning, say) instead of rebuilding them from memory.
+        $('#tab-selections').on('click', '.rc-start-standard', function () {
+            var scope = scopeOf(this);
+            clearScope(scope.type, scope.unitTypeId);
+            $.each(optionsFor(scope.type, scope.unitTypeId), function (i, option) {
+                if (option.isMeaning && (option.availability === 1 || option.availability === 4)) {
+                    setSelection(scope.type, scope.unitTypeId, option, true);
+                }
+            });
+            renderSelections();
+        });
+
+        $('#tab-selections').on('click', '.rc-copy-all', function () {
+            var scope = scopeOf(this);
+            clearScope(1, scope.unitTypeId);
+            $.each(selectionsIn(1, null), function (i, s) { setSelection(1, scope.unitTypeId, s, true); });
+            renderSelections();
+        });
+
+        $('#tab-selections').on('click', '.rc-clear', function () {
+            var scope = scopeOf(this);
+            if ($(this).attr('data-scope') === 'all') {
+                card.selections = card.selections.filter(function (s) { return s.selectionType !== scope.type; });
+            } else {
+                clearScope(scope.type, scope.unitTypeId);
+            }
+            renderSelections();
+        });
+
+        $('#tab-selections').on('click', '.rc-toggle-unit', function () {
+            var unitTypeId = $(this).closest('.rc-unit-row').attr('data-unit-type-id');
+            expandedUnitTypes[unitTypeId] = !expandedUnitTypes[unitTypeId];
+            rerenderKeepingFocus('.rc-unit-row[data-unit-type-id="' + unitTypeId + '"] .rc-toggle-unit');
+        });
+
+        // ── Test tab ──
+        $('#testPriority').html(optionList(lookups.priorities, null, false));
+        $('#testCallType').html(optionList(lookups.callTypes.map(function (t) { return { id: t.name, name: t.name }; }), null, true));
+
+        $('#runTestButton').on('click', function () {
+            $.getJSON('@Url.Action("Preview", "RunCards", new { area = "User" })', {
+                priority: $('#testPriority').val(),
+                type: $('#testCallType').val(),
+                latitude: $('#testLatitude').val() || null,
+                longitude: $('#testLongitude').val() || null,
+                alarmLevel: $('#testAlarmLevel').val() || 1,
+                // A saved card is tested as itself, even while disabled; a new card falls back to matching.
+                runCardId: card.runCardId || null
+            }, function (response) {
+                if (response.success) {
+                    $('#testResults').text(JSON.stringify(response.result, null, 2)).hide();
+                    $('#testRendered').html(resgrid.dispatch.runcarddecision.renderResult(response.result)).show();
+                    $('#testRawToggle').show();
+                }
+            });
+        });
+
+        $('#testRawToggle').on('click', function (e) {
+            e.preventDefault();
+            $('#testResults').toggle();
+        });
+
+        // ── Save ──
+        $('#saveCardButton').on('click', function () {
+            var payload = {
+                runCardId: card.runCardId || 0,
+                name: $('#cardName').val(),
+                description: $('#cardDescription').val(),
+                isDisabled: $('#cardDisabled').is(':checked'),
+                dispatchModeOverride: $('#cardModeOverride').val() === '' ? null : parseInt($('#cardModeOverride').val(), 10),
+                autoDispatchOverride: $('#cardAutoOverride').val() === '' ? null : parseInt($('#cardAutoOverride').val(), 10),
+                minimumStaffingLevelOverride: $('#cardStaffingOverride').val() === '' ? null : parseInt($('#cardStaffingOverride').val(), 10),
+                homeStationGroupId: $('#cardHomeStation').val() === '' ? null : parseInt($('#cardHomeStation').val(), 10),
+                relaxUnfilledRows: $('#cardRelaxUnfilledRows').is(':checked'),
+                waitingCallAutoDispatchOverride: !$('#cardWaitingAutoDispatch').length || $('#cardWaitingAutoDispatch').val() === '' ? null : parseInt($('#cardWaitingAutoDispatch').val(), 10),
+                triggers: card.triggers,
+                alarmLevels: card.alarmLevels,
+                selections: card.selections
+            };
+
+            $.ajax({
+                url: '@Url.Action("Save", "RunCards", new { area = "User" })',
+                type: 'POST',
+                contentType: 'application/json',
+                // JSON bodies cannot carry the token as a field, so it travels in the
+                // header the antiforgery options look for (see PerformCheckIn).
+                headers: { 'RequestVerificationToken': $('#saveCardForm input[name="__RequestVerificationToken"]').val() },
+                data: JSON.stringify(payload),
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = '@Url.Action("Index", "RunCards", new { area = "User" })';
+                    } else {
+                        $('#saveError').show().text(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    $('#saveError').show().text(xhr.responseJSON && xhr.responseJSON.message || 'Save failed.');
+                }
+            });
+        });
+
+        renderTriggers();
+        renderAlarmLevels();
+        renderSelections();
+    });
+</script>
+}

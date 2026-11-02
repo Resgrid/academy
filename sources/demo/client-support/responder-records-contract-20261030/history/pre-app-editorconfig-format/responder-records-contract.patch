@@ -1,0 +1,2597 @@
+--- a/src/app/records/[id].tsx
++++ b/src/app/records/[id].tsx
+@@ -25,237 +25,237 @@
+ // and approval stay Web-first (RMS plan RMS-1D), so they are not offered here.
+ 
+ export default function RecordScreen() {
+-  const { t } = useTranslation();
+-  const recordsTitle = useTerm(TermKeys.Records, t('records.title'));
+-  const router = useRouter();
+-  const { id } = useLocalSearchParams<{ id: string }>();
+-
+-  const fetchSchema = useRecordsStore((state) => state.fetchSchema);
+-  const stageDraft = useRecordsStore((state) => state.stageDraft);
+-  const pushDraft = useRecordsStore((state) => state.pushDraft);
+-  const discardDraft = useRecordsStore((state) => state.discardDraft);
+-  const submitForReview = useRecordsStore((state) => state.submitForReview);
+-  const finalize = useRecordsStore((state) => state.finalize);
+-  const entryFor = useRecordsStore((state) => state.entryFor);
+-
+-  const [record, setRecord] = useState<RecordData | null>(null);
+-  const [schema, setSchema] = useState<RecordDefinitionSchema | null>(null);
+-  const [values, setValues] = useState<ValueMap>({});
+-  const [issues, setIssues] = useState<ValidationIssue[]>([]);
+-  const [attested, setAttested] = useState(false);
+-  const [isBusy, setIsBusy] = useState(false);
+-  const [message, setMessage] = useState<string | null>(null);
+-  // Edits made since the record was last loaded; they exist only here until they are saved.
+-  const [dirty, setDirty] = useState(false);
+-
+-  /** Loads the record as the server holds it now, replacing any local edits. */
+-  const fetchRecord = useCallback(async (): Promise<RecordData | null> => {
+-    if (!id) {
+-      return null;
++    const { t } = useTranslation();
++    const recordsTitle = useTerm(TermKeys.Records, t('records.title'));
++    const router = useRouter();
++    const { id } = useLocalSearchParams<{ id: string }>();
++
++    const fetchSchema = useRecordsStore((state) => state.fetchSchema);
++    const stageDraft = useRecordsStore((state) => state.stageDraft);
++    const pushDraft = useRecordsStore((state) => state.pushDraft);
++    const discardDraft = useRecordsStore((state) => state.discardDraft);
++    const submitForReview = useRecordsStore((state) => state.submitForReview);
++    const finalize = useRecordsStore((state) => state.finalize);
++    const entryFor = useRecordsStore((state) => state.entryFor);
++
++    const [record, setRecord] = useState<RecordData | null>(null);
++    const [schema, setSchema] = useState<RecordDefinitionSchema | null>(null);
++    const [values, setValues] = useState<ValueMap>({});
++    const [issues, setIssues] = useState<ValidationIssue[]>([]);
++    const [attested, setAttested] = useState(false);
++    const [isBusy, setIsBusy] = useState(false);
++    const [message, setMessage] = useState<string | null>(null);
++    // Edits made since the record was last loaded; they exist only here until they are saved.
++    const [dirty, setDirty] = useState(false);
++
++    /** Loads the record as the server holds it now, replacing any local edits. */
++    const fetchRecord = useCallback(async (): Promise<RecordData | null> => {
++        if (!id) {
++            return null;
++        }
++        try {
++            const response = await getRecord(id);
++            const loaded = response?.Data ?? null;
++            setRecord(loaded);
++            setValues(toValueMap(loaded?.Values));
++            setDirty(false);
++            if (loaded?.DefinitionKey) {
++                setSchema(await fetchSchema(loaded.DefinitionKey, loaded.DefinitionVersion));
++            }
++            return loaded;
++        } catch (error) {
++            logger.error({ message: 'Record load failed', context: { error, id } });
++            setMessage(t('records.load_failed'));
++            return null;
++        }
++    }, [id, fetchSchema, t]);
++
++    const load = useCallback(async () => {
++        setIsBusy(true);
++        try {
++            await fetchRecord();
++        } finally {
++            setIsBusy(false);
++        }
++    }, [fetchRecord]);
++
++    useEffect(() => {
++        void load();
++    }, [load]);
++
++    const unsupported = useMemo(() => unsupportedFieldKeys(schema), [schema]);
++    const editable = record ? record.State === RmsRecordState.Draft || record.State === RmsRecordState.Returned : false;
++    const entry = record?.DefinitionKey ? entryFor(record.DefinitionKey, record.DefinitionVersion) : null;
++    const definitionName = useRecordDefinitionName(record?.DefinitionKey, entry?.Name);
++
++    const handleChange = useCallback((next: ValueMap) => {
++        setValues(next);
++        setDirty(true);
++    }, []);
++
++    /** Sends the edited values and returns the record as the server now holds it, or null when it was not saved. */
++    const persist = useCallback(
++        async (current: RecordData): Promise<RecordData | null> => {
++            const clientRecordId = `edit-${current.RecordId}-${current.RowVersion}`;
++            const draft = {
++                clientRecordId,
++                recordId: current.RecordId,
++                definitionKey: current.DefinitionKey ?? '',
++                definitionVersion: current.DefinitionVersion,
++                name: current.RecordNumber ?? current.DraftReference ?? definitionName ?? t('records.untitled'),
++                values: toValueList(values),
++                rowVersion: current.RowVersion,
++                updatedOn: new Date().toISOString(),
++            };
++            stageDraft(draft);
++            // Passed directly as well: a definition that seals values is never staged on the device.
++            const result = await pushDraft(clientRecordId, draft);
++            if (!result.ok) {
++                // A conflict is shown, never resolved by overwriting: the person reloads and decides.
++                setMessage(result.conflict ? t(`records.conflict_${result.conflict.replace('-', '_')}`) : (result.error ?? t('records.save_failed')));
++                return null;
++            }
++            discardDraft(clientRecordId);
++            return fetchRecord();
++        },
++        [values, definitionName, stageDraft, pushDraft, discardDraft, fetchRecord, t]
++    );
++
++    const save = useCallback(async () => {
++        if (!record || !schema) {
++            return;
++        }
++        const found = validate(schema, values, false);
++        setIssues(found);
++        if (found.length > 0) {
++            setMessage(t('records.fix_fields'));
++            return;
++        }
++        setIsBusy(true);
++        try {
++            if (await persist(record)) {
++                setMessage(t('records.saved'));
++            }
++        } finally {
++            setIsBusy(false);
++        }
++    }, [record, schema, values, persist, t]);
++
++    const submit = useCallback(async () => {
++        if (!record) {
++            return;
++        }
++        if (dirty && schema) {
++            const found = validate(schema, values, false);
++            setIssues(found);
++            if (found.length > 0) {
++                setMessage(t('records.fix_fields'));
++                return;
++            }
++        }
++        setIsBusy(true);
++        try {
++            // Unsaved edits go first; otherwise the server's older copy is what would be put up for review.
++            const current = dirty ? await persist(record) : record;
++            if (!current) {
++                return;
++            }
++            const result = await submitForReview(current.RecordId, current.RowVersion);
++            setMessage(result.ok ? t('records.submitted') : (result.error ?? t('records.save_failed')));
++            if (result.ok) {
++                await fetchRecord();
++            }
++        } finally {
++            setIsBusy(false);
++        }
++    }, [record, schema, values, dirty, persist, submitForReview, fetchRecord, t]);
++
++    const complete = useCallback(async () => {
++        if (!record || !schema) {
++            return;
++        }
++        const found = validate(schema, values, true);
++        setIssues(found);
++        if (found.length > 0) {
++            setMessage(t('records.fix_fields'));
++            return;
++        }
++        setIsBusy(true);
++        try {
++            // The values just validated are the ones finalized, so unsaved edits are sent first.
++            const current = dirty ? await persist(record) : record;
++            if (!current) {
++                return;
++            }
++            const result = await finalize(current.RecordId, current.RowVersion, attested);
++            setMessage(result.ok ? t('records.finalized') : (result.error ?? t('records.save_failed')));
++            if (result.ok) {
++                await fetchRecord();
++            }
++        } finally {
++            setIsBusy(false);
++        }
++    }, [record, schema, values, dirty, attested, persist, finalize, fetchRecord, t]);
++
++    if (!record) {
++        return (
++            <Box className="flex-1 items-center justify-center bg-background-0">
++                <Stack.Screen options={{ title: recordsTitle }} />
++                {isBusy ? <Spinner /> : <Text className="text-typography-500">{message ?? t('records.not_found')}</Text>}
++            </Box>
++        );
+     }
+-    try {
+-      const response = await getRecord(id);
+-      const loaded = response?.Data ?? null;
+-      setRecord(loaded);
+-      setValues(toValueMap(loaded?.Values?.Cells));
+-      setDirty(false);
+-      if (loaded?.DefinitionKey) {
+-        setSchema(await fetchSchema(loaded.DefinitionKey, loaded.DefinitionVersion));
+-      }
+-      return loaded;
+-    } catch (error) {
+-      logger.error({ message: 'Record load failed', context: { error, id } });
+-      setMessage(t('records.load_failed'));
+-      return null;
+-    }
+-  }, [id, fetchSchema, t]);
+-
+-  const load = useCallback(async () => {
+-    setIsBusy(true);
+-    try {
+-      await fetchRecord();
+-    } finally {
+-      setIsBusy(false);
+-    }
+-  }, [fetchRecord]);
+-
+-  useEffect(() => {
+-    void load();
+-  }, [load]);
+-
+-  const unsupported = useMemo(() => unsupportedFieldKeys(schema), [schema]);
+-  const editable = record ? record.State === RmsRecordState.Draft || record.State === RmsRecordState.Returned : false;
+-  const entry = record?.DefinitionKey ? entryFor(record.DefinitionKey, record.DefinitionVersion) : null;
+-  const definitionName = useRecordDefinitionName(record?.DefinitionKey, entry?.Name);
+-
+-  const handleChange = useCallback((next: ValueMap) => {
+-    setValues(next);
+-    setDirty(true);
+-  }, []);
+-
+-  /** Sends the edited values and returns the record as the server now holds it, or null when it was not saved. */
+-  const persist = useCallback(
+-    async (current: RecordData): Promise<RecordData | null> => {
+-      const clientRecordId = `edit-${current.RecordId}-${current.RowVersion}`;
+-      const draft = {
+-        clientRecordId,
+-        recordId: current.RecordId,
+-        definitionKey: current.DefinitionKey ?? '',
+-        definitionVersion: current.DefinitionVersion,
+-        name: current.RecordNumber ?? current.DraftReference ?? definitionName ?? t('records.untitled'),
+-        values: toValueList(values),
+-        rowVersion: current.RowVersion,
+-        updatedOn: new Date().toISOString(),
+-      };
+-      stageDraft(draft);
+-      // Passed directly as well: a definition that seals values is never staged on the device.
+-      const result = await pushDraft(clientRecordId, draft);
+-      if (!result.ok) {
+-        // A conflict is shown, never resolved by overwriting: the person reloads and decides.
+-        setMessage(result.conflict ? t(`records.conflict_${result.conflict.replace('-', '_')}`) : (result.error ?? t('records.save_failed')));
+-        return null;
+-      }
+-      discardDraft(clientRecordId);
+-      return fetchRecord();
+-    },
+-    [values, definitionName, stageDraft, pushDraft, discardDraft, fetchRecord, t]
+-  );
+-
+-  const save = useCallback(async () => {
+-    if (!record || !schema) {
+-      return;
+-    }
+-    const found = validate(schema, values, false);
+-    setIssues(found);
+-    if (found.length > 0) {
+-      setMessage(t('records.fix_fields'));
+-      return;
+-    }
+-    setIsBusy(true);
+-    try {
+-      if (await persist(record)) {
+-        setMessage(t('records.saved'));
+-      }
+-    } finally {
+-      setIsBusy(false);
+-    }
+-  }, [record, schema, values, persist, t]);
+-
+-  const submit = useCallback(async () => {
+-    if (!record) {
+-      return;
+-    }
+-    if (dirty && schema) {
+-      const found = validate(schema, values, false);
+-      setIssues(found);
+-      if (found.length > 0) {
+-        setMessage(t('records.fix_fields'));
+-        return;
+-      }
+-    }
+-    setIsBusy(true);
+-    try {
+-      // Unsaved edits go first; otherwise the server's older copy is what would be put up for review.
+-      const current = dirty ? await persist(record) : record;
+-      if (!current) {
+-        return;
+-      }
+-      const result = await submitForReview(current.RecordId, current.RowVersion);
+-      setMessage(result.ok ? t('records.submitted') : (result.error ?? t('records.save_failed')));
+-      if (result.ok) {
+-        await fetchRecord();
+-      }
+-    } finally {
+-      setIsBusy(false);
+-    }
+-  }, [record, schema, values, dirty, persist, submitForReview, fetchRecord, t]);
+-
+-  const complete = useCallback(async () => {
+-    if (!record || !schema) {
+-      return;
+-    }
+-    const found = validate(schema, values, true);
+-    setIssues(found);
+-    if (found.length > 0) {
+-      setMessage(t('records.fix_fields'));
+-      return;
+-    }
+-    setIsBusy(true);
+-    try {
+-      // The values just validated are the ones finalized, so unsaved edits are sent first.
+-      const current = dirty ? await persist(record) : record;
+-      if (!current) {
+-        return;
+-      }
+-      const result = await finalize(current.RecordId, current.RowVersion, attested);
+-      setMessage(result.ok ? t('records.finalized') : (result.error ?? t('records.save_failed')));
+-      if (result.ok) {
+-        await fetchRecord();
+-      }
+-    } finally {
+-      setIsBusy(false);
+-    }
+-  }, [record, schema, values, dirty, attested, persist, finalize, fetchRecord, t]);
+-
+-  if (!record) {
++
+     return (
+-      <Box className="flex-1 items-center justify-center bg-background-0">
+-        <Stack.Screen options={{ title: recordsTitle }} />
+-        {isBusy ? <Spinner /> : <Text className="text-typography-500">{message ?? t('records.not_found')}</Text>}
+-      </Box>
++        <Box className="flex-1 bg-background-0">
++            <Stack.Screen options={{ title: record.RecordNumber ?? record.DraftReference ?? recordsTitle }} />
++            <ScrollView contentContainerClassName="p-4">
++                <VStack space="sm" className="mb-4">
++                    <Heading size="sm">{definitionName ?? recordsTitle}</Heading>
++                    <Badge action="muted" size="sm" className="self-start">
++                        <BadgeText>{record.StateName ?? RmsRecordState[record.State] ?? ''}</BadgeText>
++                    </Badge>
++                </VStack>
++
++                {unsupported.length > 0 ? (
++                    <Box className="mb-4 rounded-md border border-warning-300 bg-background-warning p-3">
++                        <Heading size="xs">{t('records.update_required')}</Heading>
++                        <Text className="mt-1 text-sm text-typography-700">{t('records.unsupported_definition')}</Text>
++                    </Box>
++                ) : null}
++
++                {message ? <Text className="mb-3 text-sm text-typography-700">{message}</Text> : null}
++
++                {schema ? <RecordForm schema={schema} values={values} issues={issues} readOnly={!editable || unsupported.length > 0} forFinalize={false} onChange={handleChange} /> : <Spinner />}
++
++                {/* Attachments upload against a server-owned session, so an interruption resumes. */}
++                <RecordAttachments recordId={record.RecordId} allowAttachments={entry?.AllowAttachments !== false} readOnly={!editable} />
++
++                {editable && unsupported.length === 0 ? (
++                    <VStack space="sm" className="mt-4">
++                        <Button isDisabled={isBusy} onPress={() => void save()} testID="record-save">
++                            <ButtonText>{t('records.save')}</ButtonText>
++                        </Button>
++                        <Button variant="outline" isDisabled={isBusy} onPress={() => void submit()} testID="record-submit">
++                            <ButtonText>{t('records.submit_for_review')}</ButtonText>
++                        </Button>
++                        <Checkbox value="attested" isChecked={attested} onChange={setAttested} testID="record-attest">
++                            <CheckboxIndicator>
++                                <CheckboxIcon />
++                            </CheckboxIndicator>
++                            <CheckboxLabel>{t('records.attestation')}</CheckboxLabel>
++                        </Checkbox>
++                        <Button variant="outline" isDisabled={isBusy || !attested} onPress={() => void complete()} testID="record-finalize">
++                            <ButtonText>{t('records.finalize')}</ButtonText>
++                        </Button>
++                    </VStack>
++                ) : null}
++
++                <Button variant="link" className="mt-2" onPress={() => router.back()}>
++                    <ButtonText>{t('records.back')}</ButtonText>
++                </Button>
++                <Box className="h-16" />
++            </ScrollView>
++        </Box>
+     );
+-  }
+-
+-  return (
+-    <Box className="flex-1 bg-background-0">
+-      <Stack.Screen options={{ title: record.RecordNumber ?? record.DraftReference ?? recordsTitle }} />
+-      <ScrollView contentContainerClassName="p-4">
+-        <VStack space="sm" className="mb-4">
+-          <Heading size="sm">{definitionName ?? recordsTitle}</Heading>
+-          <Badge action="muted" size="sm" className="self-start">
+-            <BadgeText>{record.StateName ?? RmsRecordState[record.State] ?? ''}</BadgeText>
+-          </Badge>
+-        </VStack>
+-
+-        {unsupported.length > 0 ? (
+-          <Box className="mb-4 rounded-md border border-warning-300 bg-background-warning p-3">
+-            <Heading size="xs">{t('records.update_required')}</Heading>
+-            <Text className="mt-1 text-sm text-typography-700">{t('records.unsupported_definition')}</Text>
+-          </Box>
+-        ) : null}
+-
+-        {message ? <Text className="mb-3 text-sm text-typography-700">{message}</Text> : null}
+-
+-        {schema ? <RecordForm schema={schema} values={values} issues={issues} readOnly={!editable || unsupported.length > 0} forFinalize={false} onChange={handleChange} /> : <Spinner />}
+-
+-        {/* Attachments upload against a server-owned session, so an interruption resumes. */}
+-        <RecordAttachments recordId={record.RecordId} allowAttachments={entry?.AllowAttachments !== false} readOnly={!editable} />
+-
+-        {editable && unsupported.length === 0 ? (
+-          <VStack space="sm" className="mt-4">
+-            <Button isDisabled={isBusy} onPress={() => void save()} testID="record-save">
+-              <ButtonText>{t('records.save')}</ButtonText>
+-            </Button>
+-            <Button variant="outline" isDisabled={isBusy} onPress={() => void submit()} testID="record-submit">
+-              <ButtonText>{t('records.submit_for_review')}</ButtonText>
+-            </Button>
+-            <Checkbox value="attested" isChecked={attested} onChange={setAttested} testID="record-attest">
+-              <CheckboxIndicator>
+-                <CheckboxIcon />
+-              </CheckboxIndicator>
+-              <CheckboxLabel>{t('records.attestation')}</CheckboxLabel>
+-            </Checkbox>
+-            <Button variant="outline" isDisabled={isBusy || !attested} onPress={() => void complete()} testID="record-finalize">
+-              <ButtonText>{t('records.finalize')}</ButtonText>
+-            </Button>
+-          </VStack>
+-        ) : null}
+-
+-        <Button variant="link" className="mt-2" onPress={() => router.back()}>
+-          <ButtonText>{t('records.back')}</ButtonText>
+-        </Button>
+-        <Box className="h-16" />
+-      </ScrollView>
+-    </Box>
+-  );
+ }
+--- /dev/null
++++ b/src/app/records/__tests__/contract.test.tsx
+@@ -0,0 +1,162 @@
++import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
++import { randomUUID } from 'expo-crypto';
++import React from 'react';
++
++import { createRecordDraft, getRecord } from '@/api/records/records';
++import { goldenCatalogEntry } from '@/lib/records/__tests__/fixtures';
++import { type RecordDefinitionSchema, RmsRecordState } from '@/models/v4/records';
++import { useRecordsStore } from '@/stores/records/store';
++
++const mockReplace = jest.fn();
++const mockTranslate = (key: string) => key;
++const mockContext = {};
++let mockParams: { id?: string; draft?: string } = {};
++const GUID = '11111111-1111-4111-8111-111111111111';
++const EXISTING_GUID = '22222222-2222-4222-8222-222222222222';
++const mockSchema: RecordDefinitionSchema = {
++    SchemaVersion: 1,
++    Sections: [
++        {
++            Key: 'summary',
++            Label: 'Summary',
++            Fields: [
++                { Key: 'summary', Label: 'Summary', Type: 1, Classification: 0 },
++                { Key: 'notes', Label: 'Notes', Type: 2, Classification: 0 },
++            ],
++        },
++    ],
++};
++const mockEntry = goldenCatalogEntry({ DefinitionKey: 'training-review', Version: 1, Name: 'Training review', SupportsPrefill: false, AllowOffline: false });
++
++jest.mock('expo-crypto', () => ({ randomUUID: jest.fn(() => '11111111-1111-4111-8111-111111111111') }));
++jest.mock('expo-router', () => ({ Stack: { Screen: () => null }, useRouter: () => ({ replace: mockReplace, back: jest.fn() }), useLocalSearchParams: () => mockParams }));
++jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: mockTranslate }) }));
++jest.mock('lucide-react-native', () => ({ ChevronRight: () => null, CloudOff: () => null }));
++jest.mock('@/hooks/use-records-context', () => ({ useRecordsContext: () => mockContext }));
++jest.mock('@/hooks/use-record-definition-name', () => ({ useRecordDefinitionNameResolver: () => (_key: string, name?: string) => name, useRecordDefinitionName: () => 'Training review' }));
++jest.mock('@/stores/terminology/store', () => ({ TermKeys: { Records: 'records' }, useTerm: (_key: string, fallback: string) => fallback }));
++jest.mock('@/lib/records/uploads', () => ({ runUpload: jest.fn(), cancelUpload: jest.fn() }));
++jest.mock('@/lib/logging', () => ({ logger: { error: jest.fn(), warn: jest.fn(), info: jest.fn(), debug: jest.fn() } }));
++jest.mock('@/api/records/field-records', () => ({
++    reportFieldRecordTelemetry: jest.fn(),
++    getFieldRecordsPreflight: jest.fn(),
++    getFieldRecordsCatalog: jest.fn(),
++    getFieldRecordPrefill: jest.fn(),
++    syncFieldRecords: jest.fn().mockResolvedValue({}),
++    getFieldRecordAssignments: jest.fn(),
++    getAssignmentsForRecord: jest.fn(),
++    acknowledgeAssignment: jest.fn(),
++    completeAssignment: jest.fn(),
++}));
++jest.mock('@/api/records/records', () => ({
++    getRecord: jest.fn(),
++    getRecordDefinitionVersion: jest.fn(),
++    createRecordDraft: jest.fn(),
++    saveRecordDraft: jest.fn(),
++    submitRecordForReview: jest.fn(),
++    finalizeRecord: jest.fn(),
++    cancelRecord: jest.fn(),
++}));
++jest.mock('@/components/records/record-attachments', () => ({ RecordAttachments: () => null }));
++jest.mock('@/components/records/record-form', () => {
++    const { Text } = require('react-native');
++    return { RecordForm: ({ values }: { values: unknown }) => <Text testID="returned-values">{JSON.stringify(values)}</Text> };
++});
++jest.mock('@/components/ui/box', () => ({ Box: require('react-native').View }));
++jest.mock('@/components/ui/text', () => ({ Text: require('react-native').Text }));
++jest.mock('@/components/ui/heading', () => ({ Heading: require('react-native').Text }));
++jest.mock('@/components/ui/hstack', () => ({ HStack: require('react-native').View }));
++jest.mock('@/components/ui/vstack', () => ({ VStack: require('react-native').View }));
++jest.mock('@/components/ui/divider', () => ({ Divider: () => null }));
++jest.mock('@/components/ui/spinner', () => ({ Spinner: () => null }));
++jest.mock('@/components/ui/badge', () => ({ Badge: require('react-native').View, BadgeText: require('react-native').Text }));
++jest.mock('@/components/ui/pressable', () => ({ Pressable: require('react-native').TouchableOpacity }));
++jest.mock('@/components/ui/button', () => {
++    const { Text, TouchableOpacity } = require('react-native');
++    return { ButtonText: Text, Button: ({ isDisabled, ...props }: { isDisabled?: boolean }) => <TouchableOpacity disabled={isDisabled} {...props} /> };
++});
++jest.mock('@/components/ui/checkbox', () => ({ Checkbox: require('react-native').View, CheckboxIndicator: require('react-native').View, CheckboxIcon: () => null, CheckboxLabel: require('react-native').Text }));
++
++const NewRecordScreen = require('../new').default as React.ComponentType;
++const RecordScreen = require('../[id]').default as React.ComponentType;
++
++describe('Records screens use the Core wire contract', () => {
++    beforeEach(() => {
++        jest.clearAllMocks();
++        mockParams = {};
++        useRecordsStore.getState().reset();
++        useRecordsStore.setState({
++            catalog: { ContractVersion: 'field-catalog.v1', OriginClient: 'Responder', Ok: true, Reasons: [], ContextVerified: true, Definitions: [mockEntry], Exclusions: [], ServerTimestampMs: 0 },
++            schemas: { 'training-review:1': mockSchema },
++            pendingDrafts: {},
++        });
++        (createRecordDraft as jest.Mock).mockResolvedValue({ Data: { RecordId: GUID } });
++    });
++
++    it('sends a fresh UUID as both ClientRecordId and IdempotencyKey through the actual store', async () => {
++        render(<NewRecordScreen />);
++        fireEvent.press(screen.getByTestId('records-choose-training-review'));
++        await waitFor(() => expect(screen.getByTestId('records-save-send')).toBeTruthy());
++        fireEvent.press(screen.getByTestId('records-save-send'));
++        await waitFor(() => expect(createRecordDraft).toHaveBeenCalledTimes(1));
++        const request = (createRecordDraft as jest.Mock).mock.calls[0][0];
++        expect(randomUUID).toHaveBeenCalledTimes(1);
++        expect(request.ClientRecordId).toBe(GUID);
++        expect(request.ClientRecordId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
++        expect(request.IdempotencyKey).toBe(request.ClientRecordId);
++        await waitFor(() => expect(mockReplace).toHaveBeenCalledWith(`/records/${GUID}`));
++    });
++
++    it('preserves a resumed draft identity rather than silently rekeying it', async () => {
++        mockParams = { draft: EXISTING_GUID };
++        useRecordsStore.setState({
++            pendingDrafts: {
++                [EXISTING_GUID]: { clientRecordId: EXISTING_GUID, recordId: null, definitionKey: 'training-review', definitionVersion: 1, name: 'Training review', values: [], updatedOn: '2026-10-30T00:00:00Z' },
++            },
++        });
++        render(<NewRecordScreen />);
++        await waitFor(() => expect(screen.getByTestId('records-save-send')).toBeTruthy());
++        fireEvent.press(screen.getByTestId('records-save-send'));
++        await waitFor(() => expect(createRecordDraft).toHaveBeenCalledTimes(1));
++        expect(randomUUID).not.toHaveBeenCalled();
++        expect((createRecordDraft as jest.Mock).mock.calls[0][0]).toMatchObject({ ClientRecordId: EXISTING_GUID, IdempotencyKey: EXISTING_GUID });
++    });
++
++    it('passes returned nested Summary/Notes into the form without writing a record', async () => {
++        mockParams = { id: GUID };
++        (getRecord as jest.Mock).mockResolvedValue({
++            Data: {
++                RecordId: GUID,
++                DefinitionKey: 'training-review',
++                DefinitionVersion: 1,
++                State: RmsRecordState.Finalized,
++                RowVersion: 1,
++                Values: {
++                    DefinitionVersion: 1,
++                    Sections: [
++                        {
++                            SectionKey: 'summary',
++                            Rows: [
++                                {
++                                    RowKey: null,
++                                    Ordinal: 0,
++                                    Cells: [
++                                        { FieldKey: 'summary', Value: 'Returned summary' },
++                                        { FieldKey: 'notes', Value: 'Returned notes' },
++                                        { FieldKey: 'private', Withheld: true, Display: '[redacted]' },
++                                    ],
++                                },
++                            ],
++                        },
++                    ],
++                },
++            },
++        });
++        render(<RecordScreen />);
++        await waitFor(() => expect(screen.getByTestId('returned-values').props.children).toContain('Returned summary'));
++        expect(screen.getByTestId('returned-values').props.children).toContain('Returned notes');
++        expect(screen.getByTestId('returned-values').props.children).not.toContain('redacted');
++        expect(createRecordDraft).not.toHaveBeenCalled();
++        expect(screen.queryByTestId('record-save')).toBeNull();
++    });
++});
+--- a/src/app/records/new.tsx
++++ b/src/app/records/new.tsx
+@@ -1,3 +1,4 @@
++import { randomUUID } from 'expo-crypto';
+ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+ import { ChevronRight, CloudOff } from 'lucide-react-native';
+ import React, { useCallback, useEffect, useMemo, useState } from 'react';
+@@ -24,225 +25,225 @@
+ // Contextual create: pick a definition the server offered for this context, then author it. The
+ // catalog is the only source of what may be started here — nothing is inferred locally.
+ 
+-const clientId = () => `draft-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
++const clientId = () => randomUUID();
+ 
+ export default function NewRecordScreen() {
+-  const { t } = useTranslation();
+-  const router = useRouter();
+-  const params = useLocalSearchParams<{ draft?: string; definitionKey?: string }>();
+-  const context = useRecordsContext();
+-  const definitionName = useRecordDefinitionNameResolver();
+-
+-  const catalog = useRecordsStore((state) => state.catalog);
+-  const pendingDrafts = useRecordsStore((state) => state.pendingDrafts);
+-  const fetchCatalog = useRecordsStore((state) => state.fetchCatalog);
+-  const fetchSchema = useRecordsStore((state) => state.fetchSchema);
+-  const prefill = useRecordsStore((state) => state.prefill);
+-  const stageDraft = useRecordsStore((state) => state.stageDraft);
+-  const discardDraft = useRecordsStore((state) => state.discardDraft);
+-  const pushDraft = useRecordsStore((state) => state.pushDraft);
+-  const report = useRecordsStore((state) => state.report);
+-
+-  const resumed = params.draft ? pendingDrafts[params.draft] : undefined;
+-  const [entry, setEntry] = useState<FieldRecordCatalogEntry | null>(null);
+-  const [schema, setSchema] = useState<RecordDefinitionSchema | null>(null);
+-  const [values, setValues] = useState<ValueMap>({});
+-  const [issues, setIssues] = useState<ValidationIssue[]>([]);
+-  const [isBusy, setIsBusy] = useState(false);
+-  const [message, setMessage] = useState<string | null>(null);
+-
+-  useEffect(() => {
+-    if (!catalog) {
+-      void fetchCatalog();
++    const { t } = useTranslation();
++    const router = useRouter();
++    const params = useLocalSearchParams<{ draft?: string; definitionKey?: string }>();
++    const context = useRecordsContext();
++    const definitionName = useRecordDefinitionNameResolver();
++
++    const catalog = useRecordsStore((state) => state.catalog);
++    const pendingDrafts = useRecordsStore((state) => state.pendingDrafts);
++    const fetchCatalog = useRecordsStore((state) => state.fetchCatalog);
++    const fetchSchema = useRecordsStore((state) => state.fetchSchema);
++    const prefill = useRecordsStore((state) => state.prefill);
++    const stageDraft = useRecordsStore((state) => state.stageDraft);
++    const discardDraft = useRecordsStore((state) => state.discardDraft);
++    const pushDraft = useRecordsStore((state) => state.pushDraft);
++    const report = useRecordsStore((state) => state.report);
++
++    const resumed = params.draft ? pendingDrafts[params.draft] : undefined;
++    const [entry, setEntry] = useState<FieldRecordCatalogEntry | null>(null);
++    const [schema, setSchema] = useState<RecordDefinitionSchema | null>(null);
++    const [values, setValues] = useState<ValueMap>({});
++    const [issues, setIssues] = useState<ValidationIssue[]>([]);
++    const [isBusy, setIsBusy] = useState(false);
++    const [message, setMessage] = useState<string | null>(null);
++
++    useEffect(() => {
++        if (!catalog) {
++            void fetchCatalog();
++        }
++    }, [catalog, fetchCatalog]);
++
++    const choose = useCallback(
++        async (chosen: FieldRecordCatalogEntry, existing?: ValueMap) => {
++            setIsBusy(true);
++            try {
++                const loaded = await fetchSchema(chosen.DefinitionKey, chosen.Version);
++                setEntry(chosen);
++                setSchema(loaded);
++                if (existing) {
++                    setValues(existing);
++                    return;
++                }
++                if (!chosen.SupportsPrefill) {
++                    setValues({});
++                    return;
++                }
++                report({ EventType: 'draft_started', Outcome: 'ok', DefinitionKey: chosen.DefinitionKey, DefinitionVersion: chosen.Version });
++                const prefilled = await prefill(chosen.DefinitionKey, chosen.Version);
++                const map: ValueMap = {};
++                for (const value of prefilled?.Values ?? []) {
++                    if (!value.SectionKey) {
++                        continue;
++                    }
++                    map[cellKey(value.SectionKey, value.FieldKey, null)] = {
++                        SectionKey: value.SectionKey,
++                        FieldKey: value.FieldKey,
++                        RowKey: null,
++                        Value: value.Value ?? null,
++                        ReferenceType: value.ReferenceType ?? null,
++                        ReferenceId: value.ReferenceId ?? null,
++                    };
++                }
++                setValues(map);
++            } finally {
++                setIsBusy(false);
++            }
++        },
++        [fetchSchema, prefill, report]
++    );
++
++    useEffect(() => {
++        if (!resumed || entry) {
++            return;
++        }
++        const match = (catalog?.Definitions ?? []).find((definition) => definition.DefinitionKey === resumed.definitionKey && definition.Version === resumed.definitionVersion);
++        if (!match) {
++            return;
++        }
++        const map: ValueMap = {};
++        for (const value of resumed.values) {
++            map[cellKey(value.SectionKey, value.FieldKey, value.RowKey ?? null)] = value;
++        }
++        void choose(match, map);
++    }, [resumed, entry, catalog, choose]);
++
++    const unsupported = useMemo(() => unsupportedFieldKeys(schema), [schema]);
++    const offlineCapable = canAuthorOffline(entry);
++
++    const save = useCallback(
++        async (send: boolean) => {
++            if (!entry || !schema) {
++                return;
++            }
++            const found = validate(schema, values, false);
++            setIssues(found);
++            if (found.length > 0) {
++                setMessage(t('records.fix_fields'));
++                return;
++            }
++
++            const draftId = resumed?.clientRecordId ?? clientId();
++            const draft = {
++                clientRecordId: draftId,
++                recordId: resumed?.recordId ?? null,
++                definitionKey: entry.DefinitionKey,
++                definitionVersion: entry.Version,
++                name: entry.Name,
++                values: toValueList(values),
++                callId: context.CallId ?? null,
++                stationGroupId: context.GroupId ?? null,
++                rowVersion: resumed?.rowVersion ?? null,
++                updatedOn: new Date().toISOString(),
++            };
++
++            if (!send) {
++                // Explicit local save. A definition that seals values is never written to the device, so the
++                // store refuses to stage it and the person is told to stay online for it.
++                stageDraft(draft);
++                setMessage(offlineCapable ? t('records.saved_locally') : t('records.online_only'));
++                return;
++            }
++
++            setIsBusy(true);
++            try {
++                // Staged first so an interrupted send leaves the work on the device rather than losing it. A
++                // definition that seals values is not staged, so the draft is handed to the send directly.
++                stageDraft(draft);
++                const result = await pushDraft(draftId, draft);
++                if (result.ok && result.recordId) {
++                    discardDraft(draftId);
++                    router.replace(`/records/${result.recordId}`);
++                    return;
++                }
++                setMessage(result.conflict ? t(`records.conflict_${result.conflict.replace('-', '_')}`) : (result.error ?? t('records.save_failed')));
++            } finally {
++                setIsBusy(false);
++            }
++        },
++        [entry, schema, values, resumed, context, stageDraft, offlineCapable, pushDraft, discardDraft, router, t]
++    );
++
++    if (!entry) {
++        const definitions = catalog?.Definitions ?? [];
++        return (
++            <Box className="flex-1 bg-background-0">
++                <Stack.Screen options={{ title: t('records.new_record') }} />
++                <ScrollView>
++                    {definitions.length === 0 ? (
++                        <Text className="p-4 text-sm text-typography-500">{t('records.nothing_to_create')}</Text>
++                    ) : (
++                        definitions.map((definition) => (
++                            <React.Fragment key={`${definition.DefinitionKey}:${definition.Version}`}>
++                                <Pressable className="px-4 py-4" onPress={() => void choose(definition)} testID={`records-choose-${definition.DefinitionKey}`}>
++                                    <HStack className="items-center" space="md">
++                                        <VStack className="flex-1">
++                                            <Text className="font-medium text-typography-900">{definitionName(definition.DefinitionKey, definition.Name)}</Text>
++                                            <HStack space="xs" className="mt-1 flex-wrap items-center">
++                                                {definition.Category ? <Text className="text-xs text-typography-500">{definition.Category}</Text> : null}
++                                                {definition.RequiresProtectedGrant ? (
++                                                    <Badge action="warning" size="sm">
++                                                        <BadgeText>{t('records.online_only_badge')}</BadgeText>
++                                                    </Badge>
++                                                ) : null}
++                                                {definition.AllowOffline ? (
++                                                    <Badge action="muted" size="sm">
++                                                        <BadgeText>{t('records.offline_capable')}</BadgeText>
++                                                    </Badge>
++                                                ) : null}
++                                            </HStack>
++                                        </VStack>
++                                        <ChevronRight size={18} color="#94a3b8" />
++                                    </HStack>
++                                </Pressable>
++                                <Divider />
++                            </React.Fragment>
++                        ))
++                    )}
++                </ScrollView>
++            </Box>
++        );
+     }
+-  }, [catalog, fetchCatalog]);
+-
+-  const choose = useCallback(
+-    async (chosen: FieldRecordCatalogEntry, existing?: ValueMap) => {
+-      setIsBusy(true);
+-      try {
+-        const loaded = await fetchSchema(chosen.DefinitionKey, chosen.Version);
+-        setEntry(chosen);
+-        setSchema(loaded);
+-        if (existing) {
+-          setValues(existing);
+-          return;
+-        }
+-        if (!chosen.SupportsPrefill) {
+-          setValues({});
+-          return;
+-        }
+-        report({ EventType: 'draft_started', Outcome: 'ok', DefinitionKey: chosen.DefinitionKey, DefinitionVersion: chosen.Version });
+-        const prefilled = await prefill(chosen.DefinitionKey, chosen.Version);
+-        const map: ValueMap = {};
+-        for (const value of prefilled?.Values ?? []) {
+-          if (!value.SectionKey) {
+-            continue;
+-          }
+-          map[cellKey(value.SectionKey, value.FieldKey, null)] = {
+-            SectionKey: value.SectionKey,
+-            FieldKey: value.FieldKey,
+-            RowKey: null,
+-            Value: value.Value ?? null,
+-            ReferenceType: value.ReferenceType ?? null,
+-            ReferenceId: value.ReferenceId ?? null,
+-          };
+-        }
+-        setValues(map);
+-      } finally {
+-        setIsBusy(false);
+-      }
+-    },
+-    [fetchSchema, prefill, report]
+-  );
+-
+-  useEffect(() => {
+-    if (!resumed || entry) {
+-      return;
+-    }
+-    const match = (catalog?.Definitions ?? []).find((definition) => definition.DefinitionKey === resumed.definitionKey && definition.Version === resumed.definitionVersion);
+-    if (!match) {
+-      return;
+-    }
+-    const map: ValueMap = {};
+-    for (const value of resumed.values) {
+-      map[cellKey(value.SectionKey, value.FieldKey, value.RowKey ?? null)] = value;
+-    }
+-    void choose(match, map);
+-  }, [resumed, entry, catalog, choose]);
+-
+-  const unsupported = useMemo(() => unsupportedFieldKeys(schema), [schema]);
+-  const offlineCapable = canAuthorOffline(entry);
+-
+-  const save = useCallback(
+-    async (send: boolean) => {
+-      if (!entry || !schema) {
+-        return;
+-      }
+-      const found = validate(schema, values, false);
+-      setIssues(found);
+-      if (found.length > 0) {
+-        setMessage(t('records.fix_fields'));
+-        return;
+-      }
+-
+-      const draftId = resumed?.clientRecordId ?? clientId();
+-      const draft = {
+-        clientRecordId: draftId,
+-        recordId: resumed?.recordId ?? null,
+-        definitionKey: entry.DefinitionKey,
+-        definitionVersion: entry.Version,
+-        name: entry.Name,
+-        values: toValueList(values),
+-        callId: context.CallId ?? null,
+-        stationGroupId: context.GroupId ?? null,
+-        rowVersion: resumed?.rowVersion ?? null,
+-        updatedOn: new Date().toISOString(),
+-      };
+-
+-      if (!send) {
+-        // Explicit local save. A definition that seals values is never written to the device, so the
+-        // store refuses to stage it and the person is told to stay online for it.
+-        stageDraft(draft);
+-        setMessage(offlineCapable ? t('records.saved_locally') : t('records.online_only'));
+-        return;
+-      }
+-
+-      setIsBusy(true);
+-      try {
+-        // Staged first so an interrupted send leaves the work on the device rather than losing it. A
+-        // definition that seals values is not staged, so the draft is handed to the send directly.
+-        stageDraft(draft);
+-        const result = await pushDraft(draftId, draft);
+-        if (result.ok && result.recordId) {
+-          discardDraft(draftId);
+-          router.replace(`/records/${result.recordId}`);
+-          return;
+-        }
+-        setMessage(result.conflict ? t(`records.conflict_${result.conflict.replace('-', '_')}`) : (result.error ?? t('records.save_failed')));
+-      } finally {
+-        setIsBusy(false);
+-      }
+-    },
+-    [entry, schema, values, resumed, context, stageDraft, offlineCapable, pushDraft, discardDraft, router, t]
+-  );
+-
+-  if (!entry) {
+-    const definitions = catalog?.Definitions ?? [];
++
+     return (
+-      <Box className="flex-1 bg-background-0">
+-        <Stack.Screen options={{ title: t('records.new_record') }} />
+-        <ScrollView>
+-          {definitions.length === 0 ? (
+-            <Text className="p-4 text-sm text-typography-500">{t('records.nothing_to_create')}</Text>
+-          ) : (
+-            definitions.map((definition) => (
+-              <React.Fragment key={`${definition.DefinitionKey}:${definition.Version}`}>
+-                <Pressable className="px-4 py-4" onPress={() => void choose(definition)} testID={`records-choose-${definition.DefinitionKey}`}>
+-                  <HStack className="items-center" space="md">
+-                    <VStack className="flex-1">
+-                      <Text className="font-medium text-typography-900">{definitionName(definition.DefinitionKey, definition.Name)}</Text>
+-                      <HStack space="xs" className="mt-1 flex-wrap items-center">
+-                        {definition.Category ? <Text className="text-xs text-typography-500">{definition.Category}</Text> : null}
+-                        {definition.RequiresProtectedGrant ? (
+-                          <Badge action="warning" size="sm">
+-                            <BadgeText>{t('records.online_only_badge')}</BadgeText>
+-                          </Badge>
+-                        ) : null}
+-                        {definition.AllowOffline ? (
+-                          <Badge action="muted" size="sm">
+-                            <BadgeText>{t('records.offline_capable')}</BadgeText>
+-                          </Badge>
+-                        ) : null}
+-                      </HStack>
+-                    </VStack>
+-                    <ChevronRight size={18} color="#94a3b8" />
+-                  </HStack>
+-                </Pressable>
+-                <Divider />
+-              </React.Fragment>
+-            ))
+-          )}
+-        </ScrollView>
+-      </Box>
++        <Box className="flex-1 bg-background-0">
++            <Stack.Screen options={{ title: definitionName(entry.DefinitionKey, entry.Name) ?? entry.Name }} />
++            <ScrollView contentContainerClassName="p-4">
++                {unsupported.length > 0 ? (
++                    <Box className="mb-4 rounded-md border border-warning-300 bg-background-warning p-3">
++                        <Heading size="xs">{t('records.update_required')}</Heading>
++                        <Text className="mt-1 text-sm text-typography-700">{t('records.unsupported_definition')}</Text>
++                    </Box>
++                ) : null}
++
++                {!offlineCapable ? (
++                    <HStack className="mb-4 items-center" space="xs">
++                        <CloudOff size={14} color="#64748b" />
++                        <Text className="text-xs text-typography-500">{t('records.online_only')}</Text>
++                    </HStack>
++                ) : null}
++
++                {message ? <Text className="mb-3 text-sm text-typography-700">{message}</Text> : null}
++
++                {schema ? <RecordForm schema={schema} values={values} issues={issues} onChange={setValues} readOnly={unsupported.length > 0} /> : <Spinner />}
++
++                <VStack space="sm" className="mt-4">
++                    <Button isDisabled={isBusy || unsupported.length > 0} onPress={() => void save(true)} testID="records-save-send">
++                        <ButtonText>{t('records.save_and_send')}</ButtonText>
++                    </Button>
++                    <Button variant="outline" isDisabled={isBusy || unsupported.length > 0 || !offlineCapable} onPress={() => void save(false)} testID="records-save-local">
++                        <ButtonText>{t('records.save_locally')}</ButtonText>
++                    </Button>
++                    <Button variant="link" onPress={() => router.back()}>
++                        <ButtonText>{t('records.cancel')}</ButtonText>
++                    </Button>
++                </VStack>
++                <Box className="h-16" />
++            </ScrollView>
++        </Box>
+     );
+-  }
+-
+-  return (
+-    <Box className="flex-1 bg-background-0">
+-      <Stack.Screen options={{ title: definitionName(entry.DefinitionKey, entry.Name) ?? entry.Name }} />
+-      <ScrollView contentContainerClassName="p-4">
+-        {unsupported.length > 0 ? (
+-          <Box className="mb-4 rounded-md border border-warning-300 bg-background-warning p-3">
+-            <Heading size="xs">{t('records.update_required')}</Heading>
+-            <Text className="mt-1 text-sm text-typography-700">{t('records.unsupported_definition')}</Text>
+-          </Box>
+-        ) : null}
+-
+-        {!offlineCapable ? (
+-          <HStack className="mb-4 items-center" space="xs">
+-            <CloudOff size={14} color="#64748b" />
+-            <Text className="text-xs text-typography-500">{t('records.online_only')}</Text>
+-          </HStack>
+-        ) : null}
+-
+-        {message ? <Text className="mb-3 text-sm text-typography-700">{message}</Text> : null}
+-
+-        {schema ? <RecordForm schema={schema} values={values} issues={issues} onChange={setValues} readOnly={unsupported.length > 0} /> : <Spinner />}
+-
+-        <VStack space="sm" className="mt-4">
+-          <Button isDisabled={isBusy || unsupported.length > 0} onPress={() => void save(true)} testID="records-save-send">
+-            <ButtonText>{t('records.save_and_send')}</ButtonText>
+-          </Button>
+-          <Button variant="outline" isDisabled={isBusy || unsupported.length > 0 || !offlineCapable} onPress={() => void save(false)} testID="records-save-local">
+-            <ButtonText>{t('records.save_locally')}</ButtonText>
+-          </Button>
+-          <Button variant="link" onPress={() => router.back()}>
+-            <ButtonText>{t('records.cancel')}</ButtonText>
+-          </Button>
+-        </VStack>
+-        <Box className="h-16" />
+-      </ScrollView>
+-    </Box>
+-  );
+ }
+--- /dev/null
++++ b/src/lib/records/__tests__/wire-contract.test.ts
+@@ -0,0 +1,121 @@
++import { cellKey, isProtected, isRestricted, toValueList, toValueMap } from '@/lib/records/schema';
++import { type RecordFieldSchema, type RecordValuesData, RmsFieldClassification } from '@/models/v4/records';
++
++// Literal server values, not fixtures built from this client's enum: Core Standard=0/Restricted=1/Protected=2.
++describe('Core Records wire contract', () => {
++    it('matches the three actual Core classification values and keeps unknown fields restricted', () => {
++        expect([RmsFieldClassification.Standard, RmsFieldClassification.Restricted, RmsFieldClassification.Protected]).toEqual([0, 1, 2]);
++        for (const [number, restricted, protectedField] of [
++            [0, false, false],
++            [1, true, false],
++            [2, true, true],
++            [99, true, false],
++        ] as const) {
++            const field = { Classification: number } as RecordFieldSchema;
++            expect(isRestricted(field)).toBe(restricted);
++            expect(isProtected(field)).toBe(protectedField);
++        }
++        expect(isRestricted({} as RecordFieldSchema)).toBe(true);
++    });
++
++    it('maps nested sections and repeating rows without merging their identities', () => {
++        const payload: RecordValuesData = {
++            DefinitionKey: 'training-review',
++            DefinitionVersion: 1,
++            Sections: [
++                {
++                    SectionKey: 'summary',
++                    Rows: [
++                        {
++                            RowKey: null,
++                            Ordinal: 0,
++                            Cells: [
++                                { FieldKey: 'summary', Value: '  exact summary  ' },
++                                { FieldKey: 'notes', Value: 'Stored notes' },
++                            ],
++                        },
++                    ],
++                },
++                {
++                    SectionKey: 'crew',
++                    Repeating: true,
++                    Rows: [
++                        {
++                            RowKey: 'row-a',
++                            Ordinal: 0,
++                            Cells: [
++                                { FieldKey: 'member', ReferenceType: 'user', ReferenceId: 'member-a' },
++                                { FieldKey: 'options', Values: ['alpha', 'beta'] },
++                            ],
++                        },
++                        { RowKey: 'row-b', Ordinal: 1, Cells: [{ FieldKey: 'member', ReferenceType: 'user', ReferenceId: 'member-b' }] },
++                    ],
++                },
++            ],
++        };
++        const unchanged = JSON.stringify(payload);
++        const mapped = toValueMap(payload);
++        expect(mapped[cellKey('summary', 'summary')].Value).toBe('  exact summary  ');
++        expect(mapped[cellKey('summary', 'notes')].Value).toBe('Stored notes');
++        expect(mapped[cellKey('crew', 'member', 'row-a')]).toMatchObject({ SectionKey: 'crew', RowKey: 'row-a', Ordinal: 0, ReferenceType: 'user', ReferenceId: 'member-a' });
++        expect(mapped[cellKey('crew', 'member', 'row-b')]).toMatchObject({ RowKey: 'row-b', Ordinal: 1, ReferenceId: 'member-b' });
++        expect(mapped[cellKey('crew', 'options', 'row-a')].Values).toEqual(['alpha', 'beta']);
++        expect(JSON.stringify(payload)).toBe(unchanged);
++    });
++
++    it('does not map withheld cells or field keys even if unexpected raw content is present', () => {
++        const mapped = toValueMap({
++            WithheldFieldKeys: ['withheld-by-key'],
++            Sections: [
++                {
++                    SectionKey: 'summary',
++                    Rows: [
++                        {
++                            Cells: [
++                                { FieldKey: 'visible', Value: 'Returned plaintext' },
++                                { FieldKey: 'withheld', Withheld: true, Value: 'must not copy', Display: '[redacted]' },
++                                { FieldKey: 'withheld-by-key', Value: 'must not copy either' },
++                                { FieldKey: 'display-only', Display: 'not an editable value' },
++                            ],
++                        },
++                    ],
++                },
++            ],
++        });
++        expect(mapped[cellKey('summary', 'withheld')]).toBeUndefined();
++        expect(mapped[cellKey('summary', 'withheld-by-key')]).toBeUndefined();
++        expect(mapped[cellKey('summary', 'display-only')].Value).toBeNull();
++        expect(toValueList(mapped)).toEqual([expect.objectContaining({ FieldKey: 'visible', Value: 'Returned plaintext' })]);
++    });
++
++    it('preserves flat-array prefill callers and both withholding flags', () => {
++        const mapped = toValueMap([
++            { SectionKey: 'summary', FieldKey: 'call', ReferenceType: 'call', ReferenceId: '51001' },
++            { SectionKey: 'summary', FieldKey: 'legacy-private', IsWithheld: true, Value: 'not copied' },
++            { SectionKey: 'summary', FieldKey: 'private', Withheld: true, Value: 'not copied' },
++        ]);
++        expect(Object.keys(mapped)).toEqual([cellKey('summary', 'call')]);
++        expect(mapped[cellKey('summary', 'call')]).toMatchObject({ ReferenceType: 'call', ReferenceId: '51001' });
++        expect(toValueMap({ Cells: [{ SectionKey: 'summary', FieldKey: 'summary', Value: 'Legacy wrapper' }] })[cellKey('summary', 'summary')].Value).toBe('Legacy wrapper');
++    });
++
++    it('keeps raw units, currency and a zero offset without deriving values from display/numbers', () => {
++        const mapped = toValueMap({
++            Sections: [
++                {
++                    SectionKey: 'summary',
++                    Rows: [{ RowKey: 'r', Ordinal: 0, Cells: [{ FieldKey: 'amount', Value: '0.00', CurrencyCode: 'USD', OffsetMinutes: 0, UnitCode: 'gal', Display: 'Different formatted display' }] }],
++                },
++            ],
++        });
++        expect(mapped[cellKey('summary', 'amount', 'r')]).toMatchObject({ Value: '0.00', CurrencyCode: 'USD', OffsetMinutes: 0, UnitCode: 'gal', Ordinal: 0 });
++    });
++
++    it('does not invent absent sections, rows, cells or identities', () => {
++        for (const payload of [null, undefined, {}, { Sections: [] }, { Sections: [{ SectionKey: 'summary' }] }]) {
++            expect(toValueMap(payload)).toEqual({});
++        }
++        expect(toValueMap([{ FieldKey: 'without-section', Value: 'not mapped' }])).toEqual({});
++        expect(toValueMap({ Sections: [], Cells: [{ SectionKey: 'summary', FieldKey: 'stale-flat', Value: 'not substituted' }] })).toEqual({});
++    });
++});
+--- a/src/lib/records/schema.ts
++++ b/src/lib/records/schema.ts
+@@ -1,16 +1,17 @@
+ import {
+-  type FieldRecordCatalogEntry,
+-  type RecordConditionSchema,
+-  type RecordDefinitionSchema,
+-  type RecordFieldSchema,
+-  RecordsClientCapabilities,
+-  type RecordSectionSchema,
+-  type RecordValueCellData,
+-  type RecordValueInput,
+-  RmsFieldClassification,
+-  RmsFieldType,
+-  RmsRuleEffect,
+-  RmsRuleOperator,
++    type FieldRecordCatalogEntry,
++    type RecordConditionSchema,
++    type RecordDefinitionSchema,
++    type RecordFieldSchema,
++    RecordsClientCapabilities,
++    type RecordSectionSchema,
++    type RecordValueCellData,
++    type RecordValueInput,
++    type RecordValuesData,
++    RmsFieldClassification,
++    RmsFieldType,
++    RmsRuleEffect,
++    RmsRuleOperator,
+ } from '@/models/v4/records';
+ 
+ // Client-side schema helpers for the Field Records renderer (RMS plan RMS-1D). Rule evaluation here
+@@ -20,28 +21,28 @@
+ 
+ /** The controls this renderer can draw. A definition naming anything else fails closed. */
+ export const SUPPORTED_FIELD_TYPES: ReadonlySet<RmsFieldType> = new Set([
+-  RmsFieldType.ShortText,
+-  RmsFieldType.LongText,
+-  RmsFieldType.Integer,
+-  RmsFieldType.Decimal,
+-  RmsFieldType.Boolean,
+-  RmsFieldType.Date,
+-  RmsFieldType.DateTime,
+-  RmsFieldType.Duration,
+-  RmsFieldType.SingleSelect,
+-  RmsFieldType.MultiSelect,
+-  RmsFieldType.Address,
+-  RmsFieldType.Person,
+-  RmsFieldType.Unit,
+-  RmsFieldType.Group,
+-  RmsFieldType.Contact,
+-  RmsFieldType.Signature,
+-  RmsFieldType.ExternalReference,
+-  RmsFieldType.Currency,
+-  RmsFieldType.Quantity,
+-  RmsFieldType.CountrySubdivision,
+-  RmsFieldType.CallReference,
+-  RmsFieldType.Attachment,
++    RmsFieldType.ShortText,
++    RmsFieldType.LongText,
++    RmsFieldType.Integer,
++    RmsFieldType.Decimal,
++    RmsFieldType.Boolean,
++    RmsFieldType.Date,
++    RmsFieldType.DateTime,
++    RmsFieldType.Duration,
++    RmsFieldType.SingleSelect,
++    RmsFieldType.MultiSelect,
++    RmsFieldType.Address,
++    RmsFieldType.Person,
++    RmsFieldType.Unit,
++    RmsFieldType.Group,
++    RmsFieldType.Contact,
++    RmsFieldType.Signature,
++    RmsFieldType.ExternalReference,
++    RmsFieldType.Currency,
++    RmsFieldType.Quantity,
++    RmsFieldType.CountrySubdivision,
++    RmsFieldType.CallReference,
++    RmsFieldType.Attachment,
+ ]);
+ 
+ /** The capability this build reports to the server. Raise only when every control of the tier renders. */
+@@ -51,7 +52,7 @@
+ 
+ /** Field keys the renderer cannot draw; a definition with any is refused for authoring. */
+ export const unsupportedFieldKeys = (schema: RecordDefinitionSchema | null | undefined): string[] =>
+-  (schema?.Sections ?? []).flatMap((section) => (section.Fields ?? []).filter((field) => !isSupportedField(field)).map((field) => field.Key));
++    (schema?.Sections ?? []).flatMap((section) => (section.Fields ?? []).filter((field) => !isSupportedField(field)).map((field) => field.Key));
+ 
+ /** A value keyed by section, field and (for repeating sections) row. */
+ export type ValueMap = Record<string, RecordValueInput>;
+@@ -59,165 +60,187 @@
+ export const cellKey = (sectionKey: string, fieldKey: string, rowKey?: string | null): string => `${sectionKey}::${rowKey ?? ''}::${fieldKey}`;
+ 
+ export const emptyValue = (sectionKey: string, fieldKey: string, rowKey?: string | null): RecordValueInput => ({
+-  SectionKey: sectionKey,
+-  FieldKey: fieldKey,
+-  RowKey: rowKey ?? null,
++    SectionKey: sectionKey,
++    FieldKey: fieldKey,
++    RowKey: rowKey ?? null,
+ });
+ 
+-export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+-  const map: ValueMap = {};
+-  for (const cell of cells ?? []) {
+-    if (!cell?.FieldKey || !cell?.SectionKey) {
+-      continue;
+-    }
+-    map[cellKey(cell.SectionKey, cell.FieldKey, cell.RowKey)] = {
+-      SectionKey: cell.SectionKey,
+-      FieldKey: cell.FieldKey,
+-      RowKey: cell.RowKey ?? null,
+-      Ordinal: cell.Ordinal ?? 0,
+-      Value: cell.Value ?? null,
+-      Values: cell.Values ?? null,
+-      ReferenceType: cell.ReferenceType ?? null,
+-      ReferenceId: cell.ReferenceId ?? null,
+-      UnitCode: cell.UnitCode ?? null,
++/** Read only raw values returned by Core; display/redacted text is never an input value. */
++export const toValueMap = (data: RecordValuesData | RecordValueCellData[] | null | undefined): ValueMap => {
++    const map: ValueMap = {};
++    const withheld = new Set(Array.isArray(data) ? [] : (data?.WithheldFieldKeys ?? []));
++    const addCell = (cell: RecordValueCellData, sectionKey: string | undefined, rowKey: string | null | undefined, ordinal: number | undefined) => {
++        if (!cell?.FieldKey || !sectionKey || cell.Withheld === true || cell.IsWithheld === true || withheld.has(cell.FieldKey)) {
++            return;
++        }
++        map[cellKey(sectionKey, cell.FieldKey, rowKey)] = {
++            SectionKey: sectionKey,
++            FieldKey: cell.FieldKey,
++            RowKey: rowKey ?? null,
++            Ordinal: ordinal ?? 0,
++            Value: cell.Value ?? null,
++            Values: cell.Values ?? null,
++            ReferenceType: cell.ReferenceType ?? null,
++            ReferenceId: cell.ReferenceId ?? null,
++            UnitCode: cell.UnitCode ?? null,
++            CurrencyCode: cell.CurrencyCode ?? null,
++            OffsetMinutes: cell.OffsetMinutes ?? null,
++        };
+     };
+-  }
+-  return map;
++
++    if (Array.isArray(data)) {
++        for (const cell of data) {
++            addCell(cell, cell?.SectionKey, cell?.RowKey, cell?.Ordinal);
++        }
++    } else if (Array.isArray(data?.Sections)) {
++        for (const section of data.Sections) {
++            for (const row of section?.Rows ?? []) {
++                for (const cell of row?.Cells ?? []) {
++                    addCell(cell, section.SectionKey, row.RowKey, row.Ordinal);
++                }
++            }
++        }
++    } else {
++        for (const cell of data?.Cells ?? []) {
++            addCell(cell, cell?.SectionKey, cell?.RowKey, cell?.Ordinal);
++        }
++    }
++    return map;
+ };
+ 
+ export const toValueList = (values: ValueMap): RecordValueInput[] => Object.values(values).filter((value) => !isBlank(value));
+ 
+ export const isBlank = (value: RecordValueInput | undefined | null): boolean => {
+-  if (!value) {
+-    return true;
+-  }
+-  if (value.Values && value.Values.length > 0) {
+-    return false;
+-  }
+-  if (value.ReferenceId && value.ReferenceId.length > 0) {
+-    return false;
+-  }
+-  return value.Value === null || value.Value === undefined || value.Value.trim().length === 0;
++    if (!value) {
++        return true;
++    }
++    if (value.Values && value.Values.length > 0) {
++        return false;
++    }
++    if (value.ReferenceId && value.ReferenceId.length > 0) {
++        return false;
++    }
++    return value.Value === null || value.Value === undefined || value.Value.trim().length === 0;
+ };
+ 
+ /** Row keys present for a repeating section, in stored order. */
+ export const rowKeysFor = (values: ValueMap, sectionKey: string): string[] => {
+-  const seen = new Map<string, number>();
+-  for (const value of Object.values(values)) {
+-    if (value.SectionKey !== sectionKey || !value.RowKey) {
+-      continue;
+-    }
+-    if (!seen.has(value.RowKey)) {
+-      seen.set(value.RowKey, value.Ordinal ?? seen.size);
+-    }
+-  }
+-  return [...seen.entries()].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).map(([key]) => key);
++    const seen = new Map<string, number>();
++    for (const value of Object.values(values)) {
++        if (value.SectionKey !== sectionKey || !value.RowKey) {
++            continue;
++        }
++        if (!seen.has(value.RowKey)) {
++            seen.set(value.RowKey, value.Ordinal ?? seen.size);
++        }
++    }
++    return [...seen.entries()].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).map(([key]) => key);
+ };
+ 
+ const scalarText = (value: RecordValueInput | undefined): string => {
+-  if (!value) {
+-    return '';
+-  }
+-  if (value.Values && value.Values.length > 0) {
+-    return value.Values.join(',');
+-  }
+-  return value.ReferenceId ?? value.Value ?? '';
++    if (!value) {
++        return '';
++    }
++    if (value.Values && value.Values.length > 0) {
++        return value.Values.join(',');
++    }
++    return value.ReferenceId ?? value.Value ?? '';
+ };
+ 
+ const resolve = (values: ValueMap, schema: RecordDefinitionSchema, fieldKey: string, sectionKey: string, rowKey?: string | null): RecordValueInput | undefined => {
+-  // Inside a repeating row the row's own cell wins; otherwise fall back to the scalar value
+-  // anywhere in the schema, matching the server's Evaluate(condition, schema, values, depth, row).
+-  if (rowKey) {
+-    const own = values[cellKey(sectionKey, fieldKey, rowKey)];
+-    if (own) {
+-      return own;
+-    }
+-  }
+-  for (const section of schema.Sections ?? []) {
+-    if (section.Repeating) {
+-      continue;
+-    }
+-    const candidate = values[cellKey(section.Key, fieldKey, null)];
+-    if (candidate) {
+-      return candidate;
+-    }
+-  }
+-  return undefined;
++    // Inside a repeating row the row's own cell wins; otherwise fall back to the scalar value
++    // anywhere in the schema, matching the server's Evaluate(condition, schema, values, depth, row).
++    if (rowKey) {
++        const own = values[cellKey(sectionKey, fieldKey, rowKey)];
++        if (own) {
++            return own;
++        }
++    }
++    for (const section of schema.Sections ?? []) {
++        if (section.Repeating) {
++            continue;
++        }
++        const candidate = values[cellKey(section.Key, fieldKey, null)];
++        if (candidate) {
++            return candidate;
++        }
++    }
++    return undefined;
+ };
+ 
+ const MAX_RULE_DEPTH = 5;
+ 
+ export const evaluateCondition = (condition: RecordConditionSchema | null | undefined, schema: RecordDefinitionSchema, values: ValueMap, sectionKey: string, rowKey?: string | null, depth = 0): boolean => {
+-  if (!condition || depth > MAX_RULE_DEPTH) {
+-    return true;
+-  }
+-
+-  if (condition.Operator === RmsRuleOperator.And || condition.Operator === RmsRuleOperator.Or) {
+-    const children = condition.Conditions ?? [];
+-    if (children.length === 0) {
+-      return true;
+-    }
+-    return condition.Operator === RmsRuleOperator.And
+-      ? children.every((child) => evaluateCondition(child, schema, values, sectionKey, rowKey, depth + 1))
+-      : children.some((child) => evaluateCondition(child, schema, values, sectionKey, rowKey, depth + 1));
+-  }
+-
+-  if (!condition.FieldKey) {
+-    return true;
+-  }
+-
+-  const value = resolve(values, schema, condition.FieldKey, sectionKey, rowKey);
+-  const text = scalarText(value);
+-  const blank = isBlank(value);
+-
+-  switch (condition.Operator) {
+-    case RmsRuleOperator.Equals:
+-      return text.localeCompare(condition.Value ?? '', undefined, { sensitivity: 'accent' }) === 0;
+-    case RmsRuleOperator.NotEquals:
+-      return text.localeCompare(condition.Value ?? '', undefined, { sensitivity: 'accent' }) !== 0;
+-    case RmsRuleOperator.InSet:
+-      return (condition.Values ?? []).some((candidate) => candidate.localeCompare(text, undefined, { sensitivity: 'accent' }) === 0);
+-    case RmsRuleOperator.NotInSet:
+-      return !(condition.Values ?? []).some((candidate) => candidate.localeCompare(text, undefined, { sensitivity: 'accent' }) === 0);
+-    case RmsRuleOperator.IsEmpty:
+-      return blank;
+-    case RmsRuleOperator.IsNotEmpty:
+-      return !blank;
+-    case RmsRuleOperator.InRange: {
+-      const numeric = Number.parseFloat(text);
+-      if (Number.isNaN(numeric)) {
+-        return false;
+-      }
+-      if (condition.Min !== null && condition.Min !== undefined && numeric < condition.Min) {
+-        return false;
+-      }
+-      if (condition.Max !== null && condition.Max !== undefined && numeric > condition.Max) {
+-        return false;
+-      }
+-      return true;
+-    }
+-    default:
+-      return true;
+-  }
++    if (!condition || depth > MAX_RULE_DEPTH) {
++        return true;
++    }
++
++    if (condition.Operator === RmsRuleOperator.And || condition.Operator === RmsRuleOperator.Or) {
++        const children = condition.Conditions ?? [];
++        if (children.length === 0) {
++            return true;
++        }
++        return condition.Operator === RmsRuleOperator.And
++            ? children.every((child) => evaluateCondition(child, schema, values, sectionKey, rowKey, depth + 1))
++            : children.some((child) => evaluateCondition(child, schema, values, sectionKey, rowKey, depth + 1));
++    }
++
++    if (!condition.FieldKey) {
++        return true;
++    }
++
++    const value = resolve(values, schema, condition.FieldKey, sectionKey, rowKey);
++    const text = scalarText(value);
++    const blank = isBlank(value);
++
++    switch (condition.Operator) {
++        case RmsRuleOperator.Equals:
++            return text.localeCompare(condition.Value ?? '', undefined, { sensitivity: 'accent' }) === 0;
++        case RmsRuleOperator.NotEquals:
++            return text.localeCompare(condition.Value ?? '', undefined, { sensitivity: 'accent' }) !== 0;
++        case RmsRuleOperator.InSet:
++            return (condition.Values ?? []).some((candidate) => candidate.localeCompare(text, undefined, { sensitivity: 'accent' }) === 0);
++        case RmsRuleOperator.NotInSet:
++            return !(condition.Values ?? []).some((candidate) => candidate.localeCompare(text, undefined, { sensitivity: 'accent' }) === 0);
++        case RmsRuleOperator.IsEmpty:
++            return blank;
++        case RmsRuleOperator.IsNotEmpty:
++            return !blank;
++        case RmsRuleOperator.InRange: {
++            const numeric = Number.parseFloat(text);
++            if (Number.isNaN(numeric)) {
++                return false;
++            }
++            if (condition.Min !== null && condition.Min !== undefined && numeric < condition.Min) {
++                return false;
++            }
++            if (condition.Max !== null && condition.Max !== undefined && numeric > condition.Max) {
++                return false;
++            }
++            return true;
++        }
++        default:
++            return true;
++    }
+ };
+ 
+ export interface RuleState {
+-  hiddenFieldKeys: Set<string>;
+-  requiredFieldKeys: Set<string>;
+-  hiddenSectionKeys: Set<string>;
++    hiddenFieldKeys: Set<string>;
++    requiredFieldKeys: Set<string>;
++    hiddenSectionKeys: Set<string>;
+ }
+ 
+ const evaluateFieldRules = (field: RecordFieldSchema, schema: RecordDefinitionSchema, values: ValueMap, sectionKey: string, rowKey: string | null, state: RuleState) => {
+-  for (const rule of field.Rules ?? []) {
+-    const met = evaluateCondition(rule.Condition, schema, values, sectionKey, rowKey);
+-    const key = cellKey(sectionKey, field.Key, rowKey);
+-    if (rule.Effect === RmsRuleEffect.Show && !met) {
+-      state.hiddenFieldKeys.add(key);
+-    }
+-    if (rule.Effect === RmsRuleEffect.Require && met) {
+-      state.requiredFieldKeys.add(key);
+-    }
+-  }
++    for (const rule of field.Rules ?? []) {
++        const met = evaluateCondition(rule.Condition, schema, values, sectionKey, rowKey);
++        const key = cellKey(sectionKey, field.Key, rowKey);
++        if (rule.Effect === RmsRuleEffect.Show && !met) {
++            state.hiddenFieldKeys.add(key);
++        }
++        if (rule.Effect === RmsRuleEffect.Require && met) {
++            state.requiredFieldKeys.add(key);
++        }
++    }
+ };
+ 
+ /**
+@@ -225,106 +248,106 @@
+  * rule on a row's field answers from that row's cells, exactly as the server does.
+  */
+ export const evaluateRules = (schema: RecordDefinitionSchema | null | undefined, values: ValueMap): RuleState => {
+-  const state: RuleState = { hiddenFieldKeys: new Set(), requiredFieldKeys: new Set(), hiddenSectionKeys: new Set() };
+-  if (!schema) {
++    const state: RuleState = { hiddenFieldKeys: new Set(), requiredFieldKeys: new Set(), hiddenSectionKeys: new Set() };
++    if (!schema) {
++        return state;
++    }
++
++    for (const section of schema.Sections ?? []) {
++        for (const rule of section.Rules ?? []) {
++            if (rule.Effect === RmsRuleEffect.Show && !evaluateCondition(rule.Condition, schema, values, section.Key, null)) {
++                state.hiddenSectionKeys.add(section.Key);
++            }
++        }
++        if (state.hiddenSectionKeys.has(section.Key)) {
++            continue;
++        }
++
++        if (section.Repeating) {
++            for (const rowKey of rowKeysFor(values, section.Key)) {
++                for (const field of section.Fields ?? []) {
++                    evaluateFieldRules(field, schema, values, section.Key, rowKey, state);
++                }
++            }
++            continue;
++        }
++
++        for (const field of section.Fields ?? []) {
++            evaluateFieldRules(field, schema, values, section.Key, null, state);
++        }
++    }
++
+     return state;
+-  }
+-
+-  for (const section of schema.Sections ?? []) {
+-    for (const rule of section.Rules ?? []) {
+-      if (rule.Effect === RmsRuleEffect.Show && !evaluateCondition(rule.Condition, schema, values, section.Key, null)) {
+-        state.hiddenSectionKeys.add(section.Key);
+-      }
+-    }
+-    if (state.hiddenSectionKeys.has(section.Key)) {
+-      continue;
+-    }
+-
+-    if (section.Repeating) {
+-      for (const rowKey of rowKeysFor(values, section.Key)) {
+-        for (const field of section.Fields ?? []) {
+-          evaluateFieldRules(field, schema, values, section.Key, rowKey, state);
+-        }
+-      }
+-      continue;
+-    }
+-
+-    for (const field of section.Fields ?? []) {
+-      evaluateFieldRules(field, schema, values, section.Key, null, state);
+-    }
+-  }
+-
+-  return state;
+ };
+ 
+ export const isFieldHidden = (state: RuleState, sectionKey: string, fieldKey: string, rowKey?: string | null): boolean => state.hiddenFieldKeys.has(cellKey(sectionKey, fieldKey, rowKey ?? null));
+ 
+ export const isFieldRequired = (state: RuleState, field: RecordFieldSchema, sectionKey: string, rowKey?: string | null, forFinalize = false): boolean => {
+-  if (field.Required) {
+-    return true;
+-  }
+-  if (forFinalize && field.RequiredToFinalize) {
+-    return true;
+-  }
+-  return state.requiredFieldKeys.has(cellKey(sectionKey, field.Key, rowKey ?? null));
++    if (field.Required) {
++        return true;
++    }
++    if (forFinalize && field.RequiredToFinalize) {
++        return true;
++    }
++    return state.requiredFieldKeys.has(cellKey(sectionKey, field.Key, rowKey ?? null));
+ };
+ 
+ export interface ValidationIssue {
+-  sectionKey: string;
+-  fieldKey: string;
+-  rowKey: string | null;
+-  label: string;
+-  code: 'required' | 'range' | 'length';
++    sectionKey: string;
++    fieldKey: string;
++    rowKey: string | null;
++    label: string;
++    code: 'required' | 'range' | 'length';
+ }
+ 
+ /** Local validation for immediate feedback. The server validates again and its answer wins. */
+ export const validate = (schema: RecordDefinitionSchema | null | undefined, values: ValueMap, forFinalize: boolean): ValidationIssue[] => {
+-  const issues: ValidationIssue[] = [];
+-  if (!schema) {
++    const issues: ValidationIssue[] = [];
++    if (!schema) {
++        return issues;
++    }
++    const state = evaluateRules(schema, values);
++
++    const checkField = (section: RecordSectionSchema, field: RecordFieldSchema, rowKey: string | null) => {
++        if (isFieldHidden(state, section.Key, field.Key, rowKey)) {
++            return;
++        }
++        const value = values[cellKey(section.Key, field.Key, rowKey)];
++        if (isBlank(value)) {
++            if (isFieldRequired(state, field, section.Key, rowKey, forFinalize)) {
++                issues.push({ sectionKey: section.Key, fieldKey: field.Key, rowKey, label: field.Label, code: 'required' });
++            }
++            return;
++        }
++        if (field.Type === RmsFieldType.Integer || field.Type === RmsFieldType.Decimal || field.Type === RmsFieldType.Currency || field.Type === RmsFieldType.Quantity) {
++            const numeric = Number.parseFloat(value?.Value ?? '');
++            if (Number.isNaN(numeric) || (field.Min !== null && field.Min !== undefined && numeric < field.Min) || (field.Max !== null && field.Max !== undefined && numeric > field.Max)) {
++                issues.push({ sectionKey: section.Key, fieldKey: field.Key, rowKey, label: field.Label, code: 'range' });
++            }
++        }
++        if (field.MaxLength && (value?.Value?.length ?? 0) > field.MaxLength) {
++            issues.push({ sectionKey: section.Key, fieldKey: field.Key, rowKey, label: field.Label, code: 'length' });
++        }
++    };
++
++    for (const section of schema.Sections ?? []) {
++        if (state.hiddenSectionKeys.has(section.Key)) {
++            continue;
++        }
++        if (section.Repeating) {
++            for (const rowKey of rowKeysFor(values, section.Key)) {
++                for (const field of section.Fields ?? []) {
++                    checkField(section, field, rowKey);
++                }
++            }
++            continue;
++        }
++        for (const field of section.Fields ?? []) {
++            checkField(section, field, null);
++        }
++    }
++
+     return issues;
+-  }
+-  const state = evaluateRules(schema, values);
+-
+-  const checkField = (section: RecordSectionSchema, field: RecordFieldSchema, rowKey: string | null) => {
+-    if (isFieldHidden(state, section.Key, field.Key, rowKey)) {
+-      return;
+-    }
+-    const value = values[cellKey(section.Key, field.Key, rowKey)];
+-    if (isBlank(value)) {
+-      if (isFieldRequired(state, field, section.Key, rowKey, forFinalize)) {
+-        issues.push({ sectionKey: section.Key, fieldKey: field.Key, rowKey, label: field.Label, code: 'required' });
+-      }
+-      return;
+-    }
+-    if (field.Type === RmsFieldType.Integer || field.Type === RmsFieldType.Decimal || field.Type === RmsFieldType.Currency || field.Type === RmsFieldType.Quantity) {
+-      const numeric = Number.parseFloat(value?.Value ?? '');
+-      if (Number.isNaN(numeric) || (field.Min !== null && field.Min !== undefined && numeric < field.Min) || (field.Max !== null && field.Max !== undefined && numeric > field.Max)) {
+-        issues.push({ sectionKey: section.Key, fieldKey: field.Key, rowKey, label: field.Label, code: 'range' });
+-      }
+-    }
+-    if (field.MaxLength && (value?.Value?.length ?? 0) > field.MaxLength) {
+-      issues.push({ sectionKey: section.Key, fieldKey: field.Key, rowKey, label: field.Label, code: 'length' });
+-    }
+-  };
+-
+-  for (const section of schema.Sections ?? []) {
+-    if (state.hiddenSectionKeys.has(section.Key)) {
+-      continue;
+-    }
+-    if (section.Repeating) {
+-      for (const rowKey of rowKeysFor(values, section.Key)) {
+-        for (const field of section.Fields ?? []) {
+-          checkField(section, field, rowKey);
+-        }
+-      }
+-      continue;
+-    }
+-    for (const field of section.Fields ?? []) {
+-      checkField(section, field, null);
+-    }
+-  }
+-
+-  return issues;
+ };
+ 
+ /** A protected field is authored only with a live grant; it is never written to an offline draft. */
+--- a/src/models/v4/records/index.ts
++++ b/src/models/v4/records/index.ts
+@@ -4,83 +4,83 @@
+ 
+ /** Resgrid.Model.RmsOriginClient. */
+ export enum RmsOriginClient {
+-  System = 0,
+-  Web = 1,
+-  Responder = 2,
+-  Unit = 3,
+-  IncidentCommand = 4,
+-  Dispatch = 5,
+-  Api = 6,
++    System = 0,
++    Web = 1,
++    Responder = 2,
++    Unit = 3,
++    IncidentCommand = 4,
++    Dispatch = 5,
++    Api = 6,
+ }
+ 
+ /** Resgrid.Model.RmsRecordState. */
+ export enum RmsRecordState {
+-  Draft = 1,
+-  ReadyForReview = 2,
+-  Returned = 3,
+-  Finalized = 4,
+-  Amended = 5,
+-  Voided = 6,
+-  Cancelled = 7,
++    Draft = 1,
++    ReadyForReview = 2,
++    Returned = 3,
++    Finalized = 4,
++    Amended = 5,
++    Voided = 6,
++    Cancelled = 7,
+ }
+ 
+ /** Resgrid.Model.RmsFieldType. A control this client cannot render fails closed for authoring. */
+ export enum RmsFieldType {
+-  ShortText = 1,
+-  LongText = 2,
+-  Integer = 3,
+-  Decimal = 4,
+-  Boolean = 5,
+-  Date = 6,
+-  DateTime = 7,
+-  Duration = 8,
+-  SingleSelect = 9,
+-  MultiSelect = 10,
+-  Address = 11,
+-  Person = 12,
+-  Unit = 13,
+-  Group = 14,
+-  Contact = 15,
+-  Attachment = 16,
+-  Signature = 17,
+-  ExternalReference = 18,
+-  Currency = 19,
+-  Quantity = 20,
+-  CountrySubdivision = 21,
+-  CallReference = 22,
++    ShortText = 1,
++    LongText = 2,
++    Integer = 3,
++    Decimal = 4,
++    Boolean = 5,
++    Date = 6,
++    DateTime = 7,
++    Duration = 8,
++    SingleSelect = 9,
++    MultiSelect = 10,
++    Address = 11,
++    Person = 12,
++    Unit = 13,
++    Group = 14,
++    Contact = 15,
++    Attachment = 16,
++    Signature = 17,
++    ExternalReference = 18,
++    Currency = 19,
++    Quantity = 20,
++    CountrySubdivision = 21,
++    CallReference = 22,
+ }
+ 
+ /** Resgrid.Model.RmsFieldClassification. */
+ export enum RmsFieldClassification {
+-  Standard = 1,
+-  Restricted = 2,
+-  Protected = 3,
++    Standard = 0,
++    Restricted = 1,
++    Protected = 2,
+ }
+ 
+ /** Resgrid.Model.RmsRuleEffect. */
+ export enum RmsRuleEffect {
+-  Show = 1,
+-  Require = 2,
++    Show = 1,
++    Require = 2,
+ }
+ 
+ /** Resgrid.Model.RmsRuleOperator. */
+ export enum RmsRuleOperator {
+-  Equals = 1,
+-  NotEquals = 2,
+-  InSet = 3,
+-  NotInSet = 4,
+-  IsEmpty = 5,
+-  IsNotEmpty = 6,
+-  InRange = 7,
+-  And = 20,
+-  Or = 21,
++    Equals = 1,
++    NotEquals = 2,
++    InSet = 3,
++    NotInSet = 4,
++    IsEmpty = 5,
++    IsNotEmpty = 6,
++    InRange = 7,
++    And = 20,
++    Or = 21,
+ }
+ 
+ /** Renderer capability this build reports. Bump only when every control of the next tier renders. */
+ export const RecordsClientCapabilities = {
+-  Locked: 'records.v1',
+-  Configurable: 'records.v1b',
+-  Packs: 'records.v1c',
++    Locked: 'records.v1',
++    Configurable: 'records.v1b',
++    Packs: 'records.v1c',
+ } as const;
+ 
+ export const FieldRecordContractVersion = 'field-catalog.v1';
+@@ -88,196 +88,196 @@
+ 
+ /** Launch contexts a definition surface may name. */
+ export const FieldRecordLaunchContexts = {
+-  None: 'none',
+-  Call: 'call',
+-  Unit: 'unit',
+-  Contact: 'contact',
+-  Checklist: 'checklist',
+-  WorkOrder: 'workorder',
+-  Command: 'command',
++    None: 'none',
++    Call: 'call',
++    Unit: 'unit',
++    Contact: 'contact',
++    Checklist: 'checklist',
++    WorkOrder: 'workorder',
++    Command: 'command',
+ } as const;
+ 
+ /** Why the server withheld a definition. Codes only — never a reason a client can act around. */
+ export const FieldRecordExclusionReasons = {
+-  OriginNotField: 'origin_not_field',
+-  ModuleDisabled: 'module_disabled',
+-  RecordsNotUsable: 'records_not_usable',
+-  AppDisabled: 'app_disabled',
+-  AppVersionTooOld: 'app_version_too_old',
+-  NotMember: 'not_member',
+-  SurfaceNotEnabled: 'surface_not_enabled',
+-  ContextNotAllowed: 'context_not_allowed',
+-  ContextNotVerified: 'context_not_verified',
+-  CapabilityUnsupported: 'capability_unsupported',
+-  Retired: 'retired',
+-  NotPublished: 'not_published',
+-  ProtectedDataUnavailable: 'protected_data_unavailable',
++    OriginNotField: 'origin_not_field',
++    ModuleDisabled: 'module_disabled',
++    RecordsNotUsable: 'records_not_usable',
++    AppDisabled: 'app_disabled',
++    AppVersionTooOld: 'app_version_too_old',
++    NotMember: 'not_member',
++    SurfaceNotEnabled: 'surface_not_enabled',
++    ContextNotAllowed: 'context_not_allowed',
++    ContextNotVerified: 'context_not_verified',
++    CapabilityUnsupported: 'capability_unsupported',
++    Retired: 'retired',
++    NotPublished: 'not_published',
++    ProtectedDataUnavailable: 'protected_data_unavailable',
+ } as const;
+ 
+ export interface FieldRecordContextInput {
+-  CallId?: number | null;
+-  UnitId?: number | null;
+-  GroupId?: number | null;
+-  CommandRole?: string | null;
+-  ContactId?: number | null;
++    CallId?: number | null;
++    UnitId?: number | null;
++    GroupId?: number | null;
++    CommandRole?: string | null;
++    ContactId?: number | null;
+ }
+ 
+ export interface FieldRecordCatalogInput {
+-  OriginClient: number;
+-  AppVersion?: string | null;
+-  ClientCapability?: string | null;
+-  Context?: FieldRecordContextInput | null;
++    OriginClient: number;
++    AppVersion?: string | null;
++    ClientCapability?: string | null;
++    Context?: FieldRecordContextInput | null;
+ }
+ 
+ export interface FieldRecordPreflightData {
+-  ContractVersion: string;
+-  SyncContractVersion: string;
+-  OriginClient: string;
+-  Ok: boolean;
+-  Reasons: string[];
+-  ModuleEnabled: boolean;
+-  RecordsUsable: boolean;
+-  AppEnabled: boolean;
+-  MinimumAppVersion?: string | null;
+-  AppVersion?: string | null;
+-  ClientCapability?: string | null;
+-  ProtectionState?: string | null;
+-  ServerTimestampMs: number;
++    ContractVersion: string;
++    SyncContractVersion: string;
++    OriginClient: string;
++    Ok: boolean;
++    Reasons: string[];
++    ModuleEnabled: boolean;
++    RecordsUsable: boolean;
++    AppEnabled: boolean;
++    MinimumAppVersion?: string | null;
++    AppVersion?: string | null;
++    ClientCapability?: string | null;
++    ProtectionState?: string | null;
++    ServerTimestampMs: number;
+ }
+ 
+ export interface FieldRecordCatalogEntry {
+-  DefinitionKey: string;
+-  Version: number;
+-  Name: string;
+-  Category?: string | null;
+-  Locked: boolean;
+-  RecordType?: number | null;
+-  LifecyclePreset?: string | null;
+-  LaunchContexts: string[];
+-  AllowOffline: boolean;
+-  AllowAttachments: boolean;
+-  MinimumAppVersion?: string | null;
+-  MinimumClientCapability?: string | null;
+-  Restricted: boolean;
+-  /** Definition seals values: authoring needs a live grant and nothing is cached offline. */
+-  RequiresProtectedGrant: boolean;
+-  SchemaChecksum?: string | null;
+-  PrefillVersion: number;
+-  SupportsPrefill: boolean;
++    DefinitionKey: string;
++    Version: number;
++    Name: string;
++    Category?: string | null;
++    Locked: boolean;
++    RecordType?: number | null;
++    LifecyclePreset?: string | null;
++    LaunchContexts: string[];
++    AllowOffline: boolean;
++    AllowAttachments: boolean;
++    MinimumAppVersion?: string | null;
++    MinimumClientCapability?: string | null;
++    Restricted: boolean;
++    /** Definition seals values: authoring needs a live grant and nothing is cached offline. */
++    RequiresProtectedGrant: boolean;
++    SchemaChecksum?: string | null;
++    PrefillVersion: number;
++    SupportsPrefill: boolean;
+ }
+ 
+ export interface FieldRecordCatalogExclusion {
+-  DefinitionKey: string;
+-  Reason: string;
++    DefinitionKey: string;
++    Reason: string;
+ }
+ 
+ export interface FieldRecordCatalogData {
+-  ContractVersion: string;
+-  OriginClient: string;
+-  Ok: boolean;
+-  Reasons: string[];
+-  ContextKind?: string | null;
+-  ContextVerified: boolean;
+-  ProtectionState?: string | null;
+-  ScopeStamp?: string | null;
+-  Definitions: FieldRecordCatalogEntry[];
+-  Exclusions: FieldRecordCatalogExclusion[];
+-  ServerTimestampMs: number;
++    ContractVersion: string;
++    OriginClient: string;
++    Ok: boolean;
++    Reasons: string[];
++    ContextKind?: string | null;
++    ContextVerified: boolean;
++    ProtectionState?: string | null;
++    ScopeStamp?: string | null;
++    Definitions: FieldRecordCatalogEntry[];
++    Exclusions: FieldRecordCatalogExclusion[];
++    ServerTimestampMs: number;
+ }
+ 
+ export interface FieldRecordPrefillValue {
+-  SectionKey?: string | null;
+-  FieldKey: string;
+-  Value?: string | null;
+-  ReferenceType?: string | null;
+-  ReferenceId?: string | null;
++    SectionKey?: string | null;
++    FieldKey: string;
++    Value?: string | null;
++    ReferenceType?: string | null;
++    ReferenceId?: string | null;
+ }
+ 
+ export interface FieldRecordPrefillProvenance {
+-  FieldKey: string;
+-  Source: string;
+-  SourceId?: string | null;
+-  CapturedOn: string;
++    FieldKey: string;
++    Source: string;
++    SourceId?: string | null;
++    CapturedOn: string;
+ }
+ 
+ export interface FieldRecordPrefillData {
+-  ContractVersion: string;
+-  DefinitionKey: string;
+-  Version: number;
+-  PrefillVersion: number;
+-  CallId?: number | null;
+-  UnitId?: number | null;
+-  StationGroupId?: number | null;
+-  Values: FieldRecordPrefillValue[];
+-  Provenance: FieldRecordPrefillProvenance[];
+-  SuggestedParticipantUserIds: string[];
+-  SuggestedUnitIds: number[];
+-  CalculatedOn: string;
++    ContractVersion: string;
++    DefinitionKey: string;
++    Version: number;
++    PrefillVersion: number;
++    CallId?: number | null;
++    UnitId?: number | null;
++    StationGroupId?: number | null;
++    Values: FieldRecordPrefillValue[];
++    Provenance: FieldRecordPrefillProvenance[];
++    SuggestedParticipantUserIds: string[];
++    SuggestedUnitIds: number[];
++    CalculatedOn: string;
+ }
+ 
+ export interface RecordSummaryData {
+-  RecordId: string;
+-  RecordKind?: string | null;
+-  RecordNumber?: string | null;
+-  DraftReference?: string | null;
+-  DefinitionKey?: string | null;
+-  DefinitionVersion: number;
+-  RecordType?: number | null;
+-  State: number;
+-  StateName?: string | null;
+-  OccurredOn?: string | null;
+-  CreatedOn: string;
+-  FinalizedOn?: string | null;
+-  ModifiedOn: string;
+-  StationGroupId?: number | null;
+-  CallId?: number | null;
+-  CallNumber?: string | null;
+-  AuthorUserId?: string | null;
+-  OwnerUserId?: string | null;
+-  ReviewerUserId?: string | null;
+-  DisplaySummary?: string | null;
+-  IsLegacy?: boolean;
+-  RowVersion: number;
+-  IsTombstone?: boolean;
+-  DeletedOn?: string | null;
++    RecordId: string;
++    RecordKind?: string | null;
++    RecordNumber?: string | null;
++    DraftReference?: string | null;
++    DefinitionKey?: string | null;
++    DefinitionVersion: number;
++    RecordType?: number | null;
++    State: number;
++    StateName?: string | null;
++    OccurredOn?: string | null;
++    CreatedOn: string;
++    FinalizedOn?: string | null;
++    ModifiedOn: string;
++    StationGroupId?: number | null;
++    CallId?: number | null;
++    CallNumber?: string | null;
++    AuthorUserId?: string | null;
++    OwnerUserId?: string | null;
++    ReviewerUserId?: string | null;
++    DisplaySummary?: string | null;
++    IsLegacy?: boolean;
++    RowVersion: number;
++    IsTombstone?: boolean;
++    DeletedOn?: string | null;
+ }
+ 
+ export interface FieldRecordAssignmentData {
+-  AssignmentId: string;
+-  RecordId: string;
+-  AssigneeKind: string;
+-  AssigneeUserId?: string | null;
+-  AssigneeUnitId?: number | null;
+-  AssigneeGroupId?: number | null;
+-  AssigneeRole?: string | null;
+-  Purpose: string;
+-  Note?: string | null;
+-  DueOn?: string | null;
+-  State: string;
+-  AcknowledgedOn?: string | null;
+-  CompletedOn?: string | null;
+-  OriginClient?: string | null;
+-  CreatedOn: string;
+-  CreatedByUserId?: string | null;
+-  RowVersion: number;
++    AssignmentId: string;
++    RecordId: string;
++    AssigneeKind: string;
++    AssigneeUserId?: string | null;
++    AssigneeUnitId?: number | null;
++    AssigneeGroupId?: number | null;
++    AssigneeRole?: string | null;
++    Purpose: string;
++    Note?: string | null;
++    DueOn?: string | null;
++    State: string;
++    AcknowledgedOn?: string | null;
++    CompletedOn?: string | null;
++    OriginClient?: string | null;
++    CreatedOn: string;
++    CreatedByUserId?: string | null;
++    RowVersion: number;
+ }
+ 
+ export interface FieldRecordSyncData {
+-  ContractVersion: string;
+-  Ok: boolean;
+-  Reasons: string[];
+-  ScopeStamp?: string | null;
+-  ResetRequired: boolean;
+-  Since: number;
+-  ServerTimestampMs: number;
+-  ServerCursorId?: string | null;
+-  HasMore: boolean;
+-  Catalog?: FieldRecordCatalogData | null;
+-  Records: RecordSummaryData[];
+-  /** Record ids the caller may no longer read; evict any cached copy. */
+-  Tombstones: string[];
+-  Drafts: RecordSummaryData[];
+-  Assignments: FieldRecordAssignmentData[];
++    ContractVersion: string;
++    Ok: boolean;
++    Reasons: string[];
++    ScopeStamp?: string | null;
++    ResetRequired: boolean;
++    Since: number;
++    ServerTimestampMs: number;
++    ServerCursorId?: string | null;
++    HasMore: boolean;
++    Catalog?: FieldRecordCatalogData | null;
++    Records: RecordSummaryData[];
++    /** Record ids the caller may no longer read; evict any cached copy. */
++    Tombstones: string[];
++    Drafts: RecordSummaryData[];
++    Assignments: FieldRecordAssignmentData[];
+ }
+ 
+ // ---------------------------------------------------------------------------
+@@ -285,159 +285,188 @@
+ // ---------------------------------------------------------------------------
+ 
+ export interface RecordOptionSchema {
+-  Key: string;
+-  Label: string;
+-  IsInactive?: boolean;
++    Key: string;
++    Label: string;
++    IsInactive?: boolean;
+ }
+ 
+ export interface RecordConditionSchema {
+-  Operator: RmsRuleOperator;
+-  FieldKey?: string | null;
+-  Value?: string | null;
+-  Values?: string[] | null;
+-  Min?: number | null;
+-  Max?: number | null;
+-  Conditions?: RecordConditionSchema[] | null;
++    Operator: RmsRuleOperator;
++    FieldKey?: string | null;
++    Value?: string | null;
++    Values?: string[] | null;
++    Min?: number | null;
++    Max?: number | null;
++    Conditions?: RecordConditionSchema[] | null;
+ }
+ 
+ export interface RecordRuleSchema {
+-  Effect: RmsRuleEffect;
+-  Condition?: RecordConditionSchema | null;
++    Effect: RmsRuleEffect;
++    Condition?: RecordConditionSchema | null;
+ }
+ 
+ export interface RecordFieldSchema {
+-  Key: string;
+-  Label: string;
+-  Help?: string | null;
+-  Type: RmsFieldType;
+-  Required?: boolean;
+-  RequiredToFinalize?: boolean;
+-  Classification: RmsFieldClassification;
+-  Options?: RecordOptionSchema[] | null;
+-  Rules?: RecordRuleSchema[] | null;
+-  MaxLength?: number | null;
+-  Min?: number | null;
+-  Max?: number | null;
+-  DefaultCurrency?: string | null;
+-  UnitDimension?: string | null;
+-  DefaultUnitCode?: string | null;
+-  ReferenceType?: string | null;
++    Key: string;
++    Label: string;
++    Help?: string | null;
++    Type: RmsFieldType;
++    Required?: boolean;
++    RequiredToFinalize?: boolean;
++    Classification: RmsFieldClassification;
++    Options?: RecordOptionSchema[] | null;
++    Rules?: RecordRuleSchema[] | null;
++    MaxLength?: number | null;
++    Min?: number | null;
++    Max?: number | null;
++    DefaultCurrency?: string | null;
++    UnitDimension?: string | null;
++    DefaultUnitCode?: string | null;
++    ReferenceType?: string | null;
+ }
+ 
+ export interface RecordSectionSchema {
+-  Key: string;
+-  Label: string;
+-  Help?: string | null;
+-  Repeating?: boolean;
+-  MinRows?: number | null;
+-  MaxRows?: number | null;
+-  Rules?: RecordRuleSchema[] | null;
+-  Fields: RecordFieldSchema[];
++    Key: string;
++    Label: string;
++    Help?: string | null;
++    Repeating?: boolean;
++    MinRows?: number | null;
++    MaxRows?: number | null;
++    Rules?: RecordRuleSchema[] | null;
++    Fields: RecordFieldSchema[];
+ }
+ 
+ export interface RecordDefinitionSchema {
+-  Sections: RecordSectionSchema[];
++    Sections: RecordSectionSchema[];
+ }
+ 
+ export interface RecordDefinitionVersionData {
+-  DefinitionKey: string;
+-  Version: number;
+-  Name?: string | null;
+-  State?: number;
+-  LifecyclePreset?: number;
+-  MinimumClientCapability?: string | null;
+-  SchemaChecksum?: string | null;
+-  Schema?: RecordDefinitionSchema | null;
+-  ETag?: string | null;
++    DefinitionKey: string;
++    Version: number;
++    Name?: string | null;
++    State?: number;
++    LifecyclePreset?: number;
++    MinimumClientCapability?: string | null;
++    SchemaChecksum?: string | null;
++    Schema?: RecordDefinitionSchema | null;
++    ETag?: string | null;
+ }
+ 
+ /** One posted value. A repeating row groups its cells by RowKey. */
+ export interface RecordValueInput {
+-  SectionKey: string;
+-  FieldKey: string;
+-  RowKey?: string | null;
+-  Ordinal?: number;
+-  Value?: string | null;
+-  Values?: string[] | null;
+-  ReferenceType?: string | null;
+-  ReferenceId?: string | null;
+-  UnitCode?: string | null;
++    SectionKey: string;
++    FieldKey: string;
++    RowKey?: string | null;
++    Ordinal?: number;
++    Value?: string | null;
++    Values?: string[] | null;
++    ReferenceType?: string | null;
++    ReferenceId?: string | null;
++    UnitCode?: string | null;
++    CurrencyCode?: string | null;
++    OffsetMinutes?: number | null;
+ }
+ 
+ export interface RecordCreateDraftInput {
+-  DefinitionKey: string;
+-  CallId?: number | null;
+-  StationGroupId?: number | null;
+-  StartedOn?: string | null;
+-  Values?: RecordValueInput[];
+-  IdempotencyKey?: string | null;
+-  ClientRecordId?: string | null;
+-  OriginClient?: number | null;
++    DefinitionKey: string;
++    CallId?: number | null;
++    StationGroupId?: number | null;
++    StartedOn?: string | null;
++    Values?: RecordValueInput[];
++    IdempotencyKey?: string | null;
++    ClientRecordId?: string | null;
++    OriginClient?: number | null;
+ }
+ 
+ export interface RecordSaveDraftInput {
+-  RecordId: string;
+-  RowVersion?: number | null;
+-  Values?: RecordValueInput[];
+-  IdempotencyKey?: string | null;
+-  OriginClient?: number | null;
++    RecordId: string;
++    RowVersion?: number | null;
++    Values?: RecordValueInput[];
++    IdempotencyKey?: string | null;
++    OriginClient?: number | null;
+ }
+ 
+ export interface RecordCommandInput {
+-  RecordId: string;
+-  RowVersion?: number | null;
+-  IdempotencyKey?: string | null;
+-  ReasonCode?: string | null;
+-  ReasonText?: string | null;
+-  Attested?: boolean;
+-  AttestationStatementVersion?: string | null;
+-  OriginClient?: number | null;
++    RecordId: string;
++    RowVersion?: number | null;
++    IdempotencyKey?: string | null;
++    ReasonCode?: string | null;
++    ReasonText?: string | null;
++    Attested?: boolean;
++    AttestationStatementVersion?: string | null;
++    OriginClient?: number | null;
+ }
+ 
+ export interface RecordData {
+-  RecordId: string;
+-  RecordNumber?: string | null;
+-  DraftReference?: string | null;
+-  DefinitionKey?: string | null;
+-  DefinitionVersion: number;
+-  State: number;
+-  StateName?: string | null;
+-  RowVersion: number;
+-  CallId?: number | null;
+-  StationGroupId?: number | null;
+-  OwnerUserId?: string | null;
+-  AuthorUserId?: string | null;
+-  CreatedOn?: string | null;
+-  ModifiedOn?: string | null;
+-  Values?: RecordValuesData | null;
+-  [key: string]: unknown;
+-}
+-
++    RecordId: string;
++    RecordNumber?: string | null;
++    DraftReference?: string | null;
++    DefinitionKey?: string | null;
++    DefinitionVersion: number;
++    State: number;
++    StateName?: string | null;
++    RowVersion: number;
++    CallId?: number | null;
++    StationGroupId?: number | null;
++    OwnerUserId?: string | null;
++    AuthorUserId?: string | null;
++    CreatedOn?: string | null;
++    ModifiedOn?: string | null;
++    Values?: RecordValuesData | null;
++    [key: string]: unknown;
++}
++
++/** A returned wire cell inherits its section and row identity from the enclosing DTO. */
+ export interface RecordValueCellData {
+-  SectionKey: string;
+-  FieldKey: string;
+-  RowKey?: string | null;
+-  Ordinal?: number;
+-  Value?: string | null;
+-  Values?: string[] | null;
+-  ReferenceType?: string | null;
+-  ReferenceId?: string | null;
+-  UnitCode?: string | null;
+-  IsWithheld?: boolean;
++    /** Legacy flattened/prefill callers may supply identity directly. */
++    SectionKey?: string;
++    FieldKey: string;
++    RowKey?: string | null;
++    Ordinal?: number;
++    Label?: string | null;
++    Type?: string;
++    Classification?: string;
++    Display?: string | null;
++    Value?: string | null;
++    Values?: string[] | null;
++    ReferenceType?: string | null;
++    ReferenceId?: string | null;
++    UnitCode?: string | null;
++    CurrencyCode?: string | null;
++    OffsetMinutes?: number | null;
++    Withheld?: boolean;
++    /** Legacy flat-cell flag; Core's wire contract uses Withheld. */
++    IsWithheld?: boolean;
++}
++
++export interface RecordValueRowData {
++    RowKey?: string | null;
++    Ordinal?: number;
++    Cells?: RecordValueCellData[] | null;
++}
++
++export interface RecordValueSectionData {
++    SectionKey: string;
++    Label?: string | null;
++    Repeating?: boolean;
++    Rows?: RecordValueRowData[] | null;
+ }
+ 
+ export interface RecordValuesData {
+-  DefinitionKey?: string | null;
+-  Version?: number;
+-  Cells: RecordValueCellData[];
++    DefinitionKey?: string | null;
++    DefinitionVersion?: number;
++    Sections?: RecordValueSectionData[] | null;
++    WithheldFieldKeys?: string[] | null;
++    /** Retained for existing flat-array adapters; nested wire sections take precedence. */
++    Cells?: RecordValueCellData[] | null;
++    Version?: number;
+ }
+ 
+ /** Every v4 payload is wrapped like this. */
+ export interface RecordsApiResult<T> {
+-  Data?: T;
+-  PageSize?: number;
+-  Status?: string;
+-  Timestamp?: string;
++    Data?: T;
++    PageSize?: number;
++    Status?: string;
++    Timestamp?: string;
+ }
+ 
+ /** How a conflict is presented; the client never replays one silently. */

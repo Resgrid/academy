@@ -1,0 +1,3273 @@
+{
+  "schema_version": 1,
+  "lesson": "15-deployments",
+  "title": "Keep deployment activity and cost evidence together",
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "status": "BLOCKED — not a renderer-ready replacement plan",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "c74802d44e2621b4d9dc43d4d35872d2caf2dc6e45c127503ffa3e404f04725a",
+    "normalised_words_sha256": "fe0363ef198c3d7efa1c8249d96a7f764d670438756a714cd00a2963af994928",
+    "word_count": 431,
+    "source_scene_count": 11,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/15-deployments.mp4",
+      "sha256": "ba0b8e3e967d562fff59d17bb4bee4ac8f92d46c3f350442d4206eb04537aaea",
+      "exists": true,
+      "duration_seconds": 191.17,
+      "bytes": 5891960
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/15-deployments.m4a",
+      "sha256": "583d36ec75ce5d9aba42061d946f07813ba281528b80bd91ee8ee1f04d83c594",
+      "exists": true,
+      "duration_seconds": 190.48,
+      "bytes": 3844510
+    },
+    "existing_video_aac_packet_payload_sha256": "10cee59b1c02b45d9061de3f0e858d07a3e5faa248521977e9b361cef0820d93",
+    "srt": {
+      "file": "sources/media/15-deployments.srt",
+      "sha256": "c97e9cf25e4fb17a14d2b9669fd11b241d6a9b8df0c1b59e037ce390e76a88d4",
+      "cue_count": 60
+    },
+    "vtt": {
+      "file": "sources/media/15-deployments.vtt",
+      "sha256": "6dc76005d25679ee6642a7efa2ec3b1ca320817dcce5a602f0c2cadcfa1b6d68"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/15-deployments-raw.srt",
+      "sha256": "387a4d7ceeb22950784f37168135fb7325419899bad84d97a9086c787e1ecaf8"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/15-deployments-validation.json",
+      "sha256": "7b1e3eb43067bdb0e11947cea3121476a320dbe411a5d816a958e4322925ab10",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 61,
+      "reported_match_ratio": 0.9965,
+      "reported_duration_seconds": 194.98,
+      "reported_raw_audio_seconds": 190.48,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 191.164,
+    "caption_last_end_seconds": 190.939,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "illustrated_input_compliant": false,
+  "scenes": [
+    {
+      "index": 0,
+      "number": 1,
+      "title": "Keep deployment activity and cost evidence together",
+      "kind": "title",
+      "narration": "Welcome to Resgrid Academy. In this lesson, we will keep deployment activity and cost evidence together. Extended mutual-aid work needs clear personnel, apparatus, dates, and cost records that can be reviewed after demobilization. We will explain the features, the setup decisions, and a practical way to check the result.",
+      "narration_sha256": "5058a2ec54866e737d372a872d444bf325479f7ee509cee14669dc9a88a59e24",
+      "course_timing_proposal_only": {
+        "start": 0.0,
+        "duration": 21.0495
+      },
+      "actual_existing_cue_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/Index",
+          "intent": "Open fictional deployment, dates, roster and finance evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 187,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ddc97c33227aa575070865c4fd993b2abd295e74af02ccf4c8781267854ffa3c",
+              "current_file_sha256": "ddc97c33227aa575070865c4fd993b2abd295e74af02ccf4c8781267854ffa3c",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "My Deployments",
+            "Deployments",
+            "Name",
+            "Status",
+            "Finance mode",
+            "Incident #",
+            "Resource order #"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "intent": "Show actual time/usage/expense report on a real training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 92,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "current_file_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print report",
+            "Roster",
+            "Units",
+            "Personnel",
+            "Equipment",
+            "Time reports",
+            "Report date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-060-deployments:bf408f8c2aff"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s01:a01",
+          "text": "Welcome to Resgrid Academy.",
+          "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            1
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 0.07,
+          "enclosing_cue_end": 1.75,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s01:a02",
+          "text": "In this lesson, we will keep deployment activity and cost evidence together.",
+          "text_sha256": "ccd2e08e61968059ae287edbcb6647bbc673b8b56fffa6b6546028a12928f761",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            2
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 2.2,
+          "enclosing_cue_end": 6.53,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s01:a03",
+          "text": "Extended mutual-aid work needs clear personnel, apparatus, dates, and cost records that can be reviewed after demobilization.",
+          "text_sha256": "712de89f2849a4c15ca5e4529e156dd725b582a0eec70dc149392e2052fa1fcd",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            3,
+            4
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 6.949,
+          "enclosing_cue_end": 15.109,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s01:a04",
+          "text": "We will explain the features, the setup decisions, and a practical way to check the result.",
+          "text_sha256": "75a8e835ef7bfbbf0615c569d1eecf54b9bc5c6e62970378b3aeb88d08738c40",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            5,
+            6
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 15.56,
+          "enclosing_cue_end": 20.52,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy two-day deployment",
+        "Dated personnel/unit activity"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 1,
+      "number": 2,
+      "title": "A department scenario",
+      "kind": "scenario",
+      "narration": "A strike-team deployment is recorded with its personnel, apparatus and dates. Keep deployment records and cost documentation together for review and reimbursement. The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+      "narration_sha256": "8dc9499d43c50fb9fd4bc133f08630aa3dd07cb251592202cf9dd2dc3c96f5da",
+      "course_timing_proposal_only": {
+        "start": 21.0495,
+        "duration": 16.734500000000008
+      },
+      "actual_existing_cue_ids": [
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "intent": "Enter actual training assignment, dates and resource roster.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/Edit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "current_file_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Deployment",
+            "Name",
+            "Finance mode",
+            "Contact",
+            "Call ID",
+            "Window",
+            "Notes"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DeploymentOrders/New",
+          "intent": "Create or open synthetic source request/fill and verify required closeout documentation.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentOrdersController.cs",
+              "line": 73,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3f706b590ccb938c2bd407683a91923f34e2460b101230fb11060ec5376bb2b7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DeploymentOrders/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "f22fdc1d45e42cdbb33711c3a894d228910e9f696fcd07da014760e7cdf6f0f7",
+              "current_file_sha256": "f22fdc1d45e42cdbb33711c3a894d228910e9f696fcd07da014760e7cdf6f0f7",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New deployment",
+            "Order",
+            "Jurisdiction profile",
+            "Source",
+            "Order number",
+            "Incident",
+            "Country / subdivision"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "intent": "Show actual time/usage/expense report on a real training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 92,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "current_file_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print report",
+            "Roster",
+            "Units",
+            "Personnel",
+            "Equipment",
+            "Time reports",
+            "Report date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-061-deployment-new:f41a370a10ab"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s02:a01",
+          "text": "A strike-team deployment is recorded with its personnel, apparatus and dates.",
+          "text_sha256": "2bc106c49aa2d333009fa7830ceadefe4479e9a63888846697413ac4dafe554c",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            7
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 21.129,
+          "enclosing_cue_end": 25.689,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s02:a02",
+          "text": "Keep deployment records and cost documentation together for review and reimbursement.",
+          "text_sha256": "6c0e1d6da5cb75b39c5b14eac80071d061118c6323e0f06798567653039cf835",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            8,
+            9
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 26.209,
+          "enclosing_cue_end": 30.949,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s02:a03",
+          "text": "The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+          "text_sha256": "c3bea48c517ece285518958a0c220aae533e0f6326956bfe90b76d7010dd0a34",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            10,
+            11
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 31.499,
+          "enclosing_cue_end": 37.229,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DeploymentOrders/New",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Two-day exercise",
+        "Known external order",
+        "Dated personnel/unit activity"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 2,
+      "number": 3,
+      "title": "Deployment Finance",
+      "kind": "feature",
+      "narration": "Deployment Finance. Deployment records and Deployment Finance. Record your next deployment with its personnel and apparatus.",
+      "narration_sha256": "b9caeb8be202e663aa1957000784722658066e37c1c7c20e597766415c9a75b9",
+      "course_timing_proposal_only": {
+        "start": 37.784,
+        "duration": 8.960500000000003
+      },
+      "actual_existing_cue_ids": [
+        12,
+        13,
+        14
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/Index",
+          "intent": "Open fictional deployment, dates, roster and finance evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 187,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ddc97c33227aa575070865c4fd993b2abd295e74af02ccf4c8781267854ffa3c",
+              "current_file_sha256": "ddc97c33227aa575070865c4fd993b2abd295e74af02ccf4c8781267854ffa3c",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "My Deployments",
+            "Deployments",
+            "Name",
+            "Status",
+            "Finance mode",
+            "Incident #",
+            "Resource order #"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "intent": "Show current recorded deployment support/closeout.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 117,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "current_file_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print",
+            "Order",
+            "Fills",
+            "Request number",
+            "Resource",
+            "Position",
+            "Assigned person"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-060-deployments:bf408f8c2aff"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s03:a01",
+          "text": "Deployment Finance.",
+          "text_sha256": "a8e5d26b34a49b15d244ccbca11039ee2cadbbaf5417f1d03173cccbec1491a2",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            12
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 37.889,
+          "enclosing_cue_end": 39.2,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s03:a02",
+          "text": "Deployment records and Deployment Finance.",
+          "text_sha256": "45c73118e7b067ade7bee4f95fab57805df0b314708278fd6d9ea329ce8fcfd8",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            13
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 39.59,
+          "enclosing_cue_end": 42.289,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s03:a03",
+          "text": "Record your next deployment with its personnel and apparatus.",
+          "text_sha256": "4d074a6469d9314f2e2074e7758c81c9678e9b46781a69cb8c6589c6dc96b2a8",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            14
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 42.74,
+          "enclosing_cue_end": 46.21,
+          "candidate_capture_refs": [
+            "Core:legacy-core-060-deployments:bf408f8c2aff",
+            "Core:10-deployments:23fafacfc7cf"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy two-day deployment",
+        "Deployment record"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 3,
+      "number": 4,
+      "title": "New Deployment",
+      "kind": "feature",
+      "narration": "New Deployment. Start a deployment record. Useful when your members deploy to incidents outside your jurisdiction.",
+      "narration_sha256": "25ec85089886edf4b2024863e32af504633fc785a946031e4efed026ec6e25df",
+      "course_timing_proposal_only": {
+        "start": 46.7445,
+        "duration": 7.720000000000006
+      },
+      "actual_existing_cue_ids": [
+        15,
+        16,
+        17
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "intent": "Enter actual training assignment, dates and resource roster.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/Edit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "current_file_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Deployment",
+            "Name",
+            "Finance mode",
+            "Contact",
+            "Call ID",
+            "Window",
+            "Notes"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-061-deployment-new:f41a370a10ab"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s04:a01",
+          "text": "New Deployment.",
+          "text_sha256": "c9ac347534c44ead975cbb869a0cbfe1d8515c931929a989ac4aea692dc657fb",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            15
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 46.829,
+          "enclosing_cue_end": 47.79,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s04:a02",
+          "text": "Start a deployment record.",
+          "text_sha256": "622a66d264030d2e95258deb27097473cbc5d4e66c1e7c8f8d0cad8b7b869e65",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            16
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 48.219,
+          "enclosing_cue_end": 49.69,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s04:a03",
+          "text": "Useful when your members deploy to incidents outside your jurisdiction.",
+          "text_sha256": "cf0bcce77ff7f163f7e739e85746d759de7b8ce15dbdae6b9fb53d62e82a693f",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            17
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 50.129,
+          "enclosing_cue_end": 53.889,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Two-day exercise"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 4,
+      "number": 5,
+      "title": "Deployment From External Order",
+      "kind": "feature",
+      "narration": "Deployment From External Order. Create a deployment from a mutual-aid resource order. Useful when your members deploy to incidents outside your jurisdiction.",
+      "narration_sha256": "279d54af9a658ba727f8b97f8d36800055c241c2e4a379f25d854aed36933655",
+      "course_timing_proposal_only": {
+        "start": 54.4645,
+        "duration": 10.0505
+      },
+      "actual_existing_cue_ids": [
+        18,
+        19,
+        20
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/FromExternalOrder",
+          "intent": "Use the actual external-order selection/intake form, inspect source identity, then compare the resulting training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 320,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/FromExternalOrder.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "54e8b0b5c6be3c22cfd2986d24b305200f7dee07d50c2812a6639d44720034f8",
+              "current_file_sha256": "54e8b0b5c6be3c22cfd2986d24b305200f7dee07d50c2812a6639d44720034f8",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Open external orders",
+            "External order",
+            "Name",
+            "Finance mode",
+            "Contact",
+            "Prefill the roster from accepted fills",
+            "Also create a call"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "intent": "Verify actual assignment/fill/deployment linkage.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 117,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "current_file_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print",
+            "Order",
+            "Fills",
+            "Request number",
+            "Resource",
+            "Position",
+            "Assigned person"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s05:a01",
+          "text": "Deployment From External Order.",
+          "text_sha256": "a768d2215eeadb31bbbb743c7c87c4efe29f3b5abc5a12fe18e83e1baab3b0aa",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            18
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 54.59,
+          "enclosing_cue_end": 56.399,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s05:a02",
+          "text": "Create a deployment from a mutual-aid resource order.",
+          "text_sha256": "3dbd6bc119971fa709b88518fa8190fce182d7590fe96a321ad1acba43fbac5f",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            19
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 56.91,
+          "enclosing_cue_end": 59.92,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s05:a03",
+          "text": "Useful when your members deploy to incidents outside your jurisdiction.",
+          "text_sha256": "cf0bcce77ff7f163f7e739e85746d759de7b8ce15dbdae6b9fb53d62e82a693f",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            20
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 60.329,
+          "enclosing_cue_end": 63.94,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/FromExternalOrder",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Synthetic imported resource order",
+        "Created training deployment"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 5,
+      "number": 6,
+      "title": "Mutual-aid resource orders",
+      "kind": "feature",
+      "narration": "Resource orders describe requested resources and the fills departments offer or accept. Review ordering settings and participating departments. Create a fictional request, offer a fill, and review acceptance. Reconcile requested quantities, accepted fills, and the remaining resource need. Confirm availability in the demo department before recording the live workflow.",
+      "narration_sha256": "defa78fa338fa437cfe8fe8af0ea078d05026179f7293192adb6b4b8b8739a14",
+      "course_timing_proposal_only": {
+        "start": 64.515,
+        "duration": 23.41900000000001
+      },
+      "actual_existing_cue_ids": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Orders/New",
+          "intent": "Enter synthetic resource request and source/ordering details.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/OrdersController.cs",
+              "line": 156,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "83ce9b7d1e5c0c7b0ce4098c33e244c170a292f42eee2eb6874669e1a28f90b4",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Orders/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "022b84fc44ced432e7a1a87e6f18c4c4eb81cfaa13dacc4ff4efc9893c8371b3",
+              "current_file_sha256": "022b84fc44ced432e7a1a87e6f18c4c4eb81cfaa13dacc4ff4efc9893c8371b3",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Order",
+            "Title",
+            "Summary",
+            "Close Order On",
+            "Incident Number",
+            "Incident Name",
+            "Incident Address"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Orders/Index",
+          "intent": "Verify saved order and actual state.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/OrdersController.cs",
+              "line": 45,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "83ce9b7d1e5c0c7b0ce4098c33e244c170a292f42eee2eb6874669e1a28f90b4",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Orders/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "d0222d40f80e677e6287e12093e128d67a670b0128134c8b1734b90e4c0e62fc",
+              "current_file_sha256": "d0222d40f80e677e6287e12093e128d67a670b0128134c8b1734b90e4c0e62fc",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Resource Orders",
+            "Update Settings",
+            "Create Order",
+            "Your Orders",
+            "Available Orders",
+            "Closed",
+            "Filled"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s06:a01",
+          "text": "Resource orders describe requested resources and the fills departments offer or accept.",
+          "text_sha256": "fa4bd4906fe520fed8a64e124542b376fe7925aa979ea5e00f76276100f0a86c",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            21,
+            22
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 64.64,
+          "enclosing_cue_end": 69.709,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s06:a02",
+          "text": "Review ordering settings and participating departments.",
+          "text_sha256": "fff7926e74c58fb4de67e5ed3b0e8767e1dcd232752676989fe09b92e9fa9db3",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            23
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 70.1,
+          "enclosing_cue_end": 73.049,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s06:a03",
+          "text": "Create a fictional request, offer a fill, and review acceptance.",
+          "text_sha256": "2e2e3a5a55eaec5614c548171adf5405e6ba646a4a45ca5f774a23f71013c709",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            24
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 73.45,
+          "enclosing_cue_end": 77.53,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s06:a04",
+          "text": "Reconcile requested quantities, accepted fills, and the remaining resource need.",
+          "text_sha256": "b044857f366640bab4785e9fef4d88ced1c2513a4bb94b6332ad8f80e1ece806",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            25
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 77.939,
+          "enclosing_cue_end": 82.59,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s06:a05",
+          "text": "Confirm availability in the demo department before recording the live workflow.",
+          "text_sha256": "0664bbe235355b09ab1f706579864020ef6c88d973f2383da3cfa7a00b79e664",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            26,
+            27
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 83.02,
+          "enclosing_cue_end": 87.379,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Orders/New",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Orders/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Remove production instructions from narration; preserve meaningful department/provider availability and real-result limits."
+        ],
+        "proposed_learner_focused_narration": "Resource orders describe requested resources and the fills departments offer or accept. Review ordering settings and participating departments. Create a fictional request, offer a fill, and review acceptance. Reconcile requested quantities, accepted fills, and the remaining resource need."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy aid request",
+        "Saved request"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 6,
+      "number": 7,
+      "title": "External orders and deployment closeout",
+      "kind": "feature",
+      "narration": "An external order records the department fills and their mobilization, release, and actual return home. Enter an approved sample external order, link its deployment, record the fill transitions, and complete closeout. Review dates and resource identity. This workspace records manual entry and artifact snapshots; it is not an external ordering connector. Confirm availability in the demo department before recording the live workflow.",
+      "narration_sha256": "75bcc29a8679f6d0d16aa1c135904cf0f0e40b0b84681fc4f97eacf767613af5",
+      "course_timing_proposal_only": {
+        "start": 87.93400000000001,
+        "duration": 27.700999999999993
+      },
+      "actual_existing_cue_ids": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/DeploymentOrders/New",
+          "intent": "Create or open synthetic source request/fill and verify required closeout documentation.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentOrdersController.cs",
+              "line": 73,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3f706b590ccb938c2bd407683a91923f34e2460b101230fb11060ec5376bb2b7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DeploymentOrders/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "f22fdc1d45e42cdbb33711c3a894d228910e9f696fcd07da014760e7cdf6f0f7",
+              "current_file_sha256": "f22fdc1d45e42cdbb33711c3a894d228910e9f696fcd07da014760e7cdf6f0f7",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New deployment",
+            "Order",
+            "Jurisdiction profile",
+            "Source",
+            "Order number",
+            "Incident",
+            "Country / subdivision"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<id>",
+          "intent": "Inspect actual deployment closeout and remaining open fills.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 117,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "current_file_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print",
+            "Order",
+            "Fills",
+            "Request number",
+            "Resource",
+            "Position",
+            "Assigned person"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s07:a01",
+          "text": "An external order records the department fills and their mobilization, release, and actual return home.",
+          "text_sha256": "604d59b9136c69b5f23607f2e7e1e93ac5d7cdfba9b754a3c694fbb3d17ac108",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            28,
+            29
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 88.039,
+          "enclosing_cue_end": 94.139,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s07:a02",
+          "text": "Enter an approved sample external order, link its deployment, record the fill transitions, and complete closeout.",
+          "text_sha256": "f70cbb9bc1431f6ad8ec15b4b97397e5feaeca09ccc48967c94f0352284097c7",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            30,
+            31
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 94.599,
+          "enclosing_cue_end": 101.32,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s07:a03",
+          "text": "Review dates and resource identity.",
+          "text_sha256": "1634f02d3f852f605e34c3639e02a7e5dde14348f12460c3b1b412da179c3d09",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            32
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 101.83,
+          "enclosing_cue_end": 103.919,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s07:a04",
+          "text": "This workspace records manual entry and artifact snapshots; it is not an external ordering connector.",
+          "text_sha256": "7a8ce8f08253bbc9e5125bd746fc31474de51ddf7cb304de868ef1c6aca239b0",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            33,
+            34
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 104.369,
+          "enclosing_cue_end": 110.549,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s07:a05",
+          "text": "Confirm availability in the demo department before recording the live workflow.",
+          "text_sha256": "0664bbe235355b09ab1f706579864020ef6c88d973f2383da3cfa7a00b79e664",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            35,
+            36
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 110.949,
+          "enclosing_cue_end": 115.02,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/DeploymentOrders/New",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Remove production instructions from narration; preserve meaningful department/provider availability and real-result limits."
+        ],
+        "proposed_learner_focused_narration": "An external order records the department fills and their mobilization, release, and actual return home. Enter an approved sample external order, link its deployment, record the fill transitions, and complete closeout. Review dates and resource identity. This workspace records manual entry and artifact snapshots; it is not an external ordering connector."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Known external order",
+        "Training deployment"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 7,
+      "number": 8,
+      "title": "Deployment time and export reports",
+      "kind": "feature",
+      "narration": "Read-only deployment reports bring time entries, supporting artifacts, and export outputs together. Open a recorded demo deployment and review its time report, summary, and available exports. Reconcile each time entry with the roster and recorded dates before finance review. Confirm availability in the demo department before recording the live workflow.",
+      "narration_sha256": "efb9f96607e783fb0a1fc77086550fbd005a2e2d06cf51ace8d9bbd2548576d5",
+      "course_timing_proposal_only": {
+        "start": 115.635,
+        "duration": 22.389500000000012
+      },
+      "actual_existing_cue_ids": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "intent": "Show actual time/usage/expense report on a real training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 92,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "current_file_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print report",
+            "Roster",
+            "Units",
+            "Personnel",
+            "Equipment",
+            "Time reports",
+            "Report date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "intent": "Inspect export/time-report artifacts and reconcile to source.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 117,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "current_file_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print",
+            "Order",
+            "Fills",
+            "Request number",
+            "Resource",
+            "Position",
+            "Assigned person"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s08:a01",
+          "text": "Read-only deployment reports bring time entries, supporting artifacts, and export outputs together.",
+          "text_sha256": "4d23d839f60c84a694f4b0a38a6eadf36a8bc3fdbd5051e0c6e7fc408c864c1e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            37,
+            38
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 115.8,
+          "enclosing_cue_end": 121.47,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s08:a02",
+          "text": "Open a recorded demo deployment and review its time report, summary, and available exports.",
+          "text_sha256": "2d4c6892157b6a749d2389745736b58e65519a7f9972c42da90aa7af106e925c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            39,
+            40
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 121.949,
+          "enclosing_cue_end": 127.47,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s08:a03",
+          "text": "Reconcile each time entry with the roster and recorded dates before finance review.",
+          "text_sha256": "1d4764b7429647542bbe46abae9601c0b04fbd4d8466ff39ef2b00fef726400f",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            41
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 127.88,
+          "enclosing_cue_end": 132.689,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s08:a04",
+          "text": "Confirm availability in the demo department before recording the live workflow.",
+          "text_sha256": "0664bbe235355b09ab1f706579864020ef6c88d973f2383da3cfa7a00b79e664",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            42,
+            43
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 133.169,
+          "enclosing_cue_end": 137.449,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Remove production instructions from narration; preserve meaningful department/provider availability and real-result limits."
+        ],
+        "proposed_learner_focused_narration": "Read-only deployment reports bring time entries, supporting artifacts, and export outputs together. Open a recorded demo deployment and review its time report, summary, and available exports. Reconcile each time entry with the roster and recorded dates before finance review."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Dated personnel/unit activity",
+        "Training time entries"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 8,
+      "number": 9,
+      "title": "Configure one useful workflow",
+      "kind": "workflow",
+      "narration": "For the training scenario, work in this order. Step 1. Create a deployment or start from an external resource order. Step 2. Identify the assigned personnel, apparatus, and operational dates. Step 3. Record deployment activity and finance documentation for review.",
+      "narration_sha256": "65d075eb364a04ccd6fd230e32226e40230d6d1a1fd15f68a47bcf58ce19d093",
+      "course_timing_proposal_only": {
+        "start": 138.02450000000002,
+        "duration": 19.314499999999953
+      },
+      "actual_existing_cue_ids": [
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "intent": "Enter actual training assignment, dates and resource roster.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/Edit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "current_file_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Deployment",
+            "Name",
+            "Finance mode",
+            "Contact",
+            "Call ID",
+            "Window",
+            "Notes"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DeploymentOrders/New",
+          "intent": "Create or open synthetic source request/fill and verify required closeout documentation.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentOrdersController.cs",
+              "line": 73,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3f706b590ccb938c2bd407683a91923f34e2460b101230fb11060ec5376bb2b7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DeploymentOrders/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "f22fdc1d45e42cdbb33711c3a894d228910e9f696fcd07da014760e7cdf6f0f7",
+              "current_file_sha256": "f22fdc1d45e42cdbb33711c3a894d228910e9f696fcd07da014760e7cdf6f0f7",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New deployment",
+            "Order",
+            "Jurisdiction profile",
+            "Source",
+            "Order number",
+            "Incident",
+            "Country / subdivision"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "intent": "Show actual time/usage/expense report on a real training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 92,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "current_file_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print report",
+            "Roster",
+            "Units",
+            "Personnel",
+            "Equipment",
+            "Time reports",
+            "Report date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-061-deployment-new:f41a370a10ab"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s09:a01",
+          "text": "For the training scenario, work in this order.",
+          "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            44
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 138.15,
+          "enclosing_cue_end": 140.83,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s09:a02",
+          "text": "Step 1.",
+          "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            45
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 141.3,
+          "enclosing_cue_end": 141.859,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s09:a03",
+          "text": "Create a deployment or start from an external resource order.",
+          "text_sha256": "5164abf7718c6b96e8bb97077308f9e3b384d9fcea10258fdf4a86fe3d848303",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            46
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 142.409,
+          "enclosing_cue_end": 145.949,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s09:a04",
+          "text": "Step 2.",
+          "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            47
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 146.34,
+          "enclosing_cue_end": 146.979,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s09:a05",
+          "text": "Identify the assigned personnel, apparatus, and operational dates.",
+          "text_sha256": "ac41cd574b3f72f98d8700f17b533c16c4dbe9651571a0b50e80bc7bb1db87f4",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            48
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 147.5,
+          "enclosing_cue_end": 151.6,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s09:a06",
+          "text": "Step 3.",
+          "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            49
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 152.019,
+          "enclosing_cue_end": 152.769,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s09:a07",
+          "text": "Record deployment activity and finance documentation for review.",
+          "text_sha256": "c7dd7dd5eb5dc45c9872b03daf1fff6bdac577b351a35fbed46fc8bd87218317",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            50
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 153.199,
+          "enclosing_cue_end": 156.709,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DeploymentOrders/New",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Two-day exercise",
+        "Known external order",
+        "Dated personnel/unit activity"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 9,
+      "number": 10,
+      "title": "Verify the result",
+      "kind": "verify",
+      "narration": "Now verify the result. Reconcile the deployment resources and dates with supporting records. Review any daily time and cost documentation required by the workflow. A common problem to watch for: Deployment Finance is separate from the Business Operations add-on. A prepared record does not guarantee reimbursement.",
+      "narration_sha256": "d784446f22cc62efc0fc861a4fa6d0a6841a1fe9656bb2b0258a1b1e11f8afdd",
+      "course_timing_proposal_only": {
+        "start": 157.339,
+        "duration": 20.389999999999986
+      },
+      "actual_existing_cue_ids": [
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "intent": "Show current recorded deployment support/closeout.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 117,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "current_file_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print",
+            "Order",
+            "Fills",
+            "Request number",
+            "Resource",
+            "Position",
+            "Assigned person"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "intent": "Show actual time/usage/expense report on a real training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 92,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "current_file_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print report",
+            "Roster",
+            "Units",
+            "Personnel",
+            "Equipment",
+            "Time reports",
+            "Report date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s10:a01",
+          "text": "Now verify the result.",
+          "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            51
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 157.519,
+          "enclosing_cue_end": 159.06,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s10:a02",
+          "text": "Reconcile the deployment resources and dates with supporting records.",
+          "text_sha256": "4e6cfa7aec0310c04583e2d22292c740368595fc14b62803b459acba9d781b54",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            52
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 159.499,
+          "enclosing_cue_end": 163.259,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s10:a03",
+          "text": "Review any daily time and cost documentation required by the workflow.",
+          "text_sha256": "0c4fb19f23d1b12cdf907ed08039d71a02688ec9736b4701c405867333617aab",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            53
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 163.629,
+          "enclosing_cue_end": 167.74,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s10:a04",
+          "text": "A common problem to watch for: Deployment Finance is separate from the Business Operations add-on.",
+          "text_sha256": "a1f4f91d84d7303ddb89e14515b0b3ee864343c266265c7149fc1b02b624c624",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            54,
+            55
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 168.29,
+          "enclosing_cue_end": 173.77,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s10:a05",
+          "text": "A prepared record does not guarantee reimbursement.",
+          "text_sha256": "72928da19639d81f363860d6b762d7a5a1bbeed22a80e47a40881c3018f3513c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            56
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 174.209,
+          "enclosing_cue_end": 177.199,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Deployment record",
+        "Dated personnel/unit activity",
+        "Training time entries"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 10,
+      "number": 11,
+      "title": "Try it with your department",
+      "kind": "exercise",
+      "narration": "Your practice task is simple. Record a two-day demo strike-team deployment and reconcile the participating people and units with the supporting documents. Record the result, who owns the follow-up, and when it should be reviewed.",
+      "narration_sha256": "d5e09b3493323ba325e0f767d55409c7037d9b97788c0b68b1e4f68c61eb8519",
+      "course_timing_proposal_only": {
+        "start": 177.72899999999998,
+        "duration": 13.435000000000002
+      },
+      "actual_existing_cue_ids": [
+        57,
+        58,
+        59,
+        60
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "intent": "Enter actual training assignment, dates and resource roster.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DeploymentsController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "d81e4a4e5d1d51e5e0aa956db40c7ebcb0f9c6b5cd77fae468581ac080b4ee79",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Deployments/Edit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "current_file_sha256": "01f39d5e404b8d051384b2f16fd2eac3dba385e2d5c7f739fe4d3036c0be544b",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Deployment",
+            "Name",
+            "Finance mode",
+            "Contact",
+            "Call ID",
+            "Window",
+            "Notes"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "intent": "Show current recorded deployment support/closeout.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 117,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "current_file_sha256": "ebddaa6b652e177ab9d60e518fd7bc205dcf620e21445939f93a00a0bdb04586",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print",
+            "Order",
+            "Fills",
+            "Request number",
+            "Resource",
+            "Position",
+            "Assigned person"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "intent": "Show actual time/usage/expense report on a real training deployment.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordDeploymentsController.cs",
+              "line": 92,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "6ca71493243be0cb3c120b9fc76e15b03e13738b5ddc758372f0177f09941d5b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/RecordDeployments/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "current_file_sha256": "0414ba0108af01dd13a91602a8536871f5ae2d3540c6e76bd9479a38af437c31",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Print report",
+            "Roster",
+            "Units",
+            "Personnel",
+            "Equipment",
+            "Time reports",
+            "Report date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-061-deployment-new:f41a370a10ab"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "15-deployments:s11:a01",
+          "text": "Your practice task is simple.",
+          "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            57
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 177.809,
+          "enclosing_cue_end": 179.419,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s11:a02",
+          "text": "Record a two-day demo strike-team deployment and reconcile the participating people and units with the supporting documents.",
+          "text_sha256": "4b6b77abe92339612e63ad23baa15386fa5bb1f0d2ae52b86e8f1f0a463ca4a4",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            58,
+            59
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 179.869,
+          "enclosing_cue_end": 186.74,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "15-deployments:s11:a03",
+          "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+          "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            60
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 187.139,
+          "enclosing_cue_end": 190.939,
+          "candidate_capture_refs": [
+            "Core:legacy-core-061-deployment-new:f41a370a10ab",
+            "Core:11-deployment-configuration:c51b0dd80859"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Deployments/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Details?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/RecordDeployments/Report?id=<deployment-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Two-day exercise",
+        "Deployment record",
+        "Dated personnel/unit activity"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    }
+  ],
+  "existing_actual_cues": [
+    {
+      "id": 1,
+      "start": 0.07,
+      "end": 1.75,
+      "text": "Welcome to Resgrid Academy.",
+      "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 2,
+      "start": 2.2,
+      "end": 6.53,
+      "text": "In this lesson, we will keep deployment activity and cost evidence together.",
+      "text_sha256": "ccd2e08e61968059ae287edbcb6647bbc673b8b56fffa6b6546028a12928f761",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 3,
+      "start": 6.949,
+      "end": 11.5,
+      "text": "Extended mutual-aid work needs clear personnel, apparatus, dates,",
+      "text_sha256": "036aa9fa84d01b54a694d31dfcbd76cd70973c151284cbca8d024e88e91ce616",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 4,
+      "start": 11.609,
+      "end": 15.109,
+      "text": "and cost records that can be reviewed after demobilization.",
+      "text_sha256": "ebea736efad07d837e78078afc927172941eb8da4e167e8e826563870fcb9783",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 5,
+      "start": 15.56,
+      "end": 18.569,
+      "text": "We will explain the features, the setup decisions, and a",
+      "text_sha256": "e81ab5e8a7d3f89c3c2904902e3e1cba467afa49546505b3163c11c6525c28e1",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 6,
+      "start": 18.569,
+      "end": 20.52,
+      "text": "practical way to check the result.",
+      "text_sha256": "1ba25c999800aedfbbb5764d88a2d6c0551ab3478f936f377bf5e8914d613b73",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 7,
+      "start": 21.129,
+      "end": 25.689,
+      "text": "A strike-team deployment is recorded with its personnel, apparatus and dates.",
+      "text_sha256": "2bc106c49aa2d333009fa7830ceadefe4479e9a63888846697413ac4dafe554c",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 8,
+      "start": 26.209,
+      "end": 29.23,
+      "text": "Keep deployment records and cost documentation together",
+      "text_sha256": "9c2eca377e4cd1255141b1b13753012e89d33fddc5660c0cc46997bdf3d0e707",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 9,
+      "start": 29.26,
+      "end": 30.949,
+      "text": "for review and reimbursement.",
+      "text_sha256": "0a15ef6d7039c9279a79ee6a9d433a4db4022616fbf4becce85184a56df1a3b8",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 10,
+      "start": 31.499,
+      "end": 34.949,
+      "text": "The examples in this series use a fictional department and are teaching",
+      "text_sha256": "3059d3c51632c06ba8eb16a1a8b9f77c21fd6ae769066295627ad95e3acf1bca",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 11,
+      "start": 34.949,
+      "end": 37.229,
+      "text": "scenarios, not default settings.",
+      "text_sha256": "2316b9b48729ef8e05abd557d4876c25502aa2b281cb9dabcfa0721bcda2f886",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 12,
+      "start": 37.889,
+      "end": 39.2,
+      "text": "Deployment Finance.",
+      "text_sha256": "a8e5d26b34a49b15d244ccbca11039ee2cadbbaf5417f1d03173cccbec1491a2",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s03:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 13,
+      "start": 39.59,
+      "end": 42.289,
+      "text": "Deployment records and Deployment Finance.",
+      "text_sha256": "45c73118e7b067ade7bee4f95fab57805df0b314708278fd6d9ea329ce8fcfd8",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s03:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 14,
+      "start": 42.74,
+      "end": 46.21,
+      "text": "Record your next deployment with its personnel and apparatus.",
+      "text_sha256": "4d074a6469d9314f2e2074e7758c81c9678e9b46781a69cb8c6589c6dc96b2a8",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s03:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 15,
+      "start": 46.829,
+      "end": 47.79,
+      "text": "New Deployment.",
+      "text_sha256": "c9ac347534c44ead975cbb869a0cbfe1d8515c931929a989ac4aea692dc657fb",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 16,
+      "start": 48.219,
+      "end": 49.69,
+      "text": "Start a deployment record.",
+      "text_sha256": "622a66d264030d2e95258deb27097473cbc5d4e66c1e7c8f8d0cad8b7b869e65",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 17,
+      "start": 50.129,
+      "end": 53.889,
+      "text": "Useful when your members deploy to incidents outside your jurisdiction.",
+      "text_sha256": "cf0bcce77ff7f163f7e739e85746d759de7b8ce15dbdae6b9fb53d62e82a693f",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s04:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 18,
+      "start": 54.59,
+      "end": 56.399,
+      "text": "Deployment From External Order.",
+      "text_sha256": "a768d2215eeadb31bbbb743c7c87c4efe29f3b5abc5a12fe18e83e1baab3b0aa",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s05:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 19,
+      "start": 56.91,
+      "end": 59.92,
+      "text": "Create a deployment from a mutual-aid resource order.",
+      "text_sha256": "3dbd6bc119971fa709b88518fa8190fce182d7590fe96a321ad1acba43fbac5f",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s05:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 20,
+      "start": 60.329,
+      "end": 63.94,
+      "text": "Useful when your members deploy to incidents outside your jurisdiction.",
+      "text_sha256": "cf0bcce77ff7f163f7e739e85746d759de7b8ce15dbdae6b9fb53d62e82a693f",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s05:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 21,
+      "start": 64.64,
+      "end": 67.879,
+      "text": "Resource orders describe requested resources and the fills",
+      "text_sha256": "e9c64979eb13a159c1f4c87b9c360da1f2101c843f222f5c00ef3b26f5f27d18",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 22,
+      "start": 67.879,
+      "end": 69.709,
+      "text": "departments offer or accept.",
+      "text_sha256": "3b1f16128dfca1ea33c727ff7fbaa127b827b47a08acbba63d47d43b4bbffdad",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 23,
+      "start": 70.1,
+      "end": 73.049,
+      "text": "Review ordering settings and participating departments.",
+      "text_sha256": "fff7926e74c58fb4de67e5ed3b0e8767e1dcd232752676989fe09b92e9fa9db3",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 24,
+      "start": 73.45,
+      "end": 77.53,
+      "text": "Create a fictional request, offer a fill, and review acceptance.",
+      "text_sha256": "2e2e3a5a55eaec5614c548171adf5405e6ba646a4a45ca5f774a23f71013c709",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 25,
+      "start": 77.939,
+      "end": 82.59,
+      "text": "Reconcile requested quantities, accepted fills, and the remaining resource need.",
+      "text_sha256": "b044857f366640bab4785e9fef4d88ced1c2513a4bb94b6332ad8f80e1ece806",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 26,
+      "start": 83.02,
+      "end": 85.899,
+      "text": "Confirm availability in the demo department before",
+      "text_sha256": "818f102bbbbd9040370edc58f68722adfa4d42e20b4e1840bc2fc7df300b1f39",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 27,
+      "start": 85.899,
+      "end": 87.379,
+      "text": "recording the live workflow.",
+      "text_sha256": "317a6e017748307ab4cc7bdcc5e66d5782e572c5366f2fbde911cb60f9fa1767",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s06:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 28,
+      "start": 88.039,
+      "end": 92.019,
+      "text": "An external order records the department fills and their mobilization,",
+      "text_sha256": "92ece7b00f0fe9607156dab42c10312f5bf88b04b66a357870c12257082b575b",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 29,
+      "start": 92.07,
+      "end": 94.139,
+      "text": "release, and actual return home.",
+      "text_sha256": "4e9c735eda1ef23cf175f8d5766ae8c8f546326ebe690f5a34efcfba4d41daac",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 30,
+      "start": 94.599,
+      "end": 99.29,
+      "text": "Enter an approved sample external order, link its deployment, record the fill",
+      "text_sha256": "67f8d1e375fdf7a164dc4424c49549f646629ef24258d61db413ad1011a90819",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 31,
+      "start": 99.29,
+      "end": 101.32,
+      "text": "transitions, and complete closeout.",
+      "text_sha256": "d12fde298251b474d8fa52a4ebf26a434a77efbddb96a8bf2e53098f232b3f32",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 32,
+      "start": 101.83,
+      "end": 103.919,
+      "text": "Review dates and resource identity.",
+      "text_sha256": "1634f02d3f852f605e34c3639e02a7e5dde14348f12460c3b1b412da179c3d09",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 33,
+      "start": 104.369,
+      "end": 108.9,
+      "text": "This workspace records manual entry and artifact snapshots; it is not",
+      "text_sha256": "dd957daf6b009df4c392f605a88fad9fbf350d7312a52da867b293d3ecef6c20",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 34,
+      "start": 108.93,
+      "end": 110.549,
+      "text": "an external ordering connector.",
+      "text_sha256": "8b48146e8d3081a19637093df7878a76b27d3dc55e7f36b00cd5fcdf1db6c276",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 35,
+      "start": 110.949,
+      "end": 113.68,
+      "text": "Confirm availability in the demo department before",
+      "text_sha256": "818f102bbbbd9040370edc58f68722adfa4d42e20b4e1840bc2fc7df300b1f39",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 36,
+      "start": 113.68,
+      "end": 115.02,
+      "text": "recording the live workflow.",
+      "text_sha256": "317a6e017748307ab4cc7bdcc5e66d5782e572c5366f2fbde911cb60f9fa1767",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s07:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 37,
+      "start": 115.8,
+      "end": 119.729,
+      "text": "Read-only deployment reports bring time entries, supporting artifacts,",
+      "text_sha256": "ae8817b8e952eccd82ca57809b68f0fefdb8570a307132b1692a6b8306627106",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 38,
+      "start": 119.809,
+      "end": 121.47,
+      "text": "and export outputs together.",
+      "text_sha256": "107b4c6a07551abcb4454b32406ae857ece57317b9a97bb32a142fc15e14a7b7",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 39,
+      "start": 121.949,
+      "end": 125.249,
+      "text": "Open a recorded demo deployment and review its time report,",
+      "text_sha256": "c25b4f8323e89c773946eb3efef77ff7d8a6256ef6bfe0ab8dbd4bd8036ee358",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 40,
+      "start": 125.39,
+      "end": 127.47,
+      "text": "summary, and available exports.",
+      "text_sha256": "d238e75cd1bdb17a266a9c3034e3212f6243fddf8c982a95d51676e1f221212c",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 41,
+      "start": 127.88,
+      "end": 132.689,
+      "text": "Reconcile each time entry with the roster and recorded dates before finance review.",
+      "text_sha256": "1d4764b7429647542bbe46abae9601c0b04fbd4d8466ff39ef2b00fef726400f",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 42,
+      "start": 133.169,
+      "end": 135.96,
+      "text": "Confirm availability in the demo department before",
+      "text_sha256": "818f102bbbbd9040370edc58f68722adfa4d42e20b4e1840bc2fc7df300b1f39",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 43,
+      "start": 135.96,
+      "end": 137.449,
+      "text": "recording the live workflow.",
+      "text_sha256": "317a6e017748307ab4cc7bdcc5e66d5782e572c5366f2fbde911cb60f9fa1767",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s08:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 44,
+      "start": 138.15,
+      "end": 140.83,
+      "text": "For the training scenario, work in this order.",
+      "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 45,
+      "start": 141.3,
+      "end": 141.859,
+      "text": "Step 1.",
+      "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 46,
+      "start": 142.409,
+      "end": 145.949,
+      "text": "Create a deployment or start from an external resource order.",
+      "text_sha256": "5164abf7718c6b96e8bb97077308f9e3b384d9fcea10258fdf4a86fe3d848303",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 47,
+      "start": 146.34,
+      "end": 146.979,
+      "text": "Step 2.",
+      "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 48,
+      "start": 147.5,
+      "end": 151.6,
+      "text": "Identify the assigned personnel, apparatus, and operational dates.",
+      "text_sha256": "ac41cd574b3f72f98d8700f17b533c16c4dbe9651571a0b50e80bc7bb1db87f4",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 49,
+      "start": 152.019,
+      "end": 152.769,
+      "text": "Step 3.",
+      "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 50,
+      "start": 153.199,
+      "end": 156.709,
+      "text": "Record deployment activity and finance documentation for review.",
+      "text_sha256": "c7dd7dd5eb5dc45c9872b03daf1fff6bdac577b351a35fbed46fc8bd87218317",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s09:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 51,
+      "start": 157.519,
+      "end": 159.06,
+      "text": "Now verify the result.",
+      "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s10:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 52,
+      "start": 159.499,
+      "end": 163.259,
+      "text": "Reconcile the deployment resources and dates with supporting records.",
+      "text_sha256": "4e6cfa7aec0310c04583e2d22292c740368595fc14b62803b459acba9d781b54",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s10:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 53,
+      "start": 163.629,
+      "end": 167.74,
+      "text": "Review any daily time and cost documentation required by the workflow.",
+      "text_sha256": "0c4fb19f23d1b12cdf907ed08039d71a02688ec9736b4701c405867333617aab",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s10:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 54,
+      "start": 168.29,
+      "end": 172.2,
+      "text": "A common problem to watch for: Deployment Finance is separate from",
+      "text_sha256": "56b2a8e7726fec13ec0436c20c5797562d6323413b2bd82d50dff12dce4cacc0",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 55,
+      "start": 172.2,
+      "end": 173.77,
+      "text": "the Business Operations add-on.",
+      "text_sha256": "50c9d1df7d755b6ae410905a42e747e298c6d456e17810d62b55fd7d990079b0",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 56,
+      "start": 174.209,
+      "end": 177.199,
+      "text": "A prepared record does not guarantee reimbursement.",
+      "text_sha256": "72928da19639d81f363860d6b762d7a5a1bbeed22a80e47a40881c3018f3513c",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s10:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 57,
+      "start": 177.809,
+      "end": 179.419,
+      "text": "Your practice task is simple.",
+      "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s11:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 58,
+      "start": 179.869,
+      "end": 183.41,
+      "text": "Record a two-day demo strike-team deployment and reconcile the",
+      "text_sha256": "74ce30633971deadaf8f9d71824a35f14bd0e97e252b324b7549424fc612c6f7",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s11:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 59,
+      "start": 183.41,
+      "end": 186.74,
+      "text": "participating people and units with the supporting documents.",
+      "text_sha256": "e2114594e21903cc53176a39e0f130cca69c2a345d0881b06c1163605c3acbc7",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s11:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 60,
+      "start": 187.139,
+      "end": 190.939,
+      "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+      "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "15-deployments:s11:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    }
+  ],
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "readiness": {
+    "all_real_screens_matched": false,
+    "all_controls_and_saved_results_demonstrated": false,
+    "every_cue_screen_assignment_verified": false,
+    "speech_timing_authoritative": false,
+    "audio_timeline_binding_complete": false,
+    "strict_source_gate_passed": false,
+    "rendered_frame_review": "not run",
+    "genuine_browser_playback": "pending, separate proof required",
+    "publishable": false,
+    "retained_cue_timestamps_present": true,
+    "cue_timing_qualification": "Existing SRT timestamps are retained unchanged; audio timing/signal/listening binding still requires current-media QA. Normalized text equality alone does not verify speech timing."
+  },
+  "render_decision": "No master is prepared because real-screen/action coverage is incomplete; preserve exact missing-shot list.",
+  "not_changed": [
+    "Source lesson/narration/audio/captions",
+    "Frozen R1/R3",
+    "New site/catalog",
+    "Source screenshots and capture manifests",
+    "Original Academy repository"
+  ],
+  "existing_capture_scope": {
+    "apps_requested": [
+      "Core",
+      "Responder",
+      "Dispatch",
+      "IC"
+    ],
+    "app_counts": {
+      "Core": 480,
+      "IC": 42,
+      "Responder": 220
+    },
+    "dispatch_limitation": "No Dispatch application screenshot with a retained capture-manifest row was found in sources/captures. Unmanifested dispatch-login.jpg is not promoted; Core Dispatch MVC pages remain Core screenshots.",
+    "unit_excluded": true
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "id": "core-personnel-administration-actual-ui-20261028",
+  "mode": "Manual normal-UI replay; no executable seed or automatic writes",
+  "executed_by_helper": false,
+  "department_id": 51,
+  "capture_manifest": {
+    "file": "captures/expansion/core-personnel-administration-20261028/manifest.json",
+    "sha256": "bc40abcc3cba9f8a193b7d9b2a646e1a9c691ae795bc7857ec4f5ddbe3a09192"
+  },
+  "role": {
+    "actual_returned_id": 51007,
+    "name": "TRAINING ONLY - Community response navigator",
+    "description": "Fictional Academy role for community paramedicine and mental health response coordination. Software training only; no professional qualification or system administration privilege.",
+    "icon_file": null,
+    "position": 7,
+    "members_before": 0,
+    "members_after": 1
+  },
+  "saved_requirement": {
+    "type_id": 51004,
+    "type": "TRAINING ONLY - Record review 20261028",
+    "code": "TRN-REVIEW-20261028",
+    "mandatory": true,
+    "any_of_group": null,
+    "allow_trainee": false,
+    "grace_override_days": 7
+  },
+  "discarded_preview": {
+    "second_type": "Driver / operator endorsement (DEMO-CERT-3)",
+    "mandatory_both": true,
+    "first_groups": [
+      null,
+      null
+    ],
+    "second_groups": [
+      1,
+      1
+    ],
+    "original_grace": 7,
+    "second_grace": null,
+    "saved": false,
+    "discard": "Normal reload015 restored saved one row with blank group. No Save in013/014."
+  },
+  "member": {
+    "name": "Matthew Casey",
+    "actual_seeded_user_id": "DA25F49E-FEA4-5C8D-82D9-163D7D2023F9",
+    "roles_before": [
+      {
+        "id": 51002,
+        "name": "Officer"
+      }
+    ],
+    "roles_after": [
+      {
+        "id": 51002,
+        "name": "Officer"
+      },
+      {
+        "id": 51007,
+        "name": "TRAINING ONLY - Community response navigator"
+      }
+    ],
+    "group": "Truck 81",
+    "group_admin": true,
+    "department_admin": true,
+    "disabled": false,
+    "hidden": false,
+    "staffing": "On Shift",
+    "status": "Standing By",
+    "normal_full_profile_save_count": 1
+  },
+  "global_enforcement": "Off",
+  "observed_software_eligibility": "Qualified for saved single fictional rule",
+  "original_role_order_and_counts": [
+    {
+      "name": "Chief",
+      "count": 1
+    },
+    {
+      "name": "Driver / Operator",
+      "count": 1
+    },
+    {
+      "name": "Firefighter",
+      "count": 3
+    },
+    {
+      "name": "Officer",
+      "count": 3
+    },
+    {
+      "name": "Paramedic",
+      "count": 4
+    },
+    {
+      "name": "Rescue Technician",
+      "count": 2
+    }
+  ],
+  "profile_readback_audit": {
+    "file": "expansion/audits/core-personnel-role-profile-readback-20261028.json",
+    "sha256": "6e5a114bc7d3c3ca36e8c1712640dc497da69caa1b5135103b2e9d08319cef1f",
+    "compared_controls": 35,
+    "before_after_sha256": "0fb9a8806ed136801d41fae8e2e51b087708085fe5137dd4ceeb5bcdd33567b2",
+    "scope": "Hidden fields, password/file fields, email/password/token/credential named fields. Excluded values were not changed through the UI; no comprehensive backend field assertion."
+  },
+  "guards": [
+    "Use only ordinary existing permissions in isolated fictionalDepartment51; no auth/security/role-policy changes.",
+    "Search exact new role/type/record first. If already present, reopen/read rather than duplicate or overwrite an unknown row. Actual returnedIDs are observations, not values to fabricate.",
+    "Preserve original6role names/order/counts, existingOfficer membership, all calls/units/member status/staffing and saved globalOff policy.",
+    "Use only own new role for requirement save. Do not save the two-row AND/OR preview; a save replaces the entire type set.",
+    "For member assignment use the normal Personnel row Edit/profileRoles control, wait for Officer to load, retain it and add only new51007. Exclude unreadable EditRole picker017/018.",
+    "Normal profile Save has broad scope; preserve baseline group/admin/disabled/hidden/contact/preferences, perform no password/email/PIN/reset/invite/provider action, and verify visible baseline fields after reopen.",
+    "No professional/clinical qualification, Enforce gate, notification-delivery, GPS/arrival or map-change claim."
+  ],
+  "normal_replay": [
+    "Personnel → Manage Roles → Add Role → own exact Name/Description, empty icon → Save → verify seventh role0members → View name/description.",
+    "Own row Required certifications → Add requirement → select actual training type51004 → MandatoryON/Anyblank/AllowtraineeOFF/grace7 → Save → fresh saved readback.",
+    "Certification types → read fullcode/1record/1requirement → own Edit → Code readonly/help and Personscope disabled; no changes.",
+    "Own requirement Addrequirement → distinctDriver type → bothblank groups forAND → bothgroup1 forOR → NO Save → normalreload → verify originalsingle rule.",
+    "Personnel Casey Edit → waitOfficerchip → normal profileRoles lookup/add newrole → verifyOfficer+newrolechips → preserve baselineflags → normalSave once.",
+    "Roster searchCasey → bothroles and existingstate/staffing/status → Edit → bothchips/group/adminflags retained; no secondSave.",
+    "Manage Roles → newcount1 → View actualCasey → newrowRequiredcertifications → actualQualified for singlefictionalrule/globalOff."
+  ]
+}

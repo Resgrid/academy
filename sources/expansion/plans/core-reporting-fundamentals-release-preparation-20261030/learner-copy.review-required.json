@@ -1,0 +1,86 @@
+{
+  "kind": "Unchanged frozen learner fields for Root review; no new approval claimed",
+  "frozen_source_sha256": "9df3ae7d5998b85bf989e744e70aee5f8d93bb1212497def4631aaf661411fd7",
+  "title": "Read staffing, call summaries and unit response reports",
+  "summary": "Run staffing and call reports with deliberate date and group scopes, inspect the actual detail tables and timestamp sources, and download a unit-row CSV without treating missing data as zero.",
+  "prerequisites": [
+    "Use an authorized reporting account in a fictional practice department with existing calls and staffing history.",
+    "Check the department time zone and choose a deliberate report period; preserve operational data and existing staffing.",
+    "Use only fictional training records for practice and share downloaded results with authorized recipients."
+  ],
+  "practice": [
+    {
+      "scene_id": "catalog",
+      "title": "Choose the report for the question",
+      "practice": "Open Staffing Report and identify one group with more than one recorded staffing category."
+    },
+    {
+      "scene_id": "staffing-details",
+      "title": "Read the member-level staffing evidence",
+      "practice": "Find Matthew Casey and read his group, both listed roles and staffing level."
+    },
+    {
+      "scene_id": "week-parameters",
+      "title": "Define a Call Summary period",
+      "practice": "Prepare the shown October25–29 period and All Groups, then verify both values before Run Report."
+    },
+    {
+      "scene_id": "week-result",
+      "title": "Check totals against types and states",
+      "practice": "Confirm that the displayed Closed and Active counts add to the report total."
+    },
+    {
+      "scene_id": "attribution",
+      "title": "Understand how calls are assigned to groups",
+      "practice": "Read the Calls by Group explanation and identify the five calls attributed to Command."
+    },
+    {
+      "scene_id": "call-rows",
+      "title": "Read the individual call rows",
+      "practice": "Locate the native training call ending0008 and distinguish Open from its N/A on-scene value."
+    },
+    {
+      "scene_id": "unit-parameters",
+      "title": "Set the Call Unit Times window",
+      "practice": "Read the Unit Times start and end and identify the thirty-minute difference from the earlier summary."
+    },
+    {
+      "scene_id": "unit-evidence",
+      "title": "Interpret timestamps and their linkage",
+      "practice": "Compare a Dispatch only row with a Unit status row without filling any blank timestamp."
+    },
+    {
+      "scene_id": "csv",
+      "title": "Download and interpret the real CSV",
+      "practice": "Download the CSV and compare one DispatchOnly row with the matching report row; retain blank cells."
+    },
+    {
+      "scene_id": "command-scope",
+      "title": "Run an explicit group scope",
+      "practice": "Run the shown default period with Command and confirm the displayed descendant-group scope."
+    },
+    {
+      "scene_id": "period-tables",
+      "title": "Read yearly, quarterly and monthly tables",
+      "practice": "Find October’s five calls and explain why the following zero-call months still show YTD5."
+    },
+    {
+      "scene_id": "matched-comparison",
+      "title": "Change one reporting variable at a time",
+      "practice": "Compare Command5 and All Groups16 only after confirming the identical displayed start and end."
+    },
+    {
+      "scene_id": "sector-practice",
+      "title": "Apply the same checks across departments",
+      "practice": "Choose one sector example and state the report, period, group scope and missing-data rule you would use."
+    }
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Run a station-scoped call summary for a fixed exercise period, then inspect the matching unit times before describing response totals.",
+    "Community care and mental health": "Review operational call workload in an agreed period without adding client histories or treating software timestamps as an assessment.",
+    "Search and rescue": "Compare mission-period call groups using the same boundaries and distinguish missing unit times from recorded zero-duration activity.",
+    "Security": "Review current recorded staffing and a bounded patrol call period; do not equate the staffing chart with attendance.",
+    "Wildland": "Compare a defined seasonal window and its group scope; treat partial-period and future zero rows explicitly.",
+    "Industrial response": "Inspect a training call’s unit-status chronology and preserve missing fields in a CSV used for an internal software exercise."
+  }
+}

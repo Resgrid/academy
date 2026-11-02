@@ -1,0 +1,202 @@
+{
+  "id": "app-ic-tactical-map-lane-link",
+  "app": "IC",
+  "title": "IC: create a named tactical map and attach it to a lane",
+  "summary": "Create a clearly described incident reference map, inspect its saved expiry, attach it to Staging and verify the saved association after a fresh page load.",
+  "audience": [
+    "Incident commanders",
+    "Division and staging leads",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "An authorized IC session and an existing training incident command board.",
+    "Permission to create incident maps and update the intended command lane.",
+    "A fictional practice environment and a clear reference-area purpose."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start with the incident’s tactical maps",
+      "narration": "On this IC Command Board, the training warehouse call is already open. Select Tactical Maps to review additional maps for this incident. The count is zero, and the empty state explains that a map can represent an area of operation. Choose Add in this section to begin a named reference map.",
+      "practice": "Find Tactical Maps on the intended incident board and use its Add control.",
+      "required_labels": [
+        "Tactical Maps (0)",
+        "Add",
+        "No additional maps yet — add one for an area of operation."
+      ],
+      "capture_refs": [
+        "ic-tactical-001-tactical-maps-empty"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Read the new map form",
+      "narration": "New Tactical Map provides Name, Description and Expires. Before a name is entered, Add is unavailable. Read the expiry choices: None, twelve hours, one day, two days or seven days. Decide what the map should identify and how long that reference should remain relevant to your department’s work.",
+      "practice": "Inspect the form and its expiry choices before entering a name.",
+      "required_labels": [
+        "New Tactical Map",
+        "Name",
+        "Description",
+        "Expires",
+        "None",
+        "+12h",
+        "+1d",
+        "+2d",
+        "+7d",
+        "Add"
+      ],
+      "capture_refs": [
+        "ic-tactical-002-new-tactical-map-empty"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Prepare a clear name and purpose",
+      "narration": "Enter a name that another operator can recognize. Here it is Training Only, West gate coordination. The Description explains that this is a fictional reference area for the training staging lane. The twelve-hour choice has been selected, and the form displays a calculated expiry. Review the entered description and displayed time before choosing Add.",
+      "practice": "Prepare an identifiable fictional map name and description; review the displayed expiry before Add.",
+      "required_labels": [
+        "New Tactical Map",
+        "TRAINING ONLY - West gate coordination",
+        "Fictional Academy mapping practice. Reference area for the training staging lane; no operational map or deployment.",
+        "+12h",
+        "10/31/2026, 5:28:00 AM",
+        "Add"
+      ],
+      "capture_refs": [
+        "ic-tactical-003-tactical-map-prepared"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Inspect the saved map card",
+      "narration": "The board now shows Tactical Maps with a count of one. The card contains the saved name, description and an Expires label. Compare that readback with the prepared form: this recording shows different clock times in those two views. Verify the intended expiry in your department before relying on it. The named card gives the next operator a clear purpose to check when opening this reference.",
+      "practice": "Read the saved map card and compare its expiry with the prepared form; investigate any clock difference.",
+      "required_labels": [
+        "Tactical Maps (1)",
+        "TRAINING ONLY - West gate coordination",
+        "EXPIRES 10/31/2026, 12:28:00 PM"
+      ],
+      "capture_refs": [
+        "ic-tactical-003-tactical-map-prepared",
+        "ic-tactical-004-map-saved-readback"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Attach the map to the intended lane",
+      "narration": "Use the pencil button on the Staging lane to open its settings, then scroll to Attached Map. None and the named West gate coordination map are available. Select the intended map and check the selected state before saving. This associates that reference with the lane you are editing. Keep the lane identity and the map’s name clear when several areas are being coordinated.",
+      "practice": "Open the intended lane’s pencil control and select the named map under Attached Map.",
+      "required_labels": [
+        "Staging — TRAINING",
+        "Attached Map",
+        "None",
+        "TRAINING ONLY - West gate coordination",
+        "Save"
+      ],
+      "capture_refs": [
+        "ic-tactical-004-map-saved-readback",
+        "ic-tactical-006-lane-map-selected"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Save and reopen the association",
+      "narration": "Choose Save in the lane settings. After a fresh page load, reopen the same Staging lane and return to Attached Map. The named map remains selected here. This readback confirms the saved association. Check the selected map whenever a lane’s purpose or working area changes, so the next operator can find the intended reference.",
+      "practice": "Save, reload, reopen the same lane and verify its Attached Map selection.",
+      "required_labels": [
+        "Attached Map",
+        "TRAINING ONLY - West gate coordination",
+        "Save"
+      ],
+      "capture_refs": [
+        "ic-tactical-006-lane-map-selected",
+        "ic-tactical-014-stable-fresh-lane-readback"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Find the saved reference again",
+      "narration": "Return to Tactical Maps on the board. The count of one, the saved name, Description and Expires label are still present after the fresh navigation. Read the card before opening it. A short, specific description helps distinguish a staging reference from another team’s search area, patrol sector or industrial exercise location.",
+      "practice": "Revisit Tactical Maps and verify the saved reference card before opening it.",
+      "required_labels": [
+        "Tactical Maps (1)",
+        "TRAINING ONLY - West gate coordination",
+        "EXPIRES 10/31/2026, 12:28:00 PM"
+      ],
+      "capture_refs": [
+        "ic-tactical-008-fresh-map-card"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Confirm the named map you opened",
+      "narration": "Open the card and check the map’s header. It shows the same West gate coordination name, with the training street map and Squad Three’s Search Division label below. Use that identity check when sharing references with another operator. Named areas can support community paramedicine or mental health coordination, search and rescue, security companies, wildland contractors, industrial response teams, and fire or EMS departments. Choose names and descriptions that explain your own team’s work.",
+      "practice": "Open the saved card and confirm its matching header and actual resource context.",
+      "required_labels": [
+        "TRAINING ONLY - West gate coordination",
+        "Squad 3",
+        "Search Division — TRAINING"
+      ],
+      "capture_refs": [
+        "ic-tactical-009-named-map-open"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Community response",
+      "scenario": "Name an outreach staging reference for community paramedicine or mental health coordination and verify the intended lane association."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Distinguish a search-area reference from a team’s staging map using specific names and descriptions."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Keep event patrol and access-control references distinguishable for supervisors and company dispatchers."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Label a contractor’s training staging or work-area reference so another crew lead can identify its purpose."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Associate an industrial exercise reference area with the intended command lane and verify the saved setting."
+    },
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Create an identifiable training staging map and check its association before command handover."
+    }
+  ],
+  "export_ready": false,
+  "authoring_status": "source_only_personally_reviewed_screens_and_narration",
+  "publication_mode": "video",
+  "source_capture_manifest": "captures.reviewed.json",
+  "scope_limits": [
+    "Creation, lane association, persistence readback and opening the named map only. No command start, transfer, dispatch or operational deployment demonstrated.",
+    "Prepared expiry and saved card display different clock times. Actual expiry execution/duration is unverified; the narration explicitly calls for checking the intended expiry.",
+    "The general Incident Map Line tool accepted zero points from two ordinary map clicks; no drawing operation succeeded or is claimed.",
+    "Named-map pan/Save View diagnostics010-012 do not establish stable persisted camera framing and are excluded from learner evidence.",
+    "No offline replay, native mapping parity, preplan configuration, indoor map or route guidance is demonstrated.",
+    "No staff/role/objective/need/work-time threshold edits were intentionally made in the lane settings.",
+    "New Record in this recording stack leaves the offered System Run form without a schema; no IC record creation is claimed."
+  ],
+  "Root_complete_source_script_review": {
+    "reviewer": "Root",
+    "reviewed_at": "2026-10-31T00:35:52.484785+00:00",
+    "personally_viewed_actual_images": [
+      "001-tactical-maps-empty",
+      "002-new-tactical-map-empty",
+      "003-tactical-map-prepared",
+      "004-map-saved-readback",
+      "006-lane-map-selected",
+      "008-fresh-map-card",
+      "009-named-map-open",
+      "014-stable-fresh-lane-readback"
+    ],
+    "complete_script_personally_read": true,
+    "timed_correspondence_available": false,
+    "human_listening_claim": false
+  },
+  "audio_generated": false
+}

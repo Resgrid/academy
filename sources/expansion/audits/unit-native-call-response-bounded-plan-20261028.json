@@ -1,0 +1,277 @@
+{
+  "kind": "bounded_native_unit_call_response_plan_source_only",
+  "prepared_at": "2026-10-28T23:45:35.419808+00:00",
+  "status": "awaiting_parent_scenario_review_no_call_ui_actions_performed",
+  "source_only": true,
+  "browser_native_ui_api_or_db_actions_this_audit": false,
+  "hindsight_tools_available": false,
+  "held_inventory_freeze": {
+    "file": "expansion/plans/app-unit-inventory-native-counts-capture-freeze-20261028/source-freeze.json",
+    "sha256": "421693c5a83525b284e3073eb10f6778680ecfbb62f46a5f1638b458f20376ac"
+  },
+  "recommended_unit": "Keep current dedicated native Ambulance61 context; Available baseline and no assigned crew limit incidental effects on the separate Engine51/Herrmann session. Reconfirm actual current baseline before approval.",
+  "protected_records": {
+    "original_active_call_ids": [
+      51001,
+      51002,
+      51003
+    ],
+    "parent_existing_number_fragments_not_for_this_exercise": [
+      "closed0006",
+      "pending0007"
+    ],
+    "completed_inventory_count_ids": [
+      "d940ec4c-643e-49c2-a2b8-590e74ad25d8",
+      "1c9ec858-c5e1-4914-bd19-f77c9afb2740"
+    ],
+    "engine51_crew": "HerrmannOfficer/TeamLead preserved; do not select, edit or save roles."
+  },
+  "proposed_new_call": {
+    "name": "TRAINING ONLY - Native Unit response and deselection",
+    "recipients": [
+      "fictional Wallace Boden",
+      "Ambulance61 only"
+    ],
+    "exclude": [
+      "Everyone",
+      "groups",
+      "roles",
+      "original calls",
+      "existing pending0007",
+      "incident-command attachment",
+      "timers",
+      "external provider delivery"
+    ],
+    "create_not_authorized_for_child_yet": true,
+    "actual_id_number": null
+  },
+  "ordered_steps": [
+    {
+      "step": 1,
+      "scope": "Read-only baseline before any new call",
+      "controls": "Native Settings → Active Unit; current native screenshots026/025 show Ambulance61 Available,0of1Roles,NoActiveCall.",
+      "verification": "Read the intended selected-unit status/crew and current call context through normal UI again when the parent approves the exercise. Do not treat last recorded state as a new live read.",
+      "mutation": "None yet."
+    },
+    {
+      "step": 2,
+      "scope": "Parent-controlled single new fixture after plan review",
+      "controls": "Normal Core New Call, or normal native Calls → Create only if separately approved.",
+      "verification": "Clearly TRAINING ONLY name; active unscheduled call, ordinary safe priority/type, only fictional Boden plus Ambulance61 unit recipient; no Everyone/groups/roles/incident command/timer change. Capture actual issued ID/number; never assume the next sequence.",
+      "mutation": "One new clearly identified practice call only. Unit recipient is necessary for normal unit release on closure. Creating a live unit-dispatched call can itself apply Responding automatically: record that real baseline, do not credit a later button tap with a transition that already occurred."
+    },
+    {
+      "step": 3,
+      "scope": "Locate the new call",
+      "controls": "Actual Calls tab (existing native AX calls-tab), open only the new title/issued number.",
+      "verification": "Read title/number/ID-associated native row/context before selecting. Preserve original51001–51003, existing closed0006 and pending0007; none belongs to this new sequence.",
+      "mutation": "Read-only call detail."
+    },
+    {
+      "step": 4,
+      "scope": "Set local active context and record a response",
+      "controls": "Call detail Set Active opens the status sheet; Responding → Select Destination → only the new call → optional Note → Submit as actually rendered.",
+      "verification": "Built-in Responding has Calls destination and optional note; current configuration still needs actual UI confirmation. Save a plain software-only note if offered. A success toast/header is accepted only after actual result; queued is not sent.",
+      "mutation": "Only selected Ambulance61 status linked explicitly to the new call. Preserve existing role assignments; native current0of1 means no new crew assignment."
+    },
+    {
+      "step": 5,
+      "scope": "Optional On Scene software state",
+      "controls": "Sidebar On Scene → same own call → optional training note → Submit.",
+      "verification": "Label as a fictional software state, not arrival/location proof. Do not grant GPS; if current status requires GPS and refuses, stop that branch and report the real refusal.",
+      "mutation": "Only same unit/same call status after approval."
+    },
+    {
+      "step": 6,
+      "scope": "Retained plain call note",
+      "controls": "Call detail Notes → Call Notes → Add New Note input (new-note-input) → Add Note.",
+      "verification": "Enter only public training text; confirm exact native field readback before the one normal submit, then close/reopen Notes and find the stored text. Modal passes null latitude/longitude into saveCallNote. Respect redacted/context/MFA/permission failures.",
+      "mutation": "One clearly TRAINING ONLY note on the new call only."
+    },
+    {
+      "step": 7,
+      "scope": "Prioritize the real native Deselect proof while call is still open",
+      "controls": "Active call sidebar Deselect icon (accessibility label Deselect) → actual Alert: Deselect Active Call / Are you sure you want to deselect the current active call? / Cancel / Confirm.",
+      "verification": "Capture actual foreground dialog, then only after approval Confirm. Verify No Active Call locally AND that Calls still lists the same open new call. This separates local deselection from closing a server call.",
+      "mutation": "Local persisted activeCallId removed only; no call/status endpoint from this branch."
+    },
+    {
+      "step": 8,
+      "scope": "Reselect the exact same new call",
+      "controls": "No Active Call sidebar card → Select Active Call → source testID call-item-ACTUAL_NEW_ID, discovered from real native AX.",
+      "verification": "Select only the new title/number and verify the actual active card. Sidebar selection sets local context without automatically opening status submission. Do not select an original or pending call.",
+      "mutation": "Local selected context only."
+    },
+    {
+      "step": 9,
+      "scope": "Prepare one normal closure",
+      "controls": "Call detail kebab-menu-button → iOS native action sheet Close Call → Close Type Closed(value1) → explicit training closing Note → Notify everyone on the call OFF.",
+      "verification": "Notify defaults TRUE on opening/reset; capture actual OFF immediately before submit. Permission canUserCreateCalls controls this menu; backend additionally requires Call_Update, CanUserCloseCall and no active IC. Do not invent a second OS confirmation for this bottom-sheet submit.",
+      "mutation": "No close until the prepared form and owned ID/number are verified."
+    },
+    {
+      "step": 10,
+      "scope": "Close only the new call",
+      "controls": "Prepared bottom sheet Close Call once.",
+      "verification": "Observe actual response/error and refreshed Calls list. Own new call removed; protected originals/pending unchanged. Protected-write/MFA/IC/permission failure stops the operation, without overrides, unredaction or security changes.",
+      "mutation": "PUT Calls/CloseCall for own actual ID,Type1,trainingNotes,SendNotification false only."
+    },
+    {
+      "step": 11,
+      "scope": "Verify server status and stale local cleanup separately",
+      "controls": "Deselect again only if an actual stale active card remains; no manufactured closed-card selection. For status refresh, Settings → Active Unit → another existing unit → return Ambulance61.",
+      "verification": "Same-unit reselection returns early in UnitSelectionBottomSheet and does NOT refresh; a different-unit round trip runs the normal getUnitStatus fetch. No status/role submit during the temporary view. Observe actual release outcome, never infer Released from a successful close.",
+      "mutation": "Local navigation/selection only. Count records stay untouched."
+    },
+    {
+      "step": 12,
+      "scope": "Restore baseline through the supported manual status",
+      "controls": "If server readback is no longer original Available: choose Available → No Destination → explicit training restoration Note → Submit; normal selected-unit context refresh/readback afterward.",
+      "verification": "Default manual list excludes Released10; do not change department statuses to add it. Available is built-in0,optional note,Stations detail with No Destination. Final intended evidence: Ambulance61Available,original role assignments,NoActiveCall,new own callclosed,existing two countsCompleted and stock5/24/6. Stop/report any server rejection or queued/offline result.",
+      "mutation": "Only restore the selected unit to its observed pre-exercise status; no personnel/crew/qualifications/shift/security changes."
+    }
+  ],
+  "source_findings": {
+    "deselect": "Native Alert.alert Cancel/Confirm; Confirm→setActiveCall(null)→remove persisted activeCallId,clear local call/priority/id. No server call/status write. Web uses window.confirm, hence native footage is genuinely a different platform branch.",
+    "set_active": "Detail Set Active selects the call and opens the status wizard; sidebar call selection only selects context. Neither is equivalent to a submitted unit response.",
+    "close": "CloseCallBottomSheet resets Notify=true, submits selectedClosedType1 plus Note/SendNotification, navigates/reloads Calls. Detail-store closure does not clear core activeCall or refresh unit status.",
+    "release": "Only live active/dispatched call with explicit group/unit dispatch recipients invokes release. Guard keeps units alreadyAvailable/Unavailable/Delayed or latest-pointing to a different open call. Otherwise per-unit-type custom override or department target resolution applies; built-in fallbackReleased10. Original older dispatch alone does not override latest ownership of the new call.",
+    "source_seed_vs_current_config": "Seed creates Ambulance unit type without CustomStatesId/overrides. It is not proof no later current configuration exists; read current normal controls before claiming a particular auto-release outcome.",
+    "gps": "Built-in source statuses have optional note and no GpsRequired initializer. Required GPS branch explicitly requests a live fix; denied permission stops it. Nonrequired branch reads recent only when permission granted,otherwise null; location store is not persisted. Never claim zero/seeded/map coordinates as a physical fix.",
+    "notes": "Plain Call Notes passes null coordinates and has Add Note; protected/redacted notes remain protected.",
+    "ipad_menu": "Unit calls ActionSheetIOS on iOS. Installed ReactNative RCTActionSheetManager supplies parent-view popover fallback when no anchor; do not patch/fake an iPad menu before actually observing it.",
+    "harness": "Existing held recorder was scoped to inventory. A new separately reviewed owned-call handler must bind actual new ID/title,normal native Deselect Cancel/Confirm,CloseType/NotifyOFF and permitted note/status inputs. Do not bypass generic alert/Submit guards by identifiers."
+  },
+  "api_contract_for_source_context_only": [
+    "GET Calls/GetActiveCalls",
+    "GET Calls/GetCall",
+    "GET CallNotes/GetCallNotes",
+    "POST CallNotes/SaveCallNote",
+    "POST UnitStatus/SaveUnitStatus",
+    "GET UnitStatus/GetUnitStatus",
+    "PUT Calls/CloseCall"
+  ],
+  "future_capture_scope": "Native-only fresh folder and action ledger; same new call/own simulator/DPR2. No new audio/timing/canonical/ready changes until full actual controls and outcomes are reviewed.",
+  "source_citations": [
+    {
+      "repository": "Unit",
+      "file": "src/components/sidebar/call-sidebar.tsx",
+      "sha256": "72ba6af3695750fb262a83782e6d66c27b6743d4826fdb8ce3cf47342439f61e"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/stores/app/core-store.ts",
+      "sha256": "c3ee7813c3de96add5bd65655ae415f37b4a1bed1a8dc3777cfc29e40e872ee6"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/components/settings/unit-selection-bottom-sheet.tsx",
+      "sha256": "ac9cf41bdc41366edfb6aeff76cecaee83e3d5c67eecb34e981f94d67514f2b4"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/app/call/[id].tsx",
+      "sha256": "e6f88c2b1468959840f7fe81b32b2637ee1982f35be4f9aefc5cfd8e4596d605"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/components/calls/call-detail-menu.tsx",
+      "sha256": "ab664505949b0e7492bcf30c4d4758669960907162f010809352f7e34d73c406"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/utils/action-sheet.ts",
+      "sha256": "fc6b5eb4dbf1b2064f08f3246e02403de2258d3140fed6ec9a78774e7206cc9f"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/components/calls/close-call-bottom-sheet.tsx",
+      "sha256": "5694aad90aa0950fd562abdd50041b7a7993600295927ce2ead22be7294a77eb"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/stores/calls/detail-store.ts",
+      "sha256": "2713a7042fe55c8794af299e4a420e57e5c3538165c464ac218e8e521adc0cad"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/api/calls/calls.ts",
+      "sha256": "de61fd8e8167c729c0206ec68adfcfd95e2823b41e4034fa8b1be298a3769565"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/components/status/status-bottom-sheet.tsx",
+      "sha256": "aed3a7fe2ddb4d3de84739435ab62fb29d1b1f30393b4d2c255670576629fe7d"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/stores/status/store.ts",
+      "sha256": "3ce04e73cabb44348b8ce3a1497ea1dbf0c8d1c72589ba172cf64b7cd1ca7ad3"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/api/units/unitStatuses.ts",
+      "sha256": "7fd0f959c602eb87b2e0193fc35246f365c9b4fba387dd5ee1651b7c058a9c2e"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/services/location-fix.ts",
+      "sha256": "ec365c6543523c6ad646a073e57953f26429ced53f4457bef06c36d751f3c5a2"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/stores/app/location-store.ts",
+      "sha256": "d5056c3303ffd32305c361a9cb69ab9f8b133e8952f609c519f5f9a713e7e899"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/components/calls/call-notes-modal.tsx",
+      "sha256": "570deab050d11c0dc7b5dc27adee7379b191bf7dd4c8123fa83cfdebc701614f"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/api/calls/callNotes.ts",
+      "sha256": "b61e12a478347c6fabc4d54ab1c62c15115f1eb287dad487e3d5a56553775116"
+    },
+    {
+      "repository": "Unit",
+      "file": "src/translations/en.json",
+      "sha256": "a5f220e4d9204ff38f40b266219f841c2ba939dc9208b9cd8a3544b2a09cd3a4"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web.Services/Controllers/v4/CallsController.cs",
+      "sha256": "fac38d9f7d77b366d40b39062eee752adabfd946de2279e8a5cc4309872df47f"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Services/CallDispatchStatusService.cs",
+      "sha256": "b72c604893617e76f8674a9a1c4d23567a7ca14612fecc9662943a1aa8bf3451"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Model/UnitCallInvolvement.cs",
+      "sha256": "3ee01578512d30e7031d515469bb094dfabda091adf476b8407fb3723d31a26a"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Model/StatusTarget.cs",
+      "sha256": "1e871a44297fb14f8a2a64a9a6e0e934fe5d85b24676e95faddb1f67eda6bcf9"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Services/CustomStateService.cs",
+      "sha256": "934f93006eaea44e05892148846f604168eb7c8ef05991a72afcdcda08f227e0"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Model/UnitStateTypes.cs",
+      "sha256": "2098c4f843146815427182d9d402fcb20b0ecfb70e99b4246504f1eb933b4286"
+    },
+    {
+      "repository": "Academy staging",
+      "file": "sources/demo/seed.py",
+      "sha256": "219233b39368d9dd13983c327261ffce865c6db0e35eeaae4495227edd5c94d5"
+    }
+  ]
+}

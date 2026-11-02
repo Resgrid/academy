@@ -1,0 +1,153 @@
+@using Resgrid.Model
+@using Resgrid.Web.Helpers
+@model Resgrid.Web.Areas.User.Models.Training.TrainingIndexModel
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Trainings.Trainings> localizer
+@{
+  var moduleTitle = await departmentTerms.NameAsync(DepartmentTerms.Trainings, localizer["TrainingsHeader"]);
+  ViewBag.Title = "Resgrid | " + moduleTitle;
+
+  // Mirror the controller policies (Training_Create / Training_Update / Training_Delete): group admins and roles
+  // granted training permissions hold these claims too, not only department admins.
+  var canCreateTraining = ClaimsAuthorizationHelper.CanCreateTraining();
+  var canUpdateTraining = User.HasClaim(Resgrid.Providers.Claims.ResgridClaimTypes.Resources.Training, Resgrid.Providers.Claims.ResgridClaimTypes.Actions.Update);
+  var canDeleteTraining = User.HasClaim(Resgrid.Providers.Claims.ResgridClaimTypes.Resources.Training, Resgrid.Providers.Claims.ResgridClaimTypes.Actions.Delete);
+  var currentUserId = ClaimsAuthorizationHelper.GetUserId();
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-4">
+    <h2>@moduleTitle</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@localizer["HomeLink"]</a>
+      </li>
+      <li class="active">
+        <strong>@moduleTitle</strong>
+      </li>
+    </ol>
+  </div>
+  @if (canCreateTraining)
+  {
+    <div class="col-sm-8">
+      <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+        <a title="@localizer["AddTrainingIndexButton"]" class="btn btn-success" asp-controller="Trainings" asp-action="New" asp-route-area="User">@localizer["AddTrainingIndexButton"]</a>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="wrapper wrapper-content">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>
+                    @localizer["NameColumn"]
+                  </th>
+                  <th style="max-width: 300px;">
+                    @localizer["DescriptionColumn"]
+                  </th>
+                  <th>
+                    @localizer["DueDateColumn"]
+                  </th>
+                  <th>
+                    @localizer["ActionColumn"]
+                  </th>
+                  <th class="span1">
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var t in Model.Trainings)
+				{
+                  <tr>
+                    <td>
+                      @t.Name
+                    </td>
+                    <td style="max-width: 300px;">
+                      @Html.SanitizedHtml(t.Description)
+                    </td>
+                    <td>
+                      @if (t.ToBeCompletedBy != null)
+					  {
+                        @Html.Raw(t.ToBeCompletedBy.Value.ToShortDateString())
+					  }
+					  else
+					  {
+                        @localizer["NoDueDate"]
+					  }
+                    </td>
+                    <td>
+                      @if (t.Users != null && t.Users.Any(x => x.UserId == currentUserId))
+					  {
+						var userRecord = t.Users.FirstOrDefault(x => x.UserId == currentUserId);
+						if (userRecord != null)
+						{
+						  if (!userRecord.Viewed)
+						  {
+                            @Html.Raw("<a href='" + Url.Action("View", "Trainings", new { Area = "User", trainingId = t.TrainingId }) + "' class='btn btn-xs btn-primary'>" + Html.Encode(localizer["ViewTrainingButton"].Value) + "</a>")
+						  }
+						  else if (userRecord.Complete && (t.Questions == null || t.Questions.Count <= 0))
+						  {
+                            @Html.Raw("<a href='" + Url.Action("View", "Trainings", new { Area = "User", trainingId = t.TrainingId }) + "' class='btn btn-xs btn-primary'>" + Html.Encode(localizer["ViewTrainingButton"].Value) + "</a>")
+						  }
+						  else if (userRecord.Complete && userRecord.Score >= t.MinimumScore && (t.Questions != null && t.Questions.Count > 0))
+						  {
+                            @Html.Raw("<a href='" + Url.Action("View", "Trainings", new { Area = "User", trainingId = t.TrainingId }) + "' class='btn btn-xs btn-success'>" + Html.Encode(localizer["TrainingCompleteButton"].Value) + "</a>")
+						  }
+						  else if (userRecord.Complete && userRecord.Score < t.MinimumScore && (t.Questions != null && t.Questions.Count > 0))
+						  {
+                            @Html.Raw("<a href='" + Url.Action("View", "Trainings", new { Area = "User", trainingId = t.TrainingId }) + "' class='btn btn-xs btn-danger'>" + Html.Encode(localizer["TrainingCompleteButton"].Value) + "</a>")
+						  }
+						  else
+						  {
+                            @Html.Raw("<a href='" + Url.Action("View", "Trainings", new { Area = "User", trainingId = t.TrainingId }) + "' class='btn btn-xs btn-primary'>" + Html.Encode(localizer["ViewTrainingButton"].Value) + "</a>")
+						  }
+						}
+					  }
+					  else if (canUpdateTraining || t.CreatedByUserId == currentUserId)
+					  {
+                        @* Not assigned, but manages or created it: the View action admits any department member. *@
+                        <a href="@Url.Action("View", "Trainings", new { area = "User", trainingId = t.TrainingId })" class='btn btn-xs btn-primary'>@localizer["ViewTrainingButton"]</a>
+					  }
+                    </td>
+                    <td>
+                      @if (canUpdateTraining)
+					  {
+                        <a href="@Url.Action("Edit", "Trainings", new { area = "User", trainingId = t.TrainingId })" class='btn btn-xs btn-info'>
+                          <i class='icon-pencil'></i> @localizer["EditButton"]
+                        </a>
+                        <a href="@Url.Action("Report", "Trainings", new { area = "User", trainingId = t.TrainingId })" class='btn btn-xs btn-primary'>
+                          <i class='icon-eye-open'></i> @localizer["ReportButton"]
+                        </a>
+					  }
+                      @if (canDeleteTraining)
+					  {
+                        <form method="post" action="@Url.Action("DeleteTraining", "Trainings", new { area = "User", trainingId = t.TrainingId })" style="display: inline;">
+                          @Html.AntiForgeryToken()
+                          <button type="submit" class='btn btn-xs btn-danger' data-confirm="@localizer["DeleteTrainingWarning"] @t.Name ?">
+                            <i class="icon-trash">
+                            </i> @localizer["DeleteButton"]
+                          </button>
+                        </form>
+					  }
+                    </td>
+                  </tr>
+				}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts
+{
+  <script src="~/js/app/internal/training/resgrid.training.index.js"></script>
+}

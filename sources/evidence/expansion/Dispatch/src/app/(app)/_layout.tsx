@@ -1,0 +1,838 @@
+/* eslint-disable react/no-unstable-nested-components */
+
+import { NovuProvider } from '@novu/react-native';
+import Mapbox from '@rnmapbox/maps';
+import { isRunningInExpoGo } from 'expo';
+import { Redirect, Slot, usePathname } from 'expo-router';
+import { Menu } from 'lucide-react-native';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, Platform, StyleSheet, Text as RNText, TouchableOpacity, View as RNView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { AwaitingResourcesBanner } from '@/components/awaiting-resources/awaiting-resources-banner';
+import { UnitAvailableAlertHost } from '@/components/awaiting-resources/unit-available-alert-host';
+import { StepUpPromptHost } from '@/components/data-protection/step-up-prompt-host';
+import { DashboardViewToggles } from '@/components/dispatch-console';
+import { RecoveryCodesModal } from '@/components/mfa/recovery-codes-modal';
+import { NotificationButton } from '@/components/notifications/NotificationButton';
+import { NotificationInbox } from '@/components/notifications/NotificationInbox';
+import { SharedSessionBar } from '@/components/shared-session/shared-session-bar';
+import { SharedSessionLockScreen } from '@/components/shared-session/shared-session-lock-screen';
+import SideMenu from '@/components/sidebar/side-menu';
+import { View } from '@/components/ui';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Drawer, DrawerBackdrop, DrawerBody, DrawerContent, DrawerFooter } from '@/components/ui/drawer/index';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+import { useAppLifecycle } from '@/hooks/use-app-lifecycle';
+import { useAwaitingResourcesSync } from '@/hooks/use-awaiting-resources-sync';
+import { useInactivityLock } from '@/hooks/use-inactivity-lock';
+import { useSharedSessionLifecycle } from '@/hooks/use-shared-session-lifecycle';
+import { useSignalRLifecycle } from '@/hooks/use-signalr-lifecycle';
+import { useAuthStore } from '@/lib/auth';
+import { Env } from '@/lib/env';
+import { logger } from '@/lib/logging';
+import { onMapboxAccessTokenChange } from '@/lib/mapbox-token';
+import { useSharedInstallation } from '@/lib/mfa/shared-installation';
+import { useIsFirstTime } from '@/lib/storage';
+import { type GetConfigResultData } from '@/models/v4/configs/getConfigResultData';
+import { audioService } from '@/services/audio.service';
+import { pushNotificationService, usePushNotifications } from '@/services/push-notification';
+import { useAudioStreamStore } from '@/stores/app/audio-stream-store';
+import { useCoreStore } from '@/stores/app/core-store';
+import { useLiveKitStore } from '@/stores/app/livekit-store';
+import { useAwaitingResourcesStore } from '@/stores/awaiting-resources/store';
+import { useCallsStore } from '@/stores/calls/store';
+import { useChatStore } from '@/stores/chat/store';
+import { useCheckInStore } from '@/stores/checkIn/store';
+import { dataProtectionStore } from '@/stores/data-protection/store';
+import { FeatureFlagKeys, featureFlagsStore } from '@/stores/feature-flags/store';
+import useLockscreenStore from '@/stores/lockscreen/store';
+import { useRolesStore } from '@/stores/roles/store';
+import { securityStore } from '@/stores/security/store';
+import { useSignalRStore } from '@/stores/signalr/signalr-store';
+import { terminologyStore } from '@/stores/terminology/store';
+import { useToastStore } from '@/stores/toast/store';
+import { useWeatherAlertsStore } from '@/stores/weatherAlerts/store';
+
+// Keep the native Mapbox SDK on the token in use: the verified server token, else the built-in one. On web,
+// mapbox-gl takes its token separately (lib/mapbox-gl-token-web). Registered once at module scope; store
+// listeners run synchronously inside the token change, before React re-renders, so the SDK has the new
+// token before any map re-renders with a style that needs it.
+if (Platform.OS !== 'web') {
+  onMapboxAccessTokenChange((token) => {
+    Mapbox.setAccessToken(token);
+    logger.info({
+      message: 'Mapbox access token set',
+      context: { platform: Platform.OS },
+    });
+  });
+}
+
+/**
+ * Tear down every per-session resource on sign-out: SignalR hubs and their heartbeats,
+ * the LiveKit voice room, audio streams and cached sounds, check-in polling, chat
+ * timers, and push-notification listeners. Without this, all of them keep running
+ * against a signed-out session until the process dies.
+ */
+async function teardownSignedInSession(): Promise<void> {
+  const signalR = useSignalRStore.getState();
+  const teardowns: [string, () => Promise<unknown> | unknown][] = [
+    ['SignalR update hub', () => signalR.disconnectUpdateHub()],
+    ['SignalR chat hub', () => signalR.disconnectChatHub()],
+    ['SignalR geolocation hub', () => signalR.disconnectGeolocationHub()],
+    ['realtime map locations', () => signalR.clearLiveLocations()],
+    ['LiveKit room', () => useLiveKitStore.getState().disconnectFromRoom()],
+    ['audio stream', () => useAudioStreamStore.getState().cleanup()],
+    ['audio service', () => audioService.cleanup()],
+    ['check-in polling', () => useCheckInStore.getState().stopPolling()],
+    ['chat store', () => useChatStore.getState().reset()],
+    ['calls awaiting resources', () => useAwaitingResourcesStore.getState().reset()],
+    ['push notification listeners', () => pushNotificationService.cleanup()],
+  ];
+
+  for (const [label, teardown] of teardowns) {
+    try {
+      await teardown();
+    } catch (error) {
+      logger.error({
+        message: `Failed to tear down ${label} on sign-out`,
+        context: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
+}
+
+export default function TabLayout() {
+  const { t } = useTranslation();
+  const status = useAuthStore((state) => state.status);
+  const isLocked = useLockscreenStore((state) => state.isLocked);
+  // A shared workstation (passkey plan section 12.5): the server locks it, idle or put away, and unlocks it only for the
+  // operator's own second factor. The local password lock below is for personal installations only; it never
+  // establishes server MFA or renews protected data.
+  const sharedSession = useSharedSessionLifecycle(status === 'signedIn');
+  const installation = useSharedInstallation();
+  const sharedMode = sharedSession.shared || installation.shared;
+  const [isFirstTime, _setIsFirstTime] = useIsFirstTime();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = React.useState(false);
+  const [webColorScheme, setWebColorScheme] = React.useState<'light' | 'dark'>('light');
+  const pathname = usePathname();
+  const isDispatchScreen = pathname === '/home' || pathname === '/' || pathname === '/index';
+
+  // Get store states first (hooks must be at top level)
+  const config = useCoreStore((state) => state.config);
+  const coreIsInitializing = useCoreStore((state) => state.isInitializing);
+  const coreIsInitialized = useCoreStore((state) => state.isInitialized);
+  const rights = securityStore((state) => state.rights);
+  const userId = useAuthStore((state) => state.userId);
+
+  // Initialize inactivity lock monitoring (personal installations; a shared workstation follows the server's idle lock)
+  useInactivityLock(status === 'signedIn' && !sharedMode);
+
+  // Memoize drawer navigation handler for better performance
+  const handleNavigate = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+  const { isActive, appState } = useAppLifecycle();
+  const insets = useSafeAreaInsets();
+
+  // Web dark mode detection (safe - only runs on web)
+  React.useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setWebColorScheme(mediaQuery.matches ? 'dark' : 'light');
+    const handler = (e: MediaQueryListEvent) => setWebColorScheme(e.matches ? 'dark' : 'light');
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  // Refs to track initialization state
+  const hasInitialized = useRef(false);
+  const isInitializing = useRef(false);
+  // Bumped on every initialization start and on sign-out. An in-flight run compares its
+  // captured value after each await, so a run belonging to a session that ended can no
+  // longer connect hubs or mark the app initialized.
+  const initGeneration = useRef(0);
+  const initTimedOut = useRef(false);
+  const hasHiddenSplash = useRef(false);
+  const lastSignedInStatus = useRef<string | null>(null);
+  const parentRef = useRef(null);
+
+  // Initialize push notifications
+  usePushNotifications();
+
+  const initializeApp = useCallback(async () => {
+    if (isInitializing.current) {
+      logger.info({
+        message: 'App initialization already in progress, skipping',
+      });
+      return;
+    }
+
+    if (status !== 'signedIn') {
+      logger.info({
+        message: 'User not signed in, skipping initialization',
+        context: { status },
+      });
+      return;
+    }
+
+    isInitializing.current = true;
+    initTimedOut.current = false;
+    const generation = (initGeneration.current += 1);
+    const isCurrentRun = () => initGeneration.current === generation;
+    logger.info({
+      message: 'Starting app initialization',
+      context: {
+        hasInitialized: hasInitialized.current,
+        platform: Platform.OS,
+      },
+    });
+
+    try {
+      // Set a timeout for initialization to prevent infinite hanging
+      const initTimeout = new Promise((_, reject) =>
+        setTimeout(() => {
+          initTimedOut.current = true;
+          reject(new Error('Initialization timeout after 30 seconds'));
+        }, 30000)
+      );
+
+      const initPromise = (async () => {
+        await useCoreStore.getState().init();
+
+        logger.info({
+          message: 'Core store initialized, initializing calls store',
+          context: { platform: Platform.OS },
+        });
+
+        await useCallsStore.getState().init();
+
+        logger.info({
+          message: 'Calls store initialized, getting security rights',
+          context: { platform: Platform.OS },
+        });
+
+        await securityStore.getState().getRights();
+
+        // Dispatch shows private command, unit and responder traffic, so a member the department has
+        // not authorized must not get past initialization. The server is the real boundary — it simply
+        // never hands an unauthorized user the dispatch channels — but signing them straight back out
+        // is far clearer than a silently empty app.
+        if (!isCurrentRun()) {
+          return;
+        }
+        if (securityStore.getState().rights?.CanLoginToDispatchApp === false) {
+          logger.warn({
+            message: 'User is not authorized to use the Dispatch app; signing out',
+            context: { userId },
+          });
+          useToastStore.getState().showToast('error', t('login.dispatch_not_authorized'));
+          await useAuthStore.getState().logout();
+          return;
+        }
+
+        logger.info({
+          message: 'Security rights retrieved, fetching feature flags',
+          context: { platform: Platform.OS },
+        });
+
+        // All must land before the shell finishes initializing: a comma here would await only
+        // the flags and leave the capability request racing the first protected screen. Terminology
+        // is keyed to the rights just loaded and never rejects, so a failure keeps the app's own labels.
+        await Promise.all([featureFlagsStore.getState().fetchFlags(), dataProtectionStore.getState().fetchCapabilities(), terminologyStore.getState().fetchTerminology()]);
+
+        logger.info({
+          message: 'Feature flags fetched, connecting SignalR',
+          context: { platform: Platform.OS },
+        });
+
+        if (!isCurrentRun()) return;
+
+        // Connect to SignalR after core initialization is complete
+        try {
+          await useSignalRStore.getState().connectUpdateHub();
+          logger.info({
+            message: 'SignalR update hub connected successfully',
+            context: { platform: Platform.OS },
+          });
+        } catch (error) {
+          logger.error({
+            message: 'Failed to connect SignalR update hub during initialization',
+            context: { error, platform: Platform.OS },
+          });
+          // Don't fail initialization if SignalR connection fails
+        }
+
+        if (!isCurrentRun()) return;
+
+        // The dispatch console's live maps move unit and personnel pins from the geolocation hub's feed, so it
+        // connects with the update hub (and, like it, disconnects on background and reconnects on resume).
+        try {
+          await useSignalRStore.getState().connectGeolocationHub();
+          logger.info({
+            message: 'SignalR geolocation hub connected successfully',
+            context: { platform: Platform.OS },
+          });
+        } catch (error) {
+          logger.error({
+            message: 'Failed to connect SignalR geolocation hub during initialization',
+            context: { error, platform: Platform.OS },
+          });
+          // Don't fail initialization if SignalR connection fails
+        }
+
+        if (!isCurrentRun()) return;
+
+        // Connect the realtime chat hub only when the Chat.System feature flag is on for
+        // this department; when it is off every chat surface stays hidden.
+        if (featureFlagsStore.getState().isEnabled(FeatureFlagKeys.ChatSystem)) {
+          try {
+            await useSignalRStore.getState().connectChatHub();
+            logger.info({
+              message: 'SignalR chat hub connected successfully',
+              context: { platform: Platform.OS },
+            });
+          } catch (error) {
+            logger.error({
+              message: 'Failed to connect SignalR chat hub during initialization',
+              context: { error, platform: Platform.OS },
+            });
+          }
+        } else {
+          logger.info({
+            message: 'Chat disabled by feature flag; skipping chat hub connection',
+            context: { platform: Platform.OS },
+          });
+        }
+
+        if (!isCurrentRun()) return;
+
+        // Initialize weather alerts
+        try {
+          await useWeatherAlertsStore.getState().fetchSettings();
+          const weatherSettings = useWeatherAlertsStore.getState().settings;
+          if (weatherSettings?.WeatherAlertsEnabled) {
+            await useWeatherAlertsStore.getState().fetchActiveAlerts();
+          }
+          logger.info({
+            message: 'Weather alerts initialized',
+            context: { enabled: weatherSettings?.WeatherAlertsEnabled ?? false },
+          });
+        } catch (error) {
+          logger.error({
+            message: 'Failed to initialize weather alerts',
+            context: { error, platform: Platform.OS },
+          });
+        }
+
+        if (!isCurrentRun()) return;
+
+        hasInitialized.current = true;
+
+        logger.info({
+          message: 'App initialization completed successfully',
+          context: { platform: Platform.OS },
+        });
+      })();
+
+      // Swallow post-timeout rejections so they don't surface as unhandled, and
+      // keep isInitializing true until the init promise fully settles
+      initPromise
+        .catch((error) => {
+          if (initTimedOut.current) {
+            logger.error({
+              message: 'App initialization failed after initialization timeout',
+              context: { error, platform: Platform.OS },
+            });
+          }
+        })
+        .finally(() => {
+          // Only the current run owns the guard; a superseded run clearing it would let
+          // two initializations overlap.
+          if (isCurrentRun()) {
+            isInitializing.current = false;
+          }
+        });
+
+      await Promise.race([initPromise, initTimeout]);
+    } catch (error) {
+      logger.error({
+        message: 'Failed to initialize app',
+        context: { error, platform: Platform.OS },
+      });
+      // A run whose session already ended must not clobber state a newer run (or the
+      // sign-out cleanup) has since established.
+      if (!isCurrentRun()) return;
+
+      // Reset initialization state on error so it can be retried
+      hasInitialized.current = false;
+      // If the init promise is still hanging, clear the guard so a retry is possible
+      isInitializing.current = false;
+    }
+  }, [status, t, userId]);
+
+  const refreshDataFromBackground = useCallback(async () => {
+    if (status !== 'signedIn' || !hasInitialized.current) return;
+
+    // On web platform, skip config refresh as network requests are blocked
+    // This prevents an infinite loop when AppState changes trigger refreshes
+    if (Platform.OS === 'web') {
+      logger.info({
+        message: 'Skipping background data refresh on web platform (AppState handling not needed)',
+      });
+      return;
+    }
+
+    logger.info({
+      message: 'App resumed from background, refreshing data',
+    });
+
+    try {
+      // Refresh data
+      await Promise.all([useCoreStore.getState().fetchConfig(), useCallsStore.getState().fetchCalls(), useRolesStore.getState().fetchRoles()]);
+    } catch (error) {
+      logger.error({
+        message: 'Failed to refresh data on app resume',
+        context: { error },
+      });
+    }
+  }, [status]);
+
+  // Handle SignalR lifecycle management
+  useSignalRLifecycle({
+    // A locked shared session keeps its tokens but must not reconnect the hubs on resume.
+    isSignedIn: status === 'signedIn' && !sharedSession.locked,
+    hasInitialized: hasInitialized.current,
+  });
+
+  // Calls awaiting resources (conditional run cards) behind the banner, menu badge and unit-available alerts: loaded
+  // once the shell is up and the flags say so, and again on resume. Inert without Dispatch.RunCardConditions.
+  useAwaitingResourcesSync(status === 'signedIn' && coreIsInitialized && !sharedSession.locked);
+
+  // WEB PLATFORM WORKAROUND: Call initialization directly during render
+  // useEffect doesn't reliably fire on web platform due to React Native Web issues
+  if (Platform.OS === 'web') {
+    // CRITICAL: Also check coreIsInitializing from the store to prevent re-initialization during state updates
+    const shouldInitialize = status === 'signedIn' && !hasInitialized.current && !isInitializing.current && !coreIsInitializing;
+
+    if (shouldInitialize) {
+      logger.info({
+        message: 'WEB: Triggering initialization during render phase',
+        context: {
+          status,
+          hasInitialized: hasInitialized.current,
+          isInitializing: isInitializing.current,
+          coreIsInitializing,
+        },
+      });
+      // Trigger initialization in next tick to avoid setState during render
+      Promise.resolve().then(() => {
+        initializeApp();
+      });
+    }
+  }
+
+  // Handle app initialization (for native platforms)
+  useEffect(() => {
+    // Skip on web - handled above in render phase
+    if (Platform.OS === 'web') {
+      logger.info({
+        message: 'Skipping useEffect initialization on web (handled in render)',
+      });
+      return;
+    }
+
+    const shouldInitialize = status === 'signedIn' && !hasInitialized.current && !isInitializing.current;
+
+    logger.info({
+      message: 'App initialization effect triggered',
+      context: {
+        status,
+        hasInitialized: hasInitialized.current,
+        isInitializing: isInitializing.current,
+        shouldInitialize,
+        lastStatus: lastSignedInStatus.current,
+      },
+    });
+
+    if (shouldInitialize) {
+      logger.info({
+        message: 'Triggering app initialization',
+        context: {
+          statusChanged: lastSignedInStatus.current !== status,
+          lastStatus: lastSignedInStatus.current,
+          currentStatus: status,
+        },
+      });
+      initializeApp();
+    }
+
+    // Stop location tracking when user signs out
+    if (status === 'signedOut' && lastSignedInStatus.current === 'signedIn') {
+      logger.info({
+        message: 'User signed out, stopping location tracking',
+      });
+
+      // Retire any initialization still in flight so it cannot connect hubs or mark the
+      // app initialized for a session that ended, and free the guard it no longer owns
+      // so the next sign-in is not skipped as "already initializing".
+      initGeneration.current += 1;
+      isInitializing.current = false;
+      // Clear the initialized flag too, or a sign-in later in this process fails
+      // shouldInitialize and initializeApp never runs for the new session.
+      hasInitialized.current = false;
+
+      // Stop hubs, voice, audio and timers that belong to the ended session
+      void teardownSignedInSession();
+    }
+
+    // Update last known status
+    lastSignedInStatus.current = status;
+  }, [status, initializeApp]); // Added initializeApp to dependencies
+
+  // Handle app resuming from background - separate from initialization
+  useEffect(() => {
+    // Only trigger on state change, not on initial render
+    if (isActive && appState === 'active' && hasInitialized.current) {
+      const timer = setTimeout(() => {
+        refreshDataFromBackground();
+      }, 500); // Small delay to prevent multiple rapid calls
+
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, appState, refreshDataFromBackground]);
+
+  // Drawer is closed by default - user opens via hamburger menu
+
+  // Check for maintenance mode
+  if (Env.MAINTENANCE_MODE) {
+    logger.info({
+      message: 'Maintenance mode enabled, redirecting to maintenance page',
+    });
+    return <Redirect href={'/maintenance' as any} />;
+  }
+
+  // Check if screen is locked
+  if (isLocked && status === 'signedIn' && !sharedMode) {
+    logger.info({
+      message: 'Screen is locked, redirecting to lockscreen',
+    });
+    return <Redirect href={'/lockscreen' as any} />;
+  }
+
+  // Only show onboarding on iOS and Android, skip on web platform
+  if (isFirstTime && Platform.OS !== 'web') {
+    logger.info({
+      message: 'Is first time navigating to onboarding',
+    });
+
+    return <Redirect href={'/onboarding' as any} />;
+  } else if (status === 'signedOut' || status === 'idle' || status === 'error') {
+    logger.info({
+      message: 'User is not signed in, redirecting to login',
+      context: { status },
+    });
+
+    return <Redirect href={'/login' as any} />;
+  }
+
+  // Show loading screen while app is initializing
+  if (!coreIsInitialized || coreIsInitializing || !config) {
+    logger.info({
+      message: 'App still initializing, showing loading screen',
+      context: {
+        coreIsInitializing,
+        coreIsInitialized,
+        hasConfig: !!config,
+      },
+    });
+
+    return (
+      <View style={styles.container}>
+        <View className="flex-1 items-center justify-center bg-white dark:bg-gray-900">
+          <ActivityIndicator size="large" color="#0066cc" />
+          <Text className="mt-4 text-lg text-gray-600 dark:text-gray-400">Loading...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  logger.info({
+    message: 'Rendering app layout',
+    context: {
+      status,
+      isLocked,
+      isFirstTime,
+      platform: Platform.OS,
+      userId: userId || 'null',
+      hasConfig: !!config,
+    },
+  });
+
+  // Web theme with dark mode support (matching panel header and button colors)
+  const webIsDark = webColorScheme === 'dark';
+  const webTheme = {
+    navBar: { backgroundColor: webIsDark ? '#1f2937' : '#f9fafb' }, // gray-800 / gray-50 (panel header colors)
+    navBarText: { color: webIsDark ? '#f9fafb' : '#030712' }, // gray-50 / gray-950
+    sidebar: {
+      backgroundColor: webIsDark ? '#030712' : '#f3f4f6', // gray-950 / gray-100
+      borderRightColor: webIsDark ? '#1f2937' : '#e5e7eb', // gray-800 / gray-200
+    },
+    sidebarFooter: {
+      borderTopColor: webIsDark ? '#1f2937' : '#e5e7eb',
+      backgroundColor: webIsDark ? '#111827' : '#ffffff', // gray-900 / white
+    },
+    closeButton: { backgroundColor: '#2563eb' }, // blue-600 (panel button color)
+    closeButtonText: { color: '#ffffff' },
+    mainContent: { backgroundColor: webIsDark ? '#030712' : '#f3f4f6' }, // gray-950 / gray-100
+  };
+
+  const content =
+    Platform.OS === 'web' ? (
+      <RNView style={styles.container} onStartShouldSetResponderCapture={sharedSession.onTouchCapture}>
+        {/* Top Navigation Bar */}
+        <RNView style={[layoutStyles.navBar, { paddingTop: insets.top }, webTheme.navBar]}>
+          <CreateDrawerMenuButton setIsOpen={setIsOpen} colorScheme={webColorScheme} />
+          <RNView style={layoutStyles.navBarTitle}>
+            <RNText style={[layoutStyles.navBarTitleText, webTheme.navBarText]}>{t('app.title', 'Resgrid Responder')}</RNText>
+          </RNView>
+          {isDispatchScreen ? <DashboardViewToggles inHeader /> : null}
+        </RNView>
+        <SharedSessionBar />
+        <AwaitingResourcesBanner />
+
+        <RNView style={{ flex: 1, flexDirection: 'row' }} ref={parentRef}>
+          {/* Sidebar - simple show/hide */}
+          {isOpen ? (
+            <RNView style={[layoutStyles.webSidebar, webTheme.sidebar]}>
+              <SideMenu onNavigate={handleNavigate} colorScheme={webColorScheme} />
+              <RNView style={[layoutStyles.sidebarFooter, webTheme.sidebarFooter]}>
+                <TouchableOpacity onPress={() => setIsOpen(false)} style={[layoutStyles.closeButton, webTheme.closeButton]}>
+                  <RNText style={[layoutStyles.closeButtonText, webTheme.closeButtonText]}>{t('menu.close', 'Close Menu')}</RNText>
+                </TouchableOpacity>
+              </RNView>
+            </RNView>
+          ) : null}
+
+          {/* Main content area */}
+          <RNView style={[layoutStyles.mainContent, webTheme.mainContent]}>
+            <Slot />
+          </RNView>
+        </RNView>
+        {/* Unit-available alerts for calls awaiting resources; they stay until acted on or closed. */}
+        <UnitAvailableAlertHost />
+      </RNView>
+    ) : (
+      <View style={styles.container} onStartShouldSetResponderCapture={sharedSession.onTouchCapture}>
+        {/* Top Navigation Bar */}
+        <View className="flex-row items-center justify-between bg-primary-600 px-4" style={{ paddingTop: insets.top }}>
+          <CreateDrawerMenuButton setIsOpen={setIsOpen} />
+          <View className="flex-1 items-center">
+            <Text className="text-lg font-semibold text-white">{t('app.title', 'Resgrid Responder')}</Text>
+          </View>
+          {isDispatchScreen ? <DashboardViewToggles inHeader onColoredBg /> : null}
+        </View>
+        <SharedSessionBar />
+        <AwaitingResourcesBanner />
+
+        <View className="flex-1" ref={parentRef}>
+          {/* Native drawer implementation */}
+          <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)}>
+            <DrawerBackdrop onPress={() => setIsOpen(false)} />
+            <DrawerContent className="w-4/5 max-w-xs bg-white p-0 dark:bg-gray-900">
+              <View className="flex-1">
+                <SideMenu onNavigate={handleNavigate} />
+              </View>
+              <DrawerFooter>
+                <Button onPress={() => setIsOpen(false)} className="w-full bg-primary-600">
+                  <ButtonText>Close</ButtonText>
+                </Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+
+          {/* Main content area */}
+          <View className="w-full flex-1">
+            <Slot />
+          </View>
+        </View>
+        {/* Unit-available alerts for calls awaiting resources; they stay until acted on or closed. */}
+        <UnitAvailableAlertHost />
+      </View>
+    );
+
+  // Recovery codes shown once after setting up an authenticator at sign-in, and the shared workstation lock screen over
+  // everything while the server says this session is locked (the same session resumes on unlock).
+  const sessionOverlays = (
+    <>
+      <RecoveryCodesModal />
+      <SharedSessionLockScreen />
+    </>
+  );
+
+  // On web, skip Novu integration as it may cause rendering issues
+  if (Platform.OS === 'web') {
+    logger.info({
+      message: 'Rendering app layout for web platform (Novu disabled)',
+    });
+    // The app's single Advanced Data Protection prompt: any screen triggers it through the store,
+    // so no screen carries a modal of its own and two prompts can never stack.
+    return (
+      <>
+        <StepUpPromptHost />
+        {content}
+        {sessionOverlays}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {userId && config && rights?.DepartmentCode ? (
+        // subscriberHash: issued by the server for this user's own subscriber; Novu refuses the session
+        // without it once HMAC is enforced. Absent from older servers, which is fine until then.
+        <NovuProvider
+          subscriberId={`${rights?.DepartmentCode}_User_${userId}`}
+          subscriberHash={rights?.NovuSubscriberHash ?? undefined}
+          applicationIdentifier={config.NovuApplicationId}
+          backendUrl={config.NovuBackendApiUrl}
+          socketUrl={config.NovuSocketUrl}
+        >
+          {/* NotificationInbox at the root level */}
+          <NotificationInbox isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
+          <StepUpPromptHost />
+          {content}
+        </NovuProvider>
+      ) : (
+        content
+      )}
+      {sessionOverlays}
+    </>
+  );
+}
+
+interface CreateDrawerMenuButtonProps {
+  setIsOpen: (isOpen: boolean) => void;
+  colorScheme?: 'light' | 'dark';
+}
+
+const CreateDrawerMenuButton = ({ setIsOpen, colorScheme }: CreateDrawerMenuButtonProps) => {
+  // Use React Native primitives on web to avoid infinite render loops from gluestack-ui/lucide
+  if (Platform.OS === 'web') {
+    const isDark = colorScheme === 'dark';
+    return (
+      <TouchableOpacity onPress={() => setIsOpen(true)} testID="drawer-menu-button" style={layoutStyles.menuButton}>
+        <RNText style={[layoutStyles.menuIcon, { color: isDark ? '#f9fafb' : '#030712' }]}>☰</RNText>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <Pressable
+      className="p-2"
+      onPress={() => {
+        setIsOpen(true);
+      }}
+      testID="drawer-menu-button"
+    >
+      <Menu size={24} color="white" />
+    </Pressable>
+  );
+};
+
+const CreateNotificationButton = ({
+  config,
+  setIsNotificationsOpen,
+  userId,
+  departmentCode,
+}: {
+  config: GetConfigResultData | null;
+  setIsNotificationsOpen: (isOpen: boolean) => void;
+  userId: string | null;
+  departmentCode: string | undefined;
+}) => {
+  if (!userId || !config || !config.NovuApplicationId || !config.NovuBackendApiUrl || !config.NovuSocketUrl || !departmentCode) {
+    return null;
+  }
+
+  return <NotificationButton onPress={() => setIsNotificationsOpen(true)} />;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+});
+
+const layoutStyles = StyleSheet.create({
+  navBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  navBarTitle: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  navBarTitleText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'white',
+    letterSpacing: 0.5,
+  },
+  menuButton: {
+    padding: 8,
+    borderRadius: 6,
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  webSidebar: {
+    width: 280,
+    borderRightWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  sidebarFooter: {
+    borderTopWidth: 1,
+    padding: 16,
+  },
+  mainContent: {
+    flex: 1,
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  closeButton: {
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+});

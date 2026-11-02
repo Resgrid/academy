@@ -1,0 +1,48 @@
+{
+  "kind": "actual_current_Core_source_contract_excerpts",
+  "files": [
+    {
+      "file": "Core/Resgrid.Model/Records/RmsRecordDefinitions.cs",
+      "source_sha256": "fa9504d78b0474ad76e40da2113707b55208086af217aaaa6611cdb8e37adeab",
+      "first_line": 57,
+      "last_line": 63,
+      "text": "\t/// <summary>Field classification (RMS plan section 5.9.2). Restricted gates on RecordRestricted_View; Protected is sealed under ADP once cataloged.</summary>\n\tpublic enum RmsFieldClassification\n\t{\n\t\tStandard = 0,\n\t\tRestricted = 1,\n\t\tProtected = 2\n\t}"
+    },
+    {
+      "file": "Core/Resgrid.Model/Records/RmsRecordDefinitions.cs",
+      "source_sha256": "fa9504d78b0474ad76e40da2113707b55208086af217aaaa6611cdb8e37adeab",
+      "first_line": 367,
+      "last_line": 378,
+      "text": "\tpublic class RecordFieldSchema\n\t{\n\t\tpublic string Key { get; set; }\n\t\tpublic string Label { get; set; }\n\t\tpublic string Help { get; set; }\n\t\tpublic RmsFieldType Type { get; set; }\n\t\t/// <summary>Required whenever visible (checked at finalize; drafts may be incomplete).</summary>\n\t\tpublic bool Required { get; set; }\n\t\tpublic bool RequiredToFinalize { get; set; }\n\t\tpublic RmsFieldClassification Classification { get; set; }\n\t\t[JsonProperty(Required = Newtonsoft.Json.Required.DisallowNull)]\n\t\tpublic List<RecordOptionSchema> Options { get; set; } = new List<RecordOptionSchema>();"
+    },
+    {
+      "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+      "source_sha256": "ef743169e47e0726a181353fb9af69341bb390764c4d95ef89e61725c0fcd28d",
+      "first_line": 145,
+      "last_line": 164,
+      "text": "\n\t\t\tawait EnsureRecordsUsableAsync(departmentId);\n\t\t\tif (!await _authorization.HasPermissionAsync(userId, departmentId, PermissionTypes.CreateRecord))\n\t\t\t\tthrow new UnauthorizedAccessException(\"Record creation is not authorized.\");\n\n\t\t\tvar scopedKey = string.IsNullOrWhiteSpace(input.IdempotencyKey) ? null\n\t\t\t\t: RecordSnapshotSerializer.Checksum(JsonConvert.SerializeObject(new { departmentId, userId, operation = \"CreateDraft\", key = input.IdempotencyKey.Trim() }));\n\t\t\tvar request = Newtonsoft.Json.Linq.JObject.FromObject(input);\n\t\t\trequest.Remove(nameof(RecordDraftInput.IdempotencyKey));\n\t\t\tvar requestChecksum = RecordSnapshotSerializer.Checksum(request.ToString(Formatting.None));\n\t\t\tif (scopedKey != null)\n\t\t\t{\n\t\t\t\tvar existing = await _records.GetByIdempotencyKeyAsync(departmentId, scopedKey);\n\t\t\t\tif (existing != null)\n\t\t\t\t\treturn await ReplayCreateAsync(departmentId, userId, existing, requestChecksum);\n\t\t\t}\n\n\t\t\tvar now = DateTime.UtcNow;\n\t\t\tvar recordId = ResolveClientRecordId(input.ClientRecordId);\n\t\t\tvar authorGroup = await _groups.GetGroupForUserAsync(userId, departmentId);"
+    },
+    {
+      "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+      "source_sha256": "ef743169e47e0726a181353fb9af69341bb390764c4d95ef89e61725c0fcd28d",
+      "first_line": 1809,
+      "last_line": 1817,
+      "text": "\t\tprivate static string ResolveClientRecordId(string clientRecordId)\n\t\t{\n\t\t\tif (string.IsNullOrWhiteSpace(clientRecordId))\n\t\t\t\treturn Guid.NewGuid().ToString();\n\t\t\tif (!Guid.TryParse(clientRecordId, out var parsed))\n\t\t\t\tthrow new ArgumentException(\"A client-supplied record id must be a GUID.\", nameof(clientRecordId));\n\t\t\treturn parsed.ToString();\n\t\t}\n"
+    },
+    {
+      "file": "Web/Resgrid.Web.Services/Helpers/RecordsRms1bApiMapper.cs",
+      "source_sha256": "3651f791535a8d225b01c328b75c4fe12482777cc652ef4a07df7f7c1cbd93f8",
+      "first_line": 21,
+      "last_line": 45,
+      "text": "\t\tpublic static RecordValuesData ToValues(RecordValueSet set, RecordDefinitionSchema schema, bool canViewRestricted, IRecordTypedValuesService typedValues = null)\n\t\t{\n\t\t\tif (set == null) return null;\n\t\t\tvar data = new RecordValuesData { DefinitionKey = set.DefinitionKey, DefinitionVersion = set.DefinitionVersion, WithheldFieldKeys = set.WithheldFieldKeys.ToList() };\n\t\t\tforeach (var section in set.Sections)\n\t\t\t{\n\t\t\t\tvar sectionData = new RecordValueSectionData { SectionKey = section.SectionKey, Label = section.Label, Repeating = section.Repeating };\n\t\t\t\tforeach (var row in section.Rows)\n\t\t\t\t{\n\t\t\t\t\tvar rowData = new RecordValueRowData { RowKey = row.RowKey, Ordinal = row.Ordinal };\n\t\t\t\t\tforeach (var cell in row.Cells)\n\t\t\t\t\t{\n\t\t\t\t\t\tvar withheld = cell.Withheld || cell.Classification == RmsFieldClassification.Restricted && !canViewRestricted;\n\t\t\t\t\t\tif (withheld && !data.WithheldFieldKeys.Contains(cell.FieldKey)) data.WithheldFieldKeys.Add(cell.FieldKey);\n\t\t\t\t\t\trowData.Cells.Add(new RecordValueCellData\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tFieldKey = cell.FieldKey, Label = cell.Label, Type = cell.Type.ToString(), Classification = cell.Classification.ToString(), Withheld = withheld,\n\t\t\t\t\t\t\tDisplay = withheld ? (cell.Display == null ? null : RecordTypedValuesService.Redacted) : cell.Display,\n\t\t\t\t\t\t\tValue = withheld ? null : cell.Value, Values = withheld ? null : cell.Values, ReferenceType = withheld ? null : cell.ReferenceType, ReferenceId = withheld ? null : cell.ReferenceId,\n\t\t\t\t\t\t\tUnitCode = cell.UnitCode, CurrencyCode = cell.CurrencyCode, OffsetMinutes = cell.OffsetMinutes, Number = withheld ? null : cell.Number, CanonicalNumber = withheld ? null : cell.CanonicalNumber, CanonicalUnitCode = cell.CanonicalUnitCode\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t\tsectionData.Rows.Add(rowData);\n\t\t\t\t}\n\t\t\t\tdata.Sections.Add(sectionData);"
+    },
+    {
+      "file": "Web/Resgrid.Web.Services/Models/v4/Records/RecordsRms1bApiModels.cs",
+      "source_sha256": "40e56c43646392a515d45de65f890ae4626a60d88d2c1141aac6b928aa568bf6",
+      "first_line": 28,
+      "last_line": 81,
+      "text": "\tpublic class RecordValueCellData\n\t{\n\t\tpublic string FieldKey { get; set; }\n\t\tpublic string Label { get; set; }\n\t\tpublic string Type { get; set; }\n\t\tpublic string Classification { get; set; }\n\t\tpublic string Display { get; set; }\n\t\tpublic string Value { get; set; }\n\t\tpublic List<string> Values { get; set; }\n\t\tpublic string ReferenceType { get; set; }\n\t\tpublic string ReferenceId { get; set; }\n\t\tpublic string UnitCode { get; set; }\n\t\tpublic string CurrencyCode { get; set; }\n\t\tpublic int? OffsetMinutes { get; set; }\n\t\tpublic decimal? Number { get; set; }\n\t\tpublic decimal? CanonicalNumber { get; set; }\n\t\tpublic string CanonicalUnitCode { get; set; }\n\t\tpublic bool Withheld { get; set; }\n\t}\n\n\tpublic class RecordValueRowData\n\t{\n\t\tpublic string RowKey { get; set; }\n\t\tpublic int Ordinal { get; set; }\n\t\tpublic List<RecordValueCellData> Cells { get; set; } = new List<RecordValueCellData>();\n\t}\n\n\tpublic class RecordValueSectionData\n\t{\n\t\tpublic string SectionKey { get; set; }\n\t\tpublic string Label { get; set; }\n\t\tpublic bool Repeating { get; set; }\n\t\tpublic List<RecordValueRowData> Rows { get; set; } = new List<RecordValueRowData>();\n\t}\n\n\tpublic class RecordRowRulesData\n\t{\n\t\tpublic string SectionKey { get; set; }\n\t\tpublic string RowKey { get; set; }\n\t\tpublic List<string> HiddenFieldKeys { get; set; } = new List<string>();\n\t\tpublic List<string> RequiredFieldKeys { get; set; } = new List<string>();\n\t}\n\n\tpublic class RecordValuesData\n\t{\n\t\tpublic string DefinitionKey { get; set; }\n\t\tpublic int DefinitionVersion { get; set; }\n\t\tpublic List<RecordValueSectionData> Sections { get; set; } = new List<RecordValueSectionData>();\n\t\tpublic List<string> WithheldFieldKeys { get; set; } = new List<string>();\n\t\tpublic List<string> HiddenSectionKeys { get; set; } = new List<string>();\n\t\tpublic List<string> HiddenFieldKeys { get; set; } = new List<string>();\n\t\tpublic List<string> RequiredFieldKeys { get; set; } = new List<string>();\n\t\t/// <summary>Per-row rule outcomes for repeating sections (a field rule may look at its own row).</summary>\n\t\tpublic List<RecordRowRulesData> RowRules { get; set; } = new List<RecordRowRulesData>();"
+    }
+  ],
+  "limits": "Read-only source contracts, not live API responses or a security-policy change."
+}

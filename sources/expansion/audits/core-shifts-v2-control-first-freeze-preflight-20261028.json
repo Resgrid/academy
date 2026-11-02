@@ -1,0 +1,621 @@
+{
+  "kind": "recurring_shifts_v2_control_first_source_freeze_preflight",
+  "created_at": "2026-10-28T22:29:09.288782+00:00",
+  "source_only": true,
+  "parent_requested_exact_control_first_spans": true,
+  "scenes": 12,
+  "spoken_words": 996,
+  "spoken_paragraphs_changed": 0,
+  "reviewed_actual_sources": 24,
+  "all_six_sectors_retained": true,
+  "narrated_source_sha256": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4",
+  "authoring_sha256": "740d95ed47379c7945a095006e325945fa5028c9bac8e61a28cbd69272aa6447",
+  "source_hash_manifest": {
+    "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/source-hashes.json",
+    "sha256": "78587e801bdbb4fe6816511ab7ae6efad635e06926ef2ea72463582831f1105e"
+  },
+  "helper": {
+    "file": "production/author_core_shifts_candidate_20261028_v2.py",
+    "sha256": "c7768744f7a89ca0a6e6facd2be2657a3242368e939921ffd0250044ab2dcadb"
+  },
+  "source_span_corrections": [
+    {
+      "scene_id": "assigned-start",
+      "before_capture_refs": [
+        "002-assigned-start-prepared"
+      ],
+      "after_capture_refs": [
+        "001-shifts-baseline",
+        "002-assigned-start-prepared"
+      ],
+      "added_required_labels": [
+        "Add Recurring Group Shift",
+        "New Shift"
+      ],
+      "reason": "Show actual001 Add Recurring Group Shift launcher before prepared002 New Shift.",
+      "narration_unchanged": true
+    },
+    {
+      "scene_id": "verify",
+      "before_capture_refs": [
+        "009-assigned-details-reopened",
+        "010-assigned-member-reopened",
+        "014-assigned-day-saved",
+        "015-assigned-roster-saved"
+      ],
+      "after_capture_refs": [
+        "008-assigned-created-list",
+        "009-assigned-details-reopened",
+        "010-assigned-member-reopened",
+        "013-assigned-calendar-date-context",
+        "014-assigned-day-saved",
+        "015-assigned-roster-saved"
+      ],
+      "added_required_labels": [
+        "Edit Details",
+        "Calendar",
+        "November 2026",
+        "04",
+        "Upcoming",
+        "Assigned"
+      ],
+      "reason": "Actual008 Edit Details launcher precedes reopened009/010;013 shared November calendar precedes dated014/015. The calendar tile is truncated; full row above identifies the practice, and the dated detail supplies full identity.",
+      "narration_unchanged": true
+    },
+    {
+      "scene_id": "policy",
+      "before_capture_refs": [
+        "016-multiple-group-policy-readonly",
+        "039-approvals-current-empty"
+      ],
+      "after_capture_refs": [
+        "016-multiple-group-policy-readonly",
+        "001-shifts-baseline",
+        "039-approvals-current-empty"
+      ],
+      "added_required_labels": [
+        "Approvals"
+      ],
+      "reason": "Read-only016 policy, then actual001 Approvals launcher before039 empty queues. No approval action is demonstrated.",
+      "narration_unchanged": true
+    }
+  ],
+  "historical_v1_raw40_static_and_training_preserved": true,
+  "raw_image_dom_pairs_rehashed": 40,
+  "protected_inputs": [
+    {
+      "file": "expansion/plans/core-static-workshifts-candidate-20261028/candidate.json",
+      "sha256": "ddaf997d875f6f9ef10f007003d123b51fe72d48315e373afa3a24755c88b499"
+    },
+    {
+      "file": "expansion/plans/core-training-administration-take-01-source-correspondence-20261028/correspondence.scaffold.json",
+      "sha256": "cdb70614101003f282af1b259737d9633b5a640ff6f4e1367c64205cf1ae5df2"
+    }
+  ],
+  "validation": [
+    "Default/check verifies all pinned inputs and all24 actual JPEG/DOM hashes and dimensions.",
+    "All12 scenes preserve exact spoken paragraphs and have complete actual visible-label coverage.",
+    "Assigned launcher001 precedes002; saved008 Edit Details precedes009/010; actual013 calendar precedes014/015.",
+    "Read-only policy016 precedes001 Approvals launcher and039 actual empty queues.",
+    "Signup result022 precedes023/024and026 unchanged.",
+    "Write-source then read-only check reproduced exact10 output payloads; all existing v1 outputs and raw manifest retain pinned identities."
+  ],
+  "no_audio_timing_canonical_readiness_site_target_or_application_operations": true,
+  "privacy": {
+    "passed": true,
+    "files_scanned": 100,
+    "bytes_scanned": 3905559,
+    "known_private_values": 17,
+    "findings": [],
+    "limits": "Exact-value and pattern checks supplement prior original-size pixel/fullDOM reviews; they cannot identify every possible credential."
+  },
+  "limits": [
+    "Specific View Calendar widget failed; only actual shared calendar and dated details are used.",
+    "Actual013 calendar tile text is truncated. Its November2026 date and04entry identify the click context; full assigned row above and014/015 supply full identity.",
+    "No executed member signup, approval/denial, trade or attendance; empty queues are not completed approval.",
+    "Fully staffed reflects one configured Officer slot, not physical arrival, qualification or live unit crew assignment.",
+    "Static workshift editor discrepancies remain incomplete, unchanged and outside this narrated recurring-shift freeze."
+  ],
+  "inventory": [
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/001-shifts-baseline.dom.txt",
+      "sha256": "4c161ba606fded51118849033ffa499a88ddf3f78e60dc00ae1f6af588dc3038",
+      "bytes": 8804
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/001-shifts-baseline.jpg",
+      "sha256": "92664a09496babda2df8b8c2ab8226bc59c43b83e1e1f042ba8521759b956a98",
+      "bytes": 85063
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/002-assigned-start-prepared.dom.txt",
+      "sha256": "6cef27f1615e0e77cd49f9a60eeafff57bf85b3d6979059eaf18b72aa0b290b2",
+      "bytes": 4389
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/002-assigned-start-prepared.jpg",
+      "sha256": "b290207f3df61eb8690e31e647a399ae05ffd5062870a873b4a8bebc5a3a8ef1",
+      "bytes": 85356
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/003-assigned-schedule-prepared.dom.txt",
+      "sha256": "e0d31eb86ad498adfca5d60d855c4d7b9ac149f2aaba250f3fc0b294098d1316",
+      "bytes": 36601
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/003-assigned-schedule-prepared.jpg",
+      "sha256": "2ae2465b9caf014e8f64d07a9db7bdf7ef5101718283ed82661dcf8b5564abb8",
+      "bytes": 101466
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/004-assigned-schedule-corrected.dom.txt",
+      "sha256": "7d511ed927acaacfb537e6a23a572aebf935d85e88db74b9c509512933b19d25",
+      "bytes": 34960
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/004-assigned-schedule-corrected.jpg",
+      "sha256": "3187d0ed672f72dc0cb942c87a923a159f8c671b64fd385d360b3b77880dfd27",
+      "bytes": 101476
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/005-assigned-group-role-prepared.dom.txt",
+      "sha256": "2a612ec6a1bfdb823270598b5cc36f43b69666c25b3f3efb3a0e02e3b63427a5",
+      "bytes": 5206
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/005-assigned-group-role-prepared.jpg",
+      "sha256": "84152cf078e5b514c96a4d24ae3963d3e9452539f091fc58f1fa3f57fc1dd883",
+      "bytes": 72450
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/006-assigned-personnel-prepared.dom.txt",
+      "sha256": "9548271a79ebb0fa502edf8aeb3c4c68d8508c615bc3f11554ca71a842a73ebb",
+      "bytes": 4512
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/006-assigned-personnel-prepared.jpg",
+      "sha256": "179bad38f4fc984e5c6ea91c61aa17d47676a70110b6262f96d5f168e610c9fd",
+      "bytes": 78001
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/007-assigned-finish-review.dom.txt",
+      "sha256": "6445e05b4860151326280f9ba584befb824338c256d9753aaa5a92cc8e6d53f7",
+      "bytes": 3457
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/007-assigned-finish-review.jpg",
+      "sha256": "b2019432d118db68cf6da6ee74b6d153d07eee8be09036abe8d60055aa3a0db0",
+      "bytes": 49128
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/008-assigned-created-list.dom.txt",
+      "sha256": "e625d9f6f69196c4dbbb501a25a567829a25f890413b641ae643735585c932f0",
+      "bytes": 9548
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/008-assigned-created-list.jpg",
+      "sha256": "eb6fc7b500a2ebe6068eb247fc142d919342142aa9afa1a9e198c70cdc96a79d",
+      "bytes": 89069
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/009-assigned-details-reopened.dom.txt",
+      "sha256": "4a945d5073158f50d5742993db9afab5c80ad231ff023467beed397d90e3e41b",
+      "bytes": 4853
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/009-assigned-details-reopened.jpg",
+      "sha256": "81927a07de18320a72c4c67ad9fae84242b14f4075134f241d881ade31b731f7",
+      "bytes": 84405
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/010-assigned-member-reopened.dom.txt",
+      "sha256": "4a945d5073158f50d5742993db9afab5c80ad231ff023467beed397d90e3e41b",
+      "bytes": 4853
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/010-assigned-member-reopened.jpg",
+      "sha256": "5f7a96ff9b72caa88f0b04990fbfdd6991b027d2aeb6c9f9c848c6c1655143df",
+      "bytes": 77779
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/011-assigned-calendar-empty-diagnostic.dom.txt",
+      "sha256": "caad3d35f0fa307609a015f69f928099b113abef2b5382f6b7b5165c0e9bff59",
+      "bytes": 3003
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/011-assigned-calendar-empty-diagnostic.jpg",
+      "sha256": "dab6088ebb3a5adcfbdab2c733eb021f698e552eb75f9907f231c2735b8ae0b2",
+      "bytes": 43641
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/012-assigned-shared-november-calendar.dom.txt",
+      "sha256": "f91dd873272a6a9ec4ed54e2d1500665b0ad2288ea462c714475d879a42aab4c",
+      "bytes": 8688
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/012-assigned-shared-november-calendar.jpg",
+      "sha256": "1595f076bf20f378ed91af0791b1f795bf61d06994a90c32438f1beff487d541",
+      "bytes": 46463
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/013-assigned-calendar-date-context.dom.txt",
+      "sha256": "f91dd873272a6a9ec4ed54e2d1500665b0ad2288ea462c714475d879a42aab4c",
+      "bytes": 8688
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/013-assigned-calendar-date-context.jpg",
+      "sha256": "0290f058f3c154086bca9164bdd8c02527c2f438296d52619f065df007979f69",
+      "bytes": 80193
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/014-assigned-day-saved.dom.txt",
+      "sha256": "48137e26e04fb86e41ae24ea471803e118ea5710762ccba8464cfdf678621c71",
+      "bytes": 4720
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/014-assigned-day-saved.jpg",
+      "sha256": "0750ec62b83c2d5eb52b01cf49f47f2b6b22aaa0aeda066b218ddde559f6448c",
+      "bytes": 84978
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/015-assigned-roster-saved.dom.txt",
+      "sha256": "48137e26e04fb86e41ae24ea471803e118ea5710762ccba8464cfdf678621c71",
+      "bytes": 4720
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/015-assigned-roster-saved.jpg",
+      "sha256": "b06f14b160015235ac8f5e1c7c01505856da8aac45da495d0b6128da977d5508",
+      "bytes": 85203
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/016-multiple-group-policy-readonly.dom.txt",
+      "sha256": "9c7b415df829b105b54487503af593751ba7aa7b075a229ef756390fd46ba396",
+      "bytes": 3265
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/016-multiple-group-policy-readonly.jpg",
+      "sha256": "84445e1c4c460b7fb4182f178a4fd829ae37fe2a96c3df7c6d8dcc7da21700a8",
+      "bytes": 46862
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/017-signup-approval-start.dom.txt",
+      "sha256": "203156432f5cde6a53a5d5b96e4d9e0d1a6951cea8392b5c02a2d471ec81bb8f",
+      "bytes": 4399
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/017-signup-approval-start.jpg",
+      "sha256": "7004a264f602be507c338eea92d9943fe955c579b6c59a7fd3b5f75b1a3bab3c",
+      "bytes": 85139
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/018-signup-dates-prepared.dom.txt",
+      "sha256": "7bd7a7156dced8464d6b143c3d8168845a7d9bb654ff47cedb4d417760e39b12",
+      "bytes": 34951
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/018-signup-dates-prepared.jpg",
+      "sha256": "70210451d9962ab17902ff52d44dfb92e0408e1dec49faba33c3c33633fee1c2",
+      "bytes": 119744
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/019-signup-group-role-prepared.dom.txt",
+      "sha256": "2a612ec6a1bfdb823270598b5cc36f43b69666c25b3f3efb3a0e02e3b63427a5",
+      "bytes": 5206
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/019-signup-group-role-prepared.jpg",
+      "sha256": "84152cf078e5b514c96a4d24ae3963d3e9452539f091fc58f1fa3f57fc1dd883",
+      "bytes": 72450
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/020-signup-no-preassigned-members.dom.txt",
+      "sha256": "59e06f27394811d57f98058b4a6554df48ecce84642ca7fc745b8a82bf4a3513",
+      "bytes": 4414
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/020-signup-no-preassigned-members.jpg",
+      "sha256": "38eda3fa2398588435eb9f30ea1879932450699e8f83af450602bc9528f29730",
+      "bytes": 75133
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/021-signup-finish-before-save.dom.txt",
+      "sha256": "6445e05b4860151326280f9ba584befb824338c256d9753aaa5a92cc8e6d53f7",
+      "bytes": 3457
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/021-signup-finish-before-save.jpg",
+      "sha256": "b2019432d118db68cf6da6ee74b6d153d07eee8be09036abe8d60055aa3a0db0",
+      "bytes": 49128
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/022-signup-created-approval-row.dom.txt",
+      "sha256": "6d77ab1b4ef6ec3ae7a3de1a641f34b468971f97d7482e5a394ce58bdaa53806",
+      "bytes": 10209
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/022-signup-created-approval-row.jpg",
+      "sha256": "984278a2b6c5971f0286f6bb1d0686151dfa5aebca07536a64c40e481c247bef",
+      "bytes": 93885
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/023-signup-details-reopened.dom.txt",
+      "sha256": "bb043a6c54ef09f19c00411de4e9f87b2cb92b3921efaa32c907769fa228f4ba",
+      "bytes": 3920
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/023-signup-details-reopened.jpg",
+      "sha256": "85cefbcee2e0c1f26b0330e92ae50f9c13b42c3aa63f5149574210115690bb3b",
+      "bytes": 76227
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/024-signup-dates-reopened.dom.txt",
+      "sha256": "3e7e7ec579965e3a274aca170d4cd1c12be4af886e361e1cbccd10965bb489aa",
+      "bytes": 34267
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/024-signup-dates-reopened.jpg",
+      "sha256": "c2289f616303f6d0f2ae614dc343582bb9526a7b844df6a0a0f1e8f68e40de4f",
+      "bytes": 128502
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/025-signup-day-empty-saved.dom.txt",
+      "sha256": "dd616aaba221464de58532c8ddcffeffb1a54bb3fd499e56bc71233b6b8e3d69",
+      "bytes": 4430
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/025-signup-day-empty-saved.jpg",
+      "sha256": "38f48a9860ae429c4bbc68989ea68d077f041b6fa2ba66d04e56c2187c4d4dd4",
+      "bytes": 63179
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/026-signup-day-stable-empty.dom.txt",
+      "sha256": "dd616aaba221464de58532c8ddcffeffb1a54bb3fd499e56bc71233b6b8e3d69",
+      "bytes": 4430
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/026-signup-day-stable-empty.jpg",
+      "sha256": "a6448d1b8ebe18a44f87be60b076f735a84390283197ee0c6e260bec8914e0fa",
+      "bytes": 78221
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/027-static-disposable-unit-prepared.dom.txt",
+      "sha256": "5319ea91e9fea7f97696c97d5ce9a9a54497a376c5120f45bf9d4c86f161e2e9",
+      "bytes": 3734
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/027-static-disposable-unit-prepared.jpg",
+      "sha256": "87e5f1dc31468c0cc55772f38c15387c5f32d6213a0e00b5f7fa014f2bc14c72",
+      "bytes": 54968
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/028-static-unit-created.dom.txt",
+      "sha256": "39a82ec5d8aa0cea3e03a2d1f5af125f3ce8a0a536c22d873b64453dfad2fbfd",
+      "bytes": 5110
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/028-static-unit-created.jpg",
+      "sha256": "1f9bd0107b434274454a61ad043b5e99f544bb1807972f6842743af58d92f65d",
+      "bytes": 60239
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/029-static-unit-reopened.dom.txt",
+      "sha256": "2f9c69011ec0a054c3789e3b350846660fea569ec3017ae3049195cd16ebfd3d",
+      "bytes": 3983
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/029-static-unit-reopened.jpg",
+      "sha256": "a5895278ca024e8bfec4d48cfa6c5175d7778eb2fba657250f041137e10912f1",
+      "bytes": 55286
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/030-static-shift-prepared-upper.dom.txt",
+      "sha256": "44c31dc39af3fde0c7dd605801c995f1f507eea6bf3d426e846b637104513343",
+      "bytes": 4289
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/030-static-shift-prepared-upper.jpg",
+      "sha256": "de715c67c8a52e6a68815c6052ece3c86da8e87f2ab796f283cced3e132a0b8c",
+      "bytes": 63686
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/031-static-window-and-own-unit-prepared.dom.txt",
+      "sha256": "44c31dc39af3fde0c7dd605801c995f1f507eea6bf3d426e846b637104513343",
+      "bytes": 4289
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/031-static-window-and-own-unit-prepared.jpg",
+      "sha256": "6f982b880ffb86539e590ad298bcc33d035395d61573647964ec7a0e6c96aa3c",
+      "bytes": 63067
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/032-static-own-unit-selected.dom.txt",
+      "sha256": "3f48eac98806f25706d49b9e1ece82a4bb3c822b830724405e7c8d86570011cb",
+      "bytes": 4494
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/032-static-own-unit-selected.jpg",
+      "sha256": "a03402a5190f3a2fbe09b50993a4fc7f01b6148e94674c33c795168e574c1806",
+      "bytes": 65829
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/033-static-name-description-prepared.dom.txt",
+      "sha256": "3f48eac98806f25706d49b9e1ece82a4bb3c822b830724405e7c8d86570011cb",
+      "bytes": 4494
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/033-static-name-description-prepared.jpg",
+      "sha256": "ec5b19650067dcdf5821698eeb5be3f045d7c78bc4f66ffaf979da4ac8af95b6",
+      "bytes": 62794
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/034-static-readable-name-prepared.dom.txt",
+      "sha256": "388630735a711dd83bd5be66a88ed86215ae49efdcc497c7ab2dd310118faf21",
+      "bytes": 4473
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/034-static-readable-name-prepared.jpg",
+      "sha256": "944874d6031723a40cf464d3d9ce77184bba24f4ed93baa19e22af0136fcc27f",
+      "bytes": 62518
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/035-static-final-window-before-create.dom.txt",
+      "sha256": "388630735a711dd83bd5be66a88ed86215ae49efdcc497c7ab2dd310118faf21",
+      "bytes": 4473
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/035-static-final-window-before-create.jpg",
+      "sha256": "11e4bcea824f9eccf5583d574a9c7626ce1a978bddc1e36e6aedebd9fb5dd353",
+      "bytes": 61873
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/036-static-day-saved.dom.txt",
+      "sha256": "fe4dc3e3ee15088150ee9b0d791ba18fa05ed939496ed63921e467ecab6d9462",
+      "bytes": 3756
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/036-static-day-saved.jpg",
+      "sha256": "956858531ac1c56b5e21c986cdddd3e547a51cf43e332d6023d8a23cb0a6dd1a",
+      "bytes": 61945
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/037-static-edit-readback-upper.dom.txt",
+      "sha256": "c77bd9f829dccf77f5bc149cf0dd44415fa4fe8df8ab865423661a5d2ce0f098",
+      "bytes": 4439
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/037-static-edit-readback-upper.jpg",
+      "sha256": "5338f443635d160c45ad9b8073db33fef018526efd62c0f564bb82b4794d7ef5",
+      "bytes": 61106
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/038-static-edit-discrepancy-warning.dom.txt",
+      "sha256": "c77bd9f829dccf77f5bc149cf0dd44415fa4fe8df8ab865423661a5d2ce0f098",
+      "bytes": 4439
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/038-static-edit-discrepancy-warning.jpg",
+      "sha256": "5e4e062920e144bf69f85a0ee44a461d033eda7d6c8db13e7544f3d80f2be73f",
+      "bytes": 65649
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/039-approvals-current-empty.dom.txt",
+      "sha256": "314335ebc3ae0cd31ad64543ed0fe32b9d457e43f4b7953a2f061cf4e1af0955",
+      "bytes": 3394
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/039-approvals-current-empty.jpg",
+      "sha256": "af2ff7dcdf15bb41778f261a576f273ddbb79ca51411657667ee5ab711db5a25",
+      "bytes": 53651
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/040-current-on-duty-readonly.dom.txt",
+      "sha256": "32cce6b3dcdd562b840eedc65bc0e176cbaf323288552f6841c1acb7a4e9e154",
+      "bytes": 4307
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/040-current-on-duty-readonly.jpg",
+      "sha256": "38bceb72531c1225515cc3aafb7b1d3495e7c7bde571bc56012d7df85f99c03e",
+      "bytes": 61310
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/actions.json",
+      "sha256": "d102f7aad238b30df55e1c1a8241e8b411c13dcdfb04e9c5a2709cee6053d300",
+      "bytes": 8077
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/manifest.json",
+      "sha256": "b5ee334f8af8575525ec5141c4c63095c5741372ab60c9222058c6ec988bb502",
+      "bytes": 174407
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/provenance.json",
+      "sha256": "53dd96676e70cecab55eae5e3018b5750db4787ecfb60d02a4b2fb15fcb85e8c",
+      "bytes": 1173
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028-reviewed/manifest.json",
+      "sha256": "97d1415642f327a05648b4bab5bacec9b4405c59b2d5da1b00bc6c121f46200c",
+      "bytes": 121305
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/candidate.json",
+      "sha256": "44ce9754ff576afbef1322e01018bb6a24aab261e8bd394b5920be1f3891465b",
+      "bytes": 23761
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f",
+      "bytes": 6266
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/screen-sequence.json",
+      "sha256": "5c15bfc0ab92438f181e8a5deba267a14cc2a0885c3309e8912ff54813c02b4c",
+      "bytes": 13033
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-evidence.json",
+      "sha256": "830eb757b05b5cc29a050eff25fc2edf4299b68cf92e96c6e2d7957744b5f7ed",
+      "bytes": 8658
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028-v2/candidate.json",
+      "sha256": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4",
+      "bytes": 24735
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028-v2/captures.reviewed.json",
+      "sha256": "bc0f4791680591af2eaceb92e56072b026b41f9566a67e16444740fd7908d3bb",
+      "bytes": 84229
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028-v2/narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f",
+      "bytes": 6266
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028-v2/revision.json",
+      "sha256": "e5d0113bf138ab4591d86a292b06e5e42513662e933edede40380abbf3dd9535",
+      "bytes": 3171
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028-v2/screen-sequence.json",
+      "sha256": "3235f8f614d206f509a63e000e0165fa2d80e9bd7555bf10a95053c94402d099",
+      "bytes": 19125
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/core-shifts-administration.captures.reviewed.json",
+      "sha256": "bc0f4791680591af2eaceb92e56072b026b41f9566a67e16444740fd7908d3bb",
+      "bytes": 84229
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/core-shifts-administration.narrated-source.json",
+      "sha256": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4",
+      "bytes": 24735
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/core-shifts-administration.screen-sequence.json",
+      "sha256": "3235f8f614d206f509a63e000e0165fa2d80e9bd7555bf10a95053c94402d099",
+      "bytes": 19125
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f",
+      "bytes": 6266
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/source-hashes.json",
+      "sha256": "78587e801bdbb4fe6816511ab7ae6efad635e06926ef2ea72463582831f1105e",
+      "bytes": 5602
+    },
+    {
+      "file": "production/author_core_shifts_candidate_20261028_v2.py",
+      "sha256": "c7768744f7a89ca0a6e6facd2be2657a3242368e939921ffd0250044ab2dcadb",
+      "bytes": 10212
+    },
+    {
+      "file": "production/author_core_shifts_candidates_20261028.py",
+      "sha256": "78bf5f273ac8c4dbae5c0ad237c9664728b0bca50abbed374d34be42d1d3dc89",
+      "bytes": 34498
+    }
+  ]
+}

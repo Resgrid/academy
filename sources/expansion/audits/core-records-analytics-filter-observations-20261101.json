@@ -1,0 +1,46 @@
+{
+  "kind": "Actual read-only Records analytics exercise",
+  "reviewer": "Codex /root",
+  "source_file": "Core/Resgrid.Services/Records/RecordsAnalyticsService.cs",
+  "source_sha256": "0c7eb66394e4ccde43507ffb673b3fb61e478d2a490d776b51bbfda68cf25c89",
+  "source_methods": [
+    "LoadAsync",
+    "GetExecutiveSummaryAsync",
+    "KpisAsync"
+  ],
+  "actual_results": [
+    {
+      "definition": "All definitions",
+      "group": "All station groups",
+      "records_read": 4,
+      "finalized": 4,
+      "training_hours": 0.5,
+      "amendments": 1
+    },
+    {
+      "definition": "Training",
+      "group": "All station groups",
+      "records_read": 2,
+      "finalized": 2,
+      "training_hours": 0.5,
+      "amendments": 1
+    },
+    {
+      "definition": "Training",
+      "group": "Engine 51",
+      "records_read": 0,
+      "finalized": 0,
+      "training_hours": 0,
+      "amendments": 1
+    }
+  ],
+  "metric_scope_finding": "For the full-department administrator, amendment/void transitions are queried for department/time window; these transition counts do not narrow with the selected definition/group. Open drafts/awaiting review are current visible-queue counts rather than finalized dataset counts. No filter scopes are inferred identical.",
+  "filters_restored": {
+    "definition": "All definitions",
+    "group": "All station groups",
+    "records_read": 4
+  },
+  "app_data_mutations": 0,
+  "source_patches": 0,
+  "remaining": "Prepare exact narration and caption correspondence; actual generated speech, genuine hearing and encoded/video qualification still required."
+}

@@ -1,0 +1,74 @@
+{
+  "assessed_at": "2026-10-27T16:41:19.356167+00:00",
+  "decision": "No next Responder freeze. R04 preserves real operational gaps; R02 still has record-context/draft/connector gaps.",
+  "r04": {
+    "lesson_sha256": "bf1188a4227386744f8438ae5ee13f872b5ba641d5ecc2112040bbdd0a5a14e8",
+    "scenes": 14,
+    "distinct_retained_capture_refs": 68,
+    "all_source_asset_checks_passed": true,
+    "hard_gap_scenes": [
+      "03-trade-a-shift-with-a-clear-agreement",
+      "12-use-maps-and-settings-for-field-awareness"
+    ],
+    "metadata_only_gap": "191 visibly has On hold but its old literal metadata omits that selected value; no new image is needed for this correction.",
+    "prior_declared_labels_warning": "Every old required label had a union match. That did not establish readable POI input, the unopened filter sheet or missing trade lifecycle states.",
+    "plan": "sources/expansion/plans/app-responder-04-readiness-capture-plan.json",
+    "source_reconciliation": {
+      "narration_scene_indices": [
+        2,
+        10,
+        11
+      ],
+      "all_other_scenes_unchanged": true,
+      "map_blank_claim_replaced_with_actual196_197": true,
+      "assignment_acceptance_pending_claim_resolved_by190_193": true,
+      "trade_lifecycle_requirement_preserved": true,
+      "poi_search_filter_requirement_preserved": true
+    }
+  },
+  "r02_remaining_hard_groups": [
+    {
+      "scene_id": "11-start-a-call-linked-field-record",
+      "required": [
+        "Open call-context New Record only if server catalog offers it; show definition/version and actual form labels.",
+        "Use a fictional incident record draft: distinguish SupportsPrefill context, ordinary required fields and finalize-only requirements.",
+        "Use Save and send only through normal UI, then capture returned Draft/DraftReference. Show Keep on this device enabled or disabled according to the definition without claiming durable browser offline behavior."
+      ]
+    },
+    {
+      "scene_id": "12-review-drafts-attachments-and-final-states",
+      "required": [
+        "Open a genuinely server-saved fictional Draft record, capture Drafts/Returned to you list and actual detail identifier/state.",
+        "Show Save, allowed attachment controls and conditional Submit for review/Finalize with unchecked attestation. Do not attest, finalize or claim a review outcome.",
+        "If an actual permitted upload is performed later, verify attachment server state and metadata; do not infer it from a picker or progress label."
+      ]
+    },
+    {
+      "scene_id": "13-distinguish-external-orders-and-feeds",
+      "required": [
+        "Open Records Deployments and External connectors read-only, capture actual empty/readiness/authority/run-history messages.",
+        "If a fictional order exists, inspect its fills/reconciliation values only; do not press Read feed now or change credentials/reconciliation."
+      ]
+    }
+  ],
+  "review_scope": "Original retained images were inspected only for listed priority fields; all referenced asset hashes/provenance were checked. Full new per-cue rendered-frame and playback QA is unperformed, so no lesson is marked ready.",
+  "frozen_responder01_03_preserved": {
+    "sources/expansion/lessons/app-responder-01-orientation.json": "e72633e73dca80a9be5fe3ee20fdf2a22256eb6a6a1cd7e72172889ed4985559",
+    "sources/expansion/lessons/app-responder-03-communications.json": "039087158514991fe154052e0d163e03708104d889e7945c205677ca6781bc1c"
+  },
+  "all_eight_lesson_words": 6473,
+  "no_new_audio_cues_media": true,
+  "no_chrome_or_db_hidden_store": true,
+  "coverage_not_removed_to_force_completion": true,
+  "source_screenshot_manifest_unchanged": true,
+  "privacy_scan": {
+    "scanner": "scripts/audit_public_repo.py",
+    "scanner_sha256": "ad7bc86f7f340c1cbd43657815a6ff6279cf16a3d8b17215f697d6f452a53ed6",
+    "method": "Actual unchanged scan_stream",
+    "files": 4,
+    "known_private_values_checked": 17,
+    "findings": [],
+    "passed": true,
+    "no_values_printed": true
+  }
+}

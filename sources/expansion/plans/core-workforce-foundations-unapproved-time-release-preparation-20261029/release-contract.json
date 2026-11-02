@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "kind": "Prepared Workforce release recipes; root execution/review pending",
+  "new_canonical_absent": true,
+  "held_canonical_baseline": {
+    "file": "expansion/plans/core-workforce-foundations-unapproved-time-release-preparation-20261029/existing-canonical-hashes.json",
+    "sha256": "698e6fad9be610e35ce617aad514137b8efd93df290c75e7f6db8fc6fb064bea",
+    "count": 40
+  },
+  "recipes": [
+    {
+      "file": "production/qualify_core_workforce_foundations_take_01.py",
+      "sha256": "b3ba30c4e401e15a60196803fc97f25a15d2025946697eb327322b8a79f33cf3"
+    },
+    {
+      "file": "production/adopt_core_workforce_foundations_20261029.py",
+      "sha256": "a94d3e7d5807122ea0c041dff05f08251b6d09214a8b8237207ec401df8e1a9b"
+    }
+  ],
+  "real_proof_source": {
+    "file": "_reports/workforce-browser-proof-20261029.raw.json",
+    "sha256": "1be3f881fba1cb6d3046459d4b98c91f13a730e44aa8c9070b8763d46aa489c6",
+    "parent_personally_viewed_all3": true,
+    "source_agent_independently_viewed_all3_exact_JPEGs": true,
+    "measured_JPEG_dimensions": [
+      1280,
+      720
+    ]
+  },
+  "gates": {
+    "master": "0b86ac0b872e5ac9e995d210f2ecf0efedef3ae1ed01fc7cd07eef77ea3e47b2",
+    "frames_evidence": "0e283cec3d2b84596f1f58ef8f1ce30b1998994144f03ae58539b70cc15c1468",
+    "User_listening": "dc3288253e046f2c34aa8ebbda884811c75f525c9f9c9e92f276aaa9a2bfb3f1",
+    "frozen_source": "4982c376b8f3a844ae56f2c5dc369d3d16f6d4bdd0c18573cdfaff1826a01129",
+    "authoring_digest": "a4e2b839ebf0d2e6a94b26bb1d5b5304abc9ebbe016f62bb7399e1a42c0af4a1",
+    "actual_peer_frame_review": {
+      "holds": 35,
+      "caption_regions": 126,
+      "source_images": 31
+    },
+    "strict_evidence_in_memory": "PASS, zero issues",
+    "public_export_preflight": "Not yet run; qualifier runs unchanged exporter after new evidence write. Adoption reruns it before canonical write.",
+    "qualification_outputs_written": false,
+    "canonical_written": false
+  },
+  "predicted_not_yet_written_hashes": {
+    "evidence.reviewed.json": "45c389952b8f37150c4509aaca9af1f9871e7a21229f5277d920e75adbfaa50a",
+    "canonical-candidate.json": "53d6dbd7f80084132e1a0dccf029dd9d4d8ab215559cdb3b791667ff16bf310c"
+  },
+  "commands_from_repository_root": [
+    "python3 -B sources/production/qualify_core_workforce_foundations_take_01.py",
+    "python3 -B sources/production/qualify_core_workforce_foundations_take_01.py --qualify --proof-observations-sha256 1be3f881fba1cb6d3046459d4b98c91f13a730e44aa8c9070b8763d46aa489c6",
+    "python3 -B sources/production/adopt_core_workforce_foundations_20261029.py --evidence-sha256 45c389952b8f37150c4509aaca9af1f9871e7a21229f5277d920e75adbfaa50a --qualification-sha256 <actual-qualifier-output-hash>",
+    "python3 -B sources/production/adopt_core_workforce_foundations_20261029.py --write-candidate --evidence-sha256 45c389952b8f37150c4509aaca9af1f9871e7a21229f5277d920e75adbfaa50a --qualification-sha256 <actual-qualifier-output-hash>",
+    "After root reads the exact candidate: python3 -B sources/production/adopt_core_workforce_foundations_20261029.py --adopt --candidate-sha256 53d6dbd7f80084132e1a0dccf029dd9d4d8ab215559cdb3b791667ff16bf310c --evidence-sha256 45c389952b8f37150c4509aaca9af1f9871e7a21229f5277d920e75adbfaa50a --qualification-sha256 <actual-qualifier-output-hash>"
+  ],
+  "constraints": [
+    "Defaults read-only. Every output uses exclusive NEW-only creation. No overwrite, deletion, browser, app/DB, rendering, build, target copy or Git action.",
+    "Root must read recipes and the exact candidate before adoption. A qualification SHA is obtained only after actual qualification/export preflight, not fabricated here.",
+    "Any canonical count/hash drift stops adoption; never silently refresh the40-file baseline.",
+    "All frozen source/audio/plan/frame evidence and original proof JPEG/raw bytes retained unchanged.",
+    "Private QA duplicates native captions intentionally. Public native captions remain default-off."
+  ]
+}

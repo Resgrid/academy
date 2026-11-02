@@ -1,0 +1,19 @@
+				signupDate = department.CreatedOn.Value;
+			else
+				signupDate = DateTime.UtcNow;
+
+			var name = user.UserName;
+			if (profile != null && !String.IsNullOrWhiteSpace(profile.LastName))
+				name = profile.FullName.AsFirstNameLastName;
+
+			ClaimsLogic.AddGeneralClaims(id, user.UserName,
+				userId, name, department.DepartmentId, department.Name, profile.MembershipEmail,
+				signupDate);
+
+			Claim timeZoneClaim = new Claim(ResgridClaimTypes.Data.TimeZone, department.TimeZone);
+			if (!id.HasClaim(timeZoneClaim.Type, timeZoneClaim.Value))
+			{
+				id.AddClaim(timeZoneClaim);
+			}
+
+			bool isGroupAdmin = false;

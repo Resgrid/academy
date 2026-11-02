@@ -1,0 +1,97 @@
+{
+  "kind": "Qualified Reporting source-only release handoff; Root canonical review pending",
+  "recorded_at": "2026-10-30T05:44:21.688280Z",
+  "lesson_id": "core-reporting-fundamentals",
+  "video_sha256": "371993c6ace208ec5cbebf011495aa457bc010e816871d17dec37944c83c4f29",
+  "video_bytes": 16979680,
+  "duration_seconds": 432.1698125,
+  "source_images": 23,
+  "scenes": 13,
+  "actual_1920x1080_holds_personally_reviewed": 27,
+  "actual_caption_regions_personally_reviewed": 115,
+  "genuine_Root_browser_positions": 3,
+  "actual_User_listening_receipt_sha256": "4608121148c195f0cd6859f7747279c9b40cf4c0afc77de328c9b2ab31a7cefd",
+  "authoring_sha256": "514cc8a78c4d11f8ea5d473619860a0580282f0e5baf7b5bd458f3edc23ed71f",
+  "canonical_baseline_count": 41,
+  "existing_canonical_files_unchanged": true,
+  "qualified_evidence_sha256": "4d9b40654eae4bc465305d7c1b09051ff41cb26103acf277c3f5fde8c77b0479",
+  "qualification_sha256": "d93fc230fca13fcf0c78fb017654d603c029f7e3e77ce48cdf0299b9625fde87",
+  "candidate_sha256": "ecb186176785980e45396b46acad50a8059ea53eb3a240b5ee533fc0a36768c8",
+  "strict_report": {
+    "passed": true,
+    "lesson_id": "core-reporting-fundamentals",
+    "issues": []
+  },
+  "public_export_preflight": "passed",
+  "release_guard_tests": {
+    "tests": 12,
+    "passed": 12,
+    "optional_dependencies_required": false,
+    "scope": "No canonical or real-application mutation. Synthetic 41-lesson fixtures test baseline drift and adoption guards; actual strict/read-only proof checks preserve retained files."
+  },
+  "prior_authoring_tests": {
+    "tests": 17,
+    "passed": 17
+  },
+  "code_and_output_pins": [
+    {
+      "file": "production/qualify_core_reporting_fundamentals_take_01.py",
+      "sha256": "dd6b0da8e8f483af1377870923d7ef2ecd0aa52949a956878b269575e74fd837"
+    },
+    {
+      "file": "production/adopt_core_reporting_fundamentals_20261030.py",
+      "sha256": "934deea4a77278ba529fb88b8f93ece7925754262d717d1d86d55b6832dd179e"
+    },
+    {
+      "file": "production/tests/test_reporting_release_guards.py",
+      "sha256": "6c78d2cc364b8660be77f2e767db61eb60e89de0edde215136448d387aa99057"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-release-preparation-20261030/existing-canonical-hashes.json",
+      "sha256": "5451d04f31ff979cc3286318c5e7ac70e87e7b5a512bc7b36e61c9d896ff6bd3"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-release-preparation-20261030/learner-copy.review-required.json",
+      "sha256": "a6234eb5e182d058c02bb55b401661559626e9538b62a05d64041f7b247fe77d"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-release-preparation-20261030/canonical-candidate.json",
+      "sha256": "ecb186176785980e45396b46acad50a8059ea53eb3a240b5ee533fc0a36768c8"
+    },
+    {
+      "file": "expansion/rendered/core-reporting-fundamentals-take-01/evidence.reviewed.json",
+      "sha256": "4d9b40654eae4bc465305d7c1b09051ff41cb26103acf277c3f5fde8c77b0479"
+    },
+    {
+      "file": "expansion/rendered/core-reporting-fundamentals-take-01/playback/proofs.json",
+      "sha256": "c197062244edcfa239e1a132d3b017bb967698419a03e8abc9be3f2f6aff5d38"
+    },
+    {
+      "file": "expansion/rendered/core-reporting-fundamentals-take-01/qualification.json",
+      "sha256": "d93fc230fca13fcf0c78fb017654d603c029f7e3e77ce48cdf0299b9625fde87"
+    },
+    {
+      "file": "expansion/rendered/core-reporting-fundamentals-take-01/evidence.frames-reviewed.json",
+      "sha256": "448b44ebcf977f68ec5e0b78c3736b8c0f20bcdb768715108946431807d6f024"
+    },
+    {
+      "file": "expansion/rendered/core-reporting-fundamentals-take-01/encoded-audio.qa.json",
+      "sha256": "2e53d323fc4d1c2549d90fc7a9771e81e0a5472ffafc5a07b37abec6cc243568"
+    }
+  ],
+  "commands": {
+    "read_only_qualification": "python3 -B sources/production/qualify_core_reporting_fundamentals_take_01.py",
+    "read_only_adoption": "python3 -B sources/production/adopt_core_reporting_fundamentals_20261030.py --evidence-sha256 4d9b40654eae4bc465305d7c1b09051ff41cb26103acf277c3f5fde8c77b0479 --qualification-sha256 d93fc230fca13fcf0c78fb017654d603c029f7e3e77ce48cdf0299b9625fde87",
+    "root_only_after_exact_candidate_review": "python3 -B sources/production/adopt_core_reporting_fundamentals_20261030.py --adopt --evidence-sha256 4d9b40654eae4bc465305d7c1b09051ff41cb26103acf277c3f5fde8c77b0479 --qualification-sha256 d93fc230fca13fcf0c78fb017654d603c029f7e3e77ce48cdf0299b9625fde87 --candidate-sha256 ecb186176785980e45396b46acad50a8059ea53eb3a240b5ee533fc0a36768c8",
+    "release_tests": "python3 -B -m unittest discover -s sources/production/tests -p 'test_reporting_release_guards.py' -v"
+  },
+  "learner_copy_file": "expansion/plans/core-reporting-fundamentals-release-preparation-20261030/learner-copy.review-required.json",
+  "limits": [
+    "Historical reporting snapshots, not live state. The October week and default-window scopes differ; only the two matching default-window group scopes are directly compared.",
+    "Blank Call Summary charts remain blank. Missing and incomplete unit-status chronology is retained; no physical arrival, attendance or operational performance claim is inferred.",
+    "CSV thirteen-row/twelve-call facts come from the genuine retained download, not a fabricated spreadsheet screenshot.",
+    "Private QA native-caption duplication is intentional; existing public exporter leaves native captions off by default."
+  ],
+  "canonical_written": false,
+  "site_build_target_install_Git_or_application_changed": false
+}

@@ -1,0 +1,99 @@
+{
+  "id": "core-training-administration-20261028-v2",
+  "mode": "Manual normal-UI replay definition only; helper executes no application operations",
+  "department": "Isolated fictional Department51 Firehouse51",
+  "actual_returned_training_id_parent_provenance": 51004,
+  "training": {
+    "name": "Academy - Shared contact verification exercise",
+    "description": "TRAINING ONLY - Practice finding and checking fictional operational contacts.",
+    "training_text": "TRAINING ONLY. Open Contacts and find Academy Partner Directory. Check the contact identity, category and current phone details before using them. Reopen the saved contact after an edit to verify the result. This exercise does not authorize real outreach.",
+    "minimum_score_percent": 100,
+    "due_date": "2026-11-15",
+    "add_all_personnel": true
+  },
+  "quiz": {
+    "question": "What should you do after updating a shared contact?",
+    "answers": [
+      {
+        "text": "Reopen the saved contact and verify the updated details.",
+        "correct": true
+      },
+      {
+        "text": "Assume the edit was saved without checking.",
+        "correct": false
+      }
+    ]
+  },
+  "attachment": {
+    "file": "demo/training-fixtures/academy-contact-verification.txt",
+    "sha256": "fd9983216bfc96d9b26c2293673413814ad90a74cf5ee4e7cf28c2deb91070c2"
+  },
+  "actors": {
+    "creator_editor_and_assigned_learner": "Wallace Boden",
+    "actual_assigned_count": 14,
+    "actual_completed_learner_count": 1,
+    "other_pending_count": 13
+  },
+  "guards": [
+    "Confirm the isolated fictional department; search the exact training name and reopen rather than duplicate or overwrite an unknown training.",
+    "Use actual returned IDs;51004 is observed provenance, not a reusable reserved insertion ID.",
+    "Add all Personnel intentionally assigns the whole fictional department despite narrower selected inputs. Use a separately reviewed audience outside this sandbox.",
+    "Keep the three baseline trainings and all existing assignment history unchanged. No Reset User, deletion, permission, authentication or credential operation.",
+    "Use the retained software-only TXT; no real-person information, external delivery, clinical/credential or accreditation claim."
+  ],
+  "replay": [
+    "Create the uniquely named training,100minimum,due date and all14fictional members; add the one-question/two-answer quiz and save once.",
+    "Read the initial report and learner content; original handout is attached before the quiz and read back012.",
+    "Complete actual quiz once through Next/answer/Finish; verify016/017completion100Pass.",
+    "On completed training edit, add quick-check.txt and verify020lists firsttwohandouts.",
+    "Reopen Edit: select review.txt using normal chooser, normal browser anchor scroll preserves selection;021shows selectedfilename plus SaveTraining. Saveonce.",
+    "Reopen learner:022lists allthreefiles with no TakeQuiz. Check023report preserves completion/100Pass,14assignments/13Pending. No reset or further quiz submission."
+  ],
+  "readback_boundaries": [
+    "Additional-file teaching sequence is020existingtwo→021reviewselected/unobscuredSave→022allthree→023posteditreport.",
+    "019quick-check selectedfile is genuine but Saveoffscreen; raw prose corrected only in curated metadata.",
+    "021originalfilename is clipped at top; use020/022 for full filename.",
+    "Viewed refreshes on every training reopen and may be later than Completed; no timestamp equality or reset implication.",
+    "All14 count is not claimed as simultaneously pictured023;CurrentAssigned14 plus fullDOM/earlier017 establish it.",
+    "Original004/011 and unmanifested1434x1801fullpage diagnostic remain excluded from render source."
+  ],
+  "attachment_files": [
+    {
+      "file": "demo/training-fixtures/academy-contact-verification.txt",
+      "sha256": "fd9983216bfc96d9b26c2293673413814ad90a74cf5ee4e7cf28c2deb91070c2"
+    },
+    {
+      "file": "demo/training-fixtures/quick-check.txt",
+      "sha256": "4b3152db2865c953804d60c7e2edd56d287872224d54261f47e8a80a5ec873de"
+    },
+    {
+      "file": "demo/training-fixtures/review.txt",
+      "sha256": "a0f3e3706f0281613a265ca230162d358f4ffc0d68a9805f8c0c5a4b16ee8a85"
+    }
+  ],
+  "ordered_actual_extra_edits": [
+    {
+      "pending_source": "019-training-additional-handout-before-save",
+      "saved_source": "020-training-two-handouts-saved",
+      "file": "quick-check.txt",
+      "limit": "Pending019 does not show Save; no single-frame submit claim."
+    },
+    {
+      "before_existing_files_source": "020-training-two-handouts-saved",
+      "pending_and_save_source": "021-training-second-addition-anchor-state",
+      "saved_source": "022-training-review-handout-saved",
+      "file": "review.txt",
+      "normal_save_parent_provenance": true
+    }
+  ],
+  "final_report": {
+    "source": "023-training-post-edit-report-pass",
+    "preserved_completed_timestamp": "10/28/2026 15:27:45",
+    "refreshed_viewed_timestamp": "10/28/2026 15:52:50",
+    "score": 100,
+    "result": "Pass",
+    "assigned_count": 14,
+    "pending_count": 13,
+    "count_limit": "14/13 current fullDOM plus earlier017whole-roster picture; not all14simultaneously visible in023."
+  }
+}

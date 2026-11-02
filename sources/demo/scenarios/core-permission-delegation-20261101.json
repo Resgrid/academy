@@ -1,0 +1,41 @@
+{
+  "recorded_at": "2026-11-02T05:03:24.522540+00:00",
+  "department_id": 51,
+  "fictional_training_only": true,
+  "credential_values_included": false,
+  "normal_UI_only": true,
+  "demonstrated_changes": [
+    {
+      "control": "AddUsers",
+      "original": "Department Admins",
+      "practice": "Department and Group Admins",
+      "practice_value_verified_after_reload": true,
+      "final": "Department Admins",
+      "final_verified_after_reload": true
+    },
+    {
+      "control": "CreateTraining",
+      "original": "Department Admins",
+      "practice": "Department Admins and Select Roles",
+      "practice_role": {
+        "id": 51003,
+        "name": "Rescue Technician"
+      },
+      "final": "Department Admins",
+      "final_role_ids": [],
+      "final_verified_after_reload": true
+    }
+  ],
+  "unchanged_controls": [
+    "RemoveUsers",
+    "ViewPersonnelLocation",
+    "LockViewPersonneLocationToGroup",
+    "ViewUnitLocation",
+    "LockViewUnitLocationToGroup"
+  ],
+  "no_person_added_removed_promoted_or_assigned_role": true,
+  "role_removal_observation": "Clear-all click did not establish empty saved role data. Ordinary Backspace through the visible role search input did; a subsequent reload verified no selected role IDs before returning to Department Admins.",
+  "role_readback_capture_limit": "The reloaded role tag displayed ID51003 and was clipped; excluded from learner footage. Source006 visibly shows the selected Rescue Technician tag.",
+  "replay_scope": "Documented UI comparison and restoration, not an automatic seed extension.",
+  "source_raw_manifest_sha256": "39e3ce25c89cca5a54259f83ecbdcb844442ac3689d9220c018fc8338206b1cc"
+}

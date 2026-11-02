@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-11-02T01:08:02.245138+00:00",
+  "reviewer": "Codex /root",
+  "lesson_id": "core-records-review-defaults",
+  "lesson_file": "expansion/plans/core-records-review-defaults-source-proposal-20261101/lesson.candidate.json",
+  "lesson_sha256": "ec824bb6f36081b37f88a424c6eedfc20b1aaf13bebeee93fcfe9592b28c0497",
+  "actual_captures_reviewed": 13,
+  "scenes": 15,
+  "words": 876,
+  "raw_capture_manifest": {
+    "file": "captures/expansion/core-records-defaults-20261101/manifest.json",
+    "sha256": "85cdc7c3c82334367f1524acb543586c2137e0b98d0238485565ba8651cc23a1"
+  },
+  "demonstrated_states": [
+    "BaselineQuickEntry72",
+    "PreparedReviewRequired48",
+    "OrdinarySave",
+    "ActualSavedNotice",
+    "FreshGETReviewRequired48",
+    "LockedDefinitionQuickEntry",
+    "ExistingPublishedDepartmentDefinitionQuickEntry",
+    "BlankDefinitionReviewDueField",
+    "OriginalQuickEntry72RestoredAndFreshGETVerified"
+  ],
+  "ordinary_local_settings_saves": 2,
+  "new_definition_or_draft_or_publication_actions": 0,
+  "new_records_or_review_submissions": 0,
+  "source_inspection": {
+    "files": [
+      {
+        "core_relative_file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+        "sha256": "7fe5dcb35ba6c27c44bd4f4cb7b664cea9d19b1cef973c2ab2070cdb9d37a767"
+      },
+      {
+        "core_relative_file": "Core/Resgrid.Services/DepartmentSettingsService.cs",
+        "sha256": "601ff7c8e7f27b5f5ea940f40d7de4446b8fc9089e58ea3e0aaf3428201cd72f"
+      },
+      {
+        "core_relative_file": "Core/Resgrid.Services/Records/RecordsService.cs",
+        "sha256": "ef743169e47e0726a181353fb9af69341bb390764c4d95ef89e61725c0fcd28d"
+      },
+      {
+        "core_relative_file": "Core/Resgrid.Services/Records/RecordDefinitionsService.cs",
+        "sha256": "7f53c7ffbfee18643aae3b7c17b01d6285277d51be95e9bf7d6a33567c939cc1"
+      }
+    ],
+    "findings": [
+      {
+        "kind": "source_observation",
+        "detail": "The Records settings controller reads/writes the department lifecycle default and review hours, matching the observed form saves."
+      },
+      {
+        "kind": "source_observation",
+        "detail": "RecordsService submission uses definition-version ReviewDueHours when present and otherwise gets the department review hours."
+      },
+      {
+        "kind": "inference_requiring_separate_running_UI_validation",
+        "detail": "RecordDefinitionsService blank/template/clone draft creation inspected here does not call the department lifecycle-default getter. Automatic inheritance on a new blank definition may need separate verification. No new definition was created to test it, and this lesson makes no automatic-inheritance claim."
+      }
+    ]
+  },
+  "narration_quality_review": false,
+  "final_encoded_or_browser_video_review": false,
+  "all_academy_work_complete": false,
+  "git_mutations": 0
+}

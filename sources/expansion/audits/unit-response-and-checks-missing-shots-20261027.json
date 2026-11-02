@@ -1,0 +1,1437 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-10-27T20:52:05.684381+00:00",
+  "lesson_id": "app-unit-02-response-and-checks",
+  "scope": "Offline existing-screen/source assessment only; no browser, DB/API request, voice generation, canonical lesson change, freeze or ready claim.",
+  "lesson": {
+    "file": "expansion/lessons/app-unit-02-response-and-checks.json",
+    "sha256": "d61dba7faeba0dc8ca0325a69a1d9949a6219d76bbd915dbb0859f8b2b1d41ab",
+    "scenes": 12,
+    "spoken_words": 763
+  },
+  "manifest": {
+    "file": "captures/expansion/unit/manifest.json",
+    "sha256": "257ddb6a4e658beba6b9341eadbb8dbfb0624c6f772c983c3ec75404245dee80",
+    "captures": 40,
+    "accepted_records": 34,
+    "all_raw_jpeg_and_dom_hashes_reverified": true
+  },
+  "freeze_ready": false,
+  "media_ready": false,
+  "critical_findings": [
+    {
+      "id": "status-refresh-same-unit",
+      "source": "Unit/src/components/settings/unit-selection-bottom-sheet.tsx:103",
+      "finding": "Selecting the current unit exits early and closes the sheet; it does not call setActiveUnit/getUnitStatus. Calls focus/RefreshControl fetches calls/priorities, not the active-unit status.",
+      "impact": "The same-unit selection does not refresh status. Parent subsequently used ordinary Truck81→Engine51 selection and fresh001 now shows Released; older Available remains historical."
+    },
+    {
+      "id": "historical-call",
+      "finding": "51009/FD51-2026-0001 is now closed by the actual Responder workflow.020–025 remain valid historical Unit response evidence, with their original hashes/capture times.",
+      "impact": "Do not query it as a current active call, reopen it, fabricate a matching result, or use another app’s close/check-in as Unit action proof."
+    },
+    {
+      "id": "files-not-upload",
+      "source": "Unit/src/components/calls/call-files-modal.tsx",
+      "finding": "Rendered Files modal offers read/download/share; it has no file upload form despite unused translated add/upload strings. Images has its own actual picker/upload path.",
+      "impact": "The unfrozen scene09 wording must change before voice; retain file-viewing coverage and an honest native/web limitation."
+    },
+    {
+      "id": "crew-save-unproved",
+      "finding": "015/040 show a disabled Save because pendingAssignments is empty. No actual Unit crew Save or reassignment has been captured. Current only seat is Officer / Team Lead, not Driver.",
+      "impact": "Narration/practice cannot claim a relief replacement from a preserved readonly crew shot."
+    }
+  ],
+  "current_context_refresh_plan": {
+    "status": "normal_UI_plan_now_actually_performed_by_parent_and_001_image_reviewed_offline",
+    "current_state_authority": "Parent performed ordinary Truck81 selection then returned Engine51 without status/crew save. Fresh001 original JPEG independently viewed offline: Released,1of1 Roles,NoActiveCall. Herrmann preservation was reported by parent;040 remains actual role-seat proof. No browser call by this audit.",
+    "steps": [
+      "Keep the currently authenticated Unit tab and close only app sheets normally; no browser reload, sign-out or credential entry is needed for this plan.",
+      "Calls →Clear search and ordinary navigation/refocus refreshes calls; if a pull-to-refresh control is actually supported on that browser, use it once. Sidebar Call-selection sheet also fetchesCalls(true) on open and has a real Retry only on failure. Neither path guarantees active-unit status refresh.",
+      "Settings →Active Unit: record Current Unit Engine51. Selecting the same Engine only closes the chooser; do not call that a refresh.",
+      "When parent authorizes a read-only selection-context refresh, choose another already accessible unit, wait for its actual loaded identity, reopen Active Unit and select Engine51. setActiveUnit reads UnitStatus/GetUnitStatus. Do not submit a status or role assignment on either unit.",
+      "Reopen1of1 Roles to refetch actual Engine51 assignments; capture Herrmann and fresh final header. If either read fails or permission dialog appears, stop and retain the blocker; do not force session/storage state."
+    ],
+    "source_paths": [
+      "Unit/src/app/(app)/calls.tsx:55",
+      "Unit/src/components/sidebar/call-sidebar.tsx:31",
+      "Unit/src/components/settings/unit-selection-bottom-sheet.tsx:103",
+      "Unit/src/stores/app/core-store.ts:169",
+      "Unit/src/stores/app/core-store.ts:218",
+      "Unit/src/hooks/use-status-signalr-updates.ts:34"
+    ],
+    "automatic_refresh_limits": "A matching unitStatusUpdated SignalR event can fetch the current unit status after a2second debounce, but reconnect/resume is not proof a historical missed event will be replayed. A deliberate status save also refreshes but is a mutation, not a read-only refresh."
+  },
+  "crew_save_proposal": {
+    "status": "proposal_only_no_mutation_authorized_or_performed_by_this_audit",
+    "existing_baseline": "Engine51, one Officer / Team Lead seat, Christopher Herrmann; other five units unassigned. Preserve personal statuses/staffing/shifts/qualifications.",
+    "lowest_impact_save_example": {
+      "scope": "Confirm and re-save the same existing Herrmann assignment; demonstrates an actual Save request, not a changed physical crew or relief replacement.",
+      "steps": [
+        "Open1of1 Roles→Unit Role Assignments; record all existing seats/assignments.",
+        "Open Officer / Team Lead→Assign: Officer / Team Lead. Re-select Christopher Herrmann. Source handleAssignUser records a pending pick even when same; Save should become enabled, but this must be verified in actual UI.",
+        "Capture the pending assignment and enabled Save; choose Save once only if parent authorizes this same-assignment save.",
+        "Observe genuine success or inline Error saving role assignments. Reopen, wait for fresh data and verify Herrmann1/1.",
+        "If the assignment is truly unchanged, no compensating assignment swap is necessary. Do not claim this proves relief replacement."
+      ]
+    },
+    "true_relief_example_if_separately_authorized": {
+      "scope": "Only a real Unit temporary relief assignment followed immediately by restoration can cover the current replacement practice.",
+      "steps": [
+        "Before any write, parent approves the exact fictional relief member and same Officer / Team Lead seat. Confirm all existing unit assignments and member eligibility through normal supported UI. Do not infer qualification merely from an offered name.",
+        "Select that permitted member, capture pending choice, Save once; if API refuses qualification or membership, retain refusal and do not change qualifications/roles to bypass it.",
+        "If success, reopen to prove the stored replacement, then immediately select Christopher Herrmann→Save→reopen to prove exact restoration.",
+        "Capture final Engine51/Herrmann1of1; preserve every other unit assignment and personal status/staffing/shift/qualification. Do not choose Unassigned as a substitute for a relief example.",
+        "If restore fails, stop other lesson work and report the exact temporary state; do not hide it or attempt a database repair."
+      ]
+    },
+    "source_contract": {
+      "sheet": "Opening refetches all roles, this unit’s assignments and personnel. Pending choices are local until Save; Cancel discards them. Save is enabled by pendingAssignments.length>0.",
+      "payload": "Save sends every configured role for the active unit, retaining unchanged seats; empty UserId is an explicit unassignment. It is not an add-only operation.",
+      "server": "SetRoleAssignmentsForUnit validates unit ownership, required personnel-role qualification and current department membership; it deletes/replaces active assignments only for the specified unit, then notifies role updates. The request is a real write even when the selected person is unchanged.",
+      "qualification_limit": "The picker lists department personnel and displays roles/status/staffing; it does not independently certify availability, qualifications or physical readiness. Required qualification refusal must be honored."
+    }
+  },
+  "historical_evidence_policy": [
+    "Accepted020–025 may be used as explicitly historical Unit response footage with exact capture dates and preserved identifiers. Closed51009 must not be narrated as currently active.",
+    "Later035/038/039 show a genuine historical Available cleanup. Root now reports Released; neither should be relabeled as the other or presented as the latest state without new footage.",
+    "Actual Responder51009 create/edit/check-in/close proves those Responder operations only; never relabel another app’s screenshot Unit or weaken the single-app evidence gate.",
+    "Excluded019 is a real DOM/screenshot race with blank body; excluded030 auto-closed chooser;036 garbled submitted note and037 clipped header remain retained/rejected. No history erased."
+  ],
+  "scenes": [
+    {
+      "scene_id": "01-find-the-correct-call",
+      "title": "Find the correct call",
+      "draft_narration_sha256": "a1dd4f0ab19ffc19f1ddbcb3aa0c5e55ac934eaa5027c0b37d9fcbb3e63e25f2",
+      "draft_required_labels": [
+        "Calls",
+        "Clear search"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "018-number-search-no-match",
+          "file": "captures/expansion/unit/018-number-search-no-match.jpg",
+          "sha256": "d293fd3b4c2f98572243043fe7a85b8a6459eb5eb353a5ac32d6519e03df0d71",
+          "dom_file": "captures/expansion/unit/018-number-search-no-match.dom.txt",
+          "dom_sha256": "80b7ddd3500f3cbdf6037dd5c080e3a601dd7768ad245c2c879fd974a2bf59c9",
+          "captured_at": "2026-10-27T15:23:18.699Z",
+          "proves_only": "018 is a genuine incident-number no-match;024/025 show internal-ID51009 matched the then-open call. Clear search icon is hash-bound DOM-reviewed. They are historical, not a current active-call list."
+        },
+        {
+          "id": "024-engine51-response-saved",
+          "file": "captures/expansion/unit/024-engine51-response-saved.jpg",
+          "sha256": "ca59850d32ed6c74c7c5251616d1eb30d3e1199e9abe6811b37a9ea5393a6e42",
+          "dom_file": "captures/expansion/unit/024-engine51-response-saved.dom.txt",
+          "dom_sha256": "058e5df18471183c90881191c85fa316af4287ab94642cf523599bfe84937cdb",
+          "captured_at": "2026-10-27T15:25:45.576Z",
+          "proves_only": "018 is a genuine incident-number no-match;024/025 show internal-ID51009 matched the then-open call. Clear search icon is hash-bound DOM-reviewed. They are historical, not a current active-call list."
+        },
+        {
+          "id": "025-engine51-response-header",
+          "file": "captures/expansion/unit/025-engine51-response-header.jpg",
+          "sha256": "11b2778a24113686f0184ba9fb90d5e6e915e00bbaa41cb8758f05ac763b1a91",
+          "dom_file": "captures/expansion/unit/025-engine51-response-header.dom.txt",
+          "dom_sha256": "058e5df18471183c90881191c85fa316af4287ab94642cf523599bfe84937cdb",
+          "captured_at": "2026-10-27T15:28:44.814Z",
+          "proves_only": "018 is a genuine incident-number no-match;024/025 show internal-ID51009 matched the then-open call. Clear search icon is hash-bound DOM-reviewed. They are historical, not a current active-call list."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S01-A",
+          "normal_ui_action": "Calls → Clear search; wait until the actual wider list renders. Capture the field empty and original active calls with legible identifying details.",
+          "required_actual_evidence": "Unfiltered list after the actual Clear search action; do not use the blank transitional019 image.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "002-active-calls-list",
+              "file": "captures/expansion/unit-response-20261027/002-active-calls-list.jpg",
+              "sha256": "22d140520721ebea7d50cb0c98dedc77e61538644dc7a7d5ab0c0553fc708800",
+              "captured_at": "2026-10-27T20:50:43.944Z"
+            },
+            {
+              "id": "005-search-cleared-original-calls",
+              "file": "captures/expansion/unit-response-20261027/005-search-cleared-original-calls.jpg",
+              "sha256": "bd01aabc6075f90c298f39770215278b039fbfbcce4bdc7ccda21c2e815b1d9e",
+              "captured_at": "2026-10-27T20:51:09.480Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          }
+        },
+        {
+          "id": "U02-S01-B",
+          "normal_ui_action": "For a fresh exercise, enter its returned internal ID or a distinctive Nature fragment. Capture the rendered match, then clear it.",
+          "required_actual_evidence": "Actual returned call number/title/address and matching query; no assumed counter or display-number/name filtering.",
+          "prerequisite": "Create a fresh disposable call only after parent/coordinator authorization; see lifecycle sequence.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "003-search-by-internal-id",
+              "file": "captures/expansion/unit-response-20261027/003-search-by-internal-id.jpg",
+              "sha256": "912dfa5b7da39940790864ef0058b2e8e50d1172cde8a4da393db597e32ff0bb",
+              "captured_at": "2026-10-27T20:50:56.170Z"
+            },
+            {
+              "id": "004-search-by-incident-nature",
+              "file": "captures/expansion/unit-response-20261027/004-search-by-incident-nature.jpg",
+              "sha256": "011e0b380215cbd0601d163db41562e6c76035cce002fba2119f240b92ab9e6e",
+              "captured_at": "2026-10-27T20:51:09.130Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          },
+          "resolution_limit": "Internal51003 and Nature search are genuinely shown on original existingDEMO-0003. A later fresh call need not masquerade as51009; unfrozen narration still needs the correct historical/current example wording."
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "Replace present-tense “51009 finds the disposable training call” with explicitly historical wording if using024/025, or use the real returned ID of a fresh exercise.51009 is now closed and normally absent from active calls."
+      ],
+      "new_readonly_capture_refs": [
+        "002-active-calls-list",
+        "003-search-by-internal-id",
+        "004-search-by-incident-nature",
+        "005-search-cleared-original-calls"
+      ]
+    },
+    {
+      "scene_id": "02-read-the-incident-before-responding",
+      "title": "Read the incident before responding",
+      "draft_narration_sha256": "61f51f06dfdb64e447ac8eb31ccf1bbe5380456f5c80e92fc0fe6a11bf570ce7",
+      "draft_required_labels": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "020-practice-call-info",
+          "file": "captures/expansion/unit/020-practice-call-info.jpg",
+          "sha256": "5fc939b8d2f9157ade9b76e9c411cdc8681279c511544cdae2c2c243fbbc969f",
+          "dom_file": "captures/expansion/unit/020-practice-call-info.dom.txt",
+          "dom_sha256": "144c257f0ad3d49e0752f5619a40e680d3d7fd80f43817178840d7e5c8742da6",
+          "captured_at": "2026-10-27T15:24:10.472Z",
+          "proves_only": "020 shows Call Details, an actual incident map, tab entry controls and only the top Priority row. It does not show selected Contact/Protocols/Dispatched/Activity contents."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S02-A",
+          "normal_ui_action": "Open an authorized existing incident → Info; scroll below Priority.",
+          "required_actual_evidence": "Nature, Type, Address, Note, Timestamp and any actual Destination shown in readable viewport(s), with selected call identity.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "006-incident-details-info",
+              "file": "captures/expansion/unit-response-20261027/006-incident-details-info.jpg",
+              "sha256": "0f93b0205548f683d95329352c78fca634a30fd55174887906e58cdc9fee73ed",
+              "captured_at": "2026-10-27T20:51:38.209Z"
+            },
+            {
+              "id": "008-incident-info-complete-fields",
+              "file": "captures/expansion/unit-response-20261027/008-incident-info-complete-fields.jpg",
+              "sha256": "b137192e6965d49bf795d6516fda201ca905e944744e0b16d328ce3a7e7f883c",
+              "captured_at": "2026-10-27T20:53:02.969Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          },
+          "resolution_limit": "Complete current Info shown; this call has no offered Destination. Populated destination/map routing remains an independent gap under03/07."
+        },
+        {
+          "id": "U02-S02-B",
+          "normal_ui_action": "Select Contact, then Protocols; capture each actual body.",
+          "required_actual_evidence": "Contact Name/Contact Info and linked IDs, then actual protocol text or “No protocols attached to this call”. Protocol bodies render inline; no invented separate Open action.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "007-incident-contact-empty-fields",
+              "file": "captures/expansion/unit-response-20261027/007-incident-contact-empty-fields.jpg",
+              "sha256": "357c54f1f24e2a2badda23e7375f8855e243c0f215bcc7cb949f4adc344d5a36",
+              "captured_at": "2026-10-27T20:52:09.168Z"
+            },
+            {
+              "id": "009-incident-protocols-empty",
+              "file": "captures/expansion/unit-response-20261027/009-incident-protocols-empty.jpg",
+              "sha256": "78d6186642a8a06857a7295adf4671bfdc6d84cb38e0553118646f21acd5a096",
+              "captured_at": "2026-10-27T20:54:38.419Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          },
+          "resolution_limit": "Contact fields and protocols are genuinely loaded empty; no attached protocol contents/open success demonstrated."
+        },
+        {
+          "id": "U02-S02-C",
+          "normal_ui_action": "Select Dispatched, then Activity; scroll actual contents.",
+          "required_actual_evidence": "Actual dispatched resource rows and actual status/event/note/time rows, or honest loaded empty states. A tab title alone is insufficient.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "010-dispatched-personnel-and-units",
+              "file": "captures/expansion/unit-response-20261027/010-dispatched-personnel-and-units.jpg",
+              "sha256": "010693cfc256081eaba32d4f3d2c7b14af492c1347924e20e74af305f63a15b9",
+              "captured_at": "2026-10-27T20:58:15.473Z"
+            },
+            {
+              "id": "011-incident-activity-inferred-training-rows",
+              "file": "captures/expansion/unit-response-20261027/011-incident-activity-inferred-training-rows.jpg",
+              "sha256": "b60e8810b36778c71ec734b3320803e78dac4af1969d201e4966eea1adefe4c0",
+              "captured_at": "2026-10-27T20:59:35.126Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          },
+          "resolution_limit": "Dispatched nine rows are separate from seated crew. Activity rows are INFERRED simulated personnel positions; do not narrate direct Unit response/physical GPS from them."
+        }
+      ],
+      "source_corrections_before_freeze": [],
+      "new_readonly_capture_refs": [
+        "006-incident-details-info",
+        "007-incident-contact-empty-fields",
+        "008-incident-info-complete-fields",
+        "009-incident-protocols-empty",
+        "010-dispatched-personnel-and-units",
+        "011-incident-activity-inferred-training-rows"
+      ]
+    },
+    {
+      "scene_id": "03-set-the-active-incident-and-check-routing",
+      "title": "Set the active incident and check routing",
+      "draft_narration_sha256": "a82cdf6bd7789c73e1ca81d271b252133d0a9876eff63f75119e9a476fa61d08",
+      "draft_required_labels": [
+        "Set Active",
+        "Select Status",
+        "View on map",
+        "Route"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "020-practice-call-info",
+          "file": "captures/expansion/unit/020-practice-call-info.jpg",
+          "sha256": "5fc939b8d2f9157ade9b76e9c411cdc8681279c511544cdae2c2c243fbbc969f",
+          "dom_file": "captures/expansion/unit/020-practice-call-info.dom.txt",
+          "dom_sha256": "144c257f0ad3d49e0752f5619a40e680d3d7fd80f43817178840d7e5c8742da6",
+          "captured_at": "2026-10-27T15:24:10.472Z",
+          "proves_only": "020 Set Active →021 Select Status genuinely demonstrates selection without status submission.020 includes real incident cartography and offered Route; no destination map, full-screen map or external handoff was captured."
+        },
+        {
+          "id": "021-set-active-status-selection",
+          "file": "captures/expansion/unit/021-set-active-status-selection.jpg",
+          "sha256": "90b4e4f303404be12b432a657e75e0bbe7e0b1d57307c2ac522c098d2941fb48",
+          "dom_file": "captures/expansion/unit/021-set-active-status-selection.dom.txt",
+          "dom_sha256": "39b3f8911222f42c6d61ecd01aaca050831ebb53cecb62fdad7b78ce42be7c35",
+          "captured_at": "2026-10-27T15:24:41.527Z",
+          "proves_only": "020 Set Active →021 Select Status genuinely demonstrates selection without status submission.020 includes real incident cartography and offered Route; no destination map, full-screen map or external handoff was captured."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S03-A",
+          "normal_ui_action": "On Call Details, activate the actual map-preview control; capture the full-screen incident map and normal close.",
+          "required_actual_evidence": "Readable actual cartography/incident marker/address; real DOM semantics of “View on map” if present. Do not invent literal text or mark a text-containing map as icon-only.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "attempted_actual_operation_failed; still_missing_correct_fullscreen_map",
+          "failed_capture": {
+            "id": "021-fullscreen-map-wrong-location-observed",
+            "file": "captures/expansion/unit-response-20261027/021-fullscreen-map-wrong-location-observed.jpg",
+            "sha256": "25858ee5e37c2c7c5deee0d78afc08e1ce1d71dfb27a8b5ac84560393c458dc7",
+            "actual_pixels": "Loaded western US cartography with red marker near Nevada/Sacramento, while title is the fictional vehicle rescue and address says Chicago. The prior inline Static Images preview is Chicago.",
+            "eligible_for_correct_mapping_proof": false,
+            "no_actual_GPS_or_navigation_success": true
+          },
+          "source_diagnosis": {
+            "file": "expansion/audits/unit-response-map-mismatch-diagnosis-20261027.json",
+            "sha256": "3be4e475a45664661cd0c33121689f2c9f5ba779084d6e4dcd0068de3f10eae5"
+          }
+        },
+        {
+          "id": "U02-S03-B",
+          "normal_ui_action": "When an actual destination POI exists, select the destination map target and compare it with Call Location. Inspect the offered destination-route control without opening an external map service.",
+          "required_actual_evidence": "Real call-versus-destination toggles/markers/address and the offered Route / destination-route controls.",
+          "prerequisite": "A fictional destination POI must actually exist and be selected through supported controls; do not seed or alter it from this offline task.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "Keep explicit unexercised external Route/provider limitation. “Unit has its own web map and HTML implementations” is implementation detail: replace with learner-facing browser/native scope before voice."
+      ],
+      "new_readonly_capture_refs": []
+    },
+    {
+      "scene_id": "04-update-unit-status-with-a-destination",
+      "title": "Update unit status with a destination",
+      "draft_narration_sha256": "a63bde7c9822d3461dcc37aa5b19ff2185701115568194f990bee500e04fec86",
+      "draft_required_labels": [
+        "Select Status"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "016-available-destination-options",
+          "file": "captures/expansion/unit/016-available-destination-options.jpg",
+          "sha256": "f1db86323acaf730f77493e3aebeaac1e2a1c48118248e3b5e850a8f4ab70b7a",
+          "dom_file": "captures/expansion/unit/016-available-destination-options.dom.txt",
+          "dom_sha256": "e90c525f5df3058627bc9e1e093ee7e9ec9337f12fc44c4acbb874ec72de7d96",
+          "captured_at": "2026-10-27T15:21:26.551Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "017-status-note-before-submit",
+          "file": "captures/expansion/unit/017-status-note-before-submit.jpg",
+          "sha256": "b403ad2f7c831b41ef6a18510128de04853bb0fa42cf32b75a5afd7b0185d940",
+          "dom_file": "captures/expansion/unit/017-status-note-before-submit.dom.txt",
+          "dom_sha256": "a5f754c08a301bc51bd6bcaa9ff48b9e43aade636428494747baa5dec2dd4f07",
+          "captured_at": "2026-10-27T15:22:26.960Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "021-set-active-status-selection",
+          "file": "captures/expansion/unit/021-set-active-status-selection.jpg",
+          "sha256": "90b4e4f303404be12b432a657e75e0bbe7e0b1d57307c2ac522c098d2941fb48",
+          "dom_file": "captures/expansion/unit/021-set-active-status-selection.dom.txt",
+          "dom_sha256": "39b3f8911222f42c6d61ecd01aaca050831ebb53cecb62fdad7b78ce42be7c35",
+          "captured_at": "2026-10-27T15:24:41.527Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "022-responding-own-call-destination",
+          "file": "captures/expansion/unit/022-responding-own-call-destination.jpg",
+          "sha256": "ac431ff3f68d2f31f3e0ffd6d23849f8c585bc0fb4a5db0be925fecea8daad20",
+          "dom_file": "captures/expansion/unit/022-responding-own-call-destination.dom.txt",
+          "dom_sha256": "c1665a4eeb3564c28879c3e1af346f38f61cf7e0d287bcd0025956a9ad09c779",
+          "captured_at": "2026-10-27T15:24:55.285Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "023-responding-note-submit",
+          "file": "captures/expansion/unit/023-responding-note-submit.jpg",
+          "sha256": "9082c87851c746ede12efd99c844419d54da1d3f10a01d183ddd8fcf7ef3b545",
+          "dom_file": "captures/expansion/unit/023-responding-note-submit.dom.txt",
+          "dom_sha256": "945ead0649195c95a3dd3b179178462b75a9ee122fee9f2639bf1aa6ab8fd11d",
+          "captured_at": "2026-10-27T15:25:07.270Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "024-engine51-response-saved",
+          "file": "captures/expansion/unit/024-engine51-response-saved.jpg",
+          "sha256": "ca59850d32ed6c74c7c5251616d1eb30d3e1199e9abe6811b37a9ea5393a6e42",
+          "dom_file": "captures/expansion/unit/024-engine51-response-saved.dom.txt",
+          "dom_sha256": "058e5df18471183c90881191c85fa316af4287ab94642cf523599bfe84937cdb",
+          "captured_at": "2026-10-27T15:25:45.576Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "025-engine51-response-header",
+          "file": "captures/expansion/unit/025-engine51-response-header.jpg",
+          "sha256": "11b2778a24113686f0184ba9fb90d5e6e915e00bbaa41cb8758f05ac763b1a91",
+          "dom_file": "captures/expansion/unit/025-engine51-response-header.dom.txt",
+          "dom_sha256": "058e5df18471183c90881191c85fa316af4287ab94642cf523599bfe84937cdb",
+          "captured_at": "2026-10-27T15:28:44.814Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "035-available-no-destination-step",
+          "file": "captures/expansion/unit/035-available-no-destination-step.jpg",
+          "sha256": "c08026c83d5cb55476b13a6b0bb89449731512662d8e48b247a88d93c9405728",
+          "dom_file": "captures/expansion/unit/035-available-no-destination-step.dom.txt",
+          "dom_sha256": "933ce521ca99b167ee97a9d1b82ec9ceb8f87bf4fc7107b4f681d924476af3fd",
+          "captured_at": "2026-10-27T18:50:25.507Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "038-available-correction-exact-readback",
+          "file": "captures/expansion/unit/038-available-correction-exact-readback.jpg",
+          "sha256": "acc29df36d0180e934ac6d93cc8a98478ea5bb97875cc61947b7356acb2bcd4f",
+          "dom_file": "captures/expansion/unit/038-available-correction-exact-readback.dom.txt",
+          "dom_sha256": "89766d9432eee0f0cb2e6fbe6f905525b5df48d4e7cdb8b49b43722659c0b6da",
+          "captured_at": "2026-10-27T18:53:28.750Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        },
+        {
+          "id": "039-engine51-available-header-crew",
+          "file": "captures/expansion/unit/039-engine51-available-header-crew.jpg",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5",
+          "dom_file": "captures/expansion/unit/039-engine51-available-header-crew.dom.txt",
+          "dom_sha256": "0e5185d8a8a87044cf33fbd04be6f04b3fb0ed9f125be2228eec1d19b03c55f0",
+          "captured_at": "2026-10-27T18:53:37.012Z",
+          "proves_only": "021–025 show ordinary Responding →Calls→own51009→note→Submit→saved header.016/035 show Available with Stations/POIs and No Destination;038/039 show later normal cleanup. No Hold mode, actual queued update or later queue replay was captured."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S04-A",
+          "normal_ui_action": "First refresh the selected-unit context through the safe read-only sequence below and capture the actual Engine51 header/status.",
+          "required_actual_evidence": "Fresh actual sidebar state compared with current Core report; historical039 Available must not represent today’s parent-reported Released.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_capture": {
+            "id": "001-refreshed-engine-context",
+            "file": "captures/expansion/unit-response-20261027/001-refreshed-engine-context.jpg",
+            "sha256": "2539c3c4da347f83d3273c88953d852bad7d21831edd8a7773a10939010b7bff",
+            "dom_file": "captures/expansion/unit-response-20261027/001-refreshed-engine-context.dom.txt",
+            "dom_sha256": "1912cd35c91507c805a7bbffa5b3d8fd8ea546b57fd76310569c77a7ceff5163",
+            "captured_at": "2026-10-27T20:49:42.590Z",
+            "reviewed_at": "2026-10-27T20:53:19.496482+00:00",
+            "reviewer": "responder_unit_coverage offline original JPEG inspection",
+            "visible_labels_reviewed": [
+              "Engine 51",
+              "Released",
+              "1 of 1 Roles",
+              "No Active Call"
+            ],
+            "proves_only": "Actual fresh Engine51 Released/NoActiveCall/1of1 sidebar after normal read-only Truck81→Engine51 selection. Member identity preservation is parent-reported; this image does not open the role seat.",
+            "raw_manifest_not_edited": true,
+            "raw_record_still_pending_curated_manifest_review": true
+          },
+          "resolution_captures": [
+            {
+              "id": "001-refreshed-engine-context",
+              "file": "captures/expansion/unit-response-20261027/001-refreshed-engine-context.jpg",
+              "sha256": "2539c3c4da347f83d3273c88953d852bad7d21831edd8a7773a10939010b7bff",
+              "captured_at": "2026-10-27T20:49:42.590Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          }
+        },
+        {
+          "id": "U02-S04-B",
+          "normal_ui_action": "If retaining the spoken Hold-to-submit branch, capture a genuinely enabled, coordinator-approved hold-mode configuration/control and deliberate hold submission. Otherwise leave that branch explicitly unresolved.",
+          "required_actual_evidence": "Actual configured hold control and result, not an ordinary Submit image relabeled Hold.",
+          "prerequisite": "StatusHoldToConfirm is department configuration. Do not toggle shared settings solely to force a missing example without parent approval.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S04-C",
+          "normal_ui_action": "If demonstrating queue/replay, use an explicitly approved bounded connectivity exercise and capture queued, later sent, and final server-backed state.",
+          "required_actual_evidence": "Genuine queued message plus later synchronization; existing sent captures prove neither offline queuing nor replay.",
+          "prerequisite": "No offline/connectivity exercise is authorized or performed by this source-only audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "A sent software status proves a saved status, not physical mobilization or provider delivery. Statuses requiring a live GPS fix remain outside this no-device-permission exercise."
+      ],
+      "new_readonly_capture_refs": [
+        "001-refreshed-engine-context"
+      ]
+    },
+    {
+      "scene_id": "05-keep-the-seated-crew-accurate",
+      "title": "Keep the seated crew accurate",
+      "draft_narration_sha256": "c007550f6dad0bb9d58c7286dd4a17a9615e28f89aad5ccf4bf1ad181fa385eb",
+      "draft_required_labels": [
+        "Unit Role Assignments",
+        "Save"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "015-engine51-herrmann-preserved",
+          "file": "captures/expansion/unit/015-engine51-herrmann-preserved.jpg",
+          "sha256": "d39268cccc0ec1225bfdd0a78bde2b9dea1bd55d7d29f5973abf71f46a4f84be",
+          "dom_file": "captures/expansion/unit/015-engine51-herrmann-preserved.dom.txt",
+          "dom_sha256": "0296f31738186ced5f3e42789a6265260b1b8fb6f0fc5c839f02b1498dccfa49",
+          "captured_at": "2026-10-27T15:21:09.207Z",
+          "proves_only": "Both show Engine51 Officer / Team Lead = Christopher Herrmann with Save disabled. They prove review/preservation, not an assignment edit, successful Save or restoration."
+        },
+        {
+          "id": "040-engine51-herrmann-assignment-preserved",
+          "file": "captures/expansion/unit/040-engine51-herrmann-assignment-preserved.jpg",
+          "sha256": "4f3d2c7b9d5d05e91c7f0a25790a059c6be5774dbc825d09c7ccec96b9878184",
+          "dom_file": "captures/expansion/unit/040-engine51-herrmann-assignment-preserved.dom.txt",
+          "dom_sha256": "fcc8e52befb69f274a0b65254c8cd3fce934cbb944189b9158d57557ef4d9e63",
+          "captured_at": "2026-10-27T18:54:10.733Z",
+          "proves_only": "Both show Engine51 Officer / Team Lead = Christopher Herrmann with Save disabled. They prove review/preservation, not an assignment edit, successful Save or restoration."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S05-A",
+          "normal_ui_action": "Open 1 of1 Roles →Unit Role Assignments→Officer / Team Lead; capture the real picker, current choice and offered name/group search.",
+          "required_actual_evidence": "Actual “Assign: Officer / Team Lead”, member choices and any real assignment/qualification information; no implied Driver role.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S05-B",
+          "normal_ui_action": "Use one of the bounded crew Save options below only when parent authorizes that exact operation. Capture pending choice, enabled Save, real result, and fresh reopen.",
+          "required_actual_evidence": "Actual Save result and reopened server-backed assignment, with all unit seats visible. Disabled Save040 does not qualify as mutation proof.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S05-C",
+          "normal_ui_action": "If a different relief member was actually saved, immediately restore Christopher Herrmann to the same single seat via the same UI, Save and reopen.",
+          "required_actual_evidence": "Restored Herrmann1/1 plus unchanged other unit assignments; no personal status/staffing/qualification changes.",
+          "prerequisite": "No relief-member save is authorized by this offline audit. Respect ordinary eligibility/refusals.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "The practice “replace a relief driver” conflicts with the actual single Officer / Team Lead seat. Correct role wording before freeze. The narration currently instructs choosing people and saving an updated assignment; a read-only disabled Save shot does not cover it."
+      ],
+      "new_readonly_capture_refs": []
+    },
+    {
+      "scene_id": "06-create-a-call-with-the-permitted-fields",
+      "title": "Create a call with the permitted fields",
+      "draft_narration_sha256": "4daa9b1937ff85f7e7c567558b1caf03c0dc06c615d4551ebb18bf2628b2e852",
+      "draft_required_labels": [
+        "Create New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Type"
+      ],
+      "coverage": "missing_actual_operational_content",
+      "existing": [],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S06-A",
+          "normal_ui_action": "Calls → actual plus FAB → Create New Call; wait for loaded policy. Open Priority and Type choices.",
+          "required_actual_evidence": "Real Create New Call, Name, Nature, Priority, Type and actual options/required indicators. The plus FAB has no source-provided “New Call” accessible name; do not fabricate metadata.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S06-B",
+          "normal_ui_action": "Before creation, submit one safe intentionally incomplete exercise draft; correct the actual visible validation error.",
+          "required_actual_evidence": "Real missing-field message and corrected required field. No duplicate saved call.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "Describe the actual plus control and resulting Create New Call screen, rather than inventing a painted New Call button. Loaded field policy controls optional/required/scheduling behavior."
+      ],
+      "new_readonly_capture_refs": []
+    },
+    {
+      "scene_id": "07-resolve-the-call-location-and-destination",
+      "title": "Resolve the call location and destination",
+      "draft_narration_sha256": "0120898e47136160473d013f7e5f349bde2b737a213af3289570be16e11a1245",
+      "draft_required_labels": [
+        "Address",
+        "GPS Coordinates",
+        "what3words",
+        "Plus Code",
+        "Select Location on Map"
+      ],
+      "coverage": "missing_actual_operational_content",
+      "existing": [],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S07-A",
+          "normal_ui_action": "On the unsaved Create New Call form, show permitted Address / GPS Coordinates / what3words / Plus Code inputs and the separate destination selector.",
+          "required_actual_evidence": "Actually visible offered input modes, entered clearly simulated coordinates and available/empty destination choices. No provider lookup success implied.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S07-B",
+          "normal_ui_action": "Select Location on Map; inspect the supplied simulated point on real cartography; confirm only through actual offered controls.",
+          "required_actual_evidence": "Actual map picker/control, real rendered point and returned form coordinates.",
+          "prerequisite": "Never accept current-device GPS permission. If map/provider data fails, retain the exact blocker rather than showing a gray/loading map as success.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S07-C",
+          "normal_ui_action": "Select an actual approved fictional destination POI if that branch is narrated, then inspect its returned label/location.",
+          "required_actual_evidence": "Saved call/destination distinction using a real POI; an empty selector can only support explaining an empty state.",
+          "prerequisite": "Parent/coordinator must provide or create a fictional destination through normal supported UI if none exists.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [],
+      "new_readonly_capture_refs": []
+    },
+    {
+      "scene_id": "08-dispatch-and-edit-with-a-reviewed-scope",
+      "title": "Dispatch and edit with a reviewed scope",
+      "draft_narration_sha256": "a229449fffbd8dacd3d51b4ed9b04d2f5f9fa639e17936a485cb8115ef2b5bb3",
+      "draft_required_labels": [
+        "Dispatch To",
+        "Create",
+        "Edit Call",
+        "Save"
+      ],
+      "coverage": "missing_actual_operational_content",
+      "existing": [],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S08-A",
+          "normal_ui_action": "Create New Call →Dispatch To; clear any broad default and select only coordinator-approved fictional recipients. Inspect the loaded scheduling control if offered.",
+          "required_actual_evidence": "Actual selected recipient summary and actual immediate/scheduled time control state.",
+          "prerequisite": "Do not assume the current form’s dispatch default is narrow; confirm it before Create.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S08-B",
+          "normal_ui_action": "Create exactly one approved clearly TRAINING ONLY Unit exercise. Capture returned actual number/ID and real detail result.",
+          "required_actual_evidence": "Successful actual Unit creation result, received number and narrow dispatch scope; no assumed numbering or delivery claim.",
+          "prerequisite": "Parent coordinates numbering/call ownership. Do not reopen/reuse closed51009 or change original51001–51003.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S08-C",
+          "normal_ui_action": "On that new call, use the real overflow menu →Edit Call. Change one public-safe fictional Contact Info value →Save→fresh reopen Contact.",
+          "required_actual_evidence": "Actual menu/form/input/Save and returned stored Contact Info; no cached-only success.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [],
+      "new_readonly_capture_refs": []
+    },
+    {
+      "scene_id": "09-share-concise-incident-evidence",
+      "title": "Share concise incident evidence",
+      "draft_narration_sha256": "250f57e9916ee0f58e36da071ec869ae644969a10cbbae5eea4ae9e373d2a003",
+      "draft_required_labels": [
+        "Notes",
+        "Images",
+        "Files",
+        "Site Info",
+        "History"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "020-practice-call-info",
+          "file": "captures/expansion/unit/020-practice-call-info.jpg",
+          "sha256": "5fc939b8d2f9157ade9b76e9c411cdc8681279c511544cdae2c2c243fbbc969f",
+          "dom_file": "captures/expansion/unit/020-practice-call-info.dom.txt",
+          "dom_sha256": "144c257f0ad3d49e0752f5619a40e680d3d7fd80f43817178840d7e5c8742da6",
+          "captured_at": "2026-10-27T15:24:10.472Z",
+          "proves_only": "020 proves only Notes/Images/Files/Site Info/History entry controls. No modal bodies, stored new Unit note, upload result, site preplan or history body is captured."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S09-A",
+          "normal_ui_action": "Notes→enter a clearly TRAINING ONLY access note→actual add/send control→close/reopen.",
+          "required_actual_evidence": "Actual newly stored note text, fictional author/time and fresh-read result; retain exact readback before submit.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S09-B",
+          "normal_ui_action": "Images→actual gallery/library selection; when the normal authorized chooser is available, select only a public-safe fictional software image→training note→Upload→reopen.",
+          "required_actual_evidence": "Real selection preview, Upload and stored image result. A file dialog alone is not storage proof.",
+          "prerequisite": "Parent owns browser/chooser lease; no camera/private media/device permission. If chooser or upload stalls/rejects, stop that workflow and report genuine gap.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S09-C",
+          "normal_ui_action": "Open Files, Site Info and History separately; inspect loaded bodies/empty states.",
+          "required_actual_evidence": "Actual Files list/download/share offer, matched site information and earlier-call history or their honest empty states. No invented upload control.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "016-incident-history-nearby-training-call",
+              "file": "captures/expansion/unit-response-20261027/016-incident-history-nearby-training-call.jpg",
+              "sha256": "96871dbc225d80b2c317c107b3b9579793a2eb1a3bddd205cd510e068b15f587",
+              "captured_at": "2026-10-27T21:04:36.892Z"
+            },
+            {
+              "id": "017-site-information-full-empty-state",
+              "file": "captures/expansion/unit-response-20261027/017-site-information-full-empty-state.jpg",
+              "sha256": "433753992fb960519527fd3c684cb825fb07131cbb49302f80c1a5f84c6cec2c",
+              "captured_at": "2026-10-27T21:04:42.278Z"
+            },
+            {
+              "id": "018-call-files-empty",
+              "file": "captures/expansion/unit-response-20261027/018-call-files-empty.jpg",
+              "sha256": "1b61097831ae1fc727193a44856675b5f6ee96569f58e3c8b99a76ee122baff9",
+              "captured_at": "2026-10-27T21:04:49.436Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          },
+          "resolution_limit": "Files/SiteInfo are loaded empty; History shows a Nearby closed exercise. No stored file, native download/share or populated pre-plan demonstrated."
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "Correct “Images and Files attach supporting material”: Images has selection/upload; current call-files-modal.tsx only lists/downloads/shares existing files. Translated Add File/Upload strings alone do not create rendered controls. Native file writing/sharing is untested on web."
+      ],
+      "new_readonly_capture_refs": [
+        "016-incident-history-nearby-training-call",
+        "017-site-information-full-empty-state",
+        "018-call-files-empty"
+      ]
+    },
+    {
+      "scene_id": "10-use-check-ins-command-and-video-appropriately",
+      "title": "Use check-ins, command, and video appropriately",
+      "draft_narration_sha256": "388bdd65852abbb54becd0f6bcc5401cd6f7a1febf5a5b35403e0ad8634d5dac",
+      "draft_required_labels": [
+        "Check-In",
+        "Command",
+        "Video"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "020-practice-call-info",
+          "file": "captures/expansion/unit/020-practice-call-info.jpg",
+          "sha256": "5fc939b8d2f9157ade9b76e9c411cdc8681279c511544cdae2c2c243fbbc969f",
+          "dom_file": "captures/expansion/unit/020-practice-call-info.dom.txt",
+          "dom_sha256": "144c257f0ad3d49e0752f5619a40e680d3d7fd80f43817178840d7e5c8742da6",
+          "captured_at": "2026-10-27T15:24:10.472Z",
+          "proves_only": "020 shows an offered Check-In tab while51009 was enabled, plus Command/Video tabs. It does not show a timer, Unit check-in, command body, video empty state or stream."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S10-A",
+          "normal_ui_action": "On an approved active call with timers enabled, select Check-In; inspect actual eligible target cards/type choices before acting.",
+          "required_actual_evidence": "Actual timer/target/countdown, Check In form and offered Personnel/Unit-type choices.",
+          "prerequisite": "Closed51009 cannot support a fresh active-call check-in. Parent may configure a narrow call-specific/eligible timer; no global default change or eligibility bypass.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S10-B",
+          "normal_ui_action": "If authorized, record one explicitly fictional software check-in with a clear note, then open History.",
+          "required_actual_evidence": "Actual success and newly stored history entry for the selected target. No GPS/physical arrival/remote alert claim.",
+          "prerequisite": "Use only the type genuinely offered. Personnel targets require signed-in user; Unit-type target requires matching activeUnit.TypeId; IC is excluded from this client.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S10-C",
+          "normal_ui_action": "Open Command and Video; capture actual content/loaded empty states.",
+          "required_actual_evidence": "Real command resource panel and configured feed list or honest no-feed state.",
+          "prerequisite": "Do not start an external stream, camera or provider operation; empty-state narration must remain bounded.",
+          "status": "captured_and_qualified_for_bounded_readonly_scope",
+          "resolution_captures": [
+            {
+              "id": "012-incident-command-empty",
+              "file": "captures/expansion/unit-response-20261027/012-incident-command-empty.jpg",
+              "sha256": "fb39dfa9f735a5f58b89c12f53a136e00b8f10432c314734aea3f8e91ba2b129",
+              "captured_at": "2026-10-27T21:00:16.235Z"
+            },
+            {
+              "id": "013-incident-video-empty",
+              "file": "captures/expansion/unit-response-20261027/013-incident-video-empty.jpg",
+              "sha256": "f7b211e0c0405abdf7c576c898750eba1aa057d92d989664c3254ef78027ebad",
+              "captured_at": "2026-10-27T21:00:34.290Z"
+            }
+          ],
+          "reviewed_subset": {
+            "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+            "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+            "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+            "accepted": 19,
+            "excluded": 2,
+            "all21_original_pixels_DOM_reviewed": true
+          },
+          "resolution_limit": "Command and Video loaded empty.014 only shows an unsaved feed form; no actual command assignment/feed creation/stream exercised."
+        }
+      ],
+      "source_corrections_before_freeze": [],
+      "new_readonly_capture_refs": [
+        "012-incident-command-empty",
+        "013-incident-video-empty"
+      ]
+    },
+    {
+      "scene_id": "11-complete-the-crew-s-checklist-deliberately",
+      "title": "Complete the crew’s checklist deliberately",
+      "draft_narration_sha256": "6ae98615ac27d880fd9d9282ea29954f000053a7c2b802270267cf54e521c005",
+      "draft_required_labels": [
+        "Due checks",
+        "Start checklist",
+        "Save progress",
+        "Submit checklist"
+      ],
+      "coverage": "missing_actual_operational_content",
+      "existing": [],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S11-A",
+          "normal_ui_action": "Sidebar Checklists→Due checks→actual published definition/target or Open check.",
+          "required_actual_evidence": "Actual active unit target, checklist name/published version/required items and entry into the editable run.",
+          "prerequisite": "Checklist access/system enabled; published safe fictional run target; no protected-data unlock/MFA bypass.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S11-B",
+          "normal_ui_action": "Answer only fictional non-attestation items; inspect an actually allowed Not applicable→Reason branch and actual conditional/required item validation.",
+          "required_actual_evidence": "Real entered answer, required indicator, Not applicable and Reason; no invented branch.",
+          "prerequisite": "Do not claim operational readiness. Stop if actual form demands current-device location, real signature or unavailable witness before the authorized boundary.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S11-C",
+          "normal_ui_action": "Save progress→close→Local drafts or server History→reopen the same run.",
+          "required_actual_evidence": "Actual resumable stored answer/version and run identity. “Start checklist” is a heading; new runs start with a target-name button, not necessarily a button with that heading.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S11-D",
+          "normal_ui_action": "Review the permitted completed training answers→Submit checklist; capture the actual returned state or validation/refusal.",
+          "required_actual_evidence": "Real submitted / Awaiting witness / failed validation result, with no Attest and complete action.",
+          "prerequisite": "Only if ordinary form eligibility allows it and a genuinely safe training run is authorized; never submit a real signature or independent witness attestation.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S11-E",
+          "normal_ui_action": "If photo/evidence is retained in practice, use an authorized public-safe sample through the actual normal chooser and reopen its evidence; otherwise keep the photo branch expressly unresolved.",
+          "required_actual_evidence": "Real selected/stored evidence shown in this Unit run, not Responder evidence or an empty photo control.",
+          "prerequisite": "No camera/private library or device GPS permission; durable native offline operation remains untested.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [
+        "Correct “choose an apparatus target and Start checklist” to identify the actual Start checklist heading and target-name button. “Resume ... review a photo” remains an operation gap until actual Unit evidence exists."
+      ],
+      "new_readonly_capture_refs": []
+    },
+    {
+      "scene_id": "12-close-deselect-and-reset-deliberately",
+      "title": "Close, deselect, and reset deliberately",
+      "draft_narration_sha256": "be457d1cad1359e52e2fcba958390c7e89b4737185119308e1241b227bf200e9",
+      "draft_required_labels": [
+        "Close Call",
+        "Close Type",
+        "Close Note",
+        "Deselect"
+      ],
+      "coverage": "partial_historical_screens",
+      "existing": [
+        {
+          "id": "024-engine51-response-saved",
+          "file": "captures/expansion/unit/024-engine51-response-saved.jpg",
+          "sha256": "ca59850d32ed6c74c7c5251616d1eb30d3e1199e9abe6811b37a9ea5393a6e42",
+          "dom_file": "captures/expansion/unit/024-engine51-response-saved.dom.txt",
+          "dom_sha256": "058e5df18471183c90881191c85fa316af4287ab94642cf523599bfe84937cdb",
+          "captured_at": "2026-10-27T15:25:45.576Z",
+          "proves_only": "024/025 show offered DOM-reviewed Deselect icon on then-active51009.035/038/039 show later Available/NoActiveCall after Responder closure; they do not prove a Unit Close Call action, accepted Deselect dialog, or current Released status."
+        },
+        {
+          "id": "025-engine51-response-header",
+          "file": "captures/expansion/unit/025-engine51-response-header.jpg",
+          "sha256": "11b2778a24113686f0184ba9fb90d5e6e915e00bbaa41cb8758f05ac763b1a91",
+          "dom_file": "captures/expansion/unit/025-engine51-response-header.dom.txt",
+          "dom_sha256": "058e5df18471183c90881191c85fa316af4287ab94642cf523599bfe84937cdb",
+          "captured_at": "2026-10-27T15:28:44.814Z",
+          "proves_only": "024/025 show offered DOM-reviewed Deselect icon on then-active51009.035/038/039 show later Available/NoActiveCall after Responder closure; they do not prove a Unit Close Call action, accepted Deselect dialog, or current Released status."
+        },
+        {
+          "id": "035-available-no-destination-step",
+          "file": "captures/expansion/unit/035-available-no-destination-step.jpg",
+          "sha256": "c08026c83d5cb55476b13a6b0bb89449731512662d8e48b247a88d93c9405728",
+          "dom_file": "captures/expansion/unit/035-available-no-destination-step.dom.txt",
+          "dom_sha256": "933ce521ca99b167ee97a9d1b82ec9ceb8f87bf4fc7107b4f681d924476af3fd",
+          "captured_at": "2026-10-27T18:50:25.507Z",
+          "proves_only": "024/025 show offered DOM-reviewed Deselect icon on then-active51009.035/038/039 show later Available/NoActiveCall after Responder closure; they do not prove a Unit Close Call action, accepted Deselect dialog, or current Released status."
+        },
+        {
+          "id": "038-available-correction-exact-readback",
+          "file": "captures/expansion/unit/038-available-correction-exact-readback.jpg",
+          "sha256": "acc29df36d0180e934ac6d93cc8a98478ea5bb97875cc61947b7356acb2bcd4f",
+          "dom_file": "captures/expansion/unit/038-available-correction-exact-readback.dom.txt",
+          "dom_sha256": "89766d9432eee0f0cb2e6fbe6f905525b5df48d4e7cdb8b49b43722659c0b6da",
+          "captured_at": "2026-10-27T18:53:28.750Z",
+          "proves_only": "024/025 show offered DOM-reviewed Deselect icon on then-active51009.035/038/039 show later Available/NoActiveCall after Responder closure; they do not prove a Unit Close Call action, accepted Deselect dialog, or current Released status."
+        },
+        {
+          "id": "039-engine51-available-header-crew",
+          "file": "captures/expansion/unit/039-engine51-available-header-crew.jpg",
+          "sha256": "af7db8fb829c4548f6690438b44069f1dea008131303bb7272dd92f01664f4b5",
+          "dom_file": "captures/expansion/unit/039-engine51-available-header-crew.dom.txt",
+          "dom_sha256": "0e5185d8a8a87044cf33fbd04be6f04b3fb0ed9f125be2228eec1d19b03c55f0",
+          "captured_at": "2026-10-27T18:53:37.012Z",
+          "proves_only": "024/025 show offered DOM-reviewed Deselect icon on then-active51009.035/038/039 show later Available/NoActiveCall after Responder closure; they do not prove a Unit Close Call action, accepted Deselect dialog, or current Released status."
+        }
+      ],
+      "missing_shot_groups": [
+        {
+          "id": "U02-S12-A",
+          "normal_ui_action": "On only the new owned disposable Unit call, actual overflow→Close Call. Show Close Type choices, clear training Close Note and Notify everyone on the call OFF.",
+          "required_actual_evidence": "Actual Unit close form with selected type/note/off notification state immediately before submit.",
+          "prerequisite": "Do not touch original51001–51003.51009 is already closed; no reopen/reset. The notification switch defaults ON each form open.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S12-B",
+          "normal_ui_action": "Submit Close Call once; capture success and refreshed active-call list without the new call.",
+          "required_actual_evidence": "Actual Unit closure result and disappearance/closed detail state; errors such as active incident command remain real blockers.",
+          "prerequisite": "Existing authenticated fictional Unit session; no browser action performed by this audit.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S12-C",
+          "normal_ui_action": "If active selection remains, use Deselect→real browser confirmation→accept, then capture No Active Call.",
+          "required_actual_evidence": "Actual web confirmation and cleared-selection result, separate from closure.",
+          "prerequisite": "Normal browser dialog only; preserve user-owned app/auth sessions. No unsupported dialog bypass.",
+          "status": "not_captured_for_this_Unit_operation"
+        },
+        {
+          "id": "U02-S12-D",
+          "normal_ui_action": "Inspect final actual Engine51 status. If parent authorizes a cleanup status, submit the chosen configured no-destination state with a clear training note and fresh-read result; preserve Herrmann1/1.",
+          "required_actual_evidence": "Independent final status/NoActiveCall/crew proof. Do not assume Close or Deselect made the unit Available or Released.",
+          "prerequisite": "Current parent-reported server state is Released; agree the intended end state before any mutation, never overwrite it simply to match an older screenshot.",
+          "status": "not_captured_for_this_Unit_operation"
+        }
+      ],
+      "source_corrections_before_freeze": [],
+      "new_readonly_capture_refs": []
+    }
+  ],
+  "reusable_capture_refs": [
+    "015-engine51-herrmann-preserved",
+    "016-available-destination-options",
+    "017-status-note-before-submit",
+    "018-number-search-no-match",
+    "020-practice-call-info",
+    "021-set-active-status-selection",
+    "022-responding-own-call-destination",
+    "023-responding-note-submit",
+    "024-engine51-response-saved",
+    "025-engine51-response-header",
+    "035-available-no-destination-step",
+    "038-available-correction-exact-readback",
+    "039-engine51-available-header-crew",
+    "040-engine51-herrmann-assignment-preserved"
+  ],
+  "rejected_captures": [
+    {
+      "id": "008-sso-unconfigured-runtime-blocker",
+      "file": "captures/expansion/unit/008-sso-unconfigured-runtime-blocker.jpg",
+      "sha256": "b84876e761b8bf856ab55bcd4aa32c54cf83c828ffc4be5a92b19c63869522cb",
+      "reason": "excluded_application_error"
+    },
+    {
+      "id": "012-select-engine51",
+      "file": "captures/expansion/unit/012-select-engine51.jpg",
+      "sha256": "2e8c0e17d348b6cc50a2c30ec04d494cb654af4c0fd5f1322942b08112efe820",
+      "reason": "System theme has nearly white title/unit names on white selection sheet; not legible enough for control proof. Recapture under chosen Dark theme is still required."
+    },
+    {
+      "id": "019-call-id-search-practice",
+      "file": "captures/expansion/unit/019-call-id-search-practice.jpg",
+      "sha256": "4bdbb4423762d0caebee07b86e0459611fedfeb3882971eb1efa855d3af7e195",
+      "reason": "Screenshot caught a blank transitional call-list body although preceding DOM already contained the matching call. Cannot prove matching result; use later024/025 instead."
+    },
+    {
+      "id": "030-engine51-current-unit-selection",
+      "file": "captures/expansion/unit/030-engine51-current-unit-selection.jpg",
+      "sha256": "98e551b958e8a54df809459624b0fe9f55e832cda018504e721b375678af4b2f",
+      "reason": "Excluded: the chooser auto-closed before this screenshot. Select Unit, Current Unit and Cancel are absent;031 supplies the real reopened selector. Header is clipped and cannot prove apparatus status."
+    },
+    {
+      "id": "036-available-training-note-before-submit",
+      "file": "captures/expansion/unit/036-available-training-note-before-submit.jpg",
+      "sha256": "21413afb257ce652807226be0b83000f98add25cb72b653a12d98799ab1b586c",
+      "reason": "Excluded: keyboard typing dropped characters, producing a visibly garbled note that was submitted. Preserve the historical evidence;038 contains the explicit correction with exact fill/read-back before a subsequent normal Submit. No history was erased."
+    },
+    {
+      "id": "037-engine51-available-preserved-crew",
+      "file": "captures/expansion/unit/037-engine51-available-preserved-crew.jpg",
+      "sha256": "d4e9b45c7b82123f2799c186297039fb084d74caae1d84b071c6b5e1a45fe998",
+      "reason": "Excluded: Engine header and1-of-1 badge are outside the viewport.039 supplies full saved Available/Engine51/1of1 proof; do not infer crew from the clipped image."
+    }
+  ],
+  "ordered_capture_sequence": [
+    {
+      "order": 1,
+      "action": "Read-only refresh/context + Calls clear-search and detail/tab content captures; keep original active calls unchanged.",
+      "groups": [
+        "U02-S01-A",
+        "U02-S02-A",
+        "U02-S02-B",
+        "U02-S02-C",
+        "U02-S04-A"
+      ]
+    },
+    {
+      "order": 2,
+      "action": "Crew picker inspection, then only the exact parent-approved same-assignment or relief+restoration Save example.",
+      "groups": [
+        "U02-S05-A",
+        "U02-S05-B",
+        "U02-S05-C"
+      ]
+    },
+    {
+      "order": 3,
+      "action": "Coordinate one new clearly TRAINING ONLY disposable Unit call; capture blank/validation/options/location/destination/recipients and actual returned identity.",
+      "groups": [
+        "U02-S06-A",
+        "U02-S06-B",
+        "U02-S07-A",
+        "U02-S07-B",
+        "U02-S07-C",
+        "U02-S08-A",
+        "U02-S08-B",
+        "U02-S01-B"
+      ]
+    },
+    {
+      "order": 4,
+      "action": "Capture call edits, maps, notes/image/file/site/history contents; Set Active/status only when needed and authorized, preserving clear software-only notes.",
+      "groups": [
+        "U02-S08-C",
+        "U02-S03-A",
+        "U02-S03-B",
+        "U02-S09-A",
+        "U02-S09-B",
+        "U02-S09-C"
+      ]
+    },
+    {
+      "order": 5,
+      "action": "While the owned call is still open, coordinate an eligible narrow timer; record only actually offered Unit check-in and stored history; inspect Command/Video loaded states.",
+      "groups": [
+        "U02-S10-A",
+        "U02-S10-B",
+        "U02-S10-C"
+      ]
+    },
+    {
+      "order": 6,
+      "action": "Run the separate authorized fictional Unit checklist to save/resume/submit boundary; no witness attestation, signature or device GPS.",
+      "groups": [
+        "U02-S11-A",
+        "U02-S11-B",
+        "U02-S11-C",
+        "U02-S11-D",
+        "U02-S11-E"
+      ]
+    },
+    {
+      "order": 7,
+      "action": "Close only the newly owned call with Notify everyone OFF; capture closure, separate Deselect dialog/result and independent final unit/crew state.",
+      "groups": [
+        "U02-S12-A",
+        "U02-S12-B",
+        "U02-S12-C",
+        "U02-S12-D"
+      ]
+    },
+    {
+      "order": 8,
+      "action": "Hold/queue branches stay unresolved unless specifically approved and actually exercised; no department setting/network mutation just to fill footage.",
+      "groups": [
+        "U02-S04-B",
+        "U02-S04-C"
+      ]
+    }
+  ],
+  "remaining_shot_groups": 28,
+  "sector_companions": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "An EMS crew receives a training standby.",
+      "practice": "Read actual call identity, contacts and dispatched resources, then distinguish Set Active selection from a submitted unit status."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A community response vehicle attends a fictional support request.",
+      "practice": "Use narrow permitted recipients and a useful fictional note; confirm resulting status rather than assuming a notification or physical visit."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A SAR vehicle reaches a search staging point.",
+      "practice": "Inspect the selected incident, valid supplied destination and eligible check-in target; claim neither device GPS nor physical arrival from a software update."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A security team triages an alarm.",
+      "practice": "Review actual Site Info, History and any empty states before editing; keep external video, camera and provider operations separate."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A mutual-aid engine prepares for a wildland assignment.",
+      "practice": "Inspect the unit’s actual status/destination and checklist target/version; demonstrate only supported current controls and preserve crew assignments."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial team runs a disposable incident exercise.",
+      "practice": "Use the loaded field policy, review recipients, and close only the authorized training call. Treat Deselect and separate record/checklist states as distinct actions."
+    }
+  ],
+  "source_pins": [
+    {
+      "app": "Unit",
+      "path": "src/app/(app)/calls.tsx",
+      "sha256": "ae3634d0803f1412c2cb7cf071e3cbd8a0ab5dbe57c85ee60724d2d5a240ded9"
+    },
+    {
+      "app": "Unit",
+      "path": "src/app/call/[id].tsx",
+      "sha256": "e6f88c2b1468959840f7fe81b32b2637ee1982f35be4f9aefc5cfd8e4596d605"
+    },
+    {
+      "app": "Unit",
+      "path": "src/app/call/new/index.tsx",
+      "sha256": "5fc816e59645c51234c8b4f1d4ca049c22da54ebe74fab04f813bb7b8bff378b"
+    },
+    {
+      "app": "Unit",
+      "path": "src/app/call/[id]/edit.tsx",
+      "sha256": "520ebeaf43d89fd11d9de76bf8fb3b1ab1a00bde41c9f1cfb5b1238c0eaa03e2"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/calls/call-detail-menu.tsx",
+      "sha256": "ab664505949b0e7492bcf30c4d4758669960907162f010809352f7e34d73c406"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/calls/close-call-bottom-sheet.tsx",
+      "sha256": "5694aad90aa0950fd562abdd50041b7a7993600295927ce2ead22be7294a77eb"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/calls/call-notes-modal.tsx",
+      "sha256": "570deab050d11c0dc7b5dc27adee7379b191bf7dd4c8123fa83cfdebc701614f"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/calls/call-images-modal.tsx",
+      "sha256": "7749da50f6632262f48a78ab7f63e9bce581af87e100c97947e502ba64d120fd"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/calls/call-files-modal.tsx",
+      "sha256": "1f5ebb64dae96e186adde035f28fabecfe62feda3eee6c3d2a4cd9a69893d2eb"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/calls/destination-poi-selector.tsx",
+      "sha256": "6fcb47b83eb2644b0e21ee363662a960ebc84efed59ff5e0631b0ebabbc55cdd"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/status/status-bottom-sheet.tsx",
+      "sha256": "aed3a7fe2ddb4d3de84739435ab62fb29d1b1f30393b4d2c255670576629fe7d"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/settings/unit-selection-bottom-sheet.tsx",
+      "sha256": "ac9cf41bdc41366edfb6aeff76cecaee83e3d5c67eecb34e981f94d67514f2b4"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/sidebar/call-sidebar.tsx",
+      "sha256": "72ba6af3695750fb262a83782e6d66c27b6743d4826fdb8ce3cf47342439f61e"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/sidebar/roles-sidebar.tsx",
+      "sha256": "3f73202513f5a420b6dbeb3ed3ca5c2ee9e17aee15fa67b87b0f05faa53f4058"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/sidebar/status-sidebar.tsx",
+      "sha256": "356044c54d6e1af49dd96990c32b73aa6f4b54ceb9d12808ec9bb507f13aa2ab"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/roles/roles-bottom-sheet.tsx",
+      "sha256": "de89407a3072c095ddaadf2a60cb660340112247b7b4993b0b9377ff307f2d59"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/roles/role-assignment-item.tsx",
+      "sha256": "12fbd7baed3282a71bd22a6e2e4b8396ab651f3d100df285b7bddc11ad404095"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/roles/role-user-selection-modal.tsx",
+      "sha256": "2276c8c7b11b054ca2900a4c8599be857171ddb95c19d152ef65a6ecda833bff"
+    },
+    {
+      "app": "Unit",
+      "path": "src/stores/roles/store.ts",
+      "sha256": "77059bf2a607be1e64c207abeddb67f9bc43cc0d65295650a8108501c4f1b06b"
+    },
+    {
+      "app": "Unit",
+      "path": "src/stores/app/core-store.ts",
+      "sha256": "c3ee7813c3de96add5bd65655ae415f37b4a1bed1a8dc3777cfc29e40e872ee6"
+    },
+    {
+      "app": "Unit",
+      "path": "src/stores/status/store.ts",
+      "sha256": "3ce04e73cabb44348b8ce3a1497ea1dbf0c8d1c72589ba172cf64b7cd1ca7ad3"
+    },
+    {
+      "app": "Unit",
+      "path": "src/hooks/use-status-signalr-updates.ts",
+      "sha256": "79d2f9c25264007c7373a0989506f2ebf0aba428c7d2683f4de2099e813ae211"
+    },
+    {
+      "app": "Unit",
+      "path": "src/lib/check-in-eligibility.ts",
+      "sha256": "7ba81452b8508f3a021cb269165f8548a81f1da1c05fb2e7bc6050710d9fb441"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/check-in-timers/check-in-tab-content.tsx",
+      "sha256": "173e9fa4700df82c646e797b8d924ac73e43365948bcdeb37084687136f687bd"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/check-in-timers/check-in-bottom-sheet.tsx",
+      "sha256": "12786d224a241417afd5c9f714a50927d3a07569c5a1012c015bf2335a2a193a"
+    },
+    {
+      "app": "Unit",
+      "path": "src/app/(app)/checklists.tsx",
+      "sha256": "d35e29d1e35f74d62892708d96c8fa6bb67f7a8852e54ba70550738ff4155279"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/checklists/checklist-run-sheet.tsx",
+      "sha256": "7f37bb43cf69c96f50c781c53d5565b36605c6324e92251787097e1be40e942d"
+    },
+    {
+      "app": "Unit",
+      "path": "src/api/calls/calls.ts",
+      "sha256": "de61fd8e8167c729c0206ec68adfcfd95e2823b41e4034fa8b1be298a3769565"
+    },
+    {
+      "app": "Unit",
+      "path": "src/api/check-in-timers/check-in-timers.ts",
+      "sha256": "f5d0d9f8429e7d98acabba775ca5a748b92f92d5117fa0a7c5496920e39a181e"
+    },
+    {
+      "app": "Unit",
+      "path": "src/api/checklists/checklists.ts",
+      "sha256": "0fad27496a4939c3ba271f37124c523c40f79eeabf37f086590cab61603c172f"
+    },
+    {
+      "app": "Unit",
+      "path": "src/api/units/unitRoles.ts",
+      "sha256": "d7df43410909aa03dd69c7c0ce30db98a84a3913ee12353493c87adaca7ed7c7"
+    },
+    {
+      "app": "Unit",
+      "path": "src/api/units/unitStatuses.ts",
+      "sha256": "7fd0f959c602eb87b2e0193fc35246f365c9b4fba387dd5ee1651b7c058a9c2e"
+    },
+    {
+      "app": "Unit",
+      "path": "src/translations/en.json",
+      "sha256": "a5f220e4d9204ff38f40b266219f841c2ba939dc9208b9cd8a3544b2a09cd3a4"
+    },
+    {
+      "app": "Core",
+      "path": "Web/Resgrid.Web.Services/Controllers/v4/UnitRolesController.cs",
+      "sha256": "cf6560b26484be8cc95f4790234e1d17b558f7dad817a526deca4295b4d0cb43"
+    }
+  ],
+  "browser_native_provider_limits": [
+    "No actual GPS, camera, microphone, native background location/alert, external navigation/feed or provider receipt is exercised or claimed.",
+    "Current source supports required live-fix statuses, signature/location-required checklist fields and protected access. Such branches are not bypassed; stop at their actual boundary.",
+    "File download/share uses device filesystem/sharing code; a web list/empty state does not demonstrate native download/share success.",
+    "No durable native offline-recovery claim can come from a desktop browser queue/control alone.",
+    "No new call number, destination POI, timer or eligible relief member is assumed to exist; actual coordinator-prepared state and returned identifiers must be recorded."
+  ],
+  "preserved_ready_sources": {
+    "unit01_sha256": "884fd7bc83b2f2a9f0d30f379364db163b36f6549f4dd3c6f862548d4c6956ba",
+    "location_sha256": "84eea946bcaee807c9b2fc9ac1c7dc529c43b890ceadd20265481aaf29fa8a06"
+  },
+  "canonical_unit02_unchanged": true,
+  "supplemental_context_capture": {
+    "id": "001-refreshed-engine-context",
+    "file": "captures/expansion/unit-response-20261027/001-refreshed-engine-context.jpg",
+    "sha256": "2539c3c4da347f83d3273c88953d852bad7d21831edd8a7773a10939010b7bff",
+    "dom_file": "captures/expansion/unit-response-20261027/001-refreshed-engine-context.dom.txt",
+    "dom_sha256": "1912cd35c91507c805a7bbffa5b3d8fd8ea546b57fd76310569c77a7ceff5163",
+    "captured_at": "2026-10-27T20:49:42.590Z",
+    "reviewed_at": "2026-10-27T20:53:19.496482+00:00",
+    "reviewer": "responder_unit_coverage offline original JPEG inspection",
+    "visible_labels_reviewed": [
+      "Engine 51",
+      "Released",
+      "1 of 1 Roles",
+      "No Active Call"
+    ],
+    "proves_only": "Actual fresh Engine51 Released/NoActiveCall/1of1 sidebar after normal read-only Truck81→Engine51 selection. Member identity preservation is parent-reported; this image does not open the role seat.",
+    "raw_manifest_not_edited": true,
+    "raw_record_still_pending_curated_manifest_review": false,
+    "reviewed_subset": {
+      "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+      "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+      "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+      "accepted": 19,
+      "excluded": 2,
+      "all21_original_pixels_DOM_reviewed": true
+    }
+  },
+  "shot_groups_total": 36,
+  "captured_context_groups_pending_curated_metadata": 0,
+  "audit_snapshot_limit": "Stable original40 Unit captures plus all21 held Unit response captures reviewed here;19qualified narrowly,015clipped superseded and021wrong map excluded. Parent newer unit-response-actions-20261027 folder remains active and is not reviewed here.",
+  "reviewed_response_capture_subset": {
+    "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+    "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+    "raw_manifest_sha256": "e89788a0134aa42bf9d3480d78fabfc32210aee3fbed5d4b9e106b5bb9263f6c",
+    "accepted": 19,
+    "excluded": 2,
+    "all21_original_pixels_DOM_reviewed": true
+  },
+  "map_failure_diagnosis": {
+    "file": "expansion/audits/unit-response-map-mismatch-diagnosis-20261027.json",
+    "sha256": "3be4e475a45664661cd0c33121689f2c9f5ba779084d6e4dcd0068de3f10eae5"
+  },
+  "resolved_bounded_readonly_groups": 8,
+  "updated_at": "2026-10-27T21:19:19.172717+00:00"
+}

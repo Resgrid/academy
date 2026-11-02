@@ -1,0 +1,273 @@
+import { SearchIcon, X } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatList, Keyboard, KeyboardAvoidingView, Modal, Platform, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { ProtectedText } from '@/components/data-protection/protected-text';
+import { showErrorMessage } from '@/components/ui/utils';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { useAuthStore } from '@/lib/auth';
+import { isRedactedValue, ProtectedFieldIds } from '@/lib/data-protection/redacted';
+import type { CallNoteResultData } from '@/models/v4/callNotes/callNoteResultData';
+import { useCallDetailStore } from '@/stores/calls/detail-store';
+
+import { Loading } from '../common/loading';
+import ZeroState from '../common/zero-state';
+import { Box } from '../ui/box';
+import { Button, ButtonText } from '../ui/button';
+import { Heading } from '../ui/heading';
+import { HStack } from '../ui/hstack';
+import { Input, InputField, InputSlot } from '../ui/input';
+import { Text } from '../ui/text';
+import { Textarea, TextareaInput } from '../ui/textarea';
+import { VStack } from '../ui/vstack';
+
+interface CallNotesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  callId: string;
+}
+
+function CallNotesModal({ isOpen, onClose, callId }: CallNotesModalProps) {
+  const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
+  const { colorScheme } = useColorScheme();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [newNote, setNewNote] = useState('');
+  const { callNotes, addNote, searchNotes, isNotesLoading, fetchCallNotes } = useCallDetailStore();
+  const { profile } = useAuthStore();
+
+  // Create dynamic styles based on color scheme
+  const styles = React.useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          backgroundColor: colorScheme === 'dark' ? '#111827' : 'white',
+        },
+        keyboardAvoidingContainer: {
+          flex: 1,
+        },
+        header: {
+          backgroundColor: colorScheme === 'dark' ? '#111827' : 'white',
+          borderBottomWidth: 1,
+          borderBottomColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB',
+        },
+        listContainer: {
+          flex: 1,
+        },
+        listContent: {
+          paddingHorizontal: 16,
+          paddingTop: 8,
+          paddingBottom: 16,
+        },
+        footer: {
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          borderTopWidth: 1,
+          borderTopColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB',
+          backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#F9FAFB',
+        },
+      }),
+    [colorScheme]
+  );
+
+  // Track if modal was actually opened to avoid false close events
+  const wasModalOpenRef = useRef(false);
+
+  // Track analytics when modal becomes visible
+  useEffect(() => {
+    if (isOpen) {
+      wasModalOpenRef.current = true;
+      try {
+        trackEvent('call_notes_modal_viewed', {
+          timestamp: new Date().toISOString(),
+          callId,
+          noteCount: callNotes?.length || 0,
+          hasNotes: Boolean(callNotes?.length),
+          isLoading: isNotesLoading,
+          hasSearchQuery: searchQuery.trim().length > 0,
+        });
+      } catch (error) {
+        console.warn('Failed to track call notes modal analytics:', error);
+      }
+    }
+  }, [isOpen, trackEvent, callId, callNotes?.length, isNotesLoading, searchQuery]);
+
+  // Fetch call notes when modal opens
+  useEffect(() => {
+    if (isOpen && callId) {
+      fetchCallNotes(callId);
+    }
+  }, [isOpen, callId, fetchCallNotes]);
+
+  const filteredNotes = React.useMemo(() => {
+    return searchNotes(searchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, searchNotes, callNotes]);
+
+  // Get current user from profile
+  const currentUser = profile?.sub || '';
+
+  const handleAddNote = React.useCallback(async () => {
+    if (newNote.trim()) {
+      const noteLen = newNote.trim().length;
+      // Track note addition analytics immediately
+      try {
+        trackEvent('call_note_added', {
+          timestamp: new Date().toISOString(),
+          callId,
+          noteLength: noteLen,
+          userId: currentUser,
+        });
+      } catch (error) {
+        console.warn('Failed to track note addition analytics:', error);
+      }
+      try {
+        await addNote(callId, newNote, currentUser, null, null);
+        // Dismiss keyboard first, then clear text to ensure proper state update on iOS
+        Keyboard.dismiss();
+        requestAnimationFrame(() => {
+          setNewNote('');
+        });
+      } catch (error) {
+        console.error('Failed to add note:', error);
+        showErrorMessage(t('callNotes.addNoteError'));
+      }
+    }
+  }, [newNote, callId, currentUser, addNote, trackEvent, t]);
+
+  // Handle close with analytics tracking
+  const handleClose = useCallback(() => {
+    // Only track close analytics if modal was actually opened
+    if (wasModalOpenRef.current) {
+      try {
+        trackEvent('call_notes_modal_closed', {
+          timestamp: new Date().toISOString(),
+          callId,
+          wasManualClose: true,
+          noteCount: callNotes?.length || 0,
+          hadSearchQuery: searchQuery.trim().length > 0,
+        });
+      } catch (error) {
+        console.warn('Failed to track call notes modal close analytics:', error);
+      }
+      wasModalOpenRef.current = false;
+    }
+    onClose();
+  }, [onClose, trackEvent, callId, callNotes?.length, searchQuery]);
+
+  // Handle search query change with analytics tracking
+  const handleSearchQueryChange = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+
+      // Track search analytics when user actually types something
+      if (query.trim().length > 0 && query.trim().length % 3 === 0) {
+        try {
+          trackEvent('call_notes_search', {
+            timestamp: new Date().toISOString(),
+            callId,
+            searchQuery: query.trim(),
+            resultCount: searchNotes(query.trim()).length,
+          });
+        } catch (error) {
+          console.warn('Failed to track call notes search analytics:', error);
+        }
+      }
+    },
+    [setSearchQuery, trackEvent, callId, searchNotes]
+  );
+
+  // Render note item for FlatList
+  const renderNoteItem = useCallback(
+    ({ item: note }: { item: CallNoteResultData }) => (
+      <Box className="mb-3 w-full rounded-lg bg-gray-50 p-4 shadow-xs dark:bg-gray-700">
+        <ProtectedText value={note.Note} fieldId={ProtectedFieldIds.callNote} className="mb-2 text-gray-800 dark:text-gray-200" />
+        <HStack className="w-full justify-between">
+          <Text className="text-xs text-gray-500 dark:text-gray-400">{note.FullName}</Text>
+          <Text className="text-xs text-gray-500 dark:text-gray-400">{note.TimestampFormatted}</Text>
+        </HStack>
+      </Box>
+    ),
+    []
+  );
+
+  // Key extractor for FlatList
+  const keyExtractor = useCallback((item: CallNoteResultData) => item.CallNoteId.toString(), []);
+
+  // Empty list component
+  const ListEmptyComponent = useCallback(() => <ZeroState heading={t('No notes found')} />, [t]);
+
+  return (
+    <Modal visible={isOpen} animationType="slide" presentationStyle="pageSheet" onRequestClose={handleClose}>
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingContainer}>
+          {/* Fixed Header */}
+          <View style={styles.header}>
+            <Box className="w-full flex-row items-center justify-between px-4 pb-4 pt-2">
+              <Heading size="lg">{t('callNotes.title')}</Heading>
+              <Button variant="link" onPress={handleClose} className="p-1" testID="close-button">
+                <X size={24} color={colorScheme === 'dark' ? '#9ca3af' : '#6b7280'} />
+              </Button>
+            </Box>
+
+            {/* Search Bar - Fixed */}
+            <Box className="px-4 pb-4">
+              <Input className="w-full rounded-lg bg-gray-100 dark:bg-gray-700">
+                <InputSlot>
+                  <SearchIcon size={20} color={colorScheme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                </InputSlot>
+                <InputField placeholder={t('callNotes.searchPlaceholder')} value={searchQuery} onChangeText={handleSearchQueryChange} />
+              </Input>
+            </Box>
+          </View>
+
+          {/* Scrollable Notes List */}
+          <View style={styles.listContainer}>
+            {isNotesLoading ? (
+              <Loading />
+            ) : (
+              <FlatList
+                data={filteredNotes}
+                renderItem={renderNoteItem}
+                keyExtractor={keyExtractor}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.listContent}
+                ListEmptyComponent={ListEmptyComponent}
+                showsVerticalScrollIndicator={true}
+                removeClippedSubviews={true}
+                maxToRenderPerBatch={10}
+                windowSize={5}
+              />
+            )}
+          </View>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <VStack space="md" className="w-full">
+              <Textarea className="w-full rounded-lg bg-white dark:bg-gray-700">
+                <TextareaInput placeholder={t('callNotes.addNotePlaceholder')} value={newNote} onChangeText={setNewNote} autoCorrect={false} className="min-h-[80px] w-full" />
+              </Textarea>
+              <HStack className="w-full justify-between">
+                <Button variant="outline" onPress={handleClose} className="border-gray-300 dark:border-gray-600">
+                  <ButtonText className="text-gray-700 dark:text-gray-300">{t('common.cancel')}</ButtonText>
+                </Button>
+                <Button onPress={handleAddNote} className="bg-blue-600 dark:bg-blue-500" isDisabled={!newNote.trim() || isNotesLoading}>
+                  <HStack space="xs" className="text-center">
+                    <ButtonText>{t('callNotes.addNote')}</ButtonText>
+                  </HStack>
+                </Button>
+              </HStack>
+            </VStack>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </Modal>
+  );
+}
+
+export default CallNotesModal;
+export { CallNotesModal };

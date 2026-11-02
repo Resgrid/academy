@@ -1,0 +1,144 @@
+
+@using Resgrid.Model.Helpers
+@model Resgrid.Web.Areas.User.Models.Training.TrainingReportView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Trainings.Trainings> localizer
+@{
+	ViewBag.Title = "Resgrid | " + localizer["TrainingReportHeader"];
+	Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+@section Styles
+{
+
+}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>@localizer["TrainingReportHeader"]</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@localizer["HomeLink"]</a>
+			</li>
+			<li>
+				<a asp-controller="Trainings" asp-action="Index" asp-route-area="User">@localizer["TrainingsLink"]</a>
+			</li>
+			<li class="active">
+				<strong>@localizer["TrainingReportHeader"]</strong>
+			</li>
+		</ol>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="wrapper wrapper-content">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>
+										@localizer["NameColumn"]
+									</th>
+									<th>
+										@localizer["GroupColumn"]
+									</th>
+									<th>
+										@localizer["ViewedColumn"]
+									</th>
+									<th>
+										@localizer["CompletedColumn"]
+									</th>
+									<th>
+										@localizer["ScoreColumn"]
+									</th>
+									<th>
+										@localizer["ResultColumn"]
+									</th>
+									<th>
+
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var u in Model.Training.Users)
+								{
+									<tr>
+										<td>@(await UserHelper.GetFullNameForUser(u.UserId))</td>
+										<td>
+											@if (Model.UserGroups.ContainsKey(u.UserId))
+											{
+												<span>@Model.UserGroups[u.UserId]</span>
+											}
+										</td>
+										<td>
+											@if (u.Viewed)
+											{
+												<span>@u.ViewedOn.Value.TimeConverterToString(Model.Department)</span>
+											}
+											else
+											{
+												<span>@localizer["NotViewed"]</span>
+											}
+										</td>
+										<td>
+											@if (u.Complete)
+											{
+												<span>@u.CompletedOn.Value.TimeConverterToString(Model.Department)</span>
+											}
+											else
+											{
+												<span>@localizer["NotCompleted"]</span>
+											}
+										</td>
+										<td>
+											@if (u.Complete && Model.Training.Questions != null && Model.Training.Questions.Count > 0)
+											{
+												<span>@u.Score</span>
+											}
+											else
+											{
+												<span>@localizer["NoScore"]</span>
+											}
+										</td>
+										<td>
+											@if (u.Complete && Model.Training.Questions != null && Model.Training.Questions.Count > 0)
+											{
+												if (@u.Score >= Model.Training.MinimumScore)
+												{
+													<span class='label label-success'>@localizer["PassLabel"]</span>
+												}
+												else
+												{
+													<span class='label label-danger'>@localizer["FailedLabel"]</span>
+												}
+											}
+											else if (u.Viewed && Model.Training.Questions == null || Model.Training.Questions.Count <= 0)
+											{
+												<span>@localizer["CompleteLabel"]</span>
+											}
+											else
+											{
+												<span>@localizer["PendingLabel"]</span>
+											}
+										</td>
+										<td>
+											<form method="post" action="@Url.Action("ResetUserTraining", "Trainings", new {Area ="User", trainingId = Model.Training.TrainingId, userId = u.UserId})" style="display: inline;">@Html.AntiForgeryToken()<button type="submit" class="btn btn-primary btn-xs">@localizer["ResetUserButton"]</button></form>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts
+{
+
+}

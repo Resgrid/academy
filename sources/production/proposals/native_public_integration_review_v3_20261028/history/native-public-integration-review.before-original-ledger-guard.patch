@@ -1,0 +1,695 @@
+--- a/scripts/render_walkthrough.py
++++ b/scripts/render_walkthrough.py
+@@ -232,15 +232,25 @@
+         except (OSError, ValueError) as exc:
+             raise AssemblyError(f"{field}: cannot read PNG/JPEG screenshot: {exc}") from exc
+         need(dimensions == (row.get("width"), row.get("height")), field, "image header dimensions do not match capture metadata")
+-        fitted = layout(*dimensions)
++        native_report = None
+         provenance = mapping(row.get("provenance"), field + ".provenance")
+-        need(provenance.get("method") == "browser_screenshot", field, "require actual browser capture provenance")
+-        try:
+-            url = urlsplit(text(provenance.get("url"), field + ".url"))
+-        except ValueError as exc:
+-            raise AssemblyError(f"{field}.url: malformed application URL") from exc
+-        need(url.scheme in ("http", "https") and url.hostname and not url.username and not url.password, field + ".url", "require the actual application http(s) URL without credentials")
+-        need(not any(key in url.query.lower() for key in ("access_token=", "token=", "api_key=", "password=")), field + ".url", "redact credential-bearing URL query values before recording provenance")
++        if provenance.get("method") == "ios_simulator_screenshot":
++            try:
++                from native_capture_public import validate_native_source
++                native_report = validate_native_source(row, root, lesson["app"])
++            except (ValueError, OSError, TypeError, KeyError) as exc:
++                raise AssemblyError(f"{field}: {exc}") from exc
++            fitted = native_report["layout"]
++            sources.extend(native_report["dependencies"])
++        else:
++            fitted = layout(*dimensions)
++            need(provenance.get("method") == "browser_screenshot" and "native_review_package" not in row, field, "require actual browser capture provenance; native evidence cannot be relabeled")
++            try:
++                url = urlsplit(text(provenance.get("url"), field + ".url"))
++            except ValueError as exc:
++                raise AssemblyError(f"{field}.url: malformed application URL") from exc
++            need(url.scheme in ("http", "https") and url.hostname and not url.username and not url.password, field + ".url", "require the actual application http(s) URL without credentials")
++            need(not any(key in url.query.lower() for key in ("access_token=", "token=", "api_key=", "password=")), field + ".url", "redact credential-bearing URL query values before recording provenance")
+         captured_at = timestamp(provenance.get("captured_at"), field + ".captured_at")
+         control_validator = _Validator(root)
+         observed_names = control_validator.observations(row, field)
+@@ -252,6 +262,8 @@
+         for flag in ("application_visible", "labels_legible", "no_errors"):
+             need(checked.get(flag) is True, f"plan.screenshot_reviews.{sid}.{flag}", "requires genuine visual review of this screenshot")
+         selected[sid] = {"metadata": row, "path": image, "layout": fitted, "observed_names": observed_names}
++        if native_report is not None:
++            selected[sid]["native_binding"] = native_report["native_binding"]
+         sources.append(image)
+         if "dom_file" in row or "dom_sha256" in row:
+             sources.append(asset({"file": row.get("dom_file"), "sha256": row.get("dom_sha256")}, root, field + ".dom"))
+@@ -484,6 +496,9 @@
+                 need(_image_dimensions(frame) == (WIDTH, HEIGHT), "frame.extract", "decoded frame is not 1920x1080")
+                 segments.append({"scene_id": scene["id"], **screen, "frame": {**file_ref(frame), "width": WIDTH, "height": HEIGHT, "time": at, "video_sha256": digest,
+                     "review_status": "pending_actual_frame_review", "application_visible": None, "visible_labels": [], "reviewed_control_names": [], "caption_text": cue["text"]}})
++                native_binding = recipe["screenshots"][screen["screenshot_id"]].get("native_binding")
++                if native_binding is not None:
++                    segments[-1]["frame"].update(native_binding=native_binding, native_frame_review=None)
+         for path, original_hash in recipe["source_hashes"].items():
+             need(_hash(Path(path)) == original_hash, "source_hashes", "a source changed during rendering; discard and re-review current inputs")
+         assembled = datetime.now(timezone.utc).isoformat()
+@@ -493,6 +508,8 @@
+                     "scenes": recipe["scenes"], "rendered_segments": segments, "browser_playback": []}
+         if recipe["plan"].get("supporting_applications"):
+             evidence.update(primary_app=recipe["lesson"]["app"], supporting_applications=recipe["plan"]["supporting_applications"])
++        if any("native_binding" in shot for shot in recipe["screenshots"].values()):
++            evidence["primary_app"] = recipe["lesson"]["app"]
+         # This is an incomplete evidence worksheet, not a passed publication gate.
+         (staging / "evidence.pending.json").write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n")
+         manifest = {"schema_version": 1, "kind": "actual_screen_walkthrough_assembly", "lesson_id": ident, "assembled_at": assembled,
+--- a/scripts/verify_capture_evidence.py
++++ b/scripts/verify_capture_evidence.py
+@@ -551,6 +551,7 @@
+     primary_app = data.get("primary_app")
+     supporting = v.supporting_applications(data.get("supporting_applications", []), primary_app)
+     screenshots, screenshot_control_names, screenshot_hashes, screenshot_records = {}, {}, {}, {}
++    native_reports = {}
+     for i, raw in enumerate(v.items(data.get("screenshots"), "screenshots")):
+         field = f"screenshots[{i}]"
+         item = v.mapping(raw, field)
+@@ -563,9 +564,16 @@
+         v.asset(item, field, image=True)
+         v.accepted_image(item, field)
+         provenance = v.mapping(item.get("provenance"), field + ".provenance")
+-        if provenance.get("method") != "browser_screenshot":
+-            v.error(field + ".provenance.method", "must be browser_screenshot from the actual application")
+-        v.url(provenance.get("url"), field + ".provenance.url")
++        if provenance.get("method") == "ios_simulator_screenshot":
++            try:
++                from native_capture_public import validate_native_source
++                native_reports[ident] = validate_native_source(item, v.root, primary_app)
++            except (ValueError, OSError, TypeError, KeyError) as exc:
++                v.error(field + ".native_review_package", str(exc))
++        else:
++            if provenance.get("method") != "browser_screenshot" or "native_review_package" in item:
++                v.error(field + ".provenance.method", "must be browser_screenshot from the actual application; native evidence cannot be relabeled")
++            v.url(provenance.get("url"), field + ".provenance.url")
+         captured = v.timestamp(provenance.get("captured_at"), field + ".provenance.captured_at")
+         if captured and assembled_at and captured > assembled_at:
+             v.error(field + ".provenance.captured_at", "application screenshot was captured after this video was assembled")
+@@ -669,6 +677,12 @@
+             v.error(field + ".frame.video_sha256", "frame proof must reference the current assembled video's hash")
+         if frame.get("application_visible") is not True:
+             v.error(field + ".frame.application_visible", "review and record that the real application is visible in the rendered frame")
++        if sid in native_reports:
++            try:
++                from native_capture_public import verify_native_frame
++                verify_native_frame(frame, video_hash, native_reports[sid], video.get("assembled_at"))
++            except (ValueError, OSError, TypeError, KeyError) as exc:
++                v.error(field + ".frame.native_frame_review", str(exc))
+         reviewed_names = frame.get("reviewed_control_names", [])
+         frame_controls = set()
+         if reviewed_names != []:
+--- a/scripts/expansion_site.py
++++ b/scripts/expansion_site.py
+@@ -242,10 +242,17 @@
+         validator.asset(shot, 'Screenshot ' + str(index), image=True)
+         validator.accepted_image(shot, 'Screenshot ' + str(index))
+         provenance = shot.get('provenance')
+-        if not isinstance(provenance, dict) or provenance.get('method') != 'browser_screenshot':
+-            raise PublicationError('Screenshot needs actual browser provenance.')
+-        _assert_no_credentials(provenance.get('url'))
+-        validator.url(provenance.get('url'), 'Capture URL')
++        if isinstance(provenance, dict) and provenance.get('method') == 'ios_simulator_screenshot':
++            try:
++                from native_capture_public import validate_native_source
++                validate_native_source(shot, root, primary_app)
++            except (ValueError, OSError, TypeError, KeyError) as exc:
++                raise PublicationError(str(exc)) from exc
++        else:
++            if not isinstance(provenance, dict) or provenance.get('method') != 'browser_screenshot' or 'native_review_package' in shot:
++                raise PublicationError('Screenshot needs actual browser provenance; native evidence cannot be relabeled.')
++            _assert_no_credentials(provenance.get('url'))
++            validator.url(provenance.get('url'), 'Capture URL')
+         validator.timestamp(provenance.get('captured_at'), 'Capture time')
+         observed = validator.observations(shot, 'Screenshot ' + str(index))
+         labels = _strings(shot.get('visible_labels'), 'Visible labels', allow_empty=bool(shot.get('visible_controls')))
+--- /dev/null
++++ b/scripts/native_capture_public.py
+@@ -0,0 +1,286 @@
++"""UNADOPTED PROPOSAL: self-contained reviewed Unit native-source package.
++
++No SDK, installed app, npm, key, development bundle, browser, network or private
++root is used here. Rehashes public PNG/receipts/source snapshots and measures
++DPR-aware geometry. It checks named review bindings; it cannot authenticate
++pixels, a reviewer, transport clients, lazy loads or executed JavaScript.
++Source validation is not video/publication approval. Historical v1/v2 unchanged.
++"""
++from datetime import datetime, timezone
++import hashlib
++import json
++import math
++from pathlib import Path, PurePosixPath
++import re
++import struct
++import uuid
++import zlib
++
++SCHEMA = 'academy.reviewed-native-public-package.proposal.v3'
++BUNDLE = 'com.resgrid.unit.development'
++HEX = re.compile(r'[0-9a-f]{64}\Z')
++REV = re.compile(r'[0-9a-f]{40}\Z')
++LIMITS = {
++ 'review_is_not_cryptographic_pixel_authentication': True,
++ 'transport_client_identity': 'not_authenticated_by_transport',
++ 'loaded_or_executed_identity': 'unresolved',
++ 'complete_lazy_execution_graph': 'unresolved',
++ 'real_hardware_or_gps_success_claimed': False,
++}
++REVIEW_CHECKS = ('application_visible','full_viewport_unmodified','no_blocking_error',
++ 'literal_labels_reviewed','controls_legible','normal_ui_correspondence_reviewed',
++ 'foreground_and_installed_source_correspondence_reviewed','no_private_values_visible')
++SOURCE_EXTENSIONS = {'.json','.lock','.ts','.tsx','.js','.jsx','.m','.mm','.h','.swift','.patch','.md','.yml','.yaml','.pbxproj','.plist'}
++SECRET = re.compile(rb'(?:\b(?:pk|sk)\.[A-Za-z0-9_-]{12,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|\beyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{10,}\.)')
++FORBIDDEN_SOURCE = re.compile(r'(?:^|/)(?:\.env[^/]*|private|node_modules|\.git)(?:/|$)|\.(?:bundle|hbc|map|ipa|dylib|a|so)\Z',re.I)
++UI_METHODS = {'human_simulator_ui','xcuitest','maestro','appium_xcuitest'}
++UI_ACTIONS = {'tap','scroll','select','type_text','sensitive_typing_redacted','observe_screen','wait_for_visible','permission_denied'}
++
++
++def digest(value):
++ return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()).hexdigest()
++
++
++def unique_json(text):
++ def pairs(items):
++  result={}
++  for k,v in items:
++   if k in result: raise ValueError('duplicate JSON key')
++   result[k]=v
++  return result
++ return json.loads(text,object_pairs_hook=pairs,parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite JSON')))
++
++
++def build_digest(build):
++ return digest({k:v for k,v in build.items() if k!='installed_correspondence'})
++
++
++def review_digest(package):
++ return digest({k:v for k,v in package.items() if k!='review'})
++
++
++def need(ok,message):
++ if not ok: raise ValueError('native public package: '+message)
++
++
++def obj(value,keys,field):
++ need(isinstance(value,dict) and set(value)==set(keys.split()),field+' requires exact declared fields; self-approval/URL/private-root/body additions are forbidden')
++ return value
++
++
++def text(value,field):
++ need(isinstance(value,str) and value.strip() and len(value)<=4000,field+' must contain specific nonempty text')
++ need(not re.search(r'(?i)(?:https?://|file://|/Users/|/private/|access_token=|api_key=|password=)',value),field+' must not expose a private URL/path/credential')
++ return value
++
++
++def when(value,field,now):
++ text(value,field)
++ try: at=datetime.fromisoformat(value.replace('Z','+00:00'))
++ except ValueError as e:raise ValueError(field+' requires ISO timestamp') from e
++ need(at.tzinfo is not None and at<=now,field+' must have timezone and not be future')
++ return at
++
++
++def sha(path):
++ with path.open('rb') as stream:
++  return hashlib.file_digest(stream,'sha256').hexdigest()
++
++
++def identifier(value,field):
++ try:need(isinstance(value,str) and str(uuid.UUID(value)).lower()==value.lower(),field+' requires explicit UUID')
++ except (ValueError,AttributeError) as e:raise ValueError(field+' requires explicit UUID') from e
++
++
++class PublicCheck:
++ def __init__(self,root,now=None):
++  self.root=Path(root).resolve();self.now=now or datetime.now(timezone.utc);self.dependencies=[]
++ def asset(self,ref,field,kind='json'):
++  obj(ref,'file sha256',field);name=text(ref['file'],field+'.file')
++  need(not PurePosixPath(name).is_absolute() and '\\' not in name and all(x not in ('','.','..') for x in name.split('/')),field+' must be confined relative POSIX path')
++  need(not FORBIDDEN_SOURCE.search(name),field+' cannot retain private/npm/binary/development-bundle assets')
++  p=(self.root/name).resolve()
++  need(p.is_relative_to(self.root) and p.is_file(),field+' asset missing/unreadable or symlink escape')
++  need(isinstance(ref['sha256'],str) and HEX.fullmatch(ref['sha256']) and sha(p)==ref['sha256'],field+' hash differs')
++  need(p.stat().st_size<=128*1024*1024,field+' unexpectedly large')
++  self.dependencies.append(p)
++  if kind!='png':
++   data=p.read_bytes();need(not SECRET.search(data),field+' appears to retain a key/token/private-key body')
++   need(not data.startswith((b'\xcf\xfa\xed\xfe',b'\xca\xfe\xba\xbe',b'\xfe\xed\xfa\xcf')),field+' cannot retain an executable')
++   try:decoded=data.decode('utf-8')
++   except UnicodeError as e:raise ValueError(field+' must be nonsecret source or JSON text, never binary/runtime body') from e
++   if kind=='json':return unique_json(decoded)
++   need(p.suffix in SOURCE_EXTENSIONS or p.name in {'Podfile','Podfile.lock','yarn.lock'},field+' is not an allowed public source snapshot')
++  return p
++ def png(self,path):
++  data=path.read_bytes();need(data[:8]==b'\x89PNG\r\n\x1a\n','raw native screenshot must be unchanged PNG')
++  pos=8;types=[];size=None
++  while pos<len(data):
++   need(pos+12<=len(data),'truncated PNG chunk');n=struct.unpack('>I',data[pos:pos+4])[0];kind=data[pos+4:pos+8];end=pos+12+n
++   need(end<=len(data),'truncated PNG payload');body=data[pos+8:pos+8+n];crc=struct.unpack('>I',data[pos+8+n:end])[0]
++   need(zlib.crc32(kind+body)&0xffffffff==crc,'PNG CRC differs')
++   if kind==b'IHDR':need(not types and n==13,'invalid PNG header');size=struct.unpack('>II',body[:8])
++   types.append(kind);pos=end
++   if kind==b'IEND':need(n==0 and end==len(data),'PNG has trailing or invalid end bytes');break
++  need(size and b'IDAT' in types and types[-1]==b'IEND' and types.count(b'IHDR')==1,'PNG incomplete')
++  need(all(320<=v<=16384 for v in size),'native PNG dimensions unsuitable')
++  return size
++ def named_review(self,r,keys,field,earliest,binding):
++  obj(r,keys,field);text(r['reviewer'],field+'.reviewer')
++  need(r['reviewer'].casefold() not in {'unknown','automatic','none','test','passed'},field+' must name actual reviewer')
++  need(when(r['reviewed_at'],field+'.reviewed_at',self.now)>=earliest,field+' predates reviewed observations')
++  need(r['binding_sha256']==binding,field+' binding digest differs')
++  text(r['method'],field+'.method')
++
++ def validate(self,d):
++  obj(d,'schema app kind session build capture normal_ui runtime observations limitations review','package')
++  need(d['schema']==SCHEMA and d['app']=='Unit' and d['kind']=='application_screenshot','explicit Unit native application identity required')
++  need(d['limitations']==LIMITS,'honest pixel/transport/execution/hardware limitations required')
++  session=obj(d['session'],'id udid device_type os_version created_at creation_receipt','session')
++  identifier(session['id'],'session.id');identifier(session['udid'],'session.udid')
++  created=when(session['created_at'],'session.created_at',self.now);text(session['device_type'],'device_type');text(session['os_version'],'os_version')
++  receipt=self.asset(session['creation_receipt'],'session.creation_receipt')
++  need(receipt=={k:session[k] for k in ('id','udid','device_type','os_version','created_at')}|{'method':'new_dedicated_simulator'},'dedicated device creation receipt differs')
++  b=obj(d['build'],'mode base_source_revision bundle_id native_sdk installed_binary_sha256 installed_info_plist_sha256 snapshot_manifest installed_correspondence','build')
++  need(b['mode']=='development_metro' and b['bundle_id']==BUNDLE,'unknown build mode/bundle; only reviewed Unit development_metro branch proposed')
++  need(isinstance(b['base_source_revision'],str) and REV.fullmatch(b['base_source_revision']),'source Git revision missing')
++  need(isinstance(b['native_sdk'],str) and re.fullmatch(r'iphonesimulator\d+\.\d+',b['native_sdk']),'native SDK identity missing')
++  for k in ('installed_binary_sha256','installed_info_plist_sha256'):need(isinstance(b[k],str) and HEX.fullmatch(b[k]),k+' requires actual digest, no binary retained')
++  manifest=self.asset(b['snapshot_manifest'],'build.snapshot_manifest')
++  obj(manifest,'base_source_revision snapshots','source manifest');need(manifest['base_source_revision']==b['base_source_revision'],'stale source snapshot revision')
++  need(isinstance(manifest['snapshots'],list) and len(manifest['snapshots'])>=3,'source, app package and Pod lock snapshots required')
++  names=set()
++  for row in manifest['snapshots']:
++   obj(row,'namespace original_path snapshot','source snapshot')
++   need(row['namespace'] in {'source','dependencies'},'source namespace unsupported');name=text(row['original_path'],'source original_path')
++   need(not PurePosixPath(name).is_absolute() and '\\' not in name and all(x not in ('','.','..') for x in name.split('/')),'source path must be relative')
++   need(not FORBIDDEN_SOURCE.search(name) and (row['namespace'],name) not in names,'private source path or duplicate snapshot')
++   names.add((row['namespace'],name));self.asset(row['snapshot'],'public source snapshot','source')
++  need({('source','package.json'),('source','ios/Podfile.lock')}<=names and any(n.startswith('src/') for ns,n in names if ns=='source'),'app package, Pod lock and actual app screen source snapshots required')
++  identity=self.asset(b['installed_correspondence'],'build.installed_correspondence')
++  self.named_review(identity,'reviewer reviewed_at method binding_sha256 session_id udid foreground_bundle_id observation_at snapshot_manifest_sha256 findings','installed correspondence',created,build_digest(b))
++  need(identity['session_id']==session['id'] and identity['udid']==session['udid'] and identity['foreground_bundle_id']==BUNDLE and identity['snapshot_manifest_sha256']==b['snapshot_manifest']['sha256'],'installed correspondence wrong device/app/source')
++  observed=when(identity['observation_at'],'installed correspondence observation',self.now)
++  need(created<=observed<=when(identity['reviewed_at'],'installed correspondence review',self.now),'installed correspondence chronology differs');text(identity['findings'],'installed correspondence findings')
++  cap=obj(d['capture'],'image width height captured_at method session_id udid foreground_bundle_id simctl_method display','capture')
++  at=when(cap['captured_at'],'capture.captured_at',self.now)
++  need(cap['method']=='ios_simulator_screenshot' and cap['simctl_method']=='xcrun_simctl_io_explicit_udid_screenshot_png','actual explicit-device simctl screenshot method required')
++  need(cap['session_id']==session['id'] and cap['udid']==session['udid'] and cap['foreground_bundle_id']==BUNDLE,'capture session/foreground identity differs')
++  need(observed<=at and (at-observed).total_seconds()<=600,'installed correspondence observation stale for capture')
++  image=self.asset(cap['image'],'capture.image','png');need(self.png(image)==(cap['width'],cap['height']),'actual PNG dimensions disagree')
++  display=self.asset(cap['display'],'capture.display')
++  obj(display,'session_id udid measured_at method orientation dpr screen_points app_viewport_points pixel_width pixel_height','display')
++  need(display['session_id']==session['id'] and display['udid']==session['udid'] and (display['pixel_width'],display['pixel_height'])==(cap['width'],cap['height']),'geometry has wrong device/raw pixels')
++  need(display['method'] in {'xcuitest_frame_and_uiscreen_scale','native_screen_window_geometry_review'},'actual native geometry measurement required')
++  measured=when(display['measured_at'],'geometry measured_at',self.now)
++  geometry_age=(at-measured).total_seconds()
++  need(created<=measured<=at and geometry_age<=60,'native geometry observation exceeds explicit60s bound')
++  need(display['orientation'] in {'landscape_left','landscape_right'},'measured native landscape required; do not rotate portrait')
++  dpr=display['dpr'];need(type(dpr) in (int,float) and math.isfinite(dpr) and dpr in (1,2,3),'native measured DPR invalid')
++  sp=obj(display['screen_points'],'width height','screen_points');vp=obj(display['app_viewport_points'],'x y width height','app_viewport_points')
++  for x in list(sp.values())+list(vp.values()):need(type(x) in (int,float) and math.isfinite(x) and x>=0,'point geometry invalid')
++  need(sp['width']>sp['height']>0 and vp['width']>vp['height']>0,'landscape geometry axes disagree')
++  need(sp['width']*dpr==cap['width'] and sp['height']*dpr==cap['height'],'DPR/logical/raw pixel dimensions disagree')
++  need(vp=={'x':0,'y':0,'width':sp['width'],'height':sp['height']},'full-viewport app screenshot required; no partial/multiwindow fit')
++  need(vp['width']>=960 and vp['height']>=540,'logical UI viewport too small')
++  ui=self.asset(d['normal_ui'],'normal_ui')
++  obj(ui,'session_id udid bundle_id method source_ledger actions geometry_events','normal UI ledger')
++  original_ui=self.asset(ui['source_ledger'],'original redacted normal UI ledger')
++  need(isinstance(original_ui,dict) and isinstance(original_ui.get('entries'),list) and original_ui['entries'],'retained original normal UI ledger entries required')
++  original_action_hashes={digest(x) for x in original_ui['entries']}
++  need(ui['session_id']==session['id'] and ui['udid']==session['udid'] and ui['bundle_id']==BUNDLE and ui['method'] in UI_METHODS,'wrong native normal-UI ledger identity/method')
++  need(isinstance(ui['actions'],list) and ui['actions'],'nonempty normal-UI action ledger required')
++  prior=created
++  for a in ui['actions']:
++   obj(a,'id at kind control observation source_entry_sha256','normal UI action');need(a['source_entry_sha256'] in original_action_hashes,'normal UI action lacks retained source entry binding');text(a['id'],'action id');text(a['control'],'control');text(a['observation'],'observation')
++   need(a['kind'] in UI_ACTIONS,'hidden write/launch hook/automatic permission grant is not normal UI')
++   t=when(a['at'],'action time',self.now);need(prior<=t<=at,'normal UI chronology differs');prior=t
++  guard_age=(at-prior).total_seconds()
++  need(ui['actions'][-1]['kind']=='observe_screen' and guard_age<=60,'normal-UI capture guard exceeds explicit60s bound')
++  need(isinstance(ui['geometry_events'],list),'retained geometry/device event observations required')
++  for event in ui['geometry_events']:
++   obj(event,'at kind udid source_entry_sha256','geometry/device event')
++   need(event['kind'] in {'rotate','resize','switch_device','change_window'} and event['source_entry_sha256'] in original_action_hashes,'geometry/device event lacks actual source binding')
++   identifier(event['udid'],'geometry event device')
++   event_at=when(event['at'],'geometry event time',self.now)
++   need(not measured<event_at<=at,'intervening geometry/device switch invalidates measured geometry')
++  runtime=obj(d['runtime'],'coverage transport_client_identity loaded_or_executed_identity complete_lazy_execution_graph lazy served_ledger selected_streams review_receipt','runtime')
++  need(runtime['coverage']=='served_response_metadata_only' and runtime['transport_client_identity']=='not_authenticated_by_transport' and runtime['loaded_or_executed_identity']=='unresolved' and runtime['complete_lazy_execution_graph']=='unresolved' and type(runtime['lazy']) is bool,'served bytes must not become an authenticated load/execution assertion')
++  ledger=self.asset(runtime['served_ledger'],'original retained served metadata ledger')
++  obj(ledger,'kind source_only native_client_authenticated loaded_or_executed_identity_proven lazy_load_set_complete bodies_urls_queries_headers_frames_retained known_host_manifest_probe_present entries','served ledger')
++  need(ledger['kind']=='actual_served_packager_stream_receipts_not_execution_proof' and ledger['source_only'] is True and ledger['native_client_authenticated'] is False and ledger['loaded_or_executed_identity_proven'] is False and ledger['lazy_load_set_complete'] is False and ledger['bodies_urls_queries_headers_frames_retained'] is False and type(ledger['known_host_manifest_probe_present']) is bool,'retain original served metadata limits; no claimed app client/execution/bundle body')
++  def no_payload(value):
++   if isinstance(value,dict):
++    need(not {str(k).casefold() for k in value}&{'body','raw_body','payload','headers','url','query','frames','bundle','data','raw_bundle','access_token','token','password'},'runtime ledger must not retain key-bearing body/header/URL/query/frame payloads')
++    for child in value.values():no_payload(child)
++   elif isinstance(value,list):
++    for child in value:no_payload(child)
++  no_payload(ledger)
++  need(isinstance(ledger['entries'],list) and ledger['entries'],'original served ledger must retain its observations')
++  need(isinstance(runtime['selected_streams'],list) and runtime['selected_streams'],'actual served response observations required')
++  ids=[]
++  for association in runtime['selected_streams']:
++   obj(association,'entry_index entry_sha256 association_method build_identity_sha256','served measurement review association')
++   i=association['entry_index'];need(type(i) is int and 0<=i<len(ledger['entries']),'served observation index invalid')
++   r=ledger['entries'][i]
++   need(association['entry_sha256']==digest(r) and association['entry_sha256'] not in ids,'selected original served observation changed/duplicated');ids.append(association['entry_sha256'])
++   need(association['association_method']=='reviewed_capture_context_only_not_authenticated' and association['build_identity_sha256']==build_digest(b),'served observation review context stale/wrong; no authenticated device linkage')
++   need(isinstance(r,dict) and r.get('kind')=='actual_local_metro_response_stream' and r.get('method')=='GET' and r.get('resource_category') in {'entry_bundle','lazy_chunk','script_segment'},'selected observation is not an actual served script response')
++   need(r.get('hash_stage')=='decoded_response_body' and r.get('source_kind')=='real_metro_forwarded_without_content_rewrite','unknown response measurement stage/source')
++   need(all(isinstance(r.get(k),str) and HEX.fullmatch(r[k]) for k in ['stream_sha256','request_target_sha256','original_receipt_sha256']),'stream hash missing')
++   need(type(r.get('byte_length')) is int and 0<r['byte_length']<=256*1024*1024 and type(r.get('status')) is int and r['status']==200 and r.get('completed') is True,'incomplete/empty/failed served response')
++   need(r.get('body_saved') is False and r.get('body_or_query_logged') is False and r.get('client_identity')=='not_authenticated_by_transport' and r.get('executed_or_loaded_identity_proven') is False,'key-bearing body retention or invented execution proof forbidden')
++   content=text(r.get('content_type'),'actual HTTP response content_type')
++   need(content.split(';',1)[0].strip() in {'multipart/mixed','application/javascript','text/javascript','application/octet-stream'},'unknown HTTP served response content type')
++   need(r.get('content_encoding') in {'identity','gzip','deflate','br'},'unknown measured response encoding')
++   start=when(r.get('started_at'),'stream started',self.now);end=when(r.get('finished_at'),'stream finished',self.now);need(created<=start<=end<=at,'stream chronology outside session/capture')
++  rr=self.asset(runtime['review_receipt'],'runtime.review_receipt')
++  runtime_binding=digest({k:v for k,v in runtime.items() if k!='review_receipt'})
++  self.named_review(rr,'reviewer reviewed_at method binding_sha256 session_id udid build_identity_sha256 observed_entry_sha256 findings','served-byte review',at,runtime_binding)
++  need(rr['session_id']==session['id'] and rr['udid']==session['udid'] and rr['build_identity_sha256']==build_digest(b) and rr['observed_entry_sha256']==ids,'runtime review scope/identity differs')
++  text(rr['findings'],'runtime review findings')
++  obs=obj(d['observations'],'visible_labels required_labels','observations')
++  for k in obs:
++   need(isinstance(obs[k],list) and obs[k] and len(obs[k])==len(set(obs[k])),'literal label observations must be nonempty unique lists')
++   for label in obs[k]:text(label,'literal label')
++  need(set(obs['required_labels'])<=set(obs['visible_labels']),'required native label is not observed')
++  review=d['review'];self.named_review(review,'reviewer reviewed_at method binding_sha256 checks findings','native pixel/source review',at,review_digest(d))
++  need(set(review['checks'])==set(REVIEW_CHECKS) and all(review['checks'][k] is True for k in REVIEW_CHECKS),'explicit full-viewport/source/normal-UI/privacy review findings required')
++  text(review['findings'],'pixel/source review findings')
++  scale=min(1920/cap['width'],912/cap['height']);logical=scale*dpr
++  width=round(cap['width']*scale);height=round(cap['height']*scale)
++  need(.75<=logical<=2 and width>=1100 and height>=650,'DPR-aware fitted logical UI is too small/large to read')
++  fit={'x':(1920-width)//2,'y':48+(912-height)//2,'width':width,'height':height,'scale':scale,'raw_pixel_scale':scale,'output_pixels_per_logical_point':logical,'measured_native_dpr':dpr,'geometry_observation_age_seconds':geometry_age,'normal_ui_guard_age_seconds':guard_age,'cropped':False}
++  binding={'package_digest':review_digest(d),'review_digest':digest(review),'source_png_sha256':cap['image']['sha256'],'source_identity_sha256':build_digest(b),'geometry_sha256':cap['display']['sha256'],'normal_ui_sha256':d['normal_ui']['sha256'],'runtime_review_sha256':runtime['review_receipt']['sha256'],'layout':fit}
++  return {'source_review_validated':True,'proposal_only':True,'publishable':False,'pixel_authenticity_proven':False,'executed_identity_proven':False,'layout':fit,'native_binding':binding,'dependencies':list(dict.fromkeys(self.dependencies)),'limitations':LIMITS}
++
++
++def validate_public_package(package,asset_root,now=None):
++ """Read-only source package check. No trusted private roots or cached pass flags."""
++ return PublicCheck(asset_root,now).validate(package)
++
++
++def validate_native_source(row,asset_root,primary_app):
++ need(primary_app=='Unit' and row.get('app')=='Unit','native source must have explicit Unit primary identity')
++ need(not {'url','dom_file','dom_sha256','publishable','native_context','native_roots','native_approved','passed','publication_ready','export_ready','integration_approved','source_review_validated','valid_traceability'}&set(row),'native cannot self-approve or be relabeled as browser')
++ need(row.get('kind')=='application_screenshot' and row.get('visible_controls',[])==[] and row.get('visible_field_text',[])==[],'literal native labels only; DOM/icon names unsupported')
++ provenance=obj(row.get('provenance'),'method captured_at','native provenance');need(provenance['method']=='ios_simulator_screenshot','true native provenance method required')
++ check=PublicCheck(asset_root);package=check.asset(row.get('native_review_package'),'native review package');result=check.validate(package)
++ cap=package['capture'];obs=package['observations']
++ need(row.get('file')==cap['image']['file'] and row.get('sha256')==cap['image']['sha256'] and (row.get('width'),row.get('height'))==(cap['width'],cap['height']) and provenance['captured_at']==cap['captured_at'],'screenshot row differs from reviewed native PNG/capture')
++ need(row.get('visible_labels')==obs['visible_labels'] and row.get('required_labels')==obs['required_labels'],'literal native labels differ from bound review package')
++ result['native_binding']['package_file_sha256']=row['native_review_package']['sha256']
++ result['dependencies']=list(dict.fromkeys(check.dependencies))
++ return result
++
++
++def verify_native_frame(frame,video_hash,source_report,assembled_at):
++ """Validate a separately recorded real rendered-frame review; never generate one."""
++ expected=source_report['native_binding'];need(frame.get('native_binding')==expected,'native frame lost source/geometry/review binding')
++ need(frame.get('reviewed_control_names',[])==[],'native icon accessible names unsupported')
++ r=frame.get('native_frame_review');obj(r,'reviewer reviewed_at method binding_sha256 checks findings','native encoded-frame review')
++ binding=digest({'frame_sha256':frame.get('sha256'),'video_sha256':video_hash,'source_binding_sha256':digest(expected),'visible_labels':frame.get('visible_labels'),'caption_text':frame.get('caption_text')})
++ check=PublicCheck('.');check.named_review(r,'reviewer reviewed_at method binding_sha256 checks findings','native encoded-frame review',when(assembled_at,'assembled_at',check.now),binding)
++ checks={'application_visible','raw_full_viewport_visible','controls_legible','caption_text_verified','no_blocking_error','no_private_values_visible'}
++ need(set(r['checks'])==checks and all(r['checks'][k] is True for k in checks),'actual native full-frame/caption/control/privacy review incomplete')
++ text(r['findings'],'frame review findings')
+--- /dev/null
++++ b/scripts/native_capture_review.py
+@@ -0,0 +1,62 @@
++"""UNADOPTED private capture-stage preflight; never used by public site rebuild.
++
++Read-only. Caller supplies current installed .app, managed source and dependency
++roots explicitly. No simulator, network, shell, key, signing or bundle retrieval.
++Compares retained review candidates against actual private bytes and reports
++only nonsecret digests, never writes a review or promotes served bytes to loads.
++"""
++from pathlib import Path, PurePosixPath
++import plistlib
++from native_capture_public import PublicCheck, BUNDLE, REV, build_digest, need, sha, validate_public_package
++
++
++def inspect_private_context(package,public_assets,installed_app,source_root,dependency_root):
++    """Calculate context comparisons before a reviewer authors final public receipt.
++
++    This private-only result supplies no pixel/normal-UI/reviewer approval and is
++    deliberately not imported by render/evidence/export paths.
++    """
++    roots={'source':Path(source_root).resolve(),'dependencies':Path(dependency_root).resolve()}
++    app=Path(installed_app).resolve();public_root=Path(public_assets).resolve()
++    need(app.is_dir() and all(p.is_dir() for p in roots.values()),'actual private context roots missing')
++    need(not app.is_relative_to(public_root) and all(not p.is_relative_to(public_root) for p in roots.values()),'private binary/source roots must remain outside public package')
++    info=app/'Info.plist';need(info.is_file(),'actual installed Info.plist missing')
++    parsed=plistlib.loads(info.read_bytes());name=parsed.get('CFBundleExecutable')
++    need(isinstance(name,str) and name==PurePosixPath(name).name and name not in {'.','..'},'installed executable name invalid')
++    binary=(app/name).resolve();need(binary.is_relative_to(app) and binary.is_file(),'actual installed executable missing or escapes app')
++    with binary.open('rb') as stream:
++        magic=stream.read(4)
++    need(magic in {b'\xcf\xfa\xed\xfe',b'\xfe\xed\xfa\xcf',b'\xca\xfe\xba\xbe',b'\xbe\xba\xfe\xca'},'actual installed executable is not recognized Mach-O')
++    b=package['build']
++    need(b.get('mode')=='development_metro' and b.get('bundle_id')==BUNDLE and isinstance(b.get('base_source_revision'),str) and REV.fullmatch(b['base_source_revision']),'unknown private build/source identity')
++    need(sha(binary)==b['installed_binary_sha256'] and sha(info)==b['installed_info_plist_sha256'],'actual installed binary/plist changed or unknown')
++    need(parsed.get('CFBundleIdentifier')==b['bundle_id'] and parsed.get('DTSDKName')==b['native_sdk'],'actual installed bundle/SDK differs')
++    check=PublicCheck(public_assets);manifest=check.asset(b['snapshot_manifest'],'source snapshot manifest')
++    comparisons=[]
++    for row in manifest['snapshots']:
++        root=roots[row['namespace']];actual=(root/row['original_path']).resolve()
++        need(actual.is_relative_to(root) and actual.is_file(),'actual private source dependency missing or escapes explicit root')
++        snapshot=check.asset(row['snapshot'],'retained public source snapshot','source')
++        need(sha(actual)==row['snapshot']['sha256'] and actual.read_bytes()==snapshot.read_bytes(),'actual source/lock/module differs from reviewed public snapshot')
++        comparisons.append({'namespace':row['namespace'],'original_path':row['original_path'],'sha256':sha(actual)})
++    measured_receipts=[]
++    ledger=check.asset(package['runtime']['served_ledger'],'actual retained served ledger')
++    for association in package['runtime']['selected_streams']:
++        need(association['build_identity_sha256']==build_digest(b) and association['association_method']=='reviewed_capture_context_only_not_authenticated','served observation has stale reviewed context')
++        receipt=ledger['entries'][association['entry_index']]
++        from native_capture_public import digest
++        need(digest(receipt)==association['entry_sha256'],'actual retained served measurement changed')
++        need(receipt.get('body_saved') is False and receipt.get('body_or_query_logged') is False and receipt.get('executed_or_loaded_identity_proven') is False,'runtime body retention or execution promotion forbidden')
++        measured_receipts.append(association)
++    return {'proposal_only':True,'publishable':False,'private_context_matches_review_candidate':True,
++            'identity_sha256':build_digest(b),'installed_binary_sha256':sha(binary),'installed_info_plist_sha256':sha(info),
++            'source_snapshots':comparisons,'retained_snapshot_dependencies':len(check.dependencies),'stream_references':measured_receipts,
++            'review_still_required':True,'review_flags_generated':False,'loaded_or_executed_identity_proven':False,
++            'limitations':'Actual private bytes match this review candidate at preflight time. Foreground, normal UI, source correspondence and pixels still require the named reviewer. Served-response hashes do not establish authenticated execution or complete lazy-load coverage.'}
++
++
++def validate_private_context(package,public_assets,installed_app,source_root,dependency_root):
++    """Recheck final review candidate's private bytes and public bindings together."""
++    report=inspect_private_context(package,public_assets,installed_app,source_root,dependency_root)
++    validate_public_package(package,public_assets)
++    return report
+--- /dev/null
++++ b/scripts/tests/test_native_public_package.py
+@@ -0,0 +1,207 @@
++"""Synthetic parser fixtures ONLY. No app screenshot, audio or review is genuine."""
++import copy
++import hashlib
++import json
++from pathlib import Path
++import plistlib
++import shutil
++import struct
++import sys
++import tempfile
++import unittest
++import zlib
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++import native_capture_public as n
++from native_capture_review import inspect_private_context, validate_private_context
++from verify_capture_evidence import verify_document
++import expansion_site as exporter
++import render_walkthrough as renderer
++import test_walkthrough_render as browser_fixture
++
++
++def png(w,h):
++ def chunk(k,b):return struct.pack('>I',len(b))+k+b+struct.pack('>I',zlib.crc32(k+b)&0xffffffff)
++ return b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',w,h,8,2,0,0,0))+chunk(b'IDAT',zlib.compress((b'\0'+b'\x12\x34\x56'*w)*h))+chunk(b'IEND',b'')
++
++
++class Fixture:
++ def __init__(self,root,private):
++  self.root=Path(root).resolve();self.private=Path(private).resolve();self.sid='11111111-1111-4111-8111-111111111111';self.udid='22222222-2222-4222-8222-222222222222'
++  self.app=self.private/'app';self.source=self.private/'source';self.deps=self.private/'deps'
++  for p in [self.root,self.app,self.source,self.deps]:p.mkdir(parents=True,exist_ok=True)
++  (self.app/'Unit').write_bytes(b'\xcf\xfa\xed\xfe'+b'synthetic Mach-O fixture only')
++  (self.app/'Info.plist').write_bytes(plistlib.dumps({'CFBundleExecutable':'Unit','CFBundleIdentifier':n.BUNDLE,'DTSDKName':'iphonesimulator27.1'}))
++  self.snapshots=[]
++  for original,body in [('package.json','{"name":"synthetic-fixture"}'),('ios/Podfile.lock','PODS:\n  - Synthetic (1.0)\n'),('src/app/count.tsx','// synthetic parser fixture, not app source\n')]:
++   p=self.source/original;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(body)
++   self.snapshots.append({'namespace':'source','original_path':original,'snapshot':self.asset('snapshots/'+original,body.encode())})
++  self.manifest={'base_source_revision':'a'*40,'snapshots':self.snapshots}
++  self.creation={'id':self.sid,'udid':self.udid,'device_type':'Synthetic iPad fixture','os_version':'27.0','created_at':'2026-10-25T11:50:00Z','method':'new_dedicated_simulator'}
++  self.geometry={'session_id':self.sid,'udid':self.udid,'measured_at':'2026-10-25T11:59:59Z','method':'xcuitest_frame_and_uiscreen_scale','orientation':'landscape_left','dpr':2,'screen_points':{'width':1366,'height':1024},'app_viewport_points':{'x':0,'y':0,'width':1366,'height':1024},'pixel_width':2732,'pixel_height':2048}
++  self.ui={'session_id':self.sid,'udid':self.udid,'bundle_id':n.BUNDLE,'method':'xcuitest','geometry_events':[],'actions':[{'id':'a1','at':'2026-10-25T11:59:57Z','kind':'tap','control':'Count','observation':'Synthetic parser action only.'},{'id':'a2','at':'2026-10-25T11:59:59Z','kind':'observe_screen','control':'Inventory','observation':'Synthetic parser observation only.'}]}
++  self.original_ui={'kind':'synthetic_redacted_normal_ui_ledger','entries':[{'kind':a['kind'],'control':a['control'],'at':a['at']} for a in self.ui['actions']]}
++  for a,row in zip(self.ui['actions'],self.original_ui['entries']):a['source_entry_sha256']=n.digest(row)
++  self.identity={'reviewer':'Synthetic named reviewer, parser fixture only','reviewed_at':'2026-10-25T12:00:10Z','method':'Synthetic review structure, never actual review.','binding_sha256':'','session_id':self.sid,'udid':self.udid,'foreground_bundle_id':n.BUNDLE,'observation_at':'2026-10-25T11:59:58Z','snapshot_manifest_sha256':'','findings':'Synthetic installed context fixture only; no app operation claim.'}
++  self.stream={'original_receipt_sha256':'d'*64,'kind':'actual_local_metro_response_stream','started_at':'2026-10-25T11:58:00Z','finished_at':'2026-10-25T11:58:01Z','method':'GET','request_target_sha256':'b'*64,'resource_category':'entry_bundle','status':200,'content_type':'multipart/mixed; boundary="synthetic-fixture"','content_encoding':'identity','hash_stage':'decoded_response_body','stream_sha256':'c'*64,'byte_length':1234,'completed':True,'failure_type':None,'body_saved':False,'body_or_query_logged':False,'source_kind':'real_metro_forwarded_without_content_rewrite','source':'Synthetic local packager context only','client_identity':'not_authenticated_by_transport','executed_or_loaded_identity_proven':False,'coverage_limits':'No authenticated app client or executed identity.'}
++  self.ledger={'kind':'actual_served_packager_stream_receipts_not_execution_proof','source_only':True,'native_client_authenticated':False,'loaded_or_executed_identity_proven':False,'lazy_load_set_complete':False,'bodies_urls_queries_headers_frames_retained':False,'known_host_manifest_probe_present':True,'entries':[self.stream]}
++  self.runtime_review={'reviewer':'Synthetic named reviewer, parser fixture only','reviewed_at':'2026-10-25T12:00:20Z','method':'Synthetic observed served response metadata review only.','binding_sha256':'','session_id':self.sid,'udid':self.udid,'build_identity_sha256':'','observed_entry_sha256':[],'findings':'Entry-only served bytes; authenticated client, executed graph and lazy coverage unresolved.'}
++  self.d={'schema':n.SCHEMA,'app':'Unit','kind':'application_screenshot','session':{k:v for k,v in self.creation.items() if k!='method'},
++   'build':{'mode':'development_metro','base_source_revision':'a'*40,'bundle_id':n.BUNDLE,'native_sdk':'iphonesimulator27.1','installed_binary_sha256':n.sha(self.app/'Unit'),'installed_info_plist_sha256':n.sha(self.app/'Info.plist')},
++   'capture':{'image':self.asset('raw/native.png',png(2732,2048)),'width':2732,'height':2048,'captured_at':'2026-10-25T12:00:00Z','method':'ios_simulator_screenshot','session_id':self.sid,'udid':self.udid,'foreground_bundle_id':n.BUNDLE,'simctl_method':'xcrun_simctl_io_explicit_udid_screenshot_png'},
++   'runtime':{'coverage':'served_response_metadata_only','transport_client_identity':'not_authenticated_by_transport','loaded_or_executed_identity':'unresolved','complete_lazy_execution_graph':'unresolved','lazy':True},
++   'observations':{'visible_labels':['Inventory','Count','Completed'],'required_labels':['Count','Inventory']},'limitations':dict(n.LIMITS)}
++  self.seal()
++ def asset(self,name,body):
++  p=self.root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(body);return {'file':name,'sha256':hashlib.sha256(body).hexdigest()}
++ def json(self,name,d):return self.asset(name,json.dumps(d,sort_keys=True).encode())
++ def seal(self):
++  d=self.d;d['session']['creation_receipt']=self.json('receipts/creation.json',self.creation)
++  b=d['build'];b['snapshot_manifest']=self.json('receipts/sources.json',self.manifest)
++  self.identity['binding_sha256']=n.build_digest(b);self.identity['snapshot_manifest_sha256']=b['snapshot_manifest']['sha256'];b['installed_correspondence']=self.json('receipts/installed.json',self.identity)
++  d['capture']['display']=self.json('receipts/geometry.json',self.geometry);self.ui['source_ledger']=self.json('receipts/original-ui.json',self.original_ui);d['normal_ui']=self.json('receipts/ui.json',self.ui)
++  d['runtime']['served_ledger']=self.json('receipts/served-ledger.json',self.ledger)
++  d['runtime']['selected_streams']=[{'entry_index':0,'entry_sha256':n.digest(self.stream),'association_method':'reviewed_capture_context_only_not_authenticated','build_identity_sha256':n.build_digest(b)}]
++  self.runtime_review['observed_entry_sha256']=[n.digest(self.stream)]
++  self.runtime_review['binding_sha256']=n.digest({k:v for k,v in d['runtime'].items() if k!='review_receipt'});self.runtime_review['build_identity_sha256']=n.build_digest(b)
++  d['runtime']['review_receipt']=self.json('receipts/runtime-review.json',self.runtime_review)
++  d['review']={'reviewer':'Synthetic named reviewer, parser fixture only','reviewed_at':'2026-10-25T12:00:30Z','method':'Synthetic test receipt, never actual pixel review.','binding_sha256':n.review_digest(d),'checks':{k:True for k in n.REVIEW_CHECKS},'findings':'Synthetic parser fixture only. No genuine pixel or UI review performed.'}
++  self.ref=self.json('receipts/package.json',d)
++  cap=d['capture'];self.row={'id':'native-count','app':'Unit','kind':'application_screenshot','file':cap['image']['file'],'sha256':cap['image']['sha256'],'width':2732,'height':2048,'provenance':{'method':cap['method'],'captured_at':cap['captured_at']},**d['observations'],'native_review_package':self.ref}
++ def report(self):return n.validate_native_source(self.row,self.root,'Unit')
++ def evidence(self):
++  video={**self.asset('video/master.mp4',b'synthetic identity only, not media'),'duration_seconds':30,'width':1920,'height':1080,'assembled_at':'2026-10-25T12:01:00Z'}
++  caption='Select Count to review Inventory.';video['captions']=self.asset('video/master.vtt',('WEBVTT\n\n00:00.000 --> 00:30.000\n'+caption+'\n').encode())
++  frame={**self.asset('proof/frame.png',png(1920,1080)),'width':1920,'height':1080,'time':15,'video_sha256':video['sha256'],'application_visible':True,'visible_labels':['Inventory','Count'],'caption_text':caption,'native_binding':self.report()['native_binding']}
++  frame['native_frame_review']={'reviewer':'Synthetic named reviewer, parser fixture only','reviewed_at':'2026-10-25T12:02:00Z','method':'Synthetic frame review test only.','binding_sha256':n.digest({'frame_sha256':frame['sha256'],'video_sha256':video['sha256'],'source_binding_sha256':n.digest(frame['native_binding']),'visible_labels':frame['visible_labels'],'caption_text':caption}),'checks':{k:True for k in ['application_visible','raw_full_viewport_visible','controls_legible','caption_text_verified','no_blocking_error','no_private_values_visible']},'findings':'Synthetic test only, never real encoded review.'}
++  proofs=[]
++  for pos,t in [('beginning',2),('middle',15),('end',28)]:
++   proofs.append({'position':pos,'video_sha256':video['sha256'],'url':'http://localhost:8000/master/','current_src':'http://localhost:8000/master.mp4','captured_at':'2026-10-25T12:03:00Z','previous_time':t-.5,'current_time':t,'duration_seconds':30,'video_width':1920,'video_height':1080,'ready_state':4,'network_state':1,'paused':False,'ended':False,'media_error':None,'console_errors':[],'captions':{'mode':'showing','text':caption},'screenshot':{**self.asset('proof/'+pos+'.png',png(1280,720)),'width':1280,'height':720}})
++  return {'schema_version':1,'lesson_id':'synthetic-native-count','primary_app':'Unit','video':video,'screenshots':[self.row],'scenes':[{'id':'count','kind':'operational','start':0,'end':30,'screens':[{'screenshot_id':'native-count','start':0,'end':30}],'captions':[{'start':0,'end':30,'text':caption,'screenshot_id':'native-count','required_labels':['Inventory','Count']}]}],'rendered_segments':[{'scene_id':'count','screenshot_id':'native-count','start':0,'end':30,'frame':frame}],'browser_playback':proofs}
++
++
++class NativePublicProposalTests(unittest.TestCase):
++ def setUp(self):
++  self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.base=Path(self.tmp.name);self.f=Fixture(self.base/'public',self.base/'private')
++ def reject(self,word):
++  with self.assertRaisesRegex((ValueError,OSError),word):self.f.report()
++ def test_public_offline_package_valid_without_any_private_build_or_dependencies(self):
++  shutil.rmtree(self.f.private);r=self.f.report();self.assertTrue(r['source_review_validated']);self.assertFalse(r['publishable']);self.assertFalse(r['executed_identity_proven']);self.assertTrue(all(p.is_relative_to(self.f.root) for p in r['dependencies']))
++ def test_private_context_checks_actual_binary_plist_source_and_locks(self):
++  r=validate_private_context(self.f.d,self.f.root,self.f.app,self.f.source,self.f.deps);self.assertTrue(r['private_context_matches_review_candidate']);self.assertFalse(r['review_flags_generated'])
++  (self.f.app/'Unit').write_bytes(b'\xcf\xfa\xed\xfechanged')
++  with self.assertRaisesRegex(ValueError,'installed binary/plist changed'):validate_private_context(self.f.d,self.f.root,self.f.app,self.f.source,self.f.deps)
++ def test_private_preflight_of_unreviewed_draft_does_not_generate_approval(self):
++  draft=copy.deepcopy(self.f.d);draft.pop('review');r=inspect_private_context(draft,self.f.root,self.f.app,self.f.source,self.f.deps);self.assertTrue(r['private_context_matches_review_candidate']);self.assertTrue(r['review_still_required']);self.assertFalse(r['publishable'])
++  with self.assertRaises(ValueError):n.validate_public_package(draft,self.f.root)
++ def test_private_source_mismatch_does_not_change_public_snapshot_identity(self):
++  (self.f.source/'src/app/count.tsx').write_text('changed')
++  with self.assertRaisesRegex(ValueError,'actual source/lock/module differs'):validate_private_context(self.f.d,self.f.root,self.f.app,self.f.source,self.f.deps)
++  self.assertTrue(self.f.report()['source_review_validated'])
++ def test_true_dpr2_full_fit_records_both_units_without_cropping(self):
++  fit=self.f.report()['layout'];self.assertLess(fit['raw_pixel_scale'],.75);self.assertEqual(fit['output_pixels_per_logical_point'],fit['raw_pixel_scale']*2);self.assertGreaterEqual(fit['output_pixels_per_logical_point'],.75);self.assertFalse(fit['cropped']);self.assertGreaterEqual(fit['width'],1100);self.assertGreaterEqual(fit['height'],650)
++ def test_wrong_dpr_even_resealed_rejected(self):
++  self.f.geometry['dpr']=1;self.f.seal();self.reject('DPR/logical/raw')
++ def test_wrong_measured_pixel_dimension_even_resealed_rejected(self):
++  self.f.geometry['pixel_width']=2700;self.f.seal();self.reject('wrong device/raw pixels')
++ def test_portrait_is_not_rotated_or_relabelled(self):
++  self.f.geometry['orientation']='portrait';self.f.seal();self.reject('landscape')
++ def test_small_logical_viewport_and_partial_app_window_rejected(self):
++  self.f.geometry['app_viewport_points']['width']=900;self.f.seal();self.reject('landscape geometry|full-viewport|too small')
++ def test_wrong_method_rejected(self):
++  self.f.d['capture']['method']='browser_screenshot';self.f.seal();self.reject('native provenance')
++ def test_source_cannot_relabel_native_as_browser(self):
++  self.f.row['provenance']['method']='browser_screenshot';self.reject('native provenance')
++ def test_unknown_build_branch_rejected_even_new_review(self):
++  self.f.d['build']['mode']='release_unreviewed';self.f.seal();self.reject('unknown build')
++ def test_missing_real_binary_digest_rejected(self):
++  self.f.d['build']['installed_binary_sha256']='';self.f.seal();self.reject('actual digest')
++ def test_stale_installed_source_review_digest_rejected(self):
++  self.f.d['build']['base_source_revision']='b'*40;self.f.d['review']['binding_sha256']=n.review_digest(self.f.d);self.f.ref=self.f.json('receipts/package.json',self.f.d);self.f.row['native_review_package']=self.f.ref;self.reject('stale source snapshot revision')
++ def test_review_digest_not_arbitrary_passed_flag(self):
++  self.f.d['review']['binding_sha256']='0'*64;self.f.ref=self.f.json('receipts/package.json',self.f.d);self.f.row['native_review_package']=self.f.ref;self.reject('binding digest differs')
++ def test_extra_self_approval_fields_rejected(self):
++  for field in ['publishable','passed','native_approved','native_roots','publication_ready','export_ready']:
++   with self.subTest(field=field):
++    row=copy.deepcopy(self.f.row);row[field]=True
++    with self.assertRaisesRegex(ValueError,'self-approve'):n.validate_native_source(row,self.f.root,'Unit')
++ def test_missing_specific_pixel_review_check_rejected(self):
++  self.f.d['review']['checks']['controls_legible']=False;self.f.ref=self.f.json('receipts/package.json',self.f.d);self.f.row['native_review_package']=self.f.ref;self.reject('explicit full-viewport')
++ def test_changed_raw_png_hash_rejected(self):
++  (self.f.root/'raw/native.png').write_bytes(png(2048,2732));self.reject('hash differs')
++ def test_png_crc_tamper_rejected_even_with_new_ref(self):
++  p=self.f.root/'raw/native.png';data=bytearray(p.read_bytes());data[-15]^=1;self.f.d['capture']['image']=self.f.asset('raw/native.png',bytes(data));self.f.seal();self.reject('CRC')
++ def test_missing_public_source_asset_rejected(self):
++  (self.f.root/'snapshots/src/app/count.tsx').unlink();self.reject('asset missing/unreadable')
++ def test_source_snapshot_symlink_escape_rejected(self):
++  p=self.f.root/'snapshots/src/app/count.tsx';p.unlink();p.symlink_to(self.f.source/'src/app/count.tsx');self.reject('symlink escape')
++ def test_no_raw_key_bearing_runtime_body_retained(self):
++  self.f.stream['body_saved']=True;self.f.seal();self.reject('body retention')
++ def test_unknown_extra_stream_body_field_rejected(self):
++  self.f.stream['body']='synthetic payload';self.f.seal();self.reject('body/header/URL/query/frame')
++ def test_source_snapshot_key_pattern_rejected_without_printing_value(self):
++  self.f.snapshots[2]['snapshot']=self.f.asset('snapshots/src/app/count.tsx',b'const fixture = "p'+b'k.'+b'A'*24+b'";');self.f.seal();self.reject('key/token/private-key body')
++ def test_missing_stream_hash_rejected(self):
++  self.f.stream['stream_sha256']='';self.f.seal();self.reject('stream hash missing')
++ def test_served_entry_only_is_truthful_and_never_complete_execution(self):
++  self.assertEqual(len(self.f.d['runtime']['selected_streams']),1);self.assertTrue(self.f.report()['source_review_validated']);self.assertFalse(self.f.report()['executed_identity_proven'])
++  self.f.d['runtime']['complete_lazy_execution_graph']='complete';self.f.seal();self.reject('authenticated load/execution assertion')
++ def test_fabricated_authenticated_execution_claim_rejected(self):
++  self.f.stream['executed_or_loaded_identity_proven']=True;self.f.seal();self.reject('invented execution proof')
++ def test_stale_geometry_and_installed_observation_rejected(self):
++  self.f.geometry['measured_at']='2026-10-25T11:58:59Z';self.f.seal();self.reject('60s bound')
++ def test_actual_geometry_age_is_retained_under_explicit60s_bound(self):
++  self.f.geometry['measured_at']='2026-10-25T11:59:09Z';self.f.seal();r=self.f.report();self.assertEqual(r['layout']['geometry_observation_age_seconds'],51)
++ def test_intervening_rotate_or_device_switch_cannot_keep_old_geometry(self):
++  for kind in ['rotate','switch_device','resize','change_window']:
++   event={'at':'2026-10-25T11:59:59.500Z','kind':kind,'udid':self.f.udid};self.f.original_ui['entries'].append(dict(event));event['source_entry_sha256']=n.digest(event);self.f.ui['geometry_events']=[event];self.f.seal();self.reject('intervening geometry/device switch')
++ def test_guard_age_is_preserved_and_over60s_rejected(self):
++  self.f.ui['actions'][-1]['at']='2026-10-25T11:59:09Z';self.f.ui['actions'][0]['at']='2026-10-25T11:59:08Z';self.f.seal();self.assertEqual(self.f.report()['layout']['normal_ui_guard_age_seconds'],51)
++  self.f.ui['actions'][-1]['at']='2026-10-25T11:58:59Z';self.f.ui['actions'][0]['at']='2026-10-25T11:58:58Z';self.f.seal();self.reject('guard exceeds explicit60s')
++ def test_hidden_state_write_not_normal_ui(self):
++  self.f.ui['actions'][0]['kind']='api_write';self.f.seal();self.reject('not normal UI')
++ def test_foreground_other_app_rejected(self):
++  self.f.d['capture']['foreground_bundle_id']='other.app';self.f.seal();self.reject('foreground identity')
++ def test_literal_labels_are_hash_bound_no_dom_or_icons(self):
++  self.f.row['visible_labels'].append('Invented');self.reject('labels differ')
++ def test_full_synthetic_evidence_offline_and_later_frame_review_required(self):
++  e=self.f.evidence();shutil.rmtree(self.f.private);self.assertTrue(verify_document(e,self.f.root)['passed'])
++  e['rendered_segments'][0]['frame']['native_frame_review']=None;self.assertFalse(verify_document(e,self.f.root)['passed'])
++ def test_native_frame_hash_caption_geometry_or_labels_changes_fail(self):
++  original=self.f.evidence()
++  for key,value in [('native_binding',{}),('caption_text','Changed'),('visible_labels',['Invented'])]:
++   e=copy.deepcopy(original);e['rendered_segments'][0]['frame'][key]=value;self.assertFalse(verify_document(e,self.f.root)['passed'])
++ def test_browser_playback_and_authoring_digest_still_required_offline(self):
++  e=self.f.evidence();e['browser_playback']=[];self.assertFalse(verify_document(e,self.f.root)['passed'])
++ def test_public_screenshot_branch_accepts_true_native_without_roots(self):
++  e=self.f.evidence();shutil.rmtree(self.f.private);self.assertEqual(exporter._screenshots(e,self.f.root,'Unit')['native-count']['provenance']['method'],'ios_simulator_screenshot')
++ def test_native_source_primary_other_app_cannot_supply_controls(self):
++  with self.assertRaisesRegex(ValueError,'Unit primary identity'):n.validate_native_source(self.f.row,self.f.root,'IC')
++ def native_lesson(self,e):
++  lesson={'id':'synthetic-native-count','title':'Synthetic native parser fixture','app':'Unit','audience':['Synthetic reviewer'],'summary':'Synthetic public parser fixture only.','prerequisites':['No app or physical outcome is represented.'],'scenes':[{'id':'count','title':'Synthetic Count','narration':'Select Count to review Inventory.','practice':'Synthetic parser exercise only.','required_labels':['Count','Inventory']}],'sector_examples':[{'sector':x,'scenario':'Synthetic '+x+' parser fixture only.'} for x in exporter.SECTORS],'publication_mode':'video','export_ready':True,'evidence_file':'evidence.json'}
++  e['authoring_sha256']=exporter.lesson_content_digest(lesson);self.f.json('evidence.json',e);return lesson
++ def test_public_prepare_passes_offline_without_sdk_binary_or_npm(self):
++  e=self.f.evidence();lesson=self.native_lesson(e);shutil.rmtree(self.f.private)
++  public=exporter._prepare(lesson,self.f.root);self.assertEqual(public['mode'],'video')
++ def test_offline_site_exports_unchanged_png_and_portable_native_video_links(self):
++  e=self.f.evidence();lesson=self.native_lesson(e);folder=self.f.root/'expansion/lessons';folder.mkdir(parents=True);(folder/'synthetic-native-count.json').write_text(json.dumps(lesson));shutil.rmtree(self.f.private)
++  out=self.base/'export';cards=exporter.write_expansion_site(out,self.f.root);self.assertEqual(len(cards),1)
++  images=list(out.rglob('*.png'));self.assertTrue(images);self.assertTrue(any(n.sha(p)==self.f.row['sha256'] for p in images))
++  page=(out/'walkthroughs/synthetic-native-count/index.html').read_text();self.assertNotIn('localhost',page);self.assertNotIn('file://',page);self.assertNotIn('/Users/',page)
++ def test_public_canonical_digest_still_rejects_changed_learner_content(self):
++  e=self.f.evidence();lesson=self.native_lesson(e);lesson['scenes'][0]['practice']='Changed current learner practice.'
++  with self.assertRaisesRegex(exporter.PublicationError,'authoring|current|content'):
++   exporter._prepare(lesson,self.f.root)
++ def test_dom_icon_metadata_cannot_be_promoted_to_native_labels(self):
++  for field,value in [('dom_file','fake.txt'),('visible_controls',[{'accessible_name':'Count'}]),('visible_field_text',['Count'])]:
++   row=copy.deepcopy(self.f.row);row[field]=value
++   with self.assertRaisesRegex(ValueError,'browser|DOM|literal'):n.validate_native_source(row,self.f.root,'Unit')
++ def test_stream_stale_review_context_is_rejected(self):
++  self.f.d['runtime']['selected_streams'][0]['build_identity_sha256']='0'*64;self.f.d['review']['binding_sha256']=n.review_digest(self.f.d);self.f.row['native_review_package']=self.f.json('receipts/package.json',self.f.d);self.reject('context stale/wrong')
++ def test_review_timestamp_before_source_observation_is_rejected(self):
++  self.f.d['review']['reviewed_at']='2026-10-25T11:59:00Z';self.f.ref=self.f.json('receipts/package.json',self.f.d);self.f.row['native_review_package']=self.f.ref;self.reject('predates reviewed observations')
++ def test_renderer_synthetic_input_only_is_dpr_aware_and_creates_no_review(self):
++  factory=browser_fixture.WalkthroughContractTests(methodName='runTest');factory.setUp();self.addCleanup(factory.doCleanups)
++  f=Fixture(factory.root,self.base/'renderer-private');factory.capture=dict(f.row,id='draft-screen');factory.lesson['app']='Unit';factory.lesson['scenes'][0]['required_labels']=['Inventory','Count'];factory.lesson['scenes'][0]['narration']='Select Count to review Inventory.'
++  (factory.root/'voice.srt').write_text('1\n00:00:00,000 --> 00:00:01,000\nSelect Count to review Inventory.\n\n');factory.plan['captions']['sha256']=renderer._hash(factory.root/'voice.srt');factory.plan['captions']['approval']['sha256']=factory.plan['captions']['sha256'];factory.plan['scenes'][0]['captions'][0]['required_labels']=['Inventory','Count'];factory.plan['screenshot_reviews']['draft-screen']=factory.approval(factory.capture['sha256'],application_visible=True,labels_legible=True,no_errors=True);factory.plan['screenshot_reviews']['draft-screen']['reviewed_at']='2026-10-25T12:00:40Z'
++  factory.save();shutil.rmtree(f.private);recipe=renderer.validate_inputs(factory.lesson_path,factory.plan_path,factory.root);shot=recipe['screenshots']['draft-screen'];self.assertLess(shot['layout']['scale'],.75);self.assertIn('native_binding',shot);self.assertNotIn('native_frame_review',shot)
++if __name__=='__main__':unittest.main()

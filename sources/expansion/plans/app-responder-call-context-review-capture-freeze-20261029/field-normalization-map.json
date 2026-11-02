@@ -1,0 +1,130 @@
+{
+  "kind": "typed_learner_projection_without_spoken_word_changes",
+  "original_candidate_sha256": "882a6bba425dfb8e32807f4a820ebebae0cf4ee1eb36db6d454f5761353e6c54",
+  "narration_sha256": "7d6bd8a04fe7751de719e9fc8bff9718fd4a7a63931cf0bce1cd640a65510d30",
+  "field_map": [
+    {
+      "from": "audience[0]",
+      "to": "audience",
+      "change": "Single-item audience list becomes the same exact string."
+    },
+    {
+      "from": "source_files[{repository,path,sha256}]",
+      "to": "source_files[str] + source_file_hashes[{file,sha256,repository,repository_path}]",
+      "change": "Use portable string paths to retained snapshots; preserve original hashes and repository paths separately."
+    },
+    {
+      "from": "scenes[*].capture_refs",
+      "to": "scenes[*].capture_evidence.capture_refs",
+      "change": "Same ordered source IDs; source-only observation status added."
+    },
+    {
+      "from": "candidate review flags",
+      "to": "source-only frozen flags",
+      "change": "Parent approved the exact661-word script and bounded correspondence. No audio, frame, playback or publication review is inferred."
+    },
+    {
+      "from": "candidate asset paths",
+      "to": "self-contained frozen image/DOM/source paths",
+      "change": "Byte-identical copies only; image identity, dates, URLs, labels and existing review attribution remain unchanged."
+    }
+  ],
+  "unchanged_fields": [
+    "All8 narration paragraphs",
+    "Every scene required_labels entry",
+    "Scene titles, routes, practice and capture intent",
+    "All6 sector companions",
+    "Every source ID, original image/DOM hash and pixel-review receipt"
+  ],
+  "context_order_note": "Accepted context refs remain unchanged. Exact prose spans use their relevant actual screenshots; redundant prior context frames do not force a cut.",
+  "public_package_path_map": {
+    "captures/expansion/responder-calls-readonly-20261029-235/006-readable-calls-list-and-search.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/006-readable-calls-list-and-search.jpg",
+      "sha256": "d82eb0d785bc3ca51262446829d3c9ad8af346bad3b619dd47333b0b313d1569"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/006-readable-calls-list-and-search.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/006-readable-calls-list-and-search.dom.txt",
+      "sha256": "a327d8a9edb399f03d9a4de056cd6caa375627ddf3e92c925fa8ede46eac3e4f"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/007-readable-warehouse-search-result.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/007-readable-warehouse-search-result.jpg",
+      "sha256": "ce5e70e5eb4faf7b435e51bd90c37ae2203fe8afb95143e756b93b36a9246537"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/007-readable-warehouse-search-result.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/007-readable-warehouse-search-result.dom.txt",
+      "sha256": "ce510cab224ba5a2e20e7956f200726bdc329a521ac0e49103fd52d7b199177d"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/009-call-info-priority-type-address.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/009-call-info-priority-type-address.jpg",
+      "sha256": "40ca38129263e7ed3551f81aefedcd84388edae699244522b2c0649fcf955427"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/009-call-info-priority-type-address.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/009-call-info-priority-type-address.dom.txt",
+      "sha256": "8d8f45be69d0a652cb5d824567df9e74e62758a3b4165b185dc4039fc664afb1"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/010-loaded-warehouse-identity-and-location.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/010-loaded-warehouse-identity-and-location.jpg",
+      "sha256": "a8ef956def7448f609541cf0843f315488297fc33e4978c011ec934658e19643"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/010-loaded-warehouse-identity-and-location.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/010-loaded-warehouse-identity-and-location.dom.txt",
+      "sha256": "8d8f45be69d0a652cb5d824567df9e74e62758a3b4165b185dc4039fc664afb1"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/011-call-protocols-current-result.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/011-call-protocols-current-result.jpg",
+      "sha256": "22c258a4a9d3a3a9188f6b862aa49cb34d7a0841e2644a963b2b5c77a802fe8e"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/011-call-protocols-current-result.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/011-call-protocols-current-result.dom.txt",
+      "sha256": "f358b40ce704cd18fa065e136538b4118f3004497605e30e3c52b394d124293e"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/013-dispatched-resource-rows-complete.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/013-dispatched-resource-rows-complete.jpg",
+      "sha256": "f2dbf92d4492a85f7af6305255f51680147030f9592f5a3e8a7d2d0beadbbb08"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/013-dispatched-resource-rows-complete.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/013-dispatched-resource-rows-complete.dom.txt",
+      "sha256": "673b99af990faeebdf4a4f9801426c3d5ac512357b9047f78d3d9aa5ea5f5a85"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/014-call-activity-existing-software-events.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/014-call-activity-existing-software-events.jpg",
+      "sha256": "2099182a7e1db9b6ca51b7fdb7c7045cd6cecf7cadbca1926fa728b503801159"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/014-call-activity-existing-software-events.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/014-call-activity-existing-software-events.dom.txt",
+      "sha256": "408e00649c35758f5d07a7c548403f9adeb0257ef692afb87882718a4efac55f"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/015-call-notes-readonly-empty.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/015-call-notes-readonly-empty.jpg",
+      "sha256": "eb853347be8326e804c044ce6409107de184afea11754b46a8a677b6051d9bfc"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/015-call-notes-readonly-empty.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/015-call-notes-readonly-empty.dom.txt",
+      "sha256": "3b983d364dd05352814ffb043cd9fabad6bf4328e2ffe13c5ebf9f2ed219f751"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/016-call-images-readonly-empty.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/016-call-images-readonly-empty.jpg",
+      "sha256": "9e85be785308dea7c893280111a32610865bea6345f28426f93e2b6ac6f3db37"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/016-call-images-readonly-empty.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/016-call-images-readonly-empty.dom.txt",
+      "sha256": "ea204547c1061587028ee671a8bad595ba8a1befe6783fcee099a2961fc7541a"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/017-call-files-readonly-empty.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/017-call-files-readonly-empty.jpg",
+      "sha256": "9f82fc88dd678e2297bc22f31de84ec0332e5ded7a65c911dcfe408e61faa62a"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/017-call-files-readonly-empty.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/017-call-files-readonly-empty.dom.txt",
+      "sha256": "f382075a3fd41288fe667903591d2da26cc8b75e73659e3acc90f7dd0d601427"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/019-home-response-visibility-readback.jpg": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/images/019-home-response-visibility-readback.jpg",
+      "sha256": "3e126ff98f7029eed60200403a86158b9ecd08e4e01403d0c7a31999fc56e865"
+    },
+    "captures/expansion/responder-calls-readonly-20261029-235/019-home-response-visibility-readback.dom.txt": {
+      "file": "expansion/plans/app-responder-call-context-review-capture-freeze-20261029/dom/019-home-response-visibility-readback.dom.txt",
+      "sha256": "9f15129149207a8e220daae990235f1bb76fa4228c058c06bb3ae69e9b27afa3"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "title": "Actual User complete Records narration listening receipt",
+  "required": [
+    "reviewer",
+    "reviewed_at",
+    "lesson_sha256",
+    "audio_sha256",
+    "complete_natural_narration",
+    "evidence"
+  ],
+  "properties": {
+    "lesson_sha256": {
+      "const": "e3df33c2315187e211c0e5c83f8ea0468c22cb549230c0cb752d736853ad9bc5"
+    },
+    "audio_sha256": {
+      "const": "f7f1235fb74e25a008a7c53d34c6309e67feb31f42cdeab46c314d7860babdc6"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewer": {
+      "const": "User"
+    },
+    "complete_natural_narration": {
+      "const": true
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "question_call_id": {
+      "type": "string"
+    }
+  },
+  "description": "No approval example is generated. Runtime additionally checks exact supplied SHA, URL-free content, actual full natural/complete response and chronology after actual QA."
+}

@@ -1,0 +1,604 @@
+{
+  "id": "core-personnel-administration",
+  "status": "untimed candidate only",
+  "scenes": [
+    {
+      "scene_id": "orient",
+      "title": "Distinguish roster roles, staffing and status",
+      "narration": "Personnel shows a member’s roles separately from staffing, status, and administrative state. In our fictional Chicago Fire department, Casey begins with Officer, On Shift, Standing By, and Admin. Choose Manage Roles to inspect the catalog. The page lists each role’s description and member count. It also explains how role order chooses an available custom icon for a person’s map pin. We will leave the original six roles and their order unchanged, and add one clearly marked coordination exercise.",
+      "screens": [
+        {
+          "capture_id": "001-personnel-baseline-launchers",
+          "file": "captures/expansion/core-personnel-administration-20261028/001-personnel-baseline-launchers.jpg",
+          "sha256": "6b5a0f324407f74c2eead80c66a88a5eb318ae004920cf5842b4103e23a21329",
+          "required_labels": [
+            "Personnel",
+            "Roles",
+            "Staffing",
+            "Status",
+            "State",
+            "Manage Roles"
+          ],
+          "phase": "Actual roster launchers and visible Casey row only. Bottom people/count are offscreen; use023 for14total. No invite/person creation/staffing/status action."
+        },
+        {
+          "capture_id": "002-role-catalog-baseline",
+          "file": "captures/expansion/core-personnel-administration-20261028/002-role-catalog-baseline.jpg",
+          "sha256": "e66c948e03fdeffaa4a69d1101e8d40f927d9cac8c76f58cafc412cdf0bfb22d",
+          "required_labels": [
+            "Add Role",
+            "Users In Role"
+          ],
+          "phase": "Six original roles/order/counts and role-order help. Save order was never used; no new map appearance is shown."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "new-role",
+      "title": "Give the role a clear operational purpose",
+      "narration": "Choose Add Role. Enter Training Only, Community Response Navigator as the Name. Use the Description to explain the fictional community paramedicine and mental health coordination exercise. Our description explicitly separates software training from professional qualification and system administration privileges. Custom icon is optional and remains empty. A useful role name tells another administrator what the role is for; its description explains the intended scope before anyone is assigned to it.",
+      "screens": [
+        {
+          "capture_id": "002-role-catalog-baseline",
+          "file": "captures/expansion/core-personnel-administration-20261028/002-role-catalog-baseline.jpg",
+          "sha256": "e66c948e03fdeffaa4a69d1101e8d40f927d9cac8c76f58cafc412cdf0bfb22d",
+          "required_labels": [
+            "Add Role",
+            "Name",
+            "Description"
+          ],
+          "phase": "Six original roles/order/counts and role-order help. Save order was never used; no new map appearance is shown."
+        },
+        {
+          "capture_id": "003-add-role-blank",
+          "file": "captures/expansion/core-personnel-administration-20261028/003-add-role-blank.jpg",
+          "sha256": "8f835e11c64803374e5e19ecc0268ce775a99ee64e0af1b54cfae55e0add32e1",
+          "required_labels": [
+            "Add Role",
+            "Name",
+            "Description",
+            "Custom icon",
+            "No file chosen"
+          ],
+          "phase": "Blank upper Add Role and default icon preview only. Save is offscreen; lower icon guidance is clipped and excluded."
+        },
+        {
+          "capture_id": "004-prepared-community-response-role",
+          "file": "captures/expansion/core-personnel-administration-20261028/004-prepared-community-response-role.jpg",
+          "sha256": "c6480e4760d5c0a0971b5f3c5d5c12a1d9f06bca9dd8e0b68af41772e235b6a0",
+          "required_labels": [
+            "Add Role",
+            "Name",
+            "TRAINING ONLY - Community response navigator",
+            "Description",
+            "Fictional Academy role for community paramedicine and mental health response coordination. Software training only; no professional qualification or system administration privilege.",
+            "Custom icon",
+            "No file chosen"
+          ],
+          "phase": "Prepared name/complete Description, empty icon chooser and default previews. Not yet saved; preview labels truncate the long name. Use005 for Save."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "save-role",
+      "title": "Save the role and verify the empty starting point",
+      "narration": "The lower form previews the default icon on light and dark backgrounds and in a list. No custom file has been selected. Use Save, then find the new role at the end of the catalog. Users In Role is zero, and the original six rows retain their order and counts. Choose View on the new row to read its stored name and full description. Creating the role has given us a saved definition, but has not yet assigned a member.",
+      "screens": [
+        {
+          "capture_id": "005-role-default-preview-save-visible",
+          "file": "captures/expansion/core-personnel-administration-20261028/005-role-default-preview-save-visible.jpg",
+          "sha256": "8c721227f9e44d3aa6a497fc952e32d442ba5884354d3b6e91956e9bca528e80",
+          "required_labels": [
+            "Preview",
+            "Light map",
+            "Dark map",
+            "In a list",
+            "No custom icon. Showing the default icon.",
+            "Save"
+          ],
+          "phase": "Complete default-icon preview and Save; Name is above viewport. No icon upload or actual map change."
+        },
+        {
+          "capture_id": "006-saved-role-zero-members",
+          "file": "captures/expansion/core-personnel-administration-20261028/006-saved-role-zero-members.jpg",
+          "sha256": "5da7d26c787d3e505f90941e86d87f9b389140072ddf49ce397c3ab9e36d8cb4",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator",
+            "0",
+            "View"
+          ],
+          "phase": "Saved seventh role0members, original6names/order/counts retained. New row View/Required certifications launchers shown. No Save order."
+        },
+        {
+          "capture_id": "016-new-role-view-no-members",
+          "file": "captures/expansion/core-personnel-administration-20261028/016-new-role-view-no-members.jpg",
+          "sha256": "824b133ac68ab858597245790d43a1fffbf351da1f2ed7a336c8ac79ed2d877c",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator"
+          ],
+          "phase": "Role title/complete Description only; blank table area has no explicit no-members text. Use006/007 for member count/empty-state evidence."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "requirement",
+      "title": "Save one deliberate certification requirement",
+      "narration": "From the new role’s row, open Required certifications. The notice says enforcement is Off, and Member eligibility says the role has no members. Add requirement creates a row. Select the fictional record-review type, check Mandatory, leave Any-of group blank, leave Allow trainee clear, and enter seven for Grace override. Save, then reopen the page and read the same single row. The seven-day setting concerns the removal grace calculation if enforcement applies; it does not change a certification record’s expiry.",
+      "screens": [
+        {
+          "capture_id": "006-saved-role-zero-members",
+          "file": "captures/expansion/core-personnel-administration-20261028/006-saved-role-zero-members.jpg",
+          "sha256": "5da7d26c787d3e505f90941e86d87f9b389140072ddf49ce397c3ab9e36d8cb4",
+          "required_labels": [
+            "Required certifications",
+            "7"
+          ],
+          "phase": "Saved seventh role0members, original6names/order/counts retained. New row View/Required certifications launchers shown. No Save order."
+        },
+        {
+          "capture_id": "007-new-role-no-requirements",
+          "file": "captures/expansion/core-personnel-administration-20261028/007-new-role-no-requirements.jpg",
+          "sha256": "0bdbaafd2c06fe36899706fb63191af8396299ea0a827b0d1b7919f14eccd4c4",
+          "required_labels": [
+            "Required certifications",
+            "Add requirement",
+            "Type",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "Grace override (days)",
+            "7",
+            "Save",
+            "This role has no members."
+          ],
+          "phase": "Empty new role requirements, explicit no-members message and departmentOff notice; no policy change."
+        },
+        {
+          "capture_id": "008-one-fictional-requirement-prepared",
+          "file": "captures/expansion/core-personnel-administration-20261028/008-one-fictional-requirement-prepared.jpg",
+          "sha256": "51146e109a32557b7bc154dcf5e5e68c79d86a424d0852a1f48cfa9f5f646951",
+          "required_labels": [
+            "Required certifications",
+            "Add requirement",
+            "Type",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "Grace override (days)",
+            "7",
+            "Save",
+            "This role has no members."
+          ],
+          "phase": "Prepared one Type51004 row with MandatoryON/Anyblank/AllowtraineeOFF/grace7. Selected long name is clipped; retain prefix only. Full identity is independently shown011/012, not invented inside this selector."
+        },
+        {
+          "capture_id": "009-saved-requirement-off-no-members",
+          "file": "captures/expansion/core-personnel-administration-20261028/009-saved-requirement-off-no-members.jpg",
+          "sha256": "4bac18604fa128462272e88535ee88e3ff9182caf49e443f1938d6bc95c7fa05",
+          "required_labels": [
+            "Required certifications",
+            "Add requirement",
+            "Type",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "Grace override (days)",
+            "7",
+            "Save",
+            "Saved.",
+            "This role has no members."
+          ],
+          "phase": "Saved one row/Saved banner/Off/no-members. Long selected type name is clipped; do not promote full option text from DOM."
+        },
+        {
+          "capture_id": "010-requirement-fresh-readback",
+          "file": "captures/expansion/core-personnel-administration-20261028/010-requirement-fresh-readback.jpg",
+          "sha256": "a65a22d91d10d43cacbf3df12b8c9d8553472054b93ed6dedb87f7988975f383",
+          "required_labels": [
+            "Required certifications",
+            "Add requirement",
+            "Type",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "Grace override (days)",
+            "7",
+            "Save",
+            "This role has no members."
+          ],
+          "phase": "Fresh saved single-rule readback; type text remains clipped. No second save or eligibility outcome."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "type-lock",
+      "title": "Check the referenced type and code lock",
+      "narration": "Choose Certification types to verify the full identity behind the narrow requirement selector. The training review row shows its complete code, one existing record, and now one requirement. Open its Edit control. Code is read-only, and the help explains that a role requirement references this type. Applies to remains locked at Person because a record already uses it. We are inspecting these fields only. Keep the existing record and type settings intact.",
+      "screens": [
+        {
+          "capture_id": "010-requirement-fresh-readback",
+          "file": "captures/expansion/core-personnel-administration-20261028/010-requirement-fresh-readback.jpg",
+          "sha256": "a65a22d91d10d43cacbf3df12b8c9d8553472054b93ed6dedb87f7988975f383",
+          "required_labels": [
+            "Certification types"
+          ],
+          "phase": "Fresh saved single-rule readback; type text remains clipped. No second save or eligibility outcome."
+        },
+        {
+          "capture_id": "011-certification-type-now-referenced",
+          "file": "captures/expansion/core-personnel-administration-20261028/011-certification-type-now-referenced.jpg",
+          "sha256": "4679bea769a9fae9cd0d6523b37d687960b77394a02b8e3da0b895dcc1396213",
+          "required_labels": [
+            "Certification types",
+            "TRN-REVIEW-20261028",
+            "TRAINING ONLY - Record review 20261028",
+            "Records",
+            "Requirements",
+            "1",
+            "Edit",
+            "Code",
+            "Applies to",
+            "Person"
+          ],
+          "phase": "Actual type51004 now1Record/1Requirement with full name/code. This is later than the frozen Certification lesson’s earlier0Requirement image."
+        },
+        {
+          "capture_id": "012-referenced-type-code-and-scope-locked",
+          "file": "captures/expansion/core-personnel-administration-20261028/012-referenced-type-code-and-scope-locked.jpg",
+          "sha256": "a537abc4a069375e378a72f3eb97d1e9d89b8143dfd41b5a88cfec9654c68ad2",
+          "required_labels": [
+            "TRN-REVIEW-20261028",
+            "TRAINING ONLY - Record review 20261028",
+            "Code",
+            "A role requirement references this type, so its code can no longer change.",
+            "Applies to",
+            "Person"
+          ],
+          "phase": "Actual readonly Code and disabled Person scope. Code help/fullidentity readable. Lower verification help/Active/Save are clipped or offscreen; no type edit."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "alternatives",
+      "title": "Compare independent rules and alternatives without saving",
+      "narration": "Back on the role’s requirements page, add a second, distinct type for an unsaved comparison. With both Mandatory boxes checked and both group fields blank, the rows express separate requirements: both would be needed. Give both rows group number one, and they become alternatives: either could satisfy that group. This is a form preview, so do not Save. Reloading restores the original single row, blank group, and seven-day override. Saving would replace the stored requirement set; the discarded preview changes none of it.",
+      "screens": [
+        {
+          "capture_id": "010-requirement-fresh-readback",
+          "file": "captures/expansion/core-personnel-administration-20261028/010-requirement-fresh-readback.jpg",
+          "sha256": "a65a22d91d10d43cacbf3df12b8c9d8553472054b93ed6dedb87f7988975f383",
+          "required_labels": [
+            "Add requirement",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "7"
+          ],
+          "phase": "Fresh saved single-rule readback; type text remains clipped. No second save or eligibility outcome."
+        },
+        {
+          "capture_id": "013-two-separate-rules-unsaved",
+          "file": "captures/expansion/core-personnel-administration-20261028/013-two-separate-rules-unsaved.jpg",
+          "sha256": "66a54083818b9b3205bbd0b2918113b53fe004cf6fd95fb1cfe7f4a1b7dd9f24",
+          "required_labels": [
+            "Add requirement",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "Driver / operator",
+            "7"
+          ],
+          "phase": "UNSAVED two distinct types, bothMandatoryON and blankAny-of. Driver/type labels are clipped; preserve readable prefixes only. Second row grace blank; original row remains7. No save/person evaluation."
+        },
+        {
+          "capture_id": "014-same-group-alternatives-unsaved",
+          "file": "captures/expansion/core-personnel-administration-20261028/014-same-group-alternatives-unsaved.jpg",
+          "sha256": "088354a6c8fa8585ce2d8029d4c61a7a418cadd38d8ae22c24932b197258bfde",
+          "required_labels": [
+            "Add requirement",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "Driver / operator",
+            "1",
+            "7"
+          ],
+          "phase": "UNSAVED bothAny-of1; originalgrace7/secondblank remain. This is an OR-form illustration only, not persisted policy or re-evaluated eligibility."
+        },
+        {
+          "capture_id": "015-unsaved-alternatives-discarded",
+          "file": "captures/expansion/core-personnel-administration-20261028/015-unsaved-alternatives-discarded.jpg",
+          "sha256": "a65a22d91d10d43cacbf3df12b8c9d8553472054b93ed6dedb87f7988975f383",
+          "required_labels": [
+            "Add requirement",
+            "Mandatory",
+            "Any-of group",
+            "Allow trainee",
+            "7"
+          ],
+          "phase": "Normal reload discarded local second row/group1; original saved single row/blankgroup/grace7 remains. No Save."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "member-profile",
+      "title": "Open the member editor and preserve the baseline",
+      "narration": "To assign the role, return to Personnel and use Edit on Casey’s row. In the profile’s Roles field, wait for the existing Officer selection to load. It must remain selected when adding another role. Group is Truck 81 and Is Group Admin is already checked in this fictional account; leave both unchanged. This page contains other profile settings, so keep the exercise focused on the intended additional role rather than changing membership, contact, or administrative options.",
+      "screens": [
+        {
+          "capture_id": "001-personnel-baseline-launchers",
+          "file": "captures/expansion/core-personnel-administration-20261028/001-personnel-baseline-launchers.jpg",
+          "sha256": "6b5a0f324407f74c2eead80c66a88a5eb318ae004920cf5842b4103e23a21329",
+          "required_labels": [
+            "Matthew Casey",
+            "Edit",
+            "Roles",
+            "Officer"
+          ],
+          "phase": "Actual roster launchers and visible Casey row only. Bottom people/count are offscreen; use023 for14total. No invite/person creation/staffing/status action."
+        },
+        {
+          "capture_id": "019-profile-group-admin-and-officer-baseline",
+          "file": "captures/expansion/core-personnel-administration-20261028/019-profile-group-admin-and-officer-baseline.jpg",
+          "sha256": "d1915609b2befb44e329e90e5d27241008a84caf643e23580f4a43a548e617ab",
+          "required_labels": [
+            "Group",
+            "Truck 81",
+            "Is Group Admin?",
+            "Roles",
+            "Officer"
+          ],
+          "phase": "Casey’s existing Officer chip loaded; Truck81/GroupAdmin checked are baseline. Account identity/contact fields are outside this image. No edit yet."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "select-role",
+      "title": "Prepare the additional role without replacing Officer",
+      "narration": "Use the profile’s Roles selector for the additional assignment. Community is entered in the lookup, while Officer remains selected. The prepared selection then contains two complete chips: Officer and the new Training Only, Community Response Navigator role. Read both names before saving. This control submits the whole selected role set, so an existing role must remain present if you intend to preserve it. Adding the new chip is preparation; we still need a saved readback.",
+      "screens": [
+        {
+          "capture_id": "019-profile-group-admin-and-officer-baseline",
+          "file": "captures/expansion/core-personnel-administration-20261028/019-profile-group-admin-and-officer-baseline.jpg",
+          "sha256": "d1915609b2befb44e329e90e5d27241008a84caf643e23580f4a43a548e617ab",
+          "required_labels": [
+            "Roles",
+            "Officer",
+            "Group",
+            "Truck 81",
+            "Is Group Admin?"
+          ],
+          "phase": "Casey’s existing Officer chip loaded; Truck81/GroupAdmin checked are baseline. Account identity/contact fields are outside this image. No edit yet."
+        },
+        {
+          "capture_id": "020-profile-role-search-result",
+          "file": "captures/expansion/core-personnel-administration-20261028/020-profile-role-search-result.jpg",
+          "sha256": "2ed9d316d12440c2681691c13bf62eedeb5682360b5e37b6c3c378c1226ec882",
+          "required_labels": [
+            "Roles",
+            "Officer",
+            "Community",
+            "Group",
+            "Truck 81",
+            "Is Group Admin?"
+          ],
+          "phase": "Normal fullwidth Roles lookup with Community typed and Officer retained. Last new-role option is vertically clipped; do not claim its full text or a completed selection here.021 supplies complete selected chips. No claim the lookup filtered to one result."
+        },
+        {
+          "capture_id": "021-profile-officer-and-new-role-prepared",
+          "file": "captures/expansion/core-personnel-administration-20261028/021-profile-officer-and-new-role-prepared.jpg",
+          "sha256": "f51514f2a12bbe43fa2ff74f6a45f2bb36a2dc07a5501af2eefbfc535878aeee",
+          "required_labels": [
+            "Roles",
+            "Officer",
+            "TRAINING ONLY - Community response navigator",
+            "Group",
+            "Truck 81",
+            "Is Group Admin?"
+          ],
+          "phase": "Prepared full Officer+new-role chips; group/admin baseline unchanged. Save not pictured here and persistence not yet established."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "profile-save",
+      "title": "Save the intended role set with profile settings preserved",
+      "narration": "Before saving, compare the unchanged profile controls. Department Admin is already selected, while Disable User and Hide User are clear. We leave them that way. Use the normal Save once. Back in Personnel, search for Matthew Casey. His row now lists Officer and the new coordination role together. Staffing remains On Shift, status remains Standing By, and administrative state still reads Admin. The result is an additional operational role on the same member, not a new staffing or status selection.",
+      "screens": [
+        {
+          "capture_id": "021-profile-officer-and-new-role-prepared",
+          "file": "captures/expansion/core-personnel-administration-20261028/021-profile-officer-and-new-role-prepared.jpg",
+          "sha256": "f51514f2a12bbe43fa2ff74f6a45f2bb36a2dc07a5501af2eefbfc535878aeee",
+          "required_labels": [
+            "Roles",
+            "Officer",
+            "TRAINING ONLY - Community response navigator"
+          ],
+          "phase": "Prepared full Officer+new-role chips; group/admin baseline unchanged. Save not pictured here and persistence not yet established."
+        },
+        {
+          "capture_id": "022-profile-admin-flags-and-save-unchanged",
+          "file": "captures/expansion/core-personnel-administration-20261028/022-profile-admin-flags-and-save-unchanged.jpg",
+          "sha256": "be1720bdb673bbe1b9a1d7d6e76eca4142239f35c100ae934da437b1c05fa135",
+          "required_labels": [
+            "Department Settings",
+            "Department Admin",
+            "Disable User",
+            "Hide User",
+            "Save"
+          ],
+          "phase": "Before the one normal full-profile Save: DepartmentAdmin remains selected, DisableOFF/HideOFF; Save fully visible. Roles are above viewport, supplied by021. No privilege toggle was changed."
+        },
+        {
+          "capture_id": "023-roster-saved-additional-role",
+          "file": "captures/expansion/core-personnel-administration-20261028/023-roster-saved-additional-role.jpg",
+          "sha256": "82d25ab86725a2d641308d195cfac0402fb1052332b772116e2e62eaa63b0b5b",
+          "required_labels": [
+            "Roles",
+            "Officer",
+            "TRAINING ONLY - Community response navigator",
+            "Matthew Casey",
+            "On Shift",
+            "Standing By",
+            "Admin"
+          ],
+          "phase": "Actual saved roster searchCasey shows both roles, OnShift/StandingBy/Admin and14total. No actual arrival, staffing/status or admin change is inferred."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "profile-readback",
+      "title": "Confirm the stored selection and baseline flags",
+      "narration": "Use the member’s Edit control again to check persistence. Both role chips are present in the fresh profile. Truck 81 remains selected and Is Group Admin remains checked. Farther down, Department Admin is still selected, while Disable User and Hide User remain clear. This second visit is read-only. Verify the particular fields involved in your exercise instead of assuming that a typed or selected value was stored. Keep unrelated profile and permission choices unchanged.",
+      "screens": [
+        {
+          "capture_id": "023-roster-saved-additional-role",
+          "file": "captures/expansion/core-personnel-administration-20261028/023-roster-saved-additional-role.jpg",
+          "sha256": "82d25ab86725a2d641308d195cfac0402fb1052332b772116e2e62eaa63b0b5b",
+          "required_labels": [
+            "Edit",
+            "Roles",
+            "Officer",
+            "TRAINING ONLY - Community response navigator"
+          ],
+          "phase": "Actual saved roster searchCasey shows both roles, OnShift/StandingBy/Admin and14total. No actual arrival, staffing/status or admin change is inferred."
+        },
+        {
+          "capture_id": "024-profile-both-roles-fresh-readback",
+          "file": "captures/expansion/core-personnel-administration-20261028/024-profile-both-roles-fresh-readback.jpg",
+          "sha256": "c6e99562d6aa83159f4a6b4deb2ad462619bed91ce3782a6452dfe4e9952b8e4",
+          "required_labels": [
+            "Group",
+            "Truck 81",
+            "Is Group Admin?",
+            "Roles",
+            "Officer",
+            "TRAINING ONLY - Community response navigator"
+          ],
+          "phase": "Fresh profile both role chips plusTruck81/GroupAdmin retained. Parent separately compared35selected non-sensitive/non-email/non-role controls; not a comprehensive backend data assertion."
+        },
+        {
+          "capture_id": "025-admin-flags-fresh-readback",
+          "file": "captures/expansion/core-personnel-administration-20261028/025-admin-flags-fresh-readback.jpg",
+          "sha256": "be1720bdb673bbe1b9a1d7d6e76eca4142239f35c100ae934da437b1c05fa135",
+          "required_labels": [
+            "Department Admin",
+            "Disable User",
+            "Hide User"
+          ],
+          "phase": "Fresh DepartmentAdminON/DisableOFF/HideOFF readback. Save remains untouched on this reopen; no role chips in this viewport."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "verify-member",
+      "title": "Check the role’s actual member and software eligibility",
+      "narration": "Return through Manage Roles. The new role now has one member. Choose its View control to see Casey listed under the stored description. Open Required certifications from that role’s row to inspect Member eligibility. Casey is marked Qualified for this single fictional software rule. The Off notice remains visible: this result does not demonstrate enforcement blocking or removal. Read the rule, the member, and the software result together, and keep professional authorization decisions outside this training exercise.",
+      "screens": [
+        {
+          "capture_id": "023-roster-saved-additional-role",
+          "file": "captures/expansion/core-personnel-administration-20261028/023-roster-saved-additional-role.jpg",
+          "sha256": "82d25ab86725a2d641308d195cfac0402fb1052332b772116e2e62eaa63b0b5b",
+          "required_labels": [
+            "Manage Roles",
+            "TRAINING ONLY - Community response navigator",
+            "View",
+            "Matthew Casey"
+          ],
+          "phase": "Actual saved roster searchCasey shows both roles, OnShift/StandingBy/Admin and14total. No actual arrival, staffing/status or admin change is inferred."
+        },
+        {
+          "capture_id": "028-final-role-order-and-one-member",
+          "file": "captures/expansion/core-personnel-administration-20261028/028-final-role-order-and-one-member.jpg",
+          "sha256": "173fe522246406a6e8f7fb3d6045f9349e2adeedcdd3dcf19d09ce7556419880",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator",
+            "Users In Role",
+            "1",
+            "View",
+            "Required certifications"
+          ],
+          "phase": "New seventh role1member; original6order/counts unchanged. No icon added/reorder/delete. This is the captured final state only."
+        },
+        {
+          "capture_id": "026-role-view-saved-casey-member",
+          "file": "captures/expansion/core-personnel-administration-20261028/026-role-view-saved-casey-member.jpg",
+          "sha256": "f79ab8216b00a7c046a3f06e38d84715dc862568eb339c32f3b2f4885c614fab",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator",
+            "Matthew Casey"
+          ],
+          "phase": "Actual new role View now lists Casey. No other member added or removed; role membership is distinct from actual arrival/qualification."
+        },
+        {
+          "capture_id": "028-final-role-order-and-one-member",
+          "file": "captures/expansion/core-personnel-administration-20261028/028-final-role-order-and-one-member.jpg",
+          "sha256": "173fe522246406a6e8f7fb3d6045f9349e2adeedcdd3dcf19d09ce7556419880",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator",
+            "Users In Role",
+            "1",
+            "View",
+            "Required certifications"
+          ],
+          "phase": "New seventh role1member; original6order/counts unchanged. No icon added/reorder/delete. This is the captured final state only."
+        },
+        {
+          "capture_id": "027-saved-member-qualified-for-fictional-rule",
+          "file": "captures/expansion/core-personnel-administration-20261028/027-saved-member-qualified-for-fictional-rule.jpg",
+          "sha256": "1dd468aa2ab1095e55536c37a0ac270325feae609ae784cdabc7d50170b69106",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator",
+            "Matthew Casey",
+            "Required certifications",
+            "Member eligibility",
+            "Qualified",
+            "Enforcement is off: these requirements are informational until a department administrator turns on Warn only or Enforce in Settings"
+          ],
+          "phase": "Actual software Qualified for single fictional rule while enforcementOff. No block/removal/warning delivery or professional qualification award. Full selected type text remains clipped."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    },
+    {
+      "scene_id": "adapt",
+      "title": "Apply the same careful role workflow across sectors",
+      "narration": "Chicago Fire can use this workflow to describe an exercise coordination role. Community care and mental health teams can organize operational responsibilities without patient detail. Search and rescue can distinguish search and support roles; security teams can define site responsibilities; wildland teams can organize seasonal coordination; and industrial response teams can separate staff functions from equipment inspections. In each setting, use clear descriptions, deliberate requirements, and verified membership. Preserve existing assignments and administrative settings, and check saved results before relying on them.",
+      "screens": [
+        {
+          "capture_id": "028-final-role-order-and-one-member",
+          "file": "captures/expansion/core-personnel-administration-20261028/028-final-role-order-and-one-member.jpg",
+          "sha256": "173fe522246406a6e8f7fb3d6045f9349e2adeedcdd3dcf19d09ce7556419880",
+          "required_labels": [
+            "Users In Role",
+            "TRAINING ONLY - Community response navigator",
+            "Officer"
+          ],
+          "phase": "New seventh role1member; original6order/counts unchanged. No icon added/reorder/delete. This is the captured final state only."
+        },
+        {
+          "capture_id": "023-roster-saved-additional-role",
+          "file": "captures/expansion/core-personnel-administration-20261028/023-roster-saved-additional-role.jpg",
+          "sha256": "82d25ab86725a2d641308d195cfac0402fb1052332b772116e2e62eaa63b0b5b",
+          "required_labels": [
+            "TRAINING ONLY - Community response navigator",
+            "Matthew Casey",
+            "Officer"
+          ],
+          "phase": "Actual saved roster searchCasey shows both roles, OnShift/StandingBy/Admin and14total. No actual arrival, staffing/status or admin change is inferred."
+        }
+      ],
+      "timing": "untimed source-only candidate; no audio/cue/cut/duration estimate"
+    }
+  ]
+}

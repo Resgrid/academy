@@ -1,0 +1,210 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Inventory" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - strong: Inventory
+- text: Track what your department owns, where it is kept and who is carrying it.
+- button " Purchasing":
+  - generic: 
+  - text: Purchasing
+- button " Counts, alerts and reports":
+  - generic: 
+  - text: Counts, alerts and reports
+- heading "Issuances" [level=5]
+- tablist "Inventory":
+  - button " On hand":
+    - generic: 
+    - text: On hand
+  - button " Items":
+    - generic: 
+    - text: Items
+  - button " Categories":
+    - generic: 
+    - text: Categories
+  - button " Locations":
+    - generic: 
+    - text: Locations
+  - button " Lots":
+    - generic: 
+    - text: Lots
+  - button " Assets":
+    - generic: 
+    - text: Assets
+  - button " Issuances":
+    - generic: 
+    - text: Issuances
+  - button " Kits":
+    - generic: 
+    - text: Kits
+  - button " Transfers":
+    - generic: 
+    - text: Transfers
+  - button " History":
+    - generic: 
+    - text: History
+- generic: 
+- text: Equipment currently signed out to a person or an apparatus. Record a return when it comes back.
+- button " Issue equipment":
+  - generic: 
+  - text: Issue equipment
+- table:
+  - rowgroup:
+    - row "Item Location Outstanding Expected return date Status Actions":
+      - columnheader "Item"
+      - columnheader "Location"
+      - columnheader "Outstanding"
+      - columnheader "Expected return date"
+      - columnheader "Status"
+      - columnheader "Actions"
+  - rowgroup:
+    - row "Academy training batteries Personnel 1.000000 10/26/2026 Partially returned Return":
+      - cell "Academy training batteries"
+      - cell "Personnel"
+      - cell "1.000000"
+      - cell "10/26/2026"
+      - cell "Partially returned"
+      - cell "Return":
+        - button "Return"
+- dialog "Return · Academy training batteries":
+  - document:
+    - button "Close": ×
+    - heading "Return · Academy training batteries" [level=4]
+    - button "Open Grammarly."
+    - paragraph: Say how much came back, where it went, and what condition it is in.
+    - generic: Amount
+    - spinbutton "Amount": "1"
+    - generic: Destination location
+    - combobox "Destination location":
+      - option "—"
+      - option "Unassigned"
+      - option "Personnel"
+      - option "Unit"
+      - option "Station" [selected]
+    - generic: Where the stock is going. Leave blank when consuming or writing stock off.
+    - generic: Status
+    - combobox "Status":
+      - option "In service" [selected]
+      - option "Out for repair"
+      - option "Damaged"
+    - generic: The state the equipment came back in.
+    - generic: Note
+    - textbox "Note" [active]: TRAINING ONLY - Return the remaining one fictional training battery pack to Station. Software exercise; no physical movement.
+    - generic: Why this happened. Notes appear on the ledger and on reports.
+    - button "Close"
+    - button "Return"
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

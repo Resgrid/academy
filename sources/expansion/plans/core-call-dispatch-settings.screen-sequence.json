@@ -1,0 +1,312 @@
+{
+  "schema_version": 1,
+  "kind": "untimed_source_photo_correspondence",
+  "lesson_id": "core-call-dispatch-settings",
+  "lesson_sha256": "33c09d43e37180c77a93e81b20027e4bf8cec484fe9eceece0bb692b7d9df6d4",
+  "prepared_at": "2026-10-26T21:05:40.599237+00:00",
+  "reviewer": "Codex",
+  "capture_manifest": "expansion/plans/core-call-dispatch-settings.captures.json",
+  "capture_manifest_sha256": "87126cc20e01aa194b6f80693d4a10facb623585efef0e7745b6d0f93b309a4e",
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review call intake and pruning",
+      "narration_sha256": "e26f4b280b297563c92083db8a5f6d371ad833b6c5d3667cd488df145f351d89",
+      "capture_refs": [
+        "core-config-037-call-settings-import-prune-readonly"
+      ],
+      "required_labels": [
+        "Dispatch Import Email",
+        "Prune (Auto Close) Calls",
+        "Minutes to keep call open",
+        "Email Type"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Identify the current parser, blank intake address and disabled cleanup values without sending or saving."
+    },
+    {
+      "id": "02",
+      "title": "Keep numbering and intake separate",
+      "narration_sha256": "ede1d805848716b378331770aa05c8568da0fc7b7d3c65a65702a0fe6ce93f96",
+      "capture_refs": [
+        "core-config-038-call-number-format-preserved",
+        "core-config-039-call-number-next-after-responder"
+      ],
+      "required_labels": [
+        "Call Numbering",
+        "Call number pattern",
+        "Sequence digits",
+        "Next call number"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Read the saved pattern and next number while preserving the existing sequence."
+    },
+    {
+      "id": "03",
+      "title": "Understand group and shift behavior",
+      "narration_sha256": "86439ef252f32a76b80a4566d021b3fe4fb0e8d18f1aaa9481f7ec5fa6324fea",
+      "capture_refs": [
+        "core-config-040-dispatch-group-settings-readonly"
+      ],
+      "required_labels": [
+        "Group Dispatch Settings",
+        "Use Shift for Group Dispatch",
+        "Set Status for Shift Personnel On Dispatch",
+        "Person Call Dispatch Status",
+        "Person Call Release Status"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Explain notification roster fallback separately from automatic personnel status eligibility."
+    },
+    {
+      "id": "04",
+      "title": "Review group scope and exceptions",
+      "narration_sha256": "d5ee6cddf2dead5306a1cbf807cd9ef957dc8a0017702f4a333ffbd9db998466",
+      "capture_refs": [
+        "core-config-048-group-scope-roles-readonly",
+        "core-nearest-group-boundary-editor"
+      ],
+      "required_labels": [
+        "Group-Scoped Dispatch",
+        "Scope Dispatch to Group Areas",
+        "Department-Wide Dispatch Roles",
+        "Group Boundary"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Identify the current administrator scope and explain why a missing estimate is not a deletion."
+    },
+    {
+      "id": "05",
+      "title": "Review unit recipients and status targets",
+      "narration_sha256": "4b2424ad3c7845f78f97370fd8f80c311e7f8556558f6da725627c423c95cada",
+      "capture_refs": [
+        "core-config-041-dispatch-unit-settings-readonly",
+        "core-config-049-unit-release-status-rules",
+        "core-config-057-engine-type-icon-baseline"
+      ],
+      "required_labels": [
+        "Unit Dispatch Settings",
+        "Also Dispatch To Assigned Personnel",
+        "Also Dispatch To Entire Group",
+        "Unit Call Dispatch Status",
+        "Unit Call Release Status",
+        "Actions (Custom Unit Statuses)"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Trace the two audience switches and dispatch/release targets; identify why no custom-type override table appears."
+    },
+    {
+      "id": "06",
+      "title": "Review linked status and confirmation",
+      "narration_sha256": "bc58d692b8658a1ff53f9bab874f69f26b02cd57632e9d5fb176caf3253e0d73",
+      "capture_refs": [
+        "core-config-049-unit-release-status-rules",
+        "core-config-042-dispatch-close-timer-run-card-settings"
+      ],
+      "required_labels": [
+        "Personnel on Unit Set Unit Status",
+        "Hold to set status"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Explain each switch without assuming a native gesture or linked status was exercised."
+    },
+    {
+      "id": "07",
+      "title": "Review recommendations and waiting resources",
+      "narration_sha256": "831451ecf71fd399efc5fa15ae0266a5a8b61211e01d58b5a4e45bd0c78307a4",
+      "capture_refs": [
+        "core-config-042-dispatch-close-timer-run-card-settings",
+        "core-config-043-dispatch-closest-tuning-readonly",
+        "core-config-050-turnout-waiting-call-readonly",
+        "core-config-051-response-code-options-empty",
+        "core-nearest-near-turnout-with-officer-crew"
+      ],
+      "required_labels": [
+        "Run Cards & Automatic Dispatch",
+        "Closest Unit Response Tuning",
+        "Response codes"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Read the saved120/0/0 turnout and compare it with the actual2-minute training unit estimate; keep automatic dispatch off."
+    },
+    {
+      "id": "08",
+      "title": "Review separate timer and coverage forms",
+      "narration_sha256": "f0d9a9458c69944c1009b28c61c00f39c3d8c81aa068c5c1d7bc2329a3ee55f2",
+      "capture_refs": [
+        "core-config-042-dispatch-close-timer-run-card-settings",
+        "core-config-047-default-timers-empty-preserved",
+        "core-config-069-investigation-personnel-timer-override",
+        "core-responder-eligible-boden-timer",
+        "core-config-046-station-coverage-empty-baseline"
+      ],
+      "required_labels": [
+        "Check-In Timer Settings",
+        "Auto-Enable Check-In Timers for New Calls",
+        "Default Timer Configurations",
+        "Call Type / Priority Overrides",
+        "Investigation",
+        "60",
+        "5",
+        "Station Coverage Minimums",
+        "Check-In Timers"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Distinguish the saved60-minute override from unsaved30-minute new-default form values and the call-level enable flag."
+    },
+    {
+      "id": "09",
+      "title": "Review call-creation field rules",
+      "narration_sha256": "4352c43a071e766323a27024e7cb02953e563fe21512ea09973b20589a11deaa",
+      "capture_refs": [
+        "core-config-044-new-call-visible-required-fields",
+        "core-config-045-new-call-lower-field-rules",
+        "core-nearest-training-near-pin-fields"
+      ],
+      "required_labels": [
+        "New Call Form Fields",
+        "Visible",
+        "Required",
+        "GPS Coordinates",
+        "Plus Code"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Explain the current Visible/Required policy and identify the disabled Plus Code requirement."
+    },
+    {
+      "id": "10",
+      "title": "Inspect a real training closeout",
+      "narration_sha256": "94f6d3ef24feaa70edf4de32dbe72f84dfb7dbe94cadc9a8feeee295af27c82f",
+      "capture_refs": [
+        "core-nearest-saved-call-dispatched-resources",
+        "core-nearest-training-close-without-notification",
+        "core-nearest-training-call-closed-history",
+        "core-config-049-unit-release-status-rules"
+      ],
+      "required_labels": [
+        "Dispatched",
+        "Engine 51",
+        "Christopher Herrmann",
+        "Completed Type",
+        "Send Notification",
+        "Completed Notes",
+        "Close Call",
+        "Closed"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Compare stored recipients, the notification-off close form and the saved Closed record; keep release-status verification separate."
+    },
+    {
+      "id": "11",
+      "title": "Review automatic closure and apply the policy",
+      "narration_sha256": "48106c238b64116db49db5cb501a9eea02206e5555439f781925a6796e5f0375",
+      "capture_refs": [
+        "core-config-042-dispatch-close-timer-run-card-settings",
+        "core-nearest-training-call-closed-history"
+      ],
+      "required_labels": [
+        "Close call when last unit clears",
+        "Closed"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "practice": "Explain the automatic-close guards and choose a controlled verification plan suited to your sector."
+    }
+  ],
+  "state_rules": [
+    "Call/Dispatch settings were captured read-only. Only parent separately saved the InvestigationPersonnel60/5/allstates timer override; no new settings writes made for this lesson.",
+    "The 30-minute AddNewDefaultTimer form is unsaved. The saved override is60minutes. Departmentauto-enableoff and calllevelenabled are separate controls.",
+    "All unit types currently use standard statuses, so custom override rows are not displayed. No unseen row operation is narrated.",
+    "Current optionalfieldpolicy remains unchanged; explanations describe behavior without claiming a required-field error test.",
+    "Existing call26-4 predates FD51 formatting. Actualstoredrecipients, notification-off closeform and Closedrecord are historicaltrainingproof. No original activecall closed.",
+    "Close-last-unit and nativehold controls remainoff. Conditional impacts are explained; no automatic/native outcome is claimed."
+  ],
+  "declared_limits": [
+    "No intake import, parser send or cleanup execution is demonstrated.",
+    "Group shift/status controls, audience expansion, role scope, hold-to-set and automatic-close switches stayoff.",
+    "No unit-type override rows are available because current training types use standard statuses; no unseen row editing claimed.",
+    "The field policy is unchanged; no required-field rejection, restricted-user comparison or two-unit automatic-close exercise is claimed.",
+    "The timer override and call-level panel are real; check-in receipt is not shown here.",
+    "The closed26-4 example predates FD51 numbering. It remains a historical training call with its issued number."
+  ],
+  "follow_up_capture_gaps": [
+    {
+      "id": "custom-status-overrides",
+      "scene": "05",
+      "status": "outside_current_demonstration",
+      "route": "/User/Department/DispatchSettings",
+      "required_labels": [
+        "Unit Type",
+        "Unit Call Dispatch Status",
+        "Unit Call Release Status"
+      ],
+      "prerequisite": "A fictional unit type assigned a custom unit status set; current Engine/other types use StandardActions and produce no override rows.",
+      "needed_shots": "Actual table rows with Default and specific status choices, saved/reopened configuration and any real no-match/multiple-match warnings.",
+      "mutation_policy": "Do not change existing types/assignments solely for footage without coordinated authorization; preserve current calls."
+    },
+    {
+      "id": "group-status-and-audience-outcome",
+      "scenes": [
+        "03",
+        "05"
+      ],
+      "status": "conditional_policy_only",
+      "route": "/User/Dispatch/ViewCall?callId=<owned-training-call>",
+      "needed_shots": "If teaching execution later: controlled nonempty/empty on-duty roster routing and actual person/unit dispatch+release history before/after, explicitly distinguishing notification fallback from shift-status eligibility.",
+      "current_limit": "Current switches remainoff; existing26-4 shows direct person+unit stored assignments and manualclose, not groupstatus automation."
+    },
+    {
+      "id": "native-hold-and-linked-crew",
+      "scene": "06",
+      "status": "conditional_policy_only",
+      "routes": [
+        "/User/Department/DispatchSettings",
+        "supported Unit/Responder status screen"
+      ],
+      "needed_shots": "Actual supported app2second hold and submitted crewroles/link context after explicit enabling, including note/destination nextstep.",
+      "current_limit": "Current controls areoff. No native gesture or automaticlinkedstatus result claimed."
+    },
+    {
+      "id": "required-field-validation",
+      "scene": "09",
+      "status": "conditional_policy_only",
+      "routes": [
+        "/User/Department/DispatchSettings",
+        "/User/Dispatch/NewCall"
+      ],
+      "needed_shots": "If extending beyond currentpolicyreview: saved fictional Visible/Requiredchange, fresh unsentform requiredvalidation and corrected values; restore/preserve existingpolicy by coordination.",
+      "current_limit": "All optionalfields shownandnotrequired, PlusCoderequirementdisabled; no rejected submit or policychange performed."
+    },
+    {
+      "id": "automatic-close-and-command-guard",
+      "scene": "11",
+      "status": "conditional_policy_only",
+      "routes": [
+        "/User/Department/DispatchSettings",
+        "/User/Dispatch/ViewCall?callId=<owned-call>",
+        "/User/Dispatch/CloseCall?callId=51001"
+      ],
+      "needed_shots": "Optional future two-owned-unit firstclear/lastclear sequence with actualstatushistory and finalstate; read-only activeincidentcommand closeguard view. Do not close or change originalwarehousecall.",
+      "current_limit": "Close-last-unitoff. Policyguard explained onactualhelp; only existing26-4manualclosure demonstrated."
+    },
+    {
+      "id": "intake-pruning-and-provider-result",
+      "scene": "01",
+      "status": "conditional_policy_only",
+      "route": "/User/Department/CallSettings",
+      "needed_shots": "Only if separately authorized: localcontrolledintake and time-based importedcallcleanup with finalhistory; no realproviderorallcall send.",
+      "current_limit": "Addressblank, Genericparserselected, pruneoff0. Worker selectsEmailImport/AudioImport; do not generalize UIteaser to every SMSsource."
+    }
+  ],
+  "source_evidence_manifest": "evidence/expansion/supplemental/core-call-dispatch-settings/source-manifest.json"
+}

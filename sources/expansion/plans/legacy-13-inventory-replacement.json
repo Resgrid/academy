@@ -1,0 +1,3885 @@
+{
+  "schema_version": 1,
+  "lesson": "13-inventory",
+  "title": "Know what is available, issued, and expiring",
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "status": "BLOCKED — not a renderer-ready replacement plan",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "5838f79c1797037b05a4fd99d378aa5db13df81a2b457b1781f247a1f15cb58c",
+    "normalised_words_sha256": "71563fff1b170680e524f707d8a533f7f5cc367ceb2df99d61e8513094e55d54",
+    "word_count": 411,
+    "source_scene_count": 11,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/13-inventory.mp4",
+      "sha256": "2e9de129ba34f8cdc488c41badb79157cd24a188ef83d54b17ebefbb4ba0d288",
+      "exists": true,
+      "duration_seconds": 180.07,
+      "bytes": 5289233
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/13-inventory.m4a",
+      "sha256": "e263fadd76115e4a8c8d72ac8c2cbd6c19626536db622a8a41b4a69f75cbc7ee",
+      "exists": true,
+      "duration_seconds": 179.36,
+      "bytes": 3620159
+    },
+    "existing_video_aac_packet_payload_sha256": "215bf48238921936b4347d5bfe01af2ef2a84ff5fe26bf97e135d8a7a482b790",
+    "srt": {
+      "file": "sources/media/13-inventory.srt",
+      "sha256": "c858deeb608c86d1d713ec3763ac03d6e70f7d6e9a40d01ced89416ede5ab463",
+      "cue_count": 58
+    },
+    "vtt": {
+      "file": "sources/media/13-inventory.vtt",
+      "sha256": "3e28b8dab7b9bc4944cf91a7aa4a849f2ab615fcb57a2ff91e910c7bc16fd0c4"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/13-inventory-raw.srt",
+      "sha256": "ce03c7e55dc5816eb01ed033f33d2a21bbcd85dbb0afc6ec9b1815ed25ea3df5"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/13-inventory-validation.json",
+      "sha256": "b08b4058562f65dd64b09834cd46cb79a001d683094308b5834ad25e2a37965b",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 59,
+      "reported_match_ratio": 0.9964,
+      "reported_duration_seconds": 183.86,
+      "reported_raw_audio_seconds": 179.36,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 180.06,
+    "caption_last_end_seconds": 179.84,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "illustrated_input_compliant": false,
+  "scenes": [
+    {
+      "index": 0,
+      "number": 1,
+      "title": "Know what is available, issued, and expiring",
+      "kind": "title",
+      "narration": "Welcome to Resgrid Academy. In this lesson, we will know what is available, issued, and expiring. Unrecorded transfers and missing expiry dates make stock levels unreliable and replenishment harder to plan. We will explain the features, the setup decisions, and a practical way to check the result.",
+      "narration_sha256": "31736610844acf0b5086137854bd2cff7261719a8aaa1fd5a7e807314ffed91e",
+      "course_timing_proposal_only": {
+        "start": 0.0,
+        "duration": 19.2895
+      },
+      "actual_existing_cue_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=OnHand",
+          "intent": "Inspect current available stock and location balances.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Assets",
+          "intent": "Inspect durable asset and issuance controls.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+        "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+        "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+        "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+        "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s01:a01",
+          "text": "Welcome to Resgrid Academy.",
+          "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            1
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 0.029,
+          "enclosing_cue_end": 1.7,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s01:a02",
+          "text": "In this lesson, we will know what is available, issued, and expiring.",
+          "text_sha256": "b44ef34f0eb4372d6acd726537cc420bbedd07260d9472c5d1f1f27faa347438",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            2
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 2.13,
+          "enclosing_cue_end": 6.289,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s01:a03",
+          "text": "Unrecorded transfers and missing expiry dates make stock levels unreliable and replenishment harder to plan.",
+          "text_sha256": "d4792e5f5891d0f2bf46226130f56ef8bdb55e8ca205f11e31a8896a0a14468c",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            3,
+            4
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 6.82,
+          "enclosing_cue_end": 13.26,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s01:a04",
+          "text": "We will explain the features, the setup decisions, and a practical way to check the result.",
+          "text_sha256": "75a8e835ef7bfbbf0615c569d1eecf54b9bc5c6e62970378b3aeb88d08738c40",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            5,
+            6
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 13.75,
+          "enclosing_cue_end": 18.69,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=OnHand",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Assets",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Known test receipt",
+        "Training radio"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 1,
+      "number": 2,
+      "title": "A department scenario",
+      "kind": "scenario",
+      "narration": "Medical supplies are tracked by lot with expiry alerts, and turnout gear is issued to members. Know what you have, where it is and what is about to expire. The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+      "narration_sha256": "93e1dfc089d864ea678321262b4d7c0a179b69d1b4376592e3485e60a8477ae3",
+      "course_timing_proposal_only": {
+        "start": 19.2895,
+        "duration": 16.590000000000007
+      },
+      "actual_existing_cue_ids": [
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Items",
+          "intent": "Inspect actual catalog items.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "intent": "Create/inspect actual two-unit transfer and source/destination.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "intent": "Inspect actual assignee, return and movement evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+        "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+        "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+        "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+        "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+        "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+        "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+        "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s02:a01",
+          "text": "Medical supplies are tracked by lot with expiry alerts, and turnout gear is issued to members.",
+          "text_sha256": "b86f4967def92709db4ee08518c36ff4790bce7a0995423a5fe80d321be5272c",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            7,
+            8
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 19.439,
+          "enclosing_cue_end": 24.94,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s02:a02",
+          "text": "Know what you have, where it is and what is about to expire.",
+          "text_sha256": "54ba7454531b74107c5a24b5eeb736cf2f76915b9de8c44314b2b42399554827",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            9
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 25.33,
+          "enclosing_cue_end": 29.0,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s02:a03",
+          "text": "The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+          "text_sha256": "c3bea48c517ece285518958a0c220aae533e0f6326956bfe90b76d7010dd0a34",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            10,
+            11
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 29.5,
+          "enclosing_cue_end": 35.34,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Items",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy supplies",
+        "Ten supplies in Store Room",
+        "Engine 1 location",
+        "Alex Example"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 2,
+      "number": 3,
+      "title": "Inventory",
+      "kind": "feature",
+      "narration": "Inventory. Items, stock levels and storage locations. Add the supplies and equipment you track and where they are stored. Availability also depends on Inventory. Check access in the target department.",
+      "narration_sha256": "37877684ab30f450e26e843e18fa391014bcfeb42d7efb948f0468ae205cf8a4",
+      "course_timing_proposal_only": {
+        "start": 35.8795,
+        "duration": 13.6445
+      },
+      "actual_existing_cue_ids": [
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Items",
+          "intent": "Inspect actual catalog items.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Locations",
+          "intent": "Inspect storage locations and target units.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+        "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+        "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s03:a01",
+          "text": "Inventory.",
+          "text_sha256": "9e3e885943363a1947c0c27cc5e3ff559396be12b9db9b240ab35b4fb7c109e2",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            12
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 35.969,
+          "enclosing_cue_end": 36.73,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s03:a02",
+          "text": "Items, stock levels and storage locations.",
+          "text_sha256": "a62e44859472fc8f176d2ed4760d75ab4f5f82cc4a2a219377828f1fb289190d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            13
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 37.109,
+          "enclosing_cue_end": 40.17,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s03:a03",
+          "text": "Add the supplies and equipment you track and where they are stored.",
+          "text_sha256": "44fcdeb8de46ae85396543557b14307d37712c8095a8dc6a4c178ec74cf7122b",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            14
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 40.51,
+          "enclosing_cue_end": 43.679,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s03:a04",
+          "text": "Availability also depends on Inventory.",
+          "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            15
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 44.089,
+          "enclosing_cue_end": 46.599,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s03:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            16
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 46.979,
+          "enclosing_cue_end": 49.009,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Items",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Locations",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy supplies",
+        "Store Room",
+        "Academy Engine 1"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 3,
+      "number": 4,
+      "title": "Inventory counts, expiry and alerts",
+      "kind": "feature",
+      "narration": "Inventory counts, expiry and alerts. Counts, expiry dates and low-stock alerts. Set minimum levels and expiry alerts for critical supplies. Availability also depends on Inventory. Check access in the target department.",
+      "narration_sha256": "471e4c81023bd1e6a5be15c0b64a5b0ee745a9df54c7d11e0222e3f590d135d7",
+      "course_timing_proposal_only": {
+        "start": 49.524,
+        "duration": 16.205
+      },
+      "actual_existing_cue_ids": [
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Operations",
+          "intent": "Show actual count/expiry/low-stock controls and result rows.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryOperationsController.cs",
+              "line": 35,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2b37063f2fdacf00e09de59847464ad8e25efc7d7dbb20bffeeff129a68ce64e",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Operations.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770",
+              "current_file_sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Start count",
+            "No inventory records to display.",
+            "Name",
+            "Location"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+        "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s04:a01",
+          "text": "Inventory counts, expiry and alerts.",
+          "text_sha256": "77ed49eb071c4c688014451b596c1e24a284410d283318dcd0bda85e92e75ffe",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            17
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 49.589,
+          "enclosing_cue_end": 52.33,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s04:a02",
+          "text": "Counts, expiry dates and low-stock alerts.",
+          "text_sha256": "e9a47dc247e2ebd07c5d20b4b08b7c93642682dc8953973594553fc62a79280d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            18
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 52.78,
+          "enclosing_cue_end": 55.689,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s04:a03",
+          "text": "Set minimum levels and expiry alerts for critical supplies.",
+          "text_sha256": "8ff333a5e578f75fc231acd595f1f3c4d3bb625bfe4f3d4a6c1bd3aadbb4279e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            19
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 56.109,
+          "enclosing_cue_end": 59.6,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s04:a04",
+          "text": "Availability also depends on Inventory.",
+          "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            20
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 60.069,
+          "enclosing_cue_end": 62.65,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s04:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            21
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 63.1,
+          "enclosing_cue_end": 65.209,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Operations",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Lot with expiry",
+        "Low-stock item"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 4,
+      "number": 5,
+      "title": "Inventory Status",
+      "kind": "feature",
+      "narration": "Inventory Status. What is on hand, running low or expiring. Decide which supplies and equipment are worth tracking and where they are stored. Availability also depends on Inventory. Check access in the target department.",
+      "narration_sha256": "7378b192bac0595964ccdac722d60ebd38ca3bc3c7f4738876aff0d773c4d5b7",
+      "course_timing_proposal_only": {
+        "start": 65.729,
+        "duration": 15.14
+      },
+      "actual_existing_cue_ids": [
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=OnHand",
+          "intent": "Inspect current available stock and location balances.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Operations",
+          "intent": "Inspect actual expiry/low-stock exceptions.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryOperationsController.cs",
+              "line": 35,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2b37063f2fdacf00e09de59847464ad8e25efc7d7dbb20bffeeff129a68ce64e",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Operations.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770",
+              "current_file_sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Start count",
+            "No inventory records to display.",
+            "Name",
+            "Location"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+        "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+        "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+        "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+        "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+        "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+        "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s05:a01",
+          "text": "Inventory Status.",
+          "text_sha256": "f016d27b4936dc784c39ca70ac9df518c94e554ba52fdd7ca4e573f9ab81ad20",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            22
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 65.799,
+          "enclosing_cue_end": 67.089,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s05:a02",
+          "text": "What is on hand, running low or expiring.",
+          "text_sha256": "e716e85d96bd61f00f6f0b556fcb6c0bde50d488798ca741c1b0dae7a4035bff",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            23
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 67.49,
+          "enclosing_cue_end": 70.209,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s05:a03",
+          "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+          "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            24
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 70.81,
+          "enclosing_cue_end": 74.93,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s05:a04",
+          "text": "Availability also depends on Inventory.",
+          "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            25
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 75.409,
+          "enclosing_cue_end": 77.94,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s05:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            26
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 78.379,
+          "enclosing_cue_end": 80.289,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=OnHand",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Operations",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace repeated, irrelevant, recorder-oriented or stale feature wording with operation-specific learner instructions."
+        ],
+        "proposed_learner_focused_narration": "Open On hand and inspect the actual item, location and balance. Review expiry and low-stock exceptions in Operations, then reconcile a known training receipt or count before treating stock as available."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Known test receipt",
+        "Test lot"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 5,
+      "number": 6,
+      "title": "Transfer Inventory",
+      "kind": "feature",
+      "narration": "Transfer Inventory. Move stock between locations. Decide which supplies and equipment are worth tracking and where they are stored. Availability also depends on Inventory. Check access in the target department.",
+      "narration_sha256": "464463ebdc94c6afbfa2449bde71183c1e70ff892d3e3dc289cf068637f0170e",
+      "course_timing_proposal_only": {
+        "start": 80.869,
+        "duration": 14.120499999999993
+      },
+      "actual_existing_cue_ids": [
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "intent": "Create/inspect actual two-unit transfer and source/destination.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=History",
+          "intent": "Verify source and destination stock movement.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+        "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+        "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+        "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s06:a01",
+          "text": "Transfer Inventory.",
+          "text_sha256": "2c7ff0f88f4101ca1481f56fc70236b622dd68cd86b36c3c746c237d727502a1",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            27
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 80.999,
+          "enclosing_cue_end": 82.32,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s06:a02",
+          "text": "Move stock between locations.",
+          "text_sha256": "05a2baea4fe941bf59b732c19cb0afad4c9ae2ec685b5285d6d7274201303572",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            28
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 82.729,
+          "enclosing_cue_end": 84.559,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s06:a03",
+          "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+          "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            29
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 84.94,
+          "enclosing_cue_end": 89.03,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s06:a04",
+          "text": "Availability also depends on Inventory.",
+          "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            30
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 89.44,
+          "enclosing_cue_end": 91.98,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s06:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            31
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 92.36,
+          "enclosing_cue_end": 94.48,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=History",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace repeated, irrelevant, recorder-oriented or stale feature wording with operation-specific learner instructions."
+        ],
+        "proposed_learner_focused_narration": "Choose a training item, source and destination and transfer two of the ten sample supplies. Inspect the actual transfer state and both ledger movements. Reconcile destination stock before assuming it is ready for use."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Ten supplies in Store Room",
+        "Engine 1 location",
+        "Transfer transaction"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 6,
+      "number": 7,
+      "title": "Issue Equipment",
+      "kind": "feature",
+      "narration": "Issue Equipment. Issue equipment to members and record returns. Decide which supplies and equipment are worth tracking and where they are stored. Availability also depends on Inventory. Check access in the target department.",
+      "narration_sha256": "843379c38514b418bbed225fd5b663e249540b66833d72f6a143506a5bf64591",
+      "course_timing_proposal_only": {
+        "start": 94.98949999999999,
+        "duration": 14.614500000000021
+      },
+      "actual_existing_cue_ids": [
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Assets",
+          "intent": "Inspect durable asset and issuance controls.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "intent": "Inspect actual assignee, return and movement evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+        "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+        "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s07:a01",
+          "text": "Issue Equipment.",
+          "text_sha256": "6cac2936a737ca106e23cc20ac37c607f1f53a47a5fc19767882034e3977caff",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            32
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 95.049,
+          "enclosing_cue_end": 96.079,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s07:a02",
+          "text": "Issue equipment to members and record returns.",
+          "text_sha256": "44e8e7e9c64766af945cfaa2ab2c1a1f543110d54cc17b23276ecced9f14ac7c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            33
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 96.47,
+          "enclosing_cue_end": 99.03,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s07:a03",
+          "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+          "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            34
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 99.48,
+          "enclosing_cue_end": 103.559,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s07:a04",
+          "text": "Availability also depends on Inventory.",
+          "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            35
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 103.99,
+          "enclosing_cue_end": 106.58,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s07:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            36
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 106.959,
+          "enclosing_cue_end": 109.099,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Assets",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace repeated, irrelevant, recorder-oriented or stale feature wording with operation-specific learner instructions."
+        ],
+        "proposed_learner_focused_narration": "Select a fictional durable asset and issue it to Alex Example. Inspect the actual assignee and outstanding issuance, then record an authorized training return and verify its movement history."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training radio",
+        "Alex Example"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 7,
+      "number": 8,
+      "title": "Inventory purchasing",
+      "kind": "feature",
+      "narration": "Inventory purchasing. Suppliers, purchase orders and deliveries. Decide which supplies and equipment are worth tracking and where they are stored. Availability also depends on Inventory. Check access in the target department.",
+      "narration_sha256": "a75125763a9006eac5e1b0468ef062e881c9422bc231e54a6fefcccf8813ac14",
+      "course_timing_proposal_only": {
+        "start": 109.60400000000001,
+        "duration": 14.995500000000007
+      },
+      "actual_existing_cue_ids": [
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Purchasing",
+          "intent": "Inspect supplier, purchase-order and receipt states.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryPurchasingController.cs",
+              "line": 36,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a52a100401ea75cb179cf1dab9745ee03d0db7ad59aa6802bd39970e74542346",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Purchasing.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "675750fd633fa8938bb2ec410dd868cb699e377317b206d41280dae867825107",
+              "current_file_sha256": "675750fd633fa8938bb2ec410dd868cb699e377317b206d41280dae867825107",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Add supplier",
+            "No inventory records to display.",
+            "Supplier",
+            "Supplier account number"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s08:a01",
+          "text": "Inventory purchasing.",
+          "text_sha256": "c163b41ebebfa27654ecc4bb4b11c2513fe672ed197e5b30e93ad8aaf6cfd9a3",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            37
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 109.659,
+          "enclosing_cue_end": 110.909,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s08:a02",
+          "text": "Suppliers, purchase orders and deliveries.",
+          "text_sha256": "300d0dac6b5cbe85b78faf46e268626d4634d9ce2460ec9fe7504ede5ebb6eb0",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            38
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 111.36,
+          "enclosing_cue_end": 114.22,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s08:a03",
+          "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+          "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            39
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 114.64,
+          "enclosing_cue_end": 118.65,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s08:a04",
+          "text": "Availability also depends on Inventory.",
+          "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            40
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 119.05,
+          "enclosing_cue_end": 121.569,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s08:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            41
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 121.959,
+          "enclosing_cue_end": 124.05,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Purchasing",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace repeated, irrelevant, recorder-oriented or stale feature wording with operation-specific learner instructions."
+        ],
+        "proposed_learner_focused_narration": "Open a fictional supplier and purchase order. Keep the ordered quantity distinct from the actual received delivery, then inspect the receipt and stock movement before treating the purchase as on-hand inventory."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Fictional vendor",
+        "Draft PO",
+        "Test receipt"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 8,
+      "number": 9,
+      "title": "Configure one useful workflow",
+      "kind": "workflow",
+      "narration": "For the training scenario, work in this order. Step 1. Define the stock locations and items the department will track. Step 2. Record a receipt, transfer, and equipment issue using sample stock. Step 3. Review counts, expiry, low-stock alerts, and purchasing needs.",
+      "narration_sha256": "2f07905ce03b1b6536ea6c3bcc547db4269db80bd5bfe98daac34e9e9cb88edd",
+      "course_timing_proposal_only": {
+        "start": 124.5995,
+        "duration": 19.87949999999998
+      },
+      "actual_existing_cue_ids": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Items",
+          "intent": "Inspect actual catalog items.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "intent": "Create/inspect actual two-unit transfer and source/destination.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "intent": "Inspect actual assignee, return and movement evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+        "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+        "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+        "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+        "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+        "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+        "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+        "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s09:a01",
+          "text": "For the training scenario, work in this order.",
+          "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            42
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 124.699,
+          "enclosing_cue_end": 127.479,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s09:a02",
+          "text": "Step 1.",
+          "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            43
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 127.949,
+          "enclosing_cue_end": 128.67,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s09:a03",
+          "text": "Define the stock locations and items the department will track.",
+          "text_sha256": "6a9006d9e19cd578ee83f3896a31180eb6f37e31c85be5afae5a778a839b0c5f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            44
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 129.0,
+          "enclosing_cue_end": 132.379,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s09:a04",
+          "text": "Step 2.",
+          "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            45
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 132.749,
+          "enclosing_cue_end": 133.499,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s09:a05",
+          "text": "Record a receipt, transfer, and equipment issue using sample stock.",
+          "text_sha256": "675af9cd492da0f7fe646bd0b1c8d6ce57adfe51b6f96d2b6a1e4bb1583cc44d",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            46
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 133.919,
+          "enclosing_cue_end": 138.11,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s09:a06",
+          "text": "Step 3.",
+          "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            47
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 138.579,
+          "enclosing_cue_end": 139.32,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s09:a07",
+          "text": "Review counts, expiry, low-stock alerts, and purchasing needs.",
+          "text_sha256": "0a47a2456cf03a72dda3b8296dee085b7eaad56898e44c4a9bca026894df629f",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            48
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 139.74,
+          "enclosing_cue_end": 143.949,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-008-inventory-catalog-existing:6a08da0aa496",
+            "Core:legacy-core-op-009-inventory-item-tracking-options:178cf1bd60c4",
+            "Core:legacy-core-op-010-inventory-item-review:0c4060ea92a1",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Items",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy supplies",
+        "Ten supplies in Store Room",
+        "Engine 1 location",
+        "Alex Example"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 9,
+      "number": 10,
+      "title": "Verify the result",
+      "kind": "verify",
+      "narration": "Now verify the result. Reconcile a physical demo count with recorded stock. Check the destination of a transfer, the equipment assignee, and the expiry record. A common problem to watch for: A purchase order is distinct from a received delivery. Reconcile the receipt before assuming stock is available.",
+      "narration_sha256": "66f1e5c3923ab7a18aa0c318923b4318ac7a3244cdbc671cfac9bbad7f8bb5dd",
+      "course_timing_proposal_only": {
+        "start": 144.479,
+        "duration": 20.159999999999997
+      },
+      "actual_existing_cue_ids": [
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Operations",
+          "intent": "Compare actual count/expiry exceptions.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryOperationsController.cs",
+              "line": 35,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2b37063f2fdacf00e09de59847464ad8e25efc7d7dbb20bffeeff129a68ce64e",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Operations.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770",
+              "current_file_sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Start count",
+            "No inventory records to display.",
+            "Name",
+            "Location"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=History",
+          "intent": "Verify source and destination stock movement.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "intent": "Inspect actual assignee, return and movement evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+        "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+        "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+        "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+        "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+        "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+        "Core:legacy-core-op-023-inventory-reports:9a4136f0012e"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s10:a01",
+          "text": "Now verify the result.",
+          "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            49
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 144.559,
+          "enclosing_cue_end": 146.049,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s10:a02",
+          "text": "Reconcile a physical demo count with recorded stock.",
+          "text_sha256": "bbb9e7f1170424405e1d482defd849b1ce2660e2b2c297e23e3d1b2d8320c909",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            50
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 146.47,
+          "enclosing_cue_end": 149.62,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s10:a03",
+          "text": "Check the destination of a transfer, the equipment assignee, and the expiry record.",
+          "text_sha256": "8c4724ba9a5b6d14e99fa6ce3e58ca0ef6de5306e0049dd702d76b4b2f0ecd19",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            51
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 150.01,
+          "enclosing_cue_end": 154.87,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s10:a04",
+          "text": "A common problem to watch for: A purchase order is distinct from a received delivery.",
+          "text_sha256": "bf09a6e57b8603e47736e65f7752263ef9e38de9477d1f67a958d7c3308a6936",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            52,
+            53
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 155.34,
+          "enclosing_cue_end": 160.509,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s10:a05",
+          "text": "Reconcile the receipt before assuming stock is available.",
+          "text_sha256": "74977bad6aea69a7e18bfdababbe5ffe70888b2d8db741665d4605d74e36f5cf",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            54
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 160.89,
+          "enclosing_cue_end": 164.109,
+          "candidate_capture_refs": [
+            "Core:legacy-core-op-014-inventory-ledger-receipt:c78bf9a535bb",
+            "Core:legacy-core-op-017-inventory-ledger-transfer-pair:e888a24f057b",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-022-inventory-expiry-alerts:0d29645658e6",
+            "Core:legacy-core-op-023-inventory-reports:9a4136f0012e",
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Operations",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=History",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Known physical sample count",
+        "Transfer transaction",
+        "Alex Example"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 10,
+      "number": 11,
+      "title": "Try it with your department",
+      "kind": "exercise",
+      "narration": "Your practice task is simple. Receive ten demo supplies, transfer two, and issue one durable item. Reconcile the resulting balances and inspect expiry alerts. Record the result, who owns the follow-up, and when it should be reviewed.",
+      "narration_sha256": "78028725ed16a8575ec391d3af73cffbc4042ff8f319901a690cd60ff72ce4fe",
+      "course_timing_proposal_only": {
+        "start": 164.639,
+        "duration": 15.420999999999992
+      },
+      "actual_existing_cue_ids": [
+        55,
+        56,
+        57,
+        58
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=OnHand",
+          "intent": "Verify ten received then changed balances.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "intent": "Create/inspect actual two-unit transfer and source/destination.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "intent": "Inspect actual assignee, return and movement evidence.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+              "line": 72,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "current_file_sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Verify your identity to view protected inventory.",
+            "Unlock",
+            "Initialize inventory",
+            "Filter",
+            "Unit equipment",
+            "Personnel gear",
+            "New item"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+        "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+        "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+        "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+        "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+        "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+        "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+        "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+        "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+        "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "13-inventory:s11:a01",
+          "text": "Your practice task is simple.",
+          "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            55
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 164.719,
+          "enclosing_cue_end": 166.28,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s11:a02",
+          "text": "Receive ten demo supplies, transfer two, and issue one durable item.",
+          "text_sha256": "b3feaaae1a24c5f4071ee05383215c83d5224406f2bcb97f5ae247a8093d1cb5",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            56
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 166.759,
+          "enclosing_cue_end": 171.6,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s11:a03",
+          "text": "Reconcile the resulting balances and inspect expiry alerts.",
+          "text_sha256": "400dfc6f7f17106602e4c64cbddd36e3c7dd287cc9089e1d88b950df4b49b221",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            57
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 172.029,
+          "enclosing_cue_end": 175.59,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "13-inventory:s11:a04",
+          "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+          "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            58
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 175.979,
+          "enclosing_cue_end": 179.84,
+          "candidate_capture_refs": [
+            "Core:legacy-core-031-inventory-onhand:4ea003613abf",
+            "Core:legacy-core-op-007-inventory-initialized-on-hand:de066c9c35ed",
+            "Core:legacy-core-op-012-inventory-receipt-review:fe659900017a",
+            "Core:legacy-core-op-013-inventory-receipt-result:13cc1e51a865",
+            "Core:legacy-core-op-015-inventory-transfer-review:1c0fe47a6855",
+            "Core:legacy-core-op-016-inventory-transfer-posted:1b4970344433",
+            "Core:legacy-core-op-018-inventory-issuance-review:e59309388515",
+            "Core:legacy-core-op-019-inventory-issue-posted:e67ef08d74f2",
+            "Core:legacy-core-op-020-inventory-partial-return-result:ce9542f0db03",
+            "Core:legacy-core-op-021-inventory-result-balances:9eee3523ed3d",
+            "Core:05-inventory:d1386f432593",
+            "Core:34-inventory-balances:982a486aeef5"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=OnHand",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Transfers",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Inventory/Index?tab=Issuances",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Ten fictional supplies",
+        "Ten supplies in Store Room",
+        "Engine 1 location",
+        "Alex Example"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    }
+  ],
+  "existing_actual_cues": [
+    {
+      "id": 1,
+      "start": 0.029,
+      "end": 1.7,
+      "text": "Welcome to Resgrid Academy.",
+      "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 2,
+      "start": 2.13,
+      "end": 6.289,
+      "text": "In this lesson, we will know what is available, issued, and expiring.",
+      "text_sha256": "b44ef34f0eb4372d6acd726537cc420bbedd07260d9472c5d1f1f27faa347438",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 3,
+      "start": 6.82,
+      "end": 11.42,
+      "text": "Unrecorded transfers and missing expiry dates make stock levels unreliable",
+      "text_sha256": "4a283463cb828756f01c7baabc542becc1ff18eadfae96ec42830d13a64e8391",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 4,
+      "start": 11.52,
+      "end": 13.26,
+      "text": "and replenishment harder to plan.",
+      "text_sha256": "0116309bb1fec2987629b16791172ed0f086f043fae8f3a751d5b6609f60eaf2",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 5,
+      "start": 13.75,
+      "end": 16.809,
+      "text": "We will explain the features, the setup decisions, and a",
+      "text_sha256": "e81ab5e8a7d3f89c3c2904902e3e1cba467afa49546505b3163c11c6525c28e1",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 6,
+      "start": 16.809,
+      "end": 18.69,
+      "text": "practical way to check the result.",
+      "text_sha256": "1ba25c999800aedfbbb5764d88a2d6c0551ab3478f936f377bf5e8914d613b73",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 7,
+      "start": 19.439,
+      "end": 22.969,
+      "text": "Medical supplies are tracked by lot with expiry alerts, and",
+      "text_sha256": "14c75d2a5aa3e00da5dd258a1902858058707967cf01b3b70542fb41189d653b",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 8,
+      "start": 22.969,
+      "end": 24.94,
+      "text": "turnout gear is issued to members.",
+      "text_sha256": "6a46b31c5e491d6dc39020fb7da45edf8b1d897d1f29c27df2503735e1e404c4",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 9,
+      "start": 25.33,
+      "end": 29.0,
+      "text": "Know what you have, where it is and what is about to expire.",
+      "text_sha256": "54ba7454531b74107c5a24b5eeb736cf2f76915b9de8c44314b2b42399554827",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 10,
+      "start": 29.5,
+      "end": 33.019,
+      "text": "The examples in this series use a fictional department and are teaching",
+      "text_sha256": "3059d3c51632c06ba8eb16a1a8b9f77c21fd6ae769066295627ad95e3acf1bca",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 11,
+      "start": 33.019,
+      "end": 35.34,
+      "text": "scenarios, not default settings.",
+      "text_sha256": "2316b9b48729ef8e05abd557d4876c25502aa2b281cb9dabcfa0721bcda2f886",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 12,
+      "start": 35.969,
+      "end": 36.73,
+      "text": "Inventory.",
+      "text_sha256": "9e3e885943363a1947c0c27cc5e3ff559396be12b9db9b240ab35b4fb7c109e2",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s03:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 13,
+      "start": 37.109,
+      "end": 40.17,
+      "text": "Items, stock levels and storage locations.",
+      "text_sha256": "a62e44859472fc8f176d2ed4760d75ab4f5f82cc4a2a219377828f1fb289190d",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s03:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 14,
+      "start": 40.51,
+      "end": 43.679,
+      "text": "Add the supplies and equipment you track and where they are stored.",
+      "text_sha256": "44fcdeb8de46ae85396543557b14307d37712c8095a8dc6a4c178ec74cf7122b",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s03:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 15,
+      "start": 44.089,
+      "end": 46.599,
+      "text": "Availability also depends on Inventory.",
+      "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s03:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 16,
+      "start": 46.979,
+      "end": 49.009,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s03:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 17,
+      "start": 49.589,
+      "end": 52.33,
+      "text": "Inventory counts, expiry and alerts.",
+      "text_sha256": "77ed49eb071c4c688014451b596c1e24a284410d283318dcd0bda85e92e75ffe",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 18,
+      "start": 52.78,
+      "end": 55.689,
+      "text": "Counts, expiry dates and low-stock alerts.",
+      "text_sha256": "e9a47dc247e2ebd07c5d20b4b08b7c93642682dc8953973594553fc62a79280d",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 19,
+      "start": 56.109,
+      "end": 59.6,
+      "text": "Set minimum levels and expiry alerts for critical supplies.",
+      "text_sha256": "8ff333a5e578f75fc231acd595f1f3c4d3bb625bfe4f3d4a6c1bd3aadbb4279e",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s04:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 20,
+      "start": 60.069,
+      "end": 62.65,
+      "text": "Availability also depends on Inventory.",
+      "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s04:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 21,
+      "start": 63.1,
+      "end": 65.209,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s04:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 22,
+      "start": 65.799,
+      "end": 67.089,
+      "text": "Inventory Status.",
+      "text_sha256": "f016d27b4936dc784c39ca70ac9df518c94e554ba52fdd7ca4e573f9ab81ad20",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s05:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 23,
+      "start": 67.49,
+      "end": 70.209,
+      "text": "What is on hand, running low or expiring.",
+      "text_sha256": "e716e85d96bd61f00f6f0b556fcb6c0bde50d488798ca741c1b0dae7a4035bff",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s05:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 24,
+      "start": 70.81,
+      "end": 74.93,
+      "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+      "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s05:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 25,
+      "start": 75.409,
+      "end": 77.94,
+      "text": "Availability also depends on Inventory.",
+      "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s05:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 26,
+      "start": 78.379,
+      "end": 80.289,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s05:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 27,
+      "start": 80.999,
+      "end": 82.32,
+      "text": "Transfer Inventory.",
+      "text_sha256": "2c7ff0f88f4101ca1481f56fc70236b622dd68cd86b36c3c746c237d727502a1",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s06:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 28,
+      "start": 82.729,
+      "end": 84.559,
+      "text": "Move stock between locations.",
+      "text_sha256": "05a2baea4fe941bf59b732c19cb0afad4c9ae2ec685b5285d6d7274201303572",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s06:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 29,
+      "start": 84.94,
+      "end": 89.03,
+      "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+      "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s06:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 30,
+      "start": 89.44,
+      "end": 91.98,
+      "text": "Availability also depends on Inventory.",
+      "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s06:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 31,
+      "start": 92.36,
+      "end": 94.48,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s06:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 32,
+      "start": 95.049,
+      "end": 96.079,
+      "text": "Issue Equipment.",
+      "text_sha256": "6cac2936a737ca106e23cc20ac37c607f1f53a47a5fc19767882034e3977caff",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s07:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 33,
+      "start": 96.47,
+      "end": 99.03,
+      "text": "Issue equipment to members and record returns.",
+      "text_sha256": "44e8e7e9c64766af945cfaa2ab2c1a1f543110d54cc17b23276ecced9f14ac7c",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 34,
+      "start": 99.48,
+      "end": 103.559,
+      "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+      "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s07:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 35,
+      "start": 103.99,
+      "end": 106.58,
+      "text": "Availability also depends on Inventory.",
+      "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s07:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 36,
+      "start": 106.959,
+      "end": 109.099,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s07:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 37,
+      "start": 109.659,
+      "end": 110.909,
+      "text": "Inventory purchasing.",
+      "text_sha256": "c163b41ebebfa27654ecc4bb4b11c2513fe672ed197e5b30e93ad8aaf6cfd9a3",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s08:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 38,
+      "start": 111.36,
+      "end": 114.22,
+      "text": "Suppliers, purchase orders and deliveries.",
+      "text_sha256": "300d0dac6b5cbe85b78faf46e268626d4634d9ce2460ec9fe7504ede5ebb6eb0",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s08:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 39,
+      "start": 114.64,
+      "end": 118.65,
+      "text": "Decide which supplies and equipment are worth tracking and where they are stored.",
+      "text_sha256": "15624d771fdec0e1d177ed7feefc42170fb838212ce2b2911eeb5a2472de1ecf",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s08:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 40,
+      "start": 119.05,
+      "end": 121.569,
+      "text": "Availability also depends on Inventory.",
+      "text_sha256": "c64cd5fac15562b8084c49ce487c8e5566b94f068f65c6db6675bc1b01567e40",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s08:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 41,
+      "start": 121.959,
+      "end": 124.05,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s08:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 42,
+      "start": 124.699,
+      "end": 127.479,
+      "text": "For the training scenario, work in this order.",
+      "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 43,
+      "start": 127.949,
+      "end": 128.67,
+      "text": "Step 1.",
+      "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 44,
+      "start": 129.0,
+      "end": 132.379,
+      "text": "Define the stock locations and items the department will track.",
+      "text_sha256": "6a9006d9e19cd578ee83f3896a31180eb6f37e31c85be5afae5a778a839b0c5f",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 45,
+      "start": 132.749,
+      "end": 133.499,
+      "text": "Step 2.",
+      "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 46,
+      "start": 133.919,
+      "end": 138.11,
+      "text": "Record a receipt, transfer, and equipment issue using sample stock.",
+      "text_sha256": "675af9cd492da0f7fe646bd0b1c8d6ce57adfe51b6f96d2b6a1e4bb1583cc44d",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 47,
+      "start": 138.579,
+      "end": 139.32,
+      "text": "Step 3.",
+      "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 48,
+      "start": 139.74,
+      "end": 143.949,
+      "text": "Review counts, expiry, low-stock alerts, and purchasing needs.",
+      "text_sha256": "0a47a2456cf03a72dda3b8296dee085b7eaad56898e44c4a9bca026894df629f",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s09:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 49,
+      "start": 144.559,
+      "end": 146.049,
+      "text": "Now verify the result.",
+      "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s10:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 50,
+      "start": 146.47,
+      "end": 149.62,
+      "text": "Reconcile a physical demo count with recorded stock.",
+      "text_sha256": "bbb9e7f1170424405e1d482defd849b1ce2660e2b2c297e23e3d1b2d8320c909",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s10:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 51,
+      "start": 150.01,
+      "end": 154.87,
+      "text": "Check the destination of a transfer, the equipment assignee, and the expiry record.",
+      "text_sha256": "8c4724ba9a5b6d14e99fa6ce3e58ca0ef6de5306e0049dd702d76b4b2f0ecd19",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s10:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 52,
+      "start": 155.34,
+      "end": 159.03,
+      "text": "A common problem to watch for: A purchase order is distinct",
+      "text_sha256": "dafeb6909797a6916851af47bd114712a747e341b11f1bc0736ccf3bfe57f0ad",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 53,
+      "start": 159.03,
+      "end": 160.509,
+      "text": "from a received delivery.",
+      "text_sha256": "433c1b6740ad95c2eeeb916cf9d077c24a4c4ab7eaa7a3cac09927440d6ef1a3",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 54,
+      "start": 160.89,
+      "end": 164.109,
+      "text": "Reconcile the receipt before assuming stock is available.",
+      "text_sha256": "74977bad6aea69a7e18bfdababbe5ffe70888b2d8db741665d4605d74e36f5cf",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s10:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 55,
+      "start": 164.719,
+      "end": 166.28,
+      "text": "Your practice task is simple.",
+      "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s11:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 56,
+      "start": 166.759,
+      "end": 171.6,
+      "text": "Receive ten demo supplies, transfer two, and issue one durable item.",
+      "text_sha256": "b3feaaae1a24c5f4071ee05383215c83d5224406f2bcb97f5ae247a8093d1cb5",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s11:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 57,
+      "start": 172.029,
+      "end": 175.59,
+      "text": "Reconcile the resulting balances and inspect expiry alerts.",
+      "text_sha256": "400dfc6f7f17106602e4c64cbddd36e3c7dd287cc9089e1d88b950df4b49b221",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s11:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 58,
+      "start": 175.979,
+      "end": 179.84,
+      "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+      "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "13-inventory:s11:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    }
+  ],
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "readiness": {
+    "all_real_screens_matched": false,
+    "all_controls_and_saved_results_demonstrated": false,
+    "every_cue_screen_assignment_verified": false,
+    "speech_timing_authoritative": false,
+    "audio_timeline_binding_complete": false,
+    "strict_source_gate_passed": false,
+    "rendered_frame_review": "not run",
+    "genuine_browser_playback": "pending, separate proof required",
+    "publishable": false,
+    "retained_cue_timestamps_present": true,
+    "cue_timing_qualification": "Existing SRT timestamps are retained unchanged; audio timing/signal/listening binding still requires current-media QA. Normalized text equality alone does not verify speech timing."
+  },
+  "render_decision": "No master is prepared because real-screen/action coverage is incomplete; preserve exact missing-shot list.",
+  "not_changed": [
+    "Source lesson/narration/audio/captions",
+    "Frozen R1/R3",
+    "New site/catalog",
+    "Source screenshots and capture manifests",
+    "Original Academy repository"
+  ],
+  "existing_capture_scope": {
+    "apps_requested": [
+      "Core",
+      "Responder",
+      "Dispatch",
+      "IC"
+    ],
+    "app_counts": {
+      "Core": 480,
+      "IC": 42,
+      "Responder": 220
+    },
+    "dispatch_limitation": "No Dispatch application screenshot with a retained capture-manifest row was found in sources/captures. Unmanifested dispatch-login.jpg is not promoted; Core Dispatch MVC pages remain Core screenshots.",
+    "unit_excluded": true
+  }
+}

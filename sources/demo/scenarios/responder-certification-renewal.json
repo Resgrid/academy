@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "responder-certification-renewal-training",
+  "mode": "manual normal UI replay",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "preserve_existing_records": true
+  },
+  "seed_source": "sources/demo/seed.py",
+  "existing_record": {
+    "member": "Wallace Boden",
+    "name": "Firefighter qualification",
+    "number": "DEMO-CERT-1",
+    "issued_by": "Academy Training Board (fictional)",
+    "area": "Software demonstration"
+  },
+  "education_entry": {
+    "hours": 0.25,
+    "date_input": "Leave blank to use the form's displayed default of today",
+    "category": "Training software demonstration",
+    "description": "TRAINING ONLY — Academy interface practice; no accredited credit claimed."
+  },
+  "renewal": {
+    "new_expiry_date": "2028-10-27",
+    "new_number": ""
+  },
+  "replay_steps": [
+    "Use a normally authorized account in the isolated training department and open My certifications.",
+    "Find the existing record by name and number; compare its issuer and current verification state before editing.",
+    "Check the education ledger first. If the exact exercise entry already exists, reuse its saved readback rather than adding duplicate hours.",
+    "For a fresh exercise only, enter the fictional hours, category and description; review the date choice, then choose Add hours.",
+    "Read back Hours added, the total and the saved ledger entry. Do not assume an unsent form is saved.",
+    "Review Renew and the optional number. Use the historical date only while it is a valid future exercise date; otherwise choose and document a new future date and record new footage.",
+    "If the intended renewal is already saved, reuse its saved readback. Otherwise choose Save renewal once and verify the resulting expiry and number.",
+    "Read the displayed verification state. Awaiting verification does not establish department approval. Stop before any department verification operation."
+  ],
+  "historical_recording": {
+    "captured_on": "2026-10-26",
+    "certification_id": 51001,
+    "education_date": "2026-10-26",
+    "saved_total_hours": 0.25,
+    "saved_expiry_date": "2028-10-27",
+    "saved_number": "DEMO-CERT-1",
+    "saved_status": "Awaiting verification",
+    "verification_text": "Not verified by the department yet"
+  },
+  "limits": [
+    "This JSON records fictional UI inputs and replay instructions; loading it does not execute database writes or alter the seed.",
+    "The seed uses relative dates. Recorded dates, IDs and days remaining describe the retained historical footage, not a guaranteed fresh-stack result.",
+    "The demonstration claims no accredited education, awarded qualification, photo attachment, native camera operation or department approval.",
+    "Do not reset the stack, delete ledger entries or approve a certification to recreate earlier screenshots. Use a separate fresh training stack if the initial state is needed."
+  ]
+}

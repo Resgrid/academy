@@ -1,0 +1,111 @@
+@model Resgrid.Web.Areas.User.Models.CustomMaps.CustomMapImportView
+@using Resgrid.Model
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.CustomMaps.CustomMaps> localizer
+@{
+    ViewBag.Title = "Resgrid | " + localizer["ImportPageTitlePrefix"] + " - " + Model.Map.Name;
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["ImportHeaderPrefix"] - @Model.Map.Name</h2>
+        <ol class="breadcrumb">
+            <li><a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a></li>
+            <li><a asp-controller="CustomMaps" asp-action="Index" asp-route-area="User">@localizer["CustomMapsHeader"]</a></li>
+            <li class="active"><strong>@localizer["ImportBreadcrumb"]</strong></li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>@localizer["ImportGeospatialTitle"]</h5>
+                </div>
+                <div class="ibox-content">
+                    @if (!string.IsNullOrWhiteSpace(Model.Message))
+                    {
+                        <div class="alert alert-info">@Model.Message</div>
+                    }
+                    <form asp-action="ImportUpload" asp-controller="CustomMaps" asp-route-area="User" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="mapId" value="@Model.Map.IndoorMapId" />
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["TargetLayer"]</label>
+                            <div class="col-sm-4">
+                                @if (Model.Layers == null || !Model.Layers.Any())
+                                {
+                                    <p class="text-danger">@localizer["NoLayersAvailable"]</p>
+                                }
+                                else
+                                {
+                                    <select class="form-control" name="layerId">
+                                        @foreach (var layer in Model.Layers)
+                                        {
+                                            <option value="@layer.IndoorMapFloorId">@layer.Name</option>
+                                        }
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["File"]</label>
+                            <div class="col-sm-6">
+                                <input type="file" name="importFile" accept=".geojson,.json,.kml,.kmz" required />
+                                <span class="help-block">@localizer["ImportFileHelp"]</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-primary" type="submit" @(Model.Layers == null || !Model.Layers.Any() ? "disabled" : null)>@localizer["ImportButton"]</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>@localizer["ImportHistoryTitle"]</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>@localizer["File"]</th>
+                                    <th>@localizer["Type"]</th>
+                                    <th>@localizer["Status"]</th>
+                                    <th>@localizer["Date"]</th>
+                                    <th>@localizer["Error"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Imports != null)
+                                {
+                                    foreach (var imp in Model.Imports)
+                                    {
+                                        <tr>
+                                            <td>@imp.SourceFileName</td>
+                                            <td>@((CustomMapImportFileType)imp.SourceFileType)</td>
+                                            <td>
+                                                @{
+                                                    var status = (CustomMapImportStatus)imp.Status;
+                                                    var labelClass = status == CustomMapImportStatus.Complete ? "label-success" :
+                                                                     status == CustomMapImportStatus.Failed ? "label-danger" :
+                                                                     status == CustomMapImportStatus.Processing ? "label-warning" : "label-default";
+                                                }
+                                                <span class="label @labelClass">@status</span>
+                                            </td>
+                                            <td>@imp.ImportedOn.ToString("g")</td>
+                                            <td>@imp.ErrorMessage</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,375 @@
+{
+  "id": "core-records-training-entry",
+  "title": "Save, revise and finalize a Training record",
+  "app": "Core",
+  "audience": [
+    "authorized record authors",
+    "department administrators",
+    "record reviewers"
+  ],
+  "summary": "Create a fictional record with the built-in Training form, verify a saved narrative revision and public attachment, finalize accurately, and inspect the first retained revision and record number.",
+  "prerequisites": [
+    "Use an authorized account in a fictional practice department where Records is already usable; honor any normal access or Protected Data verification gate.",
+    "Use the built-in Training definition, a distinct software-only course/reference and a public plain-text handout; preserve other records and numbering settings.",
+    "For this software exercise leave participants and unit response times empty, and attest only to the activity actually documented."
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Use a clearly labeled software orientation record with no fabricated attendance or response times; retain its draft identity and finalized revision.",
+    "Community care and mental health": "Document an operational platform practice using fictional content and a public handout, without client histories or assessment claims.",
+    "Search and rescue": "Keep software practice distinct from a mission response and preserve only actual participation/time data.",
+    "Security": "Review a fictional platform-training entry and its signed version, preserving the record’s original identifiers.",
+    "Wildland": "Document seasonal software familiarization with a truthful narrative and the actual saved revision rather than invented deployment activity.",
+    "Industrial response": "Retain a system-training software example, public attachment and first finalized version without treating it as proof of physical drills or credentials."
+  },
+  "source_files": [
+    "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/RecordDocumentsController.cs",
+    "Web/Resgrid.Web/Areas/User/Models/Records/RecordsViewModels.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Records/Edit.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Records/Index.cshtml",
+    "Web/Resgrid.Web/wwwroot/js/record-authoring.js",
+    "Core/Resgrid.Services/Records/RecordsService.cs",
+    "Core/Resgrid.Services/Records/RecordsDocumentService.cs",
+    "Core/Resgrid.Services/Records/RecordsLifecycleAuthority.cs",
+    "Core/Resgrid.Services/Records/RecordsAuthorizationService.cs",
+    "Core/Resgrid.Services/Records/RecordsProtectionService.cs",
+    "Core/Resgrid.Services/Records/RecordsNumberingService.cs",
+    "Core/Resgrid.Services/Records/RecordAttachmentHygiene.cs",
+    "Core/Resgrid.Services/Records/RecordSnapshotSerializer.cs",
+    "Core/Resgrid.Model/Records/RmsDefinitionKeys.cs",
+    "Core/Resgrid.Model/Records/RmsLifecycle.cs",
+    "Core/Resgrid.Model/Records/RmsEvidenceArtifact.cs",
+    "Core/Resgrid.Model/Records/RmsOperationalRecordDetail.cs",
+    "Core/Resgrid.Model/Records/RmsRevision.cs",
+    "Core/Resgrid.Model/Records/RmsEnums.cs",
+    "Core/Resgrid.Framework/RecordNarrativeFormatter.cs",
+    "Web/Resgrid.Web/Helpers/RecordsLifecycleClaims.cs",
+    "Core/Resgrid.Localization/Areas/User/Records/Records.en.resx"
+  ],
+  "scenes": [
+    {
+      "id": "training-form",
+      "title": "Identify the built-in Training record form",
+      "route": "/User/Records/New",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "001-published-training-entry-form",
+        "002-prepared-software-training-record"
+      ],
+      "required_labels": [
+        "New Record",
+        "Training",
+        "Definition",
+        "Course",
+        "Narrative",
+        "TRAINING ONLY - Records software entry 20261029",
+        "Course code",
+        "ACADEMY-REC-29",
+        "External ID",
+        "ACADEMY-RECORD-ENTRY-20261029",
+        "Location",
+        "Start",
+        "End"
+      ],
+      "narration": "In Records, the New Record form has Training selected in Definition. This built-in form provides course information, a narrative, participant rows and optional unit times. Our fictional Chicago Fire exercise demonstrates the record lifecycle. It does not represent a physical training session or attendance. Enter a distinct Course, Training Only, Records Software Entry, followed by the exercise date. The Course code is Academy Rec Twenty-Nine, and External ID carries a separate exercise reference. Location says Fictional Software Workspace. Review Start and the empty End before continuing.",
+      "practice": "On New Record, confirm Training is selected before preparing a distinctly named software exercise.",
+      "source_limits": [
+        "Actual typed built-in Training form on New. No custom department definition is involved; changing Definition would reload a form. No initial New Record launcher click is pictured before this form.",
+        "Prepared fields only. Start initialized by normal form, End empty; Station/group dash later resolves to author group Command. No saved draft yet."
+      ]
+    },
+    {
+      "id": "narrative",
+      "title": "Describe only the activity that actually occurred",
+      "route": "/User/Records/New#Details_Location",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "003-prepared-narrative-no-attendance"
+      ],
+      "required_labels": [
+        "Narrative",
+        "Participants",
+        "Choose a participant",
+        "No assigned unit"
+      ],
+      "narration": "The initial Narrative explains that this is a software record-entry exercise and that no physical training, attendance or operational response occurred. Write enough context for someone reading the record later. Below it, Participants provides a person selector, an optional assigned unit and a role. We leave the participant unselected. A blank chooser is not an attendance entry, and adding a name would make a different factual claim. The exercise therefore keeps this section empty.",
+      "practice": "Write an explicit software-only narrative and leave the participant chooser empty.",
+      "source_limits": [
+        "Initial software-only narrative and blank participant controls. This is not the later corrected narrative. Lower/right unit table clipped."
+      ]
+    },
+    {
+      "id": "unit-times",
+      "title": "Keep optional unit response data truthful",
+      "route": "/User/Records/New#Details_Location",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "004-record-unit-time-fields-unselected"
+      ],
+      "required_labels": [
+        "Units",
+        "Unit",
+        "Dispatched",
+        "En route",
+        "On scene",
+        "Released",
+        "In quarters"
+      ],
+      "narration": "The Units section offers a checkbox for each unit and columns for Dispatched, En route, On scene, Released and In quarters. These fields belong to the record’s response data. They are not instructions to change a unit’s live status. We leave all unit selections and time entries untouched because no response happened. Review the displayed rows and preserve those empty selections rather than entering invented times to make a record appear complete.",
+      "practice": "Inspect the unit/timestamp columns without selecting a unit or entering response times.",
+      "source_limits": [
+        "Blank participant and unchecked unit rows pictured. Not all8units fit vertically at once; rightmost In quarters inputs are clipped. Full DOM corroborates no selected unit; do not claim all time inputs fully visible. No time/attendance/crew operation."
+      ]
+    },
+    {
+      "id": "save-draft",
+      "title": "Save once and retain the actual draft identity",
+      "route": "/User/Records/New#Details_Location",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "006-first-draft-save-controls-before-save",
+        "007-fresh-saved-training-draft"
+      ],
+      "required_labels": [
+        "Attachments",
+        "No file chosen",
+        "Save draft",
+        "Save and finalize",
+        "View Record",
+        "Training",
+        "Draft",
+        "Record #",
+        "Draft reference",
+        "D-YXS93",
+        "Author",
+        "Owner",
+        "Station / group",
+        "Command"
+      ],
+      "narration": "At the bottom, no file is selected and the attestation is unchecked. Choose Save draft to retain an editable record for review. The separate Save and finalize control is visible, but this first step saves the draft. The fresh View Record page shows Training in Draft, with reference D, Y, X, S, Nine, Three and no final record number. Author and Owner are Wallace Boden. Station and group resolved to Command after the initial field was left blank. Read the returned group and keep the actual reference before proceeding.",
+      "practice": "Save the distinct draft once and retain its returned reference before any further editing.",
+      "source_limits": [
+        "Actual initial Unsaved changes with complete Save draft and Save and finalize controls. No file chosen, unused Restricted default and unchecked attestation. This is the original New form, not a later Edit-save frame.",
+        "Actual first saved own Draft sameID0795ea02/refD-YXS93; no final number. Author/OwnerBoden; Station/groupCommand auto-resolved. Reassignment/Export/Print controls visible but unused here."
+      ]
+    },
+    {
+      "id": "edit-narrative",
+      "title": "Edit the same draft instead of creating another",
+      "route": "/User/Records/Details/0795ea02-2d42-4940-8d1a-d95094281f75",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "007-fresh-saved-training-draft",
+        "009-corrected-visible-training-narrative"
+      ],
+      "required_labels": [
+        "Edit",
+        "D-YXS93",
+        "Narrative",
+        "Course",
+        "Course code",
+        "Location",
+        "Fictional software workspace"
+      ],
+      "narration": "Use Edit on this saved draft to revise its content. Continue with the existing record rather than opening another New Record form. The revised Narrative states that this is software record entry, no physical training or operational response occurred, and no personnel or unit times were added. Course, code and Location remain the exercise values. Read the complete text in the visible editor after typing; the content on screen must match the intended statement before you rely on it.",
+      "practice": "Use the saved draft’s Edit control and enter a concise, truthful narrative revision.",
+      "source_limits": [
+        "Actual first saved own Draft sameID0795ea02/refD-YXS93; no final number. Author/OwnerBoden; Station/groupCommand auto-resolved. Reassignment/Export/Print controls visible but unused here.",
+        "Corrected visible narrative in actual Edit form. Earlier008failed edit is excluded. Header and bottom Save control offscreen; do not promote them into this image. Participants heading visible but its lower controls clipped."
+      ]
+    },
+    {
+      "id": "readback",
+      "title": "Verify the persisted narrative",
+      "route": "/User/Records/Details/0795ea02-2d42-4940-8d1a-d95094281f75",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "010-fresh-revised-draft-readback"
+      ],
+      "required_labels": [
+        "View Record",
+        "Draft",
+        "D-YXS93",
+        "Narrative",
+        "Course"
+      ],
+      "narration": "A fresh View Record readback now contains the corrected narrative on the same draft and the same reference. It remains Draft, with no final number. Checking a separate readback is valuable even when a draft supports automatic saving: text visible in an editor is not sufficient evidence that the intended version is stored. If the result is unexpected, inspect this existing draft before repeating a create action. Here the software-only revision is present and ready for the next step.",
+      "practice": "Reopen View Record and compare the stored narrative and draft reference with your intended revision.",
+      "source_limits": [
+        "Fresh readback proves corrected narrative stored on same own draft/reference. The exact later manual Edit Save button was not captured; do not relabel006as that later action or claim an observed autosave status."
+      ]
+    },
+    {
+      "id": "attachment",
+      "title": "Attach a public handout and verify storage",
+      "route": "/User/Records/Details/0795ea02-2d42-4940-8d1a-d95094281f75",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "011-public-handout-unrestricted-prepared",
+        "012-fresh-saved-public-handout"
+      ],
+      "required_labels": [
+        "Attachments",
+        "Choose Files",
+        "File classification",
+        "Unrestricted operational content",
+        "Add attachment",
+        "academy-record-entry-handout.txt",
+        "358 bytes",
+        "Restricted"
+      ],
+      "narration": "In Attachments, choose the public software handout and select Unrestricted operational content in File classification. Use this classification because the file contains only the fictional exercise. Then use Add attachment. After a fresh readback, academy-record-entry-handout dot text appears in the attachment list with three hundred fifty-eight bytes. The upload selector has reset to Restricted for another file. That reset does not describe the file already stored. We will check the stored classification in the finalized revision, rather than inferring it from the new-upload control.",
+      "practice": "Upload the public software handout as Unrestricted operational content, then verify its stored filename.",
+      "source_limits": [
+        "Actual public file selected and classification0Unrestricted operational content before Add attachment. Chooser truncates the filename; full stored name is proved by012. Preparation is not upload success.",
+        "Fresh stored filename358bytes. Upload chooser resets Restricted for another file; this is not the stored file’s classification. Stored classification comes from016revision."
+      ]
+    },
+    {
+      "id": "finalize",
+      "title": "Attest to the bounded software record and finalize",
+      "route": "/User/Records/Details/0795ea02-2d42-4940-8d1a-d95094281f75",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "013-own-software-record-finalize-prepared",
+        "014-fresh-finalized-training-number"
+      ],
+      "required_labels": [
+        "Narrative",
+        "academy-record-entry-handout.txt",
+        "Finalize",
+        "I attest that this record is accurate and complete to the best of my knowledge.",
+        "Finalized",
+        "TRN-2026-0002",
+        "D-YXS93",
+        "Amend"
+      ],
+      "narration": "Read the narrative and stored handout before signing. The attestation says the record is accurate and complete to the best of your knowledge. In this exercise, accuracy means accurately documenting a software practice with no physical training or response. Check the attestation and use Finalize. The fresh result shows Finalized and the actual issued number, T R N, Twenty Twenty-Six, Zero Zero Zero Two. The draft reference remains. Amend is now available for later corrections; a finalized revision is preserved rather than overwritten by ordinary draft editing.",
+      "practice": "Review the software content and handout, then use the ordinary attestation and Finalize only when accurate.",
+      "source_limits": [
+        "Own accurate software-only content and stored handout reviewed; attestation checked and normal Finalize visible before submission. No native dialog expected from this form.",
+        "Initial Finalized result TRN-2026-0002 with retained D-YXS93 and same recordID. Amend replaces Edit in header. This historical first-finalization state predates a separate later amendment exercise."
+      ]
+    },
+    {
+      "id": "history",
+      "title": "Open the actual first finalized revision",
+      "route": "/User/Records/Details/0795ea02-2d42-4940-8d1a-d95094281f75",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "015-finalized-attachment-and-history",
+        "016-saved-training-revision-content"
+      ],
+      "required_labels": [
+        "History",
+        "Transition",
+        "Finalized",
+        "By",
+        "Date",
+        "View",
+        "academy-record-entry-handout.txt",
+        "Complete department record TRN-2026-0002 — revision 1",
+        "Details",
+        "Course",
+        "Course Code",
+        "Location",
+        "Narrative"
+      ],
+      "narration": "History now contains revision one, transition Finalized, with Wallace Boden and the recorded date. The handout remains listed. Use View on that history row to inspect what this first signature preserved. The resulting HTML page identifies the complete department record and revision one. Its Details section contains the Course, Course Code, Location and exact software-only Narrative. This gives a specific version to review, rather than relying only on the latest record header.",
+      "practice": "Use View on the first Finalized History row and inspect its retained course and narrative.",
+      "source_limits": [
+        "Initial finalized attachment plus actual revision1Finalized/actor/date/View in History. Upload form remains rendered, but backend requires amendment for uploads to a finalized record; no post-final upload used. Void unused.",
+        "Actual HTML revision1 content and attachment metadata including358bytes, Unrestricted and checksum matching the retained handout. Scan State3 is not interpreted as malware-scan success. No PDF/export or real attendance claim."
+      ]
+    },
+    {
+      "id": "revision-metadata",
+      "title": "Distinguish stored attachment metadata from the upload form",
+      "route": "/User/RecordDocuments/Revision/0795ea02-2d42-4940-8d1a-d95094281f75?kind=Operational&revisionId=9d7d790e-25af-4f82-aa91-0ebcf3fd51bb",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "016-saved-training-revision-content",
+        "017-revision-public-attachment-metadata"
+      ],
+      "required_labels": [
+        "Attachments",
+        "Item 1 / Byte Size",
+        "Item 1 / Checksum",
+        "Item 1 / Classification",
+        "Unrestricted",
+        "Item 1 / File Name",
+        "academy-record-entry-handout.txt",
+        "Draft Reference",
+        "D-YXS93",
+        "External Id",
+        "ACADEMY-RECORD-ENTRY-20261029",
+        "Record Number",
+        "TRN-2026-0002"
+      ],
+      "narration": "The same revision lists the handout’s filename, byte size, checksum and Unrestricted classification. This is the stored attachment metadata, separate from the reset chooser we saw earlier. The checksum matches the retained public handout. Farther down, Draft Reference, External Id and Record Number connect the original draft to the finalized record. Keep those identifiers together when reviewing an exercise or resolving a question about which version was signed.",
+      "practice": "Read the revision’s stored file classification and compare the retained reference and record number.",
+      "source_limits": [
+        "Actual HTML revision1 content and attachment metadata including358bytes, Unrestricted and checksum matching the retained handout. Scan State3 is not interpreted as malware-scan success. No PDF/export or real attendance claim.",
+        "Same revision1 lower metadata, preserving reference/ID/number/startedUTC/station51002. Attachments heading is above viewport and first classification row clips at top; use016for that evidence. Do not translate numericRecordType2into a shown user choice."
+      ]
+    },
+    {
+      "id": "queue",
+      "title": "Confirm the initial finalized record in the list",
+      "route": "/User/Records",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "019-final-records-list-originals-preserved"
+      ],
+      "required_labels": [
+        "Records",
+        "Record #",
+        "Type",
+        "State",
+        "Summary",
+        "TRN-2026-0002",
+        "D-469KP",
+        "TRN-2026-0001",
+        "Finalized",
+        "Draft"
+      ],
+      "narration": "Returning to Records shows the new finalized Training row alongside the earlier Work draft and older finalized Training example. Read the number, type, state and summary together to choose the intended row. The original Work draft remains D, Four Six Nine K P; the older Training record ends Zero Zero Zero One. This exercise created and finalized only its own entry. Leave the other records untouched, and use the actual issued number when finding this example again.",
+      "practice": "Identify the new finalized Training row while preserving the earlier Work and Training examples.",
+      "source_limits": [
+        "Three-row list after first finalization: ownTRN2 plus originalWorkDraftD-469KP and olderTrainingTRN1stillshown. This predates later same-record amendment; do not claim current live state remains Finalized forever."
+      ]
+    },
+    {
+      "id": "sectors",
+      "title": "Use the same record discipline across sectors",
+      "route": "/User/Records",
+      "capture_intent": "Show actual typed Training record controls, saved readbacks and first-finalization revision in their retained causal order.",
+      "capture_refs": [
+        "019-final-records-list-originals-preserved",
+        "016-saved-training-revision-content"
+      ],
+      "required_labels": [
+        "Records",
+        "Training",
+        "Summary",
+        "Details",
+        "Narrative",
+        "Attachments"
+      ],
+      "narration": "Chicago Fire can use this pattern for a software orientation record. Community care and mental-health teams can document an operational software exercise without client histories. Search-and-rescue teams can keep practice documentation distinct from a mission response. Security teams can retain a fictional platform exercise; wildland coordinators can document seasonal software familiarization; industrial teams can preserve a system-training example and public handout. Across all six settings, use accurate narrative, actual participants and times only when they occurred, a verified attachment, and the saved revision that supports the statement being reviewed.",
+      "practice": "Choose one sector and describe a truthful practice record without adding invented attendance or response data.",
+      "source_limits": [
+        "Three-row list after first finalization: ownTRN2 plus originalWorkDraftD-469KP and olderTrainingTRN1stillshown. This predates later same-record amendment; do not claim current live state remains Finalized forever.",
+        "Actual HTML revision1 content and attachment metadata including358bytes, Unrestricted and checksum matching the retained handout. Scan State3 is not interpreted as malware-scan success. No PDF/export or real attendance claim."
+      ]
+    }
+  ],
+  "candidate_only": true,
+  "status": "source_only_for_parent_whole_script_review_not_frozen",
+  "export_ready": false,
+  "publication_approved": false,
+  "parent_full_script_review_pending": true,
+  "history_boundary": "These19raw pairs cover the initial record entry and first finalization before a separately recorded later amendment. The current live record is later Amended; immutable revision1and these original source bytes remain accurate.",
+  "full_records_module_demonstrated": false
+}

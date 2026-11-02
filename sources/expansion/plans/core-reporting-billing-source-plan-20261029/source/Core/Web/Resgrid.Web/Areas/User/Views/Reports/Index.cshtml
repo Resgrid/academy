@@ -1,0 +1,257 @@
+@inject Resgrid.Model.Services.IBusinessOperationsAccessService businessOperationsAccess
+@using Resgrid.Framework
+@using Resgrid.Model
+@using Resgrid.Web.Helpers
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Checklists.Checklists> checklistLocalizer
+@model Resgrid.Web.Areas.User.Models.Logs.LogsIndexView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Reports.FlaggedReport> flaggedReportLocalizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Reports.Reports> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Certifications.Certifications> certificationLocalizer
+@{
+    var moduleTitle = await departmentTerms.NameAsync(DepartmentTerms.Reports, localizer["ReportingTitle"]);
+    ViewBag.Title = "Resgrid | " + moduleTitle;
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@moduleTitle</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["Home"]</a>
+            </li>
+            <li class="active">
+                <strong>@moduleTitle</strong>
+            </li>
+        </ol>
+    </div>
+    @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+    {
+        <div class="col-sm-8">
+            <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+                <a class="btn btn-success" asp-controller="CommunicationTest" asp-action="Index" asp-route-area="User">Communication Tests</a>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>@commonLocalizer["Name"]</th>
+                                <th>@commonLocalizer["Description"]</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr><td><a asp-controller="Checklists" asp-action="Compliance">@checklistLocalizer["ChecklistComplianceReport"]</a></td><td>@checklistLocalizer["AuthorizedScope"]</td><td><a asp-controller="Checklists" asp-action="Compliance" class="btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a></td></tr>
+                            <tr><td><a asp-controller="Checklists" asp-action="ReadinessPacket">@checklistLocalizer["ReadinessPacketReport"]</a></td><td>@checklistLocalizer["AuthorizedScope"]</td><td><a asp-controller="Checklists" asp-action="ReadinessPacket" class="btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a></td></tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("ActionLogsParams", "Reports", new { Area = "User" })">@localizer["PersonnelStatusHistoryReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["PersonnelStatusHistoryReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("ActionLogsParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("PersonnelReport", "Reports", new { Area = "User" })">@localizer["PersonnelReportName"]</a>
+                                    </td>
+                                    <td>
+                                        @localizer["PersonnelReportDescription"]
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("PersonnelReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("StaffingReport", "Reports", new { Area = "User" })">@localizer["StaffingReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["StaffingReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("StaffingReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            @if (!await businessOperationsAccess.IsEnabledAsync(ClaimsAuthorizationHelper.GetDepartmentId()))
+                            {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("CertificationsReport", "Reports", new { Area = "User" })">@localizer["CertificationsReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["CertificationsReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("CertificationsReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            }
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("CertificationComplianceReport", "Reports", new { Area = "User" })">@certificationLocalizer["ComplianceReport"]</a>
+                                </td>
+                                <td>
+                                    @certificationLocalizer["ComplianceReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("CertificationComplianceReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("UpcomingShiftReadinessReport", "Reports", new { Area = "User" })">@localizer["ShiftReadinessReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["ShiftReadinessReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("UpcomingShiftReadinessReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("DepartmentActivityReport", "Reports", new { Area = "User" })">@localizer["DepartmentActivityReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["DepartmentActivityReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("DepartmentActivityReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("PersonnelHoursReportParams", "Reports", new { Area = "User" })">@localizer["PersonnelHoursReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["PersonnelHoursReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("PersonnelHoursReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("CallSummaryReportParams", "Reports", new { Area = "User" })">@localizer["CallSummaryReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["CallSummaryReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("CallSummaryReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("CallUnitTimesReportParams", "Reports", new { Area = "User" })">@localizer["CallUnitTimesReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["CallUnitTimesReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("CallUnitTimesReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("PersonnelStaffingHistoryReportParams", "Reports", new { Area = "User" })">@localizer["PersonnelStaffingHistoryReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["PersonnelStaffingHistoryReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("PersonnelStaffingHistoryReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("UnitStateHistoryReportParams", "Reports", new { Area = "User" })">@localizer["UnitStateHistoryReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["UnitStateHistoryReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("UnitStateHistoryReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("ActiveCallsResourcesReport", "Reports", new { Area = "User" })">@localizer["ActiveCallsResourcesReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["ActiveCallsResourcesReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("ActiveCallsResourcesReport", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("FlaggedCallNotesReportParams", "Reports", new { Area = "User" })">@flaggedReportLocalizer["ReportTitle"]</a>
+                                    </td>
+                                    <td>
+                                        @flaggedReportLocalizer["ReportIndexDescription"]
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("FlaggedCallNotesReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("EventAttendanceReportParams", "Reports", new { Area = "User" })">@localizer["EventAttendanceReportName"]</a>
+                                </td>
+                                <td>
+                                    @localizer["EventAttendanceReportDescription"]
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("EventAttendanceReportParams", "Reports", new { Area = "User" })" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                </td>
+                            </tr>
+                            @foreach (var kind in Enum.GetValues<Resgrid.Model.Inventories.InventoryReportKind>())
+                            {
+                                var inventoryReportUrl = Url.Action("Operations", "Inventory", new { Area = "User", tab = "Reports", kind });
+                                <tr>
+                                    <td>
+                                        <a href="@inventoryReportUrl">@Resgrid.Services.InventoryReportDocuments.Title(kind)</a>
+                                    </td>
+                                    <td>
+                                        @Resgrid.Services.InventoryReportDocuments.Summary(kind)
+                                    </td>
+                                    <td>
+                                        <a href="@inventoryReportUrl" class=" btn btn-primary btn-sm"><i class="icon-eye-open"></i> @localizer["ViewReport"]</a>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+
+}

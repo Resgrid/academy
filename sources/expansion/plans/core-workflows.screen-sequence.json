@@ -1,0 +1,445 @@
+{
+  "schema_version": 1,
+  "kind": "untimed_real_screen_correspondence_with_explicit_gaps",
+  "lesson_id": "core-workflows",
+  "lesson_sha256": "7ac82f3ede2d1091864e4a78b71cd334e23c60f385ab61683d543c1dc6a36944",
+  "prepared_at": "2026-10-26T18:55:15.492386+00:00",
+  "narration_changed": false,
+  "publishable": false,
+  "audio_qa_owner": "core_configuration_coverage",
+  "audio_status": "Await verified full speech export, corrected timed captions and QA report. No audio approval or estimated timestamps recorded here.",
+  "capture_audit": "expansion/plans/core-workflows.capture-audit.json",
+  "capture_manifest": "expansion/plans/core-workflows.captures.json",
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose an event and outcome",
+      "narration_sha256": "19aa14e1172ec97ff367f0e04a60c5cdf266527278d05e9813234afed13eb622",
+      "required_labels": [
+        "New Workflow",
+        "Credentials",
+        "Pending Runs"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Open Workflows in the Chicago Fire demonstration department. We will build a training call-created workflow with two ordered actions and a separate call-closed workflow. Begin with the outcome you want and the event that should cause it. Each workflow listens to one event. Multiple steps can respond to that event, while a different event needs a different workflow. ",
+          "screenshot_id": "core-workflows-index",
+          "purpose": "Open the actual Workflows list and its navigation controls."
+        },
+        {
+          "order": 2,
+          "spoken_text": "Inspect the list's event and enabled columns before editing, and identify who will monitor the result when the automation runs.",
+          "screenshot_id": "core-workflows-practice-disabled",
+          "purpose": "Use the populated final list to show each event and status; actual state is Disabled, not a first-visit claim."
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Create the matching credential",
+      "narration_sha256": "27e95e67b9d47efda4b42da0bcad2c1c5b25c50044f7635c7c3adac66d848703",
+      "required_labels": [
+        "Credentials",
+        "Name",
+        "Type"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Open Credentials and create Academy local captured mail. ",
+          "screenshot_id": "core-workflow-credential-stored",
+          "purpose": "Show Credentials and the stored training credential identity."
+        },
+        {
+          "order": 2,
+          "spoken_text": "Choose SMTP Email. In this isolated exercise, Mailpit receives messages inside the training network; nothing goes to an outside mail service. Set the local host, port and demonstration sender, keep the unused password masked, and save. ",
+          "screenshot_id": "core-workflow-smtp-local-setup",
+          "purpose": "Show actual credential type and safe local settings; do not substitute the stored list for these fields."
+        },
+        {
+          "order": 3,
+          "spoken_text": "Your live department needs its own mail provider settings and appropriate transport security. The credential type must match the action. A stored credential supplies authentication details; it does not establish that a destination is reachable or accepts a message.",
+          "screenshot_id": "core-workflow-credential-stored",
+          "purpose": "Keep the saved credential visible during the authentication-versus-delivery caution."
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Create the first workflow safely",
+      "narration_sha256": "6211dcaa823851ef798895a08a0eb0208bd9f1785f6ebc55e7e84ea8ef870a57",
+      "required_labels": [
+        "Name",
+        "Trigger Event",
+        "Enabled",
+        "Max Retry Count",
+        "Retry Backoff Base (seconds)"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Choose New Workflow ",
+          "screenshot_id": "core-workflows-index",
+          "purpose": "Show New Workflow before entering setup."
+        },
+        {
+          "order": 2,
+          "spoken_text": "and name it Academy call opened — captured mail. Select CallAdded as Trigger Event. Turn Enabled off while configuring the destination and actions, and review the retry controls. ",
+          "screenshot_id": "core-workflow-create-disabled",
+          "purpose": "Show the disabled create form, actual name, CallAdded and retry controls."
+        },
+        {
+          "order": 3,
+          "spoken_text": "The event becomes fixed after creation, so confirm it before saving. Keep retry values modest for practice and observe actual attempt timing later. ",
+          "screenshot_id": "core-workflow-settings-disabled",
+          "purpose": "Show literal fixed-event help after creation."
+        },
+        {
+          "order": 4,
+          "spoken_text": "Template gallery examples also need their destinations and credentials completed before enabling. ",
+          "screenshot_id": "core-workflow-template-gallery",
+          "purpose": "Show actual template examples without claiming successful template creation."
+        },
+        {
+          "order": 5,
+          "spoken_text": "A descriptive name makes the event and operational purpose easier to recognize in the workflow list.",
+          "screenshot_id": "core-workflows-practice-disabled",
+          "purpose": "Show the distinct event and purpose in the workflow list."
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Add the first ordered action",
+      "narration_sha256": "85908653767d67e26dae7821d93f20b0a13081e782df42f4a27dac0bc6e209c8",
+      "required_labels": [
+        "Add Step",
+        "Action Type",
+        "Send Email",
+        "Order",
+        "Output Template",
+        "Credential"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Select Add Step. ",
+          "screenshot_id": "core-workflow-settings-disabled",
+          "purpose": "Show the visible Add Step control."
+        },
+        {
+          "order": 2,
+          "spoken_text": "Choose Send Email and set Order to one. Enter the fictional training-supervisor address and a subject, then select Academy local captured mail as the SMTP credential. In Output Template, use a short training message with department name and call name from the variable reference. ",
+          "screenshot_id": "core-workflow-first-email-action-form",
+          "purpose": "Show first action type, Order one, fictional supervisor destination, subject, credential and template variables."
+        },
+        {
+          "order": 3,
+          "spoken_text": "Keep unnecessary personal details and narratives out of the message. ",
+          "screenshot_id": "core-workflow-first-email-output-template",
+          "purpose": "Keep the actual short department/call template visible during the data-minimization instruction."
+        },
+        {
+          "order": 4,
+          "spoken_text": "Save the step and inspect its card in the editor. The card shows the action and a template excerpt; the execution history will show whether a send actually completed.",
+          "screenshot_id": "core-workflow-two-ordered-step-cards",
+          "purpose": "Show the saved first-step card and excerpt; no execution claim at this stage."
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Add and check a condition",
+      "narration_sha256": "5bc7eaadbbd5dcec245f46cf739b37cab60810726a95d29cc11aa01d0c0057cc",
+      "required_labels": [
+        "Add Step",
+        "Condition Expression",
+        "Visual Builder",
+        "Raw Expression",
+        "Test Condition"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Add a second Send Email step at Order two. ",
+          "screenshot_id": "core-workflow-two-ordered-step-cards",
+          "purpose": "Show Add Step and the actual second Send Email step Order two."
+        },
+        {
+          "order": 2,
+          "spoken_text": "For this exercise, run it only when the call name contains TRAINING. Use Visual Builder for simple comparisons, or Raw Expression with Scriban braces. Here, call.name piped to string.contains TRAINING must render true for the step to run. ",
+          "screenshot_id": "core-workflow-syntax-check",
+          "purpose": "Show actual TRAINING expression and Visual Builder / Raw Expression tabs."
+        },
+        {
+          "order": 3,
+          "spoken_text": "Select Test Condition and read the result carefully. A syntax-valid message means the expression can be read; without sample event data, it does not establish whether this call will pass. ",
+          "screenshot_id": "core-workflow-syntax-check",
+          "purpose": "The actual syntax-valid result explicitly lacks sample payload; preserve that distinction."
+        },
+        {
+          "order": 4,
+          "spoken_text": "Save the condition with the step, then inspect the actual run later to confirm whether it ran or skipped.",
+          "screenshot_id": "core-workflow-two-ordered-step-cards",
+          "purpose": "Show the saved enabled conditional step card and its order without claiming a run yet."
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Use separate workflows for separate events",
+      "narration_sha256": "03e0cce3ee83b7690a3fdafdf207a1efcf8b9713554bee93b02a7930434c9bbf",
+      "required_labels": [
+        "New Workflow",
+        "Trigger Event"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Create Academy call closed — captured mail as a second workflow, ",
+          "screenshot_id": "core-workflows-index",
+          "purpose": "Show New Workflow entry point for the separate event."
+        },
+        {
+          "order": 2,
+          "spoken_text": "choose CallClosed, and add its own closeout action. Keep it disabled until checked. ",
+          "screenshot_id": "core-workflow-close-own-action",
+          "purpose": "Show separate CallClosed configuration, disabled until checked, plus its own closeout action."
+        },
+        {
+          "order": 3,
+          "spoken_text": "This gives each event a visible definition and history. It does not make the first workflow wait for the second event. ",
+          "screenshot_id": "core-workflows-practice-disabled",
+          "purpose": "Show distinct workflow definitions and available histories."
+        },
+        {
+          "order": 4,
+          "spoken_text": "For other operations, choose the actual available event, such as a unit status change, completed checklist or finalized record. Check the event's timing and data before choosing template variables. ",
+          "screenshot_id": "core-workflow-event-unit-status",
+          "purpose": "Show actual event choices for unit status / checklist / finalized records."
+        },
+        {
+          "order": 5,
+          "spoken_text": "Ordered steps belong to the event that started that specific run.",
+          "screenshot_id": "core-workflow-two-ordered-step-cards",
+          "purpose": "Show ordered actions belonging to a single CallAdded definition."
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Enable and trigger a training event",
+      "narration_sha256": "460e0ba48e91947003c4fd3103a91f06d1a91a736584dea7ac4280571116e55b",
+      "required_labels": [
+        "Enabled",
+        "Order"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Reopen Academy call opened — captured mail and review the destination, credential, enabled steps and order. ",
+          "screenshot_id": "core-workflow-two-ordered-step-cards",
+          "purpose": "Show destination, credential, enabled steps and order before overall enabling."
+        },
+        {
+          "order": 2,
+          "spoken_text": "Confirm the training receiver and background processing are ready. ",
+          "screenshot_id": "core-workflow-local-receiver-inbox",
+          "purpose": "Show the real controlled Mailpit interface as receiver context; it is not an outside provider."
+        },
+        {
+          "order": 3,
+          "spoken_text": "Enable the workflow and save. ",
+          "screenshot_id": "core-workflow-two-ordered-step-cards",
+          "purpose": "Show the literal overall Enabled and Save Changes controls; actual enabled index follows."
+        },
+        {
+          "order": 4,
+          "spoken_text": "Create one approved training call whose name contains TRAINING. ",
+          "screenshot_id": "core-workflow-created-call-identity",
+          "purpose": "Show the actual TRAINING call identity / historical form, tied to the successful run; no new call is required."
+        },
+        {
+          "order": 5,
+          "spoken_text": "That operational event is the execution test. If the action is meant for email, a file store or a messaging platform, use a controlled test destination for that service. ",
+          "screenshot_id": "core-workflow-call-added-run-history",
+          "purpose": "Show the actual completed CallAdded run generated by the event."
+        },
+        {
+          "order": 6,
+          "spoken_text": "Do not infer a working integration merely from the workflow's enabled badge or the absence of a form error.",
+          "screenshot_id": "core-workflows-two-events-enabled",
+          "purpose": "Use enabled badges only as configuration evidence during the caution."
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Inspect run and step details",
+      "narration_sha256": "d19af8e4fd22a53e42d134d8ae1b90faa528e4d4ee24213996aef82ffbda4145",
+      "required_labels": [
+        "Runs",
+        "Status",
+        "Attempt",
+        "Step Logs",
+        "Rendered Output"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Open Runs for the workflow, ",
+          "screenshot_id": "core-workflows-two-events-enabled",
+          "purpose": "Show the workflow Runs action."
+        },
+        {
+          "order": 2,
+          "spoken_text": "then open the training run. Read its status, attempt number, start and completion times. ",
+          "screenshot_id": "core-workflow-call-added-run-history",
+          "purpose": "Show the actual run link, status, start/completion times and attempt."
+        },
+        {
+          "order": 3,
+          "spoken_text": "Inspect each step's log and duration, including the conditional step. ",
+          "screenshot_id": "core-workflow-two-step-completed",
+          "purpose": "Show both actual completed action logs and timestamps."
+        },
+        {
+          "order": 4,
+          "spoken_text": "Expand Rendered Output when your permissions allow it and compare the actual message with the template. ",
+          "screenshot_id": "core-workflow-calladded-rendered-output",
+          "purpose": "Use the same CallAdded run as the template/receipt, not the different closeout output."
+        },
+        {
+          "order": 5,
+          "spoken_text": "A skipped step should have an understandable reason; a failed step needs its recorded error reviewed. ",
+          "screenshot_id": "core-workflow-retry-limit-failed",
+          "purpose": "A conditional instruction, not a claim of an actual skipped example; the actual SMTP failure illustrates the next clause."
+        },
+        {
+          "order": 6,
+          "spoken_text": "Compare the receiver's own controlled receipt when you need proof of delivery, because a workflow log alone may describe only the action's handoff.",
+          "screenshot_id": "core-workflow-receiver-message",
+          "purpose": "Show exact fictional supervisor receipt and message matching the CallAdded run; no external delivery claim."
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Monitor pending work and health",
+      "narration_sha256": "66e59c93ce45e556c687d30a9e43a76d0c50eb9bc2d92ccea255db1128dc6cce",
+      "required_labels": [
+        "Health",
+        "Last 24 Hours",
+        "Pending Runs"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "Open Health ",
+          "screenshot_id": "core-workflows-two-events-enabled",
+          "purpose": "Show the Health entry point."
+        },
+        {
+          "order": 2,
+          "spoken_text": "to review recent successful, failed and skipped runs and performance. Use the different time windows to see whether a single failure is part of a pattern. ",
+          "screenshot_id": "core-workflow-health-success",
+          "purpose": "Show real Last 24 Hours / 7 Days / 30 Days and performance. This historical shot has one successful run, zero failed/skipped."
+        },
+        {
+          "order": 3,
+          "spoken_text": "Pending Runs shows ",
+          "screenshot_id": "core-workflows-two-events-enabled",
+          "purpose": "Show the Pending Runs navigation control."
+        },
+        {
+          "order": 4,
+          "spoken_text": "work that is waiting, running or retrying. Inspect a run before using Cancel, and understand what Clear Pending will affect. These controls manage queued work; they do not undo an action already accepted by another service. Keep the run identifier when investigating, so the workflow, event and destination evidence remain connected.",
+          "screenshot_id": "core-workflow-pending-running-controls",
+          "purpose": "Show actual Running attempt one and Cancel / Clear All Pending; no cancellation or clearing performed."
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Observe retries and finish practice",
+      "narration_sha256": "b73b6546167236805e41eaa43318dfc0259c70287ed3ceff1b2bb94d5e84d069",
+      "required_labels": [
+        "Attempt",
+        "Status",
+        "Step Logs"
+      ],
+      "sequence": [
+        {
+          "order": 1,
+          "spoken_text": "For a controlled retry exercise, pause only the isolated training receiver and trigger a fresh close event. ",
+          "screenshot_id": "core-workflow-training-close-event",
+          "purpose": "Show the actual training Close Call form while receiver-pause setup is explained; its checkbox for Send Notification is off."
+        },
+        {
+          "order": 2,
+          "spoken_text": "In this example the same run reaches three attempts, ",
+          "screenshot_id": "core-workflow-retrying-attempt-two",
+          "purpose": "Show the same run ID in Retrying attempt two before final exhausted state."
+        },
+        {
+          "order": 3,
+          "spoken_text": "then fails with Maximum retry attempts exceeded. ",
+          "screenshot_id": "core-workflow-retry-limit-failed",
+          "purpose": "Show final Attempt three, Failed and exact error."
+        },
+        {
+          "order": 4,
+          "spoken_text": "Read the SMTP error in its step logs. ",
+          "screenshot_id": "core-workflow-all-three-retry-timestamps",
+          "purpose": "Show the actual SMTP failure and all three readable attempt logs."
+        },
+        {
+          "order": 5,
+          "spoken_text": "Restoring the receiver does not restart an exhausted run. A fresh training close event creates a different run, which completes on attempt one ",
+          "screenshot_id": "core-workflow-recovery-new-run",
+          "purpose": "Show the exhausted run remains failed and the fresh completed run has a different ID on attempt one."
+        },
+        {
+          "order": 6,
+          "spoken_text": "and arrives in the receiver. ",
+          "screenshot_id": "core-workflow-recovery-receiver-receipt",
+          "purpose": "Show actual local receiver recovery receipt."
+        },
+        {
+          "order": 7,
+          "spoken_text": "Retries happen automatically; this page does not provide a general Retry button. Earlier actions can run again, so destinations must tolerate duplicate attempts. ",
+          "screenshot_id": "core-workflow-recovery-new-run",
+          "purpose": "Show history while explaining there is no general Retry control and duplicate attempts are possible."
+        },
+        {
+          "order": 8,
+          "spoken_text": "In this build, the saved thirty-second backoff ",
+          "screenshot_id": "core-workflow-close-disabled-backoff-thirty",
+          "purpose": "Show actual saved backoff 30, not the earlier CallAdded five-second settings."
+        },
+        {
+          "order": 9,
+          "spoken_text": "did not match the observed five- and ten-second gaps, so confirm timing in the run history. ",
+          "screenshot_id": "core-workflow-all-three-retry-timestamps",
+          "purpose": "Show actual recorded start timestamps that support the observed gaps."
+        },
+        {
+          "order": 10,
+          "spoken_text": "Finally, disable the training workflows and keep their run history. These controls also fit community care and mental health teams, search and rescue organizations, security departments, wildland contractors and industrial response teams. Choose the operational event and the minimum information your own process needs; for example, route a site incident to a supervisor or a completed readiness check to a training coordinator.",
+          "screenshot_id": "core-workflows-practice-disabled",
+          "purpose": "Retain the actual disabled final state and preserved Runs links for all remaining sector examples."
+        }
+      ]
+    }
+  ],
+  "missing_evidence": [],
+  "timing_and_review_constraints": [
+    "Use only fresh speech-timed captions after audio QA passes; preserve all frozen words.",
+    "Missing-evidence IDs explicitly denote uncaptured screens, not synthetic screenshot placeholders. This file is not accepted by the renderer.",
+    "Bind precise timed instructions to actual corresponding labels after new source image review.",
+    "Review every final extracted frame/caption against actual raw screenshots; do not auto-approve browser playback.",
+    "Keep intentional actual workflow failure/empty states, local-only receiver limitations and separate retry run identities explicit.",
+    "Literal Clear All Pending corresponds to natural spoken Clear Pending; use an explicit reviewed spoken reference."
+  ]
+}

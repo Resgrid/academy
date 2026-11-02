@@ -1,0 +1,156 @@
+{
+  "kind": "read_only_actual_backend_inventory_pdf_diagnosis",
+  "observed_route": "/User/Inventory/ReportPdf",
+  "observed_failure": {
+    "user_observation": "Normal report chooser/filter/Download printable PDF returned ReportUnavailable JSON; no download. No retry performed by diagnosis.",
+    "sanitized_log_line": "[22:05:42 ERR] Inventory report rendering failed: System.Exception.",
+    "log_scope": "Read-only web logs: last45minutes,tail650;52lines scanned,1Inventory report failure match. Only this relevant sanitized line retained.",
+    "first_thrown_exception_message": "Not recorded by controller; exact first failing check cannot be determined from current log."
+  },
+  "actual_backend_context": {
+    "stack": "resgrid-academy-oct25",
+    "web_port": 18967,
+    "core_pointer_target": "Core task workspace",
+    "private_source_profile_json_present": false,
+    "retained_and_actual_core_head": "6f83872110b0382f2911d099e95d6a4ef7da8315",
+    "active_image": "mcr.microsoft.com/dotnet/aspnet:9.0",
+    "active_architecture": "aarch64",
+    "read_only_mounts": [
+      "resgrid-academy-oct25_web-publish:/app",
+      "resgrid-academy-oct25_config:/config"
+    ],
+    "note": "Did not assume the newer managed expansion checkout/profile was running. The actual retained stack points at the Core workspace; binary/source checks bind the concrete runtime."
+  },
+  "runtime_assemblies": [
+    {
+      "file": "Resgrid.Web.dll",
+      "sha256": "80593683e0f81a19a169c517c116a24495a7d312f98c744725c08333a52c0a62",
+      "host_publish_matches_running_container": true
+    },
+    {
+      "file": "Resgrid.Providers.Pdf.dll",
+      "sha256": "9d5780ed81c6e18108b7800ddb1ab4a3cd5259907d6320b0f1d3bb71f3e85124",
+      "host_publish_matches_running_container": true
+    },
+    {
+      "file": "Resgrid.Config.dll",
+      "sha256": "c4ec763db0c955a68f2af74472a1006b2efe593fec1a117adb6cf7618e2d3d9e",
+      "host_publish_matches_running_container": true
+    },
+    {
+      "file": "Resgrid.Services.dll",
+      "sha256": "79a7bda2b851452d712fd0dffb6708d53a8b1166cdb939d450b8b5927cb21ed8",
+      "host_publish_matches_running_container": true
+    }
+  ],
+  "source_binding": {
+    "portable_pdb_codeview_identity_matches_running_dll_bytes": true,
+    "matching_sha256_document_checksums": [
+      "InventoryController.cs",
+      "InventoryOperationsController.cs",
+      "NRecoProvider.cs",
+      "PdfProviderModule.cs",
+      "PrintConfig.cs"
+    ],
+    "scope": "Read-only PDB document checksums and matching DLL CodeView/PDB IDs bind these exact current source files to the same host publish whose DLL hashes match the running container. No stronger claim about every source or build step."
+  },
+  "request_path": [
+    "Inventory Operations report form POST with antiforgery token, report kind and filters.",
+    "Partial InventoryController.ReportPdf resolves IPdfProvider and checks inventory/report access.",
+    "OperationsService.BuildReportAsync reads the permitted inventory projection.",
+    "InventoryReportDocuments.Build creates HTML in-process.",
+    "NRecoProvider creates NReco.PdfGenerator.LT HtmlToPdfConverter and launches local wkhtmltopdf.",
+    "General conversion failure logs exception type only and throws InventoryException409/ReportUnavailable; controller filter emits JSON message/code.",
+    "Success would re-read current projection/permissions and return application/pdf; that success was not observed."
+  ],
+  "confirmed_missing_prerequisites": {
+    "hardcoded_linux_pdf_binary": "/usr/local/bin/wkhtmltopdf is missing; no wkhtmltopdf executable on PATH was observed.",
+    "license_config_presence": {
+      "PrintConfig.NRecoPdfOwner": false,
+      "PrintConfig.NRecoPdfKey": false
+    },
+    "pdf_environment_key_presence": [],
+    "config_values_or_credentials_recorded": false
+  },
+  "package": {
+    "coordinate": "NReco.PdfGenerator.LT/1.2.1",
+    "published_binary_matches_cached_package": true,
+    "published_binary_sha256": "c92f8eb277144fe5ea2e17eca1f091064f602b0e831424944dd6748eb56af18f",
+    "vendor_nuspec_sha256": "b71375f3b7daf366d674f4603312b2b504375a94b11982a8a4f09fdef1583162",
+    "vendor_documentation_summary": "LT package excludes wkhtmltopdf binaries and is not for free users; vendor offers an evaluation/demo-key route. No license obtained, guessed, bypassed or configured."
+  },
+  "standalone_reporting_service": {
+    "required_for_this_route": false,
+    "wired_in_training_compose": false,
+    "found_as_separate_reporting_service_project_or_sibling_repo": false,
+    "reason": "This handler calls in-process IPdfProvider directly. Reporting business services/analytics elsewhere are not the HTML-to-PDF executable."
+  },
+  "safe_next_steps_not_executed": [
+    "Keep the JSON/error screenshot diagnostic; retain the chooser/filter screens only within their actual scope.",
+    "A later authorized setup needs a legitimate evaluation/development license from the owner/vendor, supplied privately in the isolated stack; do not borrow production credentials or invent a license.",
+    "Prepare a reviewed PDF-capable image with architecture-compatible wkhtmltopdf/runtime libraries/fonts at the provider path. The existing web Dockerfile demonstrates dependency packaging but currently downloads an amd64 Debian package, while this live image is aarch64.",
+    "Alternatively review an explicit AMD64 local runtime as a whole; do not copy an amd64 binary blindly into the present ARM64 container. Any setup/restart remains a separate action.",
+    "After actual setup and service readiness, use the normal report UI once and inspect the genuine downloaded PDF/header/pages/scope and filtered inventory values. Until that succeeds, report/export success stays unverified."
+  ],
+  "source_files": [
+    {
+      "file": "Web/Resgrid.Web/Areas/User/Controllers/InventoryOperationsController.cs",
+      "line": 124,
+      "sha256": "2b37063f2fdacf00e09de59847464ad8e25efc7d7dbb20bffeeff129a68ce64e"
+    },
+    {
+      "file": "Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+      "line": 18,
+      "sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107"
+    },
+    {
+      "file": "Web/Resgrid.Web/Areas/User/Views/Inventory/Operations.cshtml",
+      "line": 371,
+      "sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770"
+    },
+    {
+      "file": "Providers/Resgrid.Providers.Pdf/NRecoProvider.cs",
+      "line": 17,
+      "sha256": "e952359aeffb66b4b04f3d6cf20266d0963002fbeb659e6dd8d9987e77b1d8f4"
+    },
+    {
+      "file": "Providers/Resgrid.Providers.Pdf/PdfProviderModule.cs",
+      "line": 10,
+      "sha256": "5cd60756d3988a4ff2fedc93c9bfd788d75b307ea2df505c9d83c8e171f60e79"
+    },
+    {
+      "file": "Providers/Resgrid.Providers.Pdf/Resgrid.Providers.Pdf.csproj",
+      "line": 8,
+      "sha256": "d4617a2f567002d9b60fb5870a87311f2de24e16dff2b19f8d1452ceabbb4d47"
+    },
+    {
+      "file": "Core/Resgrid.Config/PrintConfig.cs",
+      "line": 16,
+      "sha256": "13ccaf00fe78d87a138b741e151291bfa6b1b0cae513cd746f92427e50273eb1"
+    },
+    {
+      "file": "Core/Resgrid.Services/InventoryReports.cs",
+      "line": 21,
+      "sha256": "1ec4321a1464c9ebed5c919374760b99144b7683427dd6b3f88a2312e6a0c873"
+    },
+    {
+      "file": "Core/Resgrid.Services/InventoryReportDocuments.cs",
+      "line": 36,
+      "sha256": "1af1db6dee0576ec4a907df00e41439f22a15f1dd09d81ee64e05c51b6b96209"
+    },
+    {
+      "file": "Web/Resgrid.Web/Dockerfile",
+      "line": 74,
+      "sha256": "9ab1433b31aa6ad75bd447adf553e2323109576e02c385061eb6c5c91cc87bb1"
+    }
+  ],
+  "training_compose": {
+    "file": "demo/compose.yaml",
+    "sha256": "f9c175f479e83b2ee60f7ef502c4c17418f39837b15d8272c916ad88441c1a8f"
+  },
+  "actions_not_performed": [
+    "No new product API request or UI action.",
+    "No report retry, synthetic PDF, external service call, credential acquisition, seed write, code change, build, restart, Git or target/site change."
+  ],
+  "future_video_narration_audio_and_sources_unchanged": true
+}

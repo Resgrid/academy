@@ -1,0 +1,730 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Resgrid.Model;
+using Resgrid.Model.Events;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Repositories;
+using Resgrid.Model.Repositories.Queries;
+using Resgrid.Model.Search;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Bus;
+using Resgrid.Model.Identity;
+
+namespace Resgrid.Services
+{
+	public class DepartmentGroupsService : IDepartmentGroupsService
+	{
+		private static string CacheKey = "DepartmentGroup_{0}";
+		private static TimeSpan CacheLength = TimeSpan.FromDays(14);
+
+		private readonly IDepartmentGroupsRepository _departmentGroupsRepository;
+		private readonly IDepartmentGroupMembersRepository _departmentGroupMembersRepository;
+		private readonly ISubscriptionsService _subscriptionsService;
+		private readonly IAddressService _addressService;
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IGeoLocationProvider _geoLocationProvider;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly ICacheProvider _cacheProvider;
+		private readonly IIdentityRepository _identityRepository;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly IInventoryStore _inventoryStore;
+		private readonly Lazy<ISearchProjectionService> _searchProjections;
+
+		public DepartmentGroupsService(IDepartmentGroupsRepository departmentGroupsRepository, IDepartmentGroupMembersRepository departmentGroupMembersRepository,
+			ISubscriptionsService subscriptionsService, IAddressService addressService, IDepartmentsService departmentsService, IGeoLocationProvider geoLocationProvider,
+			IDepartmentSettingsService departmentSettingsService, IEventAggregator eventAggregator, ICacheProvider cacheProvider,
+			IIdentityRepository identityRepository, IUnitOfWork unitOfWork, IInventoryStore inventoryStore = null,
+			Lazy<ISearchProjectionService> searchProjections = null)
+		{
+			_searchProjections = searchProjections;
+			_departmentGroupsRepository = departmentGroupsRepository;
+			_departmentGroupMembersRepository = departmentGroupMembersRepository;
+			_subscriptionsService = subscriptionsService;
+			_addressService = addressService;
+			_departmentsService = departmentsService;
+			_geoLocationProvider = geoLocationProvider;
+			_departmentSettingsService = departmentSettingsService;
+			_eventAggregator = eventAggregator;
+			_cacheProvider = cacheProvider;
+			_identityRepository = identityRepository;
+			_unitOfWork = unitOfWork;
+			_inventoryStore = inventoryStore;
+		}
+
+		public async Task<List<DepartmentGroup>> GetAllAsync()
+		{
+			var items = await _departmentGroupsRepository.GetAllAsync();
+
+			if (items != null && items.Any())
+				return items.ToList();
+
+			return new List<DepartmentGroup>();
+		}
+
+		public async Task<DepartmentGroup> SaveAsync(DepartmentGroup departmentGroup, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			// New or Updated Address for this group (outside the transaction — address has its own lifecycle)
+			if (departmentGroup.Address != null)
+			{
+				var address = await _addressService.SaveAddressAsync(departmentGroup.Address, cancellationToken);
+				if (address != null)
+				{
+					departmentGroup.AddressId = address.AddressId;
+				}
+			}
+
+			// Open a shared connection/transaction so the group and its members are committed atomically.
+			_unitOfWork.CreateOrGetConnection();
+
+			DepartmentGroup saved;
+			try
+			{
+				// firstLevelOnly: the reflection cascade must not run for DepartmentGroup — its
+				// self-referencing Children collection makes SyncChildArrayUpdates emit
+				// DELETE FROM DepartmentGroups WHERE DepartmentGroupId = @id, deleting the group
+				// being saved. Members are saved explicitly below.
+				saved = await _departmentGroupsRepository.SaveOrUpdateAsync(departmentGroup, cancellationToken, true);
+
+				if (departmentGroup.Members != null && departmentGroup.Members.Any())
+				{
+					foreach (var member in departmentGroup.Members)
+					{
+						member.DepartmentGroupId = saved.DepartmentGroupId;
+						await _departmentGroupMembersRepository.SaveOrUpdateAsync(member, cancellationToken);
+					}
+				}
+
+				_unitOfWork.CommitChanges();
+			}
+			catch
+			{
+				_unitOfWork.DiscardChanges();
+				throw;
+			}
+
+			// Invalidate after the transaction commits so the cache is refreshed from the fully consistent state.
+			await InvalidateGroupInCache(saved.DepartmentGroupId);
+			SendGroupVisibilityRefresh(saved.DepartmentId);
+			await ProjectGroupAndDependentsAsync(saved, null, cancellationToken);
+
+			return saved;
+		}
+
+		public async Task<DepartmentGroup> SaveAsync(DepartmentGroup departmentGroup, Model.Onboarding.ImportEffectPolicy effects, CancellationToken cancellationToken)
+		{
+			if (departmentGroup.Address != null)
+			{
+				var address = await _addressService.SaveAddressAsync(departmentGroup.Address, cancellationToken);
+				if (address != null)
+					departmentGroup.AddressId = address.AddressId;
+			}
+
+			// Joins the caller's unit of work (the import chunk transaction) and never commits it; firstLevelOnly for the
+			// same self-referencing Children reason as SaveAsync above. Import groups carry no members here.
+			var saved = await _departmentGroupsRepository.SaveOrUpdateAsync(departmentGroup, cancellationToken, true);
+
+			await InvalidateGroupInCache(saved.DepartmentGroupId);
+			if (effects.ImmediateSecurityRefresh)
+				SendGroupVisibilityRefresh(saved.DepartmentId);
+			if (effects.ImmediateSearchProjection)
+				await ProjectGroupAndDependentsAsync(saved, null, cancellationToken);
+
+			return saved;
+		}
+
+		public async Task<DepartmentGroupMember> SaveGroupMemberAsync(DepartmentGroupMember depMember, Model.Onboarding.ImportEffectPolicy effects, CancellationToken cancellationToken)
+		{
+			// Never UserAssignedToGroupEvent (notification + workflow 7) on this path: that belongs to MoveUserIntoGroupAsync.
+			await _departmentGroupMembersRepository.SaveOrUpdateAsync(depMember, cancellationToken);
+			await InvalidateGroupInCache(depMember.DepartmentGroupId);
+			if (effects.ImmediateSecurityRefresh)
+				SendGroupVisibilityRefresh(depMember.DepartmentId);
+			if (effects.ImmediateSearchProjection)
+				await RefreshPersonnelProjectionsAsync(depMember.DepartmentId, new[] { depMember.UserId }, cancellationToken);
+			return depMember;
+		}
+
+		/// <summary>The group's own projection, then its members and units (theirs carry the group name), then members who just left it.</summary>
+		private async Task ProjectGroupAndDependentsAsync(DepartmentGroup group, IEnumerable<string> formerMembers, CancellationToken cancellationToken)
+		{
+			if (_searchProjections == null || group == null)
+				return;
+			await _searchProjections.Value.ProjectGroupAsync(group, cancellationToken);
+			await _searchProjections.Value.RefreshGroupDependentsAsync(group.DepartmentId, group.DepartmentGroupId, cancellationToken);
+			await RefreshPersonnelProjectionsAsync(group.DepartmentId, formerMembers, cancellationToken);
+		}
+
+		private async Task RefreshPersonnelProjectionsAsync(int departmentId, IEnumerable<string> userIds, CancellationToken cancellationToken)
+		{
+			if (_searchProjections == null || userIds == null)
+				return;
+			foreach (var userId in userIds.Where(u => !string.IsNullOrWhiteSpace(u)).Distinct(StringComparer.OrdinalIgnoreCase))
+				await _searchProjections.Value.RefreshAsync(departmentId, SearchEntityTypes.Personnel, userId, cancellationToken);
+		}
+
+		public async Task<List<DepartmentGroup>> GetAllGroupsForDepartmentAsync(int departmentId)
+		{
+			// GetAllGroupsForDepartmentUnlimitedAsync already resolves addresses, parents and children
+			return await GetAllGroupsForDepartmentUnlimitedAsync(departmentId);
+		}
+
+		public async Task InvalidateGroupInCache(int groupId)
+		{
+			await _cacheProvider.RemoveAsync(string.Format(CacheKey, groupId));
+		}
+
+		/// <summary>
+		/// All four visibility matrices are derived from group membership and group-admin standing --
+		/// unit visibility through each unit's station group, personnel visibility through the member's
+		/// own group. Without this, a user added to a group keeps the visibility they had when the
+		/// matrix was last built, which is what made units vanish from the mobile apps.
+		/// </summary>
+		private void SendGroupVisibilityRefresh(int departmentId)
+		{
+			if (departmentId <= 0)
+				return;
+
+			_eventAggregator.SendMessage<SecurityRefreshEvent>(new SecurityRefreshEvent() { DepartmentId = departmentId, Type = SecurityCacheTypes.WhoCanViewUnits });
+			_eventAggregator.SendMessage<SecurityRefreshEvent>(new SecurityRefreshEvent() { DepartmentId = departmentId, Type = SecurityCacheTypes.WhoCanViewUnitLocations });
+			_eventAggregator.SendMessage<SecurityRefreshEvent>(new SecurityRefreshEvent() { DepartmentId = departmentId, Type = SecurityCacheTypes.WhoCanViewPersonnel });
+			_eventAggregator.SendMessage<SecurityRefreshEvent>(new SecurityRefreshEvent() { DepartmentId = departmentId, Type = SecurityCacheTypes.WhoCanViewPersonnelLocations });
+		}
+
+		public async Task<List<DepartmentGroup>> GetAllGroupsForDepartmentUnlimitedAsync(int departmentId)
+		{
+			// Repository returns null when the underlying query throws (it logs and swallows)
+			var groups = (await _departmentGroupsRepository.GetAllGroupsByDepartmentIdAsync(departmentId))?.ToList();
+
+			if (groups == null)
+				return new List<DepartmentGroup>();
+
+			foreach (var addressId in groups.Where(x => x.AddressId.HasValue && x.Address == null).Select(x => x.AddressId.Value).Distinct().ToList())
+			{
+				var address = await _addressService.GetAddressByIdAsync(addressId);
+
+				foreach (var g in groups.Where(x => x.AddressId == addressId && x.Address == null))
+					g.Address = address;
+			}
+
+			// The result set already contains every group in the department, so parent and
+			// child links resolve in memory instead of issuing per-group queries.
+			var groupsById = groups.ToDictionary(x => x.DepartmentGroupId);
+			var childrenByParentId = groups
+				.Where(x => x.ParentDepartmentGroupId.HasValue)
+				.GroupBy(x => x.ParentDepartmentGroupId.Value)
+				.ToDictionary(x => x.Key, x => x.ToList());
+
+			foreach (var g in groups)
+			{
+				if (g.ParentDepartmentGroupId.HasValue)
+				{
+					if (groupsById.TryGetValue(g.ParentDepartmentGroupId.Value, out var parent))
+						g.Parent = CopyWithoutRelations(parent);
+					else
+						g.Parent = await GetGroupByIdAsync(g.ParentDepartmentGroupId.Value, false);
+				}
+
+				if (childrenByParentId.TryGetValue(g.DepartmentGroupId, out var children))
+					g.Children = children;
+				else
+					g.Children = new List<DepartmentGroup>();
+			}
+
+			return groups;
+		}
+
+		// Parent links point at a detached copy so the group graph stays acyclic;
+		// Children reference the shared in-memory list instances.
+		private static DepartmentGroup CopyWithoutRelations(DepartmentGroup group)
+		{
+			return new DepartmentGroup
+			{
+				DepartmentGroupId = group.DepartmentGroupId,
+				DepartmentId = group.DepartmentId,
+				Type = group.Type,
+				AddressId = group.AddressId,
+				Address = group.Address,
+				ParentDepartmentGroupId = group.ParentDepartmentGroupId,
+				Members = group.Members,
+				Name = group.Name,
+				Geofence = group.Geofence,
+				GeofenceColor = group.GeofenceColor,
+				DispatchEmail = group.DispatchEmail,
+				MessageEmail = group.MessageEmail,
+				Latitude = group.Latitude,
+				Longitude = group.Longitude,
+				What3Words = group.What3Words,
+				DispatchToPrinter = group.DispatchToPrinter,
+				PrinterData = group.PrinterData,
+				DispatchToFax = group.DispatchToFax,
+				FaxNumber = group.FaxNumber
+			};
+		}
+
+		public async Task<List<DepartmentGroup>> GetAllGroupsForDepartmentUnlimitedThinAsync(int departmentId)
+		{
+			var groups = await _departmentGroupsRepository.GetAllGroupsByDepartmentIdAsync(departmentId);
+
+			return groups.ToList();
+		}
+
+		public async Task<DepartmentGroup> GetGroupByIdAsync(int departmentGroupId, bool bypassCache = true)
+		{
+			async Task<DepartmentGroup> getDepartmentGroup()
+			{
+				var group1 = await _departmentGroupsRepository.GetGroupByGroupIdAsync(departmentGroupId);
+
+				if (group1 != null)
+				{
+					if (group1.AddressId.HasValue && group1.Address == null)
+						group1.Address = await _addressService.GetAddressByIdAsync(group1.AddressId.Value);
+
+					if (group1.ParentDepartmentGroupId.HasValue)
+					{
+						group1.Parent = await GetGroupByIdAsync(group1.ParentDepartmentGroupId.Value, true);
+					}
+
+					var childGroups = await _departmentGroupsRepository.GetAllGroupsByParentGroupIdAsync(group1.DepartmentGroupId);
+
+					if (childGroups != null && childGroups.Any())
+						group1.Children = childGroups.ToList();
+					else
+						group1.Children = new List<DepartmentGroup>();
+				}
+
+				return group1;
+			}
+
+			if (!bypassCache && Config.SystemBehaviorConfig.CacheEnabled)
+			{
+				return await _cacheProvider.RetrieveAsync(string.Format(CacheKey, departmentGroupId), getDepartmentGroup, CacheLength);
+			}
+
+			return await getDepartmentGroup();
+		}
+
+		public async Task<bool> DeleteGroupByIdAsync(int groupId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var group = await GetGroupByIdAsync(groupId);
+			if (group == null) return false;
+			var formerMembers = new List<string>();
+			var deleted = await InventoryHolderRetention.DeleteAsync(_inventoryStore, _unitOfWork, group.DepartmentId, groupId, false, async () =>
+			{
+			var members = await _departmentGroupMembersRepository.GetAllGroupMembersByGroupIdAsync(groupId);
+			formerMembers.AddRange((members ?? Enumerable.Empty<DepartmentGroupMember>()).Select(m => m.UserId));
+
+			foreach (var departmentGroupMember in members)
+			{
+				await _departmentGroupMembersRepository.DeleteAsync(departmentGroupMember, cancellationToken);
+			}
+
+			await _departmentGroupsRepository.DeleteAsync(group, cancellationToken);
+			await InvalidateGroupInCache(groupId);
+			SendGroupVisibilityRefresh(group?.DepartmentId ?? 0);
+
+			return true;
+			}, cancellationToken);
+
+			if (deleted && _searchProjections != null)
+			{
+				await _searchProjections.Value.RemoveAsync(group.DepartmentId, SearchEntityTypes.Group, groupId.ToString(), cancellationToken);
+				await RefreshPersonnelProjectionsAsync(group.DepartmentId, formerMembers, cancellationToken);
+			}
+			return deleted;
+		}
+
+		public async Task<DepartmentGroup> UpdateAsync(DepartmentGroup departmentGroup, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			// Materialize to List immediately to avoid multiple Dapper enumeration re-executions
+			var members = (await _departmentGroupMembersRepository.GetAllGroupMembersByGroupIdAsync(departmentGroup.DepartmentGroupId)).ToList();
+
+			if (departmentGroup.Members != null && departmentGroup.Members.Any())
+			{
+				// Delete members no longer in the group — match by UserId, not DepartmentGroupMemberId
+				// (new members passed in from the controller have DepartmentGroupMemberId = 0)
+				var membersNoLongerInGroup = members.Where(p => !departmentGroup.Members.Any(p2 => p2.UserId == p.UserId)).ToList();
+
+				foreach (var departmentGroupMember in membersNoLongerInGroup)
+				{
+					await _departmentGroupMembersRepository.DeleteAsync(departmentGroupMember, cancellationToken);
+				}
+
+				foreach (var updatedMember in departmentGroup.Members)
+				{
+					var existingMember = members.FirstOrDefault(x => x.UserId == updatedMember.UserId);
+					if (existingMember == null)
+					{
+						// New member — insert
+						updatedMember.DepartmentGroupId = departmentGroup.DepartmentGroupId;
+						await _departmentGroupMembersRepository.SaveOrUpdateAsync(updatedMember, cancellationToken);
+					}
+					else if (existingMember.IsAdmin != updatedMember.IsAdmin)
+					{
+						// Existing member whose admin flag changed — update
+						existingMember.IsAdmin = updatedMember.IsAdmin;
+						await _departmentGroupMembersRepository.SaveOrUpdateAsync(existingMember, cancellationToken);
+					}
+				}
+			}
+			else
+			{
+				foreach (var departmentGroupMember in members)
+				{
+					await _departmentGroupMembersRepository.DeleteAsync(departmentGroupMember, cancellationToken);
+				}
+			}
+
+			if (departmentGroup.Address != null)
+				await _addressService.SaveAddressAsync(departmentGroup.Address, cancellationToken);
+
+			var saved = await _departmentGroupsRepository.SaveOrUpdateAsync(departmentGroup, cancellationToken, true);
+
+			await InvalidateGroupInCache(departmentGroup.DepartmentGroupId);
+			SendGroupVisibilityRefresh(saved?.DepartmentId ?? departmentGroup.DepartmentId);
+			await ProjectGroupAndDependentsAsync(saved, members.Select(m => m.UserId), cancellationToken);
+
+			return saved;
+		}
+
+		public async Task<bool> DeleteAllMembersFromGroupAsync(DepartmentGroup departmentGroup, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var members =
+				await _departmentGroupMembersRepository.GetAllGroupMembersByGroupIdAsync(departmentGroup
+					.DepartmentGroupId);
+
+			foreach (var departmentGroupMember in members)
+			{
+				await _departmentGroupMembersRepository.DeleteAsync(departmentGroupMember, cancellationToken);
+			}
+
+			await InvalidateGroupInCache(departmentGroup.DepartmentGroupId);
+			SendGroupVisibilityRefresh(departmentGroup.DepartmentId);
+
+			return true;
+		}
+
+		public async Task<bool> IsUserInAGroupAsync(string userId, int departmentId)
+		{
+			var members =
+				await _departmentGroupMembersRepository
+					.GetAllGroupMembersByUserAndDepartmentAsync(userId, departmentId);
+
+			if (members != null && members.Any())
+				return true;
+
+			return false;
+		}
+
+		public async Task<bool> IsUserAGroupAdminAsync(string userId, int departmentId)
+		{
+			var members = from m in await _departmentGroupMembersRepository.GetAllGroupMembersByUserAndDepartmentAsync(userId, departmentId)
+						  where m.IsAdmin.HasValue && m.IsAdmin.Value && m.DepartmentId == departmentId
+						  select m;
+
+			if (members != null && members.Any())
+				return true;
+
+			return false;
+		}
+
+		public async Task<bool> IsUserInAGroupAsync(string userId, int excludedGroupId, int departmentId)
+		{
+			var members = from m in await _departmentGroupMembersRepository.GetAllGroupMembersByUserAndDepartmentAsync(userId, departmentId)
+						  where m.DepartmentGroupId != excludedGroupId
+						  select m;
+
+			if (members != null && members.Any())
+				return true;
+
+			return false;
+		}
+
+		public async Task<bool> DeleteUserFromGroupsAsync(string userId, int departmentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var groupMemberships =
+				await _departmentGroupMembersRepository
+					.GetAllGroupMembersByUserAndDepartmentAsync(userId, departmentId);
+
+			foreach (var membership in groupMemberships)
+			{
+				await _departmentGroupMembersRepository.DeleteAsync(membership, cancellationToken);
+				await InvalidateGroupInCache(membership.DepartmentGroupId);
+			}
+
+			SendGroupVisibilityRefresh(departmentId);
+			await RefreshPersonnelProjectionsAsync(departmentId, new[] { userId }, cancellationToken);
+
+			return true;
+		}
+
+		public async Task<List<DepartmentGroup>> GetAllChildDepartmentGroupsAsync(int parentDepartmentGroupId)
+		{
+			var groups = await _departmentGroupsRepository.GetAllGroupsByParentGroupIdAsync(parentDepartmentGroupId);
+
+			return groups.ToList();
+		}
+
+		public async Task<List<DepartmentGroup>> GetAllStationGroupsForDepartmentAsync(int departmentId)
+		{
+			return await _departmentGroupsRepository.GetAllStationGroupsForDepartmentAsync(departmentId);
+		}
+
+		public async Task<DepartmentGroup> GetGroupForUserAsync(string userId, int departmentId)
+		{
+			var depMember =
+				(await _departmentGroupMembersRepository.GetAllGroupMembersByUserAndDepartmentAsync(userId,
+					departmentId)).FirstOrDefault();
+
+			if (depMember == null)
+				return null;
+
+			//if (depMember.DepartmentGroup != null)
+			//	return depMember.DepartmentGroup;
+
+			return await GetGroupByIdAsync(depMember.DepartmentGroupId);
+		}
+
+		public async Task<Dictionary<string, int>> GetGroupIdsForAllUsersInDepartmentAsync(int departmentId)
+		{
+			// Ordinal: an id that differs from the stored one only in case finds no group, which can only narrow a group-locked check.
+			var groupIds = new Dictionary<string, int>(StringComparer.Ordinal);
+			foreach (var member in await _departmentGroupMembersRepository.GetAllGroupMembersByDepartmentAsync(departmentId) ?? Enumerable.Empty<DepartmentGroupMember>())
+				if (member?.UserId != null)
+					groupIds.TryAdd(member.UserId, member.DepartmentGroupId);
+
+			return groupIds;
+		}
+
+		public async Task<DepartmentGroupMember> GetGroupMemberForUserAsync(string userId, int departmentId)
+		{
+			var depMember = (await _departmentGroupMembersRepository.GetAllGroupMembersByUserAndDepartmentAsync(userId, departmentId)).FirstOrDefault();
+
+			return depMember;
+		}
+
+		public async Task<DepartmentGroupMember> SaveGroupMember(DepartmentGroupMember depMember, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			await _departmentGroupMembersRepository.SaveOrUpdateAsync(depMember, cancellationToken);
+
+			await InvalidateGroupInCache(depMember.DepartmentGroupId);
+			SendGroupVisibilityRefresh(depMember.DepartmentId);
+			await RefreshPersonnelProjectionsAsync(depMember.DepartmentId, new[] { depMember.UserId }, cancellationToken);
+
+			return depMember;
+		}
+
+		public async Task<Dictionary<string, DepartmentGroup>> GetAllDepartmentGroupsForDepartmentAsync(int departmentId)
+		{
+			var data = new Dictionary<string, DepartmentGroup>();
+			var departments = await _departmentGroupsRepository.GetAllGroupsByDepartmentIdAsync(departmentId);
+
+			foreach (var departmentGroup in departments)
+			{
+				foreach (var departmentGroupMember in departmentGroup.Members)
+				{
+					if (!data.ContainsKey(departmentGroupMember.UserId))
+						data.Add(departmentGroupMember.UserId, departmentGroup);
+				}
+			}
+
+			return data;
+		}
+
+		public async Task<List<string>> AllGroupedUserIdsForDepartmentAsync(int departmentId)
+		{
+			var groups = await _departmentGroupsRepository.GetAllGroupsByDepartmentIdAsync(departmentId);
+
+			return (from departmentGroup in groups from member in departmentGroup.Members select member.UserId).ToList();
+		}
+
+		public async Task<Coordinates> GetMapCenterCoordinatesForGroupAsync(int departmentGroupId)
+		{
+			Coordinates coordinates = null;
+
+			var departmentGroup = await GetGroupByIdAsync(departmentGroupId);
+
+			if (departmentGroup == null)
+				return null;
+
+			// A station saved by coordinates (or What3Words) has no Address, and an Organizational
+			// group's only location is its boundary; both used to open the map on the department.
+			var stored = GeoMath.ParseCoordinatePair(departmentGroup.Latitude, departmentGroup.Longitude);
+			if (stored.HasValue)
+				return new Coordinates { Latitude = stored.Value.Latitude, Longitude = stored.Value.Longitude };
+
+			var boundary = GeoMath.ParseGeofence(departmentGroup.Geofence);
+			if (boundary != null)
+			{
+				var centroid = GeoMath.Centroid(boundary);
+				return new Coordinates { Latitude = centroid.Latitude, Longitude = centroid.Longitude };
+			}
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(departmentGroup.DepartmentId);
+
+			if (departmentGroup.Address != null)
+			{
+				string coordinateString = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3} {4}", departmentGroup.Address.Address1,
+				departmentGroup.Address.City, departmentGroup.Address.State, departmentGroup.Address.PostalCode,
+				departmentGroup.Address.Country));
+
+				coordinates = ParseCoordinates(coordinateString);
+			}
+
+			if (coordinates == null && department?.Address != null)
+			{
+				string coordinateString = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3} {4}", department.Address.Address1,
+				department.Address.City, department.Address.State, department.Address.PostalCode, department.Address.Country));
+
+				coordinates = ParseCoordinates(coordinateString);
+			}
+
+			var gpsCoordinates = await _departmentSettingsService.GetBigBoardCenterGpsCoordinatesDepartmentAsync(departmentGroup.DepartmentId);
+			if (coordinates == null && !string.IsNullOrWhiteSpace(gpsCoordinates))
+			{
+				coordinates = ParseCoordinates(gpsCoordinates);
+			}
+
+			return coordinates;
+		}
+
+		private static Coordinates ParseCoordinates(string coordinateString)
+		{
+			if (string.IsNullOrWhiteSpace(coordinateString))
+				return null;
+
+			var coords = coordinateString.Split(',');
+			if (coords.Length < 2)
+				return null;
+
+			if (!double.TryParse(coords[0], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double latitude) ||
+			    !double.TryParse(coords[1], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double longitude))
+				return null;
+
+			return new Coordinates { Latitude = latitude, Longitude = longitude };
+		}
+
+		public async Task<DepartmentGroupMember> MoveUserIntoGroupAsync(string userId, int groupId, bool isAdmin, int departmentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var departmentGroup = await GetGroupByIdAsync(groupId);
+			if (departmentGroup == null || departmentGroup.DepartmentId != departmentId)
+				return null;
+
+			var depMember = (await _departmentGroupMembersRepository.GetAllGroupMembersByUserAndDepartmentAsync(userId, departmentId)).FirstOrDefault();
+
+			if (depMember == null)
+				depMember = new DepartmentGroupMember();
+
+			depMember.DepartmentGroupId = groupId;
+			depMember.DepartmentId = departmentId;
+			depMember.IsAdmin = isAdmin;
+			depMember.UserId = userId;
+
+			var saved = await _departmentGroupMembersRepository.SaveOrUpdateAsync(depMember, cancellationToken);
+			await InvalidateGroupInCache(groupId);
+
+			_eventAggregator.SendMessage<UserAssignedToGroupEvent>(new UserAssignedToGroupEvent() { DepartmentId = departmentGroup.DepartmentId, UserId = userId, Group = departmentGroup });
+			SendGroupVisibilityRefresh(departmentGroup.DepartmentId);
+			await RefreshPersonnelProjectionsAsync(departmentGroup.DepartmentId, new[] { userId }, cancellationToken);
+
+			return saved;
+		}
+
+		public async Task<List<DepartmentGroupMember>> GetAllMembersForGroupAsync(int groupId)
+		{
+			var items = await _departmentGroupMembersRepository.GetAllGroupMembersByGroupIdAsync(groupId);
+
+			if (items != null && items.Any())
+				return items.ToList();
+
+			return new List<DepartmentGroupMember>();
+		}
+
+		public List<DepartmentGroupMember> GetAllMembersForGroupAndChildGroups(DepartmentGroup group)
+		{
+			var result = new List<DepartmentGroupMember>();
+
+			if (group != null && group.Members.Any())
+				result.AddRange(group.Members);
+
+			if (group != null && group.Children != null && group.Children.Any())
+			{
+				foreach (var child in group.Children)
+				{
+					result.AddRange(GetAllMembersForGroupAndChildGroups(child));
+				}
+			}
+
+			return result;
+		}
+
+		public async Task<List<DepartmentGroupMember>> GetAllAdminsForGroupAsync(int groupId)
+		{
+			var members = await _departmentGroupMembersRepository.GetAllGroupMembersByGroupIdAsync(groupId);
+
+			return members.Where(x => x.IsAdmin.Equals(true)).ToList();
+		}
+
+		public async Task<List<DepartmentGroupMember>> GetAllAdminsForGroupAndAncestorsAsync(int groupId)
+		{
+			var admins = new List<DepartmentGroupMember>();
+			var visited = new HashSet<int>();
+			int? currentId = groupId;
+
+			// Parent chains are short (a service area over its stations); the visited set stops a
+			// corrupt parent cycle from looping.
+			while (currentId.HasValue && visited.Add(currentId.Value))
+			{
+				admins.AddRange(await GetAllAdminsForGroupAsync(currentId.Value) ?? new List<DepartmentGroupMember>());
+
+				var group = await GetGroupByIdAsync(currentId.Value, false);
+				currentId = group?.ParentDepartmentGroupId;
+			}
+
+			return admins;
+		}
+
+		public async Task<DepartmentGroup> GetGroupByDispatchEmailCodeAsync(string code)
+		{
+			var group = await _departmentGroupsRepository.GetGroupByDispatchCodeAsync(code);
+
+			return group;
+		}
+
+		public async Task<DepartmentGroup> GetGroupByMessageEmailCodeAsync(string code)
+		{
+			var group = await _departmentGroupsRepository.GetGroupByMessageCodeAsync(code);
+
+			return group;
+		}
+
+		public List<IdentityUser> GetAllUsersForGroup(int groupId)
+		{
+			return _identityRepository.GetAllUsersForGroup(groupId);
+		}
+
+		public async Task<bool> DeleteGroupMembersByGroupIdAsync(int groupId, int departmentId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var formerMembers = _searchProjections != null
+				? (await _departmentGroupMembersRepository.GetAllGroupMembersByGroupIdAsync(groupId) ?? Enumerable.Empty<DepartmentGroupMember>()).Select(m => m.UserId).ToList()
+				: null;
+			var result = await _departmentGroupMembersRepository.DeleteGroupMembersByGroupIdAsync(groupId, departmentId, cancellationToken);
+
+			await InvalidateGroupInCache(groupId);
+			SendGroupVisibilityRefresh(departmentId);
+			await RefreshPersonnelProjectionsAsync(departmentId, formerMembers, cancellationToken);
+
+			return result;
+		}
+
+		public async Task<List<DepartmentGroupMember>> GetAllGroupAdminsByDepartmentIdAsync(int departmentId)
+		{
+			var admins = await _departmentGroupMembersRepository.GetAllGroupAdminsByDepartmentIdAsync(departmentId);
+
+			return admins.ToList();
+		}
+	}
+}

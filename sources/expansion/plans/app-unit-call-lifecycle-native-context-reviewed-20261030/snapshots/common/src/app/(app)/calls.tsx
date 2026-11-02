@@ -1,0 +1,175 @@
+import { useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
+import { PlusIcon, RefreshCcwDotIcon, Search, X } from 'lucide-react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Pressable, RefreshControl, View } from 'react-native';
+
+import { CallCard } from '@/components/calls/call-card';
+import { Loading } from '@/components/common/loading';
+import ZeroState from '@/components/common/zero-state';
+import { Box } from '@/components/ui/box';
+import { Fab, FabIcon } from '@/components/ui/fab';
+import { FlatList } from '@/components/ui/flat-list';
+import { FocusAwareStatusBar } from '@/components/ui/focus-aware-status-bar';
+import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { type CallPriorityResultData } from '@/models/v4/callPriorities/callPriorityResultData';
+import { type CallResultData } from '@/models/v4/calls/callResultData';
+import { type DispatchedEventResultData } from '@/models/v4/calls/dispatchedEventResultData';
+import { useCallsStore } from '@/stores/calls/store';
+import { securityStore } from '@/stores/security/store';
+
+interface CallListItemProps {
+  call: CallResultData;
+  dispatches?: DispatchedEventResultData[];
+  priority?: CallPriorityResultData;
+}
+
+const CallListItem: React.FC<CallListItemProps> = React.memo(({ call, dispatches, priority }) => {
+  const handlePress = useCallback(() => {
+    router.push(`/call/${call.CallId}`);
+  }, [call.CallId]);
+
+  return (
+    <Pressable onPress={handlePress}>
+      <CallCard call={call} priority={priority} dispatches={dispatches} />
+    </Pressable>
+  );
+});
+
+export default function Calls() {
+  const calls = useCallsStore((state) => state.calls);
+  const callPriorities = useCallsStore((state) => state.callPriorities);
+  const isLoading = useCallsStore((state) => state.isLoading);
+  const error = useCallsStore((state) => state.error);
+  const fetchCalls = useCallsStore((state) => state.fetchCalls);
+  const fetchCallPriorities = useCallsStore((state) => state.fetchCallPriorities);
+  const fetchCallDispatches = useCallsStore((state) => state.fetchCallDispatches);
+  const callDispatches = useCallsStore((state) => state.callDispatches);
+  const canUserCreateCalls = securityStore((state) => state.rights?.CanCreateCalls);
+  const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Fetch data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchCallPriorities();
+      fetchCalls();
+
+      return () => {
+        // Clean up if needed when screen loses focus
+      };
+    }, [fetchCalls, fetchCallPriorities])
+  );
+
+  // Fetch dispatch data for all active calls after calls load (cached per callId)
+  useEffect(() => {
+    if (calls.length > 0) {
+      const callIds = calls.map((c) => c.CallId);
+      fetchCallDispatches(callIds);
+    }
+  }, [calls, fetchCallDispatches]);
+
+  // Search query is read through a ref so typing does not fire an analytics
+  // event per keystroke — the effect below must not depend on searchQuery.
+  const searchQueryRef = useRef(searchQuery);
+  useEffect(() => {
+    searchQueryRef.current = searchQuery;
+  }, [searchQuery]);
+
+  // Track when calls view is rendered
+  useEffect(() => {
+    trackEvent('calls_view_rendered', {
+      callsCount: calls.length,
+      hasSearchQuery: searchQueryRef.current.length > 0,
+    });
+  }, [trackEvent, calls.length]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // Force refresh to bypass the cached endpoint; dispatches auto-fetch via useEffect when calls update
+      await Promise.all([fetchCalls(true), fetchCallPriorities()]);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [fetchCalls, fetchCallPriorities]);
+
+  const handleNewCall = () => {
+    router.push('/call/new/');
+  };
+
+  // Priority lookup map — O(1) per row instead of an O(n) find per row per render
+  const prioritiesById = useMemo(() => new Map(callPriorities.map((p) => [p.Id, p])), [callPriorities]);
+
+  // Filter calls based on search query (memoized — previously recomputed every render)
+  const filteredCalls = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    return calls.filter((call) => call.CallId.toLowerCase().includes(query) || (call.Nature?.toLowerCase() || '').includes(query));
+  }, [calls, searchQuery]);
+
+  const renderItem = useCallback(
+    ({ item }: { item: CallResultData }) => <CallListItem call={item} priority={prioritiesById.get(item.Priority)} dispatches={callDispatches[item.CallId]} />,
+    [prioritiesById, callDispatches]
+  );
+
+  const keyExtractor = useCallback((item: CallResultData) => item.CallId, []);
+
+  // Render content based on loading, error, and data states
+  const renderContent = () => {
+    // Full-screen loader only when there is nothing to show yet; background
+    // refreshes keep the stale list on screen (stale-while-revalidate).
+    if (isLoading && calls.length === 0) {
+      return <Loading text={t('calls.loading')} />;
+    }
+
+    if (error && calls.length === 0) {
+      return <ZeroState heading={t('common.errorOccurred')} description={t('calls.errors.load_failed')} isError={true} />;
+    }
+
+    return (
+      <FlatList<CallResultData>
+        testID="calls-list"
+        data={filteredCalls}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        ListEmptyComponent={<ZeroState heading={t('calls.no_calls')} description={t('calls.no_calls_description')} icon={RefreshCcwDotIcon} />}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
+    );
+  };
+
+  return (
+    <View className="size-full flex-1 bg-gray-50 dark:bg-gray-900">
+      <FocusAwareStatusBar />
+      <Box className="flex-1 px-4 pt-4">
+        {/* Search input */}
+        <Input className="mb-4 rounded-lg bg-white dark:bg-gray-800" size="md" variant="outline">
+          <InputSlot className="pl-3">
+            <InputIcon as={Search} />
+          </InputSlot>
+          <InputField placeholder={t('calls.search')} value={searchQuery} onChangeText={setSearchQuery} />
+          {searchQuery ? (
+            <InputSlot className="pr-3" onPress={() => setSearchQuery('')} accessibilityRole="button" accessibilityLabel={t('common.clear_search')}>
+              <InputIcon as={X} />
+            </InputSlot>
+          ) : null}
+        </Input>
+
+        {/* Main content */}
+        <Box className="flex-1">{renderContent()}</Box>
+
+        {/* FAB button for creating new call - only show if user has permission */}
+        {canUserCreateCalls ? (
+          <Fab size="lg" onPress={handleNewCall} testID="new-call-fab">
+            <FabIcon as={PlusIcon} size="lg" />
+          </Fab>
+        ) : null}
+      </Box>
+    </View>
+  );
+}

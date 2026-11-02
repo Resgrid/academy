@@ -1,0 +1,457 @@
+{
+  "id": "app-unit-01-access-and-crew",
+  "title": "Unit: access, shared devices, and your active crew",
+  "app": "Unit",
+  "audience": "Crews using an apparatus tablet, vehicle device, or shared operational workstation.",
+  "summary": "Sign in as an accountable person, select the correct apparatus, organize its crew, and understand shared-session and security controls.",
+  "prerequisites": [
+    "A training member assigned to the station group that owns a demonstration unit; configured roles and unit statuses.",
+    "A shared-session policy and verification methods for the optional shared-device branch.",
+    "SSO, passkeys, and MFA only where actually configured; native hardware for operating-system permission captures.",
+    "Preserve Engine51 unit role51001 Officer/TeamLead = Christopher Herrmann only. The other five units remain unassigned; do not change member status, shift assignments or qualifications for this crew example."
+  ],
+  "scenes": [
+    {
+      "id": "01-understand-the-person-and-the-apparatus",
+      "title": "Understand the person and the apparatus",
+      "route": "/",
+      "capture_intent": "Show authenticated member identity and active-unit context; open Settings. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Settings"
+      ],
+      "narration": "Unit follows the apparatus context selected on this device, while a named person signs in. Identify both before working. The active unit scopes status, roles, map context, routes, and inventory; review it in Settings at each handoff. This is useful for a SAR vehicle, community response team, or industrial standby. A vehicle-mounted tablet still needs the correct member and apparatus selection.",
+      "practice": "Identify the signed-in training member and the apparatus the tablet is intended to represent before changing any operational data.",
+      "source_workflow_reference": {
+        "title": "Understand the person and the apparatus",
+        "narration": "Unit follows the apparatus or crew context selected on this device, while a person still signs in with their own account. Start by identifying both. The active unit determines relevant status, roles, map context, routes, and inventory. Settings is where you review that selection. A tablet mounted in a vehicle does not remove individual accountability, and it does not automatically select the right apparatus for today’s crew.",
+        "required_labels": [
+          "Settings"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Identify the signed-in training member and the apparatus the tablet is intended to represent before changing any operational data."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Show authenticated member identity and active-unit context; open Settings."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "02-complete-first-launch-and-choose-the-server",
+      "title": "Complete first launch and choose the server",
+      "route": "/onboarding -> /login",
+      "capture_intent": "Capture each actual onboarding page and empty login with Language; open Server URL without displaying credentials. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Next",
+        "Skip",
+        "Server URL",
+        "Language"
+      ],
+      "narration": "Use Next or Skip on the first-launch introduction, then review Language and Server URL on sign-in. Select the correct listed server or the permitted custom address before entering credentials. The introduction describes features but does not prove every device permission is granted. Keep the server choice visible in the demonstration so a crew can recognize a training environment and avoid confusing it with another deployment.",
+      "practice": "Open the isolated training server and confirm the language and region before signing in.",
+      "source_workflow_reference": {
+        "title": "Complete first launch and choose the server",
+        "narration": "Use Next or Skip on the first-launch introduction, then review Language and Server URL on sign-in. Select the correct listed server or the permitted custom address before entering credentials. The introduction describes features but does not prove every device permission is granted. Keep the server choice visible in the demonstration so a crew can recognize a training environment and avoid confusing it with another deployment.",
+        "required_labels": [
+          "Next",
+          "Skip",
+          "Server URL",
+          "Language"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Open the isolated training server and confirm the language and region before signing in."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture each actual onboarding page and empty login with Language; open Server URL without displaying credentials."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "03-sign-in-with-an-available-method",
+      "title": "Sign in with an available method",
+      "route": "/login -> /login/sso",
+      "capture_intent": "Capture empty password/SSO entry; show only verification choices actually offered, without changing methods or exercising a real provider. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Username",
+        "Password",
+        "Sign In",
+        "Sign in with SSO"
+      ],
+      "narration": "Enter Username and Password and select Sign In, or inspect Sign in with SSO when configured. SSO discovers organization settings from the username and accepts an optional Department ID. Additional verification depends on the methods this sign-in actually offers. Provider redirects and native callbacks require separate platform checks; viewing an entry screen does not prove successful organization sign-in or a completed challenge.",
+      "practice": "Use the training account’s approved sign-in method and identify the verification step actually offered to that account.",
+      "source_workflow_reference": {
+        "title": "Sign in with an available method",
+        "narration": "Enter Username and Password and select Sign In, or use Sign in with SSO when your organization supports it. The SSO screen discovers configuration from the username and can accept an optional Department ID. Complete the offered verification step and inspect the return to Unit. A browser redirect and a native callback may look different, so demonstrate the supported method on the platform your crew will use.",
+        "required_labels": [
+          "Username",
+          "Password",
+          "Sign In",
+          "Sign in with SSO"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Use the training account’s approved sign-in method and identify the verification step actually offered to that account."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture empty password/SSO entry; show only verification choices actually offered, without changing methods or exercising a real provider."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "04-configure-a-shared-installation-deliberately",
+      "title": "Configure a shared installation deliberately",
+      "route": "/login/shared-device",
+      "capture_intent": "Open Shared device setup and show toggle/label/Save; if configuration is changed, verify normal next sign-in rather than injecting session state. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Shared device",
+        "This is a shared device",
+        "Device label (optional)",
+        "Save"
+      ],
+      "narration": "Choose Shared device when several members use the same installation. Turn on This is a shared device and enter Device label (optional), such as the training apparatus identifier, then Save. The setting takes effect at the next sign-in. It identifies the installation; it does not turn a person’s credentials into a shared crew password. Each member still follows the department’s session and verification policy.",
+      "practice": "Label a demonstration apparatus tablet and explain why the next user should sign in with their own identity.",
+      "source_workflow_reference": {
+        "title": "Configure a shared installation deliberately",
+        "narration": "Choose Shared device when several members use the same installation. Turn on This is a shared device and enter Device label (optional), such as the training apparatus identifier, then Save. The setting takes effect at the next sign-in. It identifies the installation; it does not turn a person’s credentials into a shared crew password. Each member still follows the department’s session and verification policy.",
+        "required_labels": [
+          "Shared device",
+          "This is a shared device",
+          "Device label (optional)",
+          "Save"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Label a demonstration apparatus tablet and explain why the next user should sign in with their own identity."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Shared device setup and show toggle/label/Save; if configuration is changed, verify normal next sign-in rather than injecting session state."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "05-practice-lock-and-shift-handoff",
+      "title": "Practice lock and shift handoff",
+      "route": "/",
+      "capture_intent": "Capture actual shared-session bar if server offers it, then permitted Lock/End shift/Switch operator states; never fabricate idle deadlines or unlock choices. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Shared device"
+      ],
+      "narration": "A supported Shared device session shows its operator and Lock control. Stay signed in appears only near the idle deadline. The locked screen offers the verification methods the server permits; an account with no usable method may need End shift or Switch operator. Review the resulting identity before continuing. A saved installation preference alone does not demonstrate that locking, unlocking, or handoff worked.",
+      "practice": "Use a demo shared session to inspect its lock behavior, then prepare a clean handoff to a second training member.",
+      "source_workflow_reference": {
+        "title": "Practice lock and shift handoff",
+        "narration": "After a supported Shared device sign-in, inspect the session bar and its Lock control. Idle or background behavior follows policy; Stay signed in may appear near an idle deadline. Unlock with the verification method permitted for the current member, or use End shift and Switch operator for a handoff. Check the resulting account and session state before resuming work. Enabling a setup toggle differs from verifying the device’s actual lock behavior.",
+        "required_labels": [
+          "Shared device",
+          "Lock",
+          "Stay signed in",
+          "Unlock",
+          "End shift",
+          "Switch operator"
+        ],
+        "capture_intent": "Capture the actual SharedSessionBar, lock view, verification method, and handoff state. Map required labels to the labels visible in this build; record the shared-device setup separately.",
+        "practice": "Use a demo shared session to inspect its lock behavior, then prepare a clean handoff to a second training member."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture actual shared-session bar if server offers it, then permitted Lock/End shift/Switch operator states; never fabricate idle deadlines or unlock choices."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "06-select-the-apparatus-you-actually-have",
+      "title": "Select the apparatus you actually have",
+      "route": "/settings",
+      "capture_intent": "Open Active Unit/Select Unit and choose authorized Engine51; verify Current Unit. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Active Unit",
+        "Select Unit",
+        "Current Unit"
+      ],
+      "narration": "In Settings, open Active Unit and choose the apparatus for this crew. Select Unit lists the units accessible to this member, and Current Unit helps confirm the result. If the expected unit is missing, ask an administrator to check station-group membership. Do not select a different vehicle merely to clear an empty state. The selection scopes several operational screens and should be checked at every handoff.",
+      "practice": "Select the demo engine or ambulance, verify Current Unit, and explain the correct response when the intended unit is absent.",
+      "source_workflow_reference": {
+        "title": "Select the apparatus you actually have",
+        "narration": "In Settings, open Active Unit and choose the apparatus for this crew. Select Unit lists the units accessible to this member, and Current Unit helps confirm the result. If the expected unit is missing, ask an administrator to check station-group membership. Do not select a different vehicle merely to clear an empty state. The selection scopes several operational screens and should be checked at every handoff.",
+        "required_labels": [
+          "Active Unit",
+          "Select Unit",
+          "Current Unit"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Select the demo engine or ambulance, verify Current Unit, and explain the correct response when the intended unit is absent."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Active Unit/Select Unit and choose authorized Engine51; verify Current Unit."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "07-assign-the-actual-crew-roles",
+      "title": "Assign the actual crew roles",
+      "route": "Sidebar Roles",
+      "capture_intent": "Open Unit Role Assignments for Engine51 and show the existing Officer/TeamLead seat51001 assigned only to Christopher Herrmann; reopen to verify without changing crew, other units, staffing or qualifications. Capture the actual Save control without claiming another crew mutation.",
+      "required_labels": [
+        "Unit Role Assignments",
+        "Save"
+      ],
+      "narration": "Open the roles card and inspect Unit Role Assignments. Choose the appropriate person for each configured seat or role, then Save when the roster matches the actual training crew. A role assignment describes who fills that apparatus function; it does not replace account permissions or a dated shift sign-up. Review the assignments again after a crew change so the displayed resource picture remains useful.",
+      "practice": "Assign a fictional driver and crew boss to their configured roles and compare the saved assignments with the people using the apparatus.",
+      "source_workflow_reference": {
+        "title": "Assign the actual crew roles",
+        "narration": "Open the roles card and inspect Unit Role Assignments. Choose the appropriate person for each configured seat or role, then Save when the roster matches the actual training crew. A role assignment describes who fills that apparatus function; it does not replace account permissions or a dated shift sign-up. Review the assignments again after a crew change so the displayed resource picture remains useful.",
+        "required_labels": [
+          "Unit Role Assignments",
+          "Save"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Assign a fictional driver and crew boss to their configured roles and compare the saved assignments with the people using the apparatus."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Unit Role Assignments for Engine51 and show the existing Officer/TeamLead seat51001 assigned only to Christopher Herrmann; reopen to verify without changing crew, other units, staffing or qualifications."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "08-read-the-unit-status-before-changing-it",
+      "title": "Read the unit status before changing it",
+      "route": "Sidebar Status",
+      "capture_intent": "Use an existing training call Set Active to open Select Status; capture current banner and actual configured options; submit only an authorized fictional unit change using the currently offered mode. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Select Status",
+        "Current status"
+      ],
+      "narration": "The status controls affect the active unit. Select Status shows its current state and available choices. Two-second holding applies when department configuration enables hold mode; otherwise use the ordinary Submit control. Follow the actual destination or note steps and the final control shown. Show all statuses and Show next statuses only appear for applicable workflow restrictions. Confirm the saved unit state separately from personal staffing.",
+      "practice": "Compare the active apparatus status with a member’s personal availability, then choose a valid training status transition.",
+      "source_workflow_reference": {
+        "title": "Read the unit status before changing it",
+        "narration": "The status controls represent the active unit. Read Current and inspect the next options allowed by its workflow. Press and hold a quick status for two seconds when you intend to change it. Show all statuses reveals additional choices; Show next statuses only restores the guided sequence. Your personal staffing availability belongs in Responder, so explain which identity this status change will affect before applying it.",
+        "required_labels": [
+          "Current",
+          "Show next statuses only"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Compare the active apparatus status with a member’s personal availability, then choose a valid training status transition."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Use an existing training call Set Active to open Select Status; capture current banner and actual configured options; submit only an authorized fictional unit change using the currently offered mode."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "09-understand-the-sidebar-incident-context",
+      "title": "Understand the sidebar incident context",
+      "route": "Sidebar Call",
+      "capture_intent": "Show Select Active Call and selected call card; inspect details/directions controls; Deselect may use actual browser confirmation, without launching external maps. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Select Active Call",
+        "View Call Details",
+        "Directions",
+        "Deselect"
+      ],
+      "narration": "The call card connects the active unit’s workspace to an incident. Select Active Call chooses from available calls; View Call Details opens the full incident information. Directions hands off to the supported mapping application, and Deselect clears the current selection through its confirmation. Selecting a call is different from changing the unit’s response status, so inspect both before describing the crew as dispatched, en route, or available.",
+      "practice": "Select the fictional incident assigned to the crew, review its details, and explain which separate status action the scenario requires.",
+      "source_workflow_reference": {
+        "title": "Understand the sidebar incident context",
+        "narration": "The call card connects the active unit’s workspace to an incident. Select Active Call chooses from available calls; View Call Details opens the full incident information. Directions hands off to the supported mapping application, and Deselect clears the current selection through its confirmation. Selecting a call is different from changing the unit’s response status, so inspect both before describing the crew as dispatched, en route, or available.",
+        "required_labels": [
+          "Select Active Call",
+          "View Call Details",
+          "Directions",
+          "Deselect"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Select the fictional incident assigned to the crew, review its details, and explain which separate status action the scenario requires."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Show Select Active Call and selected call card; inspect details/directions controls; Deselect may use actual browser confirmation, without launching external maps."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "10-keep-account-security-and-recovery-visible",
+      "title": "Keep account security and recovery visible",
+      "route": "/settings -> /account-security",
+      "capture_intent": "Open account security and no-challenge recovery prerequisite; no passkey/MFA/device credential changes. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Sign-in and security",
+        "Authenticator app",
+        "Passkeys for this app",
+        "Recent verifications"
+      ],
+      "narration": "Sign-in and security shows Authenticator app, Passkeys for this app, and Recent verifications. Add a passkey appears only when registration and platform support allow it. This lesson inspects configuration and recovery prerequisites without enrolling a method, replacing an authenticator, or changing credentials. Login Info and Logout help with handoff; verify the actual account and session after a normal sign-in or sign-out.",
+      "practice": "Inspect actual account-security state and recovery prerequisites without creating passkeys, changing factors, or exposing credentials.",
+      "source_workflow_reference": {
+        "title": "Keep account security and recovery visible",
+        "narration": "Settings provides Sign-in and security for the person using Unit. Review the authenticator state, passkeys, and Recent verifications. Add a passkey only for an authorized account and supported platform. Login info helps confirm identity, and Logout supports a clean handoff. Lost-factor recovery can replace an authenticator and end sessions, so practice on a disposable account. Responder approval is a separate flow whose result should be checked on the requesting device.",
+        "required_labels": [
+          "Sign-in and security",
+          "Add a passkey",
+          "Recent verifications"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Inspect a training member’s verification methods and identify how a shared-device user should recover access without reusing another person’s credentials."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open account security and no-challenge recovery prerequisite; no passkey/MFA/device credential changes."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 61
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A new ambulance crew takes over a mounted tablet.",
+      "practice": "Confirm the individual session, active ambulance, and crew roles before opening the call."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Several volunteers share one support vehicle across shifts.",
+      "practice": "Use the shared-device label and a deliberate account handoff."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A patrol device needs the correct vehicle and driver context.",
+      "practice": "Check Current Unit and role assignments at the start of the round."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Unit/src/app/onboarding.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/login/index.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/login/sso.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/login/shared-device.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/shared-session/shared-session-bar.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/shared-session/shared-session-lock-screen.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/settings/unit-selection-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/roles/roles-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/sidebar/sidebar-content.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/account-security.tsx"
+  ],
+  "authoring_status": "source_reconciled_awaiting_actual_captures",
+  "source_audited_at": "2026-10-26T19:08:15.698056+00:00",
+  "narration_word_count": 638,
+  "capture_limitations": [
+    "No actual Unit scene-to-screen proof is established by this source audit.",
+    "No credential/factor/device-security changes or GPS/audio/native permissions are exercised.",
+    "Unrendered API/store operations are not app-screen walkthrough actions.",
+    "No external ordering/AI/voice provider, notification delivery, physical arrival, durable native offline operation, or financial submission success is claimed."
+  ],
+  "media_status": {
+    "natural_audio": "not_frozen",
+    "speech_timed_captions": "pending",
+    "rendered_video": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "spoken_sector_examples": [
+    "SAR",
+    "community response",
+    "industrial standby"
+  ]
+}

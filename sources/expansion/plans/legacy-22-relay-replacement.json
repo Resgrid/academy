@@ -1,0 +1,1012 @@
+{
+  "schema_version": 1,
+  "lesson": "22-relay",
+  "title": "Relay: bring an audio dispatch feed into Resgrid",
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "status": "BLOCKED — not a renderer-ready replacement plan",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "cd0612985d28f585e2fe5a6e4e50270aea8e8f2eba0102ab46292034b6342fc2",
+    "normalised_words_sha256": "a87fdcb0f9ae16910ebf9ed43560319ebe4d4927d5144d8332cd9149cd7640a3",
+    "word_count": 162,
+    "source_scene_count": 4,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/22-relay.mp4",
+      "sha256": "432547927ccb40324b42e5969cec48158310015be3bc80442ffb2883562a8e9d",
+      "exists": true,
+      "duration_seconds": 69.6,
+      "bytes": 1962071
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/22-relay.m4a",
+      "sha256": "181771b0e89b0e4a98a8b82e81a2b6dfbe103e6e2c83435a8127c5b93c169943",
+      "exists": true,
+      "duration_seconds": 68.24,
+      "bytes": 1378381
+    },
+    "existing_video_aac_packet_payload_sha256": "86aa4358de9ab6305841eb2c1153b579507592618806a5236159421cf3649f5b",
+    "srt": {
+      "file": "sources/media/22-relay.srt",
+      "sha256": "d530371c3b8b2f75747abfbda9f9e9d8dd770cc51bf59ba60c9f1bf97f9348d7",
+      "cue_count": 19
+    },
+    "vtt": {
+      "file": "sources/media/22-relay.vtt",
+      "sha256": "ea22248105012c2e9dc1db740756dc649c6eab6eee199d7d37bcd0178ea90215"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/22-relay-raw.srt",
+      "sha256": "47a360fdc97c5cb12a0d79e4424f2131be8b3dd871c6ab823582b943c89e210a"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/22-relay-validation.json",
+      "sha256": "d4c04456dd8a08d6084c06bd256da97aed80c76df1fab1e1f17b3ae9e8f54a1b",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 19,
+      "reported_match_ratio": 0.9908,
+      "reported_duration_seconds": 69.59,
+      "reported_raw_audio_seconds": 68.24,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 69.58999999999999,
+    "caption_last_end_seconds": 69.27,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "illustrated_input_compliant": false,
+  "scenes": [
+    {
+      "index": 0,
+      "number": 1,
+      "title": "Connect the existing dispatch feed",
+      "kind": "title",
+      "narration": "Resgrid Relay listens to an audio feed, detects configured tones, records dispatch audio, and creates calls for the associated department or groups. It can help departments connect an existing paging process when they cannot modify the upstream dispatch system.",
+      "narration_sha256": "6ac9def989b7948430064f886d2517a1fb6dc8dff5ed42bc8fcfd9954f98254b",
+      "course_timing_proposal_only": {
+        "start": 0.0,
+        "duration": 16.2595
+      },
+      "actual_existing_cue_ids": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Relay",
+          "route": null,
+          "intent": "Review actual API/client identity and masked configuration; Windows desktop view.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Relay/Resgrid.Audio.Relay/Views/ConfigurationView.xaml",
+              "line": 1,
+              "historical_citation_sha256": "4690e104e4aaf2445df48671f5a24ff90e49046af3ddb79bc77ae7139564a241",
+              "current_file_sha256": "4690e104e4aaf2445df48671f5a24ff90e49046af3ddb79bc77ae7139564a241",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "General",
+            "Mode",
+            "Resgrid API",
+            "Base URL",
+            "Client Id",
+            "Grant Type",
+            "Reveal secrets"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "22-relay:s01:a01",
+          "text": "Resgrid Relay listens to an audio feed, detects configured tones, records dispatch audio, and creates calls for the associated department or groups.",
+          "text_sha256": "9a655d5825020559f087a852a96f5b81ffd69c98c4227e1706a62c48e744cf5a",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            1,
+            2
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 0.059,
+          "enclosing_cue_end": 9.25,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s01:a02",
+          "text": "It can help departments connect an existing paging process when they cannot modify the upstream dispatch system.",
+          "text_sha256": "9c0763e60ec9e8b97fb9b2ed953d9052264c075b3a3fa6fcaff5f1f044e6f138",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            3,
+            4
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 9.6,
+          "enclosing_cue_end": 15.67,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace recorder-oriented or obsolete installation wording with actual supported-runtime operation; Windows desktop/audio capture required."
+        ],
+        "proposed_learner_focused_narration": "Relay can connect an approved audio paging feed to Resgrid. In the supported Relay application, review the input, tone detection, recording behavior and intended department or group recipients. Keep the test isolated with synthetic audio before using an operational feed."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Supported Windows/WPF Relay UI required for desktop screens; this Mac cannot substitute Core pages for it.",
+        "Use synthetic audio and isolated recipients; avoid exposing any credentials.",
+        "Actual supported Relay runtime, audio input fixture, intended tone/record behavior."
+      ],
+      "needed_fictional_entities": [
+        "Isolated training installation and synthetic fixtures"
+      ],
+      "unsupported_or_native_only_notes": [
+        "At least one operation occurs outside normal Core browser screens. Use the named native/infrastructure surface or explicitly mark demonstration pending."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 1,
+      "number": 2,
+      "title": "Prepare a controlled audio test",
+      "kind": "workflow",
+      "narration": "The recording plan begins with an approved sample audio feed and known tone frequencies. Check the input signal, configure the intended recording behavior, and review the department or group recipients. Verify the exact installer and interface against the supported Relay release before capture.",
+      "narration_sha256": "ddd53129bb94c6ac01ebd03435cd55f468a9482e3dbb7ebc76627e9421a20d32",
+      "course_timing_proposal_only": {
+        "start": 16.2595,
+        "duration": 18.204500000000007
+      },
+      "actual_existing_cue_ids": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Relay",
+          "route": null,
+          "intent": "Use actual device/input/tone/record operation controls and synthetic audio test.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Relay/Resgrid.Audio.Relay/Views/OperationsView.xaml",
+              "line": 1,
+              "historical_citation_sha256": "42d9b98de0a189a8de136cb455c6251446c866a6199682e8788de2f6ac750af3",
+              "current_file_sha256": "42d9b98de0a189a8de136cb455c6251446c866a6199682e8788de2f6ac750af3",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Start",
+            "Stop"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "22-relay:s02:a01",
+          "text": "The recording plan begins with an approved sample audio feed and known tone frequencies.",
+          "text_sha256": "ea2603861ee09656d5b8c21ad191abdad02958b5ebcb4e2fcbad0b8d8e077578",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            5,
+            6
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 16.399,
+          "enclosing_cue_end": 21.409,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s02:a02",
+          "text": "Check the input signal, configure the intended recording behavior, and review the department or group recipients.",
+          "text_sha256": "c54d71d2c17c13abc35e6d03fbf6fadd4f5040b3448115d57414b94a19873c09",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            7,
+            8
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 21.819,
+          "enclosing_cue_end": 28.14,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s02:a03",
+          "text": "Verify the exact installer and interface against the supported Relay release before capture.",
+          "text_sha256": "e7af1c5b8e81d8c868f9c3f1c96fff67daf8ae05f561ee4d11a91597b277bd79",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            9,
+            10
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 28.519,
+          "enclosing_cue_end": 33.949,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace recorder-oriented or obsolete installation wording with actual supported-runtime operation; Windows desktop/audio capture required."
+        ],
+        "proposed_learner_focused_narration": "Prepare a synthetic audio sample with known matching tones and a separate nonmatching sample. Select the actual input device, review levels and recording limits, then run the controlled test. Confirm the configured recipients before any call is sent."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Actual supported Relay runtime, audio input fixture, intended tone/record behavior.",
+        "Supported Windows/WPF Relay UI required for desktop screens; this Mac cannot substitute Core pages for it.",
+        "Use synthetic audio and isolated recipients; avoid exposing any credentials."
+      ],
+      "needed_fictional_entities": [
+        "Isolated training installation and synthetic fixtures"
+      ],
+      "unsupported_or_native_only_notes": [
+        "At least one operation occurs outside normal Core browser screens. Use the named native/infrastructure surface or explicitly mark demonstration pending."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 2,
+      "number": 3,
+      "title": "Verify the resulting call",
+      "kind": "verify",
+      "narration": "Use synthetic test audio. Inspect the resulting call, the captured recording, and the intended recipients. Test nonmatching tones separately and document what was observed. The public Relay installation page contains incomplete older steps, so it is a feature reference rather than a verified modern installation procedure.",
+      "narration_sha256": "254e0e1a20b658676358a602f037c702d6bfd792fd261b3eef5a2c55b25c542d",
+      "course_timing_proposal_only": {
+        "start": 34.464,
+        "duration": 20.835500000000003
+      },
+      "actual_existing_cue_ids": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Dispatch/ViewCall?callId=<relay-test-call-id>",
+          "intent": "Verify actual Relay-created call recording and recipients.",
+          "candidate_capture_refs": [
+            "Core:52-training-dispatch-record:9c1d70aea1c3",
+            "Core:core-run-card-saved-call-recipients:5a4097ede91e",
+            "Core:core-active-training-call-recipients:64c9ca02f991",
+            "Core:core-active-run-card-call-alarm-control:9d0c272e642d",
+            "Core:core-workflow-created-call-identity:3d5f0366fc64",
+            "Core:core-nearest-created-training-call:eb120f58f264",
+            "Core:core-nearest-saved-call-dispatched-resources:d05abceccc11",
+            "Core:core-nearest-training-call-closed-history:2c48584bdb10",
+            "Core:core-responder-eligible-boden-timer:f1edf78234cd",
+            "Core:21-call-detail:9bc409fef68e",
+            "Core:23-call-closed:2c2170e67af1"
+          ],
+          "existing_capture_count": 11,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DispatchController.cs",
+              "line": 1836,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "97ae00384036fd8b379ea0521f23262097b19718b7eb11e72eefeb41b450a34b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Dispatch/ViewCall.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "cfab54cbe6213e5484eea89b8c9988396e2a1f8684a1d02808a85029fb00dcb5",
+              "current_file_sha256": "cfab54cbe6213e5484eea89b8c9988396e2a1f8684a1d02808a85029fb00dcb5",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "View Call",
+            "Re-Open Call",
+            "Dispatch Now",
+            "Reports",
+            "Incident report",
+            "Timestamp",
+            "Status"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Relay",
+          "route": null,
+          "intent": "Inspect actual matching/nonmatching tone and recording/call submission outcomes.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Relay/Resgrid.Audio.Relay/Views/LogsView.xaml",
+              "line": 1,
+              "historical_citation_sha256": "45c6a41e667e280d411a7ec111a0efc832f55c9069ea6937efe72d9aac648a58",
+              "current_file_sha256": "45c6a41e667e280d411a7ec111a0efc832f55c9069ea6937efe72d9aac648a58",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Min level:",
+            "Auto-scroll",
+            "Copy",
+            "Clear"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "22-relay:s03:a01",
+          "text": "Use synthetic test audio.",
+          "text_sha256": "f394b5f544f89de5159b9a7d68ed9451a8281661f467925d84412cc6b438a510",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            11
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 34.529,
+          "enclosing_cue_end": 36.269,
+          "candidate_capture_refs": [
+            "Core:52-training-dispatch-record:9c1d70aea1c3",
+            "Core:core-run-card-saved-call-recipients:5a4097ede91e",
+            "Core:core-active-training-call-recipients:64c9ca02f991",
+            "Core:core-active-run-card-call-alarm-control:9d0c272e642d",
+            "Core:core-workflow-created-call-identity:3d5f0366fc64",
+            "Core:core-nearest-created-training-call:eb120f58f264",
+            "Core:core-nearest-saved-call-dispatched-resources:d05abceccc11",
+            "Core:core-nearest-training-call-closed-history:2c48584bdb10",
+            "Core:core-responder-eligible-boden-timer:f1edf78234cd",
+            "Core:21-call-detail:9bc409fef68e",
+            "Core:23-call-closed:2c2170e67af1"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s03:a02",
+          "text": "Inspect the resulting call, the captured recording, and the intended recipients.",
+          "text_sha256": "f8cd33650e50dc20dcaa1e5ee49a5d8816366ffd2cbecf6b996189b9dfa84584",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            12
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 36.74,
+          "enclosing_cue_end": 41.559,
+          "candidate_capture_refs": [
+            "Core:52-training-dispatch-record:9c1d70aea1c3",
+            "Core:core-run-card-saved-call-recipients:5a4097ede91e",
+            "Core:core-active-training-call-recipients:64c9ca02f991",
+            "Core:core-active-run-card-call-alarm-control:9d0c272e642d",
+            "Core:core-workflow-created-call-identity:3d5f0366fc64",
+            "Core:core-nearest-created-training-call:eb120f58f264",
+            "Core:core-nearest-saved-call-dispatched-resources:d05abceccc11",
+            "Core:core-nearest-training-call-closed-history:2c48584bdb10",
+            "Core:core-responder-eligible-boden-timer:f1edf78234cd",
+            "Core:21-call-detail:9bc409fef68e",
+            "Core:23-call-closed:2c2170e67af1"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s03:a03",
+          "text": "Test nonmatching tones separately and document what was observed.",
+          "text_sha256": "17ab06e96886ea0845f8f18b154e5495b97cd68f9a269f8ed75035eb1a0a3aa2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            13
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 41.96,
+          "enclosing_cue_end": 45.72,
+          "candidate_capture_refs": [
+            "Core:52-training-dispatch-record:9c1d70aea1c3",
+            "Core:core-run-card-saved-call-recipients:5a4097ede91e",
+            "Core:core-active-training-call-recipients:64c9ca02f991",
+            "Core:core-active-run-card-call-alarm-control:9d0c272e642d",
+            "Core:core-workflow-created-call-identity:3d5f0366fc64",
+            "Core:core-nearest-created-training-call:eb120f58f264",
+            "Core:core-nearest-saved-call-dispatched-resources:d05abceccc11",
+            "Core:core-nearest-training-call-closed-history:2c48584bdb10",
+            "Core:core-responder-eligible-boden-timer:f1edf78234cd",
+            "Core:21-call-detail:9bc409fef68e",
+            "Core:23-call-closed:2c2170e67af1"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s03:a04",
+          "text": "The public Relay installation page contains incomplete older steps, so it is a feature reference rather than a verified modern installation procedure.",
+          "text_sha256": "0c9a79455a36caf9b22d7f283b3013c6fc2fc51bd35c90eee92d4c36c91e801d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            14,
+            15
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 46.159,
+          "enclosing_cue_end": 54.76,
+          "candidate_capture_refs": [
+            "Core:52-training-dispatch-record:9c1d70aea1c3",
+            "Core:core-run-card-saved-call-recipients:5a4097ede91e",
+            "Core:core-active-training-call-recipients:64c9ca02f991",
+            "Core:core-active-run-card-call-alarm-control:9d0c272e642d",
+            "Core:core-workflow-created-call-identity:3d5f0366fc64",
+            "Core:core-nearest-created-training-call:eb120f58f264",
+            "Core:core-nearest-saved-call-dispatched-resources:d05abceccc11",
+            "Core:core-nearest-training-call-closed-history:2c48584bdb10",
+            "Core:core-responder-eligible-boden-timer:f1edf78234cd",
+            "Core:21-call-detail:9bc409fef68e",
+            "Core:23-call-closed:2c2170e67af1"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Dispatch/ViewCall?callId=<relay-test-call-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace recorder-oriented or obsolete installation wording with actual supported-runtime operation; Windows desktop/audio capture required."
+        ],
+        "proposed_learner_focused_narration": "Open the actual resulting training call and inspect its recording, parsed fields and intended recipients. Compare Relay logs with the synthetic fixture and test the nonmatching sample separately. A configured input alone does not prove tone detection or call creation."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change.",
+        "Actual completed synthetic tests; do not derive outcomes from source code."
+      ],
+      "needed_fictional_entities": [
+        "Synthetic tone fixture",
+        "Actual received training call",
+        "Isolated training installation and synthetic fixtures"
+      ],
+      "unsupported_or_native_only_notes": [
+        "At least one operation occurs outside normal Core browser screens. Use the named native/infrastructure surface or explicitly mark demonstration pending."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 3,
+      "number": 4,
+      "title": "Keep the test repeatable",
+      "kind": "exercise",
+      "narration": "Retain the synthetic audio fixture, selected release, approved configuration, and observed test result. A recorder will need the supported Relay application and an audio test setup to turn this briefing into a live walkthrough.",
+      "narration_sha256": "2913d4ae541ad4e28db33c2f571851798e6b5376d0633d97542765040a238ea4",
+      "course_timing_proposal_only": {
+        "start": 55.2995,
+        "duration": 14.290499999999987
+      },
+      "actual_existing_cue_ids": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Relay",
+          "route": null,
+          "intent": "Review actual API/client identity and masked configuration; Windows desktop view.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Relay/Resgrid.Audio.Relay/Views/ConfigurationView.xaml",
+              "line": 1,
+              "historical_citation_sha256": "4690e104e4aaf2445df48671f5a24ff90e49046af3ddb79bc77ae7139564a241",
+              "current_file_sha256": "4690e104e4aaf2445df48671f5a24ff90e49046af3ddb79bc77ae7139564a241",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "General",
+            "Mode",
+            "Resgrid API",
+            "Base URL",
+            "Client Id",
+            "Grant Type",
+            "Reveal secrets"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "22-relay:s04:a01",
+          "text": "Retain the synthetic audio fixture, selected release, approved configuration, and observed test result.",
+          "text_sha256": "37be851086fbbcb15e8de6eed9e01cd58529af8177b8521dc61a06df9b29421c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            16,
+            17
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 55.389,
+          "enclosing_cue_end": 62.1,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "22-relay:s04:a02",
+          "text": "A recorder will need the supported Relay application and an audio test setup to turn this briefing into a live walkthrough.",
+          "text_sha256": "733e11237a00222df0e90bd9561e0081a1585bb833bdd5151ab282ad266fae0e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            18,
+            19
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 62.569,
+          "enclosing_cue_end": 69.27,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Relay",
+          "route": null,
+          "missing_operation_or_result": "Actual app/native/infrastructure demonstration belongs to the appropriate app or operator capture pass.",
+          "prior_status": "missing_other_app_or_native_surface",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace recorder-oriented or obsolete installation wording with actual supported-runtime operation; Windows desktop/audio capture required."
+        ],
+        "proposed_learner_focused_narration": "Retain the synthetic fixture, chosen Relay version and reviewed configuration. Repeat the same positive and negative tests after an authorized change and compare actual recordings, calls and logs. Keep responsibility for reviewing exceptions and recording failures clear."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Supported Windows/WPF Relay UI required for desktop screens; this Mac cannot substitute Core pages for it.",
+        "Use synthetic audio and isolated recipients; avoid exposing any credentials.",
+        "Actual completed synthetic tests; do not derive outcomes from source code."
+      ],
+      "needed_fictional_entities": [
+        "Isolated training installation and synthetic fixtures"
+      ],
+      "unsupported_or_native_only_notes": [
+        "At least one operation occurs outside normal Core browser screens. Use the named native/infrastructure surface or explicitly mark demonstration pending."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    }
+  ],
+  "existing_actual_cues": [
+    {
+      "id": 1,
+      "start": 0.059,
+      "end": 5.019,
+      "text": "Resgrid Relay listens to an audio feed, detects configured tones, records",
+      "text_sha256": "b0b914dfe998f61a3ddcede84448630a5a6b738babcded1ae0af171a09b8eb74",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 2,
+      "start": 5.019,
+      "end": 9.25,
+      "text": "dispatch audio, and creates calls for the associated department or groups.",
+      "text_sha256": "91453f60dbe87728e648db74048ce6d2ca37c1362a1b44f537e81bdfd4474285",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 3,
+      "start": 9.6,
+      "end": 13.409,
+      "text": "It can help departments connect an existing paging process when they cannot",
+      "text_sha256": "2cd154c51f89eb2fee1b90cb7a1f456c780db38c7c25ee8e51a490c0e97148e9",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 4,
+      "start": 13.409,
+      "end": 15.67,
+      "text": "modify the upstream dispatch system.",
+      "text_sha256": "006d58dad3f16a2d4ef7b98b6011c353be53ffc3ca28cb4cde845a0609dbab24",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 5,
+      "start": 16.399,
+      "end": 19.75,
+      "text": "The recording plan begins with an approved sample audio feed",
+      "text_sha256": "8fcf33b39ae3942e0753a5353e87358b5e3e3d5d861743e0d48b6789cb8bd6dd",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 6,
+      "start": 19.78,
+      "end": 21.409,
+      "text": "and known tone frequencies.",
+      "text_sha256": "01a66bca7945240eb5693c818ec8893a09e9890fce5789130a5609a017709ca9",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 7,
+      "start": 21.819,
+      "end": 26.269,
+      "text": "Check the input signal, configure the intended recording behavior, and review",
+      "text_sha256": "4bd0121a5b0dfa5111d0c99b071953c04b7e079ed889e96cb58bafe812cd72a4",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 8,
+      "start": 26.269,
+      "end": 28.14,
+      "text": "the department or group recipients.",
+      "text_sha256": "b93a6c4bfda8df639b6b3fb3ccafc64532ff964538a7198d9c2c0d4b72d59066",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 9,
+      "start": 28.519,
+      "end": 32.05,
+      "text": "Verify the exact installer and interface against the supported",
+      "text_sha256": "3a0273028033bcce1bb9d7a0abfc3f3a7141957e93e8a0377e1aeecc6a6e65dd",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 10,
+      "start": 32.05,
+      "end": 33.949,
+      "text": "Relay release before capture.",
+      "text_sha256": "cf62a445020e29428fdaaf636664def6c402e86ce53cc52cc627a517f9779028",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 11,
+      "start": 34.529,
+      "end": 36.269,
+      "text": "Use synthetic test audio.",
+      "text_sha256": "f394b5f544f89de5159b9a7d68ed9451a8281661f467925d84412cc6b438a510",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s03:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 12,
+      "start": 36.74,
+      "end": 41.559,
+      "text": "Inspect the resulting call, the captured recording, and the intended recipients.",
+      "text_sha256": "f8cd33650e50dc20dcaa1e5ee49a5d8816366ffd2cbecf6b996189b9dfa84584",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s03:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 13,
+      "start": 41.96,
+      "end": 45.72,
+      "text": "Test nonmatching tones separately and document what was observed.",
+      "text_sha256": "17ab06e96886ea0845f8f18b154e5495b97cd68f9a269f8ed75035eb1a0a3aa2",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s03:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 14,
+      "start": 46.159,
+      "end": 50.629,
+      "text": "The public Relay installation page contains incomplete older steps, so it",
+      "text_sha256": "81748975cc2cde5e9a3073699ee0232e44db899b11be37fe85f40b221b361fcd",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s03:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 15,
+      "start": 50.629,
+      "end": 54.76,
+      "text": "is a feature reference rather than a verified modern installation procedure.",
+      "text_sha256": "ff81d572a2d68ccfd8a2469cd08d1d5fa7a466be395a7a4c2acd1f4786ae64cf",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s03:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 16,
+      "start": 55.389,
+      "end": 59.33,
+      "text": "Retain the synthetic audio fixture, selected release, approved",
+      "text_sha256": "2085135ebe6e0e19dd3822099abd0d76b45e7bb4ab28d24a0c60a52da4ce04e4",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 17,
+      "start": 59.33,
+      "end": 62.1,
+      "text": "configuration, and observed test result.",
+      "text_sha256": "1128005d5b6ed3ea3cd1efc1deda1a7914b5ea5f072c795b95777cd8d760b0ff",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 18,
+      "start": 62.569,
+      "end": 65.709,
+      "text": "A recorder will need the supported Relay application and",
+      "text_sha256": "585535ba99983bd9ba1fbf4dbad0f4c4b6355a0ff9600cdc00ac2f7ec617f7c7",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 19,
+      "start": 65.709,
+      "end": 69.27,
+      "text": "an audio test setup to turn this briefing into a live walkthrough.",
+      "text_sha256": "4154bd7ee550a63504e1da26b8466cc2a9241b2baeed3758f92a5ae8168eab5d",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "22-relay:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    }
+  ],
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "readiness": {
+    "all_real_screens_matched": false,
+    "all_controls_and_saved_results_demonstrated": false,
+    "every_cue_screen_assignment_verified": false,
+    "speech_timing_authoritative": false,
+    "audio_timeline_binding_complete": false,
+    "strict_source_gate_passed": false,
+    "rendered_frame_review": "not run",
+    "genuine_browser_playback": "pending, separate proof required",
+    "publishable": false,
+    "retained_cue_timestamps_present": true,
+    "cue_timing_qualification": "Existing SRT timestamps are retained unchanged; audio timing/signal/listening binding still requires current-media QA. Normalized text equality alone does not verify speech timing."
+  },
+  "render_decision": "No master is prepared because real-screen/action coverage is incomplete; preserve exact missing-shot list.",
+  "not_changed": [
+    "Source lesson/narration/audio/captions",
+    "Frozen R1/R3",
+    "New site/catalog",
+    "Source screenshots and capture manifests",
+    "Original Academy repository"
+  ],
+  "existing_capture_scope": {
+    "apps_requested": [
+      "Core",
+      "Responder",
+      "Dispatch",
+      "IC"
+    ],
+    "app_counts": {
+      "Core": 480,
+      "IC": 42,
+      "Responder": 220
+    },
+    "dispatch_limitation": "No Dispatch application screenshot with a retained capture-manifest row was found in sources/captures. Unmanifested dispatch-login.jpg is not promoted; Core Dispatch MVC pages remain Core screenshots.",
+    "unit_excluded": true
+  }
+}

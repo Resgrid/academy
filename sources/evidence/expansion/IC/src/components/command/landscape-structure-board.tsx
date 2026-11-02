@@ -1,0 +1,509 @@
+import { CloudOff, Eye, GripVertical, MessagesSquare, Pencil, Plus, UserPlus } from 'lucide-react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Animated, PanResponder, ScrollView, View as NativeView } from 'react-native';
+
+import { Badge, BadgeText } from '@/components/ui/badge';
+import { Box } from '@/components/ui/box';
+import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
+import { Heading } from '@/components/ui/heading';
+import { HStack } from '@/components/ui/hstack';
+import { Icon } from '@/components/ui/icon';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { UnitTypeIcon, type UnitTypeIconSource } from '@/components/units/unit-type-icon';
+import { getCommandNodeTypeName } from '@/lib/incident-command-utils';
+import { isWeb } from '@/lib/platform';
+import { parseUtcMs } from '@/lib/utils';
+import type { CommandStructureNode, ResourceAssignment } from '@/models/v4/incidentCommand/incidentCommandModels';
+
+/**
+ * Lane and resource cards are pressable containers that hold their own action buttons.
+ * On web a "button" role renders a semantic <button>, and nested <button> elements are
+ * invalid HTML (hydration errors) — so containers only carry the role on native.
+ */
+const containerButtonRole = isWeb ? undefined : ('button' as const);
+
+/** Two-line clamp: numberOfLines leaks to the DOM through the styling pipeline on web, so use CSS line-clamp there. */
+const twoLine = isWeb ? {} : ({ numberOfLines: 2 } as const);
+
+/** Default work-time light thresholds (Tablet Command-style crew fatigue): green under 20m, amber under 40m, red past that. Lanes can override; 0 disables that color. */
+export const DEFAULT_WORK_TIME_AMBER_MINUTES = 20;
+export const DEFAULT_WORK_TIME_RED_MINUTES = 40;
+
+export const workTimeColor = (minutes: number, amberAfterMinutes: number = DEFAULT_WORK_TIME_AMBER_MINUTES, redAfterMinutes: number = DEFAULT_WORK_TIME_RED_MINUTES) =>
+  redAfterMinutes > 0 && minutes >= redAfterMinutes ? '#ef4444' : amberAfterMinutes > 0 && minutes >= amberAfterMinutes ? '#f59e0b' : '#22c55e';
+
+/**
+ * Elapsed minutes since a resource was assigned, ticking once a minute. When the lane sets a
+ * MaxTimeInRole, exceeding it turns the light red and flags the resource as rotation-due.
+ * Amber/red thresholds come from the lane (0 = that color disabled; unset = 20/40 defaults).
+ */
+export const WorkTimeLight: React.FC<{ assignedOn?: string | null; rotationAfterMinutes?: number; amberAfterMinutes?: number; redAfterMinutes?: number; testID?: string }> = ({
+  assignedOn,
+  rotationAfterMinutes,
+  amberAfterMinutes = DEFAULT_WORK_TIME_AMBER_MINUTES,
+  redAfterMinutes = DEFAULT_WORK_TIME_RED_MINUTES,
+  testID,
+}) => {
+  const { t } = useTranslation();
+  const [nowMs, setNowMs] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!assignedOn) {
+      return;
+    }
+    const interval = setInterval(() => setNowMs(Date.now()), 60_000);
+    return () => clearInterval(interval);
+  }, [assignedOn]);
+
+  const assignedMs = parseUtcMs(assignedOn);
+  if (assignedMs === null) {
+    return null;
+  }
+  const minutes = Math.max(0, Math.floor((nowMs - assignedMs) / 60_000));
+  const isRotationDue = !!rotationAfterMinutes && rotationAfterMinutes > 0 && minutes >= rotationAfterMinutes;
+
+  return (
+    <HStack className="items-center" space="xs" testID={testID}>
+      <NativeView style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: isRotationDue ? '#ef4444' : workTimeColor(minutes, amberAfterMinutes, redAfterMinutes) }} />
+      <Text className={`text-xs tabular-nums ${isRotationDue ? 'font-semibold text-error-600' : 'text-gray-500 dark:text-gray-400'}`}>{`${minutes}m`}</Text>
+      {isRotationDue ? (
+        <Badge action="error" variant="solid" testID={testID ? `${testID}-rotation` : undefined}>
+          <BadgeText>{t('command.rotation_due')}</BadgeText>
+        </Badge>
+      ) : null}
+    </HStack>
+  );
+};
+
+const LONG_PRESS_DELAY_MS = 350;
+const DROP_MOVEMENT_THRESHOLD = 8;
+
+/**
+ * A lane's resource list. The lane is a fixed height, so a busy lane needs to scroll its own crews —
+ * but iOS does not chain a nested same-axis scroll view to its parent, so an always-on inner scroller
+ * turns every lane into a dead zone for scrolling the board. Scrolling is therefore enabled only once
+ * the content genuinely overflows; until then the drag falls through to the page.
+ */
+const LaneResourceList: React.FC<{ children: React.ReactNode; testID?: string }> = ({ children, testID }) => {
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  // A pixel of slack so rounding never leaves a non-overflowing lane capturing gestures.
+  const overflows = viewportHeight > 0 && contentHeight > viewportHeight + 1;
+
+  return (
+    <ScrollView
+      className="flex-1"
+      directionalLockEnabled
+      nestedScrollEnabled
+      onContentSizeChange={(_width, height) => setContentHeight(height)}
+      onLayout={(event) => setViewportHeight(event.nativeEvent.layout.height)}
+      scrollEnabled={overflows}
+      showsVerticalScrollIndicator={overflows}
+      testID={testID}
+    >
+      {children}
+    </ScrollView>
+  );
+};
+
+interface LandscapeStructureBoardProps {
+  nodes: CommandStructureNode[];
+  assignments: ResourceAssignment[];
+  viewportHeight: number;
+  viewportWidth: number;
+  resolveResourceName: (kind: number, resourceId: string) => string;
+  /** Unit type icon for a resource (department units only); omitted or null = no icon. */
+  resolveResourceIcon?: (kind: number, resourceId: string) => UnitTypeIconSource | null;
+  onAddLane: () => void;
+  /** Open the lane details editor (leads, linked objectives/need, delete). */
+  onEditLane?: (nodeId: string) => void;
+  /** Open the lane's own chat channel. Omitted when the board has no chat. */
+  onOpenLaneChat?: (nodeId: string) => void;
+  onAssignResource: (nodeId: string) => void;
+  onMoveResource: (assignmentId: string, targetNodeId: string) => void | Promise<void>;
+  /** Opens the resource details sheet for a lane assignment (hosts remove-from-lane). */
+  onViewResource: (assignment: ResourceAssignment) => void;
+}
+
+interface DraggableResourceCardProps {
+  assignment: ResourceAssignment;
+  name: string;
+  /** Department unit's type icon, when the resource is one and its type has an icon. */
+  typeIcon?: UnitTypeIconSource | null;
+  /** Lane MaxTimeInRole (minutes) — flags the resource rotation-due when exceeded. */
+  rotationAfterMinutes?: number;
+  /** Lane work-time amber threshold (0 = amber disabled; unset = 20). */
+  amberAfterMinutes?: number;
+  /** Lane work-time red threshold (0 = red disabled; unset = 40). */
+  redAfterMinutes?: number;
+  isSelected: boolean;
+  onSelect: (assignmentId: string) => void;
+  onDragStart: (assignmentId: string) => void;
+  onDragEnd: () => void;
+  onDrop: (assignmentId: string, pageX: number, pageY: number) => void;
+  onView: (assignment: ResourceAssignment) => void;
+}
+
+interface LaneRect {
+  nodeId: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+const DraggableResourceCard: React.FC<DraggableResourceCardProps> = React.memo(
+  ({ assignment, name, typeIcon, rotationAfterMinutes, amberAfterMinutes, redAfterMinutes, isSelected, onSelect, onDragStart, onDragEnd, onDrop, onView }) => {
+    const { t } = useTranslation();
+    const translation = useRef(new Animated.ValueXY()).current;
+    const dragReadyRef = useRef(false);
+    const panActiveRef = useRef(false);
+    const longPressTriggeredRef = useRef(false);
+    const [isDragging, setIsDragging] = useState(false);
+
+    const resetDrag = useCallback(() => {
+      dragReadyRef.current = false;
+      panActiveRef.current = false;
+      longPressTriggeredRef.current = false;
+      setIsDragging(false);
+      translation.setValue({ x: 0, y: 0 });
+      onDragEnd();
+    }, [onDragEnd, translation]);
+
+    const finishDrag = useCallback(
+      (pageX: number, pageY: number, distanceX: number, distanceY: number) => {
+        const wasMoved = Math.abs(distanceX) >= DROP_MOVEMENT_THRESHOLD || Math.abs(distanceY) >= DROP_MOVEMENT_THRESHOLD;
+        if (wasMoved) {
+          onDrop(assignment.ResourceAssignmentId, pageX, pageY);
+        }
+        resetDrag();
+      },
+      [assignment.ResourceAssignmentId, onDrop, resetDrag]
+    );
+
+    const panResponder = useMemo(
+      () =>
+        PanResponder.create({
+          onMoveShouldSetPanResponderCapture: () => dragReadyRef.current,
+          onPanResponderGrant: () => {
+            panActiveRef.current = true;
+          },
+          onPanResponderMove: (_event, gestureState) => {
+            translation.setValue({ x: gestureState.dx, y: gestureState.dy });
+          },
+          onPanResponderRelease: (_event, gestureState) => {
+            finishDrag(gestureState.moveX, gestureState.moveY, gestureState.dx, gestureState.dy);
+          },
+          onPanResponderTerminate: () => resetDrag(),
+          onPanResponderTerminationRequest: () => false,
+        }),
+      [finishDrag, resetDrag, translation]
+    );
+
+    const handleLongPress = useCallback(() => {
+      longPressTriggeredRef.current = true;
+      dragReadyRef.current = true;
+      setIsDragging(true);
+      onDragStart(assignment.ResourceAssignmentId);
+    }, [assignment.ResourceAssignmentId, onDragStart]);
+
+    const handlePress = useCallback(() => {
+      if (longPressTriggeredRef.current) {
+        return;
+      }
+      onSelect(assignment.ResourceAssignmentId);
+    }, [assignment.ResourceAssignmentId, onSelect]);
+
+    const handlePressOut = useCallback(() => {
+      if (dragReadyRef.current && !panActiveRef.current) {
+        setTimeout(resetDrag, 0);
+      }
+    }, [resetDrag]);
+
+    const handleView = useCallback(() => onView(assignment), [assignment, onView]);
+
+    return (
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={{
+          zIndex: isDragging ? 100 : 1,
+          elevation: isDragging ? 12 : 0,
+          transform: translation.getTranslateTransform(),
+        }}
+      >
+        <Pressable
+          accessibilityHint={t('command.drag_move_hint')}
+          accessibilityLabel={name}
+          accessibilityRole={containerButtonRole}
+          className={`rounded-lg border px-3 py-2 ${isSelected || isDragging ? 'border-primary-500 bg-primary-50' : assignment.RequirementsWarning ? 'border-2 border-amber-500 bg-white dark:bg-gray-900' : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900'}`}
+          delayLongPress={LONG_PRESS_DELAY_MS}
+          onLongPress={handleLongPress}
+          onPress={handlePress}
+          onPressOut={handlePressOut}
+          testID={`landscape-resource-${assignment.ResourceAssignmentId}`}
+        >
+          <HStack className="items-center justify-between" space="xs">
+            <HStack className="flex-1 items-center" space="xs">
+              <Icon as={GripVertical} aria-hidden={true} className="text-gray-500 dark:text-gray-400" size={16} />
+              <UnitTypeIcon iconUrl={typeIcon?.iconUrl} mapIcon={typeIcon?.mapIcon} size={20} testID={`landscape-resource-type-icon-${assignment.ResourceAssignmentId}`} />
+              <Text className="flex-1 text-sm font-medium text-gray-900 web:line-clamp-2 dark:text-white" {...twoLine}>
+                {name}
+              </Text>
+            </HStack>
+            <WorkTimeLight
+              assignedOn={assignment.AssignedOn}
+              rotationAfterMinutes={rotationAfterMinutes}
+              amberAfterMinutes={amberAfterMinutes}
+              redAfterMinutes={redAfterMinutes}
+              testID={`landscape-worktime-${assignment.ResourceAssignmentId}`}
+            />
+            <Pressable accessibilityLabel={t('command.view_details')} accessibilityRole="button" className="p-2" hitSlop={8} onPress={handleView} testID={`landscape-resource-view-${assignment.ResourceAssignmentId}`}>
+              <Icon as={Eye} className="text-gray-600 dark:text-gray-300" size={18} />
+            </Pressable>
+          </HStack>
+          {assignment.ResourceAssignmentId.startsWith('local-') || assignment.RequirementsWarning || isSelected ? (
+            <HStack className="mt-1 items-center" space="xs">
+              {assignment.ResourceAssignmentId.startsWith('local-') ? <Icon as={CloudOff} className="text-amber-500" size={14} /> : null}
+              {assignment.RequirementsWarning ? (
+                <Badge action="warning" size="sm" variant="solid">
+                  <BadgeText>{t('command.requirements_warning')}</BadgeText>
+                </Badge>
+              ) : null}
+              {isSelected ? (
+                <Badge action="info" size="sm" variant="solid">
+                  <BadgeText>{t('command.selected')}</BadgeText>
+                </Badge>
+              ) : null}
+            </HStack>
+          ) : null}
+        </Pressable>
+      </Animated.View>
+    );
+  }
+);
+
+DraggableResourceCard.displayName = 'DraggableResourceCard';
+
+/** Trello-style horizontal swimlane board used on landscape tablets and larger landscape viewports. */
+export const LandscapeStructureBoard: React.FC<LandscapeStructureBoardProps> = ({
+  nodes,
+  assignments,
+  viewportHeight,
+  viewportWidth,
+  resolveResourceName,
+  resolveResourceIcon,
+  onAddLane,
+  onEditLane,
+  onOpenLaneChat,
+  onAssignResource,
+  onMoveResource,
+  onViewResource,
+}) => {
+  const { t } = useTranslation();
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
+  const [draggingAssignmentId, setDraggingAssignmentId] = useState<string | null>(null);
+  const laneRefs = useRef<Record<string, NativeView | null>>({});
+
+  const activeNodes = useMemo(() => nodes.filter((node) => !node.DeletedOn).sort((a, b) => a.SortOrder - b.SortOrder), [nodes]);
+  const activeAssignments = useMemo(() => assignments.filter((assignment) => !assignment.ReleasedOn), [assignments]);
+  const selectedAssignment = activeAssignments.find((assignment) => assignment.ResourceAssignmentId === selectedAssignmentId);
+  const totalGapWidth = Math.max(activeNodes.length - 1, 0) * 12;
+  const laneWidth = Math.min(320, Math.max(220, (viewportWidth - 64 - totalGapWidth) / Math.max(activeNodes.length, 1)));
+  // A FIXED height, clamped so the board never eats more than a screenful. Previously this was a
+  // minHeight, so a lane with a lot of crews grew without bound and the page scrolled forever to get
+  // past the structure section. Each lane now scrolls its own resources instead.
+  const laneHeight = Math.max(280, Math.min(560, viewportHeight - 360));
+
+  const moveAssignment = useCallback(
+    async (assignmentId: string, targetNodeId: string) => {
+      const assignment = activeAssignments.find((item) => item.ResourceAssignmentId === assignmentId);
+      setSelectedAssignmentId(null);
+      if (!assignment || assignment.CommandStructureNodeId === targetNodeId) {
+        return;
+      }
+      await onMoveResource(assignmentId, targetNodeId);
+    },
+    [activeAssignments, onMoveResource]
+  );
+
+  const handleSelect = useCallback((assignmentId: string) => {
+    setSelectedAssignmentId((current) => (current === assignmentId ? null : assignmentId));
+  }, []);
+
+  const handleLanePress = useCallback(
+    (targetNodeId: string) => {
+      if (selectedAssignmentId) {
+        void moveAssignment(selectedAssignmentId, targetNodeId);
+      }
+    },
+    [moveAssignment, selectedAssignmentId]
+  );
+
+  const measureLane = useCallback(
+    (nodeId: string) =>
+      new Promise<LaneRect | null>((resolve) => {
+        const lane = laneRefs.current[nodeId];
+        if (!lane) {
+          resolve(null);
+          return;
+        }
+        lane.measureInWindow((x, y, width, height) => resolve({ nodeId, x, y, width, height }));
+      }),
+    []
+  );
+
+  const handleDrop = useCallback(
+    async (assignmentId: string, pageX: number, pageY: number) => {
+      const laneRects = await Promise.all(activeNodes.map((node) => measureLane(node.CommandStructureNodeId)));
+      const target = laneRects.find((lane): lane is LaneRect => lane !== null && pageX >= lane.x && pageX <= lane.x + lane.width && pageY >= lane.y && pageY <= lane.y + lane.height);
+      if (target) {
+        await moveAssignment(assignmentId, target.nodeId);
+      }
+    },
+    [activeNodes, measureLane, moveAssignment]
+  );
+
+  return (
+    <Box className="rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800" testID="command-landscape-structure-board">
+      <HStack className="mb-2 items-center justify-between">
+        <HStack className="items-center" space="sm">
+          <Heading size="sm">{t('command.structure_section')}</Heading>
+          <Text className="text-sm text-gray-500 dark:text-gray-400">({activeNodes.length})</Text>
+        </HStack>
+        <Button onPress={onAddLane} size="xs" testID="command-landscape-structure-add" variant="outline">
+          <ButtonIcon as={Plus} />
+          <ButtonText>{t('command.add_lane')}</ButtonText>
+        </Button>
+      </HStack>
+
+      <Text className={`mb-3 text-sm ${selectedAssignment ? 'font-medium text-primary-600' : 'text-gray-500 dark:text-gray-400'}`} testID="command-move-hint">
+        {selectedAssignment ? t('command.move_selected_hint', { resource: resolveResourceName(selectedAssignment.ResourceKind, selectedAssignment.ResourceId) }) : t('command.drag_move_hint')}
+      </Text>
+
+      {activeNodes.length === 0 ? (
+        <Text className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">{t('command.empty_structure')}</Text>
+      ) : (
+        <ScrollView horizontal directionalLockEnabled nestedScrollEnabled showsHorizontalScrollIndicator testID="command-landscape-lanes">
+          <NativeView style={{ flexDirection: 'row', gap: 12, paddingBottom: 4 }}>
+            {activeNodes.map((node) => {
+              const laneAssignments = activeAssignments.filter((assignment) => assignment.CommandStructureNodeId === node.CommandStructureNodeId);
+              const laneUnitCount = laneAssignments.filter((a) => a.ResourceKind === 0 || a.ResourceKind === 2 || a.ResourceKind === 4).length;
+              const isUnderstaffed = !!node.MinUnits && laneUnitCount < node.MinUnits;
+              const isMoveTarget = selectedAssignment ? selectedAssignment.CommandStructureNodeId !== node.CommandStructureNodeId : false;
+              return (
+                <NativeView
+                  key={node.CommandStructureNodeId}
+                  ref={(lane) => {
+                    laneRefs.current[node.CommandStructureNodeId] = lane;
+                  }}
+                  style={{ height: laneHeight, width: laneWidth }}
+                >
+                  <Pressable
+                    accessibilityHint={
+                      selectedAssignment ? t('command.move_resource_to_lane', { resource: resolveResourceName(selectedAssignment.ResourceKind, selectedAssignment.ResourceId), lane: node.Name }) : undefined
+                    }
+                    accessibilityRole={containerButtonRole}
+                    style={node.Color ? { borderTopWidth: 4, borderTopColor: node.Color } : undefined}
+                    className={`h-full rounded-xl border p-3 ${isMoveTarget ? 'border-primary-400 bg-primary-50' : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900'}`}
+                    onPress={() => handleLanePress(node.CommandStructureNodeId)}
+                    testID={`landscape-lane-${node.CommandStructureNodeId}`}
+                  >
+                    <HStack className="mb-3 items-start justify-between">
+                      <VStack className="flex-1">
+                        <Text className="text-base font-semibold text-gray-900 web:line-clamp-2 dark:text-white" {...twoLine}>
+                          {node.Name}
+                        </Text>
+                        <Text className="text-xs uppercase text-gray-500 dark:text-gray-400">
+                          {getCommandNodeTypeName(t, node.NodeType)}
+                          {node.MaxUnits ? ` • ${t('command.lane_unit_capacity', { count: laneUnitCount, max: node.MaxUnits })}` : ''}
+                        </Text>
+                      </VStack>
+                      <HStack className="items-center" space="xs">
+                        {isUnderstaffed ? (
+                          <Badge action="warning" variant="solid" testID={`landscape-lane-understaffed-${node.CommandStructureNodeId}`}>
+                            <BadgeText>{t('command.lane_understaffed', { count: laneUnitCount, min: node.MinUnits })}</BadgeText>
+                          </Badge>
+                        ) : null}
+                        {node.CommandStructureNodeId.startsWith('local-') ? <Icon as={CloudOff} className="text-amber-500" size={16} /> : null}
+                        {onOpenLaneChat ? (
+                          <Pressable
+                            accessibilityLabel={t('command.lane_chat')}
+                            accessibilityRole="button"
+                            className="p-3"
+                            hitSlop={8}
+                            onPress={() => onOpenLaneChat(node.CommandStructureNodeId)}
+                            testID={`landscape-lane-chat-${node.CommandStructureNodeId}`}
+                          >
+                            <Icon as={MessagesSquare} className="text-gray-600 dark:text-gray-300" size={20} />
+                          </Pressable>
+                        ) : null}
+                        {onEditLane ? (
+                          <Pressable
+                            accessibilityLabel={t('command.edit_lane')}
+                            accessibilityRole="button"
+                            className="p-3"
+                            hitSlop={8}
+                            onPress={() => onEditLane(node.CommandStructureNodeId)}
+                            testID={`landscape-lane-edit-${node.CommandStructureNodeId}`}
+                          >
+                            <Icon as={Pencil} className="text-gray-600 dark:text-gray-300" size={20} />
+                          </Pressable>
+                        ) : null}
+                        <Pressable
+                          accessibilityLabel={t('command.assign_resource')}
+                          accessibilityRole="button"
+                          className="p-3"
+                          hitSlop={8}
+                          onPress={() => onAssignResource(node.CommandStructureNodeId)}
+                          testID={`landscape-lane-assign-${node.CommandStructureNodeId}`}
+                        >
+                          <Icon as={UserPlus} className="text-blue-600 dark:text-blue-400" size={20} />
+                        </Pressable>
+                      </HStack>
+                    </HStack>
+
+                    {laneAssignments.length === 0 ? (
+                      <Text className="rounded-lg border border-dashed border-gray-300 px-3 py-6 text-center text-sm text-gray-500 dark:border-gray-600 dark:text-gray-400">{t('command.no_resources_in_lane')}</Text>
+                    ) : (
+                      // The lane is a fixed height, so a busy lane scrolls its own crews rather than
+                      // stretching the whole board. directionalLockEnabled keeps a sideways drag going
+                      // to the lane strip instead of being eaten here.
+                      <LaneResourceList testID={`landscape-lane-resources-${node.CommandStructureNodeId}`}>
+                        <VStack space="sm">
+                          {laneAssignments.map((assignment) => (
+                            <DraggableResourceCard
+                              key={assignment.ResourceAssignmentId}
+                              assignment={assignment}
+                              rotationAfterMinutes={node.MaxTimeInRole}
+                              amberAfterMinutes={node.WorkTimeAmberMinutes}
+                              redAfterMinutes={node.WorkTimeRedMinutes}
+                              isSelected={selectedAssignmentId === assignment.ResourceAssignmentId}
+                              name={resolveResourceName(assignment.ResourceKind, assignment.ResourceId)}
+                              typeIcon={resolveResourceIcon?.(assignment.ResourceKind, assignment.ResourceId)}
+                              onDragEnd={() => setDraggingAssignmentId(null)}
+                              onDragStart={setDraggingAssignmentId}
+                              onDrop={(assignmentId, pageX, pageY) => void handleDrop(assignmentId, pageX, pageY)}
+                              onView={onViewResource}
+                              onSelect={handleSelect}
+                            />
+                          ))}
+                        </VStack>
+                      </LaneResourceList>
+                    )}
+                    {draggingAssignmentId && laneAssignments.every((assignment) => assignment.ResourceAssignmentId !== draggingAssignmentId) ? (
+                      <NativeView className="absolute inset-0 rounded-xl border-2 border-dashed border-primary-500" pointerEvents="none" testID={`landscape-drop-target-${node.CommandStructureNodeId}`} />
+                    ) : null}
+                  </Pressable>
+                </NativeView>
+              );
+            })}
+          </NativeView>
+        </ScrollView>
+      )}
+    </Box>
+  );
+};

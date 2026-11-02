@@ -1,0 +1,220 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 4":
+      - /url: "#"
+      - generic: 
+      - generic: "4"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Document Numbering" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Department Settings":
+    - /url: /User/Department/Settings
+  - text: /
+  - strong: Document Numbering
+- form:
+  - paragraph: How Resgrid numbers work orders, invoices, bids and daily time reports. Leave a pattern blank to keep the built-in numbers. Changing a pattern never renumbers documents that already have a number, and a new pattern carries on after any number it would repeat.
+  - paragraph:
+    - link " Call Settings":
+      - /url: /User/Department/CallSettings
+      - generic: 
+      - text: Call Settings
+    - text: ·
+    - link " Records numbering":
+      - /url: /User/Records/Settings
+      - generic: 
+      - text: Records numbering
+  - generic: Numbering year starts
+  - combobox "Numbering year starts":
+    - option "January" [selected]
+    - option "February"
+    - option "March"
+    - option "April"
+    - option "May"
+    - option "June"
+    - option "July"
+    - option "August"
+    - option "September"
+    - option "October"
+    - option "November"
+    - option "December"
+  - generic: Month the numbering year starts for work orders, invoices, bids and daily time reports numbered by a fiscal year. Work order numbers and patterns that include the year start again at 1 on that month and day, and YYYY and YY write the fiscal year's name. Unset is January, the calendar year.
+  - spinbutton "Day of the month": "1"
+  - generic: "For documents numbered by a fiscal year, pick the day it starts. Work order numbers, and patterns with a year, start again at 1 that day, and {YYYY} and {YY} write the fiscal year's name. Most fiscal years are named by the year they end in, so one starting November 1, 2026 is 2027. January 1 is the calendar year. Call and Records numbers have their own year start."
+  - table:
+    - rowgroup:
+      - row "Document Number pattern Sequence digits Next number Raise next to":
+        - columnheader "Document"
+        - columnheader "Number pattern"
+        - columnheader "Sequence digits"
+        - columnheader "Next number"
+        - columnheader "Raise next to"
+    - rowgroup:
+      - 'row "Work orders MNT-{YY}-{SEQ} Example: MNT-26-0153 4 MNT-26-0002 Starts again at 1 each year."':
+        - cell "Work orders"
+        - 'cell "MNT-{YY}-{SEQ} Example: MNT-26-0153"':
+          - textbox "Number pattern Work orders":
+            - /placeholder: "WO-{YYYY}-{SEQ}"
+            - text: "MNT-{YY}-{SEQ}"
+          - text: "Example:"
+          - code: MNT-26-0153
+        - cell "4":
+          - spinbutton "Sequence digits Work orders": "4"
+        - cell "MNT-26-0002 Starts again at 1 each year.":
+          - code: MNT-26-0002
+          - text: Starts again at 1 each year.
+        - cell:
+          - spinbutton "Raise next to Work orders"
+      - 'row "Invoices Example: 153 1 Built-in, e.g. 153"':
+        - cell "Invoices"
+        - 'cell "Example: 153"':
+          - textbox "Number pattern Invoices":
+            - /placeholder: "{SEQ}"
+          - text: "Example:"
+          - code: "153"
+        - cell "1":
+          - spinbutton "Sequence digits Invoices": "1"
+        - cell "Built-in, e.g. 153":
+          - text: Built-in, e.g.
+          - code: "153"
+        - cell
+      - 'row "Bids Example: 153 1 Built-in, e.g. 153"':
+        - cell "Bids"
+        - 'cell "Example: 153"':
+          - textbox "Number pattern Bids":
+            - /placeholder: "{SEQ}"
+          - text: "Example:"
+          - code: "153"
+        - cell "1":
+          - spinbutton "Sequence digits Bids": "1"
+        - cell "Built-in, e.g. 153":
+          - text: Built-in, e.g.
+          - code: "153"
+        - cell
+      - 'row "Daily time reports Example: 153 1 Built-in, e.g. 153"':
+        - cell "Daily time reports"
+        - 'cell "Example: 153"':
+          - textbox "Number pattern Daily time reports":
+            - /placeholder: "{SEQ}"
+          - text: "Example:"
+          - code: "153"
+        - cell "1":
+          - spinbutton "Sequence digits Daily time reports": "1"
+        - cell "Built-in, e.g. 153":
+          - text: Built-in, e.g.
+          - code: "153"
+        - cell
+  - generic: "Fixed text (letters, digits, - _ . /) around {YYYY} or {YY}, {MM}, {DD} and {SEQ}, which must appear once. A pattern with a year starts again at 1 each numbering year; with {MM} or {DD}, each month or day. A number of digits alone is shown with # in front, as invoice, bid and time report numbers always have been."
+  - link "Cancel":
+    - /url: /User/Department/Settings
+  - button "Update"
+- button "Assistant" [active]:
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

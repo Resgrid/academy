@@ -1,0 +1,941 @@
+@using Newtonsoft.Json
+@using Resgrid.Framework
+@using Resgrid.Model
+@using Resgrid.Config
+@model Resgrid.Web.Areas.User.Models.Subscription.SubscriptionView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Subscription.Subscription> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.EnhancedAi.EnhancedAi> aiLocalizer
+@{
+    ViewBag.Title = "Resgrid | " + @localizer["SubscriptionHeader"];
+
+    var locationName = SystemBehaviorConfig.LocationName ?? "US-West";
+    var location = InfoConfig.Locations.Find(l => l.Name == locationName) ?? InfoConfig.Locations[0];
+    var isEU = locationName.StartsWith("EU", StringComparison.OrdinalIgnoreCase);
+    var currencySymbol = isEU ? "\u20AC" : "$";
+    var jsStringSettings = new JsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeHtml };
+    var paddleEnvironmentJson = Html.Raw(JsonConvert.SerializeObject(Model.PaddleEnvironment ?? "", jsStringSettings));
+    var paddleClientTokenJson = Html.Raw(JsonConvert.SerializeObject(Model.PaddleClientToken ?? "", jsStringSettings));
+    var paddleCustomerJson = Html.Raw(JsonConvert.SerializeObject(Model.PaddleCustomer ?? "", jsStringSettings));
+    var paddleConfigurationErrorJson = Html.Raw(JsonConvert.SerializeObject(Model.PaddleConfigurationError ?? "", jsStringSettings));
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/pricing/pricing-tables-internal.css">
+
+    <style>
+        .price-box {
+            margin: 0 auto;
+            background: #E9E9E9;
+            border-radius: 10px;
+            padding: 40px 15px;
+            width: 500px;
+        }
+
+        .ui-widget-content {
+            border: 1px solid #bdc3c7;
+            background: #e1e1e1;
+            color: #222222;
+            margin-top: 4px;
+        }
+
+        .ui-slider .ui-slider-handle {
+            position: absolute;
+            z-index: 2;
+            width: 5.2em;
+            height: 2.2em;
+            cursor: default;
+            margin: 0 -40px auto !important;
+            text-align: center;
+            line-height: 30px;
+            color: #FFFFFF;
+            font-size: 15px;
+        }
+
+            .ui-slider .ui-slider-handle .fa {
+                color: #FFFFFF;
+                margin: 0 3px;
+                font-size: 11px;
+                opacity: 0.5;
+            }
+
+        .ui-corner-all {
+            border-radius: 20px;
+        }
+
+        .ui-slider-horizontal .ui-slider-handle {
+            top: -.9em;
+        }
+
+        .ui-state-default,
+        .ui-widget-content .ui-state-default {
+            border: 1px solid #f9f9f9;
+            background: #3498db;
+        }
+
+        .ui-slider-horizontal .ui-slider-handle {
+            margin-left: -0.5em;
+        }
+
+        .ui-slider .ui-slider-handle {
+            cursor: pointer;
+        }
+
+        .ui-slider a,
+        .ui-slider a:focus {
+            cursor: pointer;
+            outline: none;
+        }
+
+        .price, .lead p {
+            font-weight: 600;
+            font-size: 32px;
+            display: inline-block;
+            line-height: 60px;
+        }
+
+        h4.great {
+            background: #00ac98;
+            margin: 0 0 25px -60px;
+            padding: 7px 15px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            display: inline-block;
+            -moz-box-shadow: 2px 4px 5px 0 #ccc;
+            -webkit-box-shadow: 2px 4px 5px 0 #ccc;
+            box-shadow: 2px 4px 5px 0 #ccc;
+        }
+
+        .total {
+            border-bottom: 1px solid #7f8c8d;
+            /*display: inline;
+                                                                                                                            padding: 10px 5px;*/
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+            .total:before {
+                content: "";
+                display: inline;
+                position: absolute;
+                left: 0;
+                bottom: 5px;
+                width: 100%;
+                height: 3px;
+                background: #7f8c8d;
+                opacity: 0.5;
+            }
+
+        .price-slider {
+            margin-bottom: 70px;
+        }
+
+            .price-slider span {
+                font-weight: 200;
+                display: inline-block;
+                color: #7f8c8d;
+                font-size: 13px;
+            }
+
+        .form-pricing {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .price-form {
+            background: #ffffff;
+            margin-bottom: 10px;
+            padding: 20px;
+            border: 1px solid #eeeeee;
+            border-radius: 4px;
+            /*-moz-box-shadow:    0 5px 5px 0 #ccc;
+                                                                                                                            -webkit-box-shadow: 0 5px 5px 0 #ccc;
+                                                                                                                            box-shadow:         0 5px 5px 0 #ccc;*/
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+            .form-group span.price {
+                font-weight: 200;
+                display: inline-block;
+                color: #7f8c8d;
+                font-size: 14px;
+            }
+
+        .help-text {
+            display: block;
+            margin-top: 32px;
+            margin-bottom: 10px;
+            color: #737373;
+            position: absolute;
+            /*margin-left: 20px;*/
+            font-weight: 200;
+            text-align: right;
+            width: 188px;
+        }
+
+        .price-form label {
+            font-weight: 200;
+            font-size: 21px;
+        }
+
+        img.payment {
+            display: block;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .ui-slider-range-min {
+            background: #2980b9;
+        }
+        /* HR */
+        hr.style {
+            margin-top: 0;
+            border: 0;
+            border-bottom: 1px dashed #ccc;
+            background: #999;
+        }
+
+        input[type="number"] {
+            width: 80px !important;
+            font-size: 21px;
+        }
+    </style>
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["SubscriptionHeader"]</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li class="active">
+                <strong>@localizer["SubscriptionHeader"]</strong>
+            </li>
+        </ol>
+    </div>
+    @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+    {
+        <div class="col-sm-8">
+            <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+                @if (Model.IsPaddleDepartment)
+                {
+                    <a title="Cancel" class="btn btn-danger" href="@Url.Action("Cancel", "Subscription", new { Area = "User" })">@localizer["CancelSub"]</a>
+                }
+                else if (!string.IsNullOrWhiteSpace(Model.StripeCustomer))
+                {
+                    <a title="Manage Your Sub" class="btn btn-info" href="@Model.StripeCustomerPortalUrl">@localizer["ManageYourSubscription"]</a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+<div class="col-xs-12">
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3>
+                            @Model.Plan.Name
+
+                            @if (Model.Payment.Cancelled)
+                            {
+                                <span class="label label-danger">@localizer["Canceled"]</span>
+                            }
+                            else
+                            {
+                                <span class="label label-success">@localizer["Active"]</span>
+                            }
+                        </h3>
+                        @if (Model.Payment.Cancelled)
+                        {
+                            <span>@localizer["PlanExpires"]: @Model.Expires</span>
+                        }
+                        else
+                        {
+                            <span>@localizer["PlanRenews"]: @Model.Expires</span>
+                        }
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom: 10px;">
+                    <div class="col-md-4">
+                        <h3 style="margin-bottom: 0;">
+                            @if (Model.Plan.Frequency == (int)PlanFrequency.Yearly)
+                            {
+                                <span>
+                                    @currencySymbol@Model.Plan.Cost.ToString("N2")<small>/@localizer["Year"]</small>
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @currencySymbol@Model.Plan.Cost.ToString("N2")<small>/@localizer["month"]</small>
+                                </span>
+                            }
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h3>
+                            <span class="">@Model.PersonnelCount</span>/@Model.PersonnelLimit
+                            <small>@localizer["Entities"]</small>
+                        </h3>
+                        <div class="progress">
+                            <div class="progress-bar @ViewBag.PersonnelBarStyle" style="width: @Model.PersonnelBarPrecent%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (ViewBag.SubscriptionErrorMessage != null)
+                {
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="alert alert-danger alert-block">
+                                <h4 class="alert alert-heading">@localizer["Warning"]</h4>
+                                @ViewBag.SubscriptionErrorMessage
+                            </div>
+                        </div>
+                    </div>
+                }
+                <hr>
+
+
+                <div class="row">
+                    <div class='col-sm-12'>
+                        <div class="panel blank-panel">
+                            <div class="panel-heading">
+                                <div class="panel-options">
+                                    <ul class="nav nav-tabs">
+                                        <li class="@Model.IsEntitiesTabActive()"><a href="#tab-1" data-toggle="tab" aria-expanded="false">Entities</a></li>
+
+                                        @if (Model.Plan != null && Model.Plan.PlanId < 36 && Model.Plan.PlanId != 1)
+                                        {
+                                            <li class="@Model.IsLegacyTabActive()"><a href="#tab-2" data-toggle="tab" aria-expanded="true">Legacy Plan</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane @Model.IsEntitiesTabActive()" id="tab-1">
+
+                                        @if (Model.Plan == null || Model.Plan.PlanId == 1)
+                                        {
+                                            <p>Select the number of Entities (Users + Units) you require using the slider or text box below.
+                                                @if (!isEU) { <text>Your first 10 entities are included at no charge — each</text> } else { <text>Each</text> }
+                                                additional pack of 10 entities is billed at the rate shown. Select "Buy Yearly" or "Buy Monthly" to proceed to checkout.</p>
+
+                                            @if (isEU)
+                                            {
+                                                <div class="alert alert-info" style="font-size:13px;">
+                                                    <strong>European Region</strong> — Pricing includes GDPR-compliant data hosting. All prices shown in EUR (@currencySymbol) with a regional adjustment. No free tier is available.
+                                                </div>
+                                            }
+
+                                            <div class="price-box">
+
+                                                <form class="form-horizontal form-pricing" role="form">
+
+                                                    <div class="price-slider">
+                                                        <h4 class="great">Entities</h4>
+                                                        <span>Users or Units sold in packs of 10</span>
+                                                        <div class="col-sm-12">
+                                                            <div id="slider">
+                                                                <div id="custom-handle" class="ui-slider-handle">
+                                                                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                                                                    <span id="handle-text"></span>
+                                                                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="price-form">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12 text-center">
+                                                                <input id="amount-input" type="number" pattern="[0-9]" min="10" max="2000" step="10" value="10" /> <span>Entities</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="amount" class="col-sm-6 control-label">Monthly (@currencySymbol): </label>
+                                                            <span class="help-text">Monthly billing amount</span>
+                                                            <div class="col-sm-6">
+                                                                <input type="hidden" id="amount" class="form-control">
+                                                                <p class="price lead" id="monthly-label">0.00</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="duration" class="col-sm-6 control-label">Yearly (@currencySymbol): </label>
+                                                            <span class="help-text">Yearly (annual) billing amount</span>
+                                                            <div class="col-sm-6">
+                                                                <input type="hidden" id="duration" class="form-control">
+                                                                <p class="price lead" id="yearly-label">0.00</p>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="style">
+                                                        <div class="form-group total">
+                                                            <div class="col-sm-6 text-center">
+                                                                @if (Model.IsPaddleDepartment) {
+                                                                    <a id="buyYearlyButton" title="@localizer["BuyYearly"]" class="btn btn-primary" href="#" onclick="paddleCheckout(36);">@localizer["BuyYearly"]</a>
+                                                                } else {
+                                                                    <a id="buyYearlyButton" title="@localizer["BuyYearly"]" class="btn btn-primary" href="#" onclick="stripeCheckout(36);">@localizer["BuyYearly"]</a>
+                                                                }
+                                                            </div>
+                                                            <div class="col-sm-6 text-center">
+                                                                @if (Model.IsPaddleDepartment) {
+                                                                    <a id="buyMonthlyButton" title="@localizer["BuyMonthly"]" class="btn btn-primary" href="#" onclick="paddleCheckout(37);">@localizer["BuyMonthly"]</a>
+                                                                } else {
+                                                                    <a id="buyMonthlyButton" title="@localizer["BuyMonthly"]" class="btn btn-primary" href="#" onclick="stripeCheckout(37);">@localizer["BuyMonthly"]</a>
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        }
+                                        else if (Model.Plan.PlanId >= 36)
+                                        {
+                                            <div class="alert alert-info alert-block">
+                                                <h4 class="alert alert-heading">Active Subscription</h4>
+                                                You currently have an activate subscription, thank you! To update the amount of entities you need, update your billing information, or cancel your subscription please use the "Manage Your Subscription" button. If you are a Invoice customer, please contact us to update your subscription.
+                                            </div>
+
+                                            <div class="text-center">
+                                                @if (Model.IsPaddleDepartment)
+                                                {
+                                                    <a title="Cancel" class="btn btn-danger" href="@Url.Action("Cancel", "Subscription", new { Area = "User" })">@localizer["CancelSub"]</a>
+                                                }
+                                                else if (!string.IsNullOrWhiteSpace(Model.StripeCustomer))
+                                                {
+                                                    <a title="Manage Your Sub" class="btn btn-info" href="@Model.StripeCustomerPortalUrl">@localizer["ManageYourSubscription"]</a>
+                                                }
+                                            </div>
+                                        }
+                                        else if (Model.Plan.PlanId != 1)
+                                        {
+                                            <div class="alert alert-info alert-block">
+                                                <h4 class="alert alert-heading">Active Legacy Subscription</h4>
+                                                You currently have an active legacy subscription. To change over to the Entity based subscription, please cancel your current subscription and then sign up for a new one. If you are a Invoice customer, please contact us to update your subscription. Click on the "Legacy Plan" tab to see more information about your current plan.
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="tab-pane @Model.IsLegacyTabActive()" id="tab-2">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="alert alert-danger alert-block">
+                                                    <h4 class="alert alert-heading">@localizer["Warning"]</h4>
+                                                    You are on a Legacy Plan. We do not offer these plans anymore. You can stay on this plan as long as you wish, but you will not be able to upgrade or downgrade your plan. If you wish to change your plan, you will need to cancel your current plan and then sign up for a new plan. We do not raise prices on departments with active billing relationships, so you can stay on this plan as long as you wish, you will need to use the "Change Billing Info" button below if you are using a Credit Card to pay. If you bill via Invoice your cost will stay the same if you renew.
+                                                </div>
+
+                                                <div class="text-center">
+                                                    @if (!string.IsNullOrWhiteSpace(Model.StripeCustomer))
+                                                    {
+                                                        <a title="Update or Change Billing Info" class="btn btn-success" href="#" onclick="stripeUpdate();">@localizer["ChangeBillingInfo"]</a>
+                                                        <a title="Cancel" class="btn btn-danger" href="@Url.Action("Cancel", "Subscription", new { Area = "User" })">@localizer["CancelSub"]</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.HasActiveSubscription)
+                {
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <div class="pricing-tables">
+                                <div class='row'>
+                                    <div class="col-sm-8 col-md-8 col-sm-offset-2">
+                                        <div class="plan" style="margin: 0; padding-bottom: 0;">
+                                            <div class="head">
+                                                <h2>Push-To-Talk Addon</h2>
+                                            </div>
+                                            <div class="row" style="margin-left: 0;">
+                                                <div class="col-sm-4 col-md-4">
+                                                    <div style="padding-top: 10px;">
+                                                        <ul class="item-list" style="padding: 0;">
+                                                            <li>Two-Way IP Voice Communications</li>
+                                                            <li>Up to 50 Channels</li>
+                                                            <li>Radios with worldwide reach</li>
+                                                            <li>Real-Time Voice, Push-To-Talk</li>
+                                                            <li>Android, iOS and Web</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3 col-md-3" style="text-align: center;">
+                                                    <span class="price" style="border-top: 0; margin-bottom: 5px; padding-top: 25px">
+                                                        <h3 style="font-size: 36px;"><span class="symbol" style="font-size: 36px; vertical-align: top;">$</span>35<small>/mo</small></h3><span style="font-size: 12px;">per 10 user pack</span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-5 col-md-5">
+                                                    <p style="color: #676a6c; padding-top: 10px;">The Push-To-Talk Addon is only available on paid plans. You can buy as many 10 user packs as you wish, and they are billed monthly separately from your Resgrid bill. Allowing you to size up and down as you need. You can have up to 50 active people per channel. Push-To-Talk requires devices with an active Internet (data) connection and uses VOIP technology.</p>
+                                                    @if (Model.IsPaddleDepartment)
+                                                    {
+                                                        <a asp-controller="Subscription" asp-action="ManagePaddlePTTAddon" asp-route-area="User" class="btn btn-sm btn-primary">Manage PTT</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="Subscription" asp-action="ManagePTTAddon" asp-route-area="User" class="btn btn-sm btn-primary">Manage PTT</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*
+                        Advanced Data Protection addon (ADP plan 17.1). One link for both states: the
+                        manage page offers the purchase when the department does not hold the addon
+                        yet, so this card does not need to know which state it is in.
+                    *@
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <div class="pricing-tables">
+                                <div class='row'>
+                                    <div class="col-sm-8 col-md-8 col-sm-offset-2">
+                                        <div class="plan" style="margin: 0; padding-bottom: 0;">
+                                            <div class="head">
+                                                <h2>Advanced Data Protection Addon</h2>
+                                            </div>
+                                            <div class="row" style="margin-left: 0;">
+                                                <div class="col-sm-4 col-md-4">
+                                                    <div style="padding-top: 10px;">
+                                                        <ul class="item-list" style="padding: 0;">
+                                                            <li>Per-department field encryption</li>
+                                                            <li>Second-factor reveal of protected values</li>
+                                                            <li>Email, SMS and push egress controls</li>
+                                                            <li>Value-free audit of protected reads</li>
+                                                            <li>Overnight, resumable enrollment</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3 col-md-3" style="text-align: center;">
+                                                    <span class="price" style="border-top: 0; margin-bottom: 5px; padding-top: 25px">
+                                                        <h3 style="font-size: 36px;"><span class="symbol" style="font-size: 36px; vertical-align: top;">@currencySymbol</span>999<small>/yr</small></h3><span style="font-size: 12px;">per department</span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-5 col-md-5">
+                                                    <p style="color: #676a6c; padding-top: 10px;">Advanced Data Protection encrypts your department's sensitive fields with a key held only for your department, and hides them behind a second-factor check. It is available on paid plans, billed yearly, and only your department's managing member can buy or cancel it. Buying the addon does not encrypt anything on its own — you enroll afterwards, from the Data Protection settings page, at a time you choose.</p>
+                                                    <a asp-controller="Subscription" asp-action="ManageAdpAddon" asp-route-area="User" class="btn btn-sm btn-primary">Manage Data Protection</a>
+                                                    <a asp-controller="ReadinessProBilling" asp-action="Index" asp-route-area="User" class="btn btn-sm btn-primary">Readiness Pro</a>
+                                                    <a asp-controller="BusinessOperationsBilling" asp-action="Index" asp-route-area="User" class="btn btn-sm btn-primary">Business Operations</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*
+                        Enhanced AI addon (enhanced-ai-addon-plan.md). One link for both states, like ADP: the manage page
+                        offers the purchase when the department does not hold the add-on, and says when it is being enabled.
+                    *@
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <div class="pricing-tables">
+                                <div class='row'>
+                                    <div class="col-sm-8 col-md-8 col-sm-offset-2">
+                                        <div class="plan" style="margin: 0; padding-bottom: 0;">
+                                            <div class="head">
+                                                <h2>@aiLocalizer["SubscriptionCardHeader"]</h2>
+                                            </div>
+                                            <div class="row" style="margin-left: 0;">
+                                                <div class="col-sm-4 col-md-4">
+                                                    <div style="padding-top: 10px;">
+                                                        <ul class="item-list" style="padding: 0;">
+                                                            <li>@aiLocalizer["CardBulletAdminAssist"]</li>
+                                                            <li>@aiLocalizer["CardBulletIncident"]</li>
+                                                            <li>@aiLocalizer["CardBulletDrafts"]</li>
+                                                            <li>@aiLocalizer["CardBulletCallBrief"]</li>
+                                                            <li>@aiLocalizer["CardBulletPrivate"]</li>
+                                                            <li>@aiLocalizer["CardBulletOwnProvider"]</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3 col-md-3" style="text-align: center;">
+                                                    <span class="price" style="border-top: 0; margin-bottom: 5px; padding-top: 25px">
+                                                        <h3 style="font-size: 36px;"><span class="symbol" style="font-size: 36px; vertical-align: top;">@currencySymbol</span>@((isEU ? AiAddonConfig.PaddleMonthlyAmount : AiAddonConfig.StripeMonthlyAmount).ToString("N0"))<small>/mo</small></h3><span style="font-size: 12px;">@aiLocalizer["PerDepartment"]</span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-5 col-md-5">
+                                                    <p style="color: #676a6c; padding-top: 10px;">@aiLocalizer["SubscriptionCardText"]</p>
+                                                    <a asp-controller="AiBilling" asp-action="Index" asp-route-area="User" class="btn btn-sm btn-primary">@aiLocalizer["ManageEnhancedAi"]</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+        <div class="alert alert-success">
+            <strong>
+                @localizer["BuyNowContact1"] <a href="@Url.Action("Contact", "Home", new { area = "" })">@localizer["ContactUs"]</a> @localizer["BuyNowContact2"]
+            </strong>
+        </div>
+
+        @section Scripts
+        {
+            @if (!Model.IsPaddleDepartment) {
+                <script src="https://js.stripe.com/v3/"></script>
+            }
+
+            <script>
+                @if (!Model.IsPaddleDepartment) {
+                    @:var stripe = Stripe('@Model.StripeKey');
+                }
+                var paddleReady = @(Model.CanInitializePaddleCheckout ? "true" : "false");
+                var paddleEnvironment = @paddleEnvironmentJson;
+                var paddleClientToken = @paddleClientTokenJson;
+                var paddleCustomerId = @paddleCustomerJson;
+                var paddleConfigurationError = @paddleConfigurationErrorJson;
+                var paddleInitializationPromise = null;
+
+                function getAjaxErrorMessage(xhr, fallbackMessage) {
+                    if (xhr && xhr.responseText) {
+                        return xhr.responseText;
+                    }
+
+                    return fallbackMessage;
+                }
+
+                function initializePaddle() {
+                    if (window.resgridPaddleInitialized) {
+                        return window.Paddle;
+                    }
+
+                    Paddle.Environment.set(paddleEnvironment);
+
+                    var paddleInitializeOptions = { token: paddleClientToken };
+                    if (/^ctm_/.test(paddleCustomerId)) {
+                        paddleInitializeOptions.pwCustomer = { id: paddleCustomerId };
+                    }
+
+                    Paddle.Initialize(paddleInitializeOptions);
+                    window.resgridPaddleInitialized = true;
+
+                    return window.Paddle;
+                }
+
+                function ensurePaddleInitialized() {
+                    if (!paddleReady) {
+                        return Promise.reject(new Error(paddleConfigurationError || "Paddle checkout is not configured correctly. Please contact support."));
+                    }
+
+                    if (window.resgridPaddleInitialized && window.Paddle) {
+                        return Promise.resolve(window.Paddle);
+                    }
+
+                    if (paddleInitializationPromise) {
+                        return paddleInitializationPromise;
+                    }
+
+                    paddleInitializationPromise = new Promise(function (resolve, reject) {
+                        var completeInitialization = function () {
+                            try {
+                                resolve(initializePaddle());
+                            } catch (error) {
+                                paddleInitializationPromise = null;
+                                reject(error);
+                            }
+                        };
+
+                        if (window.Paddle) {
+                            completeInitialization();
+                            return;
+                        }
+
+                        var script = document.createElement('script');
+                        script.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+                        script.async = true;
+                        script.onload = completeInitialization;
+                        script.onerror = function () {
+                            paddleInitializationPromise = null;
+                            reject(new Error("Unable to load Paddle checkout. Please try again."));
+                        };
+
+                        document.head.appendChild(script);
+                    });
+
+                    return paddleInitializationPromise;
+                }
+
+                function stripeCheckout(id) {
+                    const amount = slider == 1 ? val : $("#amount").val();
+                    const minAmount = IS_EU ? 10 : 20;
+
+                    if (amount && amount >= minAmount && (!IS_EU ? amount > 10 : true)) {
+                        const packs = IS_EU ? (amount / 10) : (amount / 10) - 1;
+
+                        $.ajax({
+                            url: resgrid.absoluteBaseUrl + '/User/Subscription/GetStripeSession?id=' + id + '&count=' + packs,
+                            contentType: 'application/json',
+                            type: 'GET'
+                        }).done(function (data) {
+                            if (data && data.SessionId) {
+                                stripe.redirectToCheckout({
+                                    sessionId: data.SessionId
+                                }).then(function (result) {
+                                    if (result.error) {
+                                        swal({ title: "Purchase Error", text: "Error redirecting to Stripe: " + result.error.message, icon: "error", buttons: true, dangerMode: false });
+                                    }
+                                });
+                            } else {
+                                swal({ title: "Checkout Error", text: "Unable to create a checkout session. Please try again.", icon: "error", buttons: true, dangerMode: false });
+                            }
+                        }).fail(function () {
+                            swal({ title: "Connection Error", text: "Unable to reach the server. Please check your connection and try again.", icon: "error", buttons: true, dangerMode: false });
+                        });
+                    } else {
+                        swal({ title: "Cannot Purchase", text: "Please select more entities to purchase a plan.", icon: "warning", buttons: true, dangerMode: false });
+                    }
+                }
+
+                function stripeUpdate() {
+                    $.ajax({
+                        url: resgrid.absoluteBaseUrl + '/User/Subscription/GetStripeUpdate',
+                        contentType: 'application/json',
+                        type: 'GET'
+                    }).done(function (data) {
+                        if (data) {
+                            if (data.SessionId) {
+                                stripe.redirectToCheckout({
+                                    sessionId: data.SessionId
+                                }).then(function (result) {
+                                    // If `redirectToCheckout` fails due to a browser or network
+                                    // error, display the localized error message to your customer
+                                    // using `result.error.message`.
+                                });
+                            }
+                        }
+                    });
+                }
+
+                function paddleCheckout(id) {
+                    if (!paddleReady) {
+                        swal({ title: "Checkout Unavailable", text: paddleConfigurationError || "Paddle checkout is not configured correctly. Please contact support.", icon: "error", buttons: true, dangerMode: false });
+                        return;
+                    }
+
+                    const amount = slider == 1 ? val : $("#amount").val();
+                    const minAmount = IS_EU ? 10 : 20;
+
+                    if (amount && amount >= minAmount && (!IS_EU ? amount > 10 : true)) {
+                        const packs = IS_EU ? (amount / 10) : (amount / 10) - 1;
+
+                        $.ajax({
+                            url: resgrid.absoluteBaseUrl + '/User/Subscription/GetPaddleCheckout?id=' + id + '&count=' + packs,
+                            contentType: 'application/json',
+                            type: 'GET'
+                        }).done(function (data) {
+                            if (data) {
+                                if (data.HasActiveSub) {
+                                    swal({ title: "Active Subscription", text: "You already have an active subscription. Please manage your existing subscription instead.", icon: "warning", buttons: true, dangerMode: false });
+                                    return;
+                                }
+
+                                if (data.TransactionId) {
+                                    ensurePaddleInitialized().then(function () {
+                                        Paddle.Checkout.open({
+                                            settings: { successUrl: resgrid.absoluteBaseUrl + '/User/Subscription/Processing?planId=' + id },
+                                            transactionId: data.TransactionId
+                                        });
+                                    }).catch(function (error) {
+                                        swal({ title: "Checkout Error", text: (error && error.message) || "Unable to initialize Paddle checkout. Please try again.", icon: "error", buttons: true, dangerMode: false });
+                                    });
+                                    return;
+                                }
+
+                                if (!data.PriceId) {
+                                    swal({ title: "Checkout Error", text: "Unable to create a checkout session. Please try again.", icon: "error", buttons: true, dangerMode: false });
+                                    return;
+                                }
+                                if (!/^pri_/.test(data.PriceId)) {
+                                    swal({ title: "Checkout Error", text: "Paddle checkout returned an unsupported checkout payload. Please contact support.", icon: "error", buttons: true, dangerMode: false });
+                                    return;
+                                }
+
+                                var checkoutSettings = {
+                                    settings: { successUrl: resgrid.absoluteBaseUrl + '/User/Subscription/Processing?planId=' + id },
+                                    items: [{ priceId: data.PriceId, quantity: packs }]
+                                };
+
+                                if (data.CustomerId) {
+                                    checkoutSettings.customer = { id: data.CustomerId };
+                                }
+
+                                ensurePaddleInitialized().then(function () {
+                                    Paddle.Checkout.open(checkoutSettings);
+                                }).catch(function (error) {
+                                    swal({ title: "Checkout Error", text: (error && error.message) || "Unable to initialize Paddle checkout. Please try again.", icon: "error", buttons: true, dangerMode: false });
+                                });
+                            } else {
+                                swal({ title: "Checkout Error", text: "Unable to create a checkout session. Please try again.", icon: "error", buttons: true, dangerMode: false });
+                            }
+                        }).fail(function (xhr) {
+                            swal({ title: "Checkout Error", text: getAjaxErrorMessage(xhr, "Unable to reach the server. Please check your connection and try again."), icon: "error", buttons: true, dangerMode: false });
+                        });
+                    } else {
+                        swal({ title: "Cannot Purchase", text: "Please select more entities to purchase a plan.", icon: "warning", buttons: true, dangerMode: false });
+                    }
+                }
+
+
+
+                var IS_EU = @(isEU ? "true" : "false");
+                var EU_MULTIPLIER = 1.25;
+
+                $(document).ready(function () {
+                    $("#slider").slider({
+                        animate: true,
+                        value: 10,
+                        min: 10,
+                        max: 2000,
+                        step: 10,
+                        create: function () {
+                            let handle = $("#handle-text");
+                            handle.text($(this).slider("value"));
+                        },
+                        slide: function (event, ui) {
+                            update(1, ui.value);
+                        }
+                    });
+
+                    $("#amount-input").bind('change mouseup', function () {
+                        let inputAmount = $("#amount-input").val();
+
+                        if (inputAmount < 10) {
+                            $("#slider").slider('value', 10);
+                            update(1, 10);
+                        } else if (inputAmount > 2000) {
+                            $("#slider").slider('value', 2000);
+                            update(1, 2000);
+                        } else if (inputAmount % 10 != 0) {
+                            let newAmount = Math.ceil(parseInt(inputAmount) / 10) * 10;
+                            $("#amount-input").val(newAmount);
+                            $("#slider").slider('value', newAmount);
+                            update(1, newAmount);
+                        } else {
+                            $("#slider").slider('value', inputAmount);
+                            update(1, inputAmount);
+                        }
+                    });
+
+                    $("#amount").val(10);
+                    $("#amount-input").val(10);
+                    $("#monthly-label").text('0.00');
+                    $("#yearly-label").text('0.00');
+
+                    update();
+                });
+
+                function update(sliderFlag, sliderVal) {
+                    let handle = $("#handle-text");
+                    var $amount = sliderFlag == 1 ? sliderVal : $("#amount").val();
+                    var showButtons = IS_EU ? ($amount >= 10) : ($amount > 10);
+
+                    handle.text($amount);
+                    $("#amount").val($amount);
+                    $("#amount-input").val($amount);
+
+                    if (showButtons) {
+                        var totalCostMonthly = calculateCostFromUsers($amount, true);
+                        var totalCostYearly = calculateCostFromUsers($amount, false);
+
+                        $("#monthly-label").text(totalCostMonthly.toFixed(2));
+                        $("#yearly-label").text(totalCostYearly.toFixed(2));
+
+                        $("#buyYearlyButton").show();
+                        $("#buyMonthlyButton").show();
+                    } else {
+                        $("#monthly-label").text('0.00');
+                        $("#yearly-label").text('0.00');
+
+                        $("#buyYearlyButton").hide();
+                        $("#buyMonthlyButton").hide();
+                    }
+                }
+
+                const calculateCostFromUsers = (totalNumUsers, isMonthly) => {
+                    const pricingTiersMonthly = [
+                        { marginalUserSlots: 1, costPerUser: 0.0 },
+                        { marginalUserSlots: 5, costPerUser: 20.0 },
+                        { marginalUserSlots: 100, costPerUser: 2.0 },
+                        { marginalUserSlots: 1000, costPerUser: 1.5 },
+                        { marginalUserSlots: 5000, costPerUser: 1.0 },
+                        { marginalUserSlots: 999999999, costPerUser: 0.5 },
+                    ];
+
+                    const pricingTiersYearly = [
+                        { marginalUserSlots: 1, costPerUser: 0.0 },
+                        { marginalUserSlots: 5, costPerUser: 200.0 },
+                        { marginalUserSlots: 100, costPerUser: 20.0 },
+                        { marginalUserSlots: 1000, costPerUser: 15.0 },
+                        { marginalUserSlots: 5000, costPerUser: 10.0 },
+                        { marginalUserSlots: 999999999, costPerUser: 5.0 },
+                    ];
+
+                    let finalCost = 0.0;
+                    let remainingUsers = totalNumUsers / 10;
+                    const baseTiers = isMonthly ? pricingTiersMonthly : pricingTiersYearly;
+
+                    let tiers;
+                    if (IS_EU) {
+                        tiers = [{
+                            marginalUserSlots: baseTiers[0].marginalUserSlots + baseTiers[1].marginalUserSlots,
+                            costPerUser: baseTiers[1].costPerUser
+                        }].concat(baseTiers.slice(2));
+                    } else {
+                        tiers = baseTiers;
+                    }
+
+                    for (let i = 0; i < tiers.length; i++) {
+                        let tier = tiers[i];
+                        if (tier.marginalUserSlots < remainingUsers) {
+                            finalCost += tier.marginalUserSlots * tier.costPerUser;
+                            remainingUsers -= tier.marginalUserSlots;
+                        } else {
+                            finalCost += tier.costPerUser * remainingUsers;
+                            remainingUsers = 0;
+                        }
+                    }
+
+                    if (IS_EU) {
+                        finalCost = Math.round(finalCost * EU_MULTIPLIER);
+                    }
+
+                    return finalCost;
+                };
+            </script>
+        }

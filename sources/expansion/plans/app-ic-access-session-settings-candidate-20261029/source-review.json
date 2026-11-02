@@ -1,0 +1,249 @@
+{
+  "kind": "bounded_ic_access_session_source_review",
+  "reviewed_at": "2026-10-29T23:55:51.522486+00:00",
+  "source_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "candidate": {
+    "file": "expansion/plans/app-ic-access-session-settings-candidate-20261029/lesson.candidate.json",
+    "sha256": "3ca130845b258669b4ed54619fc31c89260e8319337bcc6ace3d514eb3622788"
+  },
+  "raw_manifest": {
+    "file": "captures/expansion/ic-access-orientation-recovery-20261029/manifest.json",
+    "sha256": "ffb88e4c156ee277a38fc3f2fb6502ed5e08ee51ad70c91cad72c7df4b9063c0"
+  },
+  "reviewed_subset": {
+    "file": "captures/expansion/ic-access-orientation-recovery-20261029/review/reviewed-source-subset-20261029.json",
+    "sha256": "dde1c8f91b96156973e796b683cdd6f2b48d7354ae0afee490dc60bf8d22ae50"
+  },
+  "source_files": [
+    {
+      "repository": "IC",
+      "file": "src/app/(app)/settings.tsx",
+      "sha256": "18f6877386ab6cdcd478f12cbc4d744a41ef5a1881a0d20eff25c2327cda0522",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/(app)/_layout.tsx",
+      "sha256": "c927cf6218040da3ac19274f50a1ec6cf96e1ad50f666a35ba7dc7f88acc321b",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/settings/account-security.tsx",
+      "sha256": "39f0ab322f79156e5c2882522bd45cf4ab15b290152125025f86f6a48b54cea9",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/settings/offline-queue.tsx",
+      "sha256": "e53707705e4b175baecb0b21d24be69c91e0e9d16793d11dc2e2e86b049fea20",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/login/shared-device.tsx",
+      "sha256": "e595dd1e4214bd3f497b5ab31e0c41e612a0102910b86ba66340f2b763929015",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/server-url-bottom-sheet.tsx",
+      "sha256": "b642fa260f1bbb1577986899ca9bbead4095c9193e92ec1ca5a743e257cea373",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/login-info-bottom-sheet.tsx",
+      "sha256": "25ba9b39743ff9d7fcd1b035877b2badf02ff9a3553f39f167d6d8c4e34972c3",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/theme-item.tsx",
+      "sha256": "5b65c60d21cd7ce600f0f9accda441cf51d91e3548d73ed08b18757ef70cfb5c",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/language-item.tsx",
+      "sha256": "a91bf76826774b538bba9bdc0036ae91f8f0cbed20204206a4fbefd477835fd5",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/keep-alive-item.tsx",
+      "sha256": "a68ab1d95ade7663baa5ca8cda0b05917187f31009c36bdfef521635634b9f33",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/bluetooth-device-item.tsx",
+      "sha256": "eca00b70633b2e514073d717930094bfbdd1f54b0b2f26259e110e9a991f1477",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/lib/hooks/use-keep-alive.tsx",
+      "sha256": "2b1d64ae13594ea8c856c576dc179b6d21ea317b7827e0829330d8c7ff923626",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/api/mfa/account-security.ts",
+      "sha256": "19b050761cbab533eb9f2a2b0422876fe630e3501b794962073b9f81de74b27e",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/lib/mfa/shared-installation.ts",
+      "sha256": "0547b3d618662ec56db45d6f1c1e9d425ec1d74f577a947d747d40edb22b78af",
+      "isolated_capture_copy_matches": true
+    },
+    {
+      "repository": "IC",
+      "file": "src/translations/en.json",
+      "sha256": "c5592d7df855e3e7f9936606cb82c1570e7a180ae3ae6d5e23bd1a83c8c59359",
+      "isolated_capture_copy_matches": true
+    }
+  ],
+  "claim_correspondence": [
+    {
+      "scenes": [
+        "01-find-settings"
+      ],
+      "files": [
+        "src/app/(app)/settings.tsx",
+        "src/app/(app)/_layout.tsx"
+      ],
+      "finding": "Settings App Info and Account labels match current source. Foreground Menu displays Settings. Calls remains an authenticated starting context, not a newly created incident."
+    },
+    {
+      "scenes": [
+        "02-review-server"
+      ],
+      "files": [
+        "src/components/settings/server-url-bottom-sheet.tsx",
+        "src/app/(app)/settings.tsx"
+      ],
+      "finding": "Server form loads normalized base URL and Custom; source strips a current API-version suffix and trailing slashes, appends the configured version on Save, and invokes logout if saving while authenticated. Candidate teaches inspection and Cancel only; no save or server change claimed."
+    },
+    {
+      "scenes": [
+        "03-read-security-summary"
+      ],
+      "files": [
+        "src/app/settings/account-security.tsx",
+        "src/api/mfa/account-security.ts"
+      ],
+      "finding": "Summary comes from current account methods; no-authenticator/no-app-passkeys/approvals-stopped/no-recent-verifications branches match the captured literals. Mutations and proof gates remain outside this candidate."
+    },
+    {
+      "scenes": [
+        "04-inspect-login-info"
+      ],
+      "files": [
+        "src/components/settings/login-info-bottom-sheet.tsx",
+        "src/app/(app)/settings.tsx"
+      ],
+      "finding": "Empty form has Username/Password/Cancel/Save. Save invokes the normal login function; this is not an account-password editor. No filled values or submission appears in this lesson."
+    },
+    {
+      "scenes": [
+        "05-review-shared-device"
+      ],
+      "files": [
+        "src/app/login/shared-device.tsx",
+        "src/lib/mfa/shared-installation.ts"
+      ],
+      "finding": "An unconfigured installation defaults the displayed shared switch totrue. Only Save persists it. Signed-in variant shows next-sign-in explanation. Screenshot alone therefore cannot establish that a shared policy is configured."
+    },
+    {
+      "scenes": [
+        "06-preferences-and-support"
+      ],
+      "files": [
+        "src/components/settings/theme-item.tsx",
+        "src/components/settings/language-item.tsx",
+        "src/components/settings/keep-alive-item.tsx",
+        "src/components/settings/bluetooth-device-item.tsx",
+        "src/lib/hooks/use-keep-alive.tsx",
+        "src/app/(app)/settings.tsx"
+      ],
+      "finding": "Theme/language selectors and Keep Alive/BT Handset are rendered here on web. Keep Alive hook requests Expo wake behavior; no such request was demonstrated. BT row only shows preferred/current device state. Support rows open external destinations, none visited. Candidate shows current states only, not hidden options or hardware/provider success."
+    },
+    {
+      "scenes": [
+        "07-read-sync-status"
+      ],
+      "files": [
+        "src/app/(app)/settings.tsx",
+        "src/app/settings/offline-queue.tsx"
+      ],
+      "finding": "Up-to-date summary derives from connectivity plus pending/failed counts. Empty queue displays Online/zero counts. All four bulk actions disabled by corresponding empty counts, matching retained DOM. No queued event or replay is proven."
+    },
+    {
+      "scenes": [
+        "08-review-logout-and-handover"
+      ],
+      "files": [
+        "src/app/(app)/settings.tsx"
+      ],
+      "finding": "Logout opens a confirmation; Cancel only closes it. Confirm calls ordinary logout. Candidate teaches warning inspection and Cancel, not data reset or completed logout."
+    }
+  ],
+  "raw_review": {
+    "reviewed_count": 12,
+    "accepted_count": 10,
+    "excluded": [
+      {
+        "id": "001-preferences-system-theme-before-change",
+        "file": "captures/expansion/ic-access-orientation-recovery-20261029/001-preferences-system-theme-before-change.jpg",
+        "sha256": "4bfe026ed6797e33c2883a401791b3149328918f3cc02e814fc150447655169e",
+        "reason": "Superseded by012, which shows settled System option text and a clearer no-device value.001 is a real readable source, not an accepted theme-change result.",
+        "actual_image_reviewed": true
+      },
+      {
+        "id": "005-empty-login-info-fields",
+        "file": "captures/expansion/ic-access-orientation-recovery-20261029/005-empty-login-info-fields.jpg",
+        "sha256": "152a7ba04d753f5380a1c2e92ecae352c7a91d5b856a5e3ab7f4b0706ddf0b60",
+        "reason": "Near-duplicate empty Login Info view, superseded by006. No filled values or credential operation; no need for this duplicate in the candidate.",
+        "actual_image_reviewed": true
+      }
+    ],
+    "foreground_only": true,
+    "hidden_dom_siblings_not_accepted": true,
+    "icon_semantics_not_promoted": true,
+    "image_bytes_unchanged": true,
+    "reviewer": "Codex /root/responder_unit_coverage"
+  },
+  "root_reported_capture_actions": [
+    "IC already signed in normally before010.",
+    "A brief app Light selection was followed by normal restoration toSystem.012 shows the settled currentSystem value; no claim thatLight worked orOSsettings changed.",
+    "Server/LoginInfo inspection cancelled without saving credentials or server.",
+    "Shareddevice form remained unsaved.",
+    "008 Cancel dismissed the logout confirmation, keeping the signed-in session.",
+    "009 queue actions all disabled and not clicked.",
+    "No external Support links, enrollment, passkey, approval, provider, wake or Bluetooth operations."
+  ],
+  "not_replaced": [
+    "The broader IC onboarding/sign-in/SSO/shared-session-enrollment tutorial.",
+    "IC maps/reference, records/communications and actual offline-write/replay walkthroughs."
+  ],
+  "remaining_before_freeze": [
+    "Parent review of all8 narration paragraphs and corresponding source subset."
+  ],
+  "remaining_before_media": [
+    "Actual narration export and exact-script/full-decode/energyQA.",
+    "Genuine speech-timed captions and actual control-aware temporal mapping.",
+    "Rendered full-screen image/frame/captionQA and actual browser playback proofs."
+  ],
+  "limits": [
+    "Web settings observations do not establish native device behavior.",
+    "The current unsaved shared-device default is not a saved policy or demonstrated lock/unlock.",
+    "Current security summary is not setup, SSO or fresh-verification footage.",
+    "Zero queue counts are not a successful offline workflow.",
+    "Logout warning was cancelled, not confirmed."
+  ]
+}

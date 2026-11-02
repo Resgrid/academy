@@ -1,0 +1,44 @@
+{
+  "id": "core-inventory-return-reconcile",
+  "mode": "manual_normal_ui_only",
+  "default": "read_only_plan",
+  "automated_writes": false,
+  "captured_example": {
+    "item": "Academy training batteries",
+    "current_issuance_status": "Returned",
+    "current_outstanding": 0,
+    "return_action_available": false,
+    "duplicate_return_allowed": false,
+    "historical_before": {
+      "Station": 13,
+      "Unit": 5,
+      "Personnel": 1
+    },
+    "historical_after": {
+      "Station": 14,
+      "Unit": 5,
+      "Personnel": 0
+    },
+    "total": 19,
+    "earlier_consume": 1,
+    "these_values_are_not_replay_targets": true
+  },
+  "guards": [
+    "Read the live item, holder, issuance state and outstanding amount through normal Inventory UI; never force a captured item/issuance ID or revision.",
+    "If Returned, outstanding is zero, Return is absent, or identity is ambiguous: stop without submitting. The captured example meets this stop condition.",
+    "Use only a separate authorized noncontrolled practice issuance with positive outstanding; do not create/reset/issue stock as an implicit replay step.",
+    "Compare the approved return amount with the actual remaining quantity; never blindly copy1. Select the permitted destination and accurate condition.",
+    "Out for repair and Damaged may be inspected without submission only if appropriate; the captured example posted In service alone.",
+    "Enter and read back a clear training note. Submit exactly once only on the distinct permitted practice record, then wait for and inspect the actual UI result.",
+    "Read the fresh ledger and balances. If uncertain or an error appears, stop and inspect; do not repeat Return, rebuild balances, change database state or infer success.",
+    "Do not invoke witness/attestation, controlled stock, repair/work order, provider, import or report/PDF workflows from this lesson."
+  ],
+  "normal_ui_steps": [
+    "Inventory → On hand: choose item and Filter; read current balances.",
+    "Issuances: confirm the intended outstanding record and visible Return action.",
+    "Return form: read Amount, Destination location, Status and Note.",
+    "After a permitted single return: read Returned/remaining amount, History movement and On hand balances."
+  ],
+  "fixed_numeric_or_guid_ids": [],
+  "current_example_replay_result": "STOP: already Returned0; read-only review only."
+}

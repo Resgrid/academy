@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-27T21:40:10.742840+00:00",
+  "actual_installed_source_sha256": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+  "actual_installed_test_sha256": "9929db8002eefa7c8b84149730ccd19f36c7dccc8db3a698a9601eb5e065629b",
+  "actual_source_path": "Unit/src/components/maps/map-view.web.tsx",
+  "actual_test_path": "Unit/src/components/maps/__tests__/camera.web.test.tsx",
+  "sdk_probe": {
+    "file": "demo/client-support/unit-camera/installed-sdk-probe.json",
+    "sha256": "560b918ecedbc67c8a1817b854dfe14f245659f6cd2e1f0a4137fcc049603e1a",
+    "cases": 16,
+    "nonfinite": 0
+  },
+  "isolated_actual_installed_Jest": {
+    "success": true,
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "tests": [
+      {
+        "title": "initial defaultSettings preserves existing orientation when optional values are absent",
+        "status": "passed"
+      },
+      {
+        "title": "initial centerCoordinate preserves existing orientation when optional values are absent",
+        "status": "passed"
+      },
+      {
+        "title": "imperative setCamera preserves omitted zoom/orientation and accepts an omitted center",
+        "status": "passed"
+      },
+      {
+        "title": "controlled updates preserve omitted numeric values through easeTo",
+        "status": "passed"
+      },
+      {
+        "title": "controlled updates preserve omitted numeric values through flyTo",
+        "status": "passed"
+      },
+      {
+        "title": "omitted center leaves the current position unchanged for an imperative orientation update",
+        "status": "passed"
+      },
+      {
+        "title": "defaultSettings preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "initial preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "controlled preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "imperative preserves valid zero and other defined numeric values",
+        "status": "passed"
+      }
+    ],
+    "raw_result_sha256": "9923ddef5d901aa83720e1bc1f66b815ded69241822e66b384282e649785a950"
+  },
+  "commands": [
+    "node sources/demo/client-support/unit-camera/verify-camera-sdk.cjs --unit-root /path/to/Unit --source /path/to/Unit/src/components/maps/map-view.web.tsx --expect-invalid 0",
+    "ACADEMY_UNIT_ROOT=/path/to/Unit ACADEMY_CAMERA_TEST_CACHE=/private/tmp/academy-unit-camera-installed-jest node /path/to/Unit/node_modules/jest/bin/jest.js --config sources/demo/client-support/unit-camera/jest-camera.config.cjs --runInBand"
+  ],
+  "scope": "Tests directly load the actual installed patched Unit Camera/test, with caches in tmp. No proposed-copy substitution, Unit further edit, network/browser/native operation, or media qualification.",
+  "normal_repository_Jest_setup_limit": "Existing jest-setup.ts references absent react-native-permissions; focused isolated jsdom harness deliberately avoids unrelated native fixture setup while executing real Camera+SDK numeric contract.",
+  "real_cartography_retest": "Pending parent browser verification; original failed021 remains unchanged and excluded."
+}

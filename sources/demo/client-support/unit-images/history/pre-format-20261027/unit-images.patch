@@ -1,0 +1,110 @@
+--- a/src/components/calls/call-images-modal.tsx
++++ b/src/components/calls/call-images-modal.tsx
+@@ -16,7 +16,7 @@
+ import { useAnalytics } from '@/hooks/use-analytics';
+ import { useAuthStore } from '@/lib';
+ import { logger } from '@/lib/logging';
+-import { isIOS } from '@/lib/platform';
++import { isIOS, isWeb } from '@/lib/platform';
+ import { type CallFileResultData } from '@/models/v4/callFiles/callFileResultData';
+ import { useLocationStore } from '@/stores/app/location-store';
+ import { useCallDetailStore } from '@/stores/calls/detail-store';
+@@ -197,13 +197,21 @@
+         {
+           compress: 0.8,
+           format: ImageManipulator.SaveFormat.PNG, // Ensure PNG format
++          ...(isWeb ? { base64: true } : {}),
+         }
+       );
+ 
+-      // Read the manipulated image as base64
+-      const base64Image = await readAsStringAsync(manipulatedImage.uri, {
+-        encoding: EncodingType.Base64,
+-      });
++      // Legacy file-system reads are unavailable on web; the manipulator returns
++      // the same resized PNG as base64 when requested. Keep native file reads.
++      const base64Image =
++        isWeb
++          ? manipulatedImage.base64
++          : await readAsStringAsync(manipulatedImage.uri, {
++              encoding: EncodingType.Base64,
++            });
++      if (!base64Image) {
++        throw new Error('Unable to read selected image data');
++      }
+ 
+       // Get current location if available
+       const currentLatitude = latitude;
+--- a/src/components/calls/__tests__/call-images-modal.test.tsx
++++ b/src/components/calls/__tests__/call-images-modal.test.tsx
+@@ -5,6 +5,12 @@
+  */
+ import { fireEvent, render, waitFor } from '@testing-library/react-native';
+ import React from 'react';
++import { Platform } from 'react-native';
++
++jest.mock('@/lib/platform', () => {
++  const { Platform } = jest.requireActual('react-native');
++  return { get isIOS() { return Platform.OS === 'ios'; }, get isWeb() { return Platform.OS === 'web'; } };
++});
+ 
+ jest.mock('react-i18next', () => ({
+   useTranslation: () => ({ t: (key: string) => key }),
+@@ -826,4 +832,57 @@
+       unmount();
+     });
+   });
++  describe('web resized image upload', () => {
++    let originalPlatform: PropertyDescriptor | undefined;
++    beforeEach(() => {
++      originalPlatform = Object.getOwnPropertyDescriptor(Platform, 'OS');
++      Object.defineProperty(Platform, 'OS', { configurable: true, value: 'web' });
++      mockReadAsStringAsync.mockRejectedValue(new Error('Legacy reads are unavailable on web'));
++    });
++    afterEach(() => {
++      if (originalPlatform) Object.defineProperty(Platform, 'OS', originalPlatform);
++    });
++
++    it('uploads the manipulator base64 with the unchanged note and filename, without a legacy file read', async () => {
++      mockManipulateAsync.mockResolvedValue({ uri: 'blob:resized-training-image', width: 1024, height: 1024, base64: 'WEB_RESIZED_PNG' });
++      const screen = render(<CallImagesModal {...defaultProps} />);
++      await pickImageFromLibrary(screen);
++      fireEvent.changeText(screen.getByTestId('image-note-input'), 'TRAINING ONLY software sample');
++      fireEvent.press(screen.getByTestId('upload-button'));
++      await waitFor(() => expect(mockUploadCallImage).toHaveBeenCalledWith('call-1', 'user-42', 'TRAINING ONLY software sample', 'original.jpg', 40.1, -75.2, 'WEB_RESIZED_PNG'));
++      expect(mockManipulateAsync).toHaveBeenCalledWith('file:///tmp/original.jpg', [{ resize: { width: 1024 } }], { compress: 0.8, format: 'png', base64: true });
++      expect(mockReadAsStringAsync).not.toHaveBeenCalled();
++      expect(screen.queryByTestId('image-note-input')).toBeNull();
++      screen.unmount();
++    });
++
++    it('keeps the selected preview and note when web base64 is absent, and never sends an empty upload', async () => {
++      mockManipulateAsync.mockResolvedValue({ uri: 'blob:resized-training-image', width: 1024, height: 1024 });
++      const screen = render(<CallImagesModal {...defaultProps} />);
++      await pickImageFromLibrary(screen);
++      fireEvent.changeText(screen.getByTestId('image-note-input'), 'TRAINING ONLY retained note');
++      fireEvent.press(screen.getByTestId('upload-button'));
++      await waitFor(() => expect(mockShowToast).toHaveBeenCalledWith('error', 'callImages.upload_error'));
++      expect(mockUploadCallImage).not.toHaveBeenCalled();
++      expect(mockReadAsStringAsync).not.toHaveBeenCalled();
++      expect(screen.getByTestId('image-note-input').props.value).toBe('TRAINING ONLY retained note');
++      expect(screen.getByTestId('upload-button')).toBeTruthy();
++      screen.unmount();
++    });
++
++    it('keeps the selected preview and note after a rejected web upload', async () => {
++      mockManipulateAsync.mockResolvedValue({ uri: 'blob:resized-training-image', width: 1024, height: 1024, base64: 'WEB_RESIZED_PNG' });
++      mockUploadCallImage.mockRejectedValue(new Error('training API rejected upload'));
++      const screen = render(<CallImagesModal {...defaultProps} />);
++      await pickImageFromLibrary(screen);
++      fireEvent.changeText(screen.getByTestId('image-note-input'), 'TRAINING ONLY retry note');
++      fireEvent.press(screen.getByTestId('upload-button'));
++      await waitFor(() => expect(mockShowToast).toHaveBeenCalledWith('error', 'callImages.upload_error'));
++      expect(mockUploadCallImage).toHaveBeenCalledTimes(1);
++      expect(mockReadAsStringAsync).not.toHaveBeenCalled();
++      expect(screen.getByTestId('image-note-input').props.value).toBe('TRAINING ONLY retry note');
++      screen.unmount();
++    });
++  });
++
+ });

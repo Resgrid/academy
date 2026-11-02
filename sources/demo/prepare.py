@@ -20,8 +20,10 @@ else:
                    'demo_password': 'Training51!' + secrets.token_hex(4),
                    'encryption': secrets.token_hex(16), 'salt': secrets.token_hex(16),
                    'jwt': secrets.token_hex(32), 'links': secrets.token_hex(24)}
-    credentials_path.write_text(json.dumps(credentials, indent=2))
-    credentials_path.chmod(0o600)
+for key in ('object_store_access', 'object_store_secret'):
+    credentials.setdefault(key, secrets.token_hex(20))
+credentials_path.write_text(json.dumps(credentials, indent=2))
+credentials_path.chmod(0o600)
 env = {'ACADEMY_STACK_NAME': profile['name'], 'ACADEMY_DB_PASSWORD': credentials['database'], 'ACADEMY_RABBIT_PASSWORD': credentials['rabbit']}
 env.update({'ACADEMY_' + key.upper() + '_PORT': str(port) for key, port in profile['ports'].items()})
 (ROOT / '.env').write_text(''.join(key + '=' + value + '\n' for key, value in env.items()))
@@ -31,6 +33,7 @@ config = {
     'DataConfig.DatabaseType': '1', 'DataConfig.DocDatabaseType': '1',
     'DataConfig.ConnectionString': connection, 'DataConfig.CoreConnectionString': connection,
     'DataConfig.DocumentConnectionString': connection.replace('Database=resgrid_academy;', 'Database=resgrid_academy_docs;'),
+    'MappingConfig.LeafletTileUrl': 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     'CacheConfig.RedisConnectionString': 'redis:6379,abortConnect=false,syncTimeout=10000',
     'SystemBehaviorConfig.Environment': '3', 'SystemBehaviorConfig.IsAzure': 'false',
     'SystemBehaviorConfig.ResgridBaseUrl': base_url,
@@ -60,13 +63,18 @@ config = {
     'FeatureFlagsConfig.TrackEvaluations': 'false',
     'OidcConfig.DatabaseType': '1',
     'OidcConfig.ConnectionString': connection.replace('Database=resgrid_academy;', 'Database=resgrid_academy_oidc;'),
-    'ApiConfig.CorsAllowedOrigins': base_url + ',http://localhost:' + str(profile['ports']['web']),
+    'ApiConfig.CorsAllowedOrigins': ','.join([base_url, 'http://localhost:' + str(profile['ports']['web'])] + [f'http://{host}:{port}' for host in ('localhost','127.0.0.1') for port in range(19101,19106)]),
     'SystemBehaviorConfig.BillingApiBaseUrl': 'http://billing:8090',
     'ApiConfig.BackendInternalApikey': credentials['jwt'],
     'WorkerConfig.DatabaseType': '1',
     'WorkerConfig.WorkerDbConnectionString': connection.replace('Database=resgrid_academy;', 'Database=resgrid_academy_workers;'),
     'WorkerConfig.PayloadKey': credentials['encryption'],
 }
+if 'object_store_access' in credentials:
+    config.update({'ImportConfig.S3Endpoint':'http://object-store:9000', 'ImportConfig.S3AccessKey':credentials['object_store_access'], 'ImportConfig.S3SecretKey':credentials['object_store_secret'], 'ImportConfig.S3UseSsl':'false', 'ImportConfig.S3ForcePathStyle':'true'})
+    env.update({'ACADEMY_OBJECT_STORE_ACCESS':credentials['object_store_access'],'ACADEMY_OBJECT_STORE_SECRET':credentials['object_store_secret']})
+    (ROOT / '.env').write_text(''.join(key + '=' + value + '\n' for key, value in env.items()))
+    (ROOT / '.env').chmod(0o600)
 if 'oidc_encryption_cert' in credentials:
     config['OidcConfig.EncryptionCert'] = credentials['oidc_encryption_cert']
     config['OidcConfig.SigningCert'] = credentials['oidc_signing_cert']

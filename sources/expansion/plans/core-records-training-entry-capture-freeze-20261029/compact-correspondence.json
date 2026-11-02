@@ -1,0 +1,311 @@
+{
+  "id": "core-records-training-entry",
+  "status": "untimed source-only candidate",
+  "narration_sha256": "42de87f24123001c5cc1344d9fad1c9cbd59546f2f27789197f698d82f506e3e",
+  "candidate_sha256": "e3df33c2315187e211c0e5c83f8ea0468c22cb549230c0cb752d736853ad9bc5",
+  "scenes": [
+    {
+      "scene_id": "training-form",
+      "title": "Identify the built-in Training record form",
+      "ordered_screens": [
+        {
+          "capture_id": "001-published-training-entry-form",
+          "required_labels": [
+            "New Record",
+            "Training",
+            "Definition",
+            "Course",
+            "Narrative"
+          ],
+          "exact_narration_span": "In Records, the New Record form has Training selected in Definition. This built-in form provides course information, a narrative, participant rows and optional unit times. Our fictional Chicago Fire exercise demonstrates the record lifecycle. It does not represent a physical training session or attendance."
+        },
+        {
+          "capture_id": "002-prepared-software-training-record",
+          "required_labels": [
+            "Course",
+            "TRAINING ONLY - Records software entry 20261029",
+            "Course code",
+            "ACADEMY-REC-29",
+            "External ID",
+            "ACADEMY-RECORD-ENTRY-20261029",
+            "Location",
+            "Start",
+            "End"
+          ],
+          "exact_narration_span": "Enter a distinct Course, Training Only, Records Software Entry, followed by the exercise date. The Course code is Academy Rec Twenty-Nine, and External ID carries a separate exercise reference. Location says Fictional Software Workspace. Review Start and the empty End before continuing."
+        }
+      ]
+    },
+    {
+      "scene_id": "narrative",
+      "title": "Describe only the activity that actually occurred",
+      "ordered_screens": [
+        {
+          "capture_id": "003-prepared-narrative-no-attendance",
+          "required_labels": [
+            "Narrative",
+            "Participants",
+            "Choose a participant",
+            "No assigned unit"
+          ],
+          "exact_narration_span": "The initial Narrative explains that this is a software record-entry exercise and that no physical training, attendance or operational response occurred. Write enough context for someone reading the record later. Below it, Participants provides a person selector, an optional assigned unit and a role. We leave the participant unselected. A blank chooser is not an attendance entry, and adding a name would make a different factual claim. The exercise therefore keeps this section empty."
+        }
+      ]
+    },
+    {
+      "scene_id": "unit-times",
+      "title": "Keep optional unit response data truthful",
+      "ordered_screens": [
+        {
+          "capture_id": "004-record-unit-time-fields-unselected",
+          "required_labels": [
+            "Units",
+            "Unit",
+            "Dispatched",
+            "En route",
+            "On scene",
+            "Released",
+            "In quarters"
+          ],
+          "exact_narration_span": "The Units section offers a checkbox for each unit and columns for Dispatched, En route, On scene, Released and In quarters. These fields belong to the record’s response data. They are not instructions to change a unit’s live status. We leave all unit selections and time entries untouched because no response happened. Review the displayed rows and preserve those empty selections rather than entering invented times to make a record appear complete."
+        }
+      ]
+    },
+    {
+      "scene_id": "save-draft",
+      "title": "Save once and retain the actual draft identity",
+      "ordered_screens": [
+        {
+          "capture_id": "006-first-draft-save-controls-before-save",
+          "required_labels": [
+            "Attachments",
+            "No file chosen",
+            "Save draft",
+            "Save and finalize"
+          ],
+          "exact_narration_span": "At the bottom, no file is selected and the attestation is unchecked. Choose Save draft to retain an editable record for review. The separate Save and finalize control is visible, but this first step saves the draft."
+        },
+        {
+          "capture_id": "007-fresh-saved-training-draft",
+          "required_labels": [
+            "View Record",
+            "Training",
+            "Draft",
+            "Record #",
+            "Draft reference",
+            "D-YXS93",
+            "Author",
+            "Owner",
+            "Station / group",
+            "Command"
+          ],
+          "exact_narration_span": "The fresh View Record page shows Training in Draft, with reference D, Y, X, S, Nine, Three and no final record number. Author and Owner are Wallace Boden. Station and group resolved to Command after the initial field was left blank. Read the returned group and keep the actual reference before proceeding."
+        }
+      ]
+    },
+    {
+      "scene_id": "edit-narrative",
+      "title": "Edit the same draft instead of creating another",
+      "ordered_screens": [
+        {
+          "capture_id": "007-fresh-saved-training-draft",
+          "required_labels": [
+            "Edit",
+            "D-YXS93"
+          ],
+          "exact_narration_span": "Use Edit on this saved draft to revise its content. Continue with the existing record rather than opening another New Record form."
+        },
+        {
+          "capture_id": "009-corrected-visible-training-narrative",
+          "required_labels": [
+            "Narrative",
+            "Course",
+            "Course code",
+            "Location",
+            "Fictional software workspace"
+          ],
+          "exact_narration_span": "The revised Narrative states that this is software record entry, no physical training or operational response occurred, and no personnel or unit times were added. Course, code and Location remain the exercise values. Read the complete text in the visible editor after typing; the content on screen must match the intended statement before you rely on it."
+        }
+      ]
+    },
+    {
+      "scene_id": "readback",
+      "title": "Verify the persisted narrative",
+      "ordered_screens": [
+        {
+          "capture_id": "010-fresh-revised-draft-readback",
+          "required_labels": [
+            "View Record",
+            "Draft",
+            "D-YXS93",
+            "Narrative",
+            "Course"
+          ],
+          "exact_narration_span": "A fresh View Record readback now contains the corrected narrative on the same draft and the same reference. It remains Draft, with no final number. Checking a separate readback is valuable even when a draft supports automatic saving: text visible in an editor is not sufficient evidence that the intended version is stored. If the result is unexpected, inspect this existing draft before repeating a create action. Here the software-only revision is present and ready for the next step."
+        }
+      ]
+    },
+    {
+      "scene_id": "attachment",
+      "title": "Attach a public handout and verify storage",
+      "ordered_screens": [
+        {
+          "capture_id": "011-public-handout-unrestricted-prepared",
+          "required_labels": [
+            "Attachments",
+            "Choose Files",
+            "File classification",
+            "Unrestricted operational content",
+            "Add attachment"
+          ],
+          "exact_narration_span": "In Attachments, choose the public software handout and select Unrestricted operational content in File classification. Use this classification because the file contains only the fictional exercise. Then use Add attachment."
+        },
+        {
+          "capture_id": "012-fresh-saved-public-handout",
+          "required_labels": [
+            "Attachments",
+            "academy-record-entry-handout.txt",
+            "358 bytes",
+            "File classification",
+            "Restricted"
+          ],
+          "exact_narration_span": "After a fresh readback, academy-record-entry-handout dot text appears in the attachment list with three hundred fifty-eight bytes. The upload selector has reset to Restricted for another file. That reset does not describe the file already stored. We will check the stored classification in the finalized revision, rather than inferring it from the new-upload control."
+        }
+      ]
+    },
+    {
+      "scene_id": "finalize",
+      "title": "Attest to the bounded software record and finalize",
+      "ordered_screens": [
+        {
+          "capture_id": "013-own-software-record-finalize-prepared",
+          "required_labels": [
+            "Narrative",
+            "academy-record-entry-handout.txt",
+            "Finalize",
+            "I attest that this record is accurate and complete to the best of my knowledge."
+          ],
+          "exact_narration_span": "Read the narrative and stored handout before signing. The attestation says the record is accurate and complete to the best of your knowledge. In this exercise, accuracy means accurately documenting a software practice with no physical training or response. Check the attestation and use Finalize."
+        },
+        {
+          "capture_id": "014-fresh-finalized-training-number",
+          "required_labels": [
+            "Finalized",
+            "TRN-2026-0002",
+            "D-YXS93",
+            "Amend"
+          ],
+          "exact_narration_span": "The fresh result shows Finalized and the actual issued number, T R N, Twenty Twenty-Six, Zero Zero Zero Two. The draft reference remains. Amend is now available for later corrections; a finalized revision is preserved rather than overwritten by ordinary draft editing."
+        }
+      ]
+    },
+    {
+      "scene_id": "history",
+      "title": "Open the actual first finalized revision",
+      "ordered_screens": [
+        {
+          "capture_id": "015-finalized-attachment-and-history",
+          "required_labels": [
+            "History",
+            "Transition",
+            "Finalized",
+            "By",
+            "Date",
+            "View",
+            "academy-record-entry-handout.txt"
+          ],
+          "exact_narration_span": "History now contains revision one, transition Finalized, with Wallace Boden and the recorded date. The handout remains listed. Use View on that history row to inspect what this first signature preserved."
+        },
+        {
+          "capture_id": "016-saved-training-revision-content",
+          "required_labels": [
+            "Complete department record TRN-2026-0002 — revision 1",
+            "Details",
+            "Course",
+            "Course Code",
+            "Location",
+            "Narrative"
+          ],
+          "exact_narration_span": "The resulting HTML page identifies the complete department record and revision one. Its Details section contains the Course, Course Code, Location and exact software-only Narrative. This gives a specific version to review, rather than relying only on the latest record header."
+        }
+      ]
+    },
+    {
+      "scene_id": "revision-metadata",
+      "title": "Distinguish stored attachment metadata from the upload form",
+      "ordered_screens": [
+        {
+          "capture_id": "016-saved-training-revision-content",
+          "required_labels": [
+            "Attachments",
+            "Item 1 / Byte Size",
+            "Item 1 / Checksum",
+            "Item 1 / Classification",
+            "Unrestricted",
+            "Item 1 / File Name",
+            "academy-record-entry-handout.txt"
+          ],
+          "exact_narration_span": "The same revision lists the handout’s filename, byte size, checksum and Unrestricted classification. This is the stored attachment metadata, separate from the reset chooser we saw earlier. The checksum matches the retained public handout."
+        },
+        {
+          "capture_id": "017-revision-public-attachment-metadata",
+          "required_labels": [
+            "Draft Reference",
+            "D-YXS93",
+            "External Id",
+            "ACADEMY-RECORD-ENTRY-20261029",
+            "Record Number",
+            "TRN-2026-0002"
+          ],
+          "exact_narration_span": "Farther down, Draft Reference, External Id and Record Number connect the original draft to the finalized record. Keep those identifiers together when reviewing an exercise or resolving a question about which version was signed."
+        }
+      ]
+    },
+    {
+      "scene_id": "queue",
+      "title": "Confirm the initial finalized record in the list",
+      "ordered_screens": [
+        {
+          "capture_id": "019-final-records-list-originals-preserved",
+          "required_labels": [
+            "Records",
+            "Record #",
+            "Type",
+            "State",
+            "Summary",
+            "TRN-2026-0002",
+            "D-469KP",
+            "TRN-2026-0001",
+            "Finalized",
+            "Draft"
+          ],
+          "exact_narration_span": "Returning to Records shows the new finalized Training row alongside the earlier Work draft and older finalized Training example. Read the number, type, state and summary together to choose the intended row. The original Work draft remains D, Four Six Nine K P; the older Training record ends Zero Zero Zero One. This exercise created and finalized only its own entry. Leave the other records untouched, and use the actual issued number when finding this example again."
+        }
+      ]
+    },
+    {
+      "scene_id": "sectors",
+      "title": "Use the same record discipline across sectors",
+      "ordered_screens": [
+        {
+          "capture_id": "019-final-records-list-originals-preserved",
+          "required_labels": [
+            "Records",
+            "Training",
+            "Summary"
+          ],
+          "exact_narration_span": "Chicago Fire can use this pattern for a software orientation record. Community care and mental-health teams can document an operational software exercise without client histories. Search-and-rescue teams can keep practice documentation distinct from a mission response."
+        },
+        {
+          "capture_id": "016-saved-training-revision-content",
+          "required_labels": [
+            "Details",
+            "Narrative",
+            "Attachments"
+          ],
+          "exact_narration_span": "Security teams can retain a fictional platform exercise; wildland coordinators can document seasonal software familiarization; industrial teams can preserve a system-training example and public handout. Across all six settings, use accurate narrative, actual participants and times only when they occurred, a verified attachment, and the saved revision that supports the statement being reviewed."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+(node:71026) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL src/app/records/__tests__/contract.test.tsx
+  ● Records screens use the Core wire contract › sends a fresh UUID as both ClientRecordId and IdempotencyKey through the actual store
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      106 |     await waitFor(() => expect(createRecordDraft).toHaveBeenCalledTimes(1));
+      107 |     const request = (createRecordDraft as jest.Mock).mock.calls[0][0];
+    > 108 |     expect(randomUUID).toHaveBeenCalledTimes(1);
+          |                        ^
+      109 |     expect(request.ClientRecordId).toBe(GUID);
+      110 |     expect(request.ClientRecordId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+      111 |     expect(request.IdempotencyKey).toBe(request.ClientRecordId);
+
+      at Object.toHaveBeenCalledTimes (src/app/records/__tests__/contract.test.tsx:108:24)
+      at asyncGeneratorStep (../../../../../Dispatch/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../../Dispatch/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+  ● Records screens use the Core wire contract › passes returned nested Summary/Notes into the form without writing a record
+
+    Unable to find an element with text: /Returned summary/
+
+    [36m<View>[39m
+      [36m<RCTScrollView>[39m
+        [36m<View>[39m
+          [36m<View>[39m
+            [36m<Text>[39m
+              [0mTraining review[0m
+            [36m</Text>[39m
+            [36m<View>[39m
+              [36m<Text>[39m
+                [0mFinalized[0m
+              [36m</Text>[39m
+            [36m</View>[39m
+          [36m</View>[39m
+          [36m<Text[39m
+            [33mtestID[39m=[32m"returned-values"[39m
+          [36m>[39m
+            [0m{}[0m
+          [36m</Text>[39m
+          [36m<View[39m
+            [33maccessible[39m=[32m{true}[39m
+          [36m>[39m
+            [36m<Text>[39m
+              [0mrecords.back[0m
+            [36m</Text>[39m
+          [36m</View>[39m
+          [36m<View />[39m
+        [36m</View>[39m
+      [36m</RCTScrollView>[39m
+    [36m</View>[39m
+
+      159 |     });
+      160 |     render(<RecordScreen />);
+    > 161 |     await screen.findByText(/Returned summary/);
+          |                  ^
+      162 |     expect(screen.getByText(/Returned notes/)).toBeTruthy();
+      163 |     expect(screen.queryByText(/redacted/)).toBeNull();
+      164 |     expect(createRecordDraft).not.toHaveBeenCalled();
+
+      at Object.findByText (src/app/records/__tests__/contract.test.tsx:161:18)
+      at asyncGeneratorStep (../../../../../Dispatch/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (../../../../../Dispatch/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at ../../../../../Dispatch/node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at Object.<anonymous> (../../../../../Dispatch/node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12)
+
+FAIL src/lib/records/__tests__/wire-contract.test.ts
+  ● Core Records wire contract › matches the three actual Core classification values and keeps unknown fields restricted
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   0,
+        1,
+        2,
+    +   3,
+      ]
+
+       5 | describe('Core Records wire contract', () => {
+       6 |   it('matches the three actual Core classification values and keeps unknown fields restricted', () => {
+    >  7 |     expect([RmsFieldClassification.Standard, RmsFieldClassification.Restricted, RmsFieldClassification.Protected]).toEqual([0, 1, 2]);
+         |                                                                                                                    ^
+       8 |     for (const [number, restricted, protectedField] of [
+       9 |       [0, false, false],
+      10 |       [1, true, false],
+
+      at Object.toEqual (src/lib/records/__tests__/wire-contract.test.ts:7:116)
+
+  ● Core Records wire contract › maps nested sections and repeating rows without merging their identities
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:57:30)
+
+  ● Core Records wire contract › does not map withheld cells or field keys even if unexpected raw content is present
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:67:30)
+
+  ● Core Records wire contract › preserves flat-array prefill callers and both withholding flags
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 2
+
+      Array [
+        "summary::::call",
+    +   "summary::::legacy-private",
+    +   "summary::::private",
+      ]
+
+       95 |       { SectionKey: 'summary', FieldKey: 'private', Withheld: true, Value: 'not copied' },
+       96 |     ]);
+    >  97 |     expect(Object.keys(mapped)).toEqual([cellKey('summary', 'call')]);
+          |                                 ^
+       98 |     expect(mapped[cellKey('summary', 'call')]).toMatchObject({ ReferenceType: 'call', ReferenceId: '51001' });
+       99 |     expect(toValueMap({ Cells: [{ SectionKey: 'summary', FieldKey: 'summary', Value: 'Legacy wrapper' }] })[cellKey('summary', 'summary')].Value).toBe('Legacy wrapper');
+      100 |   });
+
+      at Object.toEqual (src/lib/records/__tests__/wire-contract.test.ts:97:33)
+
+  ● Core Records wire contract › keeps raw units, currency and a zero offset without deriving values from display/numbers
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:103:30)
+
+  ● Core Records wire contract › does not invent absent sections, rows, cells or identities
+
+    TypeError: (cells ?? []) is not iterable
+
+      67 | export const toValueMap = (cells: RecordValueCellData[] | null | undefined): ValueMap => {
+      68 |   const map: ValueMap = {};
+    > 69 |   for (const cell of cells ?? []) {
+         |                               ^
+      70 |     if (!cell?.FieldKey || !cell?.SectionKey) {
+      71 |       continue;
+      72 |     }
+
+      at toValueMap (src/lib/records/schema.ts:69:31)
+      at Object.<anonymous> (src/lib/records/__tests__/wire-contract.test.ts:116:24)
+
+Test Suites: 2 failed, 2 total
+Tests:       8 failed, 1 passed, 9 total
+Snapshots:   0 total
+Time:        4.153 s
+Ran all test suites within paths "src/app/records/__tests__/contract.test.tsx", "src/lib/records/__tests__/wire-contract.test.ts".
+Test results written to: ../../repo/sources/demo/client-support/dispatch-records-contract-20261030/proofs/baseline-regression.json

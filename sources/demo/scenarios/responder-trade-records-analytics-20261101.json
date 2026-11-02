@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "kind": "retained_fictional_data_and_normal_ui_replay",
+  "department": {"id": 51, "name": "Firehouse 51 — Training Department"},
+  "credentials": "Use the generated ignored local demo credentials. No credential is stored in this scenario.",
+  "automatic_mutations": false,
+  "completed_trade_exercise": {
+    "actual_audit": "expansion/audits/responder-approved-trade-cancellation-20261101.json",
+    "capture_manifest": "captures/expansion/responder-shift-trade-approved-20261101/manifest.json",
+    "capture_manifest_sha256": "474ebeeda7fbdd321adacc70d1277f1c300cdfb9b5fb2335c7aa7c1353bf5117",
+    "shift": {"id": 51002, "name": "Community standby signup", "start_displayed": "8:00 AM", "end_displayed": "12:00 PM", "assignment": "Sign-up", "approval_required": true},
+    "requester": {"name": "Wallace Boden", "group": "Command", "role": "Chief"},
+    "candidate": {"name": "Blake Gallo", "group": "Truck 81", "role": "Firefighter"},
+    "note": "TRAINING ONLY - Practice reviewing and cancelling a shift trade request.",
+    "dates_before": ["2026-10-25", "2026-10-26", "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30", "2026-10-31"],
+    "date_added_through_normal_core_calendar": "2026-11-01",
+    "original_dates_retained": true,
+    "actual_sequence": [
+      "Original October31 day had ended. Core Edit Shift Calendar added November1 and preserved all seven earlier selected dates; saved and reopened exact eight-date selection.",
+      "Responder Calendar opened the November1 standby day; Boden was already on its Scheduled roster and Request trade was legitimately offered.",
+      "Request a trade selected only Blake Gallo and entered the exact training note; Send request was clicked once after explicit user approval.",
+      "Saved day showed You have asked colleagues to take this shift. Trades showed Outgoing/Open, Blake Gallo/No reply yet.",
+      "Cancel trade request opened the actual identity/warning confirmation. The approved cancellation was confirmed once.",
+      "Trades returned No shift trades. Normal full reload and reopening Trades retained that result.",
+      "Reopening the same day restored Request trade, retained You are on and retained Wallace Boden/Command/Chief/Scheduled in the roster."
+    ],
+    "replay": [
+      "Start the isolated demo stack with the retained base seed, then locate the exact existing shift, requester and candidate through normal UI.",
+      "If the recorded date has ended, choose a genuinely future fictional training date before capture. Use Core calendar UI, preserve all existing dates and verify saved readback. Do not bypass eligibility or change clocks.",
+      "Confirm the intended training member is legitimately on that occurrence and the actual Request trade action is available.",
+      "A new replay sends a new request and may notify the candidate. The prior approval covered one completed request and cancellation; obtain specific authorization for another submitted exercise.",
+      "Capture the prepared selection, actual saved request, actual response labels, cancellation confirmation, reloaded queue and retained roster. Do not repeat Send request after a timeout without checking its saved state.",
+      "Record new dates, returned IDs and actual image/DOM hashes in a new capture batch; preserve this historical evidence."
+    ],
+    "not_demonstrated": ["Recipient reply or offer", "Offer acceptance", "Supervisor approval", "Replacement assignment", "Provider email/SMS/push delivery", "Physical attendance or completed handover"]
+  },
+  "analytics_read_only_exercise": {
+    "capture_manifest": "captures/expansion/core-records-analytics-20261101/manifest.json",
+    "capture_manifest_sha256": "e07f4205b20ffb0edca79f802ed4fcbd8a2ac62adc8f1f26bae173c2ccd5550d",
+    "scope_audit": "expansion/audits/core-records-analytics-filter-observations-20261101.json",
+    "from_displayed": "08/02/2026",
+    "to_displayed": "10/31/2026",
+    "existing_record_dependencies": [
+      {"number": "TRN-2026-0001", "definition": "Training", "state": "Finalized", "summary": "Firehouse 51 software orientation — fictional exercise", "course_code": "ACADEMY-CORE-01", "group": "Firehouse 51", "recorded_hours": 0.5},
+      {"number": "TRN-2026-0002", "definition": "Training", "state": "Amended", "summary": "TRAINING ONLY - Records software entry 20261029", "course_code": "ACADEMY-REC-29A", "group": "Command", "recorded_hours": 0},
+      {"number": "TRNADM-2026-0001", "definition": "TRAINING ONLY - Community software exercise", "state": "Finalized", "group": "Command", "recorded_hours": 0},
+      {"number": "TRNADM-2026-0002", "definition": "TRAINING ONLY - Community software exercise", "state": "Finalized", "group": "Command", "recorded_hours": 0},
+      {"recorded_reference": "D-469KP", "definition": "Work", "state": "Draft", "contributes_to_finalized_dataset": false}
+    ],
+    "dependency_sources": ["expansion/lessons/core-records-training-entry.json", "expansion/lessons/core-records-administration.json", "expansion/lessons/app-responder-record-draft-finalize.json", "expansion/plans/core-records-amendment-source-review-20261029/actual-operation-log.json"],
+    "replay": [
+      "Use the ordinary Records creation/finalization/amendment flows retained in the dependency lessons. Preserve their truthful software-only narrative and attestation context; do not insert synthetic signed lifecycle history directly into the database.",
+      "Locate records by their training identity rather than assuming a fresh seed issues the same number, draft reference or ID. Retain actual returned identities and timestamps.",
+      "Choose a reporting window containing those fixtures. As the intended authorized administrator, open Records > Analytics > Executive summary.",
+      "Read all-group/all-definition results, choose Training, capture the prepared selection, apply Filter and capture the refreshed result.",
+      "Apply Engine51 plus Training and capture its actual returned subset and separately scoped transition counts.",
+      "Restore All station groups and All definitions with Filter. Open Workload and record the month, definition, weekday/hour, person, unit, author and group panels.",
+      "Do not assume a fresh dataset has the same counts. Narrate its actual displayed values and preserve scope differences. No record mutation is required for the filtering exercise itself."
+    ],
+    "recorded_results": {"all_records": 4, "training_records": 2, "engine51_training_records": 0, "all_training_hours": 0.5, "department_amendments_in_window": 1, "current_visible_open_drafts": 1},
+    "metric_scope": "For the recorded full-department administrator, definition/group filters narrow the finalized record dataset. Amendment/void transitions use department/time-window scope; current queue counts are separate visible-queue measures."
+  }
+}

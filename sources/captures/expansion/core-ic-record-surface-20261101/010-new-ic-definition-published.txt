@@ -1,0 +1,116 @@
+ 
+Firehouse 51 — Training Department 
+ 
+Help 
+ 
+ 
+TRAINING ONLY - IC coordination note v1 · Published
+Home Definitions academy-ic-handover-20261101
+ History
+ Print layout
+ Open new draft
+Version 1 published.
+ This version is published and read-only. Open a new draft to make changes.
+Settings
+Name
+Category
+Description
+Permitted subjects
+Lifecycle preset
+QuickEntry
+ReviewRequired
+ApprovalAcknowledgement
+Records per call
+Multiple per call
+One authoritative per call
+One per subject per call
+How many records of this definition one call may have. Enforced on create; a voided or cancelled record releases its slot.
+Reviewer roles
+Chief
+Driver / Operator
+Firefighter
+Officer
+Paramedic
+Rescue Technician
+TRAINING ONLY - Community response navigator
+Approver roles
+Chief
+Driver / Operator
+Firefighter
+Officer
+Paramedic
+Rescue Technician
+TRAINING ONLY - Community response navigator
+Review due (hours)
+Approval due (hours)
+ Require author attestation at finalize
+Numbering
+Number prefix
+Sequence width
+Assign number
+OnFinalize
+OnCreate
+Sequence per station 
+Sequence per incident 
+Reset yearly
+Classification
+Classification
+Standard
+Restricted
+Protected
+Retention (years)
+Client surfaces
+Responder 
+Unit 
+IC 
+Dispatch 
+Allow offline 
+Allow attachments
+Keep photo coordinates on attachments
+Keep photo coordinates on attachments
+
+Off by default: a photo's location and device details are stripped on upload. Turn this on only when the form genuinely needs where the photo was taken, such as a damage assessment or a clue report.
+
+Change notes
+Migration map (JSON)
+
+Use valid JSON: put text in double quotes; enter numbers and true/false without quotes. Dates use ISO format. Field names follow the schema (letter case is ignored). Errors identify the field; array indexes start at 0. Leave blank to use an empty list or object.
+
+JSON example — MigrationMapJson
+[{"FromFieldKey":"old_key","ToFieldKey":"new_key"}]
+JSON schema (field names and types) — MigrationMapJson
+
+Client capability: records.v1b
+
+Schema (JSON)
+
+Sections hold fields; each field has a key, label, type and optional rules. Validate before publishing; the field table below reflects the last saved draft.
+
+Use valid JSON: put text in double quotes; enter numbers and true/false without quotes. Dates use ISO format. Field names follow the schema (letter case is ignored). Errors identify the field; array indexes start at 0.
+
+JSON example — SchemaJson
+{
+  "SchemaVersion": 1,
+  "Sections": [{
+    "Key": "details",
+    "Label": "Details",
+    "Fields": [{
+      "Key": "notes",
+      "Label": "Notes",
+      "Type": "LongText",
+      "Required": false
+    }]
+  }]
+}
+JSON schema (field names and types) — SchemaJson
+Fields
+Details details
+Key	Label	Field type	Required	Classification	Flags
+summary	Summary	ShortText	Yes	Standard	search filter sort workflow export
+notes	Notes	LongText	No	Standard	export
+✨
+Assistant
+ 
+💬
+Chat
+Copyright Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

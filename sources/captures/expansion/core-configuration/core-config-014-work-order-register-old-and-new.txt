@@ -1,0 +1,274 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness" [expanded]:
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - list:
+      - link " Work orders":
+        - /url: /User/WorkOrders
+        - generic: 
+        - text: Work orders
+      - link " Checklists":
+        - /url: /User/Checklists
+        - generic: 
+        - text: Checklists
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 4":
+      - /url: "#"
+      - generic: 
+      - generic: "4"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Work orders" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - strong: Work orders
+- generic: Raise repairs, track who is doing them, and see what maintenance has cost.
+- link " New work order":
+  - /url: /User/WorkOrders/New
+  - generic: 
+  - text: New work order
+- list:
+  - link " Work orders":
+    - /url: /User/WorkOrders
+    - generic: 
+    - text: Work orders
+  - link " Preventive maintenance":
+    - /url: /User/WorkOrders/Recurrences
+    - generic: 
+    - text: Preventive maintenance
+  - link " Maintenance reports":
+    - /url: /User/WorkOrders/Reports
+    - generic: 
+    - text: Maintenance reports
+  - link " Service history":
+    - /url: /User/WorkOrders/History
+    - generic: 
+    - text: Service history
+  - link " Bulk operations":
+    - /url: /User/WorkOrders/Bulk
+    - generic: 
+    - text: Bulk operations
+  - link " Work Order Settings":
+    - /url: /User/WorkOrders/Settings
+    - generic: 
+    - text: Work Order Settings
+- heading "Work orders" [level=5]
+- generic: 
+- text: A work order is one repair or inspection, from the request through to the verified fix.
+- generic: Number
+- textbox "Number"
+- generic: Status
+- combobox "Status":
+  - option "All" [selected]
+  - option "Requested"
+  - option "Accepted"
+  - option "Assigned"
+  - option "In progress"
+  - option "On hold"
+  - option "Completed"
+  - option "Closed"
+  - option "Rejected"
+  - option "Duplicate"
+  - option "Cancelled"
+- generic: Priority
+- combobox "Priority":
+  - option "All" [selected]
+  - option "Low"
+  - option "Normal"
+  - option "High"
+  - option "Emergency"
+- generic: Unit
+- combobox "Unit":
+  - option "All" [selected]
+  - option "Engine 51"
+  - option "Truck 81"
+  - option "Squad 3"
+  - option "Ambulance 61"
+  - option "Battalion 25"
+  - option "Reserve Engine 51"
+- generic: Group
+- combobox "Group":
+  - option "All" [selected]
+  - option "Firehouse 51"
+  - option "Command"
+  - option "Engine 51"
+  - option "Truck 81"
+  - option "Squad 3"
+  - option "Ambulance 61"
+- checkbox "Assigned to me"
+- text: Assigned to me
+- button " Filter":
+  - generic: 
+  - text: Filter
+- table:
+  - rowgroup:
+    - row "Number Title Status Priority Due date Actions":
+      - columnheader "Number"
+      - columnheader "Title"
+      - columnheader "Status"
+      - columnheader "Priority"
+      - columnheader "Due date"
+      - columnheader "Actions"
+  - rowgroup:
+    - row "WO-2099-000001 TRAINING ONLY — Assigned software practice In progress Normal 10/26/2026 19:00:00 Edit schedule":
+      - cell "WO-2099-000001"
+      - cell "TRAINING ONLY — Assigned software practice":
+        - link "TRAINING ONLY — Assigned software practice":
+          - /url: /User/WorkOrders/Detail/e6158298-a817-4d92-b075-a7d7ed331b5e
+      - cell "In progress"
+      - cell "Normal"
+      - cell "10/26/2026 19:00:00"
+      - cell "Edit schedule":
+        - link "Edit schedule":
+          - /url: /User/WorkOrders/Detail/e6158298-a817-4d92-b075-a7d7ed331b5e
+    - row "MNT-26-0001 TRAINING ONLY - numbering demonstration Requested Low Accepted Edit schedule":
+      - cell "MNT-26-0001"
+      - cell "TRAINING ONLY - numbering demonstration":
+        - link "TRAINING ONLY - numbering demonstration":
+          - /url: /User/WorkOrders/Detail/5e7867c1-0aa3-4269-bdbf-986674efafb2
+      - cell "Requested"
+      - cell "Low"
+      - cell
+      - cell "Accepted Edit schedule":
+        - button "Accepted"
+        - link "Edit schedule":
+          - /url: /User/WorkOrders/Detail/5e7867c1-0aa3-4269-bdbf-986674efafb2
+    - row "WO-2026-000003 TRAINING ONLY — Facility inspection practice Accepted Normal Edit schedule":
+      - cell "WO-2026-000003"
+      - cell "TRAINING ONLY — Facility inspection practice":
+        - link "TRAINING ONLY — Facility inspection practice":
+          - /url: /User/WorkOrders/Detail/22546665-bc5f-46e6-99ca-f032f8482257
+      - cell "Accepted"
+      - cell "Normal"
+      - cell
+      - cell "Edit schedule":
+        - link "Edit schedule":
+          - /url: /User/WorkOrders/Detail/22546665-bc5f-46e6-99ca-f032f8482257
+    - row "WO-2026-000002 Ambulance 61 — scheduled equipment inspection Requested Normal 10/27/2026 13:19:29 Accepted Edit schedule":
+      - cell "WO-2026-000002"
+      - cell "Ambulance 61 — scheduled equipment inspection":
+        - link "Ambulance 61 — scheduled equipment inspection":
+          - /url: /User/WorkOrders/Detail/5fb3a964-e718-5873-9706-24cdac81ae7d
+      - cell "Requested"
+      - cell "Normal"
+      - cell "10/27/2026 13:19:29"
+      - cell "Accepted Edit schedule":
+        - button "Accepted"
+        - link "Edit schedule":
+          - /url: /User/WorkOrders/Detail/5fb3a964-e718-5873-9706-24cdac81ae7d
+    - row "WO-2026-000001 Reserve Engine 51 — warning lamp investigation Assigned High 10/26/2026 13:19:29 Edit schedule":
+      - cell "WO-2026-000001"
+      - cell "Reserve Engine 51 — warning lamp investigation":
+        - link "Reserve Engine 51 — warning lamp investigation":
+          - /url: /User/WorkOrders/Detail/e74bf081-8f2b-55be-a1b4-e5ba15cb43b3
+      - cell "Assigned"
+      - cell "High"
+      - cell "10/26/2026 13:19:29"
+      - cell "Edit schedule":
+        - link "Edit schedule":
+          - /url: /User/WorkOrders/Detail/e74bf081-8f2b-55be-a1b4-e5ba15cb43b3
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

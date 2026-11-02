@@ -1,0 +1,453 @@
+import { Env } from '@env';
+import find from 'lodash/find';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { getConfig } from '@/api/config';
+import { getUnitStatus } from '@/api/units/unitStatuses';
+import { logger } from '@/lib/logging';
+import { applyServerMapboxToken } from '@/lib/mapbox-token';
+import { zustandStorage } from '@/lib/storage';
+import { getActiveCallId, getActiveUnitId, removeActiveCallId, removeActiveUnitId, setActiveCallId, setActiveUnitId } from '@/lib/storage/app';
+import { findCurrentUnitStatusOption, findUnitStatusSet } from '@/lib/unit-status-set';
+import { type CallPriorityResultData } from '@/models/v4/callPriorities/callPriorityResultData';
+import { type CallResultData } from '@/models/v4/calls/callResultData';
+import { type GetConfigResultData } from '@/models/v4/configs/getConfigResultData';
+import { type StatusesResultData } from '@/models/v4/statuses/statusesResultData';
+import { type UnitTypeStatusResultData } from '@/models/v4/statuses/unitTypeStatusResultData';
+import { type UnitResultData } from '@/models/v4/units/unitResultData';
+import { type UnitStatusResultData } from '@/models/v4/unitStatus/unitStatusResultData';
+import { isNetworkError } from '@/utils/network';
+
+import { useCallsStore } from '../calls/store';
+//import { useRolesStore } from '../roles/store';
+import { useUnitsStore } from '../units/store';
+
+/**
+ * Bumped on sign-out and on a server switch. A config response for a request started before that
+ * belongs to the previous session or server; applying it would bring back that department's config
+ * and Mapbox token, so fetchConfig drops it.
+ */
+let configSessionGeneration = 0;
+
+export const invalidateConfigRequests = (): void => {
+  configSessionGeneration += 1;
+};
+
+/**
+ * The unit list could not be loaded, so whether a unit still exists is unknown.
+ *
+ * setActiveUnit throws this rather than treating the unit as deleted: during init() it fails the
+ * initialization so the app layout retries it (with backoff, and again on foreground), and the
+ * unit picker reports the selection as failed instead of silently dropping it.
+ */
+export class UnitListUnavailableError extends Error {
+  constructor(
+    public readonly unitId: string,
+    reason: string | null
+  ) {
+    super(`Unit list unavailable while setting active unit ${unitId}${reason ? `: ${reason}` : ''}`);
+    this.name = 'UnitListUnavailableError';
+  }
+}
+
+interface CoreState {
+  activeUnitId: string | null;
+  activeUnit: UnitResultData | null;
+  activeUnitStatus: UnitStatusResultData | null;
+  activeUnitStatusType: StatusesResultData | null;
+  activeStatuses: UnitTypeStatusResultData | null;
+
+  activeCallId: string | null;
+  activeCall: CallResultData | null;
+  activePriority: CallPriorityResultData | null;
+
+  config: GetConfigResultData | null;
+
+  isLoading: boolean;
+  isInitialized: boolean;
+  isInitializing: boolean;
+  error: string | null;
+  init: () => Promise<void>;
+  setActiveUnit: (unitId: string) => Promise<void>;
+  setActiveUnitWithFetch: (unitId: string) => Promise<void>;
+  refreshActiveUnitStatus: (unitId: string) => Promise<void>;
+  setActiveCall: (callId: string | null) => Promise<void>;
+  fetchConfig: () => Promise<void>;
+}
+
+export const useCoreStore = create<CoreState>()(
+  persist(
+    (set, get) => ({
+      activeUnitId: null,
+      activeUnit: null,
+      activeUnitStatus: null,
+      activeUnitStatusType: null,
+      activeCallId: null,
+      activeCall: null,
+      activePriority: null,
+      config: null,
+      isLoading: false,
+      isInitialized: false,
+      isInitializing: false,
+      error: null,
+      activeStatuses: null,
+      init: async () => {
+        const state = get();
+
+        // Prevent multiple simultaneous initializations
+        if (state.isInitializing) {
+          logger.info({
+            message: 'Core store initialization already in progress, skipping',
+          });
+          return;
+        }
+
+        // Don't re-initialize if already initialized
+        if (state.isInitialized) {
+          logger.info({
+            message: 'Core store already initialized, skipping',
+          });
+          return;
+        }
+
+        set({ isLoading: true, isInitializing: true, error: null });
+
+        try {
+          // Fetch config first before anything else - this is critical for SignalR connections.
+          // fetchConfig rethrows, so a failure aborts init here with the original
+          // error intact — callers upstream classify it with isNetworkError, which
+          // a synthetic replacement Error would defeat.
+          await get().fetchConfig();
+
+          const activeUnitId = getActiveUnitId();
+          const activeCallId = getActiveCallId();
+
+          // Initialize in sequence to prevent race conditions
+          if (activeUnitId) {
+            await get().setActiveUnit(activeUnitId);
+          }
+
+          if (activeCallId) {
+            await get().setActiveCall(activeCallId);
+          }
+
+          set({
+            isInitialized: true,
+            isLoading: false,
+            isInitializing: false,
+          });
+
+          logger.info({
+            message: 'Core store initialization completed successfully',
+          });
+        } catch (error) {
+          set({
+            error: 'Failed to init core app data',
+            isLoading: false,
+            isInitializing: false,
+          });
+          // A network failure here has already been surfaced by fetchConfig (and an
+          // unavailable unit list by the units store); keep it at warn so the same
+          // transient, recoverable error is not reported to Sentry multiple times as it
+          // bubbles up the call stack.
+          if (isNetworkError(error) || error instanceof UnitListUnavailableError) {
+            logger.warn({
+              message: 'Failed to init core app data due to network connectivity',
+              context: { error },
+            });
+          } else {
+            logger.error({
+              message: 'Failed to init core app data',
+              context: { error },
+            });
+          }
+          throw error;
+        }
+      },
+      setActiveUnit: async (unitId: string) => {
+        set({ isLoading: true, error: null, activeUnitId: unitId });
+        try {
+          await setActiveUnitId(unitId);
+          await useUnitsStore.getState().fetchUnits();
+          const { units, unitStatuses, error: unitsError, hasLoaded } = useUnitsStore.getState();
+          const activeUnit = units.find((unit) => unit.UnitId === unitId);
+
+          if (!activeUnit && (unitsError || !hasLoaded)) {
+            // fetchUnits() swallows its failures, so a missing unit here usually means the list could
+            // not be loaded, not that the unit was deleted. Clearing the selection on that is how a
+            // crew reopening the app with poor signal lost their unit — keep it and fail instead.
+            throw new UnitListUnavailableError(unitId, unitsError);
+          }
+
+          if (activeUnit) {
+            // fetchUnits() above already fetched /Statuses/GetAllUnitStatuses and
+            // stored the identical payload as unitStatuses — reuse it instead of
+            // issuing the same request a second time.
+            // The unit type's custom status set (by CustomStatusSetId, which survives a renamed unit type, then by
+            // the unit type name); a unit without one uses the built-in statuses.
+            const defaultStatuses = find(unitStatuses, ['UnitType', '0']);
+            const activeStatuses: UnitTypeStatusResultData | undefined = findUnitStatusSet(unitStatuses, activeUnit) ?? defaultStatuses;
+
+            set({
+              activeUnit: activeUnit,
+              activeStatuses: activeStatuses,
+              isLoading: false,
+            });
+          } else {
+            // The list loaded and the persisted unit is not in it (deleted/decommissioned) —
+            // clear the stale id and ALWAYS reset isLoading or consumers spin forever.
+            logger.warn({
+              message: 'Active unit not found in fetched units, clearing stale selection',
+              context: { unitId },
+            });
+            await removeActiveUnitId();
+            set({
+              activeUnitId: null,
+              activeUnit: null,
+              activeUnitStatus: null,
+              activeUnitStatusType: null,
+              activeStatuses: null,
+              isLoading: false,
+            });
+            return;
+          }
+
+          const unitStatus = await getUnitStatus(unitId);
+
+          if (unitStatus) {
+            const unitStatusType = findUnitStatusSet(unitStatuses, activeUnit);
+            if (unitStatusType) {
+              const unitStatusInfo = findCurrentUnitStatusOption(unitStatusType.Statuses, unitStatus.Data);
+              set({
+                activeUnitStatus: unitStatus.Data,
+                activeUnitStatusType: unitStatusInfo,
+              });
+            } else {
+              set({
+                activeUnitStatus: unitStatus.Data,
+                activeUnitStatusType: null,
+              });
+            }
+          }
+
+          //await useRolesStore.getState().fetchRolesForUnit(unitId);
+        } catch (error) {
+          set({ error: 'Failed to set active unit', isLoading: false });
+
+          if (error instanceof UnitListUnavailableError) {
+            // The underlying fetch failure is already reported by the units store.
+            logger.warn({
+              message: 'Unit list unavailable, keeping the selected unit for a retry',
+              context: { unitId, error: error.message },
+            });
+            throw error;
+          }
+
+          if (isNetworkError(error)) {
+            logger.warn({
+              message: 'Failed to set active unit due to network connectivity',
+              context: { error },
+            });
+          } else {
+            logger.error({
+              message: 'Failed to set active unit',
+              context: { error },
+            });
+          }
+        }
+      },
+      setActiveUnitWithFetch: async (unitId: string) => {
+        const previousUnitId = get().activeUnitId;
+        set({ isLoading: true, error: null, activeUnitId: unitId });
+        try {
+          await useUnitsStore.getState().fetchUnits();
+
+          const units = useUnitsStore.getState().units;
+          const activeUnit = units.find((unit) => unit.UnitId === unitId);
+
+          // fetchUnits() swallows its own failures, so the list can be empty or stale here. Writing
+          // `undefined` over the unit we already hold would silently disable every status submit
+          // (they all require an active unit) until the app restarts — keep the one we have.
+          if (!activeUnit) {
+            logger.warn({
+              message: 'Active unit missing from refreshed units, keeping the current unit',
+              context: { unitId, unitCount: units.length },
+            });
+            // Keeping it is only right when it is the unit being refreshed. A switch to another unit
+            // is refused whole, so the id, the unit and its status never describe different units.
+            if (get().activeUnit?.UnitId !== unitId) {
+              set({ activeUnitId: previousUnitId, error: 'Failed to fetch and set active unit', isLoading: false });
+              return;
+            }
+          }
+
+          const unitStatus = await getUnitStatus(unitId);
+
+          // Another unit was selected while this refresh was in flight (that switch owns the loading
+          // state now); this answer is not for the unit that is active.
+          if (get().activeUnitId !== unitId) {
+            return;
+          }
+
+          set({
+            ...(activeUnit ? { activeUnit } : {}),
+            activeUnitStatus: unitStatus.Data,
+            isLoading: false,
+          });
+        } catch (error) {
+          set({
+            error: 'Failed to fetch and set active unit',
+            isLoading: false,
+          });
+          if (isNetworkError(error)) {
+            logger.warn({
+              message: 'Failed to fetch and set active unit due to network connectivity',
+              context: { error },
+            });
+          } else {
+            logger.error({
+              message: 'Failed to fetch and set active unit',
+              context: { error },
+            });
+          }
+        }
+      },
+      // Lightweight status-only refresh — used by the SignalR status hook so a
+      // unitStatusUpdated event does NOT refetch the entire fleet.
+      refreshActiveUnitStatus: async (unitId: string) => {
+        try {
+          const unitStatus = await getUnitStatus(unitId);
+          if (unitStatus?.Data) {
+            set({ activeUnitStatus: unitStatus.Data });
+          }
+        } catch (error) {
+          // Driven by SignalR unitStatusUpdated events, so a transient failure is
+          // repaired by the next event or the next resume.
+          if (isNetworkError(error)) {
+            logger.warn({
+              message: 'Failed to refresh active unit status due to network connectivity',
+              context: { error },
+            });
+          } else {
+            logger.error({
+              message: 'Failed to refresh active unit status',
+              context: { error },
+            });
+          }
+        }
+      },
+      setActiveCall: async (callId: string | null) => {
+        if (!callId) {
+          // Deselect the call — also drop the persisted id so a stale value is
+          // not re-attempted on every cold start.
+          await removeActiveCallId();
+          set({
+            activeCall: null,
+            activePriority: null,
+            activeCallId: null,
+          });
+          return;
+        }
+
+        set({ isLoading: true, error: null, activeCallId: callId });
+        try {
+          await setActiveCallId(callId);
+          const callStore = useCallsStore.getState();
+          await callStore.fetchCalls();
+          await callStore.fetchCallPriorities();
+          const activeCall = callStore.calls.find((call) => call.CallId === callId);
+          const activePriority = callStore.callPriorities.find((priority) => priority.Id === activeCall?.Priority);
+
+          if (!activeCall) {
+            // Call no longer active (e.g. closed between persist and init) —
+            // clear the stale id instead of re-attempting it every cold start.
+            await removeActiveCallId();
+            set({
+              activeCall: null,
+              activePriority: null,
+              activeCallId: null,
+              isLoading: false,
+            });
+            return;
+          }
+
+          set({
+            activeCall: activeCall,
+            activePriority: activePriority,
+            isLoading: false,
+          });
+        } catch (error) {
+          set({ error: 'Failed to set active call', isLoading: false });
+          logger.error({
+            message: 'Failed to set active call',
+            context: { error },
+          });
+        }
+      },
+      fetchConfig: async () => {
+        const sessionGeneration = configSessionGeneration;
+        try {
+          const config = await getConfig(Env.APP_KEY);
+
+          if (sessionGeneration !== configSessionGeneration) {
+            logger.info({
+              message: 'Dropping a config response from before sign-out or a server switch',
+            });
+            return;
+          }
+
+          // Only update if config actually changed to prevent unnecessary re-renders
+          const current = get().config;
+          if (!current || JSON.stringify(current) !== JSON.stringify(config.Data)) {
+            set({ config: config.Data, error: null });
+          } else if (get().error) {
+            // Clear error even if config hasn't changed
+            set({ error: null });
+          }
+
+          if (config.Data) {
+            // Fire and forget: the token is checked with Mapbox, which must never hold up or fail config loading.
+            applyServerMapboxToken(config.Data.AppMapboxAccessToken).catch((error) => {
+              logger.warn({
+                message: 'Failed to apply the server Mapbox token',
+                context: { error },
+              });
+            });
+          }
+        } catch (error) {
+          set({ error: 'Failed to fetch config', isLoading: false });
+          // Transient connectivity failures (offline, or the app cold-launched in the
+          // background with restricted network access) are expected and recoverable,
+          // so log them at warn level to avoid flooding Sentry with non-actionable
+          // errors. Genuine server responses (4xx/5xx) still report as errors.
+          if (isNetworkError(error)) {
+            logger.warn({
+              message: 'Failed to fetch config due to network connectivity',
+              context: { error },
+            });
+          } else {
+            logger.error({
+              message: 'Failed to fetch config',
+              context: { error },
+            });
+          }
+          throw error; // Re-throw to allow calling code to handle
+        }
+      },
+    }),
+    {
+      name: 'core-storage',
+      storage: createJSONStorage(() => zustandStorage),
+      // Persist ONLY the selection ids. init() refetches everything else from
+      // the server (and the standalone activeUnitId/activeCallId MMKV keys are
+      // the real restore mechanism), so persisting full objects just meant
+      // JSON.stringify + a synchronous MMKV write of heavy config/unit/call
+      // payloads on EVERY store set.
+      partialize: (state) => ({
+        activeUnitId: state.activeUnitId,
+        activeCallId: state.activeCallId,
+      }),
+    }
+  )
+);

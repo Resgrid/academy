@@ -1,0 +1,205 @@
+{
+  "id": "app-ic-orientation",
+  "title": "IC: access, shared devices and call context",
+  "app": "IC",
+  "audience": [
+    "Incident commanders",
+    "Deputy commanders",
+    "ICS role holders",
+    "Team and event leads"
+  ],
+  "summary": "Prepare a command device, sign in with the right access, and establish the call context before opening a board.",
+  "prerequisites": [
+    "Authorized command-app account and a reachable training department.",
+    "Configured MFA, SSO and shared sessions for those sign-in variants.",
+    "Prepared active calls, types, priorities, destinations and recipient roster; call creation rights for entry/edit/close segments.",
+    "Checklists.System with actual unit readiness data for readiness capture; use landscape tablet or desktop plus a narrow-layout segment."
+  ],
+  "scenes": [
+    {
+      "title": "Start with the command role",
+      "route": "/onboarding",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Next",
+        "Skip"
+      ],
+      "narration": "IC is designed for the person maintaining a shared incident command picture. That may be an incident commander, safety officer, division lead or event coordinator, depending on department access and responsibilities. Begin with a training account and complete or skip the first-launch introduction. On a tablet or desktop, a wide landscape view gives the structure board room for adjacent lanes. A narrower view stacks more information vertically. Learn both arrangements before relying on the device under pressure. This is a shared record of command decisions and resource assignments, so choose an exercise where each participant understands their role.",
+      "practice": "Choose a fire, security or community-event command role and identify what that role must monitor.",
+      "id": "app-ic-orientation-scene-01",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-01-onboarding",
+          "file": "captures/expansion/ic/ic-01-onboarding.jpg"
+        }
+      ],
+      "capture_observations": []
+    },
+    {
+      "title": "Connect and verify access",
+      "route": "/login",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Username",
+        "Password"
+      ],
+      "narration": "Check the server address and language before entering your username and password. The command app requires department authorization in addition to successful sign-in. If your organization uses single sign-on, follow its username and department discovery flow and complete the configured provider’s steps. The second-factor screen can vary with the account’s available methods, including enrollment or recovery where supported. Prepare those paths beforehand and keep setup secrets and recovery codes outside the capture. An unavailable provider or denied permission is a setup issue to resolve; entering a password does not guarantee access to incident boards.",
+      "practice": "Sign in to the training server with the actual method assigned to the command role.",
+      "id": "app-ic-orientation-scene-02",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-02-login",
+          "file": "captures/expansion/ic/ic-02-login.jpg"
+        },
+        {
+          "screenshot_id": "ic-03-server",
+          "file": "captures/expansion/ic/ic-03-server.jpg"
+        },
+        {
+          "screenshot_id": "ic-04-sso",
+          "file": "captures/expansion/ic/ic-04-sso.jpg"
+        },
+        {
+          "screenshot_id": "ic-25-login-styled",
+          "file": "captures/expansion/ic/ic-25-login-styled.jpg"
+        }
+      ],
+      "capture_observations": []
+    },
+    {
+      "title": "Prepare a shared command device",
+      "route": "/login/shared-device",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Shared device"
+      ],
+      "narration": "Open Shared device when a command tablet or workstation will pass between operators. Enable the supported shared-device mode and use a label that identifies the installation. Once signed in, the shared-session controls follow the server’s shift and locking policy. Lock protects an unattended device, while End Shift ends the current operator’s working session. Unlock uses the configured verification process. Demonstrate the handover with another authorized training operator rather than assuming that putting the tablet away transfers command. Session identity and incident command ownership are separate things; changing who is signed in does not replace the explicit Transfer Command workflow.",
+      "practice": "Label a SAR command tablet and rehearse locking it during an operator handover.",
+      "id": "app-ic-orientation-scene-03",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-02-login",
+          "file": "captures/expansion/ic/ic-02-login.jpg"
+        },
+        {
+          "screenshot_id": "ic-05-shared-device",
+          "file": "captures/expansion/ic/ic-05-shared-device.jpg"
+        },
+        {
+          "screenshot_id": "ic-25-login-styled",
+          "file": "captures/expansion/ic/ic-25-login-styled.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Shared-device configuration form captured without saving. Server lock/unlock, End Shift and second-factor flows were not exercised."
+      ]
+    },
+    {
+      "title": "Find the call and inspect its context",
+      "route": "/calls",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity",
+        "Site Info",
+        "History"
+      ],
+      "narration": "Open Calls, search for the incident and open its card. Review the call’s Info, Contact, Protocols and Dispatched tabs before starting command. Activity and History add the event sequence and location changes, while Site Info can bring in the relevant site material. Use a protected-data reveal step when the server requires it. Notes, Images and Files provide supporting material, and Video can show configured feeds. A usable address or coordinate supports Route, which hands navigation to the platform’s mapping option. These views establish the incident context; none of them substitutes for confirming the reported situation with your team.",
+      "practice": "Inspect an industrial alarm’s site context and a separate EMS call’s destination before choosing one.",
+      "id": "app-ic-orientation-scene-04",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-07-calls",
+          "file": "captures/expansion/ic/ic-07-calls.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Styled training Calls list captured. Detailed call tabs still need screenshots."
+      ]
+    },
+    {
+      "title": "Create or update an authorized call",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Name",
+        "Nature",
+        "Priority",
+        "Type",
+        "Destination POI"
+      ],
+      "narration": "Authorized users can use the new-call control from Calls. Complete the department-required name, nature, priority, type and note information. Supply the location through the available address, coordinate or location-code controls and map picker, then verify the result. Add contact information, identifiers, destination and the intended recipients. Scheduled dispatch, where offered, needs a sufficiently future time. Review before Create. Existing calls can be edited or closed with the permitted outcome and notification choices. IC does not provide Dispatch’s separate pending, scheduled and archive management screens, so use the right application when your job is managing those queues.",
+      "practice": "Create a fictional community-response call with selected recipients and a verified destination.",
+      "id": "app-ic-orientation-scene-05",
+      "capture_refs": [],
+      "capture_observations": [
+        "Call-entry preview still needs capture. No call creation, editing or closure was performed."
+      ]
+    },
+    {
+      "title": "Readiness, check-ins and supporting media",
+      "route": "/call/[id]",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Readiness",
+        "Check-In",
+        "Quick Check-In",
+        "History"
+      ],
+      "narration": "Where enabled, Readiness supplies the incident’s unit checklist and work-order context. Read what the returned packet actually says; a visible tab alone does not establish readiness. Check-In provides the configured timer view, Quick Check-In and history controls. Camera, gallery and file actions can add approved training material, while video-feed controls let an authorized operator enter or edit the feed name, URL, format and location. Verify playback separately from saving a feed entry. Browser and native permissions differ, so device camera behavior and physical GPS need native footage. We will use the board’s accountability section for the wider PAR picture.",
+      "practice": "Inspect a unit’s training readiness information and record a check-in without interpreting it as proof of physical safety.",
+      "id": "app-ic-orientation-scene-06",
+      "capture_refs": [],
+      "capture_observations": [
+        "Readiness/media/check-in details need capture. Warehouse check-in definitions are absent; no successful check-in or readiness outcome is claimed."
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A commander reviews call dispatch and readiness before starting a fire board."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "An event lead creates an authorized training call with selected recipients."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A labeled shared tablet supports secure command-device handover."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A control-room lead uses the configured provider and role access."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "A command operator compares wide and narrow layouts before field use."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "A site incident begins with preplan context and verified call information."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/IC/src/app/login/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/login/login-form.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/login/recovery.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/login/shared-device.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/login/sso.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/_layout.tsx",
+    "/Users/shawn/Documents/dev/IC/src/lib/auth/command-app-access.ts",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/calls.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/call/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/call/new/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/call/[id]/edit.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/calls/unit-readiness-panel.tsx",
+    "/Users/shawn/Documents/dev/IC/src/translations/en.json"
+  ],
+  "capture_manifest": "captures/expansion/ic/manifest.json",
+  "capture_provenance": "captures/expansion/ic/provenance.json",
+  "capture_action_ledger": "captures/expansion/ic/actions.json"
+}

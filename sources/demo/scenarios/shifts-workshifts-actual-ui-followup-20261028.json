@@ -1,0 +1,119 @@
+{
+  "id": "shifts-workshifts-actual-ui-followup-20261028",
+  "kind": "manual_fictional_ui_replay_definition_and_observed_checkpoint",
+  "source_only": true,
+  "automatic_execution": false,
+  "department_id": 51,
+  "baseline_preserved": {
+    "shift_ids": [
+      51001,
+      51002,
+      51003
+    ],
+    "unit_ids": [
+      51001,
+      51002,
+      51003,
+      51004,
+      51005,
+      51006
+    ],
+    "other_calls_settings_auth_user_simulator": "No changes by this exercise."
+  },
+  "replay_guards": [
+    "Use the isolated fictional department51 only, through normal authorized UI.",
+    "Read existing entries first; do not rerun create against the retained IDs. On a fresh stack use unique new names and treat returned IDs as authoritative.",
+    "Future dates and group/member/role eligibility must be reviewed at replay time. No delivery, attendance or operational readiness claims.",
+    "Stop all Static writes when editor and saved day disagree. Never click Update or delete as part of this checkpoint."
+  ],
+  "assigned": {
+    "shift_id": 51004,
+    "observed_day_id": 51109,
+    "name": "TRAINING ONLY - Coverage authoring 20261028",
+    "code": "TRN28A",
+    "assignment_type": "Assigned",
+    "schedule": "Manual",
+    "color": "#93c5fd",
+    "date": "2026-11-04",
+    "start": "09:00",
+    "end": "11:00",
+    "group": "Firehouse 51",
+    "required_role": "Officer",
+    "required_count": 1,
+    "assigned_member": "Matthew Casey",
+    "approval_required": false,
+    "stored_readback": "Assigned/Manual, one group/one person; dated day Upcoming, Fully staffed, Required1/Needed0 and Casey Assigned. This is one configured seat, not physical presence or live unit crew."
+  },
+  "signup": {
+    "shift_id": 51005,
+    "observed_day_id": 51110,
+    "name": "TRAINING ONLY - Approval and trade 20261028",
+    "code": "TRN28S",
+    "assignment_type": "Signup",
+    "schedule": "Manual",
+    "color": "#a7f3d0",
+    "dates": [
+      "2026-11-05",
+      "2026-11-06"
+    ],
+    "start": "09:00",
+    "end": "11:00",
+    "group": "Firehouse 51",
+    "required_role": "Officer",
+    "required_count": 1,
+    "preassigned_people": [],
+    "approval_required": true,
+    "second_day_id": "not opened; unobserved",
+    "stored_readback": "Approval required row and reopened date highlights; Nov5day Open slots1/Needed1/empty roster. No signup request or approval performed."
+  },
+  "department_policy": {
+    "route": "/User/Department/ShiftSettings",
+    "allow_signups_for_multiple_groups": false,
+    "read_only": true
+  },
+  "disposable_unit": {
+    "unit_id": 51007,
+    "name": "TRAINING ONLY - Static demo unit 20261028",
+    "type": "Engine",
+    "station": "No Station",
+    "roles": [],
+    "status_after_normal_create": "Available",
+    "no_gps_or_crew_configured": true
+  },
+  "static": {
+    "shift_id": "129680c8-881c-43d3-b615-73220c5dd46c",
+    "day_id": "d974f9f8-e8a9-4527-9425-7684821163b8",
+    "name": "TRAINING ONLY - Static Nov4",
+    "color": "#fde68a",
+    "description": "TRAINING ONLY. Fictional scheduling and equipment-window software exercise. No deployment, travel, work, expense, payment or live apparatus-availability claim.",
+    "prepared_start": "2026/11/04 09:00",
+    "prepared_end": "2026/11/05 09:00",
+    "selected_unit_id": 51007,
+    "saved_day_observation": "4 Nov2026 09:00, full description and new unit association.",
+    "reopened_editor_observation": "3:00AM both dates; Units blank; destructive assignment-clearing warning.",
+    "all_updates_stopped": true,
+    "successful_update_demonstrated": false
+  },
+  "replay_order": [
+    "Shifts → Add Recurring Group Shift → Name/code/Assigned/color → Schedule date/times → Slots group/role/count → Personnel Casey under Firehouse51 → lower Finish → returned row → fresh Edit Details → shared calendar day.",
+    "Separate Add Recurring Group Shift → Signup/approval ON/new code/color → two dates/times → group/role/count → empty personnel → lower Finish → saved row → fresh details/calendar/day.",
+    "Read ShiftSettings, empty Approvals and current OnDuty without changing them.",
+    "Create only the new disposable unit through New Unit; reopen it. Add Static Shift with short name/description/light color/future dates/own selected unit chip → Create once → shared calendar ViewDay → read-only Edit comparison → STOP."
+  ],
+  "related_diagnostic": {
+    "file": "expansion/plans/core-shifts-administration-candidate-20261028/diagnostic.json",
+    "sha256": "d89cb267e6ec2c595d1421b54ed2a4e0fbac71b238d749ad28be45ea376a5683"
+  },
+  "raw_manifest": {
+    "file": "captures/expansion/core-shifts-administration-20261028/manifest.json",
+    "sha256": "b5ee334f8af8575525ec5141c4c63095c5741372ab60c9222058c6ec988bb502"
+  },
+  "action_ledger": {
+    "file": "captures/expansion/core-shifts-administration-20261028/actions.json",
+    "sha256": "d102f7aad238b30df55e1c1a8241e8b411c13dcdfb04e9c5a2709cee6053d300"
+  },
+  "provenance": {
+    "file": "captures/expansion/core-shifts-administration-20261028/provenance.json",
+    "sha256": "53dd96676e70cecab55eae5e3018b5750db4787ecfb60d02a4b2fb15fcb85e8c"
+  }
+}

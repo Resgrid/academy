@@ -1,0 +1,122 @@
+{
+  "id": "app-ic-access-session-settings",
+  "title": "Review IC access, session settings and sync status",
+  "app": "IC",
+  "audience": "Incident commanders, command aides and supervisors who use IC on a personal or shared workstation.",
+  "summary": "Find IC settings, check the server and sign-in summary, review shared-device and presentation preferences, interpret an empty sync queue, and inspect the logout warning without ending the session.",
+  "prerequisites": [
+    "An authorized IC account already signed in to your department's intended environment.",
+    "Your department's approved server address and guidance for shared workstations and account security.",
+    "A practice period away from an active command handover. Keep credentials out of shared recordings."
+  ],
+  "status": "candidate_pending_parent_script_review",
+  "export_ready": false,
+  "publication_approved": false,
+  "scenes": [
+    {
+      "id": "01-find-settings",
+      "title": "Start with the application and environment",
+      "route": "/calls → Menu → Settings",
+      "capture_intent": "Show the authenticated Calls workspace, the foreground Menu with Settings, then the unobscured App Info and Account sections.",
+      "required_labels": ["Calls", "MENU", "Settings", "App Info", "App Name", "Resgrid IC", "Version", "Environment", "development", "Account"],
+      "capture_refs": ["010-authenticated-calls-starting-workspace", "011-readable-menu-settings-launcher", "002-app-info-account-after-theme-restored"],
+      "narration": "Before taking over a command workstation, check which application and environment you are using. We begin in IC's Calls workspace, with the department's training incidents already listed. Open the menu at the upper left and choose Settings. At the top, App Info shows App Name, Version and Environment; this example identifies Resgrid IC in development. That gives a command aide useful details when reporting a problem. For practice, locate those three values, then find the Account section directly underneath before reviewing connection or sign-in settings.",
+      "practice": "From your signed-in IC workspace, locate Settings and identify the app name, version and environment before discussing a support issue."
+    },
+    {
+      "id": "02-review-server",
+      "title": "Inspect the intended server",
+      "route": "/settings → Account → Server",
+      "capture_intent": "Hold the Account Server entry, then the foreground Custom server form with the complete local training URL, format note, Cancel and Save.",
+      "required_labels": ["Account", "Server", "Custom", "Server URL", "http://127.0.0.1:18967", "Cancel", "Save"],
+      "capture_refs": ["002-app-info-account-after-theme-restored", "003-readable-server-url-dialog"],
+      "narration": "In Settings, Account, open Server to inspect the connection address. The form shows Custom and a complete Server URL; the loopback address here belongs to this local training environment. Use the address supplied by your administrator for your own installation. The note says to leave off the API version path and a trailing slash. Cancel closes this review without saving a different server. During a command handover, comparing the address first helps avoid troubleshooting the wrong installation. Practice finding the complete address rather than relying on the shortened Account row.",
+      "practice": "Compare the full Server URL with your administrator's approved address, then use Cancel without changing it."
+    },
+    {
+      "id": "03-read-security-summary",
+      "title": "Read the current sign-in summary",
+      "route": "/settings → Account → Sign-in and security",
+      "capture_intent": "Show the literal entry row followed by the complete current security summary; do not open or imply any enrollment or verification operation.",
+      "required_labels": ["Sign-in and security", "Authenticator app", "Not set up. Set one up in Resgrid on the web.", "Passkeys for this app", "No passkeys for this app yet.", "Responder approvals", "Macintosh", "Approvals stopped", "Recent verifications", "No verifications in the last 30 days."],
+      "capture_refs": ["002-app-info-account-after-theme-restored", "004-current-sign-in-security-summary"],
+      "narration": "Back in Account, choose Sign-in and security. Read each section as the current account's summary. Here, Authenticator app says it is not set up, and Passkeys for this app says there are none yet. Responder approvals lists Macintosh with Approvals stopped. Recent verifications reports no verifications in the last thirty days. These are separate facts, so check each rather than treating one heading as a general security verdict. If your department requires another method, arrange its approved setup separately. This review does not enroll an authenticator or create a passkey.",
+      "practice": "Identify the current authenticator, app passkey, approval and recent-verification states without changing an account method."
+    },
+    {
+      "id": "04-inspect-login-info",
+      "title": "Recognize the Login Info form",
+      "route": "/settings → Account → Login Info",
+      "capture_intent": "Show Login Info in Account, then only the foreground empty Username and Password form with both actions visible. Never show filled credentials.",
+      "required_labels": ["Login Info", "Username", "Password", "Enter your username", "Enter your password", "Cancel", "Save"],
+      "capture_refs": ["002-app-info-account-after-theme-restored", "006-empty-login-form-full-cancel-save"],
+      "narration": "In Account, Login Info opens the Username and Password form. Both fields are empty in this demonstration, and Cancel and Save are visible together. Save submits these details to sign in; it is not an account password-change screen. For a routine workstation review, leave the fields empty and choose Cancel. This is especially useful when a supervisor is showing a colleague where account access lives: you can explain the form without putting anyone's credentials into a shared presentation or recording.",
+      "practice": "Locate both empty fields and Cancel. Explain the difference between submitting sign-in details here and changing an account password."
+    },
+    {
+      "id": "05-review-shared-device",
+      "title": "Review the shared-workstation choice",
+      "route": "/settings → Account → Shared device",
+      "capture_intent": "Show the entry row and the complete signed-in Shared device form: pictured switch, blank optional label, next-sign-in explanation and Save. Treat the displayed form as unsaved.",
+      "required_labels": ["Shared device", "This is a shared device", "Device label (optional)", "This takes effect the next time someone signs in on this device.", "Save"],
+      "capture_refs": ["002-app-info-account-after-theme-restored", "007-signed-in-shared-device-options-unsaved"],
+      "narration": "In Account, Shared device is the place to review a workstation used by several operators. The page explains the shared-session purpose, shows This is a shared device switched on, and offers a Device label, which is optional. The important note says this takes effect the next time someone signs in on this device. The form shown here has not been saved, so its switch alone does not prove a shared policy is active. Before a shift handover, compare this choice with department guidance and decide who should configure it.",
+      "practice": "Read the next-sign-in note and discuss whether this is a personal or shared workstation. Leave the form unsaved during the review."
+    },
+    {
+      "id": "06-preferences-and-support",
+      "title": "Read presentation preferences and support destinations",
+      "route": "/settings → Preferences and Support",
+      "capture_intent": "Use the settled full Preferences and Support viewport. Show System, the Language placeholder, Keep Alive off, no selected BT Handset and all five Support rows; do not show hidden dropdown choices as visible.",
+      "required_labels": ["Preferences", "Theme", "System ⚙️", "Language", "Select option", "Keep Alive", "BT Handset", "No device selected", "Support", "Help Center", "Contact Us", "System Status", "Privacy Policy", "Terms of Service"],
+      "capture_refs": ["012-readable-preferences-and-support"],
+      "narration": "Lower in Settings, Preferences groups the display and device choices. Theme currently shows System, while Language shows Select option. Keep Alive is off, and BT Handset says No device selected. Check these displayed states before assuming a workstation has your preferred presentation or audio arrangement; this browser view does not demonstrate a connected handset or a device staying awake. Immediately below, Support lists Help Center, Contact Us, System Status, Privacy Policy and Terms of Service. For practice, identify the appropriate support destination without opening an external page during this review.",
+      "practice": "Read the current preference values, distinguish the Language placeholder from a selected language, and locate Help Center and System Status."
+    },
+    {
+      "id": "07-read-sync-status",
+      "title": "Interpret the current sync queue",
+      "route": "/settings → Sync & Offline Queue → View Sync Queue",
+      "capture_intent": "Show Up to date and View Sync Queue in Settings, then the actual Online empty queue with zero counts and disabled actions. Do not imply queued writes, retries or successful offline synchronization.",
+      "required_labels": ["Sync & Offline Queue", "Sync Status", "Up to date", "View Sync Queue", "Sync Queue", "Online", "0 pending · 0 failed · 0 done", "Queue is empty"],
+      "capture_refs": ["002-app-info-account-after-theme-restored", "009-online-empty-sync-queue"],
+      "narration": "In Settings, Sync and Offline Queue shows a Sync Status of Up to date. Choose View Sync Queue for the detailed picture. This session is Online, with zero pending, zero failed and zero done, and the center says Queue is empty. The queue actions are disabled because there is nothing here to process or clear. An empty queue is a useful handover check, but it does not demonstrate an offline write or successful replay. Practice reading connectivity and all three counts together before describing the current sync state to another operator.",
+      "practice": "Report the observed connection state and each count. Explain why this empty queue cannot demonstrate a retry or offline replay."
+    },
+    {
+      "id": "08-review-logout-and-handover",
+      "title": "Inspect the logout consequence and finish the review",
+      "route": "/settings → Account → Logout → Cancel",
+      "capture_intent": "Show the Account Logout row and the foreground Confirm Logout warning with Cancel and Logout. Describe the recorded Cancel-only review, not a completed logout or data reset.",
+      "required_labels": ["Account", "Logout", "Confirm Logout", "Are you sure you want to logout? This will clear all app data, cached values, and settings.", "Cancel"],
+      "capture_refs": ["002-app-info-account-after-theme-restored", "008-logout-confirmation-before-cancel"],
+      "narration": "Finally, in Account, choose Logout to read Confirm Logout. The warning says logout will clear app data, cached values and settings. Choose Cancel to finish this review while keeping the session; an actual logout is a separate decision. The same checks help a fire or EMS command aide, a community crisis coordinator, a search-and-rescue lead, a security supervisor, a wildland command team or an industrial response desk. In each setting, a useful handover names the environment, account state and current queue rather than leaving the next operator to guess.",
+      "practice": "Read the logout warning, use Cancel, and summarize the environment, account state and current queue for the next authorized operator."
+    }
+  ],
+  "sector_examples": [
+    {"sector": "Fire/EMS", "scenario": "A command aide checks the IC application, environment and server before a relief officer takes the workstation.", "practice": "Use App Info and the full Server form; cancel the inspection without changing the connection."},
+    {"sector": "Community response", "scenario": "A mobile crisis coordination desk shares a workstation across shifts.", "practice": "Review Shared device and the next-sign-in note with the department's policy; distinguish the unsaved form from an active policy."},
+    {"sector": "SAR", "scenario": "A search coordinator hands the planning workstation to another authorized lead.", "practice": "Report Online and all three Sync Queue counts, without claiming an offline replay from an empty queue."},
+    {"sector": "Security", "scenario": "A supervisor checks account access before an event command handover.", "practice": "Read authenticator, app passkey, approval and recent-verification states without enrolling or changing a method."},
+    {"sector": "Wildland", "scenario": "A command team checks workstation presentation and audio expectations at shift change.", "practice": "Read Theme, Language, Keep Alive and BT Handset values; arrange any hardware or device behavior check separately."},
+    {"sector": "Industrial", "scenario": "An industrial response desk distinguishes app support from a session-ending action.", "practice": "Locate Help Center and System Status, then inspect Confirm Logout and choose Cancel during the review."}
+  ],
+  "source_files": [
+    "IC/src/app/(app)/settings.tsx",
+    "IC/src/app/(app)/_layout.tsx",
+    "IC/src/app/settings/account-security.tsx",
+    "IC/src/app/settings/offline-queue.tsx",
+    "IC/src/app/login/shared-device.tsx",
+    "IC/src/components/settings/server-url-bottom-sheet.tsx",
+    "IC/src/components/settings/login-info-bottom-sheet.tsx",
+    "IC/src/components/settings/theme-item.tsx",
+    "IC/src/components/settings/language-item.tsx",
+    "IC/src/components/settings/keep-alive-item.tsx",
+    "IC/src/components/settings/bluetooth-device-item.tsx",
+    "IC/src/lib/hooks/use-keep-alive.tsx",
+    "IC/src/api/mfa/account-security.ts",
+    "IC/src/lib/mfa/shared-installation.ts",
+    "IC/src/translations/en.json"
+  ]
+}

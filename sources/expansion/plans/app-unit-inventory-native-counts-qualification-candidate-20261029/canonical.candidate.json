@@ -1,0 +1,370 @@
+{
+  "id": "app-unit-inventory-native-counts",
+  "title": "Count unit inventory and verify the completed result",
+  "app": "Unit",
+  "audience": "Unit operators, apparatus crews, equipment coordinators and supervisors.",
+  "summary": "Follow a native iPad inventory count through an unsaved correction, saved observations, confirmation and completed history. The example uses fictional Ambulance 61 stock.",
+  "prerequisites": [
+    "Sign in to the intended department and server through your normal authorized access.",
+    "The department inventory feature is enabled, your account can count inventory, and the intended unit has assigned stock.",
+    "Select the correct unit and know your department’s counting and shared-device procedures.",
+    "Use an authorized training example; on an operational unit, independently inspect the equipment before entering an observation or choosing Matches."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Select the unit you are checking",
+      "route": "Native Unit: Select the unit you are checking",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Settings",
+        "Active Unit",
+        "Select Unit",
+        "Ambulance 61"
+      ],
+      "required_native_controls": [
+        "Active Unit, None Selected",
+        "unit-item-51004"
+      ],
+      "narration": "From Settings, open Active Unit and choose the apparatus whose inventory you intend to check. Select Unit lists the available vehicles; this fictional fire and EMS example uses Ambulance 61. Read the selected unit name again in the sidebar before opening Inventory. Selecting a unit establishes the workspace for your count; it does not demonstrate a status change or a crew assignment.",
+      "practice": "Select the intended training unit and confirm its name before opening its stock workspace.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-007-native-settings",
+          "unit-native-20261028-008-native-select-unit",
+          "unit-native-20261028-015-native-new-count-start-screen"
+        ]
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "02",
+      "title": "Review the current inventory",
+      "route": "Native Unit: Review the current inventory",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Inventory · Ambulance 61",
+        "Academy training batteries",
+        "Nitrile gloves",
+        "Training oxygen cylinder"
+      ],
+      "required_native_controls": [
+        "sidebar-inventory"
+      ],
+      "narration": "In Inventory, the heading identifies Ambulance 61. The current list shows five training batteries, twenty four nitrile gloves, and six training oxygen cylinders. Recent counts appears above that equipment list. These are fictional software quantities. On an operational vehicle, first identify the correct supplies and actually inspect them; the displayed balance is a reference for comparison, not evidence that somebody has physically counted the equipment.",
+      "practice": "Compare the displayed stock list with an independent practice count of the assigned equipment.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-015-native-new-count-start-screen"
+        ]
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "03",
+      "title": "Start one new count",
+      "route": "Native Unit: Start one new count",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Start count",
+        "Ambulance 61 check 2026-10-28",
+        "In progress · 0 of 3 counted · 0 differences"
+      ],
+      "required_native_controls": [
+        "inventory-start"
+      ],
+      "narration": "On the Inventory screen, choose Start count once. Unit opens a new count for the selected unit and gives it a name containing the unit and date. The new record starts In progress, with zero of three counted. An older completed count remains in history. This walkthrough follows the new record throughout; it does not create another count each time the screen is reopened.",
+      "practice": "Start one authorized training count and distinguish it from an older completed record.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-015-native-new-count-start-screen",
+          "unit-native-20261028-016-native-new-count-unobserved"
+        ]
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "04",
+      "title": "Read expected values before observations",
+      "route": "Native Unit: Read expected values before observations",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "In progress · 0 of 3 counted · 0 differences",
+        "Expected 5 packs",
+        "Expected 24 boxes",
+        "Expected 6 cylinders"
+      ],
+      "required_native_controls": [],
+      "narration": "On the count screen, read Expected beneath each item. The light gray five, twenty four, and six inside the fields are placeholders at this stage. They are not entered observations: the header still says zero of three counted. Complete is unavailable until every line has an observation. Check that header along with the fields, so a screen showing zero differences is not mistaken for a finished inspection.",
+      "practice": "Explain why expected placeholders and zero differences do not mean that all items have been counted.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-016-native-new-count-unobserved"
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "05",
+      "title": "Demonstrate an unsaved variance",
+      "route": "Native Unit: Demonstrate an unsaved variance",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "In progress · 1 of 3 counted · 1 differences",
+        "Expected 5 packs"
+      ],
+      "required_native_controls": [
+        "inventory-less-09b1a029-1c3d-4253-8429-6fdbf89be523"
+      ],
+      "narration": "Beside the battery field, tap the minus control once. In this software exercise, that records four against an expected five. The battery row gains an orange outline, and the header shows one of three counted with one difference. This deliberate practice entry is still unsaved. We do not save or complete the incorrect quantity; the next step corrects it before any stock adjustment could be posted.",
+      "practice": "Identify the variance and the counted total without saving the deliberately incorrect practice value.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-016-native-new-count-unobserved",
+          "unit-native-20261028-017-native-unsaved-battery-variance"
+        ]
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "06",
+      "title": "Correct the observation with plus",
+      "route": "Native Unit: Correct the observation with plus",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "In progress · 1 of 3 counted · 0 differences",
+        "Expected 5 packs"
+      ],
+      "required_native_controls": [
+        "inventory-more-09b1a029-1c3d-4253-8429-6fdbf89be523"
+      ],
+      "narration": "Use the plus control beside the batteries to change four back to five. The orange outline clears, and the header returns to zero differences. It still shows only one of three counted because the glove and oxygen observations have not been entered. This distinction matters: matching one item does not complete the rest of the count. Review both the observation and the progress total after a correction.",
+      "practice": "Correct the battery observation, then identify which two lines still need observations.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-017-native-unsaved-battery-variance",
+          "unit-native-20261028-018-native-battery-corrected-before-save"
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "07",
+      "title": "Record matching quantities",
+      "route": "Native Unit: Record matching quantities",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "In progress · 3 of 3 counted · 0 differences",
+        "Expected 24 boxes",
+        "Expected 6 cylinders",
+        "Matches"
+      ],
+      "required_native_controls": [
+        "inventory-matches-f0f7b8fb-e7a2-4a06-819a-2c2a72c8549e",
+        "inventory-matches-11b5e683-8aaf-4298-9c69-63735c73acc5"
+      ],
+      "narration": "For the fictional glove and oxygen quantities, choose Matches on each corresponding row. Those controls record the expected twenty four and six as observations. In service, use Matches only after you have actually checked that the equipment agrees with the expected balance. Here the fields now contain five, twenty four, and six, and the header shows three of three counted with zero differences.",
+      "practice": "Use each matching control only after an independent check, and verify all three observations and the progress header.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-018-native-battery-corrected-before-save",
+          "unit-native-20261028-019-native-all-matched-before-save"
+        ]
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "08",
+      "title": "Save progress without completing",
+      "route": "Native Unit: Save progress without completing",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Save progress",
+        "In progress · 3 of 3 counted · 0 differences"
+      ],
+      "required_native_controls": [
+        "inventory-save"
+      ],
+      "narration": "On the count screen, choose Save progress. The record remains In progress; saving observations does not itself finalize the count. The screen still shows the observations, and there is no pictured success banner to rely on. Verify persistence through the ordinary history and reopen sequence next. Keep completion as a separate decision after reviewing the unit, every observation, and the remaining differences.",
+      "practice": "Save the matching draft observations and explain how that differs from completing the count.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-019-native-all-matched-before-save",
+          "unit-native-20261028-020-native-new-count-save-progress-result"
+        ]
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "09",
+      "title": "Choose the correct history entry",
+      "route": "Native Unit: Choose the correct history entry",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Recent counts",
+        "In progress",
+        "Completed",
+        "Ambulance 61 check 2026-10-28"
+      ],
+      "required_native_controls": [
+        "inventory-count-back",
+        "inventory-count-1c9ec858-c5e1-4914-bd19-f77c9afb2740"
+      ],
+      "narration": "Use the back arrow to return to Inventory. Recent counts now shows two entries with the same unit and date in their titles. The newer record is In progress, while the earlier record is Completed. Compare the displayed status and timestamp rather than choosing by title alone. Open the newer In progress entry to continue the same count you just saved, while leaving the older completed record unchanged.",
+      "practice": "Identify the newer in-progress record using its status and timestamp, then reopen that record.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-020-native-new-count-save-progress-result",
+          "unit-native-20261028-021-native-new-count-saved-history"
+        ]
+      },
+      "narration_word_count": 68
+    },
+    {
+      "id": "10",
+      "title": "Verify the saved count on reopen",
+      "route": "Native Unit: Verify the saved count on reopen",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Ambulance 61 check 2026-10-28",
+        "In progress · 3 of 3 counted · 0 differences",
+        "Expected 5 packs",
+        "Expected 24 boxes",
+        "Expected 6 cylinders"
+      ],
+      "required_native_controls": [],
+      "narration": "The reopened record still shows In progress, three of three counted, and zero differences. Read the observations again: five batteries, twenty four gloves, and six oxygen cylinders. This is the saved count from the preceding steps. Reopening provides a useful review before finalization, particularly on a shared device where another crew may later read the record. Confirm the selected unit and each line before choosing Complete.",
+      "practice": "Compare the reopened observations with the saved draft and resolve any mismatch before finalization.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-022-native-new-count-fresh-reopen"
+        ]
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "11",
+      "title": "Review the genuine native confirmation",
+      "route": "Native Unit: Review the genuine native confirmation",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Complete",
+        "Complete count?",
+        "Everything matches what was expected.",
+        "Cancel"
+      ],
+      "required_native_controls": [
+        "inventory-complete",
+        "Cancel",
+        "Complete"
+      ],
+      "narration": "On this reviewed count screen, choose Complete. The actual iPad confirmation asks Complete count and states that everything matches what was expected. It presents Cancel and Complete as separate choices. Review that message before deciding. For this authorized zero difference training example, choose Complete in the confirmation. That button submits the operation; the next application screen must establish whether the count actually completed or returned an error.",
+      "practice": "Read the native confirmation and distinguish opening the dialog from successfully completing a count.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-022-native-new-count-fresh-reopen",
+          "unit-native-20261028-023-native-new-count-complete-confirmation"
+        ]
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "12",
+      "title": "Verify completion and current stock",
+      "route": "Native Unit: Verify completion and current stock",
+      "capture_intent": "Use the reviewed full native screenshots in their recorded order; preserve the actual named control and resulting state for its spoken span.",
+      "required_labels": [
+        "Completed · 3 of 3 counted · 0 differences",
+        "Count completed.",
+        "Recent counts",
+        "Completed"
+      ],
+      "required_native_controls": [],
+      "narration": "The result shows Completed and Count completed, with the saved quantities disabled. Inventory history now shows both records Completed, and stock remains five, twenty four, and six. Reopening the newer count still shows the completed result. The same review fits community care kits, search and rescue caches, security patrol supplies, wildland equipment, and industrial protective equipment. Each team should count what its own assigned unit actually carries and verify the final record.",
+      "practice": "Verify completed history and unchanged stock, then adapt the same review to the supplies used by your team.",
+      "capture_evidence": {
+        "status": "native_source_only_contract_and_parent_script_review_pending",
+        "capture_refs": [
+          "unit-native-20261028-024-native-new-count-completed-result",
+          "unit-native-20261028-025-native-two-completed-counts-stock-unchanged",
+          "unit-native-20261028-026-native-new-completed-count-fresh-reopen"
+        ]
+      },
+      "narration_word_count": 72
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "An ambulance crew checks its assigned consumables before service.",
+      "practice": "Select the correct unit, count the actual equipment, save observations and review the final count."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A mobile care team checks the supplies in its vehicle kits.",
+      "practice": "Compare actual supplies with Expected, and use Matches only for quantities independently checked."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search team reviews cache supplies carried by its assigned response vehicle.",
+      "practice": "Distinguish expected placeholders from entered observations and correct an unsaved practice variance."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A patrol team checks vehicle supplies at a crew handover.",
+      "practice": "Save progress, identify the correct dated history entry, and verify the reopened observations."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A wildland crew checks consumables and protective supplies on its assigned unit.",
+      "practice": "Review all counted lines and differences before responding to the native Complete count confirmation."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial response team checks unit protective equipment and consumables.",
+      "practice": "Verify Completed history and current stock; this lesson does not demonstrate serial-asset counting, replenishment or purchasing."
+    }
+  ],
+  "source_files": [
+    "production/native-unit/reports/unit-source-snapshot/src/app/(app)/inventory/index.tsx",
+    "production/native-unit/reports/unit-source-snapshot/src/app/(app)/inventory/count/[id].tsx",
+    "production/native-unit/reports/unit-source-snapshot/src/stores/inventory/store.ts",
+    "production/native-unit/reports/unit-source-snapshot/src/lib/inventory/count.ts",
+    "production/native-unit/reports/unit-source-snapshot/src/models/v4/inventory/index.ts",
+    "production/native-unit/reports/unit-source-snapshot/src/api/inventory/inventory.ts",
+    "production/native-unit/reports/unit-source-snapshot/src/app/(app)/settings.tsx",
+    "production/native-unit/reports/unit-source-snapshot/src/components/settings/unit-selection-bottom-sheet.tsx",
+    "production/native-unit/reports/unit-source-snapshot/src/lib/storage/app.tsx",
+    "production/native-unit/reports/unit-source-snapshot/src/translations/en.json",
+    "production/native-unit/reports/unit-source-snapshot/package.json",
+    "production/native-unit/reports/unit-source-snapshot/yarn.lock"
+  ],
+  "authoring_status": "ready_actual_native_screen_video_after_strict_evidence_review",
+  "export_ready": true,
+  "narration_word_count": 789,
+  "scope_limits": [
+    "All selected application sources are genuine native iPad captures; no illustrated, browser or cross-app substitute.",
+    "Only new count1c9ec858-c5e1-4914-bd19-f77c9afb2740 supplies the new-count detail flow. Its older same-title predecessor is context in history, not a third newly created count.",
+    "The deliberately incorrect four was corrected before Saveprogress; final observations and stock are5/24/6 with zero differences.",
+    "No count cancellation, serial-asset Present/Missing operation, compartment selector, nonzero posted stock adjustment, purchasing or replenishment is demonstrated.",
+    "Location permission was denied. No physical equipment count, GPS, camera, provider delivery or hardware result is claimed.",
+    "The actual simulator source, approved narration, source/caption correspondence, encoded frames and genuine browser playback are retained separately. This does not establish physical equipment inspection, real hardware/GPS operation or authenticated JavaScript execution.",
+    "Served Metro hashes do not prove authenticated executed JavaScript or a complete lazy-load set."
+  ],
+  "media_status": "complete_reviewed_actual_screen_video",
+  "publication_mode": "video",
+  "capture_manifest": "expansion/plans/app-unit-inventory-native-counts-020-label-review-20261029/captures.native-reviewed.json",
+  "evidence_file": "expansion/rendered/app-unit-inventory-native-counts-take-01/evidence.final.json",
+  "source_freeze": "expansion/plans/app-unit-inventory-native-counts-capture-freeze-20261028/app-unit-inventory-native-counts.narrated-source.json"
+}

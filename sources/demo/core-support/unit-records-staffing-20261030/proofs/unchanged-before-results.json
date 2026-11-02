@@ -1,0 +1,72 @@
+{
+  "total": 14,
+  "failed": 5,
+  "results": [
+    {
+      "name": "A_different_members_latest_seat_does_not_authorize_the_caller",
+      "passed": true
+    },
+    {
+      "name": "A_null_role_result_is_no_staffing_evidence",
+      "passed": true
+    },
+    {
+      "name": "A_synthetic_default_status_with_no_saved_state_proves_no_staffing",
+      "passed": true
+    },
+    {
+      "name": "Active_picks_alone_do_not_change_the_documented_latest_saved_state_authority",
+      "passed": true
+    },
+    {
+      "name": "Exact_latest_persisted_seat_enables_Unit_catalog_and_assignment_addressee",
+      "passed": false,
+      "errorType": "NUnit.Framework.AssertionException",
+      "error": "Expected catalog.Ok to be True, but found False."
+    },
+    {
+      "name": "Missing_stale_unit_cannot_author",
+      "passed": true
+    },
+    {
+      "name": "Older_matching_seats_cannot_replace_the_exact_latest_state",
+      "passed": false,
+      "errorType": "NUnit.Framework.AssertionException",
+      "error": "Expected _latest.Roles to contain only items matching (r.UnitStateId == 901), but the collection is <null>."
+    },
+    {
+      "name": "Other_app_visible_unit_reference_does_not_claim_Unit_crew_membership",
+      "passed": true
+    },
+    {
+      "name": "Other_department_unit_cannot_borrow_crew_evidence",
+      "passed": true
+    },
+    {
+      "name": "Prepopulated_navigation_values_cannot_replace_persisted_latest_seats",
+      "passed": false,
+      "errorType": "NUnit.Framework.AssertionException",
+      "error": "Expected catalog.Ok to be False, but found True."
+    },
+    {
+      "name": "Role_read_failure_cannot_degrade_into_an_authorized_context",
+      "passed": false,
+      "errorType": "NUnit.Framework.AssertionException",
+      "error": "  Assert.That(caughtException, expression)\n  Expected: <System.InvalidOperationException>\n  But was:  null\n"
+    },
+    {
+      "name": "Selecting_an_apparatus_with_no_persisted_crew_cannot_author",
+      "passed": true
+    },
+    {
+      "name": "Soft_deleted_unit_cannot_author_from_its_historical_crew",
+      "passed": false,
+      "errorType": "Moq.MockException",
+      "error": "\nExpected invocation on the mock should never have been performed, but was 2 times: r => r.GetLastUnitStateByUnitIdAsync(It.IsAny<int>())\n\nPerformed invocations:\n\n   Mock<IUnitStatesRepository:13> (r):\n\n      IUnitStatesRepository.GetLastUnitStateByUnitIdAsync(7)\n      IUnitStatesRepository.GetLastUnitStateByUnitIdAsync(7)\n"
+    },
+    {
+      "name": "Valid_crew_does_not_bypass_source_call_authorization",
+      "passed": true
+    }
+  ]
+}

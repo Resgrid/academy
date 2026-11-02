@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "kind": "source_confirmed_semantics_separate_from_actual_UI_observations",
+  "Core_HEAD": "6f83872110b0382f2911d099e95d6a4ef7da8315",
+  "retained_original_trace": {
+    "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source-trace.json",
+    "sha256": "110f2c8332bc94af09427b26ce882c46ee4af642e9a8aa2fee528a5ed1b070c6"
+  },
+  "facts": [
+    {
+      "id": "reports-html",
+      "status": "source_confirmed",
+      "finding": "Reports/Index and normal report actions use Reports_View. Staffing, Call Summary and Call Unit Times return ordinary HTML views; no PDF renderer is needed for these captures. Some catalog links belong to distinct feature modules; a link does not prove their results. InternalRunReport is a worker endpoint with a secret header and is never a browser navigation shortcut.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 120,
+          "through_line": 126,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 255,
+          "through_line": 259,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 363,
+          "through_line": 372,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 723,
+          "through_line": 736,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "staffing-snapshot",
+      "status": "source_confirmed",
+      "finding": "Staffing Report uses latest staffing, department custom staffing names, member visibility checks and next scheduled staffing change. Auto-generated timestamps display Never. Protected notes use SafeDisplay. It is not a promise of actual attendance, crew-seat occupancy or current device presence.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 772,
+          "through_line": 836,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "summary-parameters",
+      "status": "source_confirmed",
+      "finding": "Normal Call Summary parameters include Report Start Time, Report End Time, Group, All Groups and Run Report. Inputs use department-local time, converted to UTC for call/log queries. A chosen group includes descendants. Invalid department group IDs are rejected.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 579,
+          "through_line": 605,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 1740,
+          "through_line": 1779,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "summary-attribution",
+      "status": "source_confirmed",
+      "finding": "Call Summary assigns calls through the group-assignment service; its visible help explains geofence-first placement then dispatched-resource majority fallback. It does not simply filter by the current viewer's membership. Run-log resources are used where present; otherwise linked status history supplies resource counts and first on-scene time. These are recorded software facts, not real attendance/arrival verification.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 1814,
+          "through_line": 1821,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 1781,
+          "through_line": 1802,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Core/Resgrid.Services/CallGroupAssignmentService.cs",
+          "line": 31,
+          "through_line": 73,
+          "sha256": "fa5a89ec0b73a2192013deccb0a890622a4fa54a20e7f3f9db2b92d5a7949424"
+        }
+      ]
+    },
+    {
+      "id": "unit-times-sources",
+      "status": "source_confirmed",
+      "finding": "Call Unit Times derives Dispatched, En Route, On Scene, Staging and Cleared from linked dispatch/status history. The view identifies Unit status, Auto-linked, Inferred or Dispatch only. Missing timestamps stay blank. Do not teach inferred links as explicit unit selection or a physical-arrival determination. A single-call route also checks call visibility.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 632,
+          "through_line": 644,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 2013,
+          "through_line": 2090,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Reports/CallUnitTimesReport.cshtml",
+          "line": 13,
+          "through_line": 25,
+          "sha256": "01b671d87f3920edd4c1353977f78381a942b70df29a12be811d78e1533dda74"
+        }
+      ]
+    },
+    {
+      "id": "csv-distinct-from-pdf",
+      "status": "source_confirmed",
+      "finding": "The real Download CSV control uses the same dates or callId and HTML report model. Its CSV headers include call number/name/type, logged/closed, unit/group, dispatch/en-route/on-scene/staging/cleared and Linked By. Cells use the shared formula-neutralizing CSV formatter; the export is a file, not an external submission. Retain actual downloaded bytes only after supported normal UI download.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Reports/CallUnitTimesReport.cshtml",
+          "line": 71,
+          "through_line": 74,
+          "sha256": "01b671d87f3920edd4c1353977f78381a942b70df29a12be811d78e1533dda74"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 646,
+          "through_line": 679,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 2088,
+          "through_line": 2088,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    }
+  ],
+  "additional_cited_facts": [
+    {
+      "finding": "Response totals sum per-call unit/personnel counts; averages include usable eligible durations, not an assumed value for missing timestamps.",
+      "file": "Web/Resgrid.Web/Areas/User/Models/Reports/Calls/CallSummaryView.cs",
+      "lines": [
+        78,
+        100
+      ]
+    },
+    {
+      "finding": "Period sections split the displayed range, mark partial periods and accumulate included calls within each year for YTD. The shown default period is captured literally rather than renamed a full January1 calendar year.",
+      "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+      "lines": [
+        1912,
+        1977
+      ]
+    },
+    {
+      "finding": "CSV emits one row per unit and the raw enum source name. The HTML maps Explicit to Unit status and DispatchOnly to Dispatch only.",
+      "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+      "lines": [
+        646,
+        679
+      ]
+    },
+    {
+      "finding": "Actual broad-window DOM includes pre-week DEMO-0004; it is not a new call created by report generation.",
+      "dom_file": "captures/expansion/core-reporting-fundamentals-chrome-20261029/027-default-window-all-groups-sixteen-calls.dom.txt",
+      "sha256": "fbd398a67c0fc4aebfa5df615f3a1fd919cb08a3fd415691889cc1b33885011c",
+      "pixel_limit": "DEMO-0004 row is outside the027viewport; not a pictured row claim."
+    }
+  ]
+}

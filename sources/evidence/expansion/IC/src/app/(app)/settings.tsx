@@ -1,0 +1,192 @@
+/* eslint-disable react/react-in-jsx-scope */
+import { Env } from '@env';
+import { type Href, router } from 'expo-router';
+import { useColorScheme } from 'nativewind';
+import React, { useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { BluetoothDeviceItem } from '@/components/settings/bluetooth-device-item';
+import { Item } from '@/components/settings/item';
+import { KeepAliveItem } from '@/components/settings/keep-alive-item';
+import { LanguageItem } from '@/components/settings/language-item';
+import { LoginInfoBottomSheet } from '@/components/settings/login-info-bottom-sheet';
+import { ServerUrlBottomSheet } from '@/components/settings/server-url-bottom-sheet';
+import { ThemeItem } from '@/components/settings/theme-item';
+import { ToggleItem } from '@/components/settings/toggle-item';
+import { FocusAwareStatusBar, ScrollView } from '@/components/ui';
+import { AlertDialog, AlertDialogBackdrop, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
+import { Box } from '@/components/ui/box';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Heading } from '@/components/ui/heading';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { useAuth, useAuthStore } from '@/lib';
+import { logger } from '@/lib/logging';
+import { getBaseApiUrl } from '@/lib/storage/app';
+import { openLinkInBrowser } from '@/lib/utils';
+import { QueuedEventStatus } from '@/models/offline-queue/queued-event';
+import { useServerUrlStore } from '@/stores/app/server-url-store';
+import { useOfflineQueueStore } from '@/stores/offline-queue/store';
+
+export default function Settings() {
+  const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
+  const signOut = useAuthStore.getState().logout;
+  const { colorScheme } = useColorScheme();
+  const [showLoginInfo, setShowLoginInfo] = React.useState(false);
+  const { login, status, isAuthenticated } = useAuth();
+  const [showServerUrl, setShowServerUrl] = React.useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
+  const serverUrl = useServerUrlStore((s) => s.url);
+  const queuedEvents = useOfflineQueueStore((s) => s.queuedEvents);
+  const isConnected = useOfflineQueueStore((s) => s.isConnected);
+  const isNetworkReachable = useOfflineQueueStore((s) => s.isNetworkReachable);
+
+  const pendingSyncCount = queuedEvents.filter((event) => event.status === QueuedEventStatus.PENDING || event.status === QueuedEventStatus.PROCESSING).length;
+  const failedSyncCount = queuedEvents.filter((event) => event.status === QueuedEventStatus.FAILED).length;
+  const syncStatusValue =
+    !isConnected || !isNetworkReachable
+      ? t('offline_queue.offline')
+      : failedSyncCount > 0
+        ? t('settings.sync_status_failed', { count: failedSyncCount })
+        : pendingSyncCount > 0
+          ? t('settings.sync_status_pending', { count: pendingSyncCount })
+          : t('settings.sync_status_ok');
+
+  /**
+   * Signs out. The auth store's logout removes the stored tokens and runs the full app-data reset
+   * (clearAllAppData) itself, the same as every other logout path.
+   */
+  const performLogout = useCallback(async () => {
+    await signOut();
+  }, [signOut]);
+
+  /**
+   * Handles logout confirmation - clears all data and signs out
+   */
+  const handleLogoutConfirm = useCallback(async () => {
+    setShowLogoutConfirm(false);
+
+    trackEvent('user_logout_confirmed', {});
+
+    await performLogout();
+  }, [performLogout, trackEvent]);
+
+  /**
+   * The saved tokens belong to the previous server, so changing servers while signed in
+   * signs the user out. The new server URL is preserved by clearAllAppData.
+   */
+  const handleServerUrlChanged = useCallback(async () => {
+    trackEvent('settings_server_url_changed_logout', {});
+    await performLogout();
+  }, [performLogout, trackEvent]);
+
+  const handleLoginInfoSubmit = async (data: { username: string; password: string }) => {
+    logger.info({
+      message: 'Updating login info',
+    });
+    await login({ username: data.username, password: data.password });
+  };
+
+  useEffect(() => {
+    if (status === 'signedIn' && isAuthenticated) {
+      logger.info({
+        message: 'Setting Login info successful',
+      });
+    }
+  }, [status, isAuthenticated]);
+
+  // Track when settings view is rendered
+  useEffect(() => {
+    trackEvent('settings_view_rendered', {});
+  }, [trackEvent]);
+
+  return (
+    <Box className={`flex-1 ${colorScheme === 'dark' ? 'bg-neutral-950' : 'bg-neutral-50'}`}>
+      <FocusAwareStatusBar />
+      <ScrollView>
+        <VStack className="md p-4">
+          {/* App Info Section */}
+          <Card className={`mb-4 rounded-lg border p-4 ${colorScheme === 'dark' ? 'border-neutral-800 bg-neutral-900' : 'border-neutral-200 bg-white'}`}>
+            <Heading className="mb2 text-sm">{t('settings.app_info')}</Heading>
+            <VStack space="sm">
+              <Item text={t('settings.app_name')} value={Env.NAME} />
+              <Item text={t('settings.version')} value={Env.VERSION} />
+              <Item text={t('settings.environment')} value={Env.APP_ENV} />
+            </VStack>
+          </Card>
+
+          {/* Account Section */}
+          <Card className={`mb-8 rounded-lg border p-4 ${colorScheme === 'dark' ? 'border-neutral-800 bg-neutral-900' : 'border-neutral-200 bg-white'}`}>
+            <Heading className="mb2 text-sm">{t('settings.account')}</Heading>
+            <VStack space="sm">
+              <Item text={t('settings.server')} value={serverUrl || getBaseApiUrl()} onPress={() => setShowServerUrl(true)} textStyle="text-info-600" />
+              <Item text={t('settings.login_info')} onPress={() => setShowLoginInfo(true)} textStyle="text-info-600" />
+              <Item text={t('mfa.account.title')} onPress={() => router.push('/settings/account-security' as unknown as Href)} textStyle="text-info-600" />
+              <Item text={t('shared_session.device_title')} onPress={() => router.push('/login/shared-device' as unknown as Href)} textStyle="text-info-600" />
+              <Item text={t('settings.logout')} onPress={() => setShowLogoutConfirm(true)} textStyle="text-error-600" />
+            </VStack>
+          </Card>
+
+          {/* Sync & Offline Queue Section */}
+          <Card className={`mb-4 rounded-lg border p-4 ${colorScheme === 'dark' ? 'border-neutral-800 bg-neutral-900' : 'border-neutral-200 bg-white'}`}>
+            <Heading className="mb2 text-sm">{t('settings.sync_section')}</Heading>
+            <VStack space="sm">
+              <Item text={t('settings.sync_status')} value={syncStatusValue} />
+              <Item text={t('settings.view_sync_queue')} onPress={() => router.push('/settings/offline-queue')} textStyle="text-info-600" />
+            </VStack>
+          </Card>
+
+          {/* Preferences Section */}
+          <Card className={`mb-4 rounded-lg border p-4 ${colorScheme === 'dark' ? 'border-neutral-800 bg-neutral-900' : 'border-neutral-200 bg-white'}`}>
+            <Heading className="mb2 text-sm">{t('settings.preferences')}</Heading>
+            <VStack space="sm">
+              <ThemeItem />
+              <LanguageItem />
+              <KeepAliveItem />
+              <BluetoothDeviceItem />
+            </VStack>
+          </Card>
+
+          {/* Support Section */}
+          <Card className={`mb-4 rounded-lg border p-4 ${colorScheme === 'dark' ? 'border-neutral-800 bg-neutral-900' : 'border-neutral-200 bg-white'}`}>
+            <Heading className="mb2 text-sm">{t('settings.support')}</Heading>
+            <VStack space="sm">
+              <Item text={t('settings.help_center')} onPress={() => openLinkInBrowser('https://resgrid.zohodesk.com/portal/en/home')} />
+              <Item text={t('settings.contact_us')} onPress={() => openLinkInBrowser('https://resgrid.com/contact')} />
+              <Item text={t('settings.status_page')} onPress={() => openLinkInBrowser('https://resgrid.freshstatus.io')} />
+              <Item text={t('settings.privacy_policy')} onPress={() => openLinkInBrowser('https://resgrid.com/privacy')} />
+              <Item text={t('settings.terms')} onPress={() => openLinkInBrowser('https://resgrid.com/terms')} />
+            </VStack>
+          </Card>
+        </VStack>
+      </ScrollView>
+
+      <LoginInfoBottomSheet isOpen={showLoginInfo} onClose={() => setShowLoginInfo(false)} onSubmit={handleLoginInfoSubmit} />
+      <ServerUrlBottomSheet isOpen={showServerUrl} onClose={() => setShowServerUrl(false)} onUrlChanged={handleServerUrlChanged} />
+
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog isOpen={showLogoutConfirm} onClose={() => setShowLogoutConfirm(false)}>
+        <AlertDialogBackdrop />
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <Heading size="lg">{t('settings.logout_confirm_title')}</Heading>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text>{t('settings.logout_confirm_message')}</Text>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button variant="outline" action="secondary" onPress={() => setShowLogoutConfirm(false)}>
+              <ButtonText>{t('common.cancel')}</ButtonText>
+            </Button>
+            <Button action="negative" onPress={handleLogoutConfirm}>
+              <ButtonText>{t('settings.logout')}</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </Box>
+  );
+}

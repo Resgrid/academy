@@ -1,0 +1,207 @@
+{
+  "id": "core-certification-administration",
+  "kind": "untimed_source_grounded_capture_outline",
+  "canonical_ready": false,
+  "voice_or_render_ready": false,
+  "source_trace": {
+    "file": "expansion/plans/core-certification-administration-source-trace-20261028/source-trace.json",
+    "sha256": "5c0b6acb8ae642bf50496171c1c80bd46475a464a01d1efba63098f19ed6a1b8"
+  },
+  "capture_operations": [
+    {
+      "order": 1,
+      "route": "/User/Certifications",
+      "controls": [
+        "Dashboard",
+        "Certification types",
+        "Settings",
+        "Compliance report",
+        "Export CSV",
+        "Add Certification",
+        "Scope",
+        "Category",
+        "Group",
+        "Role"
+      ],
+      "state": "Use existing001 baseline; do not reinterpret cutoff/counters as Caseysfuture exercise."
+    },
+    {
+      "order": 2,
+      "route": "/User/Certifications/Record/51001",
+      "controls": [
+        "Pending verification",
+        "Wallace Boden",
+        "Edit",
+        "Renew",
+        "Add credit"
+      ],
+      "state": "Use002 only as self-review boundary. Explain noVerifywithout attempting selfverification. Preservebaseline51001."
+    },
+    {
+      "order": 3,
+      "route": "/User/Certifications/Types",
+      "controls": [
+        "Certification types",
+        "Template gallery",
+        "New type"
+      ],
+      "state": "Capture actual entry controls. OptionalreadonlyTemplate gallery filter/Person+Unit rows→Cancel;neverAddselected."
+    },
+    {
+      "order": 4,
+      "route": "/User/Certifications/EditType",
+      "controls": [
+        "Type",
+        "Code",
+        "Category",
+        "Other",
+        "Applies to",
+        "Person",
+        "Issuing authority",
+        "Description"
+      ],
+      "state": "PrepareonlynewsoftwarePerson type; capture all displayed values atnormalviewport."
+    },
+    {
+      "order": 5,
+      "route": "/User/Certifications/EditType",
+      "controls": [
+        "Default validity (months)",
+        "Never expires",
+        "Credit hours per renewal",
+        "Requires supervisor verification",
+        "Active",
+        "Save"
+      ],
+      "state": "12months;NeverExpiresOFF;creditblank;verificationON;ActiveON. CaptureSavebeforeoneordinarysubmit."
+    },
+    {
+      "order": 6,
+      "route": "/User/Certifications/Types",
+      "controls": [
+        "Code",
+        "Type",
+        "Other",
+        "Person",
+        "12 months",
+        "Records",
+        "Requirements",
+        "Edit"
+      ],
+      "state": "Actualnewrow;freshreopenverifyfields. Do not claimfixedreturnedIDuntilUIrevealsit."
+    },
+    {
+      "order": 7,
+      "route": "/User/Certifications",
+      "controls": [
+        "Add Certification"
+      ],
+      "state": "Actualdashboardlauncher beforeadminform."
+    },
+    {
+      "order": 8,
+      "route": "/User/Certifications/Add",
+      "controls": [
+        "Member",
+        "Matthew Casey",
+        "Type",
+        "Name",
+        "Number",
+        "Valid Area",
+        "Issued by",
+        "Issued on",
+        "Expires on",
+        "File",
+        "Save"
+      ],
+      "state": "SelectnewsoftwaretypeandCasey;explicitfutureexpiry2027-10-28;optionalfileempty. Capture form+Save with separate scroll frames ifneeded."
+    },
+    {
+      "order": 9,
+      "route": "/User/Certifications",
+      "controls": [
+        "Matthew Casey",
+        "newtypecode",
+        "Pending verification"
+      ],
+      "state": "Saveonce;captureactualdashboardresult andnormalCasey Person/recordlinkbeforeopening."
+    },
+    {
+      "order": 10,
+      "route": "/User/Certifications/Record?id={actualNewRecordId}",
+      "controls": [
+        "Certification record",
+        "Matthew Casey",
+        "Pending verification",
+        "newsoftwarename",
+        "Verify"
+      ],
+      "state": "CaptureactualPendingbeforeplainPOSTVerify. No modal/confirmexistsforVerify."
+    },
+    {
+      "order": 11,
+      "route": "/User/Certifications/Record?id={actualNewRecordId}",
+      "controls": [
+        "Active",
+        "Verified by",
+        "Wallace Boden",
+        "verifiedtimestamp"
+      ],
+      "state": "OneordinaryVerifyclick→actualsaved/readback→freshreopen. Claimonlysoftware departmentreview;baselineBodenremainsPending."
+    },
+    {
+      "order": 12,
+      "route": "/User/Personnel/Roles",
+      "controls": [
+        "Required certifications"
+      ],
+      "state": "Read-only existingrolelauncher→requirementsfields/Offnotice;noSave/Add/Remove/memberchanges."
+    },
+    {
+      "order": 13,
+      "route": "/User/Certifications/Settings",
+      "controls": [
+        "Off – requirements are informational only",
+        "Grace period (days)",
+        "Treat records pending verification as valid for role requirements",
+        "Notify (days before expiry)",
+        "Notify the holder directly",
+        "Send department administrators a nightly digest",
+        "Save"
+      ],
+      "state": "Use003/006stored-lookingread-onlybaseline;004/005unsavedoptionsareonlypolicychoices,notappliedpolicy. NoSave/nativeEnforceconfirm."
+    },
+    {
+      "order": 14,
+      "route": "/User/Certifications",
+      "controls": [
+        "Scope",
+        "Units"
+      ],
+      "state": "ReadonlyswitchScope=Units; ifunitrecordsexistnormalunitname→Unit page. Unitstatus/fieldsrequiresactualnewfootage;noinventedunitVerify."
+    },
+    {
+      "order": 15,
+      "route": "/User/Certifications",
+      "controls": [
+        "Export CSV",
+        "Compliance report"
+      ],
+      "state": "OptionalnormalCSVdownload+inspectheaders;normalreportnewtabPeople/Units. NoPDFdeliveryorprintsuccessclaimwithoutactualoperation."
+    }
+  ],
+  "missing_before_narration": [
+    "ActualnewPersonTypepreparedSave+storedrow+freshreopen.",
+    "ActualadminCaseyAddformSave+PendingrecordVerify+Activesavedreopen.",
+    "ActualroleRequiremententry/read-onlyrowsifcovered; no role requirementwrite.",
+    "ActualUnitScope/template/report/CSVfootageifthoseoperationsareincluded."
+  ],
+  "six_sector_applications": {
+    "Chicago Fire": "Maintain fictional department software-learning records and their reviewstate.",
+    "Community care and mental health": "Track operational process-learning evidence withoutpatientdata orclinicalvalidityclaims.",
+    "Search and rescue": "Organize fictional support-process records withoutassertingfieldqualification.",
+    "Security": "Maintain fictional software/site-process review records.",
+    "Wildland": "Record softwareorientation evidence separatelyfromprofessionalpositionqualifications.",
+    "Industrial response": "Keep fictional coordination-system records; no inspection/accreditation/legalcomplianceclaim."
+  }
+}

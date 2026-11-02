@@ -1,0 +1,67 @@
+{
+  "scenario": "Big Board readiness summaries and readable status counts",
+  "training_only": true,
+  "recorded_at": "2026-11-02T08:35:39.336844+00:00",
+  "database_writes": 0,
+  "widgets_to_add": [
+    "Personnel Status Summary",
+    "Personnel Staffing Summary",
+    "Units Summary"
+  ],
+  "personnel_status_settings": {
+    "showColors": false,
+    "fontSize": 14,
+    "width": 4,
+    "height": 4
+  },
+  "observed_counts": {
+    "personnelStatus": {
+      "Standing By": 14
+    },
+    "personnelStaffing": {
+      "Available": 3,
+      "Delayed": 1,
+      "Unavailable": 2,
+      "Committed": 0,
+      "On Shift": 8
+    },
+    "units": {
+      "Total": 8,
+      "Available": 6,
+      "Responding": 1,
+      "On Scene": 0
+    }
+  },
+  "detail_examples": [
+    {
+      "unit": "Squad 3",
+      "state": "Responding",
+      "updated_at_capture": "7 days ago"
+    },
+    {
+      "unit": "Ambulance 61",
+      "state": "Released",
+      "updated_at_capture": "4 days ago"
+    },
+    {
+      "unit": "Reserve Engine 51",
+      "state": "Out of Service",
+      "updated_at_capture": "5 days ago"
+    }
+  ],
+  "replay_steps": [
+    "Start Big Board with the fictional Academy department and seeded roster/units.",
+    "Use Add to choose each of the three readiness summary widgets; scroll to the actual panels.",
+    "Use Settings, Personnel Status Widget; set Show Colors off, leave font14pt, choose4x4 grid dimensions, then Save.",
+    "Inspect neutral status numbers and separate staffing/unit counts.",
+    "Scroll to the Units table and compare individual states and Updated ages.",
+    "Reload, inspect the returned summaries, reopen Personnel Status Widget and read back saved settings."
+  ],
+  "limits": [
+    "This records a long scrollable board, not a finished wall-display arrangement.",
+    "Raw font16 attempts did not persist; do not replay or teach them as a working change.",
+    "Relative ages depend on the recording date and should not be reproduced by silently altering records.",
+    "Unit Available counts use grouped underlying categories, not literal state-label matching."
+  ],
+  "source_proposal": "expansion/plans/app-bigboard-readiness-summaries-source-proposal-20261101"
+}

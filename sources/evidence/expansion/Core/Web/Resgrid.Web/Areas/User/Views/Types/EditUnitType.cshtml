@@ -1,0 +1,156 @@
+﻿@using Resgrid.Model
+@model Resgrid.Web.Areas.User.Models.Types.EditUnitTypeView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Department.DepartmentTypes> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Mapping.MapIconLegend> legendStrings
+@{
+    ViewBag.Title = "Resgrid | " + @localizer["EditUnitTypeHeader"];
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["EditUnitTypeHeader"]</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li>
+                <a asp-controller="Department" asp-action="Types" asp-route-area="User">@commonLocalizer["DepartmentTypes"]</a>
+            </li>
+            <li class="active">
+                <strong>@localizer["EditUnitTypeHeader"]</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal" role="form" asp-controller="Types" asp-action="EditUnitType" asp-route-area="User" method="post" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-1 col-md-pull-1">
+                                @if (!String.IsNullOrEmpty(Model.Message))
+                                {
+                                    <div class="alert alert-success">
+                                        @Model.Message
+                                    </div>
+                                }
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(m => m.UnitType.UnitTypeId)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["UnitTypeNameLabel"]</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["UnitTypeNameText"]" asp-for="UnitType.Type"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["UnitTypeClassLabel"]</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" asp-for="UnitType.BaseType">
+                                    <option value="-1">@localizer["BaseTypeNone"]</option>
+                                    @foreach (var typeClass in Enum.GetValues(typeof(Resgrid.Model.UnitTypeClasses)).Cast<Resgrid.Model.UnitTypeClasses>().Where(x => (int)x >= 0))
+                                    {
+                                        <option value="@((int)typeClass)">@localizer["UnitTypeClass." + typeClass]</option>
+                                    }
+                                </select>
+                                <span class="help-block m-b-none">@localizer["UnitTypeClassHelp"]</span>
+                                @{
+                                    // A hint only: the class is never set for the user, so nothing changes until they pick it and save.
+                                    var suggestedClass = Model.UnitType.BaseType < 0 ? BaseTypeSuggestions.SuggestUnitTypeClass(Model.UnitType.Type) : null;
+                                    var suggestedClassName = suggestedClass.HasValue ? localizer["UnitTypeClass." + (Resgrid.Model.UnitTypeClasses)suggestedClass.Value].Value : null;
+                                }
+                                @if (suggestedClassName != null)
+                                {
+                                    <span class="help-block m-b-none text-warning">@string.Format(localizer["SuggestedFromName"].Value, suggestedClassName)</span>
+                                }
+                                else if (Model.UnitType.BaseType < 0)
+                                {
+                                    // Enhanced AI: fetched after the page renders, shown only for entitled departments, and a hint like the one above.
+                                    <span class="help-block m-b-none text-info" style="display: none;" data-ai-base-type-url="@Url.Action("GetUnitTypeAiSuggestion", "Types", new { area = "User", unitTypeId = Model.UnitType.UnitTypeId })"
+                                          data-ai-base-type-select="#UnitType_BaseType" data-ai-base-type-format="@localizer["AiSuggestedFromName"].Value"></span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["UnitTypeActionsLabel"]</label>
+                            <div class="col-sm-2">@Html.DropDownListFor(m => m.UnitCustomStatesId, new SelectList(Model.States, "CustomStateId", "Name"), new { style = "width: 100%" })</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@localizer["UnitTypeMapIconLabel"]</label>
+                            <div class="col-sm-2">
+                                @* asp-for lets the option tag helper mark the saved icon as selected; a plain select always
+                                   showed Default, so saving the page cleared the icon. *@
+                                <select asp-for="UnitTypeIcon">
+                                    <option value="-1">Default</option>
+                                    <option value="20">Aircraft</option>
+                                    <option value="21">Ambulance</option>
+                                    <option value="22">Bulldozer</option>
+                                    <option value="23">Bus</option>
+                                    <option value="24">Car</option>
+                                    <option value="25">Car Two</option>
+                                    <option value="26">Check</option>
+                                    <option value="27">Flag</option>
+                                    <option value="28">FourByFour</option>
+                                    <option value="29">Group</option>
+                                    <option value="30">Helicopter</option>
+                                    <option value="31">Motorcycle</option>
+                                    <option value="32">Pickup</option>
+                                    <option value="33">Camper</option>
+                                    <option value="34">Plowtruck</option>
+                                    <option value="35">Tires</option>
+                                    <option value="36">Truck</option>
+                                    <option value="37">Van</option>
+                                    <option value="38">Velocimeter</option>
+                                    <option value="39">Watercraft</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2"><img id="newUnitTypePreview" style="height: 37px; width: 32px;"></div>
+                        </div>
+                        @{ var iconPicker = new TypeIconPicker { HelpKey = "UnitTypeIconHelp", SampleNameInputId = "UnitType_Type", SampleName = Model.UnitType?.Type, DefaultIconSelectId = "UnitTypeIcon", BaseIconUrl = "/images/Mapping/Engine_Responding.png", CurrentIconUrl = TypeIcons.WebIconUrl(Model.UnitType?.IconKey), RemoveFieldName = "RemoveCustomIcon", RemoveChecked = Model.RemoveCustomIcon }; }
+                        <partial name="_TypeIconPicker" model="iconPicker" />
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">@legendStrings["StatusMapIcons"]</label>
+                            <div class="col-sm-10">
+                                <a class="btn btn-white btn-sm" asp-controller="Mapping" asp-action="StatusIcons" asp-route-area="User" asp-route-kind="@((int)TypeIconKinds.UnitType)" asp-route-typeId="@Model.UnitType.UnitTypeId"><i class="fa fa-map-marker"></i> @legendStrings["StatusMapIcons"]</a>
+                                <span class="help-block m-b-none">@legendStrings["StatusMapIconsHelp"]</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white" asp-controller="Department" asp-action="Types" asp-route-area="User">@commonLocalizer["Cancel"]</a>
+                                <button class="btn btn-primary" type="submit">@commonLocalizer["Update"]</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/app/internal/types/resgrid.types.aibasetype.js"></script>
+<script>
+    $(document).ready(function () {
+        resgrid.common.analytics.track('Department - Edit Unit Types');
+
+        $('#newUnitTypePreview').hide();
+
+        $('#UnitTypeIcon').on('change', function() {
+          if (this.value >= 0) {
+            $('#newUnitTypePreview').show();
+            let text = $( "#UnitTypeIcon option:selected" ).text().replace(/\s/g, '').toLowerCase();
+            $("#newUnitTypePreview").attr("src", "/images/Mapping/" + text + ".png");
+          } else {
+              $('#newUnitTypePreview').hide();
+          }
+      }).trigger('change');
+    });
+</script>
+}

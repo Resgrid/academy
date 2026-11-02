@@ -1,0 +1,125 @@
+{
+  "app": "Core",
+  "capture_method": "Actual browser screenshots with separate manual review",
+  "captures": [
+    {
+      "id": "001-separate-call-number-year-controls",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-numbering-page-reference-20261101/001-separate-call-number-year-controls.jpg",
+      "sha256": "567bbb694c284039f1ca5222ac69f1e11b2f2cff6844db6c080fbd01c16d6af0",
+      "width": 1280,
+      "height": 720,
+      "url": "http://127.0.0.1:18967/User/Department/CallSettings",
+      "captured_at": "2026-11-02T00:18:31.733Z",
+      "visible_labels": [
+        "Wallace Boden",
+        "Home",
+        "Calls",
+        "Personnel",
+        "Units",
+        "Contacts",
+        "Mapping",
+        "Shifts",
+        "Records",
+        "Reports",
+        "Documents",
+        "Calendar",
+        "Notes",
+        "Call Numbering",
+        "How new calls are numbered. Changing the pattern never renumbers calls that already have a number.",
+        "Call number pattern",
+        "Example:",
+        "FD51-2026-0153",
+        "How call numbers are written, for example FD-2026-0153: fixed text plus the YYYY or YY, MM, DD and SEQ tokens. The sequence starts again whenever the date it writes changes. Until a pattern is saved, calls keep the YY-SEQ numbers Resgrid has always issued.",
+        "Fixed text (letters, digits, - _ . /) around tokens: {YYYY} or {YY} the year, {MM} the month, {DD} the day and {SEQ} the sequence, which must appear once. The sequence starts again at 1 whenever the date in the number changes: each year with a year, each month with {MM}, each day with {DD}, and never without a date. {MM} needs a year and {DD} needs {MM}. Dates use the department's time zone.",
+        "Sequence digits",
+        "Pads the sequence with leading zeros, so 4 writes 0153. 1 writes it without padding, as Resgrid always has.",
+        "Digits in the SEQ part of the call number, zero-padded: 4 writes 0153. 1 to 8 digits, 1 for no padding; changing it keeps the sequence's next number.",
+        "Numbering year starts",
+        "Month the numbering year starts, for calls numbered by a fiscal year. A yearly pattern starts again at 1 on that month and day, and YYYY and YY write the fiscal year's name; patterns with MM or DD follow the calendar. Unset is January, the calendar year.",
+        "For calls numbered by a fiscal year, pick the day it starts. A yearly pattern starts again at 1 that day, and {YYYY} and {YY} write the fiscal year's name. Most fiscal years are named by the year they end in, so one starting November 1, 2026 is 2027. January 1 is the calendar year. Patterns with {MM} or {DD} always follow the calendar.",
+        "Next call number",
+        "FD51-2026-0010",
+        "Starts again at 1 each year.",
+        "Raise next sequence to",
+        "For departments continuing numbers issued before Resgrid: the next call receives this sequence. It can only be raised, never lowered, so a number is never issued twice. Leave it blank to keep the current sequence.",
+        "Assistant",
+        "Chat",
+        "Resgrid, LLC © 2026 All Rights Reserved.",
+        "Copyright",
+        "Version 3.0.0.0",
+        "FD51-{YYYY}-{SEQ}",
+        "4",
+        "1",
+        "10"
+      ],
+      "visible_field_text": [
+        {
+          "aria_hidden_duplicate": false,
+          "kind": "value",
+          "rect": {
+            "height": 34,
+            "width": 300,
+            "x": 450,
+            "y": 107.625
+          },
+          "text": "FD51-{YYYY}-{SEQ}"
+        },
+        {
+          "aria_hidden_duplicate": false,
+          "kind": "value",
+          "rect": {
+            "height": 34,
+            "width": 135,
+            "x": 450,
+            "y": 321.6171875
+          },
+          "text": "4"
+        },
+        {
+          "aria_hidden_duplicate": false,
+          "kind": "value",
+          "rect": {
+            "height": 34,
+            "width": 70,
+            "x": 569.5,
+            "y": 422.7578125
+          },
+          "text": "1"
+        },
+        {
+          "aria_hidden_duplicate": false,
+          "kind": "placeholder",
+          "rect": {
+            "height": 34,
+            "width": 135,
+            "x": 450,
+            "y": 668.1796875
+          },
+          "text": "10"
+        }
+      ],
+      "visible_controls": [],
+      "dom_file": "captures/expansion/core-numbering-page-reference-20261101/001-separate-call-number-year-controls.dom.txt",
+      "dom_sha256": "f8946734d2f49d4656da02a2d51f4918a37bffea0bea0c6449924b20d9dd07bf",
+      "state": "Read-only Call Settings reference showing its separate numbering year start; no call settings values changed or saved.",
+      "required_labels": [
+        "Call number pattern",
+        "FD51-{YYYY}-{SEQ}",
+        "Numbering year starts",
+        "January",
+        "1"
+      ],
+      "visual_review": "pending_actual_image_review",
+      "eligible_for_lesson": false,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Department/CallSettings",
+        "captured_at": "2026-11-02T00:18:31.733Z"
+      },
+      "label_observation_method": "Actual CSS-visible DOM text and painted input values, within viewport and ancestor clips. Icon names/roles/rects are DOM observations. Separate image review must remove occlusion and bind hashes before use.",
+      "missing_required_labels": []
+    }
+  ]
+}

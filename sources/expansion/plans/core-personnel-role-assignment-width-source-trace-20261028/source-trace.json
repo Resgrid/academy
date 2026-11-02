@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "kind": "source_diagnosis_and_existing_normal_UI_alternative",
+  "source_only": true,
+  "parent_observed_problem": {
+    "screen": "Own role51007 Edit",
+    "users_in_role_picker": "Visible Select2 container2px; search0px; actual screenshot018 vertical line with no readable member names.",
+    "normal_actions": "Fill/click timed out; normal visible selection-span click opened DOM options only. No member selected or saved.",
+    "qualification": "Not usable picker footage; DOM names do not prove visible names or successful selection."
+  },
+  "source_facts": [
+    {
+      "fact": "EditRole declares an empty select#users with neither inline width nor initial option content, and initializes Select2 with multiple:true but no width option.",
+      "evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Personnel/EditRole.cshtml",
+          "line_start": 54,
+          "line_end": 60,
+          "sha256": "80d42cf201ba8350275db3de9f7bfa1878a865c732076367ed8bbe23e98efbc1"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/js/app/internal/personnel/resgrid.personnel.editRole.js",
+          "line_start": 7,
+          "line_end": 19,
+          "sha256": "07de9ef46d34ebe33c70157a88ca11b2711848cc53d503e458dfb997738e8012"
+        }
+      ]
+    },
+    {
+      "fact": "Bundled Select2 defaults width to resolve: it prefers inline width; otherwise it fixes the container width to the original element outerWidth. Its dropdown defaults to the container width. Placeholder search width follows the selection rendered width.",
+      "evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/lib/select2/dist/js/select2.full.js",
+          "line_start": 2190,
+          "line_end": 2206,
+          "sha256": "ba0664111e4e0041b30b0c1bff832f841284e46be67344b9f4c2a7f9da2865a2"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/lib/select2/dist/js/select2.full.js",
+          "line_start": 4560,
+          "line_end": 4572,
+          "sha256": "ba0664111e4e0041b30b0c1bff832f841284e46be67344b9f4c2a7f9da2865a2"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/lib/select2/dist/js/select2.full.js",
+          "line_start": 5075,
+          "line_end": 5100,
+          "sha256": "ba0664111e4e0041b30b0c1bff832f841284e46be67344b9f4c2a7f9da2865a2"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/lib/select2/dist/js/select2.full.js",
+          "line_start": 5469,
+          "line_end": 5517,
+          "sha256": "ba0664111e4e0041b30b0c1bff832f841284e46be67344b9f4c2a7f9da2865a2"
+        }
+      ]
+    },
+    {
+      "fact": "EditUserProfile already has an explicit inline width100% on select#roles and normal Select2 initialization. Existing roles are loaded as named selected options; adding a new role retains existing chips unless they are removed.",
+      "evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Home/EditUserProfile.cshtml",
+          "line_start": 383,
+          "line_end": 389,
+          "sha256": "c7c3e788e11e38ab569f4dc7d6ef8c19485b1d0876bd5d0df5b86a3ff567b24e"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/js/app/internal/home/resgrid.home.edituserprofile.js",
+          "line_start": 35,
+          "line_end": 55,
+          "sha256": "d7aec87ee7e31d52f10848ec4776803b3b960d198ccb05321f1f4107b2672d71"
+        }
+      ]
+    },
+    {
+      "fact": "Personnel list has an ordinary Edit link to Home/EditUserProfile?userId=... for members the caller may edit. Its adjacent Options dropdown contains other actions and is not the profile editor.",
+      "evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Personnel/Index.cshtml",
+          "line_start": 489,
+          "line_end": 505,
+          "sha256": "b134c014256e92872974294df469e8a373984a7661a1311c7b7ba178dc808c89"
+        }
+      ]
+    }
+  ],
+  "diagnosis": {
+    "confidence": "Source-supported inference consistent with parent-measured2px/0px geometry; no live browser instrumentation or new observation by this reviewer.",
+    "likely_cause": "The widthless empty role-member select is resolved at initialization to its small native width, then inherited by the Select2 container/dropdown; the search has no useful rendered width. The profile-role control avoids that source pattern with its pre-existing width100%.",
+    "not_claimed": "No claim of a repaired product, traced browser layout order, server/API failure or successful member picker. No page CSS/JS injected and no app files edited.",
+    "future_product_fix_only": "If separately authorized, a narrow explicit width on the real EditRole select/Select2 initialization can follow the existing profile pattern, with real fresh readback and compatibility verification. It is not implemented here."
+  },
+  "supported_alternative": {
+    "route": "/User/Home/EditUserProfile?userId=DA25F49E-FEA4-5C8D-82D9-163D7D2023F9",
+    "subject": "Fictional Matthew Casey",
+    "entry": "Personnel list → Casey row Edit (not its Options menu)",
+    "visible_control": "Roles",
+    "select_source": "select#roles style=\"width:100%\"",
+    "ordinary_permissions": "GET requires Department_View plus CanUserEditProfile. Roles UI is shown to department admins or target-group admins; POST re-derives that privilege and only honors Roles for those callers.",
+    "source": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/HomeController.cs",
+        "line_start": 405,
+        "line_end": 427,
+        "sha256": "156a9dd7cfc9b027d537019aa4bebcb47f59f46a733f77ac5605825ddcae08c8"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Home/EditUserProfile.cshtml",
+        "line_start": 383,
+        "line_end": 389,
+        "sha256": "c7c3e788e11e38ab569f4dc7d6ef8c19485b1d0876bd5d0df5b86a3ff567b24e"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/HomeController.cs",
+        "line_start": 951,
+        "line_end": 971,
+        "sha256": "156a9dd7cfc9b027d537019aa4bebcb47f59f46a733f77ac5605825ddcae08c8"
+      }
+    ]
+  },
+  "full_save_scope": {
+    "kind": "Normal full profile POST, not role-only",
+    "also_written": [
+      "Names/contact channels/carrier",
+      "Messaging and notification preferences",
+      "Timezone/language",
+      "Department-sensitive profile fields and posted UDFs",
+      "Group/admin flags where caller is department admin",
+      "Department admin/disabled/hidden member flags",
+      "Role membership set",
+      "ProfileUpdated audit and freshness/projection metadata"
+    ],
+    "conditional_external_or_identity_branches": "Newsletter sync occurs only if that preference changed. Email/session changes occur if the actual email changed; this exercise must not edit it. Other-account password/PIN actions are not part of this role exercise.",
+    "role_set_replacement": "SetRolesForUser removes the previous role rows and inserts the selected wanted set. Existing Officer must finish loading and remain selected; adding only the new role while Officer is absent would replace the old membership.",
+    "role_gate": "Only gaining roles are checked. Off skips certification blocking; verified Casey’s matching type does not by itself prove an enforcement gate was exercised while Off.",
+    "readback_limit": "Keeping displayed fields unchanged is the intended UI operation, but this source trace cannot certify that every broader profile field is unchanged after a save. Fresh actual admin/group/status/role readbacks are required for the bounded result claim.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/HomeController.cs",
+        "line_start": 852,
+        "line_end": 909,
+        "sha256": "156a9dd7cfc9b027d537019aa4bebcb47f59f46a733f77ac5605825ddcae08c8"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/HomeController.cs",
+        "line_start": 934,
+        "line_end": 971,
+        "sha256": "156a9dd7cfc9b027d537019aa4bebcb47f59f46a733f77ac5605825ddcae08c8"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/HomeController.cs",
+        "line_start": 982,
+        "line_end": 1014,
+        "sha256": "156a9dd7cfc9b027d537019aa4bebcb47f59f46a733f77ac5605825ddcae08c8"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/HomeController.cs",
+        "line_start": 1070,
+        "line_end": 1090,
+        "sha256": "156a9dd7cfc9b027d537019aa4bebcb47f59f46a733f77ac5605825ddcae08c8"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/PersonnelRolesService.cs",
+        "line_start": 363,
+        "line_end": 400,
+        "sha256": "e089e39006b1397e7909f8ad4e27388267f714ef748d1d225dc6de481bbd3b12"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/PersonnelRolesService.cs",
+        "line_start": 46,
+        "line_end": 71,
+        "sha256": "e089e39006b1397e7909f8ad4e27388267f714ef748d1d225dc6de481bbd3b12"
+      }
+    ]
+  },
+  "operator_plan": [
+    "On the normal profile form wait until existing Officer chip visibly loads. If it does not appear, stop the membership write and retain the incomplete state; do not guess or clear roles.",
+    "Record baseline role chip Officer and current group/admin/disabled/hidden values. Parent currently reports Truck81,IsGroupAdmin checked,DepartmentAdmin checked; preserve those values rather than treating them as new choices.",
+    "Use the existing readable Roles selector and its normal search/dropdown to add only own role51007. Capture both Officer and the new fictional role as visible chips before any save.",
+    "Leave identity/contact/password/reset/PIN/admin/group/status/preferences fields untouched. Use the existing ordinary Save only with loaded intended chips and baseline controls intact.",
+    "Leave/reopen Casey’s ordinary profile and compare both role chips and baseline group/admin/hidden/disabled fields. Cross-check own role View/count and requirement eligibility without changing globalOff. Do not claim role enforcement or a real qualification award.",
+    "Keep account email and other identity fields outside the captured viewport by normal navigation/scroll. No DOM/CSS alteration, form submission shortcut, private API or hidden-state injection."
+  ],
+  "no_actions_by_this_reviewer": [
+    "No UI/requests/DB/write",
+    "No product/dependency/security/profile change",
+    "No canonical/narration/media/site/target/Git changes"
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "app": "Core",
+  "scenario": "training-recurring-shifts-20261028",
+  "entries": [
+    {
+      "at": "2026-10-28T21:33:36.100Z",
+      "action": "Prepare a uniquely named Assigned shift, code TRN28A, light-blue color; supervisor approval left unchecked.",
+      "observation": "Unsaved new wizard only; existing three rows unchanged.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift"
+    },
+    {
+      "at": "2026-10-28T21:34:03.311Z",
+      "action": "Prepare November4,2026 only in manual schedule with09:00–11:00 local start/end.",
+      "observation": "Unsaved wizard selection; no existing dates modified.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift#"
+    },
+    {
+      "at": "2026-10-28T21:34:37.706Z",
+      "action": "Correction to prepared-only capture003.",
+      "observation": "Actual screenshot shows End Time01:00 and open time picker; November4 selection not yet verified. Exclude003as final schedule proof; no save occurred.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift#"
+    },
+    {
+      "at": "2026-10-28T21:34:50.621Z",
+      "action": "Corrected EndTime through actual visible time field to11:00 and Tab/Escape.",
+      "observation": "Read-only DOM and actual pixels confirm09:00/11:00; November4is selected via active current-day calendar class. No save yet.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift#"
+    },
+    {
+      "at": "2026-10-28T21:35:58.846Z",
+      "action": "Configure Firehouse51Officer count1 and choose MatthewCasey in its visible personnel picker.",
+      "observation": "Actual dropdown offered Casey; no personnel roles/groupmembership or liveEnginecrew changed.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift#"
+    },
+    {
+      "at": "2026-10-28T21:36:17.723Z",
+      "action": "Clicked the lower-right actual Finish exactly once to create own Assigned shift.",
+      "observation": "Awaiting authoritative returned list/readback; no duplicate submission.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift#"
+    },
+    {
+      "at": "2026-10-28T21:36:34.642Z",
+      "action": "Normal Finish returned new row shiftId51004.",
+      "observation": "Assigned/Manual,Groups1,Personnel1 shown; original shifts51001–51003still listed.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts"
+    },
+    {
+      "at": "2026-10-28T21:38:04.472Z",
+      "action": "Read-only View Calendar51004 failed to initialize its widget.",
+      "observation": "Visible heading only; scoped console ReferenceError:FullCalendar is not defined in resgrid.shifts.calendar.js. Diagnostic011excluded as saved-date/calendar result.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts"
+    },
+    {
+      "at": "2026-10-28T21:39:07.050Z",
+      "action": "SharedNovembercalendar own tile opened actualday51109.",
+      "observation": "SavedAssignedUpcoming09:00–11:00,Officerrequired1/needed0,CaseyAssigned,Fullystaffed. Normal ViewCalendar-specific widget remainsbroken; sharedcalendarfunctional.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/ViewShift?shiftDayId=51109"
+    },
+    {
+      "at": "2026-10-28T21:39:30.418Z",
+      "action": "Read DepartmentShiftSettings.",
+      "observation": "AllowSignupsForMultipleGroupsOFF,unchanged;noSave.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Department/ShiftSettings"
+    },
+    {
+      "at": "2026-10-28T21:41:37.785Z",
+      "action": "Created separateSignupshift with actual lower Finish once.",
+      "observation": "TRN28S,twofutureNov5/6dates09:00–11:00,Firehouse51Officer1,approvalON,allpreassignedpersonnelempty; awaiting returnedid.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/NewShift#"
+    },
+    {
+      "at": "2026-10-28T21:44:18.277Z",
+      "action": "SavedSignup51005readback opened actualday51110Nov5fromtwoNovembercalendarentries.",
+      "observation": "Upcoming09:00–11:00,approvalrequired,Officer1needed,emptyroster. Read-only; no signup/request/trade/approval/attendance action.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/ViewShift?shiftDayId=51110"
+    },
+    {
+      "at": "2026-10-28T21:45:33.293Z",
+      "action": "Saved one newdisposableUnit via normalNewUnitSave.",
+      "observation": "NameTRAININGONLY-Staticdemounit20261028,Engine,NoStation,noRoles/noGPS; original6unitsleftunchanged. AwaitingactualreturnedUnitID.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Units"
+    },
+    {
+      "at": "2026-10-28T21:47:19.233Z",
+      "action": "PreparednewStaticShift with ownunit51007.",
+      "observation": "InitialUSdateentrywasrejectedbyvisiblepickerandresetcurrent; beforeanysavecorrectedtothevisibleYYYY/MM/DDHH:mmformat2026/11/0409:00→2026/11/0509:00. Savedreadbackstillrequired.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Workshifts/New"
+    },
+    {
+      "at": "2026-10-28T21:47:53.051Z",
+      "action": "Correction to staticprepared030/031.",
+      "observation": "Datesnowcorrect but actualUnitsfieldstillblank; priorAXresultclickdidnotselectunit. NoCreateStaticShiftclicked.030/031cannotproveunitassociation; preparefreshselection.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Workshifts/New"
+    },
+    {
+      "at": "2026-10-28T21:49:18.551Z",
+      "action": "Shortened onlyunsavedStaticname beforefirstcreate.",
+      "observation": "Actualinputnarrowwidthclippedlongdraftname033; finaluniquelearner-readable nameTRAININGONLY-StaticNov4. Window/description/ownunitunchanged.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Workshifts/New"
+    },
+    {
+      "at": "2026-10-28T21:49:18.921Z",
+      "action": "ClickedCreateStaticShift exactlyonce onownnewfixture.",
+      "observation": "FinalnameTRAININGONLY-StaticNov4,onlynewunit51007,requestedfutureNov4→Nov5at09:00;awaitactualreturnedIDandstoredtimesbeforeclaim.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts"
+    },
+    {
+      "at": "2026-10-28T21:50:57.290Z",
+      "action": "SharedNovembercalendar openedactualnewStaticday.",
+      "observation": "StaticID129680c8-881c-43d3-b615-73220c5dd46c/dayd974f9f8-e8a9-4527-9425-7684821163b8;fullnameStaticNov4,4Nov202609:00,descriptionstored,ownunit51007listed.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Workshifts/ViewDay?dayId=d974f9f8-e8a9-4527-9425-7684821163b8"
+    },
+    {
+      "at": "2026-10-28T21:52:31.770Z",
+      "action": "STOPStaticwritesafterfreshEditreadbackdisagreement.",
+      "observation": "ViewDayNov409:00andownunitlisted,butEditshowsNov4/5at03:00AMandblankUnits; warningUpdateclearsassignments/signups. NoUpdate/deleteorfieldchange.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Workshifts/Edit?shiftId=129680c8-881c-43d3-b615-73220c5dd46c"
+    },
+    {
+      "at": "2026-10-28T21:53:41.480Z",
+      "action": "Read-only final approval and current-duty pages.",
+      "observation": "Approvals0signups/0trades; noApprove/Deny. ExistingAshiftcurrent10members,Engine51Herrmannstilllisted1. Noidentityswitch,attendance,request/trade,status,crew ordepartmentpolicy mutation.",
+      "normal_ui": true,
+      "tab_id": "393908928",
+      "url": "http://127.0.0.1:18967/User/Shifts/OnDuty"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "kind": "PROPOSED exact-two-array IC learner-label projection",
+  "original_source": {
+    "file": "expansion/plans/app-ic-access-session-settings-capture-freeze-20261029/app-ic-access-session-settings.narrated-source.json",
+    "sha256": "3ca130845b258669b4ed54619fc31c89260e8319337bcc6ace3d514eb3622788"
+  },
+  "original_manifest": {
+    "file": "expansion/plans/app-ic-access-session-settings-capture-freeze-20261029/captures.reviewed.json",
+    "sha256": "bf090b08e1dd54fcb3234869827fb9001a946a8631d7a6f9c532ba2496be63fe"
+  },
+  "prospective_source_sha256": "60a6279862cd105608ee0d13222eeaff44e73befe90856f631ddc8da280c2ed7",
+  "prospective_manifest_sha256": "0782a9de76eec92c36498fbfd4af74ec4b4c076d6cf917ecb8461e4d3b6f0579",
+  "operations": [
+    {
+      "json_pointer": "/scenes/1/required_labels",
+      "before": [
+        "Account",
+        "Server",
+        "Custom",
+        "Server URL",
+        "http://127.0.0.1:18967",
+        "Cancel",
+        "Save"
+      ],
+      "after": [
+        "Account",
+        "Server",
+        "Custom",
+        "Server URL",
+        "Cancel",
+        "Save"
+      ],
+      "only_removed_literal": "http://127.0.0.1:18967",
+      "existing_label_retained": "Server URL"
+    },
+    {
+      "json_pointer": "/screenshots/1/visible_labels",
+      "before": [
+        "Server",
+        "Custom",
+        "Server URL",
+        "http://127.0.0.1:18967",
+        "Note: This is the URL of the Resgrid API. It is used to connect to the Resgrid server. Do not include /api/v4 in the URL or a trailing slash.",
+        "Cancel",
+        "Save"
+      ],
+      "after": [
+        "Server",
+        "Custom",
+        "Server URL",
+        "Note: This is the URL of the Resgrid API. It is used to connect to the Resgrid server. Do not include /api/v4 in the URL or a trailing slash.",
+        "Cancel",
+        "Save"
+      ],
+      "only_removed_literal": "http://127.0.0.1:18967",
+      "existing_label_retained": "Server URL"
+    }
+  ],
+  "only_these_two_arrays_changed": true,
+  "narration_required_words_unchanged": true,
+  "actual_pixels_DOM_provenance_reviews_unchanged": true,
+  "existing_Server_URL_label_retained": true,
+  "privacy_gate_unchanged": true,
+  "root_projection_review_required": true,
+  "projection_approved": false,
+  "listening_identity_remains_original_source_sha256": "3ca130845b258669b4ed54619fc31c89260e8319337bcc6ace3d514eb3622788",
+  "rationale": "Learners identify the Server URL field; its visible local training value is retained in actual pixels and original source evidence, without treating a loopback address as a learner-facing required label. No hostname or pixels are substituted.",
+  "limits": "Root authorized preparation of this proposal only. No hearing receipt, parent approval, final plan, canonical or export readiness is created."
+}

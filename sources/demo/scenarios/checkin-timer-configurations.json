@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "kind": "training_configuration_fixture",
+  "department": "Firehouse 51 — Training Department",
+  "apply": "Normal Core Department Settings > Calls & Dispatch > Call & Dispatch Settings forms. This JSON records configuration inputs; it does not fabricate execution records.",
+  "default_timer": {
+    "Target Type": "Personnel",
+    "Duration (minutes)": 30,
+    "Warning Threshold (minutes)": 5,
+    "Enabled": true,
+    "Active States": []
+  },
+  "new_override": {
+    "Call Type ID": "Rescue",
+    "Call Priority": "-- Any --",
+    "Target Type": "Personnel",
+    "Duration (minutes)": 45,
+    "Warning Threshold (minutes)": 10,
+    "Enabled": false,
+    "Active States": []
+  },
+  "existing_override_preserved": {
+    "Call Type ID": "Investigation",
+    "Call Priority": "-- Any --",
+    "Target Type": "Personnel",
+    "Duration (minutes)": 60,
+    "Warning Threshold (minutes)": 5,
+    "Enabled": true,
+    "Active States": []
+  },
+  "automatic_enable_new_calls": false,
+  "practice_call_inputs": {
+    "Name": "TRAINING ONLY - Timer configuration verification",
+    "Type": "Investigation",
+    "Priority": "Routine",
+    "Call Identifier": "ACADEMY-TIMER-CONFIG-20261028",
+    "Address": "Fictional Academy timer exercise site, Chicago, IL",
+    "Latitude": 41.8721,
+    "Longitude": -87.6523,
+    "recipient": "Wallace Boden only",
+    "Enable Check-In Timers": true
+  },
+  "historical_observation": {
+    "call_id": 51013,
+    "issued_number": "FD51-2026-0005",
+    "final_state": "Closed",
+    "close_notification": false,
+    "software_checkin_note": "TRAINING ONLY - Core timer configuration practice check-in. No physical arrival or device-location verification.",
+    "original_active_calls_preserved": [
+      51001,
+      51002,
+      51003
+    ]
+  },
+  "replay_note": "Create a new practice call and use its returned ID/number; historical IDs/timestamps are not seeded as new execution evidence."
+}

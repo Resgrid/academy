@@ -1,0 +1,369 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Resgrid.Web.Helpers;
+using Resgrid.Model;
+
+namespace Resgrid.Web.Areas.User.Models.Records
+{
+	/// <summary>Common message slots for the Records views.</summary>
+	public abstract class RecordsBaseView : BaseUserModel
+	{
+		public string Message { get; set; }
+		public string ErrorMessage { get; set; }
+
+		/// <summary>True when the department enforces Protected Data over Records (the shield indicator).</summary>
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+		public bool ProtectionEnforced { get; set; }
+
+		/// <summary>True when this render carries REDACTED placeholders because no valid grant was presented.</summary>
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+		public bool ProtectionRedacted { get; set; }
+
+		/// <summary>Reason code behind <see cref="ProtectionRedacted"/> (step_up_required, grant_expired, ...).</summary>
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+		public string ProtectionReason { get; set; }
+
+		/// <summary>
+		/// The Protected Data Grant an edit page carries through its own form posts and autosaves after the reveal
+		/// module handed it over (RMS plan section 5.9.3). Set only by the *Revealed actions and the error re-renders
+		/// of a post that carried it; never bound from the request.
+		/// </summary>
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+		public string ProtectedGrant { get; set; }
+
+		/// <summary>Expiry of <see cref="ProtectedGrant"/> as the reveal module reported it; times the in-page expiry warning.</summary>
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+		public DateTime? ProtectedGrantExpiresOnUtc { get; set; }
+
+		public void ApplyProtection(ProtectedReadResult protection)
+		{
+			ProtectionEnforced = protection?.IsProtected == true;
+			ProtectionRedacted = protection?.RedactedFields?.Count > 0;
+			ProtectionReason = protection?.ProtectedReason;
+		}
+	}
+
+	/// <summary>
+	/// The fixed provenance footer no print layout can remove (RMS plan section 4.10.1), plus the letterhead
+	/// identity block that resolves at print time from the department (DepartmentProfile media plugs in later).
+	/// </summary>
+	public class RecordPrintProvenance
+	{
+		public string RecordNumber { get; set; }
+		public string DefinitionKey { get; set; }
+		public int DefinitionVersion { get; set; }
+		public int? RevisionNumber { get; set; }
+		public string PrintedByName { get; set; }
+		public DateTime PrintedOn { get; set; }
+		public string PrintedOnText { get; set; }
+		/// <summary>Generated safe default until the DepartmentDefault print layout (RMS-1 settings) and definition layouts (RMS-1B) land.</summary>
+		public string LayoutVersion { get; set; } = "system-default/1";
+		public string DepartmentName { get; set; }
+		public string DepartmentAddress { get; set; }
+		public string DepartmentPhone { get; set; }
+		public string Website { get; set; }
+		/// <summary>PrintHeader rendition as a data URI so the in-process PDF render needs no HTTP fetch.</summary>
+		public string LogoDataUri { get; set; }
+		public string LetterheadLine1 { get; set; }
+		public string LetterheadLine2 { get; set; }
+		public string FooterText { get; set; }
+		public string WatermarkLabel { get; set; }
+		public string PageSize { get; set; } = "Letter";
+	}
+
+	/// <summary>Records work queue / list (RMS plan section 4.1, unified queue).</summary>
+	/// <summary>Per-app Field Records rollout (RMS plan RMS-1D): adoption, outcomes and where people gave up.</summary>
+	public class RecordsFieldRolloutView : RecordsBaseView
+	{
+		public RecordsModuleState ModuleState { get; set; }
+		public Department Department { get; set; }
+		public bool IsDepartmentAdmin { get; set; }
+		public RecordsFieldRollout Rollout { get; set; }
+		public int WindowDays { get; set; } = 30;
+	}
+
+	public class RecordsIndexView : RecordsBaseView
+	{
+		public RecordsModuleState ModuleState { get; set; }
+		/// <summary>RMS-4 quality review flag (Records.QualityReview); shows the button on the index only.</summary>
+		public bool QualityReviewOn { get; set; }
+		/// <summary>RMS-6 analytics flag (Records.Analytics); shows the button on the index only.</summary>
+		public bool AnalyticsOn { get; set; }
+		public Department Department { get; set; }
+		public bool IsDepartmentAdmin { get; set; }
+		public List<RmsRecordSearchProjection> Records { get; set; } = new List<RmsRecordSearchProjection>();
+		public int Total { get; set; }
+		public int Page { get; set; } = 1;
+		public int PageSize { get; set; } = 50;
+		public int? Year { get; set; }
+		public List<SelectListItem> Years { get; set; } = new List<SelectListItem>();
+		public string DefinitionKey { get; set; }
+		public List<SelectListItem> Definitions { get; set; } = new List<SelectListItem>();
+		/// <summary>Department definition key -> name, retired ones included, so a queue row never shows a raw key.</summary>
+		public Dictionary<string, string> DefinitionNames { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+		public string StateFilter { get; set; }
+		public List<SelectListItem> States { get; set; } = new List<SelectListItem>();
+		public Dictionary<string, string> PersonnelNames { get; set; } = new Dictionary<string, string>();
+		public int TotalPages => PageSize <= 0 ? 1 : Math.Max(1, (int)Math.Ceiling(Total / (double)PageSize));
+
+		// Free-text search (RMS plan section 5.10): served by the records index when the host is online, otherwise
+		// the filtered queue renders and the text is reported as not applied.
+		public string Query { get; set; }
+		/// <summary>Drill-through filters from the accountability view.</summary>
+		public string OwnerFilter { get; set; }
+		public int? GroupFilter { get; set; }
+		public bool SearchAvailable { get; set; }
+		public bool NarrativeSearchAvailable { get; set; }
+		/// <summary>Bulk bar (RMS plan section 4.7): reviewers for assign-for-review; the packet buttons need ExportRecords.</summary>
+		public bool CanBulkAssign { get; set; }
+		public bool CanBulkPacket { get; set; }
+		public List<SelectListItem> Reviewers { get; set; } = new List<SelectListItem>();
+		public bool SearchDegraded { get; set; }
+		public bool SearchTruncated { get; set; }
+	}
+
+	/// <summary>Activation confirmation screen (RMS plan section 4.1, registry section 4.6).</summary>
+	public class RecordsAccountabilityView : RecordsBaseView
+	{
+		public RecordsModuleState ModuleState { get; set; }
+		public Department Department { get; set; }
+		public RecordsAccountabilityReport Report { get; set; } = new RecordsAccountabilityReport();
+		public RecordsAccountabilityPivot Pivot { get; set; } = RecordsAccountabilityPivot.Person;
+		public int Days { get; set; } = 30;
+		/// <summary>Display names for row keys: personnel names, group names or unit names depending on the pivot.</summary>
+		public Dictionary<string, string> Names { get; set; } = new Dictionary<string, string>();
+		public bool CanRemind { get; set; }
+	}
+
+	public class RecordsActivateView : RecordsBaseView
+	{
+		public RecordsActivationPreview Preview { get; set; }
+		public Department Department { get; set; }
+		public bool ViewGroupRecordsLockToGroup { get; set; }
+		public string Reason { get; set; }
+		public bool Acknowledged { get; set; }
+	}
+
+	/// <summary>Create / edit form for a locked Logs-parity definition.</summary>
+	public class RecordParticipantEditRow
+	{
+		public string UserId { get; set; }
+		public bool Selected { get; set; }
+		public int? UnitId { get; set; }
+		public string Role { get; set; }
+	}
+
+	public class RecordInventoryView : RecordsBaseView
+	{
+		public Resgrid.Model.Inventories.InventoryUsageType UsageType { get; set; }
+		public string UsageId { get; set; }
+		public string ExistingTransactionId { get; set; }
+		public string CorrectionReason { get; set; }
+		public bool ModernInventory { get; set; }
+		public string ItemId { get; set; }
+		public string LocationId { get; set; }
+		public string LotId { get; set; }
+		public string AssetId { get; set; }
+		public string RequestId { get; set; } = System.Guid.NewGuid().ToString("D");
+		public List<SelectListItem> Locations { get; set; } = new();
+		// Each lot and asset carries its item (WorkspaceChoice.Parent) so the pickers offer only the chosen item's.
+		public List<WorkspaceChoice> Lots { get; set; } = new();
+		public List<WorkspaceChoice> Assets { get; set; } = new();
+		public string RecordId { get; set; }
+		public RmsRecordKind Kind { get; set; }
+		public long RowVersion { get; set; }
+		public int TypeId { get; set; }
+		public int GroupId { get; set; }
+		public int? UnitId { get; set; }
+		public decimal Quantity { get; set; }
+		public string Note { get; set; }
+		public List<SelectListItem> Types { get; set; } = new();
+		public List<SelectListItem> Groups { get; set; } = new();
+		public List<SelectListItem> Units { get; set; } = new();
+		public List<Resgrid.Model.Services.RmsInventoryUsage> Usage { get; set; } = new();
+	}
+
+	public class RecordNewCallView : RecordsBaseView
+	{
+		public string RecordId { get; set; }
+		public long RowVersion { get; set; }
+		public string Name { get; set; }
+		public string Address { get; set; }
+		public string Nature { get; set; }
+		public DateTime? OccurredOn { get; set; }
+	}
+
+	public class RecordEditView : RecordsBaseView
+	{
+		public RecordUdfInput CustomFields { get; set; }
+		[Microsoft.AspNetCore.Mvc.ModelBinding.BindNever]
+		public RecordUdfSection CustomFieldForm { get; set; }
+		public int AttachmentClassification { get; set; } = 1;
+		public bool CanViewRestricted { get; set; }
+		public string RecordId { get; set; }
+		public long RowVersion { get; set; }
+		public string DefinitionKey { get; set; }
+		public RmsOperationalRecordType RecordType { get; set; }
+		public string DraftReference { get; set; }
+		public string RecordNumber { get; set; }
+		public bool IsAmendment { get; set; }
+		public bool IsNew => string.IsNullOrWhiteSpace(RecordId);
+
+		public int? CallId { get; set; }
+		public int? StationGroupId { get; set; }
+		public string ExternalId { get; set; }
+		public DateTime? StartedOn { get; set; }
+		public DateTime? EndedOn { get; set; }
+		public RmsOperationalRecordDetail Details { get; set; } = new RmsOperationalRecordDetail();
+		/// <summary>Typed values posted by the definition-driven form (RMS-1B); empty for locked system definitions.</summary>
+		public List<RecordValueInput> Values { get; set; } = new List<RecordValueInput>();
+		public List<string> ParticipantUserIds { get; set; } = new List<string>();
+		public List<RecordParticipantEditRow> ParticipantRows { get; set; }
+		public List<RecordUnitResponseInput> Units { get; set; } = new List<RecordUnitResponseInput>();
+		public string DuplicateContinueReason { get; set; }
+		public bool FinalizeAfterSave { get; set; }
+		public string ReasonCode { get; set; }
+		public string ReasonText { get; set; }
+		public bool Attested { get; set; }
+
+		public Department Department { get; set; }
+		public List<SelectListItem> Definitions { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> Stations { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> Personnel { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> AvailableUnits { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> Calls { get; set; } = new List<SelectListItem>();
+		public List<RmsOperationalRecord> DuplicateCandidates { get; set; } = new List<RmsOperationalRecord>();
+		public bool CanFinalize { get; set; }
+	}
+
+	/// <summary>Record detail with the history panel (RMS plan section 4.8).</summary>
+	public class RecordDetailView : RecordsBaseView
+	{
+		public RecordAggregate Aggregate { get; set; }
+		public Department Department { get; set; }
+		public Dictionary<string, string> PersonnelNames { get; set; } = new Dictionary<string, string>();
+		public Dictionary<int, string> GroupNames { get; set; } = new Dictionary<int, string>();
+		public bool CanEdit { get; set; }
+		public bool CanFinalize { get; set; }
+		public bool CanAmend { get; set; }
+		public bool CanVoid { get; set; }
+		public bool CanExport { get; set; }
+		public bool CanViewRestricted { get; set; }
+		public bool CanReassign { get; set; }
+		/// <summary>Who a draft may be reassigned to: active members only (PersonnelNames still labels everyone on the record).</summary>
+		public Dictionary<string, string> ReassignCandidates { get; set; } = new Dictionary<string, string>();
+		public RecordPrintProvenance Provenance { get; set; }
+		public RmsOperationalRecordType RecordType => (RmsOperationalRecordType)Aggregate.Record.RecordType.GetValueOrDefault();
+		public RmsRecordState State => (RmsRecordState)Aggregate.Record.State;
+		/// <summary>Set for a Record on a department definition (RMS-1B); the type-specific detail boxes do not apply then.</summary>
+		public string DefinitionName { get; set; }
+		public bool IsDefinitionRecord => Aggregate?.Record?.RecordType == null;
+		/// <summary>The Definition-scope print layout when one applies to this Record's pinned version (presentation only).</summary>
+		public RecordsDefinitionLayoutConfig DefinitionLayout { get; set; }
+	}
+
+	/// <summary>A single revision rendered from its snapshot.</summary>
+	public class RecordRevisionView : RecordsBaseView
+	{
+		public RmsRevision Revision { get; set; }
+		public RecordSnapshot Snapshot { get; set; }
+		public Department Department { get; set; }
+		public Dictionary<string, string> PersonnelNames { get; set; } = new Dictionary<string, string>();
+		public bool CanViewRestricted { get; set; }
+		public RecordPrintProvenance Provenance { get; set; }
+		public RmsOperationalRecordType RecordType => (RmsOperationalRecordType)(Snapshot?.RecordType ?? 0);
+		/// <summary>The department definition's name when the snapshot is of a department-definition Record.</summary>
+		public string DefinitionName { get; set; }
+	}
+
+	/// <summary>On-demand field-level diff between two revisions.</summary>
+	public class RecordDiffView : RecordsBaseView
+	{
+		public string RecordId { get; set; }
+		public RmsRevision From { get; set; }
+		public RmsRevision To { get; set; }
+		public List<RecordFieldDiff> Diffs { get; set; } = new List<RecordFieldDiff>();
+		public Department Department { get; set; }
+		public RecordPrintProvenance Provenance { get; set; }
+	}
+
+	public class RecordsRetentionOverrideRow
+	{
+		public string DefinitionKey { get; set; }
+		public string Label { get; set; }
+		public bool Restricted { get; set; }
+		public int? RetentionYears { get; set; }
+		public bool ConfirmRestricted { get; set; }
+	}
+
+	/// <summary>One sequence on the Records Settings numbering panel; NextSequence is blank unless the administrator raises it.</summary>
+	public class RecordsNextNumberRow
+	{
+		public string ScopeKey { get; set; }
+		public string Label { get; set; }
+		public string NextNumber { get; set; }
+		public int CurrentNextSequence { get; set; }
+		public int? NextSequence { get; set; }
+	}
+
+	/// <summary>One system record type's {PREFIX} on the Records Settings numbering panel; a blank Prefix keeps the default.</summary>
+	public class RecordsNumberPrefixRow
+	{
+		public string DefinitionKey { get; set; }
+		public string Label { get; set; }
+		public string DefaultPrefix { get; set; }
+		public string Prefix { get; set; }
+	}
+
+	/// <summary>Records Settings screen (RMS plan section 4.9, settings 70-77).</summary>
+	public class RecordsSettingsView : RecordsBaseView
+	{
+		public RecordsModuleState ModuleState { get; set; }
+		public Department Department { get; set; }
+		public RmsLifecyclePreset DefaultLifecyclePreset { get; set; }
+		public int ReviewDueHours { get; set; }
+		/// <summary>Setting 72's pattern (see RecordNumberFormat), e.g. "{PREFIX}-{YYYY}-{SEQ}".</summary>
+		public string NumberPattern { get; set; }
+		public int SequenceWidth { get; set; }
+		/// <summary>Setting 72's per-type prefixes, one row per system record type.</summary>
+		public List<RecordsNumberPrefixRow> NumberPrefixes { get; set; } = new List<RecordsNumberPrefixRow>();
+		/// <summary>The numbering year the next numbers below are shown for (a fiscal year's name when the year starts later than January 1).</summary>
+		public int NumberingYear { get; set; }
+		/// <summary>Setting 72's year start: the day the numbering year starts (January 1 unless records follow a fiscal year) and which year names it.</summary>
+		public int NumberingYearStartMonth { get; set; }
+		public int NumberingYearStartDay { get; set; }
+		public int NumberingYearLabel { get; set; }
+		/// <summary>Department-local today, for the pattern preview.</summary>
+		public DateTime NumberingPreviewDate { get; set; }
+		/// <summary>Records request, occupancy, inspection, permit, investigation and evidence numbers (setting 72's DocumentPatterns).</summary>
+		public List<Resgrid.Web.Areas.User.Models.Departments.DocumentNumberRow> OtherNumbers { get; set; } = new List<Resgrid.Web.Areas.User.Models.Departments.DocumentNumberRow>();
+		public List<RecordsNextNumberRow> NextNumbers { get; set; } = new List<RecordsNextNumberRow>();
+		public int? DepartmentDefaultYears { get; set; }
+		public List<RecordsRetentionOverrideRow> RetentionOverrides { get; set; } = new List<RecordsRetentionOverrideRow>();
+		public RecordsGroupVisibilityMode GroupVisibilityMode { get; set; }
+		/// <summary>What GroupScoped would hide (plan 5.7.1); shown before the administrator confirms.</summary>
+		public RecordsGroupScopePreview GroupScopePreview { get; set; }
+		/// <summary>Required to switch from DepartmentWide to GroupScoped.</summary>
+		public bool ConfirmGroupScoping { get; set; }
+		public bool IndexNarrative { get; set; }
+		/// <summary>Setting 111: the department's NERIS workflows. Off leaves every other Records setting and system as it is.</summary>
+		public bool NerisWorkflowsEnabled { get; set; }
+		/// <summary>NerisConfig.Enabled, the system-wide outbound switch; shown so the page does not imply submission works when it is off.</summary>
+		public bool NerisSystemEnabled { get; set; }
+		public List<SelectListItem> Presets { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> VisibilityModes { get; set; } = new List<SelectListItem>();
+		public RecordsSearchHealth SearchHealth { get; set; }
+		public bool NarrativeSearchAvailable { get; set; }
+		public RecordsPrintLayoutConfig PrintLayout { get; set; } = new RecordsPrintLayoutConfig();
+		public string PrintLayoutVersion { get; set; }
+		public bool HasLogo { get; set; }
+
+		// Setting 77 (RecordsDisclosureConfig, plan section 4.9): the public-records clock and production defaults.
+		public int DisclosureStatutoryClockDays { get; set; }
+		public string DisclosureDefaultRedactionProfile { get; set; }
+		public string DisclosureReleaseApproverUserId { get; set; }
+		public List<SelectListItem> RedactionProfiles { get; set; } = new List<SelectListItem>();
+		public List<SelectListItem> ReleaseApprovers { get; set; } = new List<SelectListItem>();
+	}
+}

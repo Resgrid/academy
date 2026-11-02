@@ -1,0 +1,195 @@
+{
+  "id": "app-ic-mapping-reference",
+  "title": "IC: incident maps, indoor context and preplans",
+  "app": "IC",
+  "audience": [
+    "Incident commanders",
+    "Division and group leads",
+    "Site and search coordinators"
+  ],
+  "summary": "Use resource positions, shared tactical markup, department maps and site references to build useful geographic context.",
+  "prerequisites": [
+    "Mapbox access and georeferenced department layers, custom maps, indoor floors/zones and POIs.",
+    "Training calls and resources with permitted recent positions; an active command board and additional tactical map.",
+    "Prepared contacts, preplans, site files and call history, plus configured weather test data.",
+    "Verify the indoor-zone handoff in actual capture; inspected source navigates with zone parameters but the new-call form does not read them."
+  ],
+  "scenes": [
+    {
+      "title": "Use the main map with the right context",
+      "route": "/",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Map"
+      ],
+      "narration": "Start on the main Map and identify the selected incident before interpreting the resource picture. Pan, zoom and recenter, then use the available filters and layers to show the information relevant to the response. Open a call, person, unit or point-of-interest marker to inspect its details, and set the call as current where offered. Positions depend on server data, permission and update timing. A marker’s presence does not prove that the resource is still at that point. Browser maps use a real map renderer, but a browser screen recording cannot demonstrate native background GPS collection.",
+      "practice": "Inspect a community-event call and distinguish its location from a nearby resource position.",
+      "id": "app-ic-mapping-reference-scene-01",
+      "capture_refs": [],
+      "capture_observations": [
+        "Main-map footage with broken stylesheet was rejected. Accurate training-geography map still needs capture."
+      ]
+    },
+    {
+      "title": "Inspect one resource position",
+      "route": "/resource-map",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "View on Map"
+      ],
+      "narration": "From a board resource’s details, choose View on Map to open the resource-map screen. Verify that its map is centered on the recorded training position before using it. Read the status, staffing, crew or role information alongside the location before deciding what it means. An unknown or unavailable position is a valid state, and the app can explain that there is no recent update. Do not substitute a guessed pin to make a demonstration look complete. Use another authorized client to supply a genuine training location change when the lesson needs movement. That allows the capture to demonstrate the configured update path rather than simply pan between two unrelated markers.",
+      "practice": "Open a search team’s resource map, then compare it with a resource that has no recent position.",
+      "id": "app-ic-mapping-reference-scene-02",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-22-unit-details",
+          "file": "captures/expansion/ic/ic-22-unit-details.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Unit Details and recent-position data captured. No correctly centered resource-map image accepted yet."
+      ]
+    },
+    {
+      "title": "Frame the incident and add shared markup",
+      "route": "/command-map/[callId]",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Save View",
+        "Line",
+        "Area",
+        "Text",
+        "Done"
+      ],
+      "narration": "Open the command map and frame the incident’s working area. Save View records the shared framing where permitted. Choose Line, Area or Text to add tactical context, place the required points and use Done to finish the draft. Inspect the result after saving, and verify synchronization on a second command device before describing it as shared successfully. Remove a training annotation through its confirmation when finished. Lane colors can help relate resources on the map to their assignments. Use the command structure controls to move resources; this lesson does not promise map-side resource dragging or a high-rise command mode.",
+      "practice": "Draw a labeled wildland exercise boundary and an access line, then verify the saved markup on another client.",
+      "id": "app-ic-mapping-reference-scene-03",
+      "capture_refs": [],
+      "capture_observations": [
+        "No tactical-map or annotation image accepted; source-backed web camera fix awaits visual verification."
+      ]
+    },
+    {
+      "title": "Additional tactical and custom maps",
+      "route": "/maps",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Custom Maps",
+        "Indoor Maps",
+        "Active Layers"
+      ],
+      "narration": "On the board, Tactical Maps can hold a named additional map with description and expiry, and a lane can link to that map. Review expired status before using an older view. Open Maps to browse prepared custom and indoor maps and inspect active-layer choices. Custom map layers and regions add department-specific context; use the layer toggles to compare what is relevant. Search locates prepared features, regions, floors or zones rather than creating them. These screens consume map content authored and georeferenced beforehand. A successful map search does not establish that the underlying site information has been reviewed recently.",
+      "practice": "Open a SAR sector map, inspect its layer choices and attach the relevant tactical map to a lane.",
+      "id": "app-ic-mapping-reference-scene-04",
+      "capture_refs": [],
+      "capture_observations": [
+        "Custom maps, additional tactical maps and layers still need capture."
+      ]
+    },
+    {
+      "title": "Indoor floors, zones and the call handoff",
+      "route": "/maps/indoor/[id]",
+      "capture_intent": "Capture floor selection, zone details and the New Call handoff; explicitly inspect whether zone data appears. Do not assert automatic prefill or zone association.",
+      "required_labels": [
+        "Dispatch to this zone"
+      ],
+      "narration": "Choose an indoor map, select the intended floor and search or tap a zone to inspect its details. A zone configured as dispatchable offers Dispatch to this zone. Treat that control as a handoff to New Call: verify and complete the call’s location, description and recipients yourself before dispatching. Do not assume that every zone detail has been filled automatically. This matters in a building with similar room names on several floors. The indoor map is only useful when the prepared floor image and zones are correctly aligned, so confirm the site and floor during the exercise.",
+      "practice": "Find a training industrial floor zone, open the call handoff and verify all location details before saving.",
+      "id": "app-ic-mapping-reference-scene-05",
+      "capture_refs": [],
+      "capture_observations": [
+        "Indoor floors/zones not captured. Source passes zone parameters to New Call but the inspected form does not consume them; no automatic prefill or dispatch association is claimed."
+      ]
+    },
+    {
+      "title": "Preplans, POIs and incident weather",
+      "route": "/contacts",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Details",
+        "Notes",
+        "Pre-Plan",
+        "Files",
+        "Calls"
+      ],
+      "narration": "Open Contacts and search for the site or organization. Review its Pre-Plan, alerts, access points, hazards, utilities, water supply, emergency contacts and review dates as relevant to the incident. Files and Calls can provide supporting documents and earlier events; protected material may require verification. Open a POI to inspect its note, address and coordinates, then Route if needed. Weather Alerts supports severity filtering and detail review, while the board’s weather section uses the ICP or call location. IC presents these weather references; source and zone administration belongs in the appropriate administrative workflow. Use labeled training alerts rather than imply an actual severe event.",
+      "practice": "Review a fire preplan, locate a security access gate and compare a prepared alert with the incident location.",
+      "id": "app-ic-mapping-reference-scene-06",
+      "capture_refs": [],
+      "capture_observations": [
+        "Contacts/preplans/POI/weather references still need actual screenshots."
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Preplan access and hydrant context support a training structure-fire map."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "The main map distinguishes event location, medical post and nearby resources."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Custom sectors and a focused resource map support search coordination."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Gate POIs and indoor floor zones clarify a facility response."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Shared area and line annotations describe a training perimeter and access route."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "A floor-zone handoff is reviewed manually before a plant call is saved."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/resource-map/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/command-marker-actions.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/full-screen-location-picker.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/location-picker.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/map-layers-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/map-pins.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/map-view.native.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/map-view.web.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/mapbox.native.ts",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/mapbox.ts",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/mapbox.web.ts",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/pin-detail-modal.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/pin-marker.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/poi-marker-icon.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/poi-marker.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/maps/static-map.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/command-map/[callId].tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/incident-map-card.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/incident-maps-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/maps-tabbed-card.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/maps/_layout.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/maps/custom/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/maps/index.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/maps/indoor/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/maps/search.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/poi/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/contacts.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-card.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-details-extra.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-files-list.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-files-panel.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-notes-list.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/contact-preplan-panel.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/contacts/preplan-summary.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/weather-alerts.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/weather-alert/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/incident-weather-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/translations/en.json"
+  ],
+  "capture_manifest": "captures/expansion/ic/manifest.json",
+  "capture_provenance": "captures/expansion/ic/provenance.json",
+  "capture_action_ledger": "captures/expansion/ic/actions.json"
+}

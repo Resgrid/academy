@@ -1,0 +1,168 @@
+Wallace Boden
+ Home
+ Calls
+ Personnel
+ Units
+ Contacts
+ Mapping
+ Shifts
+Records
+ Reports
+ Documents
+ Calendar
+ Notes
+ Trainings
+ Inventory
+Readiness
+Workforce & Business Ops
+0
+ 
+3
+Firehouse 51 — Training Department 
+ 
+Help 
+ 
+ 
+Edit Workflow: Academy call opened — captured mail
+Home Workflows Edit
+Workflow Settings
+Name
+Description
+Trigger Event
+
+CallAdded
+The trigger event type cannot be changed after creation.
+
+Max Retries
+Backoff (s)
+Enabled
+Save Changes Cancel
+Steps
+ Add Step
+Action Type
+
+Send Email
+
+Order
+
+1
+
+Enabled
+
+Yes
+
+ Edit 
+Template (first 120 chars)
+Training only: {{ department.name }} received {{ call.name }}. No emergency.
+Action Type
+
+Send Email  Conditional
+
+Order
+
+2
+
+Enabled
+
+Yes
+
+ Edit 
+Template (first 120 chars)
+Training review copy for {{ call.name }}. Priority: {{ call.priority_text }}.
+ Template Variables
+
+Common variables (always available):
+
+{{ department.name }}
+{{ department.code }}
+{{ department.address.full }}
+{{ timestamp.utc_now }}
+{{ timestamp.department_now }}
+{{ user.full_name }}
+{{ user.email }}
+
+Call event variables:
+
+{{ call.name }}
+{{ call.nature }}
+{{ call.address }}
+{{ call.priority_text }}
+{{ call.state_text }}
+{{ call.logged_on }}
+×
+Edit
+Action Type *
+Send Email
+Send SMS
+HTTP GET
+HTTP POST
+HTTP PUT
+HTTP DELETE
+Upload FTP
+Upload SFTP
+Upload S3
+Teams Message
+Slack Message
+Discord Message
+Azure Blob
+Box Upload
+Dropbox Upload
+Order
+ 
+
+Enabled
+ACTIONCONFIG
+To *
+Comma-separated email addresses.
+Cc
+Subject *
+ Credential *
+— select credential —
+Academy local captured mail
+SMTP credentials to send email from.
+CONDITION EXPRESSION (OPTIONAL)
+
+Leave blank to always run this step. When set, the step only runs if the condition evaluates to true. Uses the same variables as the output template.
+
+ Visual Builder
+ Raw Expression
+ Add Rule
+
+Multiple rules are joined with AND — all must be true.
+
+ Test Condition
+OUTPUT TEMPLATE *
+
+Use Scriban template syntax. Click variables in the panel on the right to insert them.
+
+1
+Training only: {{ department.name }} received {{ call.name }}. No emergency.
+
+TEMPLATE VARIABLES
+
+Click a scalar variable to insert it. Click an array ⇄ variable to insert a for loop snippet.
+
+Common variables (always available):
+
+{{ department.name }} {{ department.code }} {{ department.address.full }} {{ timestamp.utc_now }} {{ timestamp.department_now }} {{ user.full_name }} {{ user.email }}
+
+Call event variables:
+
+{{ call.name }} {{ call.nature }} {{ call.address }} {{ call.priority_text }} {{ call.state_text }} {{ call.logged_on }} {{ call.call_id }} {{ call.type }} {{ call.contact_name }} {{ call.contact_info }} {{ call.geo_location_data }} {{ call.incident_number }}
+
+Call Collections (arrays)
+
+Click to insert a for loop. Available for CallAdded, CallUpdated, CallClosed triggers.
+
+call.dispatches ⇄ call.unit_dispatches ⇄ call.group_dispatches ⇄ call.role_dispatches ⇄ call.notes_list ⇄ call.contacts ⇄
+
+Unit / Personnel
+
+{{ unit.name }} {{ unit.type }} {{ unit.group_name }} {{ personnel.full_name }} {{ personnel.email }} {{ personnel.role }}
+Cancel  Save Changes
+✨
+Assistant
+ 
+💬
+Chat
+Copyright Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

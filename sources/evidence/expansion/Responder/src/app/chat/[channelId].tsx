@@ -1,0 +1,415 @@
+import { Image } from 'expo-image';
+import { type Href, Redirect, Stack, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { Circle } from 'lucide-react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { getPresence, uploadAttachment } from '@/api/chat/chat';
+import { AckBanner } from '@/components/chat/ack-banner';
+import { buildGifMetadata, buildLocationMetadata, copyToClipboard, getChannelDisplayName, getImageMimeType } from '@/components/chat/chat-utils';
+import { GifPickerSheet } from '@/components/chat/gif-picker-sheet';
+import { MessageActionsSheet } from '@/components/chat/message-actions-sheet';
+import { MessageBubble } from '@/components/chat/message-bubble';
+import { MessageComposer } from '@/components/chat/message-composer';
+import { TypingIndicator } from '@/components/chat/typing-indicator';
+import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper } from '@/components/ui/actionsheet';
+import { Box } from '@/components/ui/box';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Center } from '@/components/ui/center';
+import { FlatList } from '@/components/ui/flat-list';
+import { HStack } from '@/components/ui/hstack';
+import { BottomAnchoredKeyboardView } from '@/components/ui/keyboard-avoiding-view';
+import { Spinner } from '@/components/ui/spinner';
+import { Text } from '@/components/ui/text';
+import { Textarea, TextareaInput } from '@/components/ui/textarea';
+import { VStack } from '@/components/ui/vstack';
+import { ChatChannelType, ChatMessagePriority, type ChatMessageResultData, ChatMessageType, type GifResultData } from '@/models/v4/chat';
+import useAuthStore from '@/stores/auth/store';
+import { useChatStore } from '@/stores/chat/store';
+import { useChatSystemStatus } from '@/stores/feature-flags/store';
+import { securityStore } from '@/stores/security/store';
+import { useToastStore } from '@/stores/toast/store';
+
+export default function ChannelConversationScreen() {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const params = useLocalSearchParams<{ channelId: string }>();
+  const channelId = Array.isArray(params.channelId) ? params.channelId[0] : params.channelId;
+
+  const currentUserId = useAuthStore((s) => s.userId);
+  const isModerator = !!securityStore((s) => s.rights)?.IsAdmin;
+  const chatStatus = useChatSystemStatus();
+  const isChatEnabled = chatStatus === 'enabled';
+
+  const channel = useChatStore((s) => s.channels.find((c) => c.ChatChannelId === channelId));
+  const messages = useChatStore((s) => (channelId ? s.messagesByChannel[channelId] : undefined));
+  const typing = useChatStore((s) => (channelId ? s.typingByChannel[channelId] : undefined));
+  const members = useChatStore((s) => (channelId ? s.membersByChannel[channelId] : undefined));
+  const presence = useChatStore((s) => s.presence);
+  const pendingAcks = useChatStore((s) => s.pendingAcks);
+  const loading = useChatStore((s) => (channelId ? s.loadingMessagesByChannel[channelId] : false));
+
+  const [gifOpen, setGifOpen] = useState(false);
+  const [resolveAttempted, setResolveAttempted] = useState(false);
+  const [actionsMessage, setActionsMessage] = useState<ChatMessageResultData | null>(null);
+  const [editMessage, setEditMessage] = useState<ChatMessageResultData | null>(null);
+  const [editText, setEditText] = useState('');
+  const [imageSource, setImageSource] = useState<{ uri: string; headers?: Record<string, string> } | null>(null);
+  const [presenceIds, setPresenceIds] = useState<Set<string>>(new Set());
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+
+  const isDm = channel?.ChannelType === ChatChannelType.DirectMessage;
+  const showSender = !isDm;
+  const isChatbot = channel?.ChannelType === ChatChannelType.Chatbot;
+  // Deep links (push notifications, cold starts) can arrive before the channel
+  // list loads; the channel type is unknown until then. Treat a completed fetch
+  // with no match as resolved so unknown channels keep the generic screen.
+  const isResolved = !!channel || resolveAttempted;
+
+  // Natural order (oldest first); FlashList v2 renders from the bottom.
+  const ordered = useMemo(() => messages ?? [], [messages]);
+
+  // Resolve the channel identity for deep links before mounting the generic view.
+  useEffect(() => {
+    if (channel || resolveAttempted || !isChatEnabled) return;
+    void useChatStore
+      .getState()
+      .fetchChannels()
+      .finally(() => setResolveAttempted(true));
+  }, [channel, resolveAttempted, isChatEnabled]);
+
+  // Mount: activate channel, join hub, load history and members. Assistant
+  // conversations are handled by the dedicated chatbot screen — never join or
+  // load them here, and wait for unresolved deep links to identify first.
+  useFocusEffect(
+    useCallback(() => {
+      if (!channelId || !isChatEnabled || !isResolved || isChatbot) return;
+      const store = useChatStore.getState();
+      store.setActiveChannel(channelId);
+      void store.joinChannel(channelId);
+      void store.loadInitialMessages(channelId);
+      void store.fetchMembers(channelId);
+      return () => {
+        useChatStore.getState().setActiveChannel(null);
+      };
+    }, [channelId, isChatEnabled, isResolved, isChatbot])
+  );
+
+  // Fetch presence for the channel members (for the header online dot).
+  useEffect(() => {
+    const ids = (members ?? []).map((m) => m.UserId).filter((id): id is string => !!id && id !== currentUserId);
+    if (ids.length === 0) return;
+    const controller = new AbortController();
+    getPresence(ids, controller.signal)
+      .then((result) => {
+        if (!controller.signal.aborted) {
+          setPresenceIds(new Set(result.OnlineUserIds ?? []));
+        }
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [members, currentUserId]);
+
+  // Mark read whenever the newest message changes while viewing.
+  useEffect(() => {
+    if (channelId && isResolved && !isChatbot && ordered.length > 0) {
+      void useChatStore.getState().markChannelRead(channelId);
+    }
+  }, [channelId, isResolved, isChatbot, ordered.length]);
+
+  const otherOnline = useMemo(() => {
+    if (!isDm) return false;
+    const other = (members ?? []).find((m) => m.UserId && m.UserId !== currentUserId);
+    if (!other?.UserId) return false;
+    return presence.has(other.UserId) || presenceIds.has(other.UserId);
+  }, [isDm, members, currentUserId, presence, presenceIds]);
+
+  const channelAcks = useMemo(() => pendingAcks.filter((a) => a.ChatChannelId === channelId), [pendingAcks, channelId]);
+
+  useEffect(
+    () => () => {
+      unsubscribeRef.current?.();
+      unsubscribeRef.current = null;
+    },
+    [channelId]
+  );
+
+  const typingNames = useMemo(() => {
+    const now = Date.now();
+    return (typing ?? []).filter((u) => u.expiresAt > now).map((u) => u.displayName || t('chat.someone'));
+  }, [typing, t]);
+
+  // ---- send handlers ----
+  const handleSendText = useCallback(
+    (body: string, urgent: boolean) => {
+      if (!channelId) return;
+      void useChatStore.getState().sendMessage({ channelId, body, priority: urgent ? ChatMessagePriority.Urgent : ChatMessagePriority.Normal });
+    },
+    [channelId]
+  );
+
+  const handleSendGif = useCallback(
+    (gif: GifResultData) => {
+      if (!channelId) return;
+      const metadata = buildGifMetadata(gif);
+      void useChatStore.getState().sendMessage({ channelId, body: gif.Title ?? 'GIF', messageType: ChatMessageType.Gif, metadataJson: metadata });
+    },
+    [channelId]
+  );
+
+  const handleSendLocation = useCallback(
+    (latitude: number, longitude: number, urgent: boolean) => {
+      if (!channelId) return;
+      const metadata = buildLocationMetadata(latitude, longitude);
+      void useChatStore.getState().sendMessage({
+        channelId,
+        body: t('chat.shared_location'),
+        messageType: ChatMessageType.Location,
+        metadataJson: metadata,
+        priority: urgent ? ChatMessagePriority.Urgent : ChatMessagePriority.Normal,
+      });
+    },
+    [channelId, t]
+  );
+
+  // Image send: optimistic bubble, then upload the file once the queued message
+  // is reconciled and receives its server ChatMessageId (initial send, retry, or outbox drain).
+  const handleSendImage = useCallback(
+    (uri: string, urgent: boolean, mimeType?: string) => {
+      if (!channelId) return;
+      const name = uri.split('/').pop() || `photo-${Date.now()}.jpg`;
+      const type = getImageMimeType(uri, mimeType);
+
+      const unsubscribe = useChatStore.subscribe((state) => {
+        const sent = (state.messagesByChannel[channelId] ?? []).find((m) => m._localAttachmentUri === uri);
+        if (!sent) return;
+        if (sent._localStatus === 'failed') {
+          const retryable = state.outbox.some((item) => item.ClientMessageId === sent.ClientMessageId);
+          if (retryable) return;
+          unsubscribe();
+          if (unsubscribeRef.current === unsubscribe) unsubscribeRef.current = null;
+          return;
+        }
+        if (sent.ChatMessageId.startsWith('local-')) return;
+        unsubscribe();
+        if (unsubscribeRef.current === unsubscribe) unsubscribeRef.current = null;
+        void (async () => {
+          try {
+            await uploadAttachment(channelId, sent.ChatMessageId, { uri, name, type });
+          } catch {
+            useToastStore.getState().showToast('error', t('chat.attachment_failed'));
+          }
+        })();
+      });
+      unsubscribeRef.current = unsubscribe;
+
+      void useChatStore.getState().sendMessage({
+        channelId,
+        body: '',
+        messageType: ChatMessageType.Image,
+        priority: urgent ? ChatMessagePriority.Urgent : ChatMessagePriority.Normal,
+        localAttachmentUri: uri,
+      });
+    },
+    [channelId, t]
+  );
+
+  const handleToggleReaction = useCallback(
+    (message: ChatMessageResultData, emoji: string, mine: boolean) => {
+      if (!channelId) return;
+      if (mine) void useChatStore.getState().removeReaction(message.ChatMessageId, channelId, emoji);
+      else void useChatStore.getState().addReaction(message.ChatMessageId, channelId, emoji);
+    },
+    [channelId]
+  );
+
+  const openThread = useCallback(
+    (message: ChatMessageResultData) => {
+      router.push(`/chat/thread/${message.ChatMessageId}?channelId=${channelId ?? ''}` as Href);
+    },
+    [router, channelId]
+  );
+
+  // Stable identity: an inline arrow here changed on every render and defeated MessageBubble's memo.
+  const handleRetry = useCallback((message: ChatMessageResultData) => {
+    if (message.ClientMessageId) {
+      void useChatStore.getState().retryOutboxItem(message.ClientMessageId);
+    }
+  }, []);
+
+  const renderItem = useCallback(
+    ({ item }: { item: ChatMessageResultData }) => (
+      <MessageBubble
+        message={item}
+        isOwn={!!item.SenderUserId && item.SenderUserId === currentUserId}
+        showSender={showSender}
+        currentUserId={currentUserId}
+        onLongPress={setActionsMessage}
+        onToggleReaction={handleToggleReaction}
+        onOpenThread={openThread}
+        onRetry={handleRetry}
+        onPressImage={setImageSource}
+      />
+    ),
+    [currentUserId, showSender, handleToggleReaction, openThread, handleRetry]
+  );
+
+  const keyExtractor = useCallback((item: ChatMessageResultData) => item.ChatMessageId, []);
+
+  const handleStartReached = useCallback(() => {
+    if (channelId) void useChatStore.getState().loadOlderMessages(channelId);
+  }, [channelId]);
+
+  const title = channel ? getChannelDisplayName(channel, t) : t('chat.title');
+
+  // Chat.System flag not yet resolved: wait instead of redirecting away from a valid deep link.
+  if (chatStatus === 'unknown') {
+    return (
+      <Box className="size-full flex-1 items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <Stack.Screen options={{ title, headerShown: true, headerBackTitle: t('chat.title') }} />
+        <Spinner />
+      </Box>
+    );
+  }
+
+  // Chat.System feature flag off: block deep links (push notifications, stale routes).
+  if (chatStatus === 'disabled') {
+    return <Redirect href="/(app)/home" />;
+  }
+
+  // Deep link to a channel that isn't loaded yet: wait for the channel list so
+  // assistant conversations never mount the full-featured view.
+  if (!isResolved) {
+    return (
+      <Box className="size-full flex-1 items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <Stack.Screen options={{ title, headerShown: true, headerBackTitle: t('chat.title') }} />
+        <Spinner />
+      </Box>
+    );
+  }
+
+  // Assistant conversations always use the dedicated restricted screen (text only,
+  // no reactions/threads/deletes) — catch deep links and stale routes here.
+  if (isChatbot) {
+    return <Redirect href={'/chatbot' as Href} />;
+  }
+
+  return (
+    <Box className="size-full flex-1 bg-gray-50 dark:bg-gray-900">
+      <Stack.Screen
+        options={{
+          title,
+          headerShown: true,
+          headerBackTitle: t('chat.title'),
+          headerRight: () => (isDm ? <Circle size={12} color={otherOnline ? '#22c55e' : '#9ca3af'} fill={otherOnline ? '#22c55e' : '#9ca3af'} /> : undefined),
+        }}
+      />
+
+      <AckBanner acks={channelAcks} onAcknowledge={(messageId) => useChatStore.getState().acknowledgeMessage(messageId)} />
+
+      <BottomAnchoredKeyboardView>
+        {loading && ordered.length === 0 ? (
+          <Center className="flex-1">
+            <Spinner />
+          </Center>
+        ) : (
+          <FlatList
+            data={ordered}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            onStartReached={handleStartReached}
+            onStartReachedThreshold={0.3}
+            removeClippedSubviews
+            // autoscrollToBottomThreshold is off by default in FlashList v2; without it a
+            // sent/incoming message lands below the viewport, hidden behind the composer.
+            maintainVisibleContentPosition={{ startRenderingFromBottom: true, autoscrollToBottomThreshold: 0.2 }}
+            contentContainerStyle={{ paddingVertical: 8 }}
+          />
+        )}
+
+        <TypingIndicator names={typingNames} />
+
+        <MessageComposer
+          onSendText={handleSendText}
+          onSendImage={handleSendImage}
+          onSendLocation={handleSendLocation}
+          onOpenGif={() => setGifOpen(true)}
+          onTyping={(isTyping) => channelId && useChatStore.getState().sendTyping(channelId, isTyping)}
+          disabled={channel?.IsLocked && !isModerator}
+        />
+      </BottomAnchoredKeyboardView>
+
+      <GifPickerSheet isOpen={gifOpen} onClose={() => setGifOpen(false)} onSelect={handleSendGif} />
+
+      <MessageActionsSheet
+        message={actionsMessage}
+        isOpen={actionsMessage !== null}
+        onClose={() => setActionsMessage(null)}
+        isOwn={!!actionsMessage?.SenderUserId && actionsMessage.SenderUserId === currentUserId}
+        isModerator={isModerator}
+        onReact={(m, emoji) =>
+          handleToggleReaction(
+            m,
+            emoji,
+            (m.Reactions ?? []).some((r) => r.Emoji === emoji && r.UserId === currentUserId)
+          )
+        }
+        onReply={openThread}
+        onCopy={async (m) => {
+          const ok = await copyToClipboard(m.Body ?? '');
+          useToastStore.getState().showToast(ok ? 'success' : 'info', ok ? t('chat.copied') : t('chat.copy_unavailable'));
+        }}
+        onEdit={(m) => {
+          setEditMessage(m);
+          setEditText(m.Body ?? '');
+        }}
+        onDelete={(m) => channelId && useChatStore.getState().deleteMessage(m.ChatMessageId, channelId)}
+        onFlag={(m, reason) => useChatStore.getState().flagMessage(m.ChatMessageId, reason)}
+        onTogglePin={(m, pinned) => channelId && useChatStore.getState().togglePin(m.ChatMessageId, channelId, pinned)}
+        onModeratorDelete={(m) => channelId && useChatStore.getState().moderatorDeleteMessage(m.ChatMessageId, channelId, t('chat.moderator_removed'))}
+      />
+
+      {/* Edit message sheet */}
+      <Actionsheet isOpen={editMessage !== null} onClose={() => setEditMessage(null)}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent>
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator />
+          </ActionsheetDragIndicatorWrapper>
+          <VStack className="w-full p-2" space="md">
+            <Text className="text-base font-semibold text-typography-900">{t('chat.edit_message')}</Text>
+            <Textarea>
+              <TextareaInput value={editText} onChangeText={setEditText} multiline />
+            </Textarea>
+            <Button
+              className="bg-primary-600"
+              onPress={() => {
+                if (editMessage && channelId && editText.trim()) {
+                  void useChatStore.getState().editMessage(editMessage.ChatMessageId, channelId, editText.trim());
+                }
+                setEditMessage(null);
+              }}
+            >
+              <ButtonText>{t('chat.save')}</ButtonText>
+            </Button>
+          </VStack>
+        </ActionsheetContent>
+      </Actionsheet>
+
+      {/* Full-screen image preview */}
+      <Actionsheet isOpen={imageSource !== null} onClose={() => setImageSource(null)} snapPoints={[80]}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent>
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator />
+          </ActionsheetDragIndicatorWrapper>
+          {imageSource ? (
+            <Center className="w-full p-2">
+              <Image source={imageSource} style={{ width: '100%', height: 400, borderRadius: 12 }} contentFit="contain" />
+            </Center>
+          ) : null}
+        </ActionsheetContent>
+      </Actionsheet>
+    </Box>
+  );
+}

@@ -1,0 +1,418 @@
+{
+  "id": "core-reporting-fundamentals",
+  "title": "Read staffing, call summaries and unit response reports",
+  "app": "Core",
+  "audience": [
+    "department administrators",
+    "operations coordinators",
+    "report reviewers"
+  ],
+  "summary": "Run staffing and call reports with deliberate date and group scopes, inspect the actual detail tables and timestamp sources, and download a unit-row CSV without treating missing data as zero.",
+  "prerequisites": [
+    "Use an authorized reporting account in a fictional practice department with existing calls and staffing history.",
+    "Check the department time zone and choose a deliberate report period; preserve operational data and existing staffing.",
+    "Use only fictional training records for practice and share downloaded results with authorized recipients."
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Run a station-scoped call summary for a fixed exercise period, then inspect the matching unit times before describing response totals.",
+    "Community care and mental health": "Review operational call workload in an agreed period without adding client histories or treating software timestamps as an assessment.",
+    "Search and rescue": "Compare mission-period call groups using the same boundaries and distinguish missing unit times from recorded zero-duration activity.",
+    "Security": "Review current recorded staffing and a bounded patrol call period; do not equate the staffing chart with attendance.",
+    "Wildland": "Compare a defined seasonal window and its group scope; treat partial-period and future zero rows explicitly.",
+    "Industrial response": "Inspect a training call’s unit-status chronology and preserve missing fields in a CSV used for an internal software exercise."
+  },
+  "source_files": [
+    "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/StaffingReport.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/CallSummaryReportParams.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/CallSummaryReport.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/CallUnitTimesReportParams.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/CallUnitTimesReport.cshtml",
+    "Web/Resgrid.Web/Areas/User/Models/Reports/Calls/CallSummaryView.cs",
+    "Core/Resgrid.Model/Reporting/ReportPeriods.cs",
+    "Core/Resgrid.Model/Reporting/CallGroupAssigner.cs",
+    "Core/Resgrid.Model/Reporting/CallUnitTimesCalculator.cs",
+    "Core/Resgrid.Services/CallGroupAssignmentService.cs",
+    "Core/Resgrid.Localization/Areas/User/Reports/Reports.en.resx"
+  ],
+  "scenes": [
+    {
+      "id": "catalog",
+      "title": "Choose the report for the question",
+      "route": "/User/Reports",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "001-reporting-catalog-top",
+        "002-staffing-summary-chart"
+      ],
+      "required_labels": [
+        "Reporting",
+        "Staffing Report",
+        "View Report",
+        "Resgrid Staffing Report",
+        "Count",
+        "Truck 81",
+        "Available",
+        "Unavailable",
+        "OnShift"
+      ],
+      "narration": "Reports brings several questions together: who is currently staffed, what happened on calls, and which timestamps have been recorded. In our fictional Chicago Fire department, begin with the Reporting catalog. Find Staffing Report and use its View Report button. The report groups people by their latest recorded staffing level and provides a count and chart. Truck 81 has people in Available, Unavailable and On Shift categories. This is a staffing summary; it does not establish who physically attended an incident.",
+      "practice": "Open Staffing Report and identify one group with more than one recorded staffing category.",
+      "source_limits": [
+        "Only the catalog top is pictured. The Call Summary and Call Unit Times catalog launchers are below this viewport; their later scenes start on their actual parameter pages. A catalog link is not proof its report ran.",
+        "Bottom detail headers are clipped; use006. The chart is a genuine rendered staffing chart, not a Call Summary chart. Staffing is latest recorded software staffing, not attendance or crew-seat verification."
+      ]
+    },
+    {
+      "id": "staffing-details",
+      "title": "Read the member-level staffing evidence",
+      "route": "/User/Reports/StaffingReport",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "006-staffing-detail-headers-and-members",
+        "003-staffing-member-details"
+      ],
+      "required_labels": [
+        "Name",
+        "Group",
+        "Roles",
+        "Staffing",
+        "Staffing Timestamp",
+        "Next Change",
+        "Next Staffing",
+        "Note",
+        "Wallace Boden",
+        "Matthew Casey",
+        "Truck 81",
+        "Officer, TRAINING ONLY - Community response navigator",
+        "On Shift"
+      ],
+      "narration": "Below the summary, read Name, Group, Roles, Staffing and Staffing Timestamp together. Next Change and Next Staffing describe a scheduled change when one exists. A blank cell supplies no future staffing commitment. Wallace Boden’s row also carries an explicit training note. Farther down, Matthew Casey’s row shows Truck 81, Officer and the training Community Response Navigator role, with On Shift staffing. The report reads existing personnel information; running it does not edit those memberships or statuses.",
+      "practice": "Find Matthew Casey and read his group, both listed roles and staffing level.",
+      "source_limits": [
+        "Lower member rows are clipped; use003 for the complete Casey row. No staffing changes were made by generating the report.",
+        "Table headers are above this viewport; use006 before interpreting columns. Full Casey row and two-role text are legible. Empty next-change cells are not a future availability promise."
+      ]
+    },
+    {
+      "id": "week-parameters",
+      "title": "Define a Call Summary period",
+      "route": "/User/Reports/CallSummaryReportParams",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "007-call-summary-date-picker-confirmed"
+      ],
+      "required_labels": [
+        "Call Summary Report",
+        "Report Start Time",
+        "Report End Time",
+        "Group",
+        "All Groups",
+        "Run Report"
+      ],
+      "narration": "On the Call Summary Report parameter page, check Report Start Time, Report End Time and Group before using Run Report. This example starts October twenty-fifth, twenty twenty-six, at midnight and ends October twenty-ninth at twenty-three thirty. All Groups is selected. These are department-local report boundaries. Read the complete values before running: a different start, end or group changes the population being summarized.",
+      "practice": "Prepare the shown October25–29 period and All Groups, then verify both values before Run Report.",
+      "source_limits": [
+        "Both parameter popovers are closed. Screenshot proves actual prepared values, not the individual calendar/time clicks. End is23:30, not the earlier diagnostic23:59."
+      ]
+    },
+    {
+      "id": "week-result",
+      "title": "Check totals against types and states",
+      "route": "/User/Reports/CallSummaryReport?start=10%2F25%2F2026%2000%3A00%3A00&end=10%2F29%2F2026%2023%3A30%3A00&groupId=0",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "008-call-summary-actual-period-totals",
+        "009-call-summary-types-states"
+      ],
+      "required_labels": [
+        "Call Summary Report",
+        "Total Calls",
+        "Open",
+        "Unit Responses",
+        "Personnel Responses",
+        "Call Types",
+        "Investigation",
+        "Structure Fire",
+        "Rescue",
+        "Medical",
+        "Call States",
+        "Closed",
+        "Active",
+        "Total"
+      ],
+      "narration": "The resulting header repeats the selected period. This captured run contains fifteen calls, with four open, nine unit responses and four personnel responses. Response totals accumulate across calls; they are not a count of unique department members or vehicles. The tables provide a useful cross-check. Investigation, Structure Fire, Rescue and Medical counts total fifteen. Call States separates eleven Closed from four Active. Read the table labels and denominators before comparing percentages with another report.",
+      "practice": "Confirm that the displayed Closed and Active counts add to the report total.",
+      "source_limits": [
+        "Week window only:2026-10-25T00:00:00 through2026-10-29T23:30:00. Totals15/open4/unitresponses9/personnelresponses4. Blank chart areas are not rendered chart-success proof.",
+        "Same week report. Closed11/Active4/Total15. Literal types are Investigation7, Structure Fire5, Rescue2, Medical1."
+      ]
+    },
+    {
+      "id": "attribution",
+      "title": "Understand how calls are assigned to groups",
+      "route": "/User/Reports/CallSummaryReport?start=10%2F25%2F2026%2000%3A00%3A00&end=10%2F29%2F2026%2023%3A30%3A00&groupId=0",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "010-call-summary-group-attribution"
+      ],
+      "required_labels": [
+        "Calls by Group",
+        "Each call counts once",
+        "Group",
+        "Count",
+        "Firehouse 51",
+        "Command"
+      ],
+      "narration": "Calls by Group explains why a call belongs to a reporting group. Each call counts once. A containing group geofence is used first; otherwise the report uses the group associated with most dispatched resources. Some calls can remain unassigned. This is different from simply listing the current viewer’s group. Here, Firehouse 51 has seven calls and Command has five. Use the explanation when investigating a surprising group total instead of changing memberships to make a report match expectations.",
+      "practice": "Read the Calls by Group explanation and identify the five calls attributed to Command.",
+      "source_limits": [
+        "Help and group table are actual. Group attribution is not simply current viewer membership. Dispatch fallback can leave a call unassigned, including an even split."
+      ]
+    },
+    {
+      "id": "call-rows",
+      "title": "Read the individual call rows",
+      "route": "/User/Reports/CallSummaryReport?start=10%2F25%2F2026%2000%3A00%3A00&end=10%2F29%2F2026%2023%3A30%3A00&groupId=0",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "011-call-summary-detail-columns-and-original-calls",
+        "012-call-summary-lower-exercise-rows"
+      ],
+      "required_labels": [
+        "Calls",
+        "Number",
+        "Name",
+        "Type",
+        "Group",
+        "Logged On",
+        "Closed On",
+        "Call Length",
+        "OnScene Time",
+        "DEMO-0001",
+        "DEMO-0002",
+        "DEMO-0003",
+        "Open",
+        "N/A",
+        "FD51-2026-0008",
+        "TRAINING ONLY - Native Unit response and deselection"
+      ],
+      "narration": "The Calls table lets you inspect the rows behind the summary. Read Number, Name, Type, Group, Logged On, Closed On and the duration columns. The original three DEMO calls are still Open in this result, and their OnScene Time is N/A. The lower rows include the native Unit response and deselection exercise, number ending zero zero zero eight, also Open at this report’s generation. N/A is missing usable timing information, not a zero-minute arrival. Preserve that distinction when explaining averages.",
+      "practice": "Locate the native training call ending0008 and distinguish Open from its N/A on-scene value.",
+      "source_limits": [
+        "Header plus original threeDEMO rows fully visible; later lower rows are clipped. Open and N/A are literal display states, not zero durations.",
+        "Headers are above this viewport; pair with011. The own0008 call remains Open in this captured report, regardless of later live state."
+      ]
+    },
+    {
+      "id": "unit-parameters",
+      "title": "Set the Call Unit Times window",
+      "route": "/User/Reports/CallUnitTimesReportParams",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "014-unit-times-valid-period-before-run"
+      ],
+      "required_labels": [
+        "Call Unit Times",
+        "Report Start Time",
+        "Report End Time",
+        "Run Report"
+      ],
+      "narration": "Call Unit Times answers a more specific question: which dispatch and status timestamps exist for each unit on each call? Its parameter form has start and end times and Run Report. Here the range starts October twenty-fourth at twenty-three thirty and ends October twenty-ninth at twenty-three thirty. That begins thirty minutes earlier than our first Call Summary. Keep those periods distinct when reconciling the results.",
+      "practice": "Read the Unit Times start and end and identify the thirty-minute difference from the earlier summary.",
+      "source_limits": [
+        "Accepted Unit Times window startsOct24 at23:30, thirty minutes before the week Call Summary startsOct25 at00:00. No group selector exists on this form."
+      ]
+    },
+    {
+      "id": "unit-evidence",
+      "title": "Interpret timestamps and their linkage",
+      "route": "/User/Reports/CallUnitTimesReport?start=10%2F24%2F2026%2023%3A30%3A00&end=10%2F29%2F2026%2023%3A30%3A00",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "015-unit-times-dispatch-only-and-empty-status-times",
+        "016-unit-times-recorded-status-source",
+        "017-unit-times-recent-call-and-no-unit-states"
+      ],
+      "required_labels": [
+        "Call Unit Times",
+        "Dispatched",
+        "En Route",
+        "On Scene",
+        "Staging",
+        "Cleared",
+        "Linked By",
+        "Dispatch only",
+        "FD51-2026-0003",
+        "Unit status",
+        "FD51-2026-0008",
+        "Ambulance 61",
+        "No unit was dispatched to this call or reported a status on it."
+      ],
+      "narration": "The generated report has Dispatched, En Route, On Scene, Staging, Cleared and Linked By columns. The original DEMO rows say Dispatch only and leave later status times blank. A dispatch entry alone does not establish an arrival. Other exercise rows say Unit status. Read the recorded timestamps as they stand; some are incomplete or out of order, so review the underlying history before calculating a duration. Some calls explicitly report no unit dispatch or status data. The native exercise shows Ambulance 61 with dispatch and en-route times, while its later cells remain blank. These are software records, not independent physical-arrival verification.",
+      "practice": "Compare a Dispatch only row with a Unit status row without filling any blank timestamp.",
+      "source_limits": [
+        "Original dispatch-only rows have blank En Route/On Scene/Staging/Cleared fields. Blank means missing timestamp, not zero or a verified nonresponse. Download CSV is an actual visible control.",
+        "FD0003 records En Route18:23:07, On Scene18:23:49 and Dispatched18:27:19; do not repair chronology or claim all fields are sequential. Current labels describe linked software records, not physical arrival.",
+        "Some calls have an explicit no-unit-data message;0008 has Ambulance61 and Unit status linkage with blank later fields. Do not count no-unit messages as exported unit rows."
+      ]
+    },
+    {
+      "id": "csv",
+      "title": "Download and interpret the real CSV",
+      "route": "/User/Reports/CallUnitTimesReport?start=10%2F24%2F2026%2023%3A30%3A00&end=10%2F29%2F2026%2023%3A30%3A00",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "015-unit-times-dispatch-only-and-empty-status-times"
+      ],
+      "required_labels": [
+        "Call Unit Times",
+        "Download CSV",
+        "Linked By",
+        "Dispatch only",
+        "Unit status"
+      ],
+      "narration": "Use Download CSV on this report to obtain its unit rows for the same parameters. The downloaded file includes call and unit identifiers, timestamps and Linked By. This exercise export contains thirteen unit rows for twelve distinct calls: a call with two units creates two rows, while a call with no unit rows contributes none. The file uses DispatchOnly and Explicit codes where the screen says Dispatch only and Unit status. Keep blank times blank, and retain the report period with your file.",
+      "practice": "Download the CSV and compare one DispatchOnly row with the matching report row; retain blank cells.",
+      "source_limits": [
+        "Original dispatch-only rows have blank En Route/On Scene/Staging/Cleared fields. Blank means missing timestamp, not zero or a verified nonresponse. Download CSV is an actual visible control."
+      ]
+    },
+    {
+      "id": "command-scope",
+      "title": "Run an explicit group scope",
+      "route": "/User/Reports/CallSummaryReportParams",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "018-call-summary-command-default-window-prepared",
+        "019-command-report-scope-and-totals",
+        "023-command-scoped-five-call-rows"
+      ],
+      "required_labels": [
+        "Call Summary Report",
+        "Report Start Time",
+        "Report End Time",
+        "Group",
+        "Command",
+        "Run Report",
+        "Group: Command (including the groups beneath it)",
+        "Total Calls",
+        "Open",
+        "Calls",
+        "Number",
+        "FD51-2026-0007"
+      ],
+      "narration": "For a separate comparison, the parameters now show the default period spanning late December twenty twenty-five to late December twenty twenty-six. This is not the earlier October week. Select Command in Group and use Run Report. The result explicitly says Command, including the groups beneath it. It contains five calls and none open. Its detail table shows those five exercise rows with Command dispatch attribution. A group filter narrows the report; it does not move resources, reassign calls or close them.",
+      "practice": "Run the shown default period with Command and confirm the displayed descendant-group scope.",
+      "source_limits": [
+        "Second/default year-spanning window is2025-12-31T18:00:01 to2026-12-31T17:59:59; it differs from the prior week window. Command is selected.",
+        "Default-window Command result is5total/0open/5closed,2unitresponses,0personnelresponses. Scope explicitly includes descendant groups. No report-induced call mutation.",
+        "All five scoped rows readable; group assignment marker(dispatch) visible. This is the Command default-window result, not All Groups."
+      ]
+    },
+    {
+      "id": "period-tables",
+      "title": "Read yearly, quarterly and monthly tables",
+      "route": "/User/Reports/CallSummaryReport?start=12%2F31%2F2025%2018%3A00%3A01&end=12%2F31%2F2026%2017%3A59%3A59&groupId=51002",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "020-yearly-statistics-partial-period",
+        "021-quarterly-statistics-ytd",
+        "022-monthly-statistics",
+        "024-monthly-lower-rows-and-partial-period-note"
+      ],
+      "required_labels": [
+        "Yearly Statistics",
+        "2025*",
+        "2026",
+        "Partial period: the report range covers only part of it.",
+        "Quarterly Statistics",
+        "Calls",
+        "YTD",
+        "Q4 2026",
+        "Monthly Statistics",
+        "Period",
+        "Oct 2026",
+        "Nov 2026",
+        "Dec 2026"
+      ],
+      "narration": "The longer period also produces Yearly Statistics. An asterisk marks a partial period; the note explains that the report covers only part of it. Do not describe that row as a complete calendar year. Quarterly Statistics adds YTD, the cumulative call count within the report’s included periods for that year. Monthly Statistics uses the same Calls and YTD distinction. October contains five calls. November and December show zero calls while YTD remains five. These are results from available records in the chosen range, not forecasts of future activity.",
+      "practice": "Find October’s five calls and explain why the following zero-call months still show YTD5.",
+      "source_limits": [
+        "Yearly table2025* is a partial period with0;2026 has5. The image does not establish a full-calendar-year operational claim. Blank charts are not used.",
+        "Quarter table with YTD. Q4-2026 has5calls/YTD5. Do not use blank chart boxes as chart-success evidence.",
+        "Monthly heading and column headers readable; lower October/November/December values require024.",
+        "Monthly heading/headers are above this viewport; pair with022. October5/YTD5, November0/YTD5, December0/YTD5. Future zero rows are not forecasts."
+      ]
+    },
+    {
+      "id": "matched-comparison",
+      "title": "Change one reporting variable at a time",
+      "route": "/User/Reports/CallSummaryReportParams",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "025-default-window-all-groups-prepared",
+        "027-default-window-all-groups-sixteen-calls"
+      ],
+      "required_labels": [
+        "Call Summary Report",
+        "Report Start Time",
+        "Report End Time",
+        "Group",
+        "All Groups",
+        "Run Report",
+        "Total Calls",
+        "Open",
+        "Call States",
+        "Closed",
+        "Active",
+        "Total"
+      ],
+      "narration": "Return to parameters for the same default period and choose All Groups. Keep both time boundaries unchanged, then Run Report. This result contains sixteen calls: four open and twelve closed. That can be compared with the five-call Command result because the periods match. It should not be treated as a new duplicate merely because the earlier October week contained fifteen. Establish the window and scope before interpreting a change in totals.",
+      "practice": "Compare Command5 and All Groups16 only after confirming the identical displayed start and end.",
+      "source_limits": [
+        "Same default start/end values as018; only group selection changes toAll Groups.",
+        "Actual totals16/open4/closed12/unitresponses10/personnelresponses6, in the same broad window as019. It is not the week15-call result. 026 JPEG is identical but its incorrect raw state is excluded. DEMO0004 appears only in the full DOM, outside this viewport, and explains the extra earlier closed call rather than a new duplicate."
+      ]
+    },
+    {
+      "id": "sector-practice",
+      "title": "Apply the same checks across departments",
+      "route": "/User/Reports/CallSummaryReport?start=10%2F25%2F2026%2000%3A00%3A00&end=10%2F29%2F2026%2023%3A30%3A00&groupId=0",
+      "capture_intent": "Show the exact report controls or corresponding actual table described by this contiguous narration span.",
+      "capture_refs": [
+        "010-call-summary-group-attribution",
+        "006-staffing-detail-headers-and-members",
+        "015-unit-times-dispatch-only-and-empty-status-times"
+      ],
+      "required_labels": [
+        "Calls by Group",
+        "Group",
+        "Count",
+        "Name",
+        "Staffing",
+        "Staffing Timestamp",
+        "Call Unit Times",
+        "Dispatched",
+        "En Route",
+        "On Scene",
+        "Linked By"
+      ],
+      "narration": "Chicago Fire can review station call distribution; community care and mental-health teams can review operational workload without putting client histories into report notes. Search-and-rescue teams can compare mission-period groups. Security teams can inspect recorded staffing before a patrol review, while wildland coordinators can compare seasonal reporting windows. Industrial teams can examine unit status chronology during a software exercise. In each setting, choose the question, fix the period and scope, inspect the detail rows, and explain missing data before sharing an authorized result.",
+      "practice": "Choose one sector example and state the report, period, group scope and missing-data rule you would use.",
+      "source_limits": [
+        "Help and group table are actual. Group attribution is not simply current viewer membership. Dispatch fallback can leave a call unassigned, including an even split.",
+        "Lower member rows are clipped; use003 for the complete Casey row. No staffing changes were made by generating the report.",
+        "Original dispatch-only rows have blank En Route/On Scene/Staging/Cleared fields. Blank means missing timestamp, not zero or a verified nonresponse. Download CSV is an actual visible control."
+      ]
+    }
+  ],
+  "candidate_only": true,
+  "status": "source_frozen_for_root_script_review_not_audio_or_video_qualified",
+  "narration_frozen": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "parent_full_script_review_pending": true,
+  "all_reporting_modules_demonstrated": false
+}

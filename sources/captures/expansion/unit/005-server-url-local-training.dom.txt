@@ -1,0 +1,54 @@
+- generic: Sign In
+- generic: Enter your credentials to access Resgrid Unit
+- generic: Username
+- textbox "Input Field":
+  - /placeholder: Enter your username
+- generic: Password
+- textbox "Input Field":
+  - /placeholder: Enter your password
+- button "Show password":
+- button "Sign In":
+  - generic: Sign In
+- button "Server URL":
+  - generic: Server URL
+- button "Sign in with SSO":
+  - generic: Sign in with SSO
+- button "Is this device shared? Set it up":
+  - generic: Is this device shared? Set it up
+- button:
+  - textbox:
+    - /placeholder: Language
+    - text: en
+- combobox "Language":
+  - option "Language" [disabled]
+  - option "English" [selected]
+  - option "Spanish"
+  - option "Swedish"
+  - option "German"
+  - option "Greek"
+  - option "French"
+  - option "Italian"
+  - option "Polish"
+  - option "Ukrainian"
+  - option "Arabic"
+- dialog:
+  - generic: Server
+  - button:
+    - textbox:
+      - /placeholder: Server
+      - text: Custom
+  - combobox "Server" [active]:
+    - option "Server" [disabled]
+    - option "US-West"
+    - option "EU-Central"
+    - option "Custom" [selected]
+  - generic: Server URL
+  - generic: "*"
+  - textbox "Input Field":
+    - /placeholder: Enter Resgrid API URL (e.g., https://api.resgrid.com)
+    - text: http://127.0.0.1:18967
+  - generic: "Note: This is the URL of the Resgrid API. It is used to connect to the Resgrid server. Do not include /api/v4 in the URL or a trailing slash."
+  - button "Cancel":
+    - generic: Cancel
+  - button "Save":
+    - generic: Save

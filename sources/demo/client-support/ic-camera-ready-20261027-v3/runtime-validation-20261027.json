@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "app": "IC",
+  "recorded_at": "2026-10-27T15:45:52.351882+00:00",
+  "source_git_revision": "39e2b7ecebc2829967a68b8111271d673bebdd70",
+  "support_package": "demo/client-support/ic-camera-ready-20261027-v3",
+  "patched_map_sha256": "b8eab0844b0bde6bf96834cf3226cfe4fc30c9dea1f24be93f44d7ec13f9bcb5",
+  "capture_manifest": "captures/expansion/ic/map-and-persistence-reviewed-source-subset-20261027.json",
+  "capture_manifest_sha256": "c52d3ff66999c474b197b17d051fe1a8e0b2e15a8c5d12625224587f2a443c4a",
+  "actual_route": "http://localhost:19104/command-map/51001",
+  "environment": "Isolated fictional Department 51; existing warehouse training call 51001 preserved.",
+  "runtime_observations": [
+    {
+      "step": 1,
+      "result": "After verified isolated Metro restart in normal dev mode with --clear, the full Incident Map showed actual Chicago cartography with Squad 3 centered near Little Italy.",
+      "capture_id": "ic-44-incident-map-chicago-v3",
+      "sha256": "235d1885cea66285c1c8e1620cf09b1bb897b7883fa6b58bd30b23cdd74d8ee4"
+    },
+    {
+      "step": 2,
+      "result": "A normal pointer drag panned the map; Squad 3 and Chicago streets moved right/down in the viewport.",
+      "capture_id": "ic-45-incident-map-manual-pan-v3",
+      "sha256": "33a902b26d119610628e2d304fa571d4b85a16f06517827fb38faec7cb8869f7"
+    },
+    {
+      "step": 3,
+      "result": "Clicked actual Save View, returned to Command Board, then opened the actual Open incident map control. Same manually panned framing was restored.",
+      "capture_id": "ic-46-incident-map-saved-view-reopened-v3",
+      "sha256": "a64b93a5f226fc57b0d048f002112ee6b426a18c325b8a01744476ebb64ac69f"
+    },
+    {
+      "step": 4,
+      "result": "A full browser reload retained the same panned framing and actual Squad 3 map marker.",
+      "capture_id": "ic-47-incident-map-saved-view-reloaded-v3",
+      "sha256": "232c52af198d260eeebd8ec0280cc600fab0991dd7cc56983e0e1d491687de76"
+    },
+    {
+      "step": 5,
+      "result": "Board after full reload retained existing objective 50%, medical need 1/2 partial fill, internal note, Safety Officer and resources. Actual incident log contains the new map-created entry.",
+      "capture_ids": [
+        "ic-48-persisted-timer-objective-need",
+        "ic-49-persisted-note-role-files",
+        "ic-50-persisted-resources-accountability",
+        "ic-51-persisted-command-log"
+      ]
+    }
+  ],
+  "important_limits": [
+    "Initial source camera framing and user pan were observed; no separate Recenter button or native GPS permission was exercised.",
+    "Save View persistence is bounded to actual route return and full browser reload in this local training session; other users/devices were not tested.",
+    "Web annotation onPress gap remains unchanged: Line/Area/Text toolbar visibility does not prove drawing or geometry persistence.",
+    "No map tiles, device coordinates, backend state, hidden stores or screenshot pixels were manufactured.",
+    "No call was created or closed during this checkpoint. Original three active calls were preserved.",
+    "No native hardware, voice provider, message delivery, completed PAR or completed needs result was tested."
+  ],
+  "cache_finding": {
+    "observed": "Prior isolated Metro process reported CI mode and reloads disabled. Browser reload alone did not establish that edited v2/v3 files were being served.",
+    "resolution": "Verified listener port/cwd, stopped only isolated IC Metro, and launched the v3 wrapper with --clear before actual UI checks. Inherited map credentials preserved; none recorded.",
+    "causation_limit": "Earlier wrong framing cannot be assigned to a particular served compatibility version from source-file hashes alone. Mocked v2 failure/v3 pass remain source regression evidence, not proof of the prior browser root cause."
+  },
+  "browser_playback_proof": null,
+  "lesson_export_ready": false
+}

@@ -1,0 +1,812 @@
+{
+  "id": "core-location-foundations",
+  "title": "Core: location sources, freshness, and response estimates",
+  "app": "Core",
+  "audience": "Department administrators and dispatchers reviewing the fictional training department.",
+  "summary": "Review stored department and station locations, map filters, marker context, location age and response estimates in actual Core screens.",
+  "prerequisites": [
+    "Use the isolated fictional Firehouse51 training department and an already authorized Core administrator session.",
+    "Keep original calls, shared settings, Engine51 station/crew and member qualifications unchanged. This lesson reads the retained states.",
+    "Understand that native device tracking, provider delivery and wider saved reference-data workflows require separate evidence."
+  ],
+  "scenes": [
+    {
+      "id": "01-read-the-map-as-evidence",
+      "title": "Read the map as evidence",
+      "kind": "operational",
+      "route": "/User/Mapping",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Mapping",
+        "TRAINING — Warehouse alarm"
+      ],
+      "narration": "On Mapping, read the warehouse call label and open description before interpreting the marker. That popup identifies a fictional incident; it does not establish where a person or apparatus is now. This walkthrough reviews Core administration and recorded training data. Device permissions and field tracking need their own application checks. Keep that distinction visible when using location information for fire and EMS, community response, or industrial standby.",
+      "narration_word_count": 67,
+      "practice": "Identify the fictional incident separately from a person, unit or fixed station; describe which source you would need for a current resource position.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "005-warehouse-saved-icon-popup"
+        ],
+        "observations": [
+          "Existing visible warehouse tooltip/popup only; no device position/receipt outcome."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "02-review-department-center",
+      "title": "Review the department address and default center",
+      "kind": "operational",
+      "route": "/User/Department/Settings",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Address",
+        "Default Map Center GPS Coordinates",
+        "Street",
+        "City",
+        "State/Province",
+        "Zip/Postal Code",
+        "Country",
+        "41.8721",
+        "-87.6523",
+        "Save",
+        "Cancel"
+      ],
+      "narration": "In Department Settings, review Address and Default Map Center GPS Coordinates. The paired latitude and longitude inputs describe the starting map view, not a live vehicle fix. This example uses a fictional Chicago address and explicit decimal coordinates. Check Street, City, State/Province, Zip/Postal Code and Country before relying on the extent. Save and Cancel are visible; this demonstration reads existing values and leaves the department unchanged.",
+      "narration_word_count": 66,
+      "practice": "Read the actual configured center without changing shared settings; identify who owns corrections to the department address.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "001-department-address-and-map-center"
+        ],
+        "observations": [
+          "Read-only actual fields/values; filled-input placeholder names are not invented as painted text."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "03-separate-station-and-boundary",
+      "title": "Separate a station position from its response boundary",
+      "kind": "operational",
+      "route": "/User/Groups/EditGroup -> /User/Groups/Geofence?departmentGroupId=51001",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Edit Group",
+        "Station Group",
+        "Group Name",
+        "Station Address",
+        "Firehouse 51",
+        "Gps Coordinates",
+        "what3words Address",
+        "Group Boundary"
+      ],
+      "narration": "On Edit Group, confirm Station Group and Group Name before reading Station Address. Firehouse 51 has a fictional Chicago address and Gps Coordinates; the lower what3words Address field is empty. These are alternative station-location inputs, not a live fix. Group Boundary is a separate response or service area. This demonstration reads the existing fields and preserves the station, boundary, apparatus assignment and crew.",
+      "narration_word_count": 63,
+      "practice": "Compare the stored station point with a response boundary without drawing, saving or changing the shared training group.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "002-station-address-and-coordinates",
+          "003-station-coordinate-and-what3words-fields",
+          "core-nearest-group-boundary-editor"
+        ],
+        "observations": [
+          "Actual existing station fields.",
+          "Visible placeholder, no lookup.",
+          "Real empty editor; no draw/save claim."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "04-filter-without-changing-resources",
+      "title": "Filter the map without changing resources",
+      "kind": "operational",
+      "route": "/User/Mapping",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Filter marker text",
+        "Truck 81",
+        "Show calls",
+        "Show stations",
+        "Show units",
+        "Show personnel",
+        "Show POIs"
+      ],
+      "narration": "On Mapping, use Filter marker text to focus the display. The retained Truck 81 view leaves that named marker visible. Show calls, Show stations, Show units, Show personnel and Show POIs control displayed categories. In the comparison view, the text filter is empty and Show units is unchecked. A hidden category is not a released resource or deleted position. Inspect these controls before treating an expected resource as missing.",
+      "narration_word_count": 69,
+      "practice": "Explain why an omitted unit could be a view filter, then verify the intended filter/category state through the actual controls.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-config-025-map-units-hidden",
+          "core-config-024-map-filter-truck81",
+          "core-config-025-map-units-hidden"
+        ],
+        "observations": [
+          "Showunits unchecked; filtered category not status mutation.",
+          "Actual readable query/result; no unseen cleanup operation narrated."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "05-read-icons-and-context",
+      "title": "Read icon conventions and incident context",
+      "kind": "operational",
+      "route": "/User/Mapping/Legend -> /User/Types/EditCallType?callTypeId=51001 -> /User/Mapping",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Map Icon Legend",
+        "Routine",
+        "Urgent",
+        "Emergency",
+        "Edit Call Type",
+        "Structure Fire",
+        "Preview",
+        "Showing the current custom icon.",
+        "TRAINING — Warehouse alarm"
+      ],
+      "narration": "From Mapping, Map Icon Legend explains type and priority conventions. Routine, Urgent and Emergency appear in separate columns. On Edit Call Type, the Structure Fire Preview shows a stored custom icon and says Showing the current custom icon. The warehouse popup supplies the incident description. These are visual identifiers. They do not establish a fresh position, response acceptance or notification receipt. Read the label and context rather than relying only on a flame or vehicle picture.",
+      "narration_word_count": 76,
+      "practice": "Compare an incident type/priority convention with its actual label and avoid treating a custom icon as a live-status measurement.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-config-024-map-filter-truck81",
+          "core-config-065-legend-call-type-priority-matrix",
+          "002-call-base-reopened-loaded",
+          "003-call-base-saved-current-preview",
+          "005-warehouse-saved-icon-popup"
+        ],
+        "observations": [
+          "Actual labeled entry.",
+          "Actual Routine/Urgent/Emergency.",
+          "Current saved state, no new file upload.",
+          "Readable actual call label/popup; no overlapping identities used."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "06-separate-update-and-status-times",
+      "title": "Separate map update time from status time",
+      "kind": "operational",
+      "route": "/User/Mapping -> /User/Units",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Last update: Tue Oct 27 2026 12:01:27 GMT-0700 (Pacific Daylight Time)",
+        "Status",
+        "Timestamp",
+        "Engine 51"
+      ],
+      "narration": "On Mapping, the footer says Last update. It records when the client loaded or refreshed marker data, or handled a location update; it is not every resource’s fix time. In Units, Status and Timestamp belong to the latest unit status. That time is not a GPS measurement either. These screens show historical training states. Check the appropriate position source and age before treating a page refresh or status entry as evidence that an apparatus moved.",
+      "narration_word_count": 75,
+      "practice": "Distinguish the page-update footer, unit-status time and actual position time. Do not describe the historical Released row as current Engine51 state.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "005-warehouse-saved-icon-popup",
+          "core-nearest-unit-overview-current-statuses"
+        ],
+        "observations": [
+          "Actual literal date plus pinned MapElement client-time semantics.",
+          "Historical unit-state column, not fix time."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "07-recognize-station-origin",
+      "title": "Recognize a station-origin estimate",
+      "kind": "operational",
+      "route": "/User/Dispatch/NewCall -> resource position popup",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Engine 51: position",
+        "Station location",
+        "Call location",
+        "41.87210, -87.65230"
+      ],
+      "narration": "In the recorded New Call position popup, Engine 51 explicitly says Station location and shows station coordinates beside the call location. That comparison uses a stored origin. A unit in quarters, or one without an available live position, can be measured from its station under the response-origin rules. Read the source before using the estimate. The displayed distance and time do not prove physical presence, arrival, or an active navigation route.",
+      "narration_word_count": 71,
+      "practice": "Read the recorded station origin and turnout-inclusive estimate. Explain why it is no proof of present station occupancy, physical movement or arrival.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-nearest-near-station-position-with-turnout"
+        ],
+        "observations": [
+          "Actual2-minute estimate/120s turnout and stored coordinates; no physical arrival."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "08-recognize-stale-data",
+      "title": "Recognize stale and simulated position data",
+      "kind": "operational",
+      "route": "/User/Dispatch/NewCall",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Personnel",
+        "Christopher Herrmann",
+        "Live GPS",
+        "stale",
+        "Status",
+        "Staffing",
+        "ETA",
+        "Position",
+        "No position"
+      ],
+      "narration": "On New Call, compare the Personnel rows. One historical training view shows Live GPS with a stale badge; the separately simulated newer view omits that badge. Live GPS names the application’s data-source category. No real device permission or physical movement was exercised. Status, Staffing, ETA and Position are separate columns. Treat No position as missing information, and review the source and configuration before using the first ranked candidate as an operational recommendation.",
+      "narration_word_count": 72,
+      "practice": "Compare the two fictional fixture states without claiming continuous live tracking. Identify which exact fix timestamp or numeric age would still need a dedicated readable detail shot.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-nearest-personnel-stale-position",
+          "core-nearest-personnel-current-simulated-position"
+        ],
+        "observations": [
+          "Two historical fixtures, no hardware exercised or numeric fix-age claim."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "09-review-minute-ttl-and-overwrite",
+      "title": "Review minute-based map TTL and status overwrite",
+      "kind": "operational",
+      "route": "/User/Department/MappingSettings",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Mapping and BigBoard Settings",
+        "TTL In Minutes for Personnel Locations",
+        "TTL In Minutes for Unit Locations",
+        "Allow Status with No Location Data to hide previous location",
+        "Allow Unit Status with No Location Data to hide previous location",
+        "0"
+      ],
+      "narration": "In Mapping and BigBoard Settings, review personnel and unit controls separately. TTL In Minutes for Personnel Locations and TTL In Minutes for Unit Locations both show zero in these views. Zero disables ping expiry; the help text’s sixty-minute example is not a saved sixty. A location-bearing status can remain a fallback after a ping expires. The separate no-location-status checkboxes affect replacement behavior. Check the policy and position source before promising that a marker will disappear.",
+      "narration_word_count": 75,
+      "practice": "Read both actual zero inputs and the distinct overwrite checkboxes without saving. Keep the hypothetical60-minute help example separate from the recorded value and status fallback.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "legacy-core-048-mapping-settings-personnel-stable",
+          "legacy-core-052-mapping-map-style-choices"
+        ],
+        "observations": [
+          "Actual0 input and unchecked overwrite boxes;60 is help example.",
+          "Actual unit0; use052, not049.",
+          "Source-backed conditional explanation without a performed positive-TTL outcome."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "10-review-recommendation-age-seconds",
+      "title": "Review dispatch age and response limits in seconds",
+      "kind": "operational",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Closest Unit Response Tuning",
+        "Maximum unit location age (seconds)",
+        "Maximum personnel location age (seconds)",
+        "Maximum response radius (meters)",
+        "Include stale locations",
+        "1800",
+        "0"
+      ],
+      "narration": "In dispatch settings, Closest Unit Response Tuning has separate age controls. Maximum unit location age and Maximum personnel location age are in seconds; both recorded values are eighteen hundred. They differ from map TTL measured in minutes. Include stale locations is unchecked. Maximum response radius is zero, meaning no configured maximum radius. These controls influence candidate evaluation. They do not certify a fresh fix, prove service-area coverage, or change a resource position because the map refreshed.",
+      "narration_word_count": 76,
+      "practice": "Compare units and meaning: map TTL minutes versus dispatch maximum-age seconds. Read the captured values and leave shared dispatch policy unchanged.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-config-043-dispatch-closest-tuning-readonly",
+          "core-config-050-turnout-waiting-call-readonly"
+        ],
+        "observations": [
+          "Actual1800seconds/0radius/staleunchecked, separate mapping TTL minutes."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "11-read-eta-and-turnout",
+      "title": "Read ETA and turnout as estimates",
+      "kind": "operational",
+      "route": "/User/Department/DispatchSettings -> recorded NewCall recommendations",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Closest Unit Response Tuning",
+        "Order by driving ETA",
+        "ETA shortlist size",
+        "In-quarters turnout (seconds)",
+        "Mobile turnout (seconds)",
+        "Personnel turnout (seconds)",
+        "120",
+        "0",
+        "5",
+        "2 min (est.)",
+        "incl. 120 s turnout",
+        "Station location"
+      ],
+      "narration": "In the same Closest Unit Response Tuning section, Order by driving ETA is unchecked and ETA shortlist size is five. Turnout is one hundred twenty seconds in quarters, zero mobile and zero personnel. The matching Engine 51 station popup shows a two-minute estimate including one hundred twenty seconds of turnout. Response combines applicable turnout with estimated travel. Routed drive time is separate. This is no tested drive, confirmed dispatch receipt, physical movement or arrival commitment.",
+      "narration_word_count": 75,
+      "practice": "Compare actual120/0/0turnout settings with the matching2-minute/120-second station popup. Leave routed ETA/provider controls unchanged.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-config-050-turnout-waiting-call-readonly",
+          "core-nearest-near-station-position-with-turnout"
+        ],
+        "observations": [
+          "Actualoff,5,120/0/0.",
+          "Use later2-minute/120s image; earlier1-minute snapshot excluded from this freeze."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    },
+    {
+      "id": "12-carry-reference-work-forward",
+      "title": "Carry reference-location work forward honestly",
+      "kind": "operational",
+      "route": "/User/Mapping -> Manage POIs; /User/WeatherAlerts/Zones",
+      "capture_intent": "Show the ordered full legible real Core screenshot states in this scene. Keep history/readonly/conditional limits explicit; do not introduce unseen operations.",
+      "required_labels": [
+        "Manage POIs",
+        "POIs",
+        "Add POI Type",
+        "Monitoring Zones",
+        "Center Location",
+        "Radius (miles)",
+        "Save Zone"
+      ],
+      "narration": "From Mapping, Manage POIs opens the empty POI-type list. In Weather Alerts, Monitoring Zones offers Center Location, Radius in miles and Save Zone; no zone is saved here. Hospitals, layers, floor plans and patrol routes still require their own saved-workflow checks. For search and rescue, security, wildland or community teams, apply the same source-and-age checks before operational use. Keep missing reference data on the follow-up list until its placement and limits are actually reviewed.",
+      "narration_word_count": 74,
+      "practice": "Choose one fictional reference-data gap for a separate actual-screen workflow. Do not claim a saved point, drawn weather audience, uploaded floor plan, route execution or alert delivery from these empty forms.",
+      "capture_evidence": {
+        "status": "frozen_actual_source_correspondence_only",
+        "manifest": "expansion/plans/core-location-foundations.captures.json",
+        "capture_refs": [
+          "core-config-024-map-filter-truck81",
+          "core-config-028-poi-empty-baseline",
+          "legacy-core-058-weather-zones"
+        ],
+        "observations": [
+          "No savedPOI result.",
+          "Actual empty center/radius form and offeredSaveZone; no save/delivery. Other reference workflows are explicitly future work."
+        ],
+        "remaining_narrated_scope_capture_operations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-27T20:25:33.181207+00:00",
+        "scope": "Current immutable pixels, retained DOM when available, and pinned source. No browser/DB/provider operation.",
+        "conditional_or_unexercised_branches_remain_explicit": true
+      }
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "An ambulance crew is selected near a training hospital.",
+      "practice": "Compare station-origin versus GPS categories, status time and dispatch age before using ETA; add a hospital POI only in a separately captured saved workflow."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A mobile crisis team coordinates a shared community support vehicle.",
+      "practice": "Use the appropriate member/location permissions, check age/source, and avoid treating an old phone point or a hidden category as the vehicle’s actual availability."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search team stages at a trailhead.",
+      "practice": "Distinguish fixed staging coordinates, station origin, simulated/stale team fixes and actual device permissions. Planned search layers remain a separate saved geometry workflow."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A patrol unit starts a campus round.",
+      "practice": "Read category filters and position source before recommending a response. Saved patrol stops/Unit assignment and route execution require separate actual screens, not an ETA popup."
+    },
+    {
+      "sector": "Wildland / mutual aid",
+      "scenario": "A mutual-aid engine moves between bases.",
+      "practice": "Confirm the intended station assignment and source age before using a station fallback. Review weather zones as center/radius and actual policy; do not infer field connectivity or recipient delivery."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "An industrial team investigates a fictional warehouse alarm.",
+      "practice": "Separate the warehouse incident point/icon from vehicle location and status. Treat floor plans/custom overlays as reference material pending saved alignment and currency review."
+    }
+  ],
+  "source_files": [
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Department/Settings.cshtml",
+      "sha256": "504b7ae47c51c6c5bf077edddc6ece3802afd758d3fccfce98108ba9e49c1cd5"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml",
+      "sha256": "dd2591d787650d2bbdfbd97f98da6eb7f71fa1d6729af5264ae18a5aef72565d"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Mapping/Index.cshtml",
+      "sha256": "6e851f93c32709bcb49fba7117f1d5b5c9a6cce1357078c75220a8a72156543b"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Apps/src/components/map/MapElement.tsx",
+      "sha256": "9129cb3dddbcf2e52ed344b377be5de658df3a5234ba1d1842cc782a30ac9ca2"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Department/MappingSettings.cshtml",
+      "sha256": "6c926e9c7d057f158475b5722e38119e3dbe6252b6ce54c6c34d31e5af0d1295"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Model/MappingMarkerSource.cs",
+      "sha256": "710f0a6c5431291fa58db20d4018b20a1dd620a76326f873445c9a280e7b7c6f"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web.Services/Controllers/V4/MappingController.cs",
+      "sha256": "047adcdfacaef79e4110153d721b5ba652f6f126edf76acd033b7cec41020980"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Model/UnitResponseOrigin.cs",
+      "sha256": "9f0a960f0bc311c0be43c64fb922e30f978dad5d22e445542d5fd59c6d3a1a16"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Services/DispatchRecommendationService.cs",
+      "sha256": "1c6d60bd5603e930a852e3df341c5f125ced228bdad0bc5586bf0201eab8a4ed"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Department/DispatchSettings.cshtml",
+      "sha256": "f5515c9f28860d2597dcfc647c2d20780ac039c21cc02d5142aabace937f2a90"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Units/Index.cshtml",
+      "sha256": "db05d44d60f86883678e9f62b13c6e4a68c6a5ad0f76aae69c2459f273199173"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Mapping/AddPOI.cshtml",
+      "sha256": "b4dbf202a3317589109bb2f5e075d818c5789094c47a2e0f491e7a301e6eae63"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Mapping/NewLayer.cshtml",
+      "sha256": "9a6fa67680430f35d8220d874348daf1afc7bf67d8800410a9dd013c2d89f4f2"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Mapping/LiveRouting.cshtml",
+      "sha256": "8c94dad789960109e885f6bd2b98eb5229081658752c4f0709c4a078e2561b58"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Mapping/StationRouting.cshtml",
+      "sha256": "38bb9cc06a179cd71700091408c12efd59fd5bbad35768ae6a5df238721999f7"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/WeatherAlerts/Zones.cshtml",
+      "sha256": "7a1a72690e2e76a0f10e63c91c657ef154ffc7a814e722553c7cfcda563b202f"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/WeatherAlerts/Settings.cshtml",
+      "sha256": "5adc003e0e4e19ba13ea016eab1a32dea397cfb0d3da72c181dc21d9fa1b7529"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Services/WeatherAlertService.cs",
+      "sha256": "b93e3b8b6465c5c4216ada696ca01b0eaa29c2192b5cd4c0be02b62f3108b5f7"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/CustomMaps/New.cshtml",
+      "sha256": "704080cb548c28a54eb9e2b15ce1dea2a60a6a7804e92e43ec850950568e61cc"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/IndoorMaps/Floors.cshtml",
+      "sha256": "b2c60c5b64bdc23e0ccde4bbb99f3bfd1e54210c0039cf8fb16b7275375811c2"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Routes/StartRoute.cshtml",
+      "sha256": "e2eb321a0ceae301894a4fbaec143b56712c9d00cc88a02c4c7c8116043ab252"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Localization/Areas/User/Department/Department.en.resx",
+      "sha256": "f4dbc6a75026e9ad218b4b88385cc53ead88d40b86f251238bcc232ca2d55be9"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Localization/Areas/User/Groups/Groups.en.resx",
+      "sha256": "724c19c84dd6aa8f845ff2c88b346597985927f29bff5d058a7a2e1ea29680e5"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Groups/Geofence.cshtml",
+      "sha256": "f9e7c8b26995eadbbd1447d8fcd669dd74ec6f32b02a6ed13a5cb5d3c0231073"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Controllers/GroupsController.cs",
+      "sha256": "8c5f6c355cd1c0821a2b7d52268344393f10df8b9842b905029dea451fa80f20"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Types/EditCallType.cshtml",
+      "sha256": "8bec2206979788ea672a2bacc212a9fefdd63b5246ee4626da12efcb24b8df52"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Shared/_TypeIconPicker.cshtml",
+      "sha256": "4d44b53e785842ff2568c0362908a6d9949ab4b70f16bc47dc484c977ab13fc9"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/wwwroot/js/app/internal/types/resgrid.types.iconpicker.js",
+      "sha256": "d61ef2592ea0030aa350ebda0e43f9a143b29dd6c39e1621297ba33bc57694c3"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Localization/Areas/User/Icons/IconUpload.en.resx",
+      "sha256": "08c561497490ffcca74cc22bd15ed4b4fadbe002cc8e0e651491f7150e446c06"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Apps/src/components/map/LeafletMapView.tsx",
+      "sha256": "1396493bed601c3d75e14baad096e9695b52607c97cc42c3fe39bad8c6c4a821"
+    }
+  ],
+  "narration_word_count": 859,
+  "authoring_status": "frozen_bounded_source_candidate_only",
+  "recording_limits": [
+    "This is a bounded separate Core source freeze, not replacement approval for canonical legacy07. All original12 gap groups are preserved from the prospective checkpoint; wider workflows remain explicitly incomplete.",
+    "All screenshot states are historical fictional training evidence from different recorded instants, not one continuous live incident or present operational status. In particular the displayed Released state is historical; no present Engine51 state is asserted.",
+    "Department/station coordinates are read-only existing fictional values. No edit/Save/geocoding/what3words lookup, real GPS permission, physical movement, provider delivery or dispatch receipt is claimed.",
+    "The location-less-status policy and positive TTL expiry are explained from source only; no new policy change, elapsed-time experiment or guaranteed marker disappearance is demonstrated. Numeric source-fix age/expiry comparison remains separate work.",
+    "No routed driving provider result, route execution, POI creation, layer saving, weather-zone save/delivery, floor-plan/custom/indoor upload/alignment, native location/background success or actual arrival is demonstrated.",
+    "Icons are read from actual stored preview/legend/incident context. No new upload, concurrency fix or global marker consistency claim is made. All overlapping co-located controls on marker005 are excluded.",
+    "No audio, captions, cue times, rendered frames, playback observations or completed video are provided by this freeze. All subsequent exact-word, timing, image-legibility, frame and browser gates still apply."
+  ],
+  "capture_manifest": "expansion/plans/core-location-foundations.captures.json",
+  "screen_sequence": "expansion/plans/core-location-foundations.screen-sequence.json",
+  "media_status": {
+    "natural_audio": "not_generated",
+    "speech_timed_captions": "not_generated",
+    "rendered_video": "not_generated",
+    "rendered_frame_review": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "canonical_legacy07_replacement": false,
+  "original_legacy07_scope": {
+    "prospective_prior": "expansion/plans/history/legacy-07-core-foundations.prospective-20261027.before-freeze.json",
+    "prospective_prior_sha256": "af565396e9fc65b4dc5f340d4690ffe685e446bd531f47c90c2d148bb94318dc",
+    "canonical_lesson_untouched": true,
+    "all24_legacy_primers_unreplaced": true,
+    "all295_legacy_scenes_unchanged": true,
+    "all12_gap_groups_preserved": [
+      {
+        "id": "L07-G01",
+        "scope": "Core foundation department center",
+        "source_route": "/User/Department/Settings",
+        "candidate_rejection": "legacy003 shows security/TTS/sorting;002 only page top.",
+        "status": "resolved_for_this_read_only_foundation_scope",
+        "resolved_at": "2026-10-27T20:17:20.909334+00:00",
+        "resolution_capture_refs": [
+          "001-department-address-and-map-center"
+        ],
+        "reviewed_subset": "captures/expansion/core-location-foundations-20261027/reviewed-core-foundations-subset.json",
+        "historical_missing_shots": [
+          "Actual Address + Default Map Center GPS Coordinates fields and actual values; frame actual applicable save control only if a write is later authorized.",
+          "If an edit/save is narrated later, show normal save result and fresh reopen; this prospective draft performs no write."
+        ],
+        "remaining_if_write_later_narrated": "A separate authorized edit/save/reopen sequence would still be required; this draft only reads existing values."
+      },
+      {
+        "id": "L07-G02",
+        "scope": "Core foundation station point",
+        "source_route": "/User/Groups/EditGroup",
+        "candidate_rejection": "Boundary editor and EditUnit Station selector are separate controls.",
+        "status": "resolved_for_this_read_only_foundation_scope",
+        "resolved_at": "2026-10-27T20:17:20.909334+00:00",
+        "resolution_capture_refs": [
+          "002-station-address-and-coordinates",
+          "003-station-coordinate-and-what3words-fields"
+        ],
+        "reviewed_subset": "captures/expansion/core-location-foundations-20261027/reviewed-core-foundations-subset.json",
+        "historical_missing_shots": [
+          "Actual Station Address/Gps Coordinates with existing Firehouse51 values; no current-device permission.",
+          "Preserve existing group boundary, Engine51 station/roles and shared fixtures."
+        ],
+        "remaining_if_write_later_narrated": "A separate authorized edit/save/reopen sequence would still be required; this draft only reads existing values."
+      },
+      {
+        "id": "L07-G03",
+        "scope": "Core source metadata before any freeze",
+        "missing": [
+          "Owner approval/narrow hash-bound literal curation for marker003/005;005 Warehouse popup/footer were physically read, raw pending metadata omitted them.",
+          "Final reviewed immutable screenshot snapshot/scene-control correspondence; eventual captions need genuine word/cue timing."
+        ],
+        "candidate_rejection": "No blanket relabeling of pending raw records or automatic passed browser evidence."
+      },
+      {
+        "id": "L07-G04",
+        "scope": "Original POI and reference placement",
+        "source_route": "/User/Mapping/POIs -> AddPOIType -> AddPOI",
+        "missing": [
+          "Saved fictional station/hospital POI types/points, coordinate forms, returned IDs and readable placed map pins/details.",
+          "Fixed station groups and POIs are different representations; do not imply creating a station automatically demonstrates a hospital POI."
+        ],
+        "candidate_rejection": "Empty list/type preview is no created/placed result."
+      },
+      {
+        "id": "L07-G05",
+        "scope": "Original geometry layers",
+        "source_route": "/User/Mapping/NewLayer -> Layers -> Mapping",
+        "missing": [
+          "Actual supported draw action, fictional geometry, save/reopen and layer visibility/alignment on real cartography."
+        ],
+        "candidate_rejection": "Layers toolbar/Hydrants checkbox and empty boundary editor do not prove creating a mapping layer."
+      },
+      {
+        "id": "L07-G06",
+        "scope": "Original weather workflow",
+        "source_route": "/User/WeatherAlerts/Zones -> Settings",
+        "missing": [
+          "Correct original draw-zone/audience narration to actual center/radius + severity/time schedule and department policy.",
+          "Actual training zone saved/reopened and configured delivery scope/schedule if narrated. No real provider notification test."
+        ],
+        "candidate_rejection": "Center/radius empty form is not saved monitoring coverage; no group/user recipient picker exists here."
+      },
+      {
+        "id": "L07-G07",
+        "scope": "Original live/station directions",
+        "source_route": "/User/Mapping/LiveRouting or StationRouting",
+        "missing": [
+          "Actual allowed station-to-call route geometry/distance/duration/instructions from provider, without actual GPS permission.",
+          "LiveRouting asks for navigator.geolocation and remains outside current no-real-GPS scope."
+        ],
+        "candidate_rejection": "Estimated nearest popup and offered Directions are not a rendered route/navigation success."
+      },
+      {
+        "id": "L07-G08",
+        "scope": "Original custom and indoor maps",
+        "source_route": "/User/CustomMaps and /User/IndoorMaps",
+        "missing": [
+          "Public-safe training reference image through normal permitted chooser/upload, saved layer/floor, actual bounds/zone alignment and source/revision checks.",
+          "Reference-only limits; indoor map does not establish indoor positioning or navigation."
+        ],
+        "candidate_rejection": "Do not conflate CustomMaps type Indoor with completed IndoorMaps floor/zone workflow; actual upload permission/state must be checked at action time."
+      },
+      {
+        "id": "L07-G09",
+        "scope": "Original planned routes",
+        "source_route": "/User/Routes/Edit -> Directions -> StartRoute",
+        "missing": [
+          "Saved fictional route/stops and actual Unit assignment/start controls/results, separately bounded from execution/physical arrival."
+        ],
+        "candidate_rejection": "No arbitrary individual-person assignment control inferred; preserve Engine51/Herrmann seat."
+      },
+      {
+        "id": "L07-G10",
+        "scope": "Original resource age/expiry verification",
+        "missing": [
+          "Readable server-backed resource position source plus exact timestamp/numeric age and declared simulated age fixture.",
+          "If claiming expiry, show actual saved positive TTL and resulting ping-vs-status fallback behavior; do not promise disappearance solely from TTL."
+        ],
+        "candidate_rejection": "Lastupdate is page client time; Units.Timestamp is status time. Earlier stale/nonstale badges are partial evidence, not numeric age or elapsed-time footage."
+      },
+      {
+        "id": "L07-G11",
+        "scope": "Cross-app/native location permission",
+        "missing": [
+          "Separate honest Responder/Unit/Dispatch/IC lessons for offered location preferences and native-only permissions/background behavior.",
+          "Current authority prohibits accepting real device GPS permissions; no hardware tracking is exercised."
+        ],
+        "candidate_rejection": "Do not mix another app screenshot into a Core lesson or relabel it Core; native limitations remain explicit."
+      },
+      {
+        "id": "L07-G12",
+        "scope": "Original mapping access and follow-up record",
+        "missing": [
+          "Actual applicable module/location-visibility permissions if a permission action is narrated; read-only, no grant/security change.",
+          "Actual fictional mapping issue note/reopen if recording owner/review-date in an app is narrated; no invented dedicated mapping fields."
+        ],
+        "candidate_rejection": "Successful administrator view is not every member permission; blank note/editor is not a saved follow-up."
+      }
+    ],
+    "bounded_resolution_at_this_freeze": {
+      "L07-G01": "Read-only department fields captured and reviewed; no edit/save workflow.",
+      "L07-G02": "Read-only station fields captured and reviewed; no boundary save.",
+      "L07-G03": "Bounded source screenshot/marker metadata and untimed source correspondence resolved here; audio/caption/render/playback remain absent."
+    },
+    "wider_reference_native_access_age_workflows": "Incomplete; this separate bounded lesson does not fulfill the original broader legacy07 feature scope."
+  }
+}

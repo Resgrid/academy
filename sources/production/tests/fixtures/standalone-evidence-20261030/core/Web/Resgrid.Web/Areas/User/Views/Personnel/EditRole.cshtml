@@ -1,0 +1,87 @@
+﻿@model Resgrid.Web.Areas.User.Models.Personnel.EditRoleModel
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Certifications.Certifications> certificationLocalizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Personnel.Person> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Mapping.MapIconLegend> legendStrings
+@{
+		ViewBag.Title = "Resgrid | " + @localizer["EditRoleHeader"];
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>@localizer["EditRoleHeader"]</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+			</li>
+			<li>
+				<a asp-controller="Personnel" asp-action="Index" asp-route-area="User">@commonLocalizer["PersonnelModule"]</a>
+			</li>
+			<li>
+				<a asp-controller="Personnel" asp-action="Roles" asp-route-area="User">@commonLocalizer["Roles"]</a>
+			</li>
+			<li class="active">
+				<strong>@localizer["EditRoleHeader"]</strong>
+			</li>
+		</ol>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="wrapper wrapper-content">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<form class="form-horizontal" role="form" asp-controller="Personnel" asp-action="EditRole" asp-route-area="User" method="post" enctype="multipart/form-data">
+
+						@Html.HiddenFor(x => x.Role.PersonnelRoleId)
+						@Html.AntiForgeryToken()
+						<div asp-validation-summary="All" class="text-danger"></div>
+						@if (TempData["RoleMembersWarning"] is string roleWarning)
+						{
+							<div class="alert alert-warning">@roleWarning</div>
+						}
+						<p><a asp-controller="Certifications" asp-action="RoleRequirements" asp-route-area="User" asp-route-roleId="@Model.Role.PersonnelRoleId"><i class="fa fa-certificate"></i> @certificationLocalizer["RequiredCertifications"]</a></p>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@commonLocalizer["Name"]</label>
+							<div class="col-sm-10"><input type="text" class="form-control" placeholder="@localizer["RoleNamePlaceholder"]" asp-for="Role.Name"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@commonLocalizer["Description"]</label>
+							<div class="col-sm-10"><textarea cols="30" rows="10" class="form-control" placeholder="@localizer["RoleDescriptionPlaceholder"]" asp-for="Role.Description"></textarea></div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">
+								@localizer["UsersInRole"]
+							</label>
+							<div class="col-sm-10">
+								<select id="users" name="users"></select>
+							</div>
+						</div>
+						@{ var iconPicker = new TypeIconPicker { HelpKey = "RoleIconHelp", SampleNameInputId = "Role_Name", SampleName = Model.Role?.Name, DefaultIconUrl = "/images/Mapping/Person_RespondingCall.png", CurrentIconUrl = TypeIcons.WebIconUrl(Model.Role?.IconKey), RemoveFieldName = "RemoveCustomIcon", RemoveChecked = Model.RemoveCustomIcon }; }
+						<partial name="_TypeIconPicker" model="iconPicker" />
+						<div class="form-group">
+							<label class="col-sm-2 control-label">@legendStrings["StatusMapIcons"]</label>
+							<div class="col-sm-10">
+								<a class="btn btn-white btn-sm" asp-controller="Mapping" asp-action="StatusIcons" asp-route-area="User" asp-route-kind="@((int)Resgrid.Model.TypeIconKinds.PersonnelRole)" asp-route-typeId="@Model.Role.PersonnelRoleId"><i class="fa fa-map-marker"></i> @legendStrings["StatusMapIcons"]</a>
+								<span class="help-block m-b-none">@legendStrings["StatusMapIconsHelp"]</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-2">
+								<a class="btn btn-white" asp-controller="Personnel" asp-action="Roles" asp-route-area="User">@commonLocalizer["Cancel"]</a>
+								<button class="btn btn-primary" type="submit">@commonLocalizer["Save"]</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts
+{
+		<script src="~/js/app/internal/personnel/resgrid.personnel.editRole.js" type="text/javascript"></script>
+}

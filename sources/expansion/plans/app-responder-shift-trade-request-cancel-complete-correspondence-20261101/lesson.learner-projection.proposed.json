@@ -1,0 +1,238 @@
+{
+  "id": "app-responder-shift-trade-request-cancel",
+  "app": "Responder",
+  "title": "Responder: send and cancel a shift-trade request",
+  "summary": "Ask a selected colleague to take an eligible shift, inspect the saved outgoing request and response state, then cancel it and verify the retained roster.",
+  "audience": [
+    "Rostered personnel",
+    "Shift supervisors",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "A normal authorized Responder session in the intended department.",
+    "An eligible future shift day on which the signed-in person is already rostered and Request trade is available.",
+    "An approved fictional training exercise and an appropriate colleague to receive the request."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Verify the shift occurrence and approval rule",
+      "narration": "Open the intended day in Responder's Shifts workspace. Here, Community standby signup is scheduled for Sunday, November first, from eight until noon. You are on confirms this account's current roster membership. Read the notice that sign-ups and trades need supervisor approval before changing coverage. Request trade is available for this occurrence. Verify the day and time first, especially when the same shift name appears on several dates.",
+      "practice": "Open an eligible training occurrence and verify its date, time, personal roster state and approval requirement.",
+      "required_labels": [
+        "Community standby signup",
+        "Sunday, November 1, 2026",
+        "Scheduled for",
+        "You are on",
+        "Sign-ups and trades on this shift need supervisor approval.",
+        "Request trade",
+        "8:00 AM – 12:00 PM"
+      ],
+      "capture_refs": [
+        "001-future-standby-overview"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Read the request form and candidate identities",
+      "narration": "Choose Request trade to open Request a trade. The explanation says that everyone you pick is asked, and then you choose from their offers. Read the candidate names with their groups and roles. Blake Gallo is shown with Truck eighty-one and Firefighter. The other displayed candidates remain separate choices. This is where you decide whom you intend to ask; a displayed name is not an accepted offer or an approved replacement.",
+      "practice": "Read the form's explanation and identify the intended candidate by name, group and role.",
+      "required_labels": [
+        "Request a trade",
+        "Choose who you would like to take this shift. Everyone you pick is asked, then you choose from their offers.",
+        "Blake Gallo",
+        "Darren Ritter",
+        "Gabriela Dawson",
+        "Leslie Shay",
+        "Truck 81 · Firefighter"
+      ],
+      "capture_refs": [
+        "002-trade-candidates"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Select one person and review the note",
+      "narration": "Select the checkbox for the intended person. This exercise selects only Blake Gallo, and Selected, one confirms the count. Enter a clear Note explaining the request. Here, the note explicitly identifies a training exercise for reviewing and cancelling a trade. Review that note and the selected person before choosing Send request. Confirm the colleague's suitability for your department's coverage needs as part of the actual staffing decision.",
+      "practice": "Select only the intended fictional candidate, verify Selected: 1, and review the note before submitting once.",
+      "required_labels": [
+        "Blake Gallo",
+        "Selected: 1",
+        "Note",
+        "TRAINING ONLY - Practice reviewing and cancelling a shift trade request.",
+        "Send request"
+      ],
+      "capture_refs": [
+        "003-request-ready-to-send"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Check the saved request notice",
+      "narration": "Choose Send request once. The returned day detail says, You have asked colleagues to take this shift, and offers Cancel trade request. You are on remains visible, along with the supervisor-approval rule. These details establish the saved request state shown here. They do not show an accepted offer, supervisor approval or a completed handover. Keep your department's actual coverage arrangements clear while the request is outstanding.",
+      "practice": "Read the actual returned notice and distinguish a saved request from a completed staffing change.",
+      "required_labels": [
+        "Community standby signup",
+        "Sunday, November 1, 2026",
+        "You have asked colleagues to take this shift.",
+        "Cancel trade request",
+        "You are on",
+        "Sign-ups and trades on this shift need supervisor approval."
+      ],
+      "capture_refs": [
+        "004-request-saved-notice"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Read the outgoing entry and response state",
+      "narration": "Close the day sheet and choose Trades. Under In progress, find the standby entry with the intended date and time. It is marked Outgoing and Open, and includes the saved training Note. Responses lists Blake Gallo with No reply yet. Read the actual response label before planning a replacement. In this recorded exercise, the colleague has not replied, and the request has not produced an accepted coverage agreement.",
+      "practice": "Find the saved outgoing entry, compare its identity and note, and read the selected colleague's actual response state.",
+      "required_labels": [
+        "Trades",
+        "In progress",
+        "Community standby signup",
+        "Sun, Nov 1, 2026",
+        "Outgoing",
+        "Open",
+        "Responses",
+        "Blake Gallo",
+        "No reply yet",
+        "Cancel trade request"
+      ],
+      "capture_refs": [
+        "005-outgoing-open-no-reply"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Review and confirm cancellation",
+      "narration": "Choose Cancel trade request on that outgoing entry. The confirmation asks, Cancel this trade request, and repeats the shift name, date and time. Read the warning that any offers you have received will be discarded. This example's preceding response state was No reply yet. Verify the identity in the confirmation, then choose the red Cancel trade request button to carry out the intended cancellation.",
+      "practice": "Verify the confirmation's shift identity and warning before deliberately confirming the training request's cancellation.",
+      "required_labels": [
+        "Cancel this trade request?",
+        "Community standby signup",
+        "Sun, Nov 1, 2026",
+        "Any offers you have received will be discarded.",
+        "Cancel trade request"
+      ],
+      "capture_refs": [
+        "006-cancel-confirmation"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Verify the queue after a fresh load",
+      "narration": "After confirmation, Trades shows No shift trades. The earlier Open entry is no longer displayed in this queue. A full page reload and a fresh visit to Trades return the same empty state. This checks that the recorded result persists beyond the confirmation screen. Read the application's actual returned state when doing this in your department; this view does not present a separate cancellation-history record.",
+      "practice": "Reload normally, return to Trades and verify the actual returned queue state.",
+      "required_labels": [
+        "Trades",
+        "No shift trades",
+        "Trade requests you send or receive appear here."
+      ],
+      "capture_refs": [
+        "008-reloaded-trades-empty"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Return to the matching Calendar card",
+      "narration": "Choose Calendar to return to the day cards. Find Sunday, November first, and compare the Community standby signup card with the cancelled request. Its eight-to-noon time range, You are on label and Approval required label remain visible. Open this matching card to recheck the saved day detail. Using the full date and hours keeps a familiar shift name from being confused with a different occurrence.",
+      "practice": "Choose Calendar and compare the intended dated card and hours before reopening it.",
+      "required_labels": [
+        "Calendar",
+        "Sunday, November 1, 2026",
+        "Community standby signup",
+        "8:00 AM – 12:00 PM",
+        "You are on",
+        "Approval required"
+      ],
+      "capture_refs": [
+        "011-return-calendar-after-cancel"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Reopen the same day and check membership",
+      "narration": "The reopened day detail identifies the same standby occurrence. Request trade is available again, the outstanding-request notice is absent, and You are on is retained. Compare the date and time with the original request so you know this is the same occurrence. Cancelling the request has not demonstrated a replacement assignment. This is still the signed-in person's recorded day membership.",
+      "practice": "Reopen the same day and compare its restored request action and retained membership with the earlier request state.",
+      "required_labels": [
+        "Community standby signup",
+        "Sunday, November 1, 2026",
+        "You are on",
+        "Request trade",
+        "Sign-ups and trades on this shift need supervisor approval."
+      ],
+      "capture_refs": [
+        "009-reopened-day-request-restored"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Check the retained named roster entry",
+      "narration": "Scroll through the same day's Roster. Wallace Boden remains under Command with Chief and the Scheduled source label. The Engine and Squad entries remain visible with their own people and roles. This named readback helps you distinguish a cancelled request from a transfer of responsibility. Verify actual availability through your department's procedures before relying on the roster for a real handover.",
+      "practice": "Find the original person's retained group, role and Scheduled roster entry after cancellation.",
+      "required_labels": [
+        "Wallace Boden",
+        "Chief",
+        "Scheduled",
+        "Command",
+        "Engine 51",
+        "Squad 3"
+      ],
+      "capture_refs": [
+        "010-roster-still-boden"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Use clear request states in any department",
+      "narration": "Use the same identity and result checks when community paramedicine or mental health teams request outreach coverage, search-and-rescue teams arrange support, security companies cover a post, wildland contractors coordinate a crew, or industrial response teams plan standby staffing. Fire and EMS departments can apply them to station coverage. Keep a request, a colleague's response, required approval and the final roster assignment distinct, and verify the actual result of each operation your department performs.",
+      "practice": "Apply the request, response and roster checks to a suitable fictional coverage scenario for your own department.",
+      "required_labels": [
+        "Community standby signup",
+        "Sunday, November 1, 2026",
+        "You are on",
+        "Request trade"
+      ],
+      "capture_refs": [
+        "009-reopened-day-request-restored"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Ask an appropriate colleague about station coverage and verify the actual request and roster result."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Review outreach or mental health response coverage using clear request, response and approval states."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Coordinate mission-support coverage while confirming the intended date and actual staffing agreement."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Read the correct post-coverage request and response before treating a colleague as the replacement."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Keep crew coverage requests and actual roster assignments distinct when arranging standby support."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Check the intended emergency-team standby day and the saved result of a request or cancellation."
+    }
+  ],
+  "scope_limits": [
+    "Exactly one explicitly approved fictional Boden-to-Blake request and cancellation was performed through normal Responder UI.",
+    "The original October31 standby occurrence had ended; normal Core calendar UI added November1 while retaining all seven earlier selected dates.",
+    "No offer, acceptance, supervisor approval, replacement assignment, physical attendance or completed handover is demonstrated.",
+    "No provider email, SMS or push delivery was verified. These are actual local web captures; native-device and offline behavior are outside this lesson.",
+    "No cancellation-history label is claimed; the actual post-cancellation result is No shift trades."
+  ],
+  "export_ready": false,
+  "publication_mode": "source_candidate_only"
+}

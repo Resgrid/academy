@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "kind": "fictional_ui_replay_scenario_definitions",
+  "created_at": "2026-10-28T20:22:35.784158+00:00",
+  "executed": false,
+  "publication_approved": false,
+  "guardrails": {
+    "mode": "manual normal-UI replay definitions only; no executable seed or automatic mutations",
+    "environment": "isolated resgrid-academy-oct25; fictionalDepartment51 Firehouse51 only",
+    "preflight": [
+      "Confirmactualdepartmenttitlebeforeeachsave.",
+      "Lookupallnamedexistingusers/groups/Officer role in normalUI; useactualreturned IDs only.",
+      "Do not changebaseline AShift,original3calls,Engine51/Herrmanncrew,numbering,dispatch/timerdefaultorotherqualifiedscenarios.",
+      "Beforecreating,searchforexactfixture name/code; ifexists,reopen/compareandstoponmismatch ratherthanblindduplicate/update.",
+      "Usefutureunambiguousdepartmentlocaldates; adjustdatepaironlybeforefirstsaveifrecordingoccursaftertheplannedwindow.",
+      "Existingnormalmember/managercredentialsremainignoredprivateinputs; no newaccount, accessgrant,storedsecretorproviderconfiguration."
+    ],
+    "completion_rule": "Only actual normal save→leave/reopen/readback qualifies; record returned IDs and genuine source JPEG/DOM hashes after capture. This JSON contains no claimed results.",
+    "cleanup": "No automatic deletion/reset. Leave uniquelynamedtrainingfixtures for review; restore only explicitlychangeddisplaypreferences/approvedtimerrow from recordedbeforevalues, usingnormalUI. Preserveallhistoricalruns/signups/rosters."
+  },
+  "capture_outlines": {
+    "file": "expansion/plans/core-shifts-workshifts-bigboard-capture-outlines-20261028.json",
+    "sha256": "e5bc5d05af11f9246c2d728b5a7dbb2cb3c22d1164fb554e4c8be44e82c21460"
+  },
+  "sectors": {
+    "Chicago Fire": "Firehouse51 training coverage and a dedicated software-only display.",
+    "Community care and mental health": "Fictional outreach coverage windows; operational roster only, no patient/safety/clinical conclusions.",
+    "Search and rescue": "Fictional standby rotation and a reserved search vehicle; sign-up is separate from arrival at staging.",
+    "Security": "Fictional site patrol/supervisor coverage and a station display; no real client/contact data.",
+    "Wildland": "Fictional relief coverage and apparatus commitment dates; no qualification/rest-rule certification.",
+    "Industrial response": "Fictional plant drill coverage and response-equipment display; highlights do not certify equipment readiness."
+  },
+  "scenarios": [
+    {
+      "id": "training-recurring-shifts-20261028",
+      "entities": [
+        {
+          "type": "AssignedShift",
+          "name": "TRAINING ONLY - Coverage authoring 20261028",
+          "code": "TRN28A",
+          "color": "#93c5fd",
+          "assignment": "Assigned",
+          "dates": [
+            "2026-11-04"
+          ],
+          "start_local": "09:00",
+          "end_local": "11:00",
+          "group": "Firehouse 51",
+          "role": "Officer",
+          "required_count": 1,
+          "member": "Matthew Casey"
+        },
+        {
+          "type": "SignupShift",
+          "name": "TRAINING ONLY - Approval and trade 20261028",
+          "code": "TRN28S",
+          "color": "#a7f3d0",
+          "assignment": "Signup",
+          "require_approval": true,
+          "dates": [
+            "2026-11-05",
+            "2026-11-06"
+          ],
+          "start_local": "09:00",
+          "end_local": "11:00",
+          "group": "Firehouse 51",
+          "role": "Officer",
+          "required_count": 1
+        }
+      ],
+      "actors": {
+        "existing_supervisor": "Wallace Boden",
+        "existing_members": [
+          "Matthew Casey",
+          "Christopher Herrmann"
+        ],
+        "eligibility": "Both namesmustappearaseligibleunderexistingOfficer/groupconstraints;otherwise recordblockerandstopwithoutrolechanges."
+      },
+      "replay": [
+        "BodenNewShiftAssigned→manualNov4/date/time→groupOfficer1→Casey→Finish→reopen.",
+        "ReadexistingDepartment/ShiftSettingsmultiple-groupvaluewithoutsave.",
+        "BodencreateuniqueSignupNov5/6requireapproval→reopen.",
+        "NormalCaseysignupNov5→Pending;normalHerrmannsignupNov6→Pending;BodenApproveeachownrequest→reopenbothrosters.",
+        "CaseyRequestTradeNov5toHerrmann;HerrmannProposeTradeRequestofferingownNov6;CaseyFinalizechosenoffer;BodenApprovependingtrade.",
+        "VerifybothnewdatedrostersandYourShifts;readcurrentOnDutyNowseparately."
+      ],
+      "observable_success": [
+        "SavednewshiftfieldsandactualreturnedIDs.",
+        "Approvalpendingdoesnotputmemberonduty;approvedrowshown.",
+        "TradeCompleteandbothresultingdatedrostersreadback,notmerelyrequestacceptance."
+      ],
+      "effects_to_expect": "NormalShiftCreated/ShiftUpdated/ShiftDaysAdded andsignup/tradeeventprocessingmayoccurinsideisolatedstack. No directevents/noexternalproviderchangebydefinition.",
+      "excluded_claims": [
+        "Arrival,qualificationorcoveragecertification.",
+        "Automaticnewwizardrotationtype.",
+        "Inlineoverlapwarningwithoutowningactualfinding."
+      ]
+    },
+    {
+      "id": "training-static-workshift-20261028",
+      "entities": [
+        {
+          "type": "new_disposable_unit",
+          "name": "TRAINING ONLY - Static demo unit 20261028",
+          "unit_type": "Engine",
+          "noGPS": true,
+          "crew": "none; leave Engine51unchanged"
+        },
+        {
+          "type": "StaticShift",
+          "name": "TRAINING ONLY - Static equipment window 20261028",
+          "color": "#fde68a",
+          "start_department_local": "2026-11-04 09:00",
+          "end_department_local": "2026-11-05 09:00",
+          "units": [
+            "TRAINING ONLY - Static demo unit 20261028"
+          ],
+          "description": "TRAINING ONLY. Fictional scheduling and equipment-window software exercise. No deployment, travel, work, expense, payment or live apparatus-availability claim."
+        }
+      ],
+      "replay": [
+        "CreateandverifyownnewdemoUnitthroughnormalUnitadministrationonlyifneededandauthorized.",
+        "Shifts→AddStaticShift→Name/Color/Description/start/end/ownunit→CreateStaticShiftonce.",
+        "CalendarNov4→actualnamedtile→ViewDayactualID→namedunit/description.",
+        "EditactualshiftID→verifystoredlocalwindow/unit;optionalownnewdescriptiononlyUpdateandreopen."
+      ],
+      "observable_success": [
+        "Newactualcalendaritem,dayIDanddescription/unitpersist.",
+        "FreshEditdatesmatchintendedlocalwindow;anyconversiondiscrepancyisablocker."
+      ],
+      "excluded_claims": [
+        "Automaticcommit/releaseofliveunit;onlyformhelpandstoredschedulearesource-supported.",
+        "Staffassignment/fillusingemptyunitrolescells.",
+        "Editofbaselineworkshiftwithfills;serviceeditrebuildschildren."
+      ]
+    },
+    {
+      "id": "training-bigboard-display-20261028",
+      "runtime_prerequisite": "BigBoardf6923031169de1f424fa8a1fa3943a13a3c73441isnotinexistingfive-repoprofile. Retainreviewedsourceandisolatedlaunchrecipefirst; do not launchoriginalworktree orreuseproductionenvironment. No launchperformedhere.",
+      "data": "Readexistingfictionaldepartmentpersonnel,unitsandthreeoriginalcalls. No newcallneeded.",
+      "display": {
+        "widgets": [
+          "Units",
+          "Personnel",
+          "Calls",
+          "Time",
+          "Unit Alerts"
+        ],
+        "font_example_pt": 16,
+        "map_center_optional": [
+          41.8721,
+          -87.6523
+        ]
+      },
+      "replay": [
+        "Normalfictionalserver/login→settingsidentitywithnocredentialsscreenshot.",
+        "Home+AddWidget→fivewidgets;Edit/Done→normalreloadverifylocallayout.",
+        "Configureoneactualcolumn/fontfilter→Save/back→reopenverifyandshowactualdisplayeffect.",
+        "Menuconnection/lastupdateinspect;separatesourcefreshnessfromrowtimestamps.",
+        "OptionalMapwidgetonlywithgenuineprovider/cartographysuccess;pairedfictionalcenterandvisibilitytoggle."
+      ],
+      "optional_timer_extension": {
+        "default": "read-onlyexistingCoreMappingSettingsfirst",
+        "new_disposable_unit": "TRAINING ONLY - Board timer demo 20261028",
+        "proposed_only_when_authorized": {
+          "base_meaning": "use an existing meaningful status actually offered by UI",
+          "warn_minutes": 1,
+          "alert_minutes": 2
+        },
+        "replay": "Recordexistingtouchedrowbeforevalues. ChangeonlyapprovedtimerrowandownnewdemoUnitviaordinaryUI,waitrealelapsedtime,capturewarn/alert,thenownacknowledge/muteifalreadypermitted. Restoreonlyapprovedrow/ownunit;neverEngine51/baselinestatushistories.",
+        "stop_conditions": [
+          "Nooriginalbeforevalues.",
+          "Unauthorizedacknowledgement.",
+          "Missingbase meaning/UTCtimestamp.",
+          "Provider/mapfailure orincorrectpoint.",
+          "Otherunitsimpactedwithoutapprovedboundedcapturewindow."
+        ],
+        "limits": "No fabricatedelapsedtime/backdatedDBrows, GPSpermission,callcheck-inclaim,notificationclaimorunobservedmuteexpiry."
+      }
+    }
+  ]
+}

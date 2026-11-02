@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "app": "Unit",
+  "source_git_revision": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+  "source_files": {
+    "src/components/maps/map-view.web.tsx": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a",
+    "src/components/calls/call-images-modal.tsx": "7749da50f6632262f48a78ab7f63e9bce581af87e100c97947e502ba64d120fd",
+    "src/components/calls/__tests__/call-images-modal.test.tsx": "355186bff02e7ebc09449b01b41487d5d4aa5d8c40c80c367f9dd6b791d72720",
+    "src/components/check-in-timers/check-in-timer-card.tsx": "32d45cb8d7f086ae3bfcf3ead022dfd5a931cf8a2ed9ba7af07ea0be309d591b",
+    "src/components/check-in-timers/check-in-history-list.tsx": "e7d4b3ae777e71d01ab9d2120d43a509728dc961c8efa6e0016513d53953cfc5",
+    "src/components/check-in-timers/__tests__/check-in-timer-card.test.tsx": "014e4aa4e2359d49046036604ac6be3bad1c68effd04f18969ae69be71000c5b",
+    "src/lib/utils.ts": "89601746c6df7a77b6fbee9bc8bac0bc0002f173f9ee17c4511aaaa0147a740f"
+  },
+  "must_be_absent": [
+    "src/components/maps/__tests__/camera.web.test.tsx",
+    "src/components/check-in-timers/__tests__/check-in-utc-dates.test.tsx"
+  ],
+  "patched_files": {
+    "src/components/maps/map-view.web.tsx": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+    "src/components/maps/__tests__/camera.web.test.tsx": "0d12a7d0e22c0b6bbb84525987a60895e15effc3ba9bf3e6f1ad822318c95e14",
+    "src/components/calls/call-images-modal.tsx": "2c26aea273f0abfcd0bd76ecdee8c87e3c6e77edbffe4486e2007deb4d9ed430",
+    "src/components/calls/__tests__/call-images-modal.test.tsx": "e8700bfe936e8d5e3c99edb5021104b1e8414527f2317c0db91ae3434dec7b9d",
+    "src/components/check-in-timers/check-in-timer-card.tsx": "ae66385b0ee1b70f3492b2af3e7b6fa706528d81450b84c682f206973628e625",
+    "src/components/check-in-timers/check-in-history-list.tsx": "fdfcb4cf5d4f7d4f65a0ec6096c1d0cefe2c3256f7ac306e80c22979937d749d",
+    "src/components/check-in-timers/__tests__/check-in-timer-card.test.tsx": "4b7648ac319826d6d0c7debfd080e754400a482558c18783d64a113236a9a905",
+    "src/components/check-in-timers/__tests__/check-in-utc-dates.test.tsx": "b73b29eeae316b8fcdadaeb0f05cc297f83b370bd91210b163398d4ab21561a0"
+  },
+  "patches": [
+    {
+      "file": "demo/client-support/unit-camera/unit-camera-options.patch",
+      "sha256": "9c9fe32bc1cf220ce6d8627d74035371f64c2dbaf62921daa892d261e728a3d0"
+    },
+    {
+      "file": "demo/client-support/unit-images/unit-images-web-read.patch",
+      "sha256": "687d448bc7601042e13c3d000539f6423f46c234c88980d881e393121cca1f07"
+    },
+    {
+      "file": "demo/client-support/unit-check-in-time/unit-check-in-utc-presentation.patch",
+      "sha256": "0ff1f9cab726f11d4e7d10fb459de8f18c820696e5988e7c159e1f16b475c914"
+    }
+  ],
+  "policy": "Explicit opt-in v2 only: clean managed0753 source, three exact patches/eight exact outputs in a fresh Unit-recording-v2-* destination. Preserve prior v1 helpers/baselines/proofs and all generic/private profile pins; never overwrite original source or install/clone/kill/authenticate.",
+  "dependency_files": {
+    "package.json": "31431c61d50287e204a6d093576520c460a34598964ac905b38a5a7e5cd5c9cd",
+    "yarn.lock": "dabc6b25d8761ecb2532c841e0efb115053c1c5acb5ed022d71a4208a6bf73d1"
+  },
+  "dependency_source_files": {
+    "mapbox-gl/package.json": "97bf991d8635b1177c1fa401193430d817288124e176eeb7ffc258319624a0fa",
+    "mapbox-gl/dist/mapbox-gl.js": "4d4b4217fe592a21fd1c7f022aa12bfcd1c08ae7c4cf9f3588a8d45990e18c8f",
+    "mapbox-gl/dist/mapbox-gl-unminified.js": "34183be70de7d8c5d7025a81622f44387d5c09e9973844621a0d25dfe5e856f2",
+    "expo-file-system/package.json": "db1d8ced7ce04e7daf4e55c3fd543bfbe42e32aa5e192bbb8ae4bda98de50069",
+    "expo-file-system/src/legacy/ExponentFileSystem.web.ts": "9486b1a41d74cc2f4c19e49a8a40a9517d2edba4a3867d1da1f2b1571e83017a",
+    "expo-file-system/src/legacy/ExponentFileSystemShim.ts": "4adb18be27fc58e0e4f68f8569abe6e778c7001c627d610c53bdd3799e67eb08",
+    "expo-file-system/src/legacy/FileSystem.ts": "46b2c457480345d91b2c7bab27fa83ca2b3b13351798c3759c38c5da3b94bb7f",
+    "expo-image-manipulator/package.json": "4c90a6c4044b440fac99327ab529539c8ac94bd1e20c61173e9f28883a904eeb",
+    "expo-image-manipulator/src/web/ImageManipulatorImageRef.web.ts": "af2249a040490ea4892f3cc0f606766743d37affb93604aa196a329a585b18b5",
+    "expo-image-manipulator/src/web/utils.web.ts": "1b818d3c8c64f4036456a4ab02b6df6cd19226c0f73b6761cad1ba30bf5a896d",
+    "date-fns/package.json": "4569c5b08a8bc61281236014c2a43490142579e1f47550cf51297607feba4b9b",
+    "date-fns/differenceInMinutes.cjs": "952d35e0b10e8083817cca85b1b2cfc4ed4b35663bbf28c219b0fc3ab9f30adc",
+    "date-fns/constructFrom.cjs": "16218b5bfb64b3e716209648147d4228f5d8971060b818e7d08c9ff11711af62",
+    "date-fns/toDate.cjs": "c9137dba7547555cd93b3af10356ea331db51e272b0922841af7c0866426bf50"
+  },
+  "support_version": "unit-web-recording-20261027-v2",
+  "prior_support_files": {
+    "unit_recording_support.py": "537dcde96878611724676bfc61626d2ce92c3c1f52a136e81eb70fb0cdaa24e2",
+    "unit-recording-prepare.py": "2e7be6684fa9634b7fccc5f91a96dc8926c5d037e9a45ade6033886ff9796666",
+    "unit-recording-launch.py": "ec1a07349e9358e6a225a2a8451527e7f5c09a945131c750658ab438e3c5d2da",
+    "unit-recording-source-baseline-20261027.json": "34019db05b8c57bf95f12cc3b0d5b1b4654055215da6358d3aec1448146b91c9",
+    "README.unit-recording.md": "db42427a95276368d2b3eb5c2b4a687f6927c10f69fa400a2dc4fa9f9dbc8bb2",
+    "unit-recording-support-preflight-20261027.json": "b03628cf9b4dfa83451005da236af1570094b84422260e542c1034d8207722dc",
+    "unit-recording-support-implementation-20261027.json": "7a849b41f377dc60964a4973a910b0b40b1b4726b59a92cc8f0c3a7bbaafe30f",
+    "unit-recording-support-implementation-preflight-20261027.json": "04e21ce82d9b80cc0e3a34d86ae4247bd54f2619765c31e01a3d4ab5d2809371"
+  }
+}

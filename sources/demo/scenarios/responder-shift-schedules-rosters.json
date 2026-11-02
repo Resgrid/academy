@@ -1,0 +1,61 @@
+{
+  "name": "Responder shift schedules and rosters",
+  "department_id": 51,
+  "department_name": "Firehouse 51 — Training Department",
+  "recorded_on": "2026-10-31",
+  "department_timezone": "America/Los_Angeles",
+  "lesson_source": "expansion/plans/app-responder-shift-schedules-rosters-source-proposal-20261031/lesson.candidate.json",
+  "baseline_seed": "demo/seed.py",
+  "account": "The fictional Boden department administrator; generated credentials stay in the ignored demo/private directory.",
+  "baseline_shifts": [
+    {
+      "name": "A Shift — Firehouse 51",
+      "code": "A51",
+      "time": "08:00–08:00 next day",
+      "recorded_assignment_label": "Assigned",
+      "recorded_rotation_label": "24/48",
+      "recorded_personnel_count": 10,
+      "recorded_groups": 1
+    },
+    {
+      "name": "Community standby signup",
+      "code": "STBY",
+      "time": "08:00–12:00",
+      "recorded_assignment_label": "Sign-up",
+      "recorded_schedule_label": "Manual",
+      "require_approval": true,
+      "recorded_personnel_count": 10,
+      "recorded_groups": 1,
+      "recorded_open_needs": "Filled; No role requirements"
+    }
+  ],
+  "independent_practice_fixture": {
+    "seed_script": "demo/scenarios/responder_readiness.py",
+    "command_from_repository_root": "python3 sources/demo/scenarios/responder_readiness.py --date YYYY-MM-DD",
+    "date_argument": "Replace YYYY-MM-DD with a future America/Los_Angeles date. The helper rejects past or current dates and any database other than the isolated Academy database.",
+    "shift_name": "TRAINING — Academy signup practice",
+    "time": "13:00–15:00",
+    "group": "Firehouse 51",
+    "required_role": "Chief",
+    "required_count": 2,
+    "require_approval": false,
+    "enrollments_added": 0,
+    "historical_recorded_day": "2026-10-27",
+    "historical_day_note": "The recording inspects a retained historical day. Do not bypass the helper's future-date check to recreate it. New captures should use the chosen new date and update the spoken date, captions and screenshot references together."
+  },
+  "normal_ui_replay": [
+    "Sign in normally to the isolated Responder app and select explicit Dark theme in Settings for readable shift sheets.",
+    "Open Shifts, then Today. Read the assigned overnight A Shift card.",
+    "Enter Community in Search shifts and open Community standby signup. Read its approval rule, Open needs and saved Scheduled roster entries.",
+    "Open My Shifts and compare the shift summaries with the separate Upcoming days section.",
+    "Open Calendar, filter to the practice shift and select the intended date. Open its day card and read its group role requirements and roster.",
+    "Inspect On Duty, then Trades and Approvals. Capture the actual returned states; do not assume queues will always be empty."
+  ],
+  "limits": [
+    "The baseline seed is for a fresh dedicated training stack. Do not rerun it over existing UI exercise history.",
+    "The independent readiness fixture preserves existing staffing, signups, trades and approvals and performs no provider delivery.",
+    "No shift assignment, signup, withdrawal, trade submission, cancellation, acceptance, approval or denial was performed for this read-only lesson.",
+    "The separately prepared trade from Boden to fictional Blake Gallo remains unsent pending a user decision; it is excluded from this lesson.",
+    "Displayed Scheduled, Fully staffed and On Duty states do not independently verify physical attendance, location, dispatch availability or payroll."
+  ]
+}

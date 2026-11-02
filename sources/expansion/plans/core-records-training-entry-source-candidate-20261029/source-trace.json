@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "kind": "source_confirmed_semantics_with_separate_actual_evidence",
+  "Core_HEAD": "6f83872110b0382f2911d099e95d6a4ef7da8315",
+  "facts": [
+    {
+      "id": "typed-training",
+      "finding": "Blank normal New without call defaults to locked system.training; a published department key uses a different definition-driven form. This course entry uses Training, not the unpublished department definition.",
+      "sources": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 398,
+          "through_line": 430
+        },
+        {
+          "file": "Core/Resgrid.Model/Records/RmsDefinitionKeys.cs",
+          "line": 13,
+          "through_line": 67
+        }
+      ]
+    },
+    {
+      "id": "draft-identity",
+      "finding": "CreateDraft sets StateDraft, random D-reference, owner/author acting user, and selected group or author-group fallback. Locked Training is QuickEntry; its final number is allocated at finalization. Never replayCreate on this existingID to repair a later step.",
+      "sources": [
+        {
+          "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+          "line": 133,
+          "through_line": 220
+        }
+      ]
+    },
+    {
+      "id": "typed-form-and-input",
+      "finding": "Course/code/instructors plus narrative/commonfields bind typedDetails. Participants are filtered to selected nonempty users; units to positive selected IDs; Save replaces submitted lists. Preserve the existing empty selections. Start/End convert department-local input toUTC.",
+      "sources": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 1601,
+          "through_line": 1664
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Edit.cshtml",
+          "line": 145,
+          "through_line": 292
+        }
+      ]
+    },
+    {
+      "id": "edit-and-autosave",
+      "finding": "Existing draft edit uses normal Quill, collects content toDetails.Narrative, debounces nonfile edits2seconds and handles row-version/access refusal. Files are excluded from autosave and require explicit SaveDraft/upload. No autosave success status is pictured in this batch; script teaches fresh readback instead.",
+      "sources": [
+        {
+          "file": "Web/Resgrid.Web/wwwroot/js/record-authoring.js",
+          "line": 1,
+          "through_line": 89
+        }
+      ]
+    },
+    {
+      "id": "upload-classification",
+      "finding": "Details AddAttachment is normal multipartPOST; Restricted1 default / Unrestricted0 explicit. Actual chosen public handout is0. Fresh selector reset is not storedclassification. Service checks authoring authority, editable/amendment state, hygiene/scanner and optimistic version, then stores attachment/audit/outbox event. Finalized upload requires an amendment even though currentDetailsstillrenders uploader.",
+      "sources": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 862,
+          "through_line": 886
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+          "line": 230,
+          "through_line": 255
+        },
+        {
+          "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+          "line": 875,
+          "through_line": 945
+        }
+      ]
+    },
+    {
+      "id": "finalization",
+      "finding": "Details Finalize is plainPOST with requiredHTMLattestation, no nativeJSconfirm. Normal permission/record-visibility/identity plus lifecycle/protection/UDF rules apply; Training requires nonempty narrative, not participant/unit-time rows. Finalization guards rowversion, allocates number, writesimmutable revision/audit/index and normal lifecycle/LogAddedcompatibility outbox events. No workflow/provider delivery is inferred.",
+      "sources": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 685,
+          "through_line": 713
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+          "line": 259,
+          "through_line": 278
+        },
+        {
+          "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+          "line": 481,
+          "through_line": 557
+        },
+        {
+          "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+          "line": 1766,
+          "through_line": 1781
+        }
+      ]
+    },
+    {
+      "id": "revision-html",
+      "finding": "HistoryView redirects toRecordDocumentsRevision, which rendersauthorizedHTMLfromimmutable revision; noPDFrenderer required. Actual016/017areHTMLviews. OrdinaryExport was client-blocked in018 and is not claimed successful or bypassed.",
+      "sources": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+          "line": 841,
+          "through_line": 846
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/RecordDocumentsController.cs",
+          "line": 27,
+          "through_line": 53
+        }
+      ]
+    }
+  ],
+  "capture_operations_by_reviewer": false,
+  "actual_source_boundary": "Initial first-finalization batch only, before separate later amendment. No images from the later batch are included here."
+}

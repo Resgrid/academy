@@ -1,0 +1,169 @@
+
+@using Resgrid.Model
+@model Resgrid.Web.Areas.User.Models.Training.ViewTrainingModel
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Trainings.Trainings> localizer
+@{
+	ViewBag.Title = "Resgrid | " + localizer["QuizPageHeader"];
+}
+
+<link rel="stylesheet" href="~/lib/bootstrapvalidator/dist/css/bootstrapValidator.css" />
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>@localizer["QuizPageHeader"]</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@localizer["HomeLink"]</a>
+			</li>
+			<li>
+				<a asp-controller="Trainings" asp-action="Index" asp-route-area="User">@localizer["TrainingsLink"]</a>
+			</li>
+			<li>
+				<a asp-controller="Trainings" asp-action="View" asp-route-area="User" asp-route-trainingId="@Model.Training.TrainingId">@localizer["TrainingBreadcrumb"]</a>
+			</li>
+			<li class="active">
+				<strong>@localizer["QuizPageHeader"]</strong>
+			</li>
+		</ol>
+	</div>
+</div>
+
+@{
+	var questionCount = 0;
+}
+
+<form class="form-horizontal" role="form" asp-controller="Trainings" asp-action="Quiz" asp-route-area="User" method="post" id="quiz_form" name="quiz_form">
+	@Html.HiddenFor(m => m.Training.TrainingId)
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="wrapper wrapper-content">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div id="rootwizard">
+							<div class="navbar">
+								<div class="navbar-inner">
+									<div class="container">
+										<ul>
+											<li><a href="#start" data-toggle="tab">@localizer["StartTab"]</a></li>
+
+											@foreach (var question in Model.Training.Questions)
+											{
+												questionCount++;
+												var questionId = "#question" + question.TrainingQuestionId;
+
+												<li><a href="@questionId" data-toggle="tab">@localizer["QuestionTab"] @questionCount ></a></li>
+											}
+											<li><a href="#finish" data-toggle="tab">@localizer["FinishTab"]</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="tab-content">
+								<div class="tab-pane" id="start">
+									<div class="row">
+										<div class="col-xs-12">
+											<p>@string.Format(localizer["QuizWelcomeText"].Value, Model.Training.Name)</p>
+										</div>
+									</div>
+								</div>
+
+								@foreach (var question in Model.Training.Questions)
+								{
+									var questionId2 = "question" + question.TrainingQuestionId;
+
+									<div class="tab-pane" id="@questionId2">
+										<div class="row">
+											<div class="col-xs-12">
+												<p>@question.Question</p>
+												<table>
+													@foreach (var answer in question.Answers)
+													{
+														<tr>
+															<td style="padding: 5px;"><input type='radio' name='question_@question.TrainingQuestionId' value='@answer.TrainingQuestionAnswerId'></td>
+															<td style="padding: 5px;">@answer.Answer</td>
+														</tr>
+													}
+												</table>
+											</div>
+										</div>
+									</div>
+								}
+
+								<div class="tab-pane" id="finish">
+									<div class="row">
+										<div class="col-xs-12">
+											<p>@localizer["QuizFinishText"]</p>
+										</div>
+									</div>
+									<span class="alert alert-error">
+										@Html.ValidationSummary(false)
+										@Html.AntiForgeryToken()
+									</span>
+								</div>
+								<ul class="pager wizard" style="display:block;">
+									<li class="previous first" style="display:none;"><a href="#">@localizer["FirstButton"]</a></li>
+									<li class="previous"><a href="#">@localizer["PreviousButton"]</a></li>
+									<li class="next"><a href="#">@localizer["NextButton"]</a></li>
+									<li class="next finish" style="display:none;"><a href="javascript:;">@localizer["FinishButton"]</a></li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+@section Scripts
+{
+	<script src="~/lib/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+	<script src="~/lib/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			$('.sl2').select2();
+
+			$("#colorPicker").minicolors({
+				animationSpeed: 50,
+				animationEasing: 'swing',
+				changeDelay: 0,
+				control: 'hue',
+				defaultValue: '#0080ff',
+				format: 'hex',
+				showSpeed: 100,
+				hideSpeed: 100,
+				inline: false,
+				theme: 'bootstrap'
+			});
+
+			$('#rootwizard').bootstrapWizard({
+				onTabShow: function (tab, navigation, index) {
+					var $total = navigation.find('li').length;
+					var $current = index + 1;
+
+					// If it's the last tab then hide the last button and show the finish instead
+					if ($current >= $total) {
+						$('#rootwizard').find('.pager .next').hide();
+						$('#rootwizard').find('.pager .finish').show();
+						$('#rootwizard').find('.pager .finish').removeClass('disabled');
+					} else {
+						$('#rootwizard').find('.pager .next').show();
+						$('#rootwizard').find('.pager .finish').hide();
+					}
+				},
+				onTabClick: function (tab, navigation, index) {
+					return false;
+				},
+				onNext: function (tab, navigation, index) {
+				}
+			});
+
+			$('#rootwizard .finish').click(function () {
+				$("form#quiz_form")[0].submit();
+			});
+		});
+	</script>
+	<script src="~/js/app/internal/training/resgrid.training.quiz.js"></script>
+}

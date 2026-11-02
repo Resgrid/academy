@@ -1,0 +1,1302 @@
+{
+  "prepared_at": "2026-10-27T16:41:19.356167+00:00",
+  "lesson_id": "app-responder-04-readiness-and-operations",
+  "status": "BLOCKED; no frozen narration or actual-screen assembly plan is approved",
+  "frozen": false,
+  "publishable": false,
+  "lesson_file": "sources/expansion/lessons/app-responder-04-readiness-and-operations.json",
+  "lesson_sha256": "bf1188a4227386744f8438ae5ee13f872b5ba641d5ecc2112040bbdd0a5a14e8",
+  "prior_lesson": {
+    "file": "sources/expansion/plans/history/app-responder-04-readiness.before-reconciliation-20261027.json",
+    "sha256": "9a3a5ffa4d01fd22e3306efb1820c6af638c8e7c644455abb63fae6ecb36953a"
+  },
+  "source_screenshot_manifest": {
+    "file": "sources/captures/expansion/responder/manifest.json",
+    "sha256": "836bca3143bf045b60b4731b1a862d2024a26e76a13d632f4db75b6008b79fa1",
+    "raw_screenshots": 225,
+    "modified": false
+  },
+  "source_pins": [
+    {
+      "project": "Responder",
+      "file": "src/app/(app)/map.tsx",
+      "sha256": "6e45728659e4ab5bac6e83b9a417b1c941e6761178f6bba12df18eff55323fbc"
+    },
+    {
+      "project": "Responder",
+      "file": "src/components/maps/poi-list-panel.tsx",
+      "sha256": "819dcbf008d5aba1db1fa096622aef37fd10732e546a3ed909bae3c3b2a7c4b2"
+    },
+    {
+      "project": "Responder",
+      "file": "src/components/maps/poi-filter-bottom-sheet.tsx",
+      "sha256": "d34b9406c9332bf7a26d7c9a3b29250000aa2110eec79f5fc572e5a2962c4262"
+    },
+    {
+      "project": "Responder",
+      "file": "src/components/shifts/shift-day-details-sheet.tsx",
+      "sha256": "8dff3d5016734f74af06379091176b7d39d50d6a0ee5743569bda3736dd9520f"
+    },
+    {
+      "project": "Responder",
+      "file": "src/components/shifts/shift-trade-card.tsx",
+      "sha256": "3abb6805e7295f9d7f05b7ce075c370093386ec1fdfe24314ffdddd2a703645b"
+    },
+    {
+      "project": "Responder",
+      "file": "src/components/shifts/shift-trades-list.tsx",
+      "sha256": "f3b6cb78fb6c77149ee6b94caf2398b08e592306d8d82ba5a6c99bac9d4fa056"
+    },
+    {
+      "project": "Responder",
+      "file": "src/app/(app)/shifts.tsx",
+      "sha256": "4b3181962aa962ab42d34cfbfbdc2778011125a5baf08b7a068915569193943c"
+    },
+    {
+      "project": "Responder",
+      "file": "src/app/(app)/work-orders/[id].tsx",
+      "sha256": "6709364ce1dc43f0548a75c0eb6e58152e58c3c5964892c57996fc5ac087c78b"
+    },
+    {
+      "project": "Responder",
+      "file": "src/translations/en.json",
+      "sha256": "d6d86f53e66c394f3a55746da910a6061cbab5bc35e452a7be52b09fbe3b6a73"
+    }
+  ],
+  "scene_matrix": [
+    {
+      "scene_id": "01-understand-the-shift-views",
+      "title": "Understand the shift views",
+      "narration_sha256": "5e2628d82604457e2447a3a6ff00a0cc6136ee9de027e9ca17e8f3946db7d99e",
+      "narration": "Open Shifts and compare Today, My Shifts, Calendar, Trades, On Duty, and Approvals. Today shows a dated assignment; My Shifts shows the shift definitions associated with you; On Duty shows the current roster. Open the exact day before acting. This works for a community response standby or security patrol as well as a firehouse rotation. The tall browser tabs shown here are a known layout limitation.",
+      "required_labels": [
+        "Today",
+        "My Shifts",
+        "Calendar",
+        "Trades",
+        "On Duty",
+        "Approvals"
+      ],
+      "captures": [
+        {
+          "id": "093-shifts-today-overview",
+          "file": "captures/expansion/responder/093-shifts-today-overview.jpg",
+          "sha256": "6c5bc0179bc294d2313ba0fc1164840ce13a56c8d720048a5404e305875658b6",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:15:51.836Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "097-my-shifts-overview",
+          "file": "captures/expansion/responder/097-my-shifts-overview.jpg",
+          "sha256": "6972e58cb2826d3500a03014d50e95d3d0ca13ccd9dd4b4f283a56beb6d2e9fe",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:24:08.870Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "105-shift-on-duty-roster",
+          "file": "captures/expansion/responder/105-shift-on-duty-roster.jpg",
+          "sha256": "7f806bdc7fe7193dc855eca840fe2f5ca009d4173426156be8d580c101bab875",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:27:05.002Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Review existing Today/My Shifts/On Duty screenshots and the visible tabs; no new roster mutation is needed."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "02-sign-up-and-review-the-roster",
+      "title": "Sign up and review the roster",
+      "narration_sha256": "3f632750d93d98239698cc3e9c3e75915f6d5992365e070a566dbc8eb93cab45",
+      "narration": "The independent Academy signup day begins with two open Chief places. Sign Up opens Choose your team; Confirm sign-up adds Boden and leaves one opening. Withdraw asks for confirmation, then the roster returns to two open places. Add person and supervisory Approve or Deny belong to the dated roster and its permission rules. The existing approval request shown here was inspected without changing another member’s assignment.",
+      "required_labels": [
+        "Sign Up",
+        "Choose your team",
+        "Confirm sign-up",
+        "You are on",
+        "Withdraw",
+        "Add person",
+        "Approve",
+        "Deny"
+      ],
+      "captures": [
+        {
+          "id": "099-signup-practice-open-day",
+          "file": "captures/expansion/responder/099-signup-practice-open-day.jpg",
+          "sha256": "6ac706dd84d33536b1b46f3df6e8d884dcccecf4c22d0476e70fa7e027768632",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:24:34.383Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "100-signup-team-confirmation",
+          "file": "captures/expansion/responder/100-signup-team-confirmation.jpg",
+          "sha256": "05cebfe988960ef21fb3c51ceaa536a19957a18748754a1c59af838a621d603b",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:24:50.009Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "101-signup-result",
+          "file": "captures/expansion/responder/101-signup-result.jpg",
+          "sha256": "38920c6a466dd654720e67b93c995fd5fc210d7083e6ee71a31a61846a6c31f6",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:24:57.892Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "102-signup-withdraw-confirmation",
+          "file": "captures/expansion/responder/102-signup-withdraw-confirmation.jpg",
+          "sha256": "14996f284568599b4a498714f091bcbfc98c6017f2e9246afde8751769b0942b",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:25:26.722Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "103-signup-withdrawn-result",
+          "file": "captures/expansion/responder/103-signup-withdrawn-result.jpg",
+          "sha256": "6ac706dd84d33536b1b46f3df6e8d884dcccecf4c22d0476e70fa7e027768632",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:25:41.834Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "106-shift-supervisor-approvals",
+          "file": "captures/expansion/responder/106-shift-supervisor-approvals.jpg",
+          "sha256": "a0c9514f2681fd7ac2c345af876387579f2f33c9131d8a5068eab0fe8d41a14b",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:27:14.411Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse actual independent day51003/51108 signup, capacity 2-to1 and withdrawal-to2 proof; keep the final unenrolled state.",
+        "Use existing supervisory approval screenshot view-only; do not approve/deny another member."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "03-trade-a-shift-with-a-clear-agreement",
+      "title": "Trade a shift with a clear agreement",
+      "narration_sha256": "98be67ce5c148d49c08d340a439b488cfe38a4d686b6e990f3d4974c4f78b182",
+      "narration": "Request trade opens the day’s candidate form. The earlier preview selected a colleague but was never sent. Our independent Chief practice day instead says No one is available to take this shift, with Send request disabled. Receiving an offer, accepting or declining, choosing a return shift, confirming the exchange, and any approval remain separate conditional steps. None is demonstrated as a completed roster change here.",
+      "required_labels": [
+        "Request trade",
+        "Request a trade",
+        "Send request",
+        "No shift trades",
+        "No one is available to take this shift."
+      ],
+      "captures": [
+        {
+          "id": "094-shift-day-roster",
+          "file": "captures/expansion/responder/094-shift-day-roster.jpg",
+          "sha256": "9cb044184ba47a5094a7e184ed9bba9bc92048ce2027bdd823e0d3c7d8f2c853",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:16:55.412Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "096-shift-trade-prepared",
+          "file": "captures/expansion/responder/096-shift-trade-prepared.jpg",
+          "sha256": "aa14822ccb0f65fa6fff63443d603050aa5e43344c1175cf4934805683421397",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:17:53.154Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "104-shift-trades-empty",
+          "file": "captures/expansion/responder/104-shift-trades-empty.jpg",
+          "sha256": "8bc63408441bfa6dbc3070396aab9c2d64519863e16aa7d8737646e38952961c",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T17:26:58.469Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "188-trade-ineligible-dark",
+          "file": "captures/expansion/responder/188-trade-ineligible-dark.jpg",
+          "sha256": "8ad2288c3dfae84606fd22c8f6748cd63e200110c24dbb7f38fd466941cf58a8",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T19:38:46.563Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "189-practice-day-restored",
+          "file": "captures/expansion/responder/189-practice-day-restored.jpg",
+          "sha256": "2677628f512f3b0a8d56426670fc965e2430d29fb71982ffc6822dae27f6927a",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/shifts",
+          "captured_at": "2026-10-26T19:39:16.860Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [
+        "Full incoming trade response/offer/confirmation lifecycle is not captured; independent day refuses all candidates."
+      ],
+      "remaining_operations_or_limits": [
+        "Use an independently eligible fictional day/assignment under coordinator scope; verify offered candidates through normal UI without changing qualifications/roles or seeded staffing.",
+        "Record an actual training-only request, incoming Accept/Decline states, available return-shift choice and requester confirmation/result. Capture configured approval if offered; do not infer it from the unsent form or refusal."
+      ],
+      "qualification": "BLOCKED",
+      "all_spoken_operations_demonstrated": false
+    },
+    {
+      "scene_id": "04-attend-an-event-and-connect-the-learning",
+      "title": "Attend an event and connect the learning",
+      "narration_sha256": "8f31be8b7dc6d5c1115e02d2d5356f46a197c84134065b245bdeca4ae795c70c",
+      "narration": "Calendar separates Today, Upcoming, and its date-based view. Open the briefing to read the time, location, description, and Event Sign-up. The actual signup result shows Signed Up and one attendee, and the detail lists Boden. Cancel Attendance is visible, but its native confirmation does not open in this browser, so cancellation is not demonstrated. Event attendance and continuing-education credit remain separate records with separate evidence.",
+      "required_labels": [
+        "Today",
+        "Upcoming",
+        "Calendar",
+        "Signed Up",
+        "Event Sign-up",
+        "Cancel Attendance",
+        "Attendees (1)"
+      ],
+      "captures": [
+        {
+          "id": "107-event-calendar-today",
+          "file": "captures/expansion/responder/107-event-calendar-today.jpg",
+          "sha256": "638f9c937cc39a339b3caad3a670c11a92e058b6879fc63706932588ee687483",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/calendar",
+          "captured_at": "2026-10-26T17:27:31.078Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "111-calendar-signup-result-repaired",
+          "file": "captures/expansion/responder/111-calendar-signup-result-repaired.jpg",
+          "sha256": "14e24d6a12fbfb64affd65ae55b741a983f1334a347f5d740bc59c84175c3a60",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/calendar",
+          "captured_at": "2026-10-26T17:33:13.260Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "113-event-attendance-visible-controls",
+          "file": "captures/expansion/responder/113-event-attendance-visible-controls.jpg",
+          "sha256": "c43590e3b5968f03eb472ffd1de74a43dee09e50bae68a1c9c57fe565673d083",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/calendar",
+          "captured_at": "2026-10-26T17:34:03.215Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse actual briefing signup Signed Up/attendee proof and the Cancel Attendance button.",
+        "Leave cancellation unclaimed unless an authorized retained compatibility change or a genuine native capture supplies the missing confirmation and result."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "05-maintain-a-certification-record",
+      "title": "Maintain a certification record",
+      "narration_sha256": "0149019a7f93c6388ef7f8940ca6c0c4f5527d7497a5ba6494d1e8fbe7cbcb4b",
+      "narration": "My certifications lists this member’s qualifications. Add opens Certification, with a type choice or an allowed Name, Number, Issued by, Area or level, Issued on, and Expires on. Photo of card and Choose photo are supporting-evidence controls. Save would store the entry; this example inspects the form without creating a new qualification or accessing a camera. Use fictional practice details rather than another person’s credential.",
+      "required_labels": [
+        "My certifications",
+        "Add",
+        "Certification",
+        "Name",
+        "Number",
+        "Issued by",
+        "Area or level",
+        "Issued on",
+        "Expires on",
+        "Photo of card",
+        "Choose photo",
+        "Save"
+      ],
+      "captures": [
+        {
+          "id": "114-certification-list",
+          "file": "captures/expansion/responder/114-certification-list.jpg",
+          "sha256": "2e6691cd0f8e1e1ca40266d986d474367afb60db0060b02717cac87265d05764",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications",
+          "captured_at": "2026-10-26T17:35:50.555Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "117-certification-add-input-labels",
+          "file": "captures/expansion/responder/117-certification-add-input-labels.jpg",
+          "sha256": "d7f84b1b30ecfb6fa14ebfd427562461be7811008545d51f1359901ab5251905",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications/edit",
+          "captured_at": "2026-10-26T17:38:00.543Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse actual My certifications/Add form fields without Save, photographs or qualification changes."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "06-renew-and-document-continuing-education",
+      "title": "Renew and document continuing education",
+      "narration_sha256": "0af3e2ce952b5ec877f14e12bf5482728321a2722ed6ac2923ba1ac058658f49",
+      "narration": "Renew opens New expiry date and an optional replacement number before Save renewal. The actual fictional renewal says Renewal saved and Awaiting verification. Hours, a date, category, and activity description support Add hours; the recorded quarter hour is clearly labelled software practice with no accredited credit claimed. Add hours with a photo provides an evidence path. A SAR drill or industrial refresher still needs its real supporting documentation and authorized review.",
+      "required_labels": [
+        "Renew",
+        "New expiry date",
+        "Save renewal",
+        "Hours",
+        "Add hours",
+        "Add hours with a photo",
+        "Renewal saved.",
+        "Awaiting verification"
+      ],
+      "captures": [
+        {
+          "id": "118-certification-renewal-ce-controls",
+          "file": "captures/expansion/responder/118-certification-renewal-ce-controls.jpg",
+          "sha256": "1064a1f4cb551fb8c6bf81e5deafdacd7775db9a8a9369bb92ab9152b79a6337",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications/51001",
+          "captured_at": "2026-10-26T17:38:17.330Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "119-certification-ce-prepared",
+          "file": "captures/expansion/responder/119-certification-ce-prepared.jpg",
+          "sha256": "4549e863df514d7b5b7c75b3a46ebc182b44e85c9576d480f6fc0326498329ca",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications/51001",
+          "captured_at": "2026-10-26T17:39:13.663Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "120-certification-ce-result",
+          "file": "captures/expansion/responder/120-certification-ce-result.jpg",
+          "sha256": "ed24c0aa0a3c0b654ca2ad893a4aa5a0db4761258a2ccfce6654a39d211fdf72",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications/51001",
+          "captured_at": "2026-10-26T17:39:27.639Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "122-certification-renewal-prepared",
+          "file": "captures/expansion/responder/122-certification-renewal-prepared.jpg",
+          "sha256": "197090f4cdc4dd68583c1021d5f398eef18a593537fdfdb5f73d0cec75f87dd8",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications/51001",
+          "captured_at": "2026-10-26T17:40:10.255Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "123-certification-renewal-result",
+          "file": "captures/expansion/responder/123-certification-renewal-result.jpg",
+          "sha256": "c951e6cd6b1bf015f03f3a44919c3f5ce08c37210a86e0265fea39fda9dd4407",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/certifications/51001",
+          "captured_at": "2026-10-26T17:40:25.221Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse actual quarter-hour software-practice CE result and renewal Awaiting verification.",
+        "Show supporting-photo control only; do not turn a software practice entry into accredited credit or approved professional renewal."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "07-prepare-due-checks-before-leaving-coverage",
+      "title": "Prepare due checks before leaving coverage",
+      "narration_sha256": "13ea5e873cc51208710939ca300c0d24733c6d4e835960e5255e5ee0895ce3e2",
+      "narration": "Checklists offers Due checks, Calendar, Prepare for offline, and Start checklist. Select the correct target and version before answering a Required or Critical item. The facility example records a clearly simulated failure and explanatory note, saves a local draft, resumes it, and eventually shows Submitted with a score and History entry. That software result describes the exercise; it does not certify that any physical equipment was inspected.",
+      "required_labels": [
+        "Due checks",
+        "Calendar",
+        "Prepare for offline",
+        "Start checklist",
+        "Equipment ready for the exercise (Required)",
+        "Critical",
+        "Save progress",
+        "Submit checklist",
+        "Submitted · Score: 66.67",
+        "History"
+      ],
+      "captures": [
+        {
+          "id": "124-checklists-start-overview",
+          "file": "captures/expansion/responder/124-checklists-start-overview.jpg",
+          "sha256": "3bf69b0de538b5c401165b508fe6be1f5e61771329053b75db5d47fc9070dc7a",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T17:40:50.237Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "125-checklist-required-critical-item",
+          "file": "captures/expansion/responder/125-checklist-required-critical-item.jpg",
+          "sha256": "d7ac445f767dd308a329c97d5a8efb3871ab22b386e5350209db261fb134a1ca",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T17:41:41.833Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "127-checklist-local-draft-list",
+          "file": "captures/expansion/responder/127-checklist-local-draft-list.jpg",
+          "sha256": "ea5c30d0fbc32518035ecb9f3e9c1e96dbfa48c6528acc7a28cba0d11427c361",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T17:44:50.068Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "128-checklist-resumed-draft",
+          "file": "captures/expansion/responder/128-checklist-resumed-draft.jpg",
+          "sha256": "45bc5f3cf3085373e3aed730534029da2c61e6298339d0685876d58ab1e96cd5",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T17:45:03.268Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "140-checklist-submitted-score",
+          "file": "captures/expansion/responder/140-checklist-submitted-score.jpg",
+          "sha256": "0c48c4bcffc2380ffa5a1639cc888a84af819f28a9a6e97002c17fe1bc0be90d",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:08:33.659Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "170-checklist-history-visible",
+          "file": "captures/expansion/responder/170-checklist-history-visible.jpg",
+          "sha256": "389740517a56239c68ef14f8eb11d7f010f4578b944659a95985d74eec653c78",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:16:10.003Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse selected checklist/target/version, actual simulated failure, draft/resume, Submitted · Score: 66.67 and History.",
+        "Retain exact literal Required question and combined Submitted/Score label; confirm the source image is legible at rendered size."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "08-answer-the-checklist-with-evidence",
+      "title": "Answer the checklist with evidence",
+      "narration_sha256": "b5129fb9afbe3110576f8517cdcb31085cb61161b6ea333455cf580e8caf3b9c",
+      "narration": "Templates can present Pass or Fail, Yes or No, Checked or Unchecked, numeric readings, quantities, text, list choices, and dates. The training form shows each actual control. Not applicable opens a field for the reason, while failures can require a Note. Photo, Take photo, and Signature expose evidence tools; the blank signature pad also offers Clear signature and Save draft. We view those tools without capturing photographs or signing an attestation.",
+      "required_labels": [
+        "Pass",
+        "Fail",
+        "Note",
+        "Not applicable",
+        "Yes",
+        "No",
+        "Checked",
+        "Unchecked",
+        "fictional units",
+        "Training option A",
+        "Training option B",
+        "Photo",
+        "Take photo",
+        "Signature",
+        "Clear signature",
+        "Save draft"
+      ],
+      "captures": [
+        {
+          "id": "126-checklist-simulated-failure-note",
+          "file": "captures/expansion/responder/126-checklist-simulated-failure-note.jpg",
+          "sha256": "cb3f9ddde7ae31d40c9bb99fdf5314d0763f846417cb7892b2a82ed079fa5a32",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T17:42:05.541Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "159-checklist-not-applicable",
+          "file": "captures/expansion/responder/159-checklist-not-applicable.jpg",
+          "sha256": "191c1e19ae974b1319f600c33c6f4e865abac654fe5321a10bd497a786dad2f4",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:08.227Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "160-checklist-yes-no",
+          "file": "captures/expansion/responder/160-checklist-yes-no.jpg",
+          "sha256": "6fbea11a50207aea08a8e250d29db2fa46d16cf7391804f3d4fced7d2f1c92ee",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:15.373Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "161-checklist-checkbox",
+          "file": "captures/expansion/responder/161-checklist-checkbox.jpg",
+          "sha256": "6118c6a564bcdcd1f2d815bd3100c17b644af568b6696263b4c7fd46eb7ce22a",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:15.755Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "162-checklist-numeric",
+          "file": "captures/expansion/responder/162-checklist-numeric.jpg",
+          "sha256": "1f48c1d98b8e4709170e6d7277f65a81b7334e4f0e0d4933d6cf65879cb612fd",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:23.951Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "163-checklist-quantity",
+          "file": "captures/expansion/responder/163-checklist-quantity.jpg",
+          "sha256": "17d829bff2a8e13be261ee4c9a2e9f228411de43be9b16ff423964d2d330e401",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:24.336Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "164-checklist-free-text",
+          "file": "captures/expansion/responder/164-checklist-free-text.jpg",
+          "sha256": "047d3fc1095e4242003b82a99c73862b718dae7657c3dcbd7fec6646acf70b1e",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:24.726Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "165-checklist-select-list",
+          "file": "captures/expansion/responder/165-checklist-select-list.jpg",
+          "sha256": "4907f6a41c8e76644a09c32659ab8aa9b1f19d6b6516e3f4b521353ee92f9c84",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:31.283Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "166-checklist-date",
+          "file": "captures/expansion/responder/166-checklist-date.jpg",
+          "sha256": "4add37cd89ec1f0c6683f1f7e687a8fab81764fc734c12f3088113c9ba882b53",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:31.687Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "167-checklist-photo-controls",
+          "file": "captures/expansion/responder/167-checklist-photo-controls.jpg",
+          "sha256": "3b17025705432dad5f2a6cd92930a16451374a16bbc5567033cb930c5fa66d53",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:32.071Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "168-checklist-signature-pad",
+          "file": "captures/expansion/responder/168-checklist-signature-pad.jpg",
+          "sha256": "baaff7b773677b2c53324869327543b8b9653cb1af69c2a4d4e235eb41cfdae7",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:15:32.749Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse all ten actual answer type views and N/A reason; show blank Photo and Signature tools without opening a camera or signing."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "09-handle-witnesses-and-offline-conflicts",
+      "title": "Handle witnesses and offline conflicts",
+      "narration_sha256": "1fa3abca3d454224eaac2b41dc8f4ac35133112a15dde89a86d454e48429d961",
+      "narration": "A witness-required submission shows Awaiting witness. The separately authenticated fictional Casey account can view the independent-verification instructions and Attest and complete; no statement or attestation is submitted. Queued work exposes Retry sync, Edit local draft, and Use server version. Its replacement confirmation is native-only in this browser. The browser checklist vault is memory-only, so do not infer durable offline recovery from the displayed queued message or our same-session draft resumption.",
+      "required_labels": [
+        "Awaiting witness · Score: —",
+        "Attest and complete",
+        "Retry sync",
+        "Edit local draft",
+        "Use server version"
+      ],
+      "captures": [
+        {
+          "id": "172-checklist-persisted-awaiting-witness",
+          "file": "captures/expansion/responder/172-checklist-persisted-awaiting-witness.jpg",
+          "sha256": "a6229de46fa45d074b7f324c44f1110ca15e27e1c54ee734f40437f8f9554525",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:16:24.425Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "176-witness-account-context",
+          "file": "captures/expansion/responder/176-witness-account-context.jpg",
+          "sha256": "f8078634e12369e76924b9dedbcb2599d7092db1bcf34cde8deeaed029f63a21",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/home",
+          "captured_at": "2026-10-26T18:21:54.168Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "177-casey-independent-witness-form",
+          "file": "captures/expansion/responder/177-casey-independent-witness-form.jpg",
+          "sha256": "e8a31d0b18f2c909351d3b5dd6edd4cdb67d6dddd17f21e5142126c7b65c0db3",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:22:18.103Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "173-checklist-queued-recovery",
+          "file": "captures/expansion/responder/173-checklist-queued-recovery.jpg",
+          "sha256": "d1b5fe2af210620c9bd83819bdddb73018b29ddf1e3fd268e1e2cfdffee32723",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/checklists",
+          "captured_at": "2026-10-26T18:16:54.384Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse distinct Casey identity and the actual independent witness form, with blank statement and disabled Attest and complete.",
+        "Reuse genuine queue recovery controls; no server-version replacement or induced outage occurred."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "10-report-a-maintenance-problem-clearly",
+      "title": "Report a maintenance problem clearly",
+      "narration_sha256": "392a23b130069a85b598f501d53dd58f173608fcc46ecf1f1ab0503b7815e2c4",
+      "narration": "Work orders separates Assigned to me from All I can see. Report a problem opens Title, Details, Kind of work, Priority, Apparatus, Station, Location, and Safety-critical. The example submits a fictional facility-inspection request with no apparatus selected and no safety-critical claim. The resulting work-order number and Requested state confirm an actual saved report. A maintenance description should explain the problem and impact without inventing a fault.",
+      "required_labels": [
+        "Work orders",
+        "Assigned to me",
+        "All I can see",
+        "Report a problem",
+        "Title",
+        "Details",
+        "Kind of work",
+        "Priority",
+        "Apparatus",
+        "Station",
+        "Location",
+        "Safety-critical",
+        "Submit report"
+      ],
+      "captures": [
+        {
+          "id": "142-work-orders-assigned",
+          "file": "captures/expansion/responder/142-work-orders-assigned.jpg",
+          "sha256": "0e63bde080cc9fc79968bc5d58f389967819ff2b4ab66f9598e1512ee38095d2",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders",
+          "captured_at": "2026-10-26T18:08:50.486Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "143-work-order-report-prepared",
+          "file": "captures/expansion/responder/143-work-order-report-prepared.jpg",
+          "sha256": "dd12933ea50c8d13c5cccfd751b160fe1425fb83209d3df54764c13ac3064cad",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders/new",
+          "captured_at": "2026-10-26T18:08:57.811Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "144-work-order-report-heading",
+          "file": "captures/expansion/responder/144-work-order-report-heading.jpg",
+          "sha256": "442219e493f250267c1067a7da8593d13dc03ff16382767cf4726f4854bc243a",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders/new",
+          "captured_at": "2026-10-26T18:09:03.746Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "145-work-order-created",
+          "file": "captures/expansion/responder/145-work-order-created.jpg",
+          "sha256": "fec24d3cf58ede7deca1a23b33f805696c0678c1f150d93966d25fe2a7aaf3bc",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders/22546665-bc5f-46e6-99ca-f032f8482257",
+          "captured_at": "2026-10-26T18:09:08.528Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse the saved fictional facility report with no apparatus/safety-critical designation and its actual Requested number."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "11-work-an-assigned-order-with-a-useful-trail",
+      "title": "Work an assigned order with a useful trail",
+      "narration_sha256": "bb6d27285ddb7295b3c69c9f2518585a48586c1654ab1072368363e93fae3b6f",
+      "narration": "Change status and Update status recorded Requested to Accepted on the separate facility report; Log hours, Save hours, Add comment, and Activity preserve its software-practice trail. On the independent assigned order, Accept assignment and In progress are recorded. Steps are read-only. On hold shows Reason; Completed exposes What was done to fix it, Cause, and All steps are complete. Those transition forms, Take photo, and Choose photo remain unsubmitted or unexercised.",
+      "required_labels": [
+        "Change status",
+        "Update status",
+        "Log hours",
+        "Save hours",
+        "Add comment",
+        "Activity",
+        "Take photo",
+        "Choose photo",
+        "Accept assignment",
+        "Steps",
+        "In progress",
+        "Assignment accepted",
+        "On hold",
+        "Reason",
+        "Completed",
+        "What was done to fix it",
+        "Cause",
+        "All steps are complete"
+      ],
+      "captures": [
+        {
+          "id": "145-work-order-created",
+          "file": "captures/expansion/responder/145-work-order-created.jpg",
+          "sha256": "fec24d3cf58ede7deca1a23b33f805696c0678c1f150d93966d25fe2a7aaf3bc",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders/22546665-bc5f-46e6-99ca-f032f8482257",
+          "captured_at": "2026-10-26T18:09:08.528Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "146-work-order-saved-activity",
+          "file": "captures/expansion/responder/146-work-order-saved-activity.jpg",
+          "sha256": "fd6b9c8fea46ea4a233d81534d34aa45d9ed1c4708ccfb496286c9f2d8f26a2b",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders/22546665-bc5f-46e6-99ca-f032f8482257",
+          "captured_at": "2026-10-26T18:09:20.620Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "147-work-order-accepted",
+          "file": "captures/expansion/responder/147-work-order-accepted.jpg",
+          "sha256": "f8afa46b7151c51ca59a19c67fee98d6d9ac56d7936c0c129b68a8e684c537f0",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/work-orders/22546665-bc5f-46e6-99ca-f032f8482257",
+          "captured_at": "2026-10-26T18:09:20.720Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "190-assigned-order-before-acceptance",
+          "file": "captures/expansion/responder/190-assigned-order-before-acceptance.jpg",
+          "sha256": "bc245d0ed60a4599938151645a9440ae16d83dd565a60595cd35c3acf599e2f6",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/work-orders/e6158298-a817-4d92-b075-a7d7ed331b5e",
+          "captured_at": "2026-10-26T19:40:48.755Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "191-assigned-order-on-hold-reason",
+          "file": "captures/expansion/responder/191-assigned-order-on-hold-reason.jpg",
+          "sha256": "3522546a32eaf2fd8390d8b72a2bd7d99d5cd415a230d6fa276c9db8a21b8eae",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/work-orders/e6158298-a817-4d92-b075-a7d7ed331b5e",
+          "captured_at": "2026-10-26T19:41:58.339Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "192-assigned-order-completion-inputs",
+          "file": "captures/expansion/responder/192-assigned-order-completion-inputs.jpg",
+          "sha256": "9056cb24c037f2f77195b366385875a121c60094abafabcf8c63f6a372b781d8",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/work-orders/e6158298-a817-4d92-b075-a7d7ed331b5e",
+          "captured_at": "2026-10-26T19:43:14.474Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "193-assigned-order-accepted-activity",
+          "file": "captures/expansion/responder/193-assigned-order-accepted-activity.jpg",
+          "sha256": "0af5b22531e529086342514fc31295034e656e1355fecf534ea46d4851f4cd12",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/work-orders/e6158298-a817-4d92-b075-a7d7ed331b5e",
+          "captured_at": "2026-10-26T19:43:42.993Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        }
+      ],
+      "missing_declared_label_metadata": [
+        "On hold"
+      ],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "No new acceptance/transition-field screenshot is required for the recorded scope;190–193 supply it.",
+        "191 visibly paints On hold and its retained DOM names that selected option, but the old literal-label metadata omitted the value. Curate that actual observation in the later immutable assembly evidence before strict label qualification; shared capture manifest remains unchanged here.",
+        "Physical repair/completion, all-steps confirmation, verification and photographs are not performed or claimed."
+      ],
+      "qualification": "BLOCKED",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "12-use-maps-and-settings-for-field-awareness",
+      "title": "Use maps and settings for field awareness",
+      "narration_sha256": "64071e3bb024a0cf4d0f54ec97cdd0bd18067311ad1881a717128092329d7ca8",
+      "narration": "Map shows real cartography and fictional call pins. A pin opens Route, View Call Details, and Set as Current Call; its coordinates come from the app, not a device fix. POIs provides search and Filter & Sort for available types; this dataset has no POIs. Weather Alerts offers All, Extreme, Severe, Moderate, and Minor with no active alerts here. Settings exposes Background Geolocation, Realtime Geolocation, and Keep Alive. Native permissions and field behavior require separate checks for wildland or SAR teams.",
+      "required_labels": [
+        "Map",
+        "POIs",
+        "0 POIs",
+        "No POIs found",
+        "All",
+        "Extreme",
+        "Severe",
+        "Moderate",
+        "Minor",
+        "Background Geolocation",
+        "Realtime Geolocation",
+        "Keep Alive",
+        "Search POIs...",
+        "Filter & Sort",
+        "Route",
+        "View Call Details",
+        "Set as Current Call"
+      ],
+      "captures": [
+        {
+          "id": "157-map-poi-list",
+          "file": "captures/expansion/responder/157-map-poi-list.jpg",
+          "sha256": "157b208adb734ab8aa6756f68c7b8dd01d707474fd6193595e583dae4ad16f0a",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/map",
+          "captured_at": "2026-10-26T18:11:55.144Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "158-weather-alerts-filters",
+          "file": "captures/expansion/responder/158-weather-alerts-filters.jpg",
+          "sha256": "45cded7c0e8e69d69367b126cf4e45efca3ebb89eb24dd5cee7765e6652323bb",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/weather-alerts",
+          "captured_at": "2026-10-26T18:11:59.657Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "057-settings-native-capability-controls",
+          "file": "captures/expansion/responder/057-settings-native-capability-controls.jpg",
+          "sha256": "2313667c83ca00d53b3815a5f9f22ef8d038a9e45cf051eb47b48c0ceaf1d0a4",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/settings",
+          "captured_at": "2026-10-26T17:00:46.096Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "196-map-incident-pins-local",
+          "file": "captures/expansion/responder/196-map-incident-pins-local.jpg",
+          "sha256": "f240644ff1a60a2b41e18dc02d918c5ba9c56b4d138840d024665a8bd48de777",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/map",
+          "captured_at": "2026-10-26T19:49:39.613Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        },
+        {
+          "id": "197-map-call-pin-details",
+          "file": "captures/expansion/responder/197-map-call-pin-details.jpg",
+          "sha256": "180a2df055c77f4f3dfba373bd0cc7c2afa829ebca241515a40c840267275229",
+          "width": 1434,
+          "height": 795,
+          "url": "http://localhost:19102/map",
+          "captured_at": "2026-10-26T19:49:50.351Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        }
+      ],
+      "missing_declared_label_metadata": [
+        "Filter & Sort"
+      ],
+      "hard_operational_screen_control_gaps": [
+        "Readable POI search/control behavior missing despite raw text observation.",
+        "Filter & Sort sheet, type/sort choices and reset/done states missing."
+      ],
+      "remaining_operations_or_limits": [
+        "Capture Search POIs without overlap so its actual input/clear behavior is readable.157 is not accepted as legible search proof.",
+        "Open and capture actual Filter & Sort sheet with Filter, All types, Sort, Name/Type, Reset and Done. No retained sheet capture exists. Use only actual available types; no invented populated results.",
+        "For full app POI coverage beyond the current empty view, a separately authorized fictional type/point enables readable results, details and View on map; keep this requirement open rather than dropping it.",
+        "No new cartography, pin-sheet or native-preference view is needed for the recorded scope. External routing, real GPS, background delivery and physical positions remain unverified."
+      ],
+      "qualification": "BLOCKED",
+      "all_spoken_operations_demonstrated": false
+    },
+    {
+      "scene_id": "13-record-daily-deployment-time-accurately",
+      "title": "Record daily deployment time accurately",
+      "narration_sha256": "7757257ccdf2252eaf475af881a8657f7bfd133e9d377c112b8eb4ba65c76f9e",
+      "narration": "Open the fictional deployment, choose its date, and compare crew, My time, and Whole deployment. Start crew time report opens From, To, break minutes, notes, and Apply to crew. Save entries preserves the draft with sample hours and break warnings. Submit report and signature controls are later stages. Approval requires a submitted report and authorized reviewer. This exercise leaves the draft unsigned and establishes no actual work, approval, or payment.",
+      "required_labels": [
+        "Deployments",
+        "Time",
+        "My time",
+        "Whole deployment",
+        "Start crew time report",
+        "From",
+        "To",
+        "Unpaid break (min)",
+        "Apply to crew",
+        "Add entry",
+        "Save entries",
+        "Submit report",
+        "Sign as crew boss",
+        "Record agency signature"
+      ],
+      "captures": [
+        {
+          "id": "148-deployment-list",
+          "file": "captures/expansion/responder/148-deployment-list.jpg",
+          "sha256": "f4ec54b9191fd176f8be13343a35f33e96bd8edbbce630c1500535a846d67990",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations",
+          "captured_at": "2026-10-26T18:10:37.105Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "149-deployment-scope",
+          "file": "captures/expansion/responder/149-deployment-scope.jpg",
+          "sha256": "a8afac1d8671b5b4ffa57b1baddcf1647969d3e38b51c5ec433618a78892aeb0",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:10:42.531Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "150-time-report-entry-fields",
+          "file": "captures/expansion/responder/150-time-report-entry-fields.jpg",
+          "sha256": "9048ff73fb673014d5e046c8961b2412e2d81f275c58a0de6206874e8cfc8d01",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:10:52.236Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "151-time-report-save-submit-signature",
+          "file": "captures/expansion/responder/151-time-report-save-submit-signature.jpg",
+          "sha256": "8670df30d2392670e91879830f6585c504328beb544ea5a10d7d8eadb12085d4",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:11:03.655Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse actual unsigned daily crew report, default sample subjects/hours, saved entries and break warnings.",
+        "Inspect submit/signature controls without signing, claiming worked hours or approval.",
+        "A later approval demonstration would need a separate authorized submitted practice report and CanApprove reviewer; it is not current evidence."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    },
+    {
+      "scene_id": "14-keep-costs-usage-and-recovery-distinct",
+      "title": "Keep costs, usage, and recovery distinct",
+      "narration_sha256": "6d59e791352c85eb970369d756014d0fae81528b7e348e13cab344a14007d380",
+      "narration": "Expenses exposes New expense and Add expense; Usage provides odometer, engine-hours, fuel, and unit controls before Add reading. These forms are inspected without creating a cost or meter reading. F-42 can draft from deployment time reports and Validate against its rules. Our actual result says Not ready for the portal and lists missing prerequisites. Portal submission remains a manual, audited web step; no government or financial submission occurred.",
+      "required_labels": [
+        "Expenses",
+        "New expense",
+        "Add expense",
+        "Usage",
+        "Start odometer",
+        "End odometer",
+        "Engine hours",
+        "Fuel",
+        "mi",
+        "gal",
+        "Add reading",
+        "F-42",
+        "Draft F-42 from time reports",
+        "Validate",
+        "Not ready for the portal"
+      ],
+      "captures": [
+        {
+          "id": "152-deployment-expense-form",
+          "file": "captures/expansion/responder/152-deployment-expense-form.jpg",
+          "sha256": "69b2657072053e212c7216e22e68c8b9eebb3ae108fe927004372e707bdf00e1",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:11:10.865Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "153-deployment-usage-form",
+          "file": "captures/expansion/responder/153-deployment-usage-form.jpg",
+          "sha256": "0e3666c608243866d96f107c2b23ded47fbb2a03d55977411c6170189e620e05",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:11:22.684Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "154-deployment-f42-boundary",
+          "file": "captures/expansion/responder/154-deployment-f42-boundary.jpg",
+          "sha256": "85eaf80c0bc009d7e70148eed71dcb82da9f68d08b81719cf0dba2be396ef349",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:11:29.982Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": false
+        },
+        {
+          "id": "155-deployment-f42-validation",
+          "file": "captures/expansion/responder/155-deployment-f42-validation.jpg",
+          "sha256": "ef91f2b313875e8b6f5cc8da470e7bc5b629fb69223230c109e00c770a30e6c4",
+          "width": 1434,
+          "height": 773,
+          "url": "http://localhost:19102/operations/8fdaedc4-69f8-45aa-95cd-42d73fe24421",
+          "captured_at": "2026-10-26T18:11:44.399Z",
+          "eligible_for_lesson": true,
+          "reviewed_raw_image_this_assessment": true
+        }
+      ],
+      "missing_declared_label_metadata": [],
+      "hard_operational_screen_control_gaps": [],
+      "remaining_operations_or_limits": [
+        "Reuse expense/usage forms view-only and the actual F-42 Not ready validation with missing prerequisites.",
+        "Do not treat the work-item summary counts as a ready result or request any government/financial/provider submission."
+      ],
+      "qualification": "candidate subset; final per-cue/pixel/render review still required",
+      "all_spoken_operations_demonstrated": null
+    }
+  ],
+  "readable_image_observations": [
+    {
+      "capture": "157-map-poi-list",
+      "accepted": "Map/POIs tabs,0 POIs and No POIs found empty state.",
+      "rejected": "Readable Search POIs/input behavior and actual filter sheet; search/count/help overlap in raw pixels."
+    },
+    {
+      "capture": "196-map-incident-pins-local",
+      "accepted": "Real Chicago cartography, warehouse/medical call labels.",
+      "rejected": "Overlapping center personnel/unit labels, real GPS fixes or current/fresh resource positions."
+    },
+    {
+      "capture": "197-map-call-pin-details",
+      "accepted": "Actual41.868200,-87.659100 and Route/View Call Details/Set as Current Call controls.",
+      "rejected": "Completed external route/provider operation."
+    },
+    {
+      "capture": "188-trade-ineligible-dark",
+      "accepted": "No one is available to take this shift; Send request disabled.",
+      "rejected": "Eligible Casey offer, sent request or successful roster exchange."
+    },
+    {
+      "capture": "190/191/192/193",
+      "accepted": "Actual Accept assignment, read-only Steps, On hold Reason, Completed explanation/Cause/all-steps input and saved acceptance/In-progress Activity.",
+      "rejected": "Physical maintenance/completion, checked all-steps confirmation, verification or photo success."
+    },
+    {
+      "capture": "151-time-report-save-submit-signature",
+      "accepted": "Sample hours/notes, break warnings and visible Submit/signature controls on unsigned draft.",
+      "rejected": "Worked/paid hours, submitted report, signatures or approval."
+    },
+    {
+      "capture": "155-deployment-f42-validation",
+      "accepted": "Expected domain validation result Not ready for the portal with missing prerequisites.",
+      "rejected": "Portal readiness inferred from work-item0-error/0-warning counters or completed government/financial submission."
+    }
+  ],
+  "next_normal_capture_paths": [
+    {
+      "priority": 1,
+      "route": "/shifts",
+      "required": "Independently eligible training-only trade scenario using unchanged existing qualifications; incoming Accept/Decline, offered return shift/give choice, Pick this offer confirmation and resulting status; configured approval if offered.",
+      "guard": "No roles/qualifications/seeded staffing changes, no direct endpoint or hidden-store forcing; do not reuse the ineligible Chief day as success."
+    },
+    {
+      "priority": 2,
+      "route": "/map -> POIs -> actual funnel button -> Filter & Sort",
+      "required": "Legible search field and query/clear state; actual Filter/All types, Sort Name/Type, Reset and Done sheet. Populated POI detail/View on map remain required for full app coverage.",
+      "guard": "Only normal visible UI after human clears Chrome; no CSS/painted substitute, fake type result or real GPS."
+    },
+    {
+      "priority": 3,
+      "route": "retained191 work-order evidence only",
+      "required": "Before eventual assembly, include the actual visibly painted On hold selected value from191 in reviewed immutable metadata; current raw labels omitted it.",
+      "guard": "This is metadata curation of a retained readable image, not a new action or screenshot. Shared manifest is deliberately untouched in this checkpoint."
+    }
+  ],
+  "timeline": "No narration audio, cue timings, speech anchors, rendered frames or browser playback generated. Root owns voice only after a genuine freeze.",
+  "coverage_not_cut": true,
+  "no_browser_or_database_access": true
+}

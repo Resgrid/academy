@@ -1,0 +1,60 @@
+{
+  "kind": "retained_nonexecuting_fictional_scenario_description",
+  "source_manifest": "captures/expansion/legacy/operations/manifest-core-legacy-operations.json",
+  "source_manifest_sha256": "8cf89af4b6068d08ffee2f72b61ae2b3e53967d2e678c25284158103e1a93651",
+  "item": {
+    "name": "Academy training batteries",
+    "code": "ACADEMY-BAT-01",
+    "unit": "packs",
+    "tracking": "By quantity",
+    "track_lots": true,
+    "expiration_required": true,
+    "controlled": false,
+    "kit": false,
+    "minimum_stock": 5,
+    "reorder_point": 8,
+    "fictional_unit_cost": 2
+  },
+  "saved_lot": {
+    "batch": "ACADEMY-LOT-A",
+    "expiry": "2026-11-30"
+  },
+  "recorded_movements": [
+    {
+      "kind": "Receive",
+      "quantity": 20,
+      "destination": "Station"
+    },
+    {
+      "kind": "Transfer",
+      "quantity": 5,
+      "source": "Station",
+      "destination": "Unit"
+    },
+    {
+      "kind": "Issue",
+      "quantity": 2,
+      "source": "Station",
+      "person": "Matthew Casey",
+      "expected_return": "2026-10-26"
+    },
+    {
+      "kind": "Partial return",
+      "quantity": 1,
+      "destination": "Station",
+      "proof_scope": "stored outstanding1/Partially returned result only; return dialog not pictured"
+    }
+  ],
+  "dated_balance_snapshot": {
+    "Station": 14,
+    "Unit": 5,
+    "Personnel": 1
+  },
+  "current_parent_observation_only": {
+    "Station": 13,
+    "Unit": 5,
+    "Personnel": 1,
+    "reason": "later recorded software usage; older worked-example snapshot is not current-state evidence"
+  },
+  "replay_policy": "Do not seed/import/reset stock or repeat historic movements. Any future training replay uses normal authorized UI with a separately reviewed new scope and current balances."
+}

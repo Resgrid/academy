@@ -1,0 +1,153 @@
+{
+  "id": "app-dispatch-allocation",
+  "title": "Dispatch: nearest resources and conditional run cards",
+  "app": "Dispatch",
+  "audience": [
+    "Dispatchers",
+    "Duty officers",
+    "Response planners"
+  ],
+  "summary": "Choose personnel and units with location-aware information, then use configured run-card recommendations, conditional decisions and outstanding requirements.",
+  "prerequisites": [
+    "Located training calls, current personnel staffing and statuses, unit crews and distinct resource positions.",
+    "Dispatch.RunCards enabled for run-card scenes; Dispatch.RunCardConditions also enabled for conditional decisions and awaiting resources.",
+    "Run cards, decision graphs, packages, response codes and alarm levels authored beforehand in Core web administration.",
+    "Prepared match, advice-only, fallback, shortfall and newly available-resource scenarios; optional routed-ETA provider configured."
+  ],
+  "scenes": [
+    {
+      "title": "Open the location-aware recipient picker",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Dispatch To",
+        "Select Recipients",
+        "Closest",
+        "Name",
+        "Available only"
+      ],
+      "narration": "Start with a call that has a usable location, then open Select Recipients under Dispatch To. Closest uses the server’s location-aware board for both people and units. Compare it with Name to understand how ordering changes, and use Available only to focus the choice. This workflow works independently of run cards. Without a valid call location, the picker falls back to names, so verify the incident pin before relying on proximity. The available candidates still depend on your department and permissions. Search for a person or unit when you need to locate a specific resource rather than simply accept the first row.",
+      "practice": "Compare the closest EMS personnel and units to a known training address with run cards disabled.",
+      "id": "app-dispatch-allocation-scene-01"
+    },
+    {
+      "title": "Read distance, response time and availability",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Closest",
+        "Available only"
+      ],
+      "narration": "Read each candidate’s status, staffing, group or role information alongside distance and time. Unit rows also show crew information where you may see it. The server considers availability and response time, including unit turnout where supplied, rather than treating a short straight-line distance as the whole decision. An estimated travel time is marked differently from a routed one. Check whether the position is live, station-based, stale or hidden. Hidden coordinates can still have an allowed distance and time estimate. A nearest badge identifies a ranked candidate; it does not guarantee access, staffing, route conditions or arrival.",
+      "practice": "Explain why a staffed station-based unit may be a better choice than a closer unavailable vehicle.",
+      "id": "app-dispatch-allocation-scene-02"
+    },
+    {
+      "title": "Make and confirm the selection",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Everyone",
+        "Select Recipients"
+      ],
+      "narration": "Select the intended personnel and units, or use the department’s groups and roles when that is the appropriate notification scope. Everyone is a broad choice, so review it carefully. Available only keeps a selected unavailable row visible so your previous choice is not silently lost. Confirm the selection, then review it on the call form before Create. On an existing call, open Dispatched and choose Dispatch additional resources to review a fresh selection for that incident. Confirming the picker and saving or dispatching are separate steps. Reopen the recorded dispatch rows to verify what the server actually accepted.",
+      "practice": "Allocate a SAR vehicle and qualified search personnel, leaving unrelated groups unselected.",
+      "id": "app-dispatch-allocation-scene-03"
+    },
+    {
+      "title": "Use a configured fixed run card",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Run card recommendation",
+        "Apply recommendation"
+      ],
+      "narration": "A matching run card can propose a response for the call’s priority, type and location. Expand Run card recommendation and read the selected mode, suggested units and personnel, reasons, shortfalls and any coverage move-up information. Apply recommendation transfers the proposal into your selection; review and adjust it before creating the call. Some departments configure automatic dispatch at creation, which the panel explains when applicable. The app consumes existing cards; authoring is done in Core web administration. No match leaves the manual workflow available. A failed lookup offers Retry and must not be interpreted as proof that no card applies.",
+      "practice": "Use a prepared structure-fire run card, inspect its shortfall and review the proposed first alarm.",
+      "id": "app-dispatch-allocation-scene-04"
+    },
+    {
+      "title": "Explain a conditional outcome and its fallback",
+      "route": "/call/new",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Decision",
+        "Advice",
+        "Ideal configuration not available",
+        "First arriving"
+      ],
+      "narration": "With conditional run cards enabled, open Decision and read why the response package was chosen. The configured rule may compare arrival times or ask whether enough resources are available within a threshold. Inspect the measured resources, timing source and margin rather than reading only the outcome label. An advice-only outcome offers guidance without selecting a package. When the ideal configuration is unavailable, the explanation can show a relaxed status filter, substitute package or remaining shortfall. First arriving identifies any extra row added by that configured rule. Review response-code chips, including the available code choices, before accepting the proposal.",
+      "practice": "Compare two prepared wildland responses: one meeting the time rule and one using a substitute package.",
+      "id": "app-dispatch-allocation-scene-05"
+    },
+    {
+      "title": "Re-evaluate a saved decision and add an alarm",
+      "route": "/call/[id]",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Re-evaluate"
+      ],
+      "narration": "A conditional decision can be pinned when the call is saved or from the dispatcher’s reviewed proposal. On the existing call’s additional-resource picker, read that pinned information before requesting Re-evaluate. Re-evaluation asks the server to assess current conditions explicitly, so changed availability does not silently rewrite your earlier decision. Uncertain timing warns that stale or missing positions could affect the result. For a fixed or configured multi-alarm response, the Strike alarm control offers the next level. Review its confirmation and the returned result, then inspect the added dispatches. Escalation adds resources for that level; it should not be narrated as resending the entire incident.",
+      "practice": "Change a training unit’s availability, compare the pinned and re-evaluated proposal, then inspect a next-alarm offer.",
+      "id": "app-dispatch-allocation-scene-06"
+    },
+    {
+      "title": "Fulfill or dismiss an outstanding requirement",
+      "route": "/awaiting-resources",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Awaiting Resources",
+        "Dispatch",
+        "Dismiss"
+      ],
+      "narration": "A conditional requirement configured to remain outstanding can place the call in Awaiting Resources. Open it from the console banner or menu badge. Read the requirement’s progress, any substitute already sent, waiting time, response code and currently matching units. Dispatch adds the chosen available unit to the existing call and reconciles the requirement. Review the updated state instead of assuming a click completed the allocation. When the requirement is no longer needed, Dismiss lets you record an optional explanation. A unit-available alert requires a real change from the backend; use a second training client to demonstrate it honestly.",
+      "practice": "Keep an industrial specialty-unit requirement outstanding, make a suitable training unit available, and review fulfillment.",
+      "id": "app-dispatch-allocation-scene-07"
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Compare ambulance and medic proximity, then inspect a multi-alarm structure-fire card."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Select on-duty volunteers by role and review an advice-only response."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Combine a nearby vehicle with personnel holding the needed search roles."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Compare patrol availability and a manually reviewed alarm response."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Exercise a time-based conditional branch, substitute package and first-arriving rule."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Track an outstanding specialist unit and fill it when that unit becomes available."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/dispatch-selection-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/calls/dispatch-recipient-rows.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/lib/dispatch-board.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/models/v4/dispatch/nearestUnitBoard.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/api/runcards/runcards.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/recommendation-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/escalate-alarm-button.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/run-card-decision-section.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/runcards/run-card-save-fields.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/models/v4/runcards/dispatchRecommendationResultData.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/awaiting-resources.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/awaiting-resources-banner.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/call-outstanding-requirements.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/dismiss-requirement-modal.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/awaiting-resources/unit-available-alert-host.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/_layout.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/translations/en.json"
+  ]
+}

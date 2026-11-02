@@ -1,0 +1,766 @@
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Reflection.PortableExecutable;
+using System.Threading.Tasks;
+using Audit.Core;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
+using FluentMigrator.Runner;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
+using Resgrid.Config;
+using Resgrid.Framework;
+using Resgrid.Localization;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Services;
+using Resgrid.Providers.AddressVerification;
+using Resgrid.Providers.Bus;
+using Resgrid.Providers.Bus.Rabbit;
+using Resgrid.Providers.Cache;
+using Resgrid.Providers.Claims;
+using Resgrid.Providers.EmailProvider;
+using Resgrid.Providers.GeoLocationProvider;
+using Resgrid.Providers.Marketing;
+using Resgrid.Providers.Messaging;
+using Resgrid.Providers.NumberProvider;
+using Resgrid.Providers.PdfProvider;
+using Resgrid.Providers.Voip;
+using Resgrid.Repositories.DataRepository;
+using Resgrid.Repositories.DataRepository.Stores;
+using Resgrid.Services;
+using Resgrid.Web.Options;
+using Resgrid.WebCore.Middleware;
+using Sentry.Extensibility;
+using StackExchange.Redis;
+using Stripe;
+using Microsoft.Extensions.Http.Logging;
+using Resgrid.Web.Middleware;
+
+namespace Resgrid.Web
+{
+	public class Startup
+	{
+		//public IConfiguration Configuration { get; }
+		public IConfigurationRoot Configuration { get; private set; }
+		public ILifetimeScope AutofacContainer { get; private set; }
+		public AutofacServiceLocator Locator { get; private set; }
+		public IServiceCollection Services { get; private set; }
+		private readonly IHostingEnvironment _environment;
+
+		public Startup(IHostingEnvironment env)
+		{
+			_environment = env;
+			var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+					.SetBasePath(env.ContentRootPath)
+					.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+					.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+					.AddEnvironmentVariables();
+
+			if (env.IsDevelopment() || env.IsStaging())
+			{
+				// For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+				//builder.AddUserSecrets();
+			}
+
+			this.Configuration = builder.Build();
+		}
+
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			bool configResult = ConfigProcessor.LoadAndProcessConfig(Configuration["AppOptions:ConfigPath"]);
+			bool envConfigResult = ConfigProcessor.LoadAndProcessEnvVariables(Configuration.AsEnumerable());
+
+			var settings = System.Configuration.ConfigurationManager.ConnectionStrings;
+			var element = typeof(ConfigurationElement).GetField("_readOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+			var collection = typeof(ConfigurationElementCollection).GetField("_readOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+
+			element.SetValue(settings, false);
+			collection.SetValue(settings, false);
+
+			if (!configResult && !envConfigResult)
+				settings.Add(new ConnectionStringSettings("ResgridContext", Configuration["ConnectionStrings:ResgridContext"]));
+			else
+				settings.Add(new ConnectionStringSettings("ResgridContext", DataConfig.ConnectionString));
+
+			collection.SetValue(settings, true);
+			element.SetValue(settings, true);
+
+			Logging.Initialize(ExternalErrorConfig.ExternalErrorServiceUrlForWebsite);
+
+
+			if (Config.ApiConfig.BypassSslChecks && !(_environment.IsDevelopment() || _environment.IsStaging()))
+				throw new InvalidOperationException("ApiConfig.BypassSslChecks cannot be enabled outside development or staging.");
+
+			if (Config.ApiConfig.BypassSslChecks)
+			{
+				services.AddHttpClient("ByPassSSLHttpClient")
+					 .ConfigurePrimaryHttpMessageHandler(() =>
+					 {
+						 var handler = new HttpClientHandler
+						 {
+							 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+							 ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) =>
+							 {
+								 return true;
+							 }
+						 };
+						 return handler;
+					 });
+			}
+			else
+			{
+				services.AddHttpClient("ByPassSSLHttpClient");
+			}
+
+			services.AddMemoryCache();
+			services.AddHttpClient("ResgridWebBff", client =>
+				{
+					// Default is 100s. A hung API would otherwise pin a Kestrel request (and the browser
+					// connection behind it) for that long, so cap it well under any sane client timeout.
+					client.Timeout = TimeSpan.FromSeconds(30);
+				})
+				.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+				{
+					AllowAutoRedirect = false,
+					AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+					ServerCertificateCustomValidationCallback = Config.ApiConfig.BypassSslChecks
+						? HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+						: null
+				});
+
+			services.AddScoped<IUserStore<Model.Identity.IdentityUser>, IdentityUserStore>();
+			services.AddScoped<IRoleStore<Model.Identity.IdentityRole>, IdentityRoleStore>();
+			services.AddScoped<IUserClaimsPrincipalFactory<Model.Identity.IdentityUser>, ClaimsPrincipalFactory<Model.Identity.IdentityUser, Model.Identity.IdentityRole>>();
+
+			services.AddIdentity<Model.Identity.IdentityUser, Model.Identity.IdentityRole>(config =>
+			{
+				config.SignIn.RequireConfirmedAccount = false;
+				config.SignIn.RequireConfirmedEmail = false;
+				config.SignIn.RequireConfirmedPhoneNumber = false;
+				config.User.RequireUniqueEmail = true;
+				config.User.AllowedUserNameCharacters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@";
+				config.Password.RequireDigit = true;
+				config.Password.RequireLowercase = true;
+				config.Password.RequireUppercase = true;
+				config.Password.RequireNonAlphanumeric = false;
+				config.Password.RequiredLength = 8;
+				config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+				config.Lockout.MaxFailedAccessAttempts = 5;
+				config.Lockout.AllowedForNewUsers = true;
+			}).AddDefaultTokenProviders()
+				// One-time TOTP steps (passkey plan section 7.5 rule 8): replaces Identity's authenticator provider.
+				.AddTokenProvider<ResgridAuthenticatorTokenProvider>(TokenOptions.DefaultAuthenticatorProvider)
+				.AddClaimsPrincipalFactory<ClaimsPrincipalFactory<Model.Identity.IdentityUser, Model.Identity.IdentityRole>>();
+
+			services.AddAuthentication(sharedOptions =>
+				{
+					sharedOptions.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+					sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+					sharedOptions.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				})
+				.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+				{
+					options.SessionStore = new RedisCacheTicketStore(new RedisCacheOptions()
+					{
+						Configuration = CacheConfig.RedisConnectionString
+					});
+
+					options.LogoutPath = new PathString("/Account/LogOff");
+					options.LoginPath = new PathString("/Account/LogOn/");
+					options.AccessDeniedPath = new PathString("/Public/Forbidden/");
+					options.Cookie.SecurePolicy = _environment.IsDevelopment()
+						? CookieSecurePolicy.SameAsRequest
+						: CookieSecurePolicy.Always;
+					options.Cookie.SameSite = SameSiteMode.Lax;//.None;
+					options.Cookie.HttpOnly = true;
+					options.Cookie.Name = "RGSITEAUTHCOOKIE";
+					options.ExpireTimeSpan = new TimeSpan(48, 0, 0);
+				});
+
+			services.ConfigureApplicationCookie(options =>
+			{
+				//options.SessionStore = new RedisCacheTicketStore(new RedisCacheOptions()
+				//{
+				//	Configuration = CacheConfig.RedisConnectionString
+				//});
+
+				options.Events.OnSignedIn = (context) =>
+				{
+					context.HttpContext.User = context.Principal;
+					return Task.CompletedTask;
+				};
+			});
+
+			#region Auth Roles
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy(ResgridResources.SystemAdmin, policy => policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "Admins"));
+				options.AddPolicy(ResgridResources.Department_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Department, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Department_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Department, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Department_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Department, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Department_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Department, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Group_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Group, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Group_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Group, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Group_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Group, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Group_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Group, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Call_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Call, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Call_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Call, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Call_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Call, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Call_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Call, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Action_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Action, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Action_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Action, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Action_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Action, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Action_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Action, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Log_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Log, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Log_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Log, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Log_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Log, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Log_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Log, ResgridClaimTypes.Actions.Delete));
+
+				// Records (RMS) policies, registry section 4.2; keep byte-identical in Web and Web.Services.
+				options.AddPolicy(ResgridResources.Record_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Record_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Record_Review, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Review));
+				options.AddPolicy(ResgridResources.Record_Approve, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Approve));
+				options.AddPolicy(ResgridResources.Record_Finalize, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Finalize));
+				options.AddPolicy(ResgridResources.Record_Submit, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Submit));
+				options.AddPolicy(ResgridResources.Record_Amend, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Amend));
+				options.AddPolicy(ResgridResources.Record_Void, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Void));
+				options.AddPolicy(ResgridResources.Record_Export, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Export));
+				options.AddPolicy(ResgridResources.Record_Share, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Share));
+				options.AddPolicy(ResgridResources.Record_Reassign, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.Reassign));
+				options.AddPolicy(ResgridResources.RecordLegacy_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordLegacy, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.RecordRestricted_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordRestricted, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.WorkOrder_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkOrder, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.WorkOrder_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkOrder, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Invoicing_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Invoicing, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Invoicing_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Invoicing, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Invoicing_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Invoicing, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Invoicing_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Invoicing, ResgridClaimTypes.Actions.Delete));
+				options.AddPolicy(ResgridResources.Certifications_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Certifications, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Certifications_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Certifications, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Certifications_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Certifications, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Certifications_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Certifications, ResgridClaimTypes.Actions.Delete));
+				options.AddPolicy(ResgridResources.Certifications_Setup, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Certifications, ResgridClaimTypes.Actions.Setup));
+				options.AddPolicy(ResgridResources.Deployments_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Deployments, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Deployments_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Deployments, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.TimeReports_Approve, policy => policy.RequireClaim(ResgridClaimTypes.Resources.TimeReports, ResgridClaimTypes.Actions.Approve));
+				options.AddPolicy(ResgridResources.Bids_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Bids, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Bids_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Bids, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Bids_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Bids, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Bids_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Bids, ResgridClaimTypes.Actions.Delete));
+				options.AddPolicy(ResgridResources.ServiceContracts_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.ServiceContracts, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.ServiceContracts_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.ServiceContracts, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.MutualAidReimbursement_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.MutualAidReimbursement, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.MutualAidReimbursement_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.MutualAidReimbursement, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.MutualAidReimbursement_Submit, policy => policy.RequireClaim(ResgridClaimTypes.Resources.MutualAidReimbursement, ResgridClaimTypes.Actions.Submit));
+				options.AddPolicy(ResgridResources.MutualAidReimbursement_Reconcile, policy => policy.RequireClaim(ResgridClaimTypes.Resources.MutualAidReimbursement, ResgridClaimTypes.Actions.Reconcile));
+				options.AddPolicy(ResgridResources.DepartmentImport_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.DepartmentImport, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.RecordImports_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordImports, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Workforce_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Workforce, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Workforce_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Workforce, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.WorkforceCompensation_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkforceCompensation, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.WorkforceCompensation_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkforceCompensation, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.InternalCosts_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.InternalCosts, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.PayDataReporting_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PayDataReporting, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.PayDataReporting_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PayDataReporting, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.PayDataReporting_Export, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PayDataReporting, ResgridClaimTypes.Actions.Export));
+				options.AddPolicy(ResgridResources.Checklist_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Checklist, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.ChecklistResults_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.ChecklistResults, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.RecordDefinition_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordDefinition, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.RecordDefinition_Publish, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordDefinition, ResgridClaimTypes.Actions.Publish));
+				options.AddPolicy(ResgridResources.RecordReport_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordReport, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.RecordDisclosure_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordDisclosure, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.RecordLegalHold_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.RecordLegalHold, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Record_PreventionAdmin, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.PreventionAdmin));
+
+				options.AddPolicy(ResgridResources.Shift_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Shift, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Shift_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Shift, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Shift_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Shift, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Shift_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Shift, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Personnel_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Personnel, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Personnel_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Personnel, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Personnel_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Personnel, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Personnel_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Personnel, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Role_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Role, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Role_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Role, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Role_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Role, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Role_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Role, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Unit_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Unit, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Unit_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Unit, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Unit_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Unit, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Unit_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Unit, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.UnitLog_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.UnitLog, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.UnitLog_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.UnitLog, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.UnitLog_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.UnitLog, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.UnitLog_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.UnitLog, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Messages_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Messages, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Messages_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Messages, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Messages_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Messages, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Messages_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Messages, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Profile_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Profile, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Profile_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Profile, ResgridClaimTypes.Actions.Update));
+
+				options.AddPolicy(ResgridResources.Reports_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Reports, ResgridClaimTypes.Actions.View));
+
+				options.AddPolicy(ResgridResources.GenericGroup_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.GenericGroup, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.GenericGroup_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.GenericGroup, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.GenericGroup_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.GenericGroup, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.GenericGroup_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.GenericGroup, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Documents_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Documents, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Documents_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Documents, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Documents_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Documents, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Documents_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Documents, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Notes_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Notes, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Notes_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Notes, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Notes_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Notes, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Notes_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Notes, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Schedule_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Schedule, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Schedule_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Schedule, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Schedule_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Schedule, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Schedule_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Schedule, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Training_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Training, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Training_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Training, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Training_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Training, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Training_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Training, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.PersonalInfo_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PersonalInfo, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.PersonalInfo_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PersonalInfo, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.PersonalInfo_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PersonalInfo, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.PersonalInfo_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.PersonalInfo, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Inventory_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Inventory, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Inventory_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Inventory, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Inventory_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Inventory, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Inventory_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Inventory, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Command_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Command, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Command_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Command, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Command_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Command, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Command_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Command, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Connect_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Connect, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Connect_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Connect, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Connect_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Connect, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Connect_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Connect, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Protocol_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Protocols, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Protocol_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Protocols, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Protocol_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Protocols, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Protocol_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Protocols, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Forms_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Forms, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Forms_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Forms, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Forms_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Forms, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Forms_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Forms, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Voice_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Voice, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Voice_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Voice, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Voice_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Voice, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Voice_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Voice, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.CustomStates_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.CustomStates, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.CustomStates_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.CustomStates, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.CustomStates_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.CustomStates, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.CustomStates_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.CustomStates, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Contacts_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Contacts, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Contacts_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Contacts, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Contacts_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Contacts, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Contacts_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Contacts, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Workflow_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Workflow, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Workflow_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Workflow, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Workflow_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Workflow, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Workflow_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Workflow, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.WorkflowCredential_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowCredential, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.WorkflowCredential_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowCredential, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.WorkflowCredential_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowCredential, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.WorkflowCredential_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowCredential, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.WorkflowRun_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowRun, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.WorkflowRun_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowRun, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.WorkflowRun_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowRun, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.WorkflowRun_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.WorkflowRun, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Udf_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Udf, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Udf_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Udf, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Udf_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Udf, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Udf_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Udf, ResgridClaimTypes.Actions.Delete));
+
+				options.AddPolicy(ResgridResources.Route_View, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Route, ResgridClaimTypes.Actions.View));
+				options.AddPolicy(ResgridResources.Route_Update, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Route, ResgridClaimTypes.Actions.Update));
+				options.AddPolicy(ResgridResources.Route_Create, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Route, ResgridClaimTypes.Actions.Create));
+				options.AddPolicy(ResgridResources.Route_Delete, policy => policy.RequireClaim(ResgridClaimTypes.Resources.Route, ResgridClaimTypes.Actions.Delete));
+			});
+			#endregion Auth Roles
+
+			//var manager = new ApplicationPartManager();
+			//manager.ApplicationParts.Add(new AssemblyPart(typeof(Startup).Assembly));
+			//services.AddSingleton(manager);
+
+			var configOptions = Configuration.GetSection("AppOptions").Get<AppOptions>();
+			services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
+
+			services.AddHttpContextAccessor();
+			services.AddRazorPages();
+
+			services.Configure<ForwardedHeadersOptions>(options =>
+				Resgrid.Web.Helpers.ForwardedHeadersSetup.Configure(options, WebConfig.IngressProxyNetwork, WebConfig.IngressProxyNetworkCidr));
+
+			services.AddWebOptimizer(pipeline =>
+			{
+				// jquery/js app files and css
+#if !DEBUG
+				// InvertIfReturn is disabled in these settings; see ScriptMinificationSettings (RESGRID-WEB-1MP, RESGRID-WEB-1MK).
+				pipeline.MinifyJsFiles(Helpers.ScriptMinificationSettings.Create(), "/js/app/**/*.js", "/js/site.js");
+#endif
+				pipeline.MinifyCssFiles("/css/**/*.css");
+
+				// Public (external website) public style bundles
+				pipeline.AddCssBundle("/css/pub-bundle.css",
+					"css/style.css", "css/animate.css", "lib/font-awesome/css/font-awesome.min.css");
+
+				// Internal app style bundle
+				pipeline.AddCssBundle("/css/int-bundle.css",
+					"lib/font-awesome/css/font-awesome.min.css", "lib/metisMenu/dist/metisMenu.min.css", "lib/bootstrap-tour/build/css/bootstrap-tour.min.css",
+					"css/animate.css", "lib/select2/dist/css/select2.min.css",
+					"lib/toastr/toastr.min.css", "lib/jqueryui/themes/cupertino/jquery-ui.css", "lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css",
+					"clib/picEdit/css/picedit.min.css", "clib/bootstrap-wizard/bootstrap-wizard.css", "lib/quill/dist/quill.snow.css", "lib/leaflet/dist/leaflet.css",
+					"lib/bstreeview/dist/css/bstreeview.min.css",
+					"lib/selectize/selectize/dist/css/selectize.default.css", "lib/claviska/jquery-minicolors/jquery.minicolors.css", "lib/algolia/autocomplete-theme-classic/dist/theme.css",
+					"lib/bootstrap-select/dist/css/bootstrap-select.css", "clib/data-tables/datatables.css", "lib/jquery-datetimepicker/build/jquery.datetimepicker.min.css",
+					"lib/deltablot/dropzone/dist/dropzone.css", "css/style.css");
+
+				// Internal app js bundle
+				pipeline.AddJavaScriptBundle("/js/int-bundle.js",
+					"lib/metisMenu/dist/metisMenu.min.js", "lib/slimScroll/jquery.slimscroll.js",
+					"lib/select2/dist/js/select2.full.js", "lib/bootstrap-tour/build/js/bootstrap-tour.min.js", "lib/toastr/toastr.min.js",
+					/*"clib/markerwithlabel/markerwithlabel.js",*/ "clib/ujs/jquery-ujs.js", "lib/jquery-validate/dist/jquery.validate.min.js", "lib/jqueryui/jquery-ui.min.js",
+					"lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js", "lib/signalr/dist/browser/signalr.js", "clib/picEdit/js/picedit.min.js",
+					"lib/sweetalert/dist/sweetalert.min.js", "clib/bootstrap-wizard/bootstrap-wizard.min.js", "lib/quill/dist/quill.min.js", "lib/moment/min/moment.min.js",
+					"lib/leaflet/dist/leaflet.js", "lib/bstreeview/dist/js/bstreeview.min.js",
+					"lib/selectize/selectize/dist/js/standalone/selectize.min.js", "lib/claviska/jquery-minicolors/jquery.minicolors.min.js", "lib/algolia/autocomplete-js/dist/umd/index.production.js",
+					"lib/bootstrap-select/dist/js/bootstrap-select.js",
+					"clib/data-tables/DataTables-1.13.5/js/jquery.dataTables.min.js",
+					"clib/data-tables/DataTables-1.13.5/js/dataTables.bootstrap.min.js",
+					"lib/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js",
+					"lib/deltablot/dropzone/dist/dropzone-min.js",
+					"js/site.min.js");
+			});
+
+
+			services.AddScoped<Filters.RequireActivePlanFilter>();
+			services.AddScoped<Helpers.DepartmentLocalTimeFilter>();
+
+			var builder = services.AddMvc().AddMvcOptions(options =>
+			{
+				options.EnableEndpointRouting = false;
+				options.Filters.Add(new Microsoft.AspNetCore.Mvc.ServiceFilterAttribute(typeof(Filters.RequireActivePlanFilter)));
+				// ADP department operation lock: refuses department-scoped mutations with 423 Locked
+				// while a migration window holds the department's lock; reads pass through untouched.
+				options.Filters.Add<Filters.DepartmentLockActionFilter>();
+				// ADP response-boundary net: for a protected department, redacts any value that
+				// reached the response still carrying an envelope, and logs the surface that missed
+				// its resolve call. Defence in depth, not a substitute for resolving.
+				options.Filters.Add<Filters.ProtectedDataEgressFilter>();
+				// RMS protected content (plan 5.9.3): a refused reveal becomes a step-up prompt, never a 500.
+				options.Filters.Add<Filters.RecordProtectedContentExceptionFilter>();
+				// A Records module not enabled for the department is a message for the user, never a 500 (or a Sentry issue).
+				options.Filters.Add<Filters.RecordsModuleDisabledExceptionFilter>();
+				// A submission held while the user verified (2FA step-up, password re-confirmation) is put back as the form when
+				// the resume page posts it; a replay post is restored or refused, never bound bare.
+				options.Filters.Add<Filters.HeldSubmissionReplayFilter>();
+				// Statuses saved by a website request record who set them (M0260), so reports can tell a dispatcher's entry
+				// from the crew's own.
+				options.Filters.Add<Filters.StatusWriteActorFilter>();
+				// The department's terminology is read before the action, so its words reach every localized string the page shows.
+				options.Filters.Add(new Filters.DepartmentTermsFilter());
+				// A write runs to the end once it starts, so a browser that leaves partway never leaves a call half saved.
+				Filters.MutationCancellationTokenBinderProvider.Register(options);
+			}).AddJsonOptions(jsonOptions =>
+			{
+				jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
+			});
+
+#if (DEBUG)
+			builder.AddRazorRuntimeCompilation();
+#endif
+
+			//#if (!DEBUG)
+			services.AddStackExchangeRedisCache(option =>
+			{
+				option.Configuration = CacheConfig.RedisConnectionString;//Environment.GetEnvironmentVariable("Redis-Session");
+				option.InstanceName = "RedisInstance";
+			});
+
+			var redis = ConnectionMultiplexer.Connect(CacheConfig.RedisConnectionString);
+			services.AddDataProtection().SetApplicationName($"{Config.SystemBehaviorConfig.GetEnvPrefix()}resgrid-web").PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
+
+			services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromMinutes(240);
+				options.Cookie.Name = "ResgridSessionCookie";
+			});
+			//#endif
+
+			StripeConfiguration.ApiKey = Config.PaymentProviderConfig.GetStripeApiKey();
+
+			services.AddLocalization();
+			// Every IStringLocalizer<T> carries the signed-in department's terminology (Department -> Terminology), so a renamed
+			// module reads the department's words on its buttons, headings and exports too; the terminology itself reads the
+			// shipped strings.
+			services.AddSingleton<ResourceManagerStringLocalizerFactory>();
+			services.AddSingleton<Helpers.IShippedStringLocalizerFactory, Helpers.ShippedStringLocalizerFactory>();
+			services.Replace(ServiceDescriptor.Singleton<IStringLocalizerFactory>(sp => new Helpers.DepartmentTermStringLocalizerFactory(
+				sp.GetRequiredService<ResourceManagerStringLocalizerFactory>(), sp.GetRequiredService<IHttpContextAccessor>())));
+
+			services.Configure<RequestLocalizationOptions>(
+				opts =>
+				{
+					opts.DefaultRequestCulture = new RequestCulture("en", "en");
+					// Formatting numbers, dates, etc.
+					opts.SupportedCultures = SupportedLocales.DefaultENCultureInfos();
+					// UI strings that we have localized.
+					opts.SupportedUICultures = SupportedLocales.GetSupportedCultureInfos();
+				});
+
+			// Not ported over to Postgres yet. -SJ.
+			if (Config.DataConfig.DocDatabaseType == DatabaseTypes.MongoDb)
+			{
+				Audit.Core.Configuration.Setup()
+					.UseMongoDB(config => config
+						.ConnectionString(Config.DataConfig.NoSqlConnectionString)
+						.Database("Audit")
+						.Collection("Event"));
+			}
+
+			// Sentry logging
+			if (!string.IsNullOrWhiteSpace(Config.ExternalErrorConfig.ExternalErrorServiceUrlForWebsite))
+			{
+				//services.AddSingleton<ISentryEventExceptionProcessor, SentryExceptionProcessor>();
+				services.AddTransient<ISentryEventProcessor, SentryEventProcessor>();
+
+				services.AddSentryTunneling();
+			}
+
+			this.Services = services;
+
+			//if (Config.ExternalErrorConfig.ApplicationInsightsEnabled)
+			//{
+			//	services.AddSingleton<ITelemetryInitializer, WebTelemetryInitializer>();
+
+			//	var aiOptions = new ApplicationInsightsServiceOptions();
+			//	aiOptions.InstrumentationKey = ExternalErrorConfig.ApplicationInsightsInstrumentationKey;
+			//	aiOptions.ConnectionString = ExternalErrorConfig.ApplicationInsightsConnectionString;
+			//	services.AddApplicationInsightsTelemetry(aiOptions);
+			//}
+		}
+
+		public void ConfigureContainer(ContainerBuilder builder)
+		{
+			builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+
+			builder.RegisterModule(new DataModule());
+			builder.RegisterModule(new NoSqlDataModule());
+			builder.RegisterModule(new ServicesModule());
+			builder.RegisterType<Resgrid.Web.Helpers.HttpProtectedGrantContext>().As<IProtectedGrantContext>().InstancePerLifetimeScope();
+			// One per request, so the navigation and the page read the department's terminology once between them.
+			builder.RegisterType<Resgrid.Web.Helpers.DepartmentTerminology>().As<Resgrid.Web.Helpers.IDepartmentTerminology>().InstancePerLifetimeScope();
+			builder.RegisterModule(new Resgrid.Search.SearchModule());
+			builder.RegisterModule(new Resgrid.Providers.Scanning.ScanningProviderModule());
+			builder.RegisterModule(new Resgrid.Providers.Import.ImportProviderModule());
+			builder.RegisterModule(new Resgrid.Providers.Neris.NerisProviderModule());
+			builder.RegisterModule(new ProviderModule());
+			builder.RegisterModule(new EmailProviderModule());
+			builder.RegisterModule(new BusModule());
+			builder.RegisterModule(new RabbitBusModule());
+			builder.RegisterModule(new AddressVerificationModule());
+			builder.RegisterModule(new NumbersProviderModule());
+			builder.RegisterModule(new CacheProviderModule());
+			builder.RegisterModule(new MarketingModule());
+			builder.RegisterModule(new PdfProviderModule());
+			builder.RegisterModule(new VoipProviderModule());
+			builder.RegisterModule(new MessagingProviderModule());
+			builder.RegisterModule(new Resgrid.Providers.Workflow.WorkflowProviderModule());
+			builder.RegisterModule(new Resgrid.Providers.Weather.WeatherProviderModule());
+			builder.RegisterModule(new Resgrid.Providers.Payments.PaymentsProviderModule());
+			// ADP broker CLIENT only (no key material, no KMS route) — the wizard preflight probes
+			// broker health through it. The real KMS adapter module is broker-host-only.
+			builder.RegisterModule(new Resgrid.Providers.ProtectedData.ProtectedDataBrokerClientModule());
+			// WebAuthn ceremonies for passkey enrollment and step-up; every passkey gate starts off (PasskeyConfig).
+			builder.RegisterModule(new Resgrid.Providers.Authentication.AuthenticationProviderModule());
+
+			builder.RegisterModule(new Resgrid.Chatbot.ChatbotModule());
+			builder.RegisterModule(new Resgrid.Chatbot.NLU.NLUModule());
+			builder.RegisterModule(new Resgrid.Providers.Chatbot.ChatbotProviderModule());
+
+			builder.RegisterType<IdentityUserStore>().As<IUserStore<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+			builder.RegisterType<IdentityRoleStore>().As<IRoleStore<Model.Identity.IdentityRole>>().InstancePerLifetimeScope();
+			builder.RegisterType<ClaimsPrincipalFactory<Model.Identity.IdentityUser, Model.Identity.IdentityRole>>().As<IUserClaimsPrincipalFactory<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+
+			builder.RegisterType<UserValidator<Model.Identity.IdentityUser>>().As<IUserValidator<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+			builder.RegisterType<PasswordValidator<Model.Identity.IdentityUser>>().As<IPasswordValidator<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+			builder.RegisterType<PasswordHasher<Model.Identity.IdentityUser>>().As<IPasswordHasher<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+			builder.RegisterType<UpperInvariantLookupNormalizer>().As<ILookupNormalizer>().InstancePerLifetimeScope();
+			builder.RegisterType<DefaultUserConfirmation<Model.Identity.IdentityUser>>().As<IUserConfirmation<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+			builder.RegisterType<UserManager<Model.Identity.IdentityUser>>().As<UserManager<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+			builder.RegisterType<SignInManager<Model.Identity.IdentityUser>>().As<SignInManager<Model.Identity.IdentityUser>>().InstancePerLifetimeScope();
+		}
+
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+		{
+			// Passkeys fail closed on a bad relying-party configuration; say so at startup (plan section 10.3).
+			Resgrid.Services.PasskeyReadinessReporter.Report(app.ApplicationServices.GetService(typeof(Resgrid.Model.Services.IRelyingPartyRegistry)) as Resgrid.Model.Services.IRelyingPartyRegistry);
+			Resgrid.Repositories.DataRepository.Stores.AuthenticatorSeedProtector.ReportReadiness();
+
+			// Preserve the trusted KnownNetworks configured through DI.
+			app.UseForwardedHeaders();
+
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else if (env.IsStaging())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Public/Error");
+
+#if (DOCKER)
+				app.Use(async (context, next) => {
+					context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
+					context.Request.Scheme = "https";
+					context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self';");
+
+					await next.Invoke();
+				});
+#else
+				app.Use(async (context, next) =>
+				{
+					context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self';");
+					await next.Invoke();
+				});
+#endif
+
+				/* I'm disabling this for now. Ideally it would be configured, but HSTS won't validate
+				 * self-signed or QA certs from ACME or cert-manager. This will cause issues with
+				 * hybrid Kubernetes\Docker implementations that are using proper certificates on the
+				 * ingress ssl terminator and non-ssl or self signed certs on internal cluster
+				 * communication channels. -SJ
+				 */
+				//app.UseHsts();
+				//app.UseHttpsRedirection();
+			}
+
+			this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+			var eventAggregator = this.AutofacContainer.Resolve<IEventAggregator>();
+			var outbound = this.AutofacContainer.Resolve<IOutboundEventProvider>();
+			var eventService = this.AutofacContainer.Resolve<ICoreEventService>();
+
+			this.Locator = new AutofacServiceLocator(this.AutofacContainer);
+			ServiceLocator.SetLocatorProvider(() => this.Locator);
+
+			var workflowProvider = this.AutofacContainer.Resolve<IWorkflowEventProvider>();
+
+			var cookiePolicyOptions = new CookiePolicyOptions
+			{
+				Secure = env.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always,
+				MinimumSameSitePolicy = SameSiteMode.Strict//.None,
+
+			};
+
+			app.UseCookiePolicy(cookiePolicyOptions);
+
+			// Serve the Vite ESM assets directly so legacy optimization doesn't rewrite module chunks.
+			app.UseWhen(
+				context => context.Request.Path.StartsWithSegments("/js/ng"),
+				clientApp =>
+				{
+					clientApp.UseStaticFiles(new StaticFileOptions
+					{
+						FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "js", "ng")),
+						RequestPath = "/js/ng",
+						OnPrepareResponse = context =>
+						{
+							var cacheControl = context.Context.Request.Path.StartsWithSegments("/js/ng/chunks")
+								? "public,max-age=31536000,immutable,no-transform"
+								: "no-cache,no-transform";
+
+							context.Context.Response.Headers["Cache-Control"] = cacheControl;
+						}
+					});
+				});
+
+			app.UseWebOptimizer();
+			app.UseStaticFiles();
+			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseMiddleware<Resgrid.Web.Middleware.SessionValidationMiddleware>();
+			app.UseAuthorization();
+			app.UseWhen(
+				context => !string.Equals(context.Request.Path.Value, "/health/getcurrent", StringComparison.OrdinalIgnoreCase),
+				authenticatedApp => authenticatedApp.UseSession());
+			app.UseMiddleware<Resgrid.Web.Middleware.Require2FAEnrollmentMiddleware>();
+
+			app.UseRequestLocalization();
+
+			// Sentry logging
+			if (!string.IsNullOrWhiteSpace(Config.ExternalErrorConfig.ExternalErrorServiceUrlForWebsite))
+			{
+				app.UseSentryTunneling();
+			}
+
+			app.UseMvc(routes =>
+			{
+				routes.MapRoute("User", "{area:exists}/{controller}/{action=Index}/{id?}");
+
+				routes.MapRoute(
+					name: "default",
+					template: "{controller=Home}/{action=Index}/{id?}");
+			});
+		}
+	}
+}

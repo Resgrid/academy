@@ -1,0 +1,155 @@
+entry | a001 | 001-records-manage-definitions
+Department administrators use record definitions to give authors a consistent form and lifecycle. In Records, open Manage and choose Definitions. This example builds a department-owned form for a fictional community coordination exercise.
+Visible: Records | Manage | Definitions
+
+entry | a002 | 002-definitions-before-own-exercise
+The catalog separates published and draft versions. A definition describes the form; an individual record stores one completed entry. Choose New definition for the new exercise, leaving the product-owned forms unchanged.
+Visible: Definitions | New definition | Published version | Draft version
+
+blank | a003 | 003-prepared-blank-definition
+Start from template is set to Blank definition. Give Definition a unique lower-case key, then enter the Name and Category. Here the name is Training Only, Community Software Exercise, and the category is Academy Software Exercises. The key cannot be changed after creation, so review it before choosing Create definition.
+Visible: Create definition | Blank definition | Definition | Name | Category
+
+blank | a009 | 009-starter-schema-summary-notes
+The returned editor identifies version one as Draft and confirms that the definition was created. It is not yet a published form.
+Visible: v1 | Draft | Definition created. Edit the schema, validate, then publish.
+
+policy | a004 | 004-prepared-own-definition-policy
+Lifecycle preset is QuickEntry, supporting a draft followed by finalization. Records per call is Multiple per call. Require author attestation at finalize is checked; reviewer and approver roles are not selected for this example.
+Visible: Lifecycle preset | QuickEntry | Records per call | Multiple per call | Require author attestation at finalize
+
+policy | a008 | 008-numbering-readable
+Under Numbering, Number prefix gives record numbers a recognizable label. Sequence width is four and Assign number is OnFinalize. Reset yearly is checked, while the station and incident sequence options are off. These choices provide one annual sequence for this definition and issue the number when the record is finalized, rather than when its draft first appears.
+Visible: Numbering | Number prefix | Sequence width | Assign number | OnFinalize | Sequence per station | Sequence per incident | Reset yearly
+
+fields | a007 | 007-client-surfaces-readable
+Classification is Standard. In Client surfaces, only Responder is selected. Allow offline is off, Allow attachments is on, and Keep photo coordinates on attachments is off. Together, these choices control where the form is offered, whether it can be used offline, and whether authors can attach files.
+Visible: Classification | Standard | Client surfaces | Responder | Unit | IC | Dispatch | Allow offline | Allow attachments | Keep photo coordinates on attachments
+
+fields | a011 | 011-definition-fields-save-controls
+The Fields table describes the unchanged starter form: Summary is required ShortText, while Notes is optional LongText. A short summary helps identify an entry; longer notes provide its context. Check that table rather than mistaking the nearby JSON example for the saved form.
+Visible: Fields | Summary | ShortText | Yes | Notes | LongText | No
+
+save-definition | a014 | 014-fresh-draft-final-controls
+At the foot of the reopened draft, Validate, Save draft and Review impact and publish are separate controls. Validate checks the definition without publishing it.
+Visible: Validate | Save draft | Review impact & publish
+
+save-definition | a010 | 010-definition-valid-result
+The validation result says The definition is valid, while the version remains Draft.
+Visible: The definition is valid. | Draft
+
+save-definition | a012 | 012-definition-draft-saved
+The save confirmation says Draft saved. That confirms a definition save, not an individual record entry.
+Visible: Draft saved. | Draft
+
+save-definition | a013 | 013-fresh-draft-numbering-attestation
+Freshly reopening the saved version retains its numbering and attestation settings. Keep the validation result, saved configuration and publication state distinct.
+Visible: Numbering | Sequence width | Assign number | OnFinalize | Require author attestation at finalize
+
+impact | a015 | 015-publish-impact-before-first-publication
+Review impact and publish opens Publish impact. Before the first publication, Published version is a dash and Breaking change is No. Read the impact before making the version available.
+Visible: Publish impact | Published version | Breaking change | Client readiness
+
+impact | a016 | 016-client-readiness-and-publish
+Client readiness compares app availability, client surfaces and capability. Only Responder is offered this version. Publish is the publication control; the table itself is neither publication confirmation nor a demonstration of using the form in that app.
+Visible: Client readiness | Responder | Unit | IncidentCommand | Dispatch | Client surfaces | Publish
+
+published | p003 | 003-published-version-readonly-resumed
+A published version is read-only. Use Open new draft when the form needs a later change.
+Visible: TRAINING ONLY - Community software exercise v1 · Published | This version is published and read-only. Open a new draft to make changes. | Open new draft
+
+published | p004 | 004-current-published-version-history
+History identifies the current published version and its publication date.
+Visible: Version | Published | Published on | QuickEntry
+
+published | u019 | 019-persisted-numbering-classification-and-client-flags
+Its saved numbering and author-attestation choices remain visible.
+Visible: Require author attestation at finalize | Sequence width | Assign number | OnFinalize
+
+published | u020 | 020-saved-fields-client-surfaces-and-media-options
+The complete settings view also retains Standard, the client and attachment choices, and the Summary and Notes fields. This is the configuration authors will use.
+Visible: Classification | Standard | Client surfaces | Responder | Fields | Summary | Notes
+
+prepare-record | u001 | 001-published-v1-quickentry-custom-form
+The published department form identifies its name and version one, QuickEntry, above Summary and Notes. Confirm that identity before typing; a generic Training form would be a different record type.
+Visible: New Record — TRAINING ONLY - Community software exercise | v1 · QuickEntry | Summary | Notes
+
+prepare-record | u002 | 002-custom-form-attachments-and-save-options
+The lower form offers Save draft and Save and finalize. We start without a file or attestation.
+Visible: Attachments | No file chosen | Save draft | Save and finalize
+
+prepare-record | u003 | 003-prepared-fictional-summary-notes-before-draft-save
+Enter a distinct exercise Summary and explain its purpose in Notes. Here the text describes software practice and makes no claim of a visit, care, attendance or operational action. Choose Save draft first so the saved entry can be checked before finalization.
+Visible: Summary | Notes | Save draft
+
+draft | u004 | 004-saved-custom-record-draft-reference
+The returned record is Draft, with a draft reference and no final record number. Author and Owner are Wallace Boden. Station and group resolves to Command, although the new form showed None. Read the saved result rather than assuming that a blank selection remained blank. Keep this reference so later editing and attachment work stay with the same record.
+Visible: Draft | D-EKCMS | Record # | Draft reference | Author | Owner | Station / group | Command
+
+edit | u004 | 004-saved-custom-record-draft-reference
+Use Edit on this draft instead of opening another New Record form.
+Visible: Edit | D-EKCMS
+
+edit | u005 | 005-own-draft-notes-edit-before-explicit-save
+Update Notes to explain that the summary and public handout were reviewed in the fictional exercise. Read the complete statement in the editor, then use Save draft.
+Visible: Notes | Save draft
+
+edit | u006 | 006-reopened-same-draft-updated-notes
+A fresh readback of the same reference contains those revised Notes and remains Draft. The separate readback is the check that the intended text was retained.
+Visible: Draft | D-EKCMS | Notes
+
+attachment | u007 | 007-actual-attachment-form-before-file-choice
+On the saved record, Attachments provides Choose Files, File classification and Add attachment.
+Visible: Attachments | Choose Files | File classification | Add attachment
+
+attachment | u008 | 008-prepared-public-handout-unrestricted
+Choose the public software handout and select Unrestricted operational content, then use Add attachment. This choice is for that file; it is separate from the form’s Standard classification.
+Visible: Choose Files | File classification | Unrestricted operational content | Add attachment
+
+attachment | u009 | 009-fresh-stored-public-software-attachment
+The fresh list contains the software handout, with a size of two hundred forty-two bytes. The next-upload selector has reset to Restricted. That reset does not describe the file already stored; check its retained metadata in the finalized revision.
+Visible: academy-record-exercise.txt | 242 bytes | Restricted
+
+finalize | u010 | 010-own-accurate-software-record-attestation-before-finalize
+Read the saved Summary and Notes before checking the accuracy attestation and choosing Finalize. The statement applies to the entry’s actual contents; it does not turn a software exercise into physical work or attendance.
+Visible: I attest that this record is accurate and complete to the best of my knowledge. | Finalize | D-EKCMS
+
+finalize | u011 | 011-fresh-finalized-trnadm-issued-number
+The fresh result shows Finalized. Its number uses our T R N A D M prefix, the year twenty twenty-six, and the four-digit sequence zero zero zero one. The draft reference remains alongside it. Amend is available for a later correction to a finalized record.
+Visible: Finalized | TRNADM-2026-0001 | D-EKCMS | Amend
+
+revision | u012 | 012-retained-handout-first-finalized-history
+History now shows revision one, Finalized, with the author and date. The handout remains listed. Use View on that history row.
+Visible: History | Finalized | View | academy-record-exercise.txt
+
+revision | u013 | 013-actual-revision-one-attachment-classification
+The resulting HTML revision identifies the same record. Its attachment metadata retains the filename, byte size, checksum and Unrestricted classification. The checksum matches the public handout. This is the stored classification, independent of the reset upload selector.
+Visible: Complete department record TRNADM-2026-0001 — revision 1 | Item 1 / Byte Size | 242 | Item 1 / Checksum | Item 1 / Classification | Unrestricted
+
+revision | u014 | 014-actual-revision-one-saved-record-values
+Farther down, Values preserves the saved Summary and Notes alongside the draft reference and record number. Review this specific revision when checking what finalization retained.
+Visible: Values | Details / Summary | Details / Notes | D-EKCMS | TRNADM-2026-0001
+
+queue | u022 | 022-all-four-existing-and-new-record-rows-readable
+Back in Records, the new custom row is Finalized. The three earlier records remain present: an Amended Training entry, a Work Draft and the older Finalized Training entry. Read Record number, Type, State and Summary together to choose the intended row. This record-entry sequence created only its own custom entry; finding it again does not require creating a replacement.
+Visible: Record # | Type | State | Summary | TRNADM-2026-0001 | TRN-2026-0002 | Amended | D-469KP | Draft | TRN-2026-0001
+
+launcher | u016 | 016-published-definition-catalog-own-launcher
+For later use, return to the definition catalog. The department-owned row shows published version one, no draft version, and its own New Record control. Use that row to select the intended form.
+Visible: TRAINING ONLY - Community software exercise | trn-community-software-20261029 | Department | Published version | Draft version | New Record
+
+launcher | u021 | 021-catalog-launcher-opens-published-form
+The actual launcher opens the named version-one form with Summary and Notes. This later check leaves the new form empty.
+Visible: New Record — TRAINING ONLY - Community software exercise | v1 · QuickEntry | Summary | Notes
+
+launcher | u022 | 022-all-four-existing-and-new-record-rows-readable
+Returning to the queue still shows four records, with no second custom draft.
+Visible: TRNADM-2026-0001 | TRN-2026-0002 | D-469KP | TRN-2026-0001
+
+sectors | u014 | 014-actual-revision-one-saved-record-values
+Fire and EMS teams can use a small form for exercise briefings. Community-care and mental-health teams can standardize coordination notes with suitable information rules. Search-and-rescue teams can organize mission-preparation summaries. Security teams can structure patrol briefings, wildland coordinators can prepare seasonal orientation forms, and industrial teams can retain system-training notes and a public handout.
+Visible: Values | Details / Summary | Details / Notes
+
+sectors | u022 | 022-all-four-existing-and-new-record-rows-readable
+Across those settings, choose fields, numbering and client access for the task. Test the actual published form, verify the saved draft and attachment, and retain the finalized revision that supports the entry.
+Visible: Record # | Type | State | Summary

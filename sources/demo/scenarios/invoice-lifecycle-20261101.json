@@ -1,0 +1,58 @@
+{
+  "scenario": "Fictional customer invoice, manual offline entries and aging",
+  "training_only": true,
+  "contact_id": "f2f8a679-745f-48b1-9002-e721e205c6b8",
+  "customer": "Academy Logistics Desk (fictional)",
+  "billing_email": "training-invoices@example.invalid",
+  "profile_terms_net_days": 30,
+  "default_discount_percent": 0,
+  "profile_notes": "TRAINING ONLY - Academy invoice and offline payment exercise. No customer communication or real payment.",
+  "invoice_id": "920e60b9-a2fa-4340-9ba4-7c19b12fc0fc",
+  "invoice_number": "1",
+  "currency": "USD",
+  "notes": "TRAINING ONLY - Community standby coordination exercise. Fictional invoice; no customer communication or real money.",
+  "terms": "TRAINING ONLY - Offline payment entry practice.",
+  "line": {
+    "description": "TRAINING ONLY - Standby exercise",
+    "quantity": 2,
+    "rate": 50,
+    "taxable": false
+  },
+  "manual_payments": [
+    {
+      "amount": 40,
+      "method": "Other",
+      "reference": "TRAINING-ONLY-PAYMENT-01"
+    },
+    {
+      "amount": 60,
+      "method": "Other",
+      "reference": "TRAINING-ONLY-PAYMENT-02"
+    }
+  ],
+  "actual_issued_date": "2026-11-02",
+  "actual_due_date": "2026-12-02",
+  "expected_observed_results": [
+    "Draft total100,paid0,balance100.",
+    "Mark as sent (no e-mail) produced Sent.",
+    "First payment persisted: Partially paid,paid40,balance60.",
+    "Aging Current60 for invoice1.",
+    "Second payment persisted: Paid,paid100,balance0.",
+    "Aging no outstanding invoices.",
+    "Paid status filter returned invoice1."
+  ],
+  "replay_steps": [
+    "In a separate fictional department, use a fictional contact and save its billing profile.",
+    "Select New invoice, customer and currency; create draft.",
+    "Fill training notes and terms; add one manual line, quantity2,rate50,taxableclear. Save and inspect the saved summary.",
+    "Use Mark as sent (no e-mail) and accept normal UI confirmation. Do not send email.",
+    "Record first fictional offline payment40,methodOther,training reference01; reload and verify.",
+    "Inspect payment row and Aging Current60.",
+    "Record second fictional payment60,methodOther,training reference02; reload and verify Paid and0balance.",
+    "Inspect both rows, Aging with no outstanding invoices, and Paid filter."
+  ],
+  "external_email_sent": false,
+  "real_payment_processed": false,
+  "pdf_export_attempted": false,
+  "id_policy": "Recorded identifiers are historical evidence. Use new generated IDs on replay; do not overwrite unrelated records."
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-29T05:36:41Z",
+  "kind": "source_only_actual_capture_review",
+  "qualified_video": false,
+  "canonical_lesson_modified": false,
+  "raw_originals_modified": false,
+  "raw_manifest": {
+    "file": "captures/expansion/core-records-administration-20261029/manifest.json",
+    "sha256": "3c099fd2536762f815db3ad2aa2905e89db5a21a68e24212e1b07121ba01eecd"
+  },
+  "department_id": 51,
+  "definition_key": "trn-community-software-20261029",
+  "definition_version": 1,
+  "status": "partial_definition_configuration_only_publication_pending",
+  "evidence_style": "Actual screenshot response/readback claims; UI operation names supplied by the parent are separated from capture-time observations. No unrecorded click timings or native dialog pixels inferred.",
+  "operations": [
+    {
+      "order": 1,
+      "operation": "Open Records Manage and the definition catalog",
+      "capture_refs": [
+        "001-records-manage-definitions",
+        "002-definitions-before-own-exercise"
+      ],
+      "observed_result": "Records list and existing definition catalog shown. No baseline row selected.",
+      "claim_boundary": "Baseline snapshot only; no later preservation comparison yet."
+    },
+    {
+      "order": 2,
+      "operation": "Prepare a new blank definition and create own v1",
+      "capture_refs": [
+        "003-prepared-blank-definition",
+        "004-prepared-own-definition-policy",
+        "009-starter-schema-summary-notes"
+      ],
+      "observed_result": "003 is the prepared form. The later own Edit route and visible 009 confirmation establish the new definition exists as v1 Draft.",
+      "claim_boundary": "No exact click timestamp is inferred from screenshot timestamps. No template or clone application claimed."
+    },
+    {
+      "order": 3,
+      "operation": "Prepare own definition policy, numbering and client/media choices",
+      "capture_refs": [
+        "004-prepared-own-definition-policy",
+        "005-prepared-numbering-classification",
+        "007-client-surfaces-readable",
+        "008-numbering-readable"
+      ],
+      "observed_result": "QuickEntry / Multiple per call; attestation on; width 4 / OnFinalize / yearly reset on; Standard; Responder only; offline off; attachments on; retained photo coordinates off. Starter Summary and Notes unchanged.",
+      "claim_boundary": "Prepared state. Full NumberPrefix TRNADM is DOM-confirmed but clipped in pixels. Review/approver selections and due hours remain empty in DOM; no approval workflow claimed."
+    },
+    {
+      "order": 4,
+      "operation": "Validate own definition",
+      "capture_refs": [
+        "010-definition-valid-result",
+        "011-definition-fields-save-controls"
+      ],
+      "observed_result": "Actual response The definition is valid.; Summary and Notes field table pictured.",
+      "claim_boundary": "Validation is not persistence. Original Validate control is not painted in these two frames; the complete current controls are captured later in 014."
+    },
+    {
+      "order": 5,
+      "operation": "Save own definition draft",
+      "capture_refs": [
+        "012-definition-draft-saved"
+      ],
+      "observed_result": "Actual Draft saved. response, own v1 still Draft.",
+      "claim_boundary": "No publication and no operational record creation. The original pre-Save button screenshot is missing."
+    },
+    {
+      "order": 6,
+      "operation": "Fresh read-only reopen of own key/version",
+      "capture_refs": [
+        "013-fresh-draft-numbering-attestation",
+        "014-fresh-draft-final-controls"
+      ],
+      "observed_result": "Fresh GET preserves the configured numbering/attestation fields, with the complete Validate, Save draft, Review impact & publish controls visible in 014. Full DOM also corroborates the saved client/media flags.",
+      "claim_boundary": "Not every saved field is simultaneously painted. This fresh reopened form must not be relabeled as the first pre-Save form."
+    },
+    {
+      "order": 7,
+      "operation": "Review impact before first publication",
+      "capture_refs": [
+        "015-publish-impact-before-first-publication",
+        "016-client-readiness-and-publish"
+      ],
+      "observed_result": "Own v1 preview: no published version, no breaking change; only Responder client surface offered; Publish and Cancel visible.",
+      "claim_boundary": "Human native Publish confirmation is pending. No POST completion, published version, published catalog row, record create or finalized number is in this held evidence."
+    }
+  ],
+  "latest_observed_state": "Own v1 definition Draft; first-publication impact preview.",
+  "not_observed": [
+    "Publish confirmation acceptance or cancellation",
+    "Published v1 result",
+    "Own operational record Draft create/edit",
+    "Stored attachment",
+    "Finalize/attestation submission",
+    "Issued TRNADM number",
+    "Field-app authoring success"
+  ]
+}

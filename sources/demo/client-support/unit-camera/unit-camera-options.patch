@@ -1,0 +1,200 @@
+--- a/src/components/maps/map-view.web.tsx
++++ b/src/components/maps/map-view.web.tsx
+@@ -544,9 +544,9 @@
+         map.easeTo(
+           {
+             center: options.centerCoordinate,
+-            zoom: options.zoomLevel,
+-            bearing: options.heading,
+-            pitch: options.pitch,
++            ...(options.zoomLevel !== undefined ? { zoom: options.zoomLevel } : {}),
++            ...(options.heading !== undefined ? { bearing: options.heading } : {}),
++            ...(options.pitch !== undefined ? { pitch: options.pitch } : {}),
+             duration: options.animationDuration || 1000,
+           },
+           { _programmatic: true }
+@@ -623,7 +623,15 @@
+ 
+       hasInitialized.current = true;
+       try {
+-        map.jumpTo({ center: center as [number, number], zoom: defaultSettings.zoomLevel, bearing: defaultSettings.heading, pitch: defaultSettings.pitch }, { _programmatic: true });
++        map.jumpTo(
++          {
++            center: center as [number, number],
++            ...(defaultSettings.zoomLevel !== undefined ? { zoom: defaultSettings.zoomLevel } : {}),
++            ...(defaultSettings.heading !== undefined ? { bearing: defaultSettings.heading } : {}),
++            ...(defaultSettings.pitch !== undefined ? { pitch: defaultSettings.pitch } : {}),
++          },
++          { _programmatic: true }
++        );
+       } catch {
+         // ignore projection errors during initialization
+       }
+@@ -639,7 +647,15 @@
+         if (!hasInitialized.current) {
+           hasInitialized.current = true;
+           try {
+-            map.jumpTo({ center: centerCoordinate as [number, number], zoom: zoomLevel, bearing: heading, pitch: pitch }, { _programmatic: true });
++            map.jumpTo(
++              {
++                center: centerCoordinate as [number, number],
++                ...(zoomLevel !== undefined ? { zoom: zoomLevel } : {}),
++                ...(heading !== undefined ? { bearing: heading } : {}),
++                ...(pitch !== undefined ? { pitch: pitch } : {}),
++              },
++              { _programmatic: true }
++            );
+           } catch {
+             // ignore projection errors during initialization
+           }
+@@ -648,9 +664,9 @@
+ 
+         const cameraOptions = {
+           center: centerCoordinate as [number, number],
+-          zoom: zoomLevel,
+-          bearing: heading,
+-          pitch: pitch,
++          ...(zoomLevel !== undefined ? { zoom: zoomLevel } : {}),
++          ...(heading !== undefined ? { bearing: heading } : {}),
++          ...(pitch !== undefined ? { pitch: pitch } : {}),
+           duration: animationDuration,
+         };
+ 
+--- /dev/null
++++ b/src/components/maps/__tests__/camera.web.test.tsx
+@@ -0,0 +1,135 @@
++/** @jest-environment jsdom */
++import { TextDecoder, TextEncoder } from 'node:util';
++
++import React, { act, createRef } from 'react';
++// @ts-ignore - react-dom/client types are not installed
++import { createRoot } from 'react-dom/client';
++
++import { Camera, MapContext } from '../map-view.web';
++
++jest.mock('@/lib/map-center', () => ({ getDepartmentMapCenter: jest.fn(() => ({ latitude: 39, longitude: -119 })) }));
++jest.mock('@/lib/map-style', () => ({ FALLBACK_DAY_MAP_STYLE: 'mapbox://styles/mapbox/streets-v12' }));
++jest.mock('@/lib/mapbox-token', () => ({ onMapboxAccessTokenChange: jest.fn() }));
++
++// Bypass the repo's mapbox-gl mock only for its actual numeric option handling.
++// No Map constructor, WebGL, tiles, browser navigation or network is involved.
++Object.assign(globalThis, { TextDecoder, TextEncoder });
++const sdk = jest.requireActual('mapbox-gl/dist/mapbox-gl.js') as typeof import('mapbox-gl');
++const ORIGIN: [number, number] = [-119, 39];
++const INCIDENT: [number, number] = [-87.6523, 41.8721];
++type CameraInput = { centerCoordinate?: [number, number]; zoomLevel?: number; heading?: number; pitch?: number; animationDuration?: number };
++type CameraHandle = { setCamera: (options: CameraInput) => void };
++type CameraProps = React.ComponentProps<typeof Camera>;
++type CameraHost = {
++  transform: { zoom: number; bearing: number; pitch: number; center: { lng: number; lat: number } };
++  stop: () => void;
++  fire: () => CameraHost;
++  jumpTo: jest.Mock;
++  easeTo: jest.Mock;
++  flyTo: jest.Mock;
++};
++
++// easeTo/flyTo use the same documented center/zoom/bearing/pitch option shape.
++// Execute the real SDK jumpTo for that shape so undefined numeric keys become
++// NaN exactly as in the installed SDK. Animation interpolation is outside scope.
++const makeMap = (): CameraHost => {
++  const map: CameraHost = {
++    transform: { zoom: 4, bearing: 3, pitch: 4, center: { lng: ORIGIN[0], lat: ORIGIN[1] } },
++    stop: jest.fn(),
++    fire: () => map,
++    jumpTo: jest.fn(),
++    easeTo: jest.fn(),
++    flyTo: jest.fn(),
++  };
++  const apply = (options: Parameters<typeof sdk.Map.prototype.jumpTo>[0]) => sdk.Map.prototype.jumpTo.call(map as unknown as InstanceType<typeof sdk.Map>, options);
++  map.jumpTo.mockImplementation(apply);
++  map.easeTo.mockImplementation(apply);
++  map.flyTo.mockImplementation(apply);
++  return map;
++};
++
++const expectFinite = (map: CameraHost, expected: { zoom: number; bearing: number; pitch: number }, center = INCIDENT) => {
++  expect(Number.isFinite(map.transform.zoom)).toBe(true);
++  expect(Number.isFinite(map.transform.bearing)).toBe(true);
++  expect(Number.isFinite(map.transform.pitch)).toBe(true);
++  expect(map.transform).toMatchObject(expected);
++  expect([map.transform.center.lng, map.transform.center.lat]).toEqual(center);
++};
++
++describe('web Camera with installed SDK numeric options', () => {
++  let host: HTMLDivElement;
++  let root: { render: (node: React.ReactNode) => void; unmount: () => void };
++  let map: CameraHost;
++  let camera: React.RefObject<CameraHandle | null>;
++  const renderCamera = (props: CameraProps = {}) => {
++    act(() =>
++      root.render(
++        <MapContext.Provider value={map}>
++          <Camera ref={camera} {...props} />
++        </MapContext.Provider>
++      )
++    );
++  };
++  beforeAll(() => {
++    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
++  });
++  beforeEach(() => {
++    host = document.createElement('div');
++    document.body.appendChild(host);
++    root = createRoot(host);
++    map = makeMap();
++    camera = createRef<CameraHandle>();
++  });
++  afterEach(() => {
++    act(() => root.unmount());
++    host.remove();
++  });
++
++  it('initial defaultSettings preserves existing orientation when optional values are absent', () => {
++    renderCamera({ defaultSettings: { centerCoordinate: INCIDENT, zoomLevel: 15 } });
++    expect(map.jumpTo).toHaveBeenCalledTimes(1);
++    expectFinite(map, { zoom: 15, bearing: 3, pitch: 4 });
++  });
++  it('initial centerCoordinate preserves existing orientation when optional values are absent', () => {
++    renderCamera({ centerCoordinate: INCIDENT, zoomLevel: 15 });
++    expect(map.jumpTo).toHaveBeenCalledTimes(1);
++    expectFinite(map, { zoom: 15, bearing: 3, pitch: 4 });
++  });
++  it('imperative setCamera preserves omitted zoom/orientation and accepts an omitted center', () => {
++    renderCamera();
++    act(() => camera.current!.setCamera({ centerCoordinate: INCIDENT }));
++    expectFinite(map, { zoom: 4, bearing: 3, pitch: 4 });
++    act(() => camera.current!.setCamera({ heading: 45 }));
++    expectFinite(map, { zoom: 4, bearing: 45, pitch: 4 });
++  });
++  it.each(['easeTo', 'flyTo'] as const)('controlled updates preserve omitted numeric values through %s', (method) => {
++    renderCamera({ centerCoordinate: ORIGIN, zoomLevel: 12, heading: 45, pitch: 20 });
++    renderCamera({ centerCoordinate: INCIDENT, animationMode: method === 'flyTo' ? 'flyTo' : 'easeTo' });
++    expect(map[method]).toHaveBeenCalledTimes(1);
++    expectFinite(map, { zoom: 12, bearing: 45, pitch: 20 });
++  });
++  it('omitted center leaves the current position unchanged for an imperative orientation update', () => {
++    renderCamera();
++    act(() => camera.current!.setCamera({ heading: 0, pitch: 0, zoomLevel: 0 }));
++    expectFinite(map, { zoom: 0, bearing: 0, pitch: 0 }, ORIGIN);
++  });
++
++  it.each(['defaultSettings', 'initial', 'controlled', 'imperative'] as const)('%s preserves valid zero and other defined numeric values', (kind) => {
++    const input = { centerCoordinate: INCIDENT, zoomLevel: 0, heading: 0, pitch: 0 };
++    if (kind === 'defaultSettings') renderCamera({ defaultSettings: input });
++    if (kind === 'initial') renderCamera(input);
++    if (kind === 'controlled') {
++      renderCamera({ centerCoordinate: ORIGIN, zoomLevel: 4, heading: 3, pitch: 4 });
++      renderCamera(input);
++    }
++    if (kind === 'imperative') {
++      renderCamera();
++      act(() => camera.current!.setCamera(input));
++    }
++    expectFinite(map, { zoom: 0, bearing: 0, pitch: 0 });
++    if (kind === 'imperative') {
++      act(() => camera.current!.setCamera({ centerCoordinate: INCIDENT, zoomLevel: 12, heading: 45, pitch: 20 }));
++      expectFinite(map, { zoom: 12, bearing: 45, pitch: 20 });
++    }
++  });
++});

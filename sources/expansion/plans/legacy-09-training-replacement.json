@@ -1,0 +1,3052 @@
+{
+  "schema_version": 1,
+  "lesson": "09-training",
+  "title": "Assign learning and track qualifications",
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "status": "BLOCKED — not a renderer-ready replacement plan",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "d26d9934b6f46d4a79b7a23062f46c862a4dce72b135fdd056a684115ed1c455",
+    "normalised_words_sha256": "6931e2fbc96dfca226b9e86934684e38b5a29e2ab76cb8ba4647ed583024be4b",
+    "word_count": 361,
+    "source_scene_count": 11,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/09-training.mp4",
+      "sha256": "b81a0dfa4d03856d8e8d6d9ec7634d17c7e08ba4e160fca993afa84d3049ef10",
+      "exists": true,
+      "duration_seconds": 161.2,
+      "bytes": 4821836
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/09-training.m4a",
+      "sha256": "f064de2e537b837eef9cbe290aa6abd86d3cbfde50853e6a87732aa89dedf948",
+      "exists": true,
+      "duration_seconds": 160.56,
+      "bytes": 3240744
+    },
+    "existing_video_aac_packet_payload_sha256": "bd385b28bde160b2611c5512a6cb2304f497859a668a60a0a1e847706d5a8902",
+    "srt": {
+      "file": "sources/media/09-training.srt",
+      "sha256": "87322bc5e6d832f5eafbc4d14f02ecfb4eb2159a713f6899512d9d22a3d16041",
+      "cue_count": 52
+    },
+    "vtt": {
+      "file": "sources/media/09-training.vtt",
+      "sha256": "62bca77ea8a32148953f83fdf1015b5ca016145bd30a2c0fc91b67eb51c30647"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/09-training-raw.srt",
+      "sha256": "58f0be9c1f6b005ab8185e1627b2889c7904f3fba3a87c2350231a68287fc762"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/09-training-validation.json",
+      "sha256": "2e314cabf30b95e98708e887adfa065a647d201802764b05622ce02fa5482f21",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 53,
+      "reported_match_ratio": 0.996,
+      "reported_duration_seconds": 165.06,
+      "reported_raw_audio_seconds": 160.56,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 161.179,
+    "caption_last_end_seconds": 160.949,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "illustrated_input_compliant": false,
+  "scenes": [
+    {
+      "index": 0,
+      "number": 1,
+      "title": "Assign learning and track qualifications",
+      "kind": "title",
+      "narration": "Welcome to Resgrid Academy. In this lesson, we will assign learning and track qualifications. Scattered training records make it harder to see incomplete assignments and upcoming certification renewals. We will explain the features, the setup decisions, and a practical way to check the result.",
+      "narration_sha256": "2de748618ecbc76403e06bd3e427fa21fefa486907a12ec42fed586b00fc0013",
+      "course_timing_proposal_only": {
+        "start": 0.0,
+        "duration": 18.06
+      },
+      "actual_existing_cue_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Index",
+          "intent": "Open actual assigned training, audience and completion state.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 38,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "4826e6d11f0f1ceb25885518c29b92af791d68c9fc9bc6a507de39a81488b7cf",
+              "current_file_sha256": "4826e6d11f0f1ceb25885518c29b92af791d68c9fc9bc6a507de39a81488b7cf",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Name",
+            "Description",
+            "Due Date",
+            "Action",
+            "WARNING: This will permanently delete this training. Are you sure you want to delete the training",
+            "Add Training",
+            "No Due Date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Index",
+          "intent": "Filter current/expiring/expired certificates and inspect person record.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 259,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4",
+              "current_file_sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Dashboard",
+            "Scope",
+            "Category",
+            "Group",
+            "Role",
+            "Export CSV",
+            "Add Certification"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-023-training:2395c6d906ae",
+        "Core:legacy-core-024-certifications:2b152cc91043"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s01:a01",
+          "text": "Welcome to Resgrid Academy.",
+          "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            1
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 0.09,
+          "enclosing_cue_end": 1.7690000000000001,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:05-trainings:9044f69b4995",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s01:a02",
+          "text": "In this lesson, we will assign learning and track qualifications.",
+          "text_sha256": "460d913fb2d1a557463cd03b565ec7ac5fae8a024454905bc301082ef87cea82",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            2
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 2.15,
+          "enclosing_cue_end": 5.84,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:05-trainings:9044f69b4995",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s01:a03",
+          "text": "Scattered training records make it harder to see incomplete assignments and upcoming certification renewals.",
+          "text_sha256": "62e94e38f0ae20824f44df381a76aaaadb88945166eb20cfad497df36e545166",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            3,
+            4
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 6.3,
+          "enclosing_cue_end": 12.1,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:05-trainings:9044f69b4995",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s01:a04",
+          "text": "We will explain the features, the setup decisions, and a practical way to check the result.",
+          "text_sha256": "75a8e835ef7bfbbf0615c569d1eecf54b9bc5c6e62970378b3aeb88d08738c40",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            5,
+            6
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 12.52,
+          "enclosing_cue_end": 17.54,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:05-trainings:9044f69b4995",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training exercise",
+        "Alex Example certification"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 1,
+      "number": 2,
+      "title": "A department scenario",
+      "kind": "scenario",
+      "narration": "EMT and Driver/Operator certification types are added with their renewal periods, and an annual refresher training is assigned to every member. See who is qualified and whose certifications are expiring before it affects who can respond. The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+      "narration_sha256": "c317090a614e24fa16883503b9f3251512bd5e609299e0bd841f7344d4a976a0",
+      "course_timing_proposal_only": {
+        "start": 18.06,
+        "duration": 21.029500000000002
+      },
+      "actual_existing_cue_ids": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/EditType?id=<id>",
+          "intent": "Inspect type, renewal and applicability; distinguish from role.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 350,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/EditType.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8",
+              "current_file_sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Type",
+            "Code",
+            "Category",
+            "Applies to",
+            "Issuing authority",
+            "Description",
+            "Default validity (months)"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Add",
+          "intent": "Record fictional current qualification and dates.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 176,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Add.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "467e2117d9013f05305367cdb8c4b8df640ad02bb28ed115abb4db947088501e",
+              "current_file_sha256": "467e2117d9013f05305367cdb8c4b8df640ad02bb28ed115abb4db947088501e",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Add Certification",
+            "Member",
+            "Type",
+            "Name",
+            "Number",
+            "Valid Area",
+            "Issued by"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/New",
+          "intent": "Set actual audience, materials and optional quiz.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 48,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "23de468783c944bc1a84bb367e9e569285dbad95e44e8f3d5d7ca7a710201552",
+              "current_file_sha256": "23de468783c944bc1a84bb367e9e569285dbad95e44e8f3d5d7ca7a710201552",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Training",
+            "Training name",
+            "Description",
+            "Training Text",
+            "Minimum Score",
+            "Due Date",
+            "Attachments"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-082-training-new:c4f469a23cb4"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s02:a01",
+          "text": "EMT and Driver/Operator certification types are added with their renewal periods, and an annual refresher training is assigned to every member.",
+          "text_sha256": "8dcdcafdc3ffcce0c6086e27e0ab5cd8eeb5c386414188318f6eda1ffc5f2a04",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            7,
+            8
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 18.13,
+          "enclosing_cue_end": 27.01,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s02:a02",
+          "text": "See who is qualified and whose certifications are expiring before it affects who can respond.",
+          "text_sha256": "8d1e39f3f7262370f0fc52c2928f69d3ca733e488e6f28d88f16946884410cb5",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            9,
+            10
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 27.44,
+          "enclosing_cue_end": 32.489,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s02:a03",
+          "text": "The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+          "text_sha256": "c3bea48c517ece285518958a0c220aae533e0f6326956bfe90b76d7010dd0a34",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            11,
+            12
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 32.94,
+          "enclosing_cue_end": 38.56,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/EditType?id=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Add",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training certification type",
+        "Alex Example",
+        "Training materials",
+        "Fictional audience"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 2,
+      "number": 3,
+      "title": "Trainings",
+      "kind": "feature",
+      "narration": "Trainings. Training assignments with materials and optional quizzes. Create a training and assign it to the members or groups who need it. Availability also depends on Training. Check access in the target department.",
+      "narration_sha256": "e5374e4e03942d6623633038ec35c3e392c65ae86ae45736310bf733e1452b04",
+      "course_timing_proposal_only": {
+        "start": 39.089499999999994,
+        "duration": 14.055000000000007
+      },
+      "actual_existing_cue_ids": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Index",
+          "intent": "Open actual assigned training, audience and completion state.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 38,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "4826e6d11f0f1ceb25885518c29b92af791d68c9fc9bc6a507de39a81488b7cf",
+              "current_file_sha256": "4826e6d11f0f1ceb25885518c29b92af791d68c9fc9bc6a507de39a81488b7cf",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Name",
+            "Description",
+            "Due Date",
+            "Action",
+            "WARNING: This will permanently delete this training. Are you sure you want to delete the training",
+            "Add Training",
+            "No Due Date"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/View?trainingId=<id>",
+          "intent": "Show materials and actual member progress.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 252,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/View.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "d31c3cf3983cc893031f50614935bb555bae2480ff203a88d9dc6921bc1e93b3",
+              "current_file_sha256": "d31c3cf3983cc893031f50614935bb555bae2480ff203a88d9dc6921bc1e93b3",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "View Training",
+            "Training Attachments",
+            "Training files",
+            "Training Quiz",
+            "Trainings",
+            "Status:",
+            "Active"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-023-training:2395c6d906ae"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s03:a01",
+          "text": "Trainings.",
+          "text_sha256": "a54d6d55c548ab43ca90295953470d179a0ac4346ff2880ca43cc79a75a1a474",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            13
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 39.169,
+          "enclosing_cue_end": 39.849,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s03:a02",
+          "text": "Training assignments with materials and optional quizzes.",
+          "text_sha256": "1e1d62cf6c7b371a28d1e799208d5a18d450a8a8c2875b89186b6f861ee21610",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            14
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 40.319,
+          "enclosing_cue_end": 43.48,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s03:a03",
+          "text": "Create a training and assign it to the members or groups who need it.",
+          "text_sha256": "37724bfa325e6024b2a8bf6fd9fcc7fe01717e6557e31e552f60e65a783d585c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            15
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 43.94,
+          "enclosing_cue_end": 47.4,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s03:a04",
+          "text": "Availability also depends on Training.",
+          "text_sha256": "b7cf15144ce99605c165b05baf4a331b8aa8a73d67ee4a0e6976899769316da0",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            16
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 47.81,
+          "enclosing_cue_end": 50.049,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s03:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            17
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 50.499,
+          "enclosing_cue_end": 52.65,
+          "candidate_capture_refs": [
+            "Core:legacy-core-023-training:2395c6d906ae",
+            "Core:05-trainings:9044f69b4995"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/View?trainingId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training exercise",
+        "Intended member"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 3,
+      "number": 4,
+      "title": "Certification Types",
+      "kind": "feature",
+      "narration": "Certification Types. The certifications and qualifications you track. Add each certification type with its renewal period.",
+      "narration_sha256": "f058446aa050da8751e651827ed2712d99274006bc98f5fc8b10ef770cc78ad0",
+      "course_timing_proposal_only": {
+        "start": 53.1445,
+        "duration": 8.800000000000004
+      },
+      "actual_existing_cue_ids": [
+        18,
+        19,
+        20
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/EditType?id=<id>",
+          "intent": "Inspect type, renewal and applicability; distinguish from role.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 350,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/EditType.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8",
+              "current_file_sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Type",
+            "Code",
+            "Category",
+            "Applies to",
+            "Issuing authority",
+            "Description",
+            "Default validity (months)"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s04:a01",
+          "text": "Certification Types.",
+          "text_sha256": "a559a66f80ab8c63fd1583592fc98a7b89ea9fb5b0a185ca112346e3f9d00fdf",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            18
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 53.189,
+          "enclosing_cue_end": 54.579,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s04:a02",
+          "text": "The certifications and qualifications you track.",
+          "text_sha256": "683ac83052d077f7512e10d4e66522a194dd595b604e7755c01b796c7d665e71",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            19
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 54.989,
+          "enclosing_cue_end": 57.8,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s04:a03",
+          "text": "Add each certification type with its renewal period.",
+          "text_sha256": "2e1362aaf743648adb3409b526389995cc5c706138687c6aa89ca480b9a2ee99",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            20
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 58.32,
+          "enclosing_cue_end": 61.36,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/EditType?id=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training certification type"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 4,
+      "number": 5,
+      "title": "Certification Dashboard",
+      "kind": "feature",
+      "narration": "Certification Dashboard. Who holds which certifications and what is expiring. Record members' current certifications, then review what expires soon.",
+      "narration_sha256": "49adf9be205856322d20d553259b17cba89295d18b9bf78e4d55ab6bbfbcb041",
+      "course_timing_proposal_only": {
+        "start": 61.9445,
+        "duration": 10.479500000000009
+      },
+      "actual_existing_cue_ids": [
+        21,
+        22,
+        23
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Index",
+          "intent": "Filter current/expiring/expired certificates and inspect person record.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 259,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4",
+              "current_file_sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Dashboard",
+            "Scope",
+            "Category",
+            "Group",
+            "Role",
+            "Export CSV",
+            "Add Certification"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-024-certifications:2b152cc91043"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s05:a01",
+          "text": "Certification Dashboard.",
+          "text_sha256": "d534cb55fe8f88c0c21f70018db2363d13488f34cbde0b37efb281e30717e3fe",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            21
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 62.079,
+          "enclosing_cue_end": 63.579,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s05:a02",
+          "text": "Who holds which certifications and what is expiring.",
+          "text_sha256": "41d39c07dee89bfd70a5f150179aa7ab8143fd0e9eeb985a67a7ffa281d1f6af",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            22
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 64.03,
+          "enclosing_cue_end": 67.21,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s05:a03",
+          "text": "Record members' current certifications, then review what expires soon.",
+          "text_sha256": "b601c741293c5ff395cee1201a3fe19b3c0c5c7f389f369a81fa59b1ac32a875",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            23
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 67.639,
+          "enclosing_cue_end": 71.869,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Alex Example certification"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 5,
+      "number": 6,
+      "title": "New Training",
+      "kind": "feature",
+      "narration": "New Training. Create a training, with an optional quiz. List the certifications your department tracks and their renewal periods. Availability also depends on Training. Check access in the target department.",
+      "narration_sha256": "f4ab3b2712c0901cb9375c843698ea4e06bb40908a6909503811b978259e7762",
+      "course_timing_proposal_only": {
+        "start": 72.424,
+        "duration": 13.665999999999997
+      },
+      "actual_existing_cue_ids": [
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/New",
+          "intent": "Set actual audience, materials and optional quiz.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 48,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "23de468783c944bc1a84bb367e9e569285dbad95e44e8f3d5d7ca7a710201552",
+              "current_file_sha256": "23de468783c944bc1a84bb367e9e569285dbad95e44e8f3d5d7ca7a710201552",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Training",
+            "Training name",
+            "Description",
+            "Training Text",
+            "Minimum Score",
+            "Due Date",
+            "Attachments"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-082-training-new:c4f469a23cb4"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s06:a01",
+          "text": "New Training.",
+          "text_sha256": "096742a455eb6b5be3eee99022bda6217be83425c797d7bb229e46b5c777f55d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            24
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 72.529,
+          "enclosing_cue_end": 73.28,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s06:a02",
+          "text": "Create a training, with an optional quiz.",
+          "text_sha256": "3c6340bcf1cdf8acc974a82e692d9a14d3d9fd1b1f33090a7a493c5f668eaf6c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            25
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 73.73,
+          "enclosing_cue_end": 76.15,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s06:a03",
+          "text": "List the certifications your department tracks and their renewal periods.",
+          "text_sha256": "19bcf9119c27101fd4d2312ebcca3ce8b01b97f08978201c838c6d9d953eefd7",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            26
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 76.569,
+          "enclosing_cue_end": 80.439,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s06:a04",
+          "text": "Availability also depends on Training.",
+          "text_sha256": "b7cf15144ce99605c165b05baf4a331b8aa8a73d67ee4a0e6976899769316da0",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            27
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 80.83,
+          "enclosing_cue_end": 83.04,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s06:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            28
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 83.46,
+          "enclosing_cue_end": 85.59,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace repeated, irrelevant, recorder-oriented or stale feature wording with operation-specific learner instructions."
+        ],
+        "proposed_learner_focused_narration": "Create a fictional refresher with approved materials, the intended member or group audience and an optional quiz. Save, open it as an assigned member and inspect the recorded completion or quiz result. A completed training remains separate from a current certification."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training materials",
+        "Fictional audience"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 6,
+      "number": 7,
+      "title": "Certification Settings",
+      "kind": "feature",
+      "narration": "Certification Settings. What happens when a certification expires, grace periods and reminders. List the certifications your department tracks and their renewal periods.",
+      "narration_sha256": "5adb6b07f60016ba06cbc5a11ad827ac6ca51294b3fd678698cc02531d3cbd1a",
+      "course_timing_proposal_only": {
+        "start": 86.09,
+        "duration": 11.414500000000004
+      },
+      "actual_existing_cue_ids": [
+        29,
+        30,
+        31
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Settings",
+          "intent": "Inspect reminders/grace/enforcement settings and actual saved choices.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 440,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Settings.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "2dab4a54b1176253c78d0e94583172b771134e41baaae5df739d96911d4a972f",
+              "current_file_sha256": "2dab4a54b1176253c78d0e94583172b771134e41baaae5df739d96911d4a972f",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Certification settings",
+            "Enforcement",
+            "Enforcement mode",
+            "Grace period (days)",
+            "Treat records pending verification as valid for role requirements",
+            "Notifications",
+            "Notify (days before expiry)"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-083-certification-settings:3f148627fbbe"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s07:a01",
+          "text": "Certification Settings.",
+          "text_sha256": "ae38ae6cdf409264a16cd3657a9d1cd8c6fe119420ed98148c7b305423a49ae9",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            29
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 86.14,
+          "enclosing_cue_end": 87.58,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s07:a02",
+          "text": "What happens when a certification expires, grace periods and reminders.",
+          "text_sha256": "285fe5ddc896adcfd4377467c5cce04271fabb1653a477d5a3d00f36c313d583",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            30
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 88.08,
+          "enclosing_cue_end": 92.549,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s07:a03",
+          "text": "List the certifications your department tracks and their renewal periods.",
+          "text_sha256": "19bcf9119c27101fd4d2312ebcca3ce8b01b97f08978201c838c6d9d953eefd7",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            31
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 93.0,
+          "enclosing_cue_end": 96.98,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Settings",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Demo expiry policy"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 7,
+      "number": 8,
+      "title": "My Certifications",
+      "kind": "feature",
+      "narration": "My Certifications. Your own certification records. List the certifications your department tracks and their renewal periods.",
+      "narration_sha256": "0482e90f07285d8874a333baf8d44408a46b83e05c0ed84ff1972748c9ab9f5b",
+      "course_timing_proposal_only": {
+        "start": 97.50450000000001,
+        "duration": 8.509999999999991
+      },
+      "actual_existing_cue_ids": [
+        32,
+        33,
+        34
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Person?userId=<current-user-id>",
+          "intent": "Inspect signed-in member current certificates and renewal dates.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 622,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Person.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "8439b75d402b60a3355605b9a38f6352b5f30f4e554d8b3fb87b79e7db677c87",
+              "current_file_sha256": "8439b75d402b60a3355605b9a38f6352b5f30f4e554d8b3fb87b79e7db677c87",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Name",
+            "Type",
+            "Expires on",
+            "Status",
+            "Add record",
+            "No certification records yet."
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s08:a01",
+          "text": "My Certifications.",
+          "text_sha256": "e4797e31d214be90dafc3b4e625c2a07c062644693aa9e2573c35715d7247711",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            32
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 97.579,
+          "enclosing_cue_end": 98.91,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s08:a02",
+          "text": "Your own certification records.",
+          "text_sha256": "a216431f8a198cd307472a391e8d6a898de8dc9b72f5e07bdcf02881322b6f3b",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            33
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 99.319,
+          "enclosing_cue_end": 101.159,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s08:a03",
+          "text": "List the certifications your department tracks and their renewal periods.",
+          "text_sha256": "19bcf9119c27101fd4d2312ebcca3ce8b01b97f08978201c838c6d9d953eefd7",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            34
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 101.569,
+          "enclosing_cue_end": 105.499,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Person?userId=<current-user-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": true,
+        "reasons": [
+          "Replace repeated, irrelevant, recorder-oriented or stale feature wording with operation-specific learner instructions."
+        ],
+        "proposed_learner_focused_narration": "Open the signed-in member certification view. Inspect the actual type, status, issued date and expiry, then review the supported renewal or evidence controls. Compare these qualification facts with role membership rather than treating them as interchangeable."
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Current user certification"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 8,
+      "number": 9,
+      "title": "Configure one useful workflow",
+      "kind": "workflow",
+      "narration": "For the training scenario, work in this order. Step 1. Create certification types with their renewal periods. Step 2. Record current member certifications and review expiry settings. Step 3. Create a training with materials and an optional quiz, then assign the intended audience.",
+      "narration_sha256": "a6644678144bf0b7930a7e8ac52a173c1c207f9ba471e915e57f639f972972c6",
+      "course_timing_proposal_only": {
+        "start": 106.01449999999998,
+        "duration": 20.35950000000001
+      },
+      "actual_existing_cue_ids": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/EditType?id=<id>",
+          "intent": "Inspect type, renewal and applicability; distinguish from role.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 350,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/EditType.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8",
+              "current_file_sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Type",
+            "Code",
+            "Category",
+            "Applies to",
+            "Issuing authority",
+            "Description",
+            "Default validity (months)"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Add",
+          "intent": "Record fictional current qualification and dates.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 176,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Add.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "467e2117d9013f05305367cdb8c4b8df640ad02bb28ed115abb4db947088501e",
+              "current_file_sha256": "467e2117d9013f05305367cdb8c4b8df640ad02bb28ed115abb4db947088501e",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Add Certification",
+            "Member",
+            "Type",
+            "Name",
+            "Number",
+            "Valid Area",
+            "Issued by"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/New",
+          "intent": "Set actual audience, materials and optional quiz.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 48,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/New.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "23de468783c944bc1a84bb367e9e569285dbad95e44e8f3d5d7ca7a710201552",
+              "current_file_sha256": "23de468783c944bc1a84bb367e9e569285dbad95e44e8f3d5d7ca7a710201552",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Training",
+            "Training name",
+            "Description",
+            "Training Text",
+            "Minimum Score",
+            "Due Date",
+            "Attachments"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-082-training-new:c4f469a23cb4"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s09:a01",
+          "text": "For the training scenario, work in this order.",
+          "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            35
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 106.08,
+          "enclosing_cue_end": 108.79,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s09:a02",
+          "text": "Step 1.",
+          "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            36
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 109.3,
+          "enclosing_cue_end": 109.97,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s09:a03",
+          "text": "Create certification types with their renewal periods.",
+          "text_sha256": "ef1f0bc51b4821d2d48579813e7b040021fbb4a701ad05eccdae525fe19df40f",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            37
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 110.4,
+          "enclosing_cue_end": 113.369,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s09:a04",
+          "text": "Step 2.",
+          "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            38
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 113.79,
+          "enclosing_cue_end": 114.46,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s09:a05",
+          "text": "Record current member certifications and review expiry settings.",
+          "text_sha256": "65fa787d0e2f0843aa6eaa1997c16f758f5a93e92a2dbf91708ad9ba8d22f1dc",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            39
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 114.97,
+          "enclosing_cue_end": 118.84,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s09:a06",
+          "text": "Step 3.",
+          "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            40
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 119.309,
+          "enclosing_cue_end": 120.05,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s09:a07",
+          "text": "Create a training with materials and an optional quiz, then assign the intended audience.",
+          "text_sha256": "d228f6a47d247a1142a92832e3cd0d58fd31ddd761f76a901fa78a48835ca095",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            41,
+            42
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 120.479,
+          "enclosing_cue_end": 125.819,
+          "candidate_capture_refs": [
+            "Core:legacy-core-082-training-new:c4f469a23cb4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Certifications/EditType?id=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Add",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/New",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Training certification type",
+        "Alex Example",
+        "Training materials",
+        "Fictional audience"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 9,
+      "number": 10,
+      "title": "Verify the result",
+      "kind": "verify",
+      "narration": "Now verify the result. Check a sample member completion and certification expiry. Review reminders, grace periods, and any configured enforcement effects. A common problem to watch for: A completed training, a personnel role, and a current certification represent different facts. Track each through its owning feature.",
+      "narration_sha256": "2c0fb25c3c9627bc02d8b559ca4da440ee3e6cfbc844710df5fbc0c6b7553b68",
+      "course_timing_proposal_only": {
+        "start": 126.374,
+        "duration": 20.940500000000014
+      },
+      "actual_existing_cue_ids": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Report?trainingId=<id>",
+          "intent": "Verify actual completion/quiz result.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 661,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/Report.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "62cf66acb7cff98e8433f6bf63ebd975a0cf2831b329455f1c121f529097f15f",
+              "current_file_sha256": "62cf66acb7cff98e8433f6bf63ebd975a0cf2831b329455f1c121f529097f15f",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Training Report",
+            "Name",
+            "Group",
+            "Viewed",
+            "Completed",
+            "Score",
+            "Result"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Person?userId=<current-user-id>",
+          "intent": "Inspect signed-in member current certificates and renewal dates.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 622,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Person.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "8439b75d402b60a3355605b9a38f6352b5f30f4e554d8b3fb87b79e7db677c87",
+              "current_file_sha256": "8439b75d402b60a3355605b9a38f6352b5f30f4e554d8b3fb87b79e7db677c87",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Name",
+            "Type",
+            "Expires on",
+            "Status",
+            "Add record",
+            "No certification records yet."
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Settings",
+          "intent": "Inspect reminders/grace/enforcement settings and actual saved choices.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 440,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Settings.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "2dab4a54b1176253c78d0e94583172b771134e41baaae5df739d96911d4a972f",
+              "current_file_sha256": "2dab4a54b1176253c78d0e94583172b771134e41baaae5df739d96911d4a972f",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Certification settings",
+            "Enforcement",
+            "Enforcement mode",
+            "Grace period (days)",
+            "Treat records pending verification as valid for role requirements",
+            "Notifications",
+            "Notify (days before expiry)"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-083-certification-settings:3f148627fbbe"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s10:a01",
+          "text": "Now verify the result.",
+          "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            43
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 126.479,
+          "enclosing_cue_end": 128.02,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s10:a02",
+          "text": "Check a sample member completion and certification expiry.",
+          "text_sha256": "2b392304a32602fa5ebef723feb3c451ab9e5d2057dd5328894213382379a75c",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            44
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 128.379,
+          "enclosing_cue_end": 131.58,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s10:a03",
+          "text": "Review reminders, grace periods, and any configured enforcement effects.",
+          "text_sha256": "58e36490ccd77d0dc48595875ea518c941336db90a07e4a450b3c872541f7b2e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            45
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 131.98,
+          "enclosing_cue_end": 136.359,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s10:a04",
+          "text": "A common problem to watch for: A completed training, a personnel role, and a current certification represent different facts.",
+          "text_sha256": "ef3f0720c891a8266cb85dc3be0007f537f893d73dc8c9003385c67c616908be",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            46,
+            47
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 136.83,
+          "enclosing_cue_end": 144.45,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s10:a05",
+          "text": "Track each through its owning feature.",
+          "text_sha256": "3702e2d89e8d019d8a42eefd28e0583f06510a4b88ac208bc06b8ac71d08dd76",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            48
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 144.839,
+          "enclosing_cue_end": 146.74,
+          "candidate_capture_refs": [
+            "Core:legacy-core-083-certification-settings:3f148627fbbe"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Report?trainingId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Person?userId=<current-user-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Settings",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Completed training",
+        "Current user certification",
+        "Demo expiry policy"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 10,
+      "number": 11,
+      "title": "Try it with your department",
+      "kind": "exercise",
+      "narration": "Your practice task is simple. Assign a refresher to the demo group and complete it as a member. Review overdue learning and certifications approaching renewal. Record the result, who owns the follow-up, and when it should be reviewed.",
+      "narration_sha256": "a8e28dce0af4d13f5e37d781daaafca676a464233dc4ed7943277418e435f22c",
+      "course_timing_proposal_only": {
+        "start": 147.3145,
+        "duration": 13.864499999999992
+      },
+      "actual_existing_cue_ids": [
+        49,
+        50,
+        51,
+        52
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/View?trainingId=<id>",
+          "intent": "Member opens actual training material.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 252,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/View.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "d31c3cf3983cc893031f50614935bb555bae2480ff203a88d9dc6921bc1e93b3",
+              "current_file_sha256": "d31c3cf3983cc893031f50614935bb555bae2480ff203a88d9dc6921bc1e93b3",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "View Training",
+            "Training Attachments",
+            "Training files",
+            "Training Quiz",
+            "Trainings",
+            "Status:",
+            "Active"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Quiz?trainingId=<id>",
+          "intent": "Complete actual optional training quiz.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TrainingsController.cs",
+              "line": 564,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "2acd14f33b4d8293ad797334eb50e66cbec038b9c17aa20385b0be2d8a762bae",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Trainings/Quiz.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "3232274f5007ceead4b0591b44605a163c185eef3dfac1bcda8fdae4909fba46",
+              "current_file_sha256": "3232274f5007ceead4b0591b44605a163c185eef3dfac1bcda8fdae4909fba46",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Training Quiz",
+            "Trainings",
+            "Training",
+            "Start >",
+            "Question",
+            "Finish",
+            "First"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Index",
+          "intent": "Filter current/expiring/expired certificates and inspect person record.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+              "line": 259,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Certifications/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4",
+              "current_file_sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Dashboard",
+            "Scope",
+            "Category",
+            "Group",
+            "Role",
+            "Export CSV",
+            "Add Certification"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-024-certifications:2b152cc91043"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "09-training:s11:a01",
+          "text": "Your practice task is simple.",
+          "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            49
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 147.439,
+          "enclosing_cue_end": 149.0,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s11:a02",
+          "text": "Assign a refresher to the demo group and complete it as a member.",
+          "text_sha256": "b437a63cd4b5ddbbf5ede7eb8d16731bd76e9fb0790a4d514b9f49e9e68b0450",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            50
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 149.429,
+          "enclosing_cue_end": 152.82,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s11:a03",
+          "text": "Review overdue learning and certifications approaching renewal.",
+          "text_sha256": "c8aee35e5c88f24059da9b9b97f2bc648830f3f15a0150b9a52a6befa4cb7fae",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            51
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 153.229,
+          "enclosing_cue_end": 156.64,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "09-training:s11:a04",
+          "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+          "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            52
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 157.06,
+          "enclosing_cue_end": 160.949,
+          "candidate_capture_refs": [
+            "Core:legacy-core-024-certifications:2b152cc91043",
+            "Core:08-certifications:f4eae20afc1e"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Trainings/View?trainingId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Trainings/Quiz?trainingId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Certifications/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Assigned member",
+        "Quiz-enabled training",
+        "Alex Example certification"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    }
+  ],
+  "existing_actual_cues": [
+    {
+      "id": 1,
+      "start": 0.09,
+      "end": 1.7690000000000001,
+      "text": "Welcome to Resgrid Academy.",
+      "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 2,
+      "start": 2.15,
+      "end": 5.84,
+      "text": "In this lesson, we will assign learning and track qualifications.",
+      "text_sha256": "460d913fb2d1a557463cd03b565ec7ac5fae8a024454905bc301082ef87cea82",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 3,
+      "start": 6.3,
+      "end": 9.989,
+      "text": "Scattered training records make it harder to see incomplete assignments",
+      "text_sha256": "ca812b8cb5a9f2b0ff6b8e1327dbc745049ee7a6c838eb6393b5fe0ec126b801",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 4,
+      "start": 10.06,
+      "end": 12.1,
+      "text": "and upcoming certification renewals.",
+      "text_sha256": "c2b6390582da1d0d82358a871da1f398523a69589e874eefcae6cf99c0d951ad",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 5,
+      "start": 12.52,
+      "end": 15.609,
+      "text": "We will explain the features, the setup decisions, and a",
+      "text_sha256": "e81ab5e8a7d3f89c3c2904902e3e1cba467afa49546505b3163c11c6525c28e1",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 6,
+      "start": 15.609,
+      "end": 17.54,
+      "text": "practical way to check the result.",
+      "text_sha256": "1ba25c999800aedfbbb5764d88a2d6c0551ab3478f936f377bf5e8914d613b73",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 7,
+      "start": 18.13,
+      "end": 22.95,
+      "text": "EMT and Driver/Operator certification types are added with their renewal",
+      "text_sha256": "cc2cf80d3d0386bf9e164bd36158d23c9f05f5238a1879f1d00bc134f58f17c4",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 8,
+      "start": 22.95,
+      "end": 27.01,
+      "text": "periods, and an annual refresher training is assigned to every member.",
+      "text_sha256": "78df757ae3d861842821f67cabce18060cf61d55846dd0330d87fa5c8d58f222",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 9,
+      "start": 27.44,
+      "end": 30.63,
+      "text": "See who is qualified and whose certifications are expiring",
+      "text_sha256": "295a796201e6c0d0a969e118704d696ffe53fe7dbe24929f6a097cc945570bfe",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 10,
+      "start": 30.63,
+      "end": 32.489,
+      "text": "before it affects who can respond.",
+      "text_sha256": "bcd3cdb2d9571bd25ba6250b1cebed1e6e1b76a4e31dbb67bef8b18b44df3a75",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 11,
+      "start": 32.94,
+      "end": 36.32,
+      "text": "The examples in this series use a fictional department and are teaching",
+      "text_sha256": "3059d3c51632c06ba8eb16a1a8b9f77c21fd6ae769066295627ad95e3acf1bca",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 12,
+      "start": 36.32,
+      "end": 38.56,
+      "text": "scenarios, not default settings.",
+      "text_sha256": "2316b9b48729ef8e05abd557d4876c25502aa2b281cb9dabcfa0721bcda2f886",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 13,
+      "start": 39.169,
+      "end": 39.849,
+      "text": "Trainings.",
+      "text_sha256": "a54d6d55c548ab43ca90295953470d179a0ac4346ff2880ca43cc79a75a1a474",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s03:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 14,
+      "start": 40.319,
+      "end": 43.48,
+      "text": "Training assignments with materials and optional quizzes.",
+      "text_sha256": "1e1d62cf6c7b371a28d1e799208d5a18d450a8a8c2875b89186b6f861ee21610",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s03:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 15,
+      "start": 43.94,
+      "end": 47.4,
+      "text": "Create a training and assign it to the members or groups who need it.",
+      "text_sha256": "37724bfa325e6024b2a8bf6fd9fcc7fe01717e6557e31e552f60e65a783d585c",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s03:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 16,
+      "start": 47.81,
+      "end": 50.049,
+      "text": "Availability also depends on Training.",
+      "text_sha256": "b7cf15144ce99605c165b05baf4a331b8aa8a73d67ee4a0e6976899769316da0",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s03:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 17,
+      "start": 50.499,
+      "end": 52.65,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s03:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 18,
+      "start": 53.189,
+      "end": 54.579,
+      "text": "Certification Types.",
+      "text_sha256": "a559a66f80ab8c63fd1583592fc98a7b89ea9fb5b0a185ca112346e3f9d00fdf",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 19,
+      "start": 54.989,
+      "end": 57.8,
+      "text": "The certifications and qualifications you track.",
+      "text_sha256": "683ac83052d077f7512e10d4e66522a194dd595b604e7755c01b796c7d665e71",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 20,
+      "start": 58.32,
+      "end": 61.36,
+      "text": "Add each certification type with its renewal period.",
+      "text_sha256": "2e1362aaf743648adb3409b526389995cc5c706138687c6aa89ca480b9a2ee99",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s04:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 21,
+      "start": 62.079,
+      "end": 63.579,
+      "text": "Certification Dashboard.",
+      "text_sha256": "d534cb55fe8f88c0c21f70018db2363d13488f34cbde0b37efb281e30717e3fe",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s05:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 22,
+      "start": 64.03,
+      "end": 67.21,
+      "text": "Who holds which certifications and what is expiring.",
+      "text_sha256": "41d39c07dee89bfd70a5f150179aa7ab8143fd0e9eeb985a67a7ffa281d1f6af",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s05:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 23,
+      "start": 67.639,
+      "end": 71.869,
+      "text": "Record members' current certifications, then review what expires soon.",
+      "text_sha256": "b601c741293c5ff395cee1201a3fe19b3c0c5c7f389f369a81fa59b1ac32a875",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s05:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 24,
+      "start": 72.529,
+      "end": 73.28,
+      "text": "New Training.",
+      "text_sha256": "096742a455eb6b5be3eee99022bda6217be83425c797d7bb229e46b5c777f55d",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s06:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 25,
+      "start": 73.73,
+      "end": 76.15,
+      "text": "Create a training, with an optional quiz.",
+      "text_sha256": "3c6340bcf1cdf8acc974a82e692d9a14d3d9fd1b1f33090a7a493c5f668eaf6c",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s06:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 26,
+      "start": 76.569,
+      "end": 80.439,
+      "text": "List the certifications your department tracks and their renewal periods.",
+      "text_sha256": "19bcf9119c27101fd4d2312ebcca3ce8b01b97f08978201c838c6d9d953eefd7",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s06:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 27,
+      "start": 80.83,
+      "end": 83.04,
+      "text": "Availability also depends on Training.",
+      "text_sha256": "b7cf15144ce99605c165b05baf4a331b8aa8a73d67ee4a0e6976899769316da0",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s06:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 28,
+      "start": 83.46,
+      "end": 85.59,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s06:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 29,
+      "start": 86.14,
+      "end": 87.58,
+      "text": "Certification Settings.",
+      "text_sha256": "ae38ae6cdf409264a16cd3657a9d1cd8c6fe119420ed98148c7b305423a49ae9",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s07:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 30,
+      "start": 88.08,
+      "end": 92.549,
+      "text": "What happens when a certification expires, grace periods and reminders.",
+      "text_sha256": "285fe5ddc896adcfd4377467c5cce04271fabb1653a477d5a3d00f36c313d583",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 31,
+      "start": 93.0,
+      "end": 96.98,
+      "text": "List the certifications your department tracks and their renewal periods.",
+      "text_sha256": "19bcf9119c27101fd4d2312ebcca3ce8b01b97f08978201c838c6d9d953eefd7",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s07:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 32,
+      "start": 97.579,
+      "end": 98.91,
+      "text": "My Certifications.",
+      "text_sha256": "e4797e31d214be90dafc3b4e625c2a07c062644693aa9e2573c35715d7247711",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s08:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 33,
+      "start": 99.319,
+      "end": 101.159,
+      "text": "Your own certification records.",
+      "text_sha256": "a216431f8a198cd307472a391e8d6a898de8dc9b72f5e07bdcf02881322b6f3b",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s08:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 34,
+      "start": 101.569,
+      "end": 105.499,
+      "text": "List the certifications your department tracks and their renewal periods.",
+      "text_sha256": "19bcf9119c27101fd4d2312ebcca3ce8b01b97f08978201c838c6d9d953eefd7",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s08:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 35,
+      "start": 106.08,
+      "end": 108.79,
+      "text": "For the training scenario, work in this order.",
+      "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 36,
+      "start": 109.3,
+      "end": 109.97,
+      "text": "Step 1.",
+      "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 37,
+      "start": 110.4,
+      "end": 113.369,
+      "text": "Create certification types with their renewal periods.",
+      "text_sha256": "ef1f0bc51b4821d2d48579813e7b040021fbb4a701ad05eccdae525fe19df40f",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 38,
+      "start": 113.79,
+      "end": 114.46,
+      "text": "Step 2.",
+      "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 39,
+      "start": 114.97,
+      "end": 118.84,
+      "text": "Record current member certifications and review expiry settings.",
+      "text_sha256": "65fa787d0e2f0843aa6eaa1997c16f758f5a93e92a2dbf91708ad9ba8d22f1dc",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 40,
+      "start": 119.309,
+      "end": 120.05,
+      "text": "Step 3.",
+      "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 41,
+      "start": 120.479,
+      "end": 124.11,
+      "text": "Create a training with materials and an optional quiz, then",
+      "text_sha256": "e0d284a1bdf1c8014ceb925250d886c677c39791bb55783ec651cfeb0b8e2b3e",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 42,
+      "start": 124.139,
+      "end": 125.819,
+      "text": "assign the intended audience.",
+      "text_sha256": "dae1280970f92f88a2965fc64b7de3e494987e1c48bf26c043277a33e0a109ff",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s09:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 43,
+      "start": 126.479,
+      "end": 128.02,
+      "text": "Now verify the result.",
+      "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s10:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 44,
+      "start": 128.379,
+      "end": 131.58,
+      "text": "Check a sample member completion and certification expiry.",
+      "text_sha256": "2b392304a32602fa5ebef723feb3c451ab9e5d2057dd5328894213382379a75c",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s10:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 45,
+      "start": 131.98,
+      "end": 136.359,
+      "text": "Review reminders, grace periods, and any configured enforcement effects.",
+      "text_sha256": "58e36490ccd77d0dc48595875ea518c941336db90a07e4a450b3c872541f7b2e",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s10:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 46,
+      "start": 136.83,
+      "end": 142.04,
+      "text": "A common problem to watch for: A completed training, a personnel role, and a current",
+      "text_sha256": "2d7d58e809df96cbb24a8f6539925f5dabee6b15d0ab7c0a557a1aab12dea467",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 47,
+      "start": 142.04,
+      "end": 144.45,
+      "text": "certification represent different facts.",
+      "text_sha256": "715085e691d70ccf4e6aab93d97a15426786c5b4afff7687cef0c110cf4473db",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 48,
+      "start": 144.839,
+      "end": 146.74,
+      "text": "Track each through its owning feature.",
+      "text_sha256": "3702e2d89e8d019d8a42eefd28e0583f06510a4b88ac208bc06b8ac71d08dd76",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s10:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 49,
+      "start": 147.439,
+      "end": 149.0,
+      "text": "Your practice task is simple.",
+      "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s11:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 50,
+      "start": 149.429,
+      "end": 152.82,
+      "text": "Assign a refresher to the demo group and complete it as a member.",
+      "text_sha256": "b437a63cd4b5ddbbf5ede7eb8d16731bd76e9fb0790a4d514b9f49e9e68b0450",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s11:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 51,
+      "start": 153.229,
+      "end": 156.64,
+      "text": "Review overdue learning and certifications approaching renewal.",
+      "text_sha256": "c8aee35e5c88f24059da9b9b97f2bc648830f3f15a0150b9a52a6befa4cb7fae",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s11:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 52,
+      "start": 157.06,
+      "end": 160.949,
+      "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+      "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+      "source_scene_indices": [
+        10
+      ],
+      "spoken_requirement_ids": [
+        "09-training:s11:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    }
+  ],
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "readiness": {
+    "all_real_screens_matched": false,
+    "all_controls_and_saved_results_demonstrated": false,
+    "every_cue_screen_assignment_verified": false,
+    "speech_timing_authoritative": false,
+    "audio_timeline_binding_complete": false,
+    "strict_source_gate_passed": false,
+    "rendered_frame_review": "not run",
+    "genuine_browser_playback": "pending, separate proof required",
+    "publishable": false,
+    "retained_cue_timestamps_present": true,
+    "cue_timing_qualification": "Existing SRT timestamps are retained unchanged; audio timing/signal/listening binding still requires current-media QA. Normalized text equality alone does not verify speech timing."
+  },
+  "render_decision": "No master is prepared because real-screen/action coverage is incomplete; preserve exact missing-shot list.",
+  "not_changed": [
+    "Source lesson/narration/audio/captions",
+    "Frozen R1/R3",
+    "New site/catalog",
+    "Source screenshots and capture manifests",
+    "Original Academy repository"
+  ],
+  "existing_capture_scope": {
+    "apps_requested": [
+      "Core",
+      "Responder",
+      "Dispatch",
+      "IC"
+    ],
+    "app_counts": {
+      "Core": 480,
+      "IC": 42,
+      "Responder": 220
+    },
+    "dispatch_limitation": "No Dispatch application screenshot with a retained capture-manifest row was found in sources/captures. Unmanifested dispatch-login.jpg is not promoted; Core Dispatch MVC pages remain Core screenshots.",
+    "unit_excluded": true
+  }
+}

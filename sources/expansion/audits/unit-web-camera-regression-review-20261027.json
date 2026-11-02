@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-27T21:15:52.357608+00:00",
+  "patch": {
+    "file": "_reports/Unit-camera-optional-values-20261027.patch",
+    "sha256": "4a40a58dd289fcf10884a5ced0b61debe88f3351d28c58de82d8471b10a1137f"
+  },
+  "original_source_sha256": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a",
+  "proposed_source_sha256": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+  "proposed_test": {
+    "path": "Unit/src/components/maps/__tests__/camera.web.test.tsx",
+    "sha256": "9929db8002eefa7c8b84149730ccd19f36c7dccc8db3a698a9601eb5e065629b"
+  },
+  "results": {
+    "original": {
+      "success": false,
+      "tests": 10,
+      "passed": 5,
+      "failed": 5,
+      "results": [
+        {
+          "title": "initial defaultSettings preserves existing orientation when optional values are absent",
+          "status": "failed"
+        },
+        {
+          "title": "initial centerCoordinate preserves existing orientation when optional values are absent",
+          "status": "failed"
+        },
+        {
+          "title": "imperative setCamera preserves omitted zoom/orientation and accepts an omitted center",
+          "status": "failed"
+        },
+        {
+          "title": "controlled updates preserve omitted numeric values through easeTo",
+          "status": "failed"
+        },
+        {
+          "title": "controlled updates preserve omitted numeric values through flyTo",
+          "status": "failed"
+        },
+        {
+          "title": "omitted center leaves the current position unchanged for an imperative orientation update",
+          "status": "passed"
+        },
+        {
+          "title": "defaultSettings preserves valid zero and other defined numeric values",
+          "status": "passed"
+        },
+        {
+          "title": "initial preserves valid zero and other defined numeric values",
+          "status": "passed"
+        },
+        {
+          "title": "controlled preserves valid zero and other defined numeric values",
+          "status": "passed"
+        },
+        {
+          "title": "imperative preserves valid zero and other defined numeric values",
+          "status": "passed"
+        }
+      ]
+    },
+    "patched": {
+      "success": true,
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "results": [
+        {
+          "title": "initial defaultSettings preserves existing orientation when optional values are absent",
+          "status": "passed"
+        },
+        {
+          "title": "initial centerCoordinate preserves existing orientation when optional values are absent",
+          "status": "passed"
+        },
+        {
+          "title": "imperative setCamera preserves omitted zoom/orientation and accepts an omitted center",
+          "status": "passed"
+        },
+        {
+          "title": "controlled updates preserve omitted numeric values through easeTo",
+          "status": "passed"
+        },
+        {
+          "title": "controlled updates preserve omitted numeric values through flyTo",
+          "status": "passed"
+        },
+        {
+          "title": "omitted center leaves the current position unchanged for an imperative orientation update",
+          "status": "passed"
+        },
+        {
+          "title": "defaultSettings preserves valid zero and other defined numeric values",
+          "status": "passed"
+        },
+        {
+          "title": "initial preserves valid zero and other defined numeric values",
+          "status": "passed"
+        },
+        {
+          "title": "controlled preserves valid zero and other defined numeric values",
+          "status": "passed"
+        },
+        {
+          "title": "imperative preserves valid zero and other defined numeric values",
+          "status": "passed"
+        }
+      ]
+    },
+    "patched-repository-context": {
+      "success": false,
+      "tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "results": []
+    }
+  },
+  "test_method": "Actual Camera component rendered in jsdom through ReactDOM/createRoot and real MapContext, following map-pins.web.test.tsx conventions. Map host routes numeric option handling to installed MapboxGL3.18.1 jumpTo; tests inspect resulting finite/current camera state rather than source object text. easeTo/flyTo animation interpolation is not exercised.",
+  "undefined_center": "Installed SDK jumpTo checks center!==undefined; easeTo uses center||previousCenter. An omitted center leaves the current center unchanged; the dedicated regression passes original and proposed source. No extra center rewrite required.",
+  "repository_harness_blocker": "Unchanged Unit jest-setup.ts imports missing react-native-permissions; default repository harness aborted before tests. No dependency install or setup edit was made. Isolated jsdom Camera harness uses installed React/Jest/Babel/SDK, and records original5fail/5pass versus proposed10pass.",
+  "source_scope": "Four Camera numeric option objects only; omit undefined zoom/bearing/pitch and preserve0/defined numbers. No native/provider/geolocation or unrelated any-type changes.",
+  "app_source_unchanged": true,
+  "browser_retest": "Pending parent review/apply and real UI. Original failed map screenshot021 remains excluded; no map repair success claimed."
+}

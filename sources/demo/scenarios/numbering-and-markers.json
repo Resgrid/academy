@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "core-numbering-and-marker-recording",
+  "observed_date": "2026-10-26",
+  "scope": "Opt-in normal UI replay in fictional Academy department51 only. No automatic replay, counter reset/lowering, call creation/closure, imports or provider events. Observed next numbers are dated evidence, not values to force.",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "required_unit_names": [
+      "Engine 51",
+      "Truck 81",
+      "Squad 3",
+      "Ambulance 61",
+      "Battalion 25",
+      "Reserve Engine 51"
+    ]
+  },
+  "call_numbering": {
+    "route": "/User/Department/CallSettings",
+    "pattern": "FD51-{YYYY}-{SEQ}",
+    "sequence_digits": 4,
+    "year_start_month": 1,
+    "year_start_day": 1,
+    "raise_next_sequence_to": null,
+    "initial_saved_new_scope_next": "FD51-2026-0001",
+    "observed_next_after_owner_call51009": "FD51-2026-0002",
+    "owner_issued_call_number": "FD51-2026-0001",
+    "replay_policy": "Compare existing settings and retain issued history. Save only an authorized new format on a fresh fictional stack; never force either observed next value or create a call merely to advance it."
+  },
+  "document_numbering": {
+    "route": "/User/Department/DocumentNumbering",
+    "kind": "Work orders",
+    "pattern": "MNT-{YY}-{SEQ}",
+    "sequence_digits": 4,
+    "year_start_month": 1,
+    "year_start_day": 1,
+    "raise_next_to": null,
+    "initial_saved_new_scope_next": "MNT-26-0001",
+    "observed_next_after_request": "MNT-26-0002",
+    "preserve_other_kinds": true
+  },
+  "training_work_request": {
+    "route": "/User/WorkOrders/New",
+    "observed_id": "5e7867c1-0aa3-4269-bdbf-986674efafb2",
+    "observed_number": "MNT-26-0001",
+    "title": "TRAINING ONLY - numbering demonstration",
+    "description": "Fictional Academy software exercise to verify a work-order number. No real equipment defect, inspection, maintenance, safety clearance, expenditure or vendor authorization is represented.",
+    "type": "Other",
+    "priority": "Low",
+    "due_date": null,
+    "unit": null,
+    "group": null,
+    "site_building_location": null,
+    "assigned_to": null,
+    "currency": "USD",
+    "costs_vendor_warranty_references": null,
+    "safety_critical": false,
+    "hazardous": false,
+    "procedure_permit_isolation_qualified_personnel": null,
+    "task_steps": [],
+    "observed_state": "Requested",
+    "replay_policy": "Optional one-time UI practice only when separately authorized. Reuse an exact existing matching request; preserve different/duplicate records and all history. Actual returned number is authoritative; no synthetic status/audit records."
+  },
+  "records_numbering_preserved": {
+    "route": "/User/Records/Settings",
+    "pattern": "{PREFIX}-{YYYY}-{SEQ}",
+    "sequence_digits": 4,
+    "year_start_month": 1,
+    "year_start_day": 1,
+    "training_prefix_override": null,
+    "training_default_prefix": "TRN",
+    "existing_training_number": "TRN-2026-0001",
+    "existing_training_state": "Finalized",
+    "observed_training_next": "TRN-2026-0002",
+    "replay_policy": "Read-only comparison; do not save, raise, amend, approve or finalize a record for this scenario."
+  },
+  "map_markers": {
+    "asset_manifest": "sources/demo/marker-icons/assets.json",
+    "call_type": {
+      "name": "Structure Fire",
+      "observed_id": 51001
+    },
+    "unit_type": {
+      "name": "Engine",
+      "observed_id": 51001
+    },
+    "personnel_role": {
+      "name": "Officer",
+      "observed_id": 51002
+    },
+    "intended_overrides": {
+      "call_priority": "Emergency",
+      "unit_status": "Available",
+      "personnel_status": "Standing By"
+    },
+    "observed_state": "No uploaded custom base or override icons. All actual captured legend combinations remain built-in pins.",
+    "blocker": "Supported Chrome fileChooser.setFiles explicitly rejects until the active ChatGPT extension has Allow access to file URLs enabled. No bypass or upload success claim.",
+    "replay_policy": "Resolve exact department-scoped names and wait for normal browser upload capability. Do not force IDs, alter member roles/statuses or claim uploads from fixtures."
+  },
+  "source_profile_limit": "The expansion source profile reproduces retained source/support patches and baseline startup. It does not replay these mutable configurations or recreate historical calls, work orders, timer operations, positions or successful runs.",
+  "evidence_manifest": "sources/captures/expansion/core-configuration/manifest-core-configuration.json"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "personnel-role-assignment-existing-profile-alternative",
+  "kind": "proposed_normal_UI_only",
+  "executed": false,
+  "target": {
+    "department_id": 51,
+    "member": "Matthew Casey",
+    "actual_seeded_user_id": "DA25F49E-FEA4-5C8D-82D9-163D7D2023F9",
+    "role_to_add": 51007,
+    "role_to_preserve": "Officer"
+  },
+  "guards": [
+    "Use only an existing authorized admin’s normal member Edit link.",
+    "Wait for actual existing selected chips before changing the set.",
+    "Preserve current admin/group/disabled/hidden/contact/preferences; no password/email/PIN/reset/invite/provider action.",
+    "Do not modify a second member, existing6roles/order or the saved globalOff policy."
+  ],
+  "source_trace": "expansion/plans/core-personnel-role-assignment-width-source-trace-20261028/source-trace.json",
+  "expected_if_successful_not_observed_here": [
+    "Before Save:Officer+own fictional role visible",
+    "After fresh reopen:same2roles and preserved baseline admin/group/state",
+    "Role51007 View actualCasey/count1 and source-supported eligibility if permitted"
+  ],
+  "do_not_claim": [
+    "2px role-member picker worked",
+    "All broad profile values unchanged without actual readback",
+    "Enforce gate exercised whileOff",
+    "A real professional qualification or authorization was granted"
+  ]
+}

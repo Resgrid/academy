@@ -1,0 +1,251 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { Check } from '@/components/ui/lucide-icons';
+import { UnitTypeIcon } from '@/components/units/unit-type-icon';
+import { logger } from '@/lib/logging';
+import { type UnitResultData } from '@/models/v4/units/unitResultData';
+import { useCoreStore } from '@/stores/app/core-store';
+import { useRolesStore } from '@/stores/roles/store';
+import { useToastStore } from '@/stores/toast/store';
+import { useUnitsStore } from '@/stores/units/store';
+
+import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, ActionsheetItem, ActionsheetItemText } from '../ui/actionsheet';
+import { Box } from '../ui/box';
+import { Button, ButtonText } from '../ui/button';
+import { Center } from '../ui/center';
+import { Heading } from '../ui/heading';
+import { HStack } from '../ui/hstack';
+import { ScrollView } from '../ui/scroll-view';
+import { Spinner } from '../ui/spinner';
+import { Text } from '../ui/text';
+import { VStack } from '../ui/vstack';
+
+interface UnitItemProps {
+  unit: UnitResultData;
+  isSelected: boolean;
+  isLoading: boolean;
+  onSelect: (unit: UnitResultData) => void;
+}
+
+const UnitItem = React.memo<UnitItemProps>(({ unit, isSelected, isLoading, onSelect }) => {
+  const handlePress = React.useCallback(() => {
+    onSelect(unit);
+  }, [onSelect, unit]);
+
+  return (
+    <ActionsheetItem key={unit.UnitId} onPress={handlePress} disabled={isLoading} className={isSelected ? 'data-[checked=true]:bg-background-100' : ''} testID={`unit-item-${unit.UnitId}`}>
+      <UnitTypeIcon iconUrl={unit.TypeIconUrl} mapIcon={unit.TypeMapIcon} size={28} testID={`unit-type-icon-${unit.UnitId}`} />
+      <VStack className="flex-1">
+        <ActionsheetItemText size="md" className={isSelected ? 'font-medium' : 'font-normal'}>
+          {unit.Name}
+        </ActionsheetItemText>
+        <ActionsheetItemText size="sm" className="text-typography-500">
+          {unit.Type}
+        </ActionsheetItemText>
+      </VStack>
+      {isSelected ? <Check size={20} className="text-primary-600" /> : null}
+    </ActionsheetItem>
+  );
+});
+
+UnitItem.displayName = 'UnitItem';
+
+interface UnitSelectionBottomSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const UnitSelectionBottomSheet = React.memo<UnitSelectionBottomSheetProps>(({ isOpen, onClose }) => {
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const units = useUnitsStore((state) => state.units);
+  const fetchUnits = useUnitsStore((state) => state.fetchUnits);
+  const isLoadingUnits = useUnitsStore((state) => state.isLoading);
+  const unitsError = useUnitsStore((state) => state.error);
+  const hasLoadedUnits = useUnitsStore((state) => state.hasLoaded);
+  const activeUnit = useCoreStore((state) => state.activeUnit);
+  const setActiveUnit = useCoreStore((state) => state.setActiveUnit);
+  const showToast = useToastStore((state) => state.showToast);
+  const isProcessingRef = React.useRef(false);
+
+  // Fetch units when sheet opens. Keyed on hasLoaded rather than units.length: an empty list is a
+  // real answer, and re-fetching on every open turned a genuinely empty result into a request storm.
+  // A fetch already in flight -- started by a retry here, or by another consumer of the store --
+  // answers this open too, so opening on top of one must not queue a second.
+  React.useEffect(() => {
+    if (isOpen && !hasLoadedUnits && !isLoadingUnits) {
+      fetchUnits().catch((error) => {
+        logger.error({
+          message: 'Failed to fetch units',
+          context: { error },
+        });
+      });
+    }
+  }, [isOpen, hasLoadedUnits, isLoadingUnits, fetchUnits]);
+
+  const handleRetryFetch = React.useCallback(() => {
+    // Bypass the cache: a retry exists because the cached answer (or the lack of one) was wrong.
+    fetchUnits(true).catch((error) => {
+      logger.error({
+        message: 'Failed to fetch units',
+        context: { error },
+      });
+    });
+  }, [fetchUnits]);
+
+  const handleClose = React.useCallback(() => {
+    if (isLoading || isProcessingRef.current) {
+      return;
+    }
+    onClose();
+  }, [onClose, isLoading]);
+
+  const handleUnitSelection = React.useCallback(
+    async (unit: UnitResultData) => {
+      // Prevent multiple concurrent selections using ref guard
+      if (isLoading || isProcessingRef.current) {
+        return;
+      }
+
+      // Additional check for same unit selection
+      if (activeUnit?.UnitId === unit.UnitId) {
+        logger.info({
+          message: 'Same unit already selected, closing modal',
+          context: { unitId: unit.UnitId },
+        });
+        handleClose();
+        return;
+      }
+
+      try {
+        isProcessingRef.current = true;
+        setIsLoading(true);
+        let hasError = false;
+
+        try {
+          await setActiveUnit(unit.UnitId);
+          await useRolesStore.getState().fetchRolesForUnit(unit.UnitId);
+
+          logger.info({
+            message: 'Active unit updated successfully',
+            context: { unitId: unit.UnitId, unitName: unit.Name },
+          });
+
+          showToast('success', t('settings.unit_selected_successfully', { unitName: unit.Name }));
+        } catch (error) {
+          hasError = true;
+          logger.error({
+            message: 'Failed to update active unit',
+            context: { error, unitId: unit.UnitId, unitName: unit.Name },
+          });
+
+          showToast('error', t('settings.unit_selection_failed'));
+        } finally {
+          setIsLoading(false);
+          isProcessingRef.current = false;
+
+          // Call handleClose after resetting loading states so it can actually close
+          if (!hasError) {
+            handleClose();
+          }
+        }
+      } catch (outerError) {
+        // This should not happen, but just in case
+        setIsLoading(false);
+        isProcessingRef.current = false;
+      }
+    },
+    [setActiveUnit, handleClose, isLoading, activeUnit, showToast, t]
+  );
+
+  return (
+    <Actionsheet isOpen={isOpen} onClose={handleClose} snapPoints={[85]}>
+      <ActionsheetBackdrop />
+      <ActionsheetContent className="bg-white dark:bg-gray-900">
+        <ActionsheetDragIndicatorWrapper>
+          <ActionsheetDragIndicator />
+        </ActionsheetDragIndicatorWrapper>
+
+        <VStack space="md" className="w-full flex-1 p-4">
+          <Heading size="lg" className="text-center">
+            {t('settings.select_unit')}
+          </Heading>
+
+          {/* Current Selection */}
+          {activeUnit && (
+            <Box className="rounded-lg border border-outline-200 bg-background-50 p-3">
+              <VStack space="xs">
+                <Text size="sm" className="font-medium text-typography-900">
+                  {t('settings.current_unit')}
+                </Text>
+                <HStack space="sm" className="items-center">
+                  <UnitTypeIcon iconUrl={activeUnit.TypeIconUrl} mapIcon={activeUnit.TypeMapIcon} size={20} testID="current-unit-type-icon" />
+                  <Text size="sm" className="text-typography-600">
+                    {activeUnit.Name}
+                  </Text>
+                </HStack>
+              </VStack>
+            </Box>
+          )}
+
+          {/* Units List */}
+          <VStack className="flex-1" space="sm">
+            {isLoading ? (
+              <Center className="flex-1 py-8">
+                <VStack space="md" className="items-center">
+                  <Spinner size="large" />
+                  <Text className="text-center text-typography-600">{t('settings.activating_unit')}</Text>
+                </VStack>
+              </Center>
+            ) : (
+              <ScrollView className="flex-1" showsVerticalScrollIndicator={false} testID="scroll-view">
+                {isLoadingUnits ? (
+                  <Center className="py-8">
+                    <Spinner size="large" />
+                  </Center>
+                ) : unitsError ? (
+                  // A failed load is not an empty department. Saying "no units available" when the
+                  // request 401'd or timed out sends the crew to their administrator over a problem
+                  // that a retry fixes.
+                  <Center className="py-8">
+                    <VStack space="md" className="items-center px-4">
+                      <Text className="text-center text-error-600">{t('settings.units_load_failed')}</Text>
+                      <Button variant="outline" onPress={handleRetryFetch} testID="retry-units-button">
+                        <ButtonText>{t('common.retry')}</ButtonText>
+                      </Button>
+                    </VStack>
+                  </Center>
+                ) : units.length > 0 ? (
+                  <VStack space="sm">
+                    {units.map((unit) => (
+                      <UnitItem key={unit.UnitId} unit={unit} isSelected={activeUnit?.UnitId === unit.UnitId} isLoading={isLoading} onSelect={handleUnitSelection} />
+                    ))}
+                  </VStack>
+                ) : (
+                  <Center className="py-8">
+                    <VStack space="xs" className="items-center px-4">
+                      <Text className="text-center text-typography-500">{t('settings.no_units_available')}</Text>
+                      <Text size="sm" className="text-center text-typography-400">
+                        {t('settings.no_units_available_help')}
+                      </Text>
+                    </VStack>
+                  </Center>
+                )}
+              </ScrollView>
+            )}
+          </VStack>
+
+          {/* Cancel Button - Fixed to bottom */}
+          <HStack space="md" className="pt-4">
+            <Button variant="outline" className="flex-1" onPress={handleClose} disabled={isLoading} testID="cancel-button">
+              <ButtonText>{t('common.cancel')}</ButtonText>
+            </Button>
+          </HStack>
+        </VStack>
+      </ActionsheetContent>
+    </Actionsheet>
+  );
+});
+
+UnitSelectionBottomSheet.displayName = 'UnitSelectionBottomSheet';

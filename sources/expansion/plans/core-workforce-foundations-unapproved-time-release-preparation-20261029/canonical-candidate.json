@@ -1,0 +1,502 @@
+{
+  "id": "core-workforce-foundations-unapproved-time",
+  "title": "Build Workforce foundations and record unapproved time",
+  "app": "Core",
+  "source_only": true,
+  "status": "source_frozen_for_parent_approved_natural_narration",
+  "audience": "Department administrators and workforce coordinators authorized to manage these pages.",
+  "summary": "Connect a fictional employer, establishment, existing member, one-day employment and assignment; save and reopen two Regular hours with approval left off.",
+  "prerequisites": [
+    "An authorized Core account with access to the demonstrated Workforce forms.",
+    "A fictional practice department; this example uses existing fictional member Matthew Casey and an existing training personnel role.",
+    "Review existing records first. Do not overwrite an employer profile, duplicate an existing worker, overlap dated records or reuse another work-entry reference.",
+    "Only browser configuration and stored readbacks are demonstrated. No attendance, payroll, legal-coverage, compensation, resource-cost or cost-run outcome is established."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start with the Workforce overview",
+      "route": "/User/Workforce",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Workforce",
+        "Overview",
+        "No employer profile yet."
+      ],
+      "narration": "Workforce gives administrators a place to connect an employer, operating locations, people, and dated work records. Start on the Workforce Overview. The empty example has no employer profile, workers, or employments. We will build one small training record, then save two unapproved hours. Use an account authorized for these pages and a fictional practice department. These entries describe a software exercise, not verified attendance or payroll.",
+      "practice": "Identify the employer, worker and employment counts before making any practice changes.",
+      "capture_evidence": {
+        "capture_refs": [
+          "002-workforce-overview-empty-baseline"
+        ]
+      },
+      "source_fact_ids": [
+        "access",
+        "navigation"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Enter a clearly identified practice employer",
+      "route": "/User/Workforce/Employer",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Employer",
+        "Employer profile",
+        "Legal name *"
+      ],
+      "narration": "Open Employer and find Employer profile. In Legal name, enter a clearly marked training name; this example uses Community coordination services with a TRAINING ONLY prefix. Tax identifiers, addresses, and filing contacts stay empty in this clean practice profile. Read the blue protection notice before editing an existing employer. Review stored information carefully rather than replacing a real organization’s details with the values from this demonstration.",
+      "practice": "In a clean training profile, choose a fictional name. In an existing profile, review without replacing stored details.",
+      "capture_evidence": {
+        "capture_refs": [
+          "004-prepared-fictional-employer-name-only",
+          "005-coverage-not-declared-before-save"
+        ]
+      },
+      "source_fact_ids": [
+        "employer_whole_save",
+        "protection"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Save without declaring coverage",
+      "route": "/User/Workforce/Employer",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Coverage status",
+        "Not declared",
+        "Part of an integrated enterprise",
+        "Save",
+        "Saved."
+      ],
+      "narration": "Scroll to Coverage status. Keep Not declared for this fictional example, leave the employee headcounts empty, and leave Part of an integrated enterprise unchecked. This exercise makes no decision about filing coverage. Choose Save at the bottom of the employer form. The Saved message confirms the response, and the fresh employer view retains the training name. Check that name before moving on to the location records.",
+      "practice": "Locate the lower employer Save, then compare the saved and fresh name readbacks without resaving.",
+      "capture_evidence": {
+        "capture_refs": [
+          "005-coverage-not-declared-before-save",
+          "006-employer-saved-name-only",
+          "007-employer-fresh-saved-readback"
+        ]
+      },
+      "source_fact_ids": [
+        "employer_whole_save"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Add an establishment with a recognizable code",
+      "route": "/User/Workforce/Establishments",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Establishments",
+        "Add establishment",
+        "Code *",
+        "TRN-COMM-28",
+        "Name *",
+        "State",
+        "IL",
+        "Major activity"
+      ],
+      "narration": "Open Establishments and choose Add establishment. An establishment gives later records a named operating location. Enter a recognizable Code and Name. Here the code is TRN-COMM-28, and State is IL. Major activity describes fictional coordination exercises. The address and industry-code fields remain blank in this example. A short, distinctive code helps you recognize the same location when a worker or time-entry form offers it later.",
+      "practice": "Read back the code and state before saving; use a new unique code only in a separately authorized practice setup.",
+      "capture_evidence": {
+        "capture_refs": [
+          "008-establishments-empty-add-launcher",
+          "010-prepared-establishment-code-name-state"
+        ]
+      },
+      "source_fact_ids": [
+        "establishment"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Check the establishment dates and saved row",
+      "route": "/User/Workforce/Establishments",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Active from",
+        "Active to",
+        "Time zone",
+        "America/Chicago",
+        "Save",
+        "Saved.",
+        "Edit establishment"
+      ],
+      "narration": "Continue down the establishment form. Set Active from to October twenty-eighth, twenty twenty-six, leave Active to empty, and enter America slash Chicago in Time zone. Headquarters and Reported in the prior year remain unchecked. Choose this form’s Save. The catalog now shows the training base, IL, and Active Yes. In the reopened establishment, check the date and time zone again so the saved location matches the setup you intended.",
+      "practice": "Compare the catalog’s full training name with the reopened code, date and time zone; do not resave merely to inspect.",
+      "capture_evidence": {
+        "capture_refs": [
+          "011-prepared-establishment-active-window-timezone-save",
+          "012-saved-establishment-catalog",
+          "013-fresh-establishment-date-and-timezone-readback"
+        ]
+      },
+      "source_fact_ids": [
+        "establishment"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Link the existing member as a worker",
+      "route": "/User/Workforce/Workers",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Workers",
+        "Member",
+        "Matthew Casey",
+        "Add worker",
+        "Saved.",
+        "Add employment"
+      ],
+      "narration": "Open Workers. The Add worker panel offers a Member picker and separate External worker key and Display label fields. For this example, select the existing fictional member Matthew Casey, leave the external fields blank, and choose Add worker. Casey’s Worker page opens with Active checked and no employment periods yet. This creates a Workforce link for an existing member; it does not invite a new user or assign anyone to an operational crew.",
+      "practice": "Distinguish the existing-member path from the external-worker fields. Reuse an existing training worker for read-only review rather than adding it again.",
+      "capture_evidence": {
+        "capture_refs": [
+          "014-workers-empty-member-and-external-paths",
+          "015-prepared-member-worker-casey-only",
+          "016-saved-casey-workforce-row-no-employment"
+        ]
+      },
+      "source_fact_ids": [
+        "worker"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Create a deliberately short employment period",
+      "route": "/User/Workforce/Worker/ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Add employment",
+        "Worker kind",
+        "Volunteer",
+        "Start *",
+        "End",
+        "Employment type",
+        "Exemption",
+        "Unknown"
+      ],
+      "narration": "From Casey’s page, choose Add employment. Worker kind is Volunteer in this practice record. Set Start and End to the same October twenty-eighth date to keep the example limited to one day. Employment type and Exemption remain Unknown. The dates belong to this worker’s employment period, rather than the establishment’s active window. Before saving, check the person and both dates so you do not attach the exercise to the wrong period.",
+      "practice": "Read the worker name and both dates. Do not add an overlapping period to the already-created example.",
+      "capture_evidence": {
+        "capture_refs": [
+          "016-saved-casey-workforce-row-no-employment",
+          "017-employment-volunteer-one-day-period"
+        ]
+      },
+      "source_fact_ids": [
+        "employment"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Choose the period defaults and save the correct form",
+      "route": "/User/Workforce/Worker/ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Default establishment",
+        "Personnel role",
+        "Labor contractor",
+        "Affiliate",
+        "Save",
+        "Saved.",
+        "Edit employment"
+      ],
+      "narration": "Select the training base in Default establishment and the existing Community response navigator training role in Personnel role. The role field helps choose compensation defaults; it does not change Casey’s response staffing. Leave Labor contractor and Affiliate blank. Scroll to the Save inside the employment panel, below those choices; the Worker panel has a separate Save. After saving, the one-day Volunteer period appears, and its reopened form retains the selected defaults.",
+      "practice": "Locate the employment-panel Save rather than the separate worker Save. Verify the stored period and defaults.",
+      "capture_evidence": {
+        "capture_refs": [
+          "018-prepared-employment-default-establishment-role-save",
+          "019-employment-final-save-control",
+          "020-saved-volunteer-employment-period",
+          "021-fresh-employment-period-and-defaults-readback"
+        ]
+      },
+      "source_fact_ids": [
+        "employment"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Give the job assignment its own dates and location",
+      "route": "/User/Workforce/Worker/ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Add assignment",
+        "Effective *",
+        "Expires",
+        "Job title",
+        "Establishment",
+        "Work mode",
+        "Non-remote",
+        "Work location",
+        "US",
+        "CA",
+        "IL"
+      ],
+      "narration": "Within that period, choose Add assignment. Check the new form: it carries the establishment forward, but Work location initially shows US and CA. Change the state to IL for this exercise. Give Effective and Expires the same one-day bounds, enter the TRAINING ONLY Coordination exercise job title, and keep Work mode Non-remote. Review the location explicitly; inheriting an establishment does not mean every other location field was copied with it.",
+      "practice": "Compare the initial CA field with the prepared IL value. Check assignment dates separately from employment dates.",
+      "capture_evidence": {
+        "capture_refs": [
+          "020-saved-volunteer-employment-period",
+          "022-new-job-assignment-default-establishment-and-ca",
+          "023-prepared-job-assignment-one-day-and-il"
+        ]
+      },
+      "source_fact_ids": [
+        "assignment"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Save the assignment without inventing classifications",
+      "route": "/User/Workforce/Worker/ea3ba456-ee5d-4a53-b61e-46c658f63b5a",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "CRD job category",
+        "SOC code",
+        "Cal OES MARS classification",
+        "Mapping provenance",
+        "Save",
+        "Saved.",
+        "Edit assignment"
+      ],
+      "narration": "The assignment also has CRD job category, SOC, and Cal OES MARS classification fields. We leave those classifications and Mapping provenance empty in this fictional exercise; a training title supplies no classification authority. Choose Save in the assignment form. Its row now shows the dated coordination exercise, the training establishment, and Non-remote. In the reopened assignment, verify IL and the matching dates before continuing to the daily work entry.",
+      "practice": "Confirm the saved title and establishment, then inspect the fresh IL/date readback without changing classification fields.",
+      "capture_evidence": {
+        "capture_refs": [
+          "024-job-assignment-mapping-fields-empty-save",
+          "025-saved-dated-job-assignment",
+          "026-fresh-job-assignment-il-and-empty-mappings"
+        ]
+      },
+      "source_fact_ids": [
+        "assignment",
+        "assignment_classification"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Use the correct work-entry date window",
+      "route": "/User/Workforce/WorkEntries",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Work entries",
+        "Add work entry",
+        "No work entries in this window."
+      ],
+      "narration": "Open Work entries. The two date controls define the list’s viewing window; the displayed window includes October twenty-eighth. No entries are listed yet. Check the window before assuming a saved record is missing. Choose Add work entry to open the entry panel beside the list. This page records a worker and date, hours, location, and supporting context, so keep the training worker and the intended day together as you fill it.",
+      "practice": "Confirm the displayed window includes the practice day before looking for the entry. No filter-change success is demonstrated here.",
+      "capture_evidence": {
+        "capture_refs": [
+          "027-work-entries-empty-date-window"
+        ]
+      },
+      "source_fact_ids": [
+        "workentry"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Prepare two Regular hours with the intended location",
+      "route": "/User/Workforce/WorkEntries",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Worker *",
+        "Matthew Casey",
+        "Date *",
+        "Hours *",
+        "2",
+        "Hours type",
+        "Regular",
+        "Establishment",
+        "Work mode",
+        "Non-remote",
+        "Country",
+        "US",
+        "State / province",
+        "IL"
+      ],
+      "narration": "Check Worker is Matthew Casey and Date is October twenty-eighth. Enter two in Hours and keep Hours type Regular. Select the training establishment and keep Work mode Non-remote. Under Country and State slash province, use US and IL. These location fields also need their own review. The two hours are a fictional software example, so choose values appropriate to your authorized practice record rather than treating the demonstration as evidence someone actually worked.",
+      "practice": "Read worker, date, hours type and location back together. Distinguish the initial CA default from the prepared IL value.",
+      "capture_evidence": {
+        "capture_refs": [
+          "028-new-work-entry-defaults-and-hours-types",
+          "029-prepared-two-hour-training-entry"
+        ]
+      },
+      "source_fact_ids": [
+        "workentry"
+      ]
+    },
+    {
+      "id": "13",
+      "title": "Keep the entry unapproved and identify its source",
+      "route": "/User/Workforce/WorkEntries",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Call #",
+        "Deployment id",
+        "Approved payroll cost",
+        "External source",
+        "External id",
+        "Approved",
+        "Save"
+      ],
+      "narration": "Continue to the lower form. Leave Call number and Deployment id empty because this exercise is not linked to an incident or deployment. Approved payroll cost stays blank, and Approved stays unchecked. Use External source and a distinct External id to identify your authorized training entry; do not reuse another record’s reference. These narrow inputs may clip long text. Review the form, then choose Save to store the unapproved entry.",
+      "practice": "Identify the unchecked Approved control and separate empty payroll-cost field. Do not infer a full external value from the clipped input.",
+      "capture_evidence": {
+        "capture_refs": [
+          "030-work-entry-provenance-unapproved-save"
+        ]
+      },
+      "source_fact_ids": [
+        "workentry"
+      ]
+    },
+    {
+      "id": "14",
+      "title": "Verify the saved entry and fresh readback",
+      "route": "/User/Workforce/WorkEntries",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Saved.",
+        "Matthew Casey",
+        "2.00",
+        "Regular",
+        "Academy software exercise",
+        "Approved",
+        "No",
+        "Edit work entry",
+        "Approved payroll cost"
+      ],
+      "narration": "The saved list now shows Casey, two Regular hours, the training establishment, and Academy software exercise in Context. Approved reads No. The fresh Edit work entry view retains the worker, date, hours, and Illinois location. Lower down, Approved is still unchecked and the payroll-cost box is empty. This is the useful stopping point: a stored, reviewable training record. Saving has not approved payroll, paid anyone, or verified attendance.",
+      "practice": "Compare the saved row with both parts of the fresh edit form. Finish without resaving or approving the example.",
+      "capture_evidence": {
+        "capture_refs": [
+          "031-saved-unapproved-two-hour-entry",
+          "032-fresh-two-hour-work-entry-readback",
+          "033-fresh-work-entry-unapproved-context-readback"
+        ]
+      },
+      "source_fact_ids": [
+        "workentry",
+        "no_payment"
+      ]
+    },
+    {
+      "id": "15",
+      "title": "Review the foundation and apply the pattern",
+      "route": "/User/Workforce",
+      "capture_intent": "Use the ordered actual source views while their named fields, Save controls and readbacks are explained. No operation time is assigned.",
+      "required_labels": [
+        "Overview",
+        "Coverage status: Not declared",
+        "Establishments: 1 · Workers: 1 · Employments: 1",
+        "Resource profiles: 0 · Cost runs: 0"
+      ],
+      "narration": "Return to Overview. One establishment, one worker, and one employment are now recorded; coverage remains Not declared, with no resource profiles or cost runs. Use the same prepare, save, and read-back pattern for fire and EMS training administration, community-care or mental-health coordination, search-and-rescue volunteers, security teams, wildland contractors, and industrial response teams. Keep each organization’s real classifications and approvals with its authorized reviewers. The common skill is connecting the right person, dates, place, and unapproved record before further review.",
+      "practice": "Explain which records were saved and which approvals or costing activities were not performed.",
+      "capture_evidence": {
+        "capture_refs": [
+          "041-workforce-overview-final-saved-foundations"
+        ]
+      },
+      "source_fact_ids": [
+        "no_payment"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "fire-ems",
+      "title": "Fire and EMS",
+      "scenario": "Practice linking a training member to a dated training-base assignment and an unapproved work entry; do not treat it as verified station attendance."
+    },
+    {
+      "sector": "community-response",
+      "title": "Community response and mental-health teams",
+      "scenario": "Use the same location, worker and dated-assignment review for community-care coordination; keep sensitive client details outside this software exercise."
+    },
+    {
+      "sector": "search-and-rescue",
+      "title": "Search and rescue",
+      "scenario": "Practice a one-day volunteer coordination period and confirm the saved dates before reviewing an unapproved entry."
+    },
+    {
+      "sector": "security",
+      "title": "Security",
+      "scenario": "Use a clearly marked training site and worker record to rehearse date/location checks without claiming a completed patrol."
+    },
+    {
+      "sector": "wildland",
+      "title": "Wildland",
+      "scenario": "Use contractor-team practice context to check worker, assignment bounds and work location; this lesson creates no labor-contractor entity or legal classification."
+    },
+    {
+      "sector": "industrial",
+      "title": "Industrial response",
+      "scenario": "Use a fictional operating establishment and dated coordination assignment; saving the entry supplies no payroll approval or physical-response verification."
+    }
+  ],
+  "source_files": [
+    "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+    "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+    "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+    "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+    "Core/Resgrid.Services/Workforce/FieldCostCalculator.cs",
+    "Core/Resgrid.Services/Workforce/WorkforceProtectionSeam.cs",
+    "Core/Resgrid.Model/Workforce/WorkforceProtectedFields.cs",
+    "Core/Resgrid.Localization/Areas/User/Workforce/Workforce.en.resx",
+    "Core/Resgrid.Model/Workforce/WorkforceEnums.cs",
+    "Core/Resgrid.Model/Workforce/WorkforceEntities.cs",
+    "Core/Resgrid.Model/Workforce/CompensationEntities.cs",
+    "Core/Resgrid.Model/Workforce/CostingEntities.cs",
+    "Core/Resgrid.Model/Services/IWorkforceServices.cs",
+    "Core/Resgrid.Services/BusinessOperationsAccessService.cs",
+    "Web/Resgrid.Web/Helpers/ClaimsAuthorizationHelper.cs",
+    "Web/Resgrid.Web/Areas/User/Models/Workforce/WorkforceViews.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Shared/_WorkforceShell.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Shared/_Navigation.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Employer.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Establishments.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Workers.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Worker.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Compensation.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/CompensationProfile.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/WorkEntries.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/ResourceCosts.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/Usage.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/CostRuns.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Workforce/CostRun.cshtml"
+  ],
+  "source_trace": [
+    {
+      "file": "expansion/plans/core-workforce-administration-source-trace-20261028/source-evidence.json",
+      "sha256": "025d9c934223c201a026719b459294a0609119c010e75dadd10591e6cbbb441a"
+    },
+    {
+      "file": "expansion/plans/core-workforce-administration-source-trace-20261028/source-trace.json",
+      "sha256": "d636eb3b000b8d9184c83c482900a90a5754db812f0ae5dd88f96287aa1098dd"
+    },
+    {
+      "file": "expansion/plans/core-workforce-administration-source-trace-20261028/capture-outline.proposed.json",
+      "sha256": "a9f7c69af79671d9095e3fbe6aadc467f9f662f7a9fe88f9d12de475c26af236"
+    },
+    {
+      "file": "expansion/plans/core-workforce-administration-source-trace-20261028/scenario.proposed.json",
+      "sha256": "eeade5e2f3636369c6bb4bfc93aad1c782db8624a6d00d3f2abb69d58f3f456b"
+    }
+  ],
+  "publication_approved": false,
+  "narration_frozen": true,
+  "parent_whole_script_approved": true,
+  "source_complete": true,
+  "narration_word_count": 1047,
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-workforce-foundations-unapproved-time-take-01/evidence.reviewed.json"
+}

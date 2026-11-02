@@ -1,0 +1,17 @@
+# Native Unit call lifecycle release source
+
+The new encoded take uses all 88 approved narration cues and 23 actual native Unit screen holds. The original frozen candidate, two native recording source profiles, source images and genuine Root reviews remain unchanged.
+
+`lesson.adoption-candidate.json` is a separate learner-content proposal. It supplies fifteen practice prompts and six distinct department examples required by the public Academy exporter. Its scene IDs, titles, complete narration and required labels exactly match the frozen original. `projection-provenance.json` records that boundary. Root must read the added practice prompts and scenarios before adopting this file.
+
+The video, original assembly worksheet, full audio QA, source comparisons, cue comparisons, actual encoded PNGs and caption reading sheets are retained under `expansion/rendered/app-unit-call-lifecycle-native-take-01/`. The frame reviewer personally inspected every hold and every caption region. `evidence.frames-reviewed.pending-playback.json` passes every applicable source, native-context, mapping, frame and caption check; only the four missing beginning/middle/end browser-proof issues remain until genuine observations are supplied.
+
+The first frame-sealing helper was intentionally stopped by the public-content guard because the historical candidate had no practice prompts. It wrote no evidence. The separately versioned `production/seal_unit_native_call_take_01_frame_review_v2_20261030.py` binds this new learner projection and preserves the unchanged narrated source. No original candidate or prior approval was rewritten to accommodate export.
+
+`relocated-frame-package-regression.json` records an actual 397-file relocated exact-copy check. The read-only frame sealer passes from that isolated copy. Removing either exact historical before/after compatibility snapshot is rejected. Removing the exact public brand stylesheet is rejected too. The initial missing-stylesheet failure is preserved in the report; the corrected closure lists every individual file and hash. This is a relocation check, not a claim about an installed Academy checkout.
+
+For genuine browser review, serve the take directory through the authorized local review server and open `playback-review/root-observer.html`. Beginning, Middle and End buttons seek to 12, 168 and 316 seconds. Ordinary clicks on **Observe playback state** read the actual media and caption state; the next observation includes the previous actual observed time. Seeking clears that previous sample. The helper never supplies playback success, screenshots or a reviewer decision. The original `playback-review/index.html` is preserved.
+
+`production/qualify_unit_native_call_take_01_20261030.py` is read-only by default. Its `--qualify` action requires actual Root browser observations and a separate genuine Root review with exact receipt hashes. The Root review must bind the exact three screenshot hashes, acknowledge all three advancing/error-free samples, and identify the new learner projection with `new_practice_prompts_and_six_sector_examples_reviewed: true`. Screenshot dimensions must match their real image headers; incorrect metadata is refused.
+
+Once those independent inputs pass, the helper can create new qualified evidence and `canonical-adoption-proposal.json` inside the take. It changes no canonical lesson, website, installed Academy repository, native application, running server or Git state. Root owns adoption and publication after that verification.

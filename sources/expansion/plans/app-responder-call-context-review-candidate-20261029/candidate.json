@@ -1,0 +1,291 @@
+{
+  "id": "app-responder-call-context-review",
+  "title": "Responder: inspect an incident before responding",
+  "app": "Responder",
+  "audience": [
+    "Responders and team members authorized to view department calls"
+  ],
+  "summary": "Find a training incident, inspect its information and assignments, and distinguish missing context from an operational response.",
+  "prerequisites": [
+    "An existing authorized Responder session; no sign-in flow is demonstrated.",
+    "Permission to read calls and their supporting views in a fictional practice department.",
+    "These browser screens use the app Dark display preference; no device-location or hardware permission is required."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the incident you mean",
+      "route": "/home/calls",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "006-readable-calls-list-and-search",
+        "007-readable-warehouse-search-result"
+      ],
+      "required_labels": [
+        "Calls",
+        "Search calls...",
+        "Warehouse",
+        "#DEMO-0001"
+      ],
+      "narration": "Begin on Calls in an authorized Responder session. The cards bring together a call number, name, location and assigned resources. Read those details before choosing any response. In this fictional department, enter Warehouse in Search calls. The list narrows to TRAINING — Warehouse alarm, numbered DEMO-0001, at Training site one in Chicago. Check the name, number and address together; a familiar word in a search result is not enough to identify an incident. The search changes the displayed list. It does not rename a call, dispatch anyone or change your personal status.",
+      "practice": "Find the training warehouse by name and confirm its number and location without creating or editing a call."
+    },
+    {
+      "id": "02",
+      "title": "Read the nature and location in context",
+      "route": "/call/51001",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "010-loaded-warehouse-identity-and-location"
+      ],
+      "required_labels": [
+        "Call Details",
+        "TRAINING — Warehouse alarm (DEMO-0001)",
+        "Exercise: reported smoke at an unoccupied training warehouse. Squad 3 assigned for a search demonstration."
+      ],
+      "narration": "Open that card to reach Call Details. The same name and number remain at the top, followed by the nature of the call. Here it describes reported smoke at an unoccupied training warehouse and a Squad Three search demonstration. The map provides context for the stored incident location. It does not establish where your device is or whether a crew has arrived. Route is available beside Notes, Images and Files, but we leave it untouched while reviewing the information already supplied.",
+      "practice": "Confirm the incident identity and describe what the stored nature actually says, without opening Route or requesting location access."
+    },
+    {
+      "id": "03",
+      "title": "Check the Info fields and training note",
+      "route": "/call/51001",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "010-loaded-warehouse-identity-and-location",
+        "009-call-info-priority-type-address"
+      ],
+      "required_labels": [
+        "Info",
+        "Priority",
+        "Urgent",
+        "Timestamp",
+        "Type",
+        "Structure Fire",
+        "Address",
+        "Note",
+        "Fictional exercise for Resgrid Academy. Do not dispatch real resources."
+      ],
+      "narration": "On Info, scroll until Priority, Timestamp, Type, Address and Note are visible together. This example shows Urgent and Structure Fire. Its timestamp is October twenty-fifth at eleven forty-nine in the morning; that displayed time is not an arrival report. Check the address against the intended training site. The note explicitly identifies a fictional Academy exercise and says not to dispatch real resources. Read qualifiers like this along with the headline, rather than carrying an assumption from the call list into your next action.",
+      "practice": "Identify the priority, type, timestamp and training qualifier, keeping the timestamp distinct from an arrival time."
+    },
+    {
+      "id": "04",
+      "title": "Separate assignments from a response",
+      "route": "/call/51001",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "009-call-info-priority-type-address",
+        "013-dispatched-resource-rows-complete"
+      ],
+      "required_labels": [
+        "Dispatched",
+        "Kelly Severide",
+        "Joe Cruz",
+        "Squad 3",
+        "Type: User",
+        "Type: Unit"
+      ],
+      "narration": "Choose Dispatched and bring all the resource rows into view. Kelly Severide and Joe Cruz appear as User entries associated with Squad Three. Squad Three also has its own Unit entry, associated with Firehouse Fifty-one. The Group and Type labels help distinguish a person from a vehicle or team resource. This is the recorded dispatch assignment for the call. A name in this list does not, by itself, prove that person acknowledged the call, changed status, reached the location or received an external notification.",
+      "practice": "Distinguish both User rows from the Unit row and explain what the assignment list does and does not establish."
+    },
+    {
+      "id": "05",
+      "title": "Interpret the available protocol and activity views",
+      "route": "/call/51001",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "013-dispatched-resource-rows-complete",
+        "011-call-protocols-current-result",
+        "014-call-activity-existing-software-events"
+      ],
+      "required_labels": [
+        "Protocols",
+        "No protocols attached to this call",
+        "Activity",
+        "No timeline events available"
+      ],
+      "narration": "Protocols and Activity answer different questions. In Protocols, this call currently returns No protocols attached to this call. Activity returns No timeline events available. Read each result in the context of the selected incident. Neither message supplies a missing procedure or confirms an arrival. An empty activity view is not a reason to invent a response history. If important guidance or chronology is missing, resolve that through your authorized coordination process before treating the information as complete.",
+      "practice": "Compare the two empty messages and explain which question each tab is trying to answer."
+    },
+    {
+      "id": "06",
+      "title": "Inspect notes without posting",
+      "route": "/call/51001",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "014-call-activity-existing-software-events",
+        "015-call-notes-readonly-empty"
+      ],
+      "required_labels": [
+        "Notes",
+        "Call Notes",
+        "No notes found",
+        "Add a new note...",
+        "Add Note",
+        "Cancel"
+      ],
+      "narration": "Choose Notes to inspect Call Notes. This example says No notes found. The search box can help find an existing note when there are entries. Below it, Add a new note and Add Note belong to the writing workflow. We leave the field blank and use Cancel, so this inspection adds nothing to the incident. Reading the original note on Info and checking the separate Call Notes list are useful complementary checks; do not assume they are the same piece of information.",
+      "practice": "Open Call Notes, read its current result and cancel without entering or posting text."
+    },
+    {
+      "id": "07",
+      "title": "Check which supporting material exists",
+      "route": "/call/51001",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "014-call-activity-existing-software-events",
+        "016-call-images-readonly-empty",
+        "014-call-activity-existing-software-events",
+        "017-call-files-readonly-empty"
+      ],
+      "required_labels": [
+        "Images",
+        "Call Images",
+        "No images available",
+        "Files",
+        "Call Files",
+        "No files available"
+      ],
+      "narration": "The Images and Files buttons open separate supporting views. Call Images currently says No images available. Call Files says No files available and explains that none have been added to this call. These are the results shown for this incident, not demonstrations of uploading, downloading or taking a photograph. Check the call identity before relying on an attachment from any source, and use only approved material when a later task genuinely requires adding one.",
+      "practice": "Inspect both supporting views and distinguish an empty list from a successful upload or download."
+    },
+    {
+      "id": "08",
+      "title": "Keep review and response decisions distinct",
+      "route": "/home",
+      "capture_intent": "Use only the actual ordered foreground views for these read-only instructions.",
+      "capture_refs": [
+        "019-home-response-visibility-readback"
+      ],
+      "required_labels": [
+        "Home",
+        "Status",
+        "Responding",
+        "Not Responding",
+        "On Scene",
+        "Standing By",
+        "3",
+        "ACTIVE CALLS",
+        "0",
+        "CALLS I'M ON"
+      ],
+      "narration": "On Home, this example shows three Active Calls and zero Calls I’m On. Those counts answer different questions. The Status controls include Responding, Not Responding, On Scene and Standing By; the Standing By choice remains outlined during this review. We do not press a response button. Use the same read-before-response pattern for fire and EMS, community-care or mental-health teams, search and rescue, security patrols, wildland contractors and industrial teams. Find the correct incident, read its context and assignments, and identify missing information before making an authorized operational response.",
+      "practice": "Explain why reading an incident and seeing an assignment are separate from sending your own response."
+    }
+  ],
+  "source_files": [
+    {
+      "repository": "Responder",
+      "path": "src/app/(app)/home/calls.tsx",
+      "sha256": "911e2486210c8ba70e29dc7291f24c5c518b7cafb0ecd363a1c887f47dca35ad"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/app/call/[id]/index.tsx",
+      "sha256": "ab628df6a8d389b65cce80bb142291e78d20e22c695b9964766dd7f45560412e"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/calls/call-card.tsx",
+      "sha256": "bd921aeb69d4937a7e94a6ac7d6f4298b5304a7a0442791232970009fae36fac"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/calls/call-notes-modal.tsx",
+      "sha256": "441b05e11a189323c5caeaee013a1556898358fb49bc3c687a3deb3fdeae5b0d"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/calls/call-images-modal.tsx",
+      "sha256": "728f21bbb101dbb94af946b7bdfbc4bcadbe07755ac508c84449fec08dd50fab"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/calls/call-files-modal.tsx",
+      "sha256": "759b30f8629fd9f4f4d8c91ad4cea395fce70e73b66360262dcc98807d5f0504"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/home/summary-stats-row.tsx",
+      "sha256": "fa3f263969e8e5d35325d5b697125dbfb3b3dad1bca73353eaf368d1e13a2bf1"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/home/status-buttons.tsx",
+      "sha256": "d8ef30a72cfd49aa8758416c55ccd7bce9813a0f1af1d42a24d08a315977f288"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/components/home/user-status-card.tsx",
+      "sha256": "5cc694da3204c40ad02e6c07d299228d0bafefaddc4659c0fdf0d0cf7a9d65b1"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/stores/calls/detail-store.ts",
+      "sha256": "1d223245ccd7f8b76630ee1f96e55664357cb18a59ac1b4b6f69a6e26c00dcf7"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/stores/calls/store.ts",
+      "sha256": "57065717fb8abed72595e44a7fc190c0912c789734820e54018483e49b6c8970"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/lib/call-dispatch.ts",
+      "sha256": "e5362c6a6b7ab81e5d4875dddef2a77508d61fa73a69eb223e582f7df0452d4e"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/api/calls/calls.ts",
+      "sha256": "a3364c9eb86f79fccec53781e39e367487874c158ab3829f8d1cf07d821add2a"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/api/calls/callNotes.ts",
+      "sha256": "b61e12a478347c6fabc4d54ab1c62c15115f1eb287dad487e3d5a56553775116"
+    },
+    {
+      "repository": "Responder",
+      "path": "src/api/calls/callFiles.ts",
+      "sha256": "f60aab996674164d9a7348919501c6bdebdbded63aad271bbf15eddc42697d21"
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Review the correct training alarm, priority, nature and assignments before choosing a personal response."
+    },
+    {
+      "sector": "Community care and mental health",
+      "scenario": "Review a fictional operational call and missing guidance without adding client histories to notes."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Confirm the mission identity and assigned people/unit rows without treating them as arrival reports."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Inspect a patrol incident and its supporting material before making an authorized response."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Confirm the correct training incident location and group/type assignments without claiming physical resource positions."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Review a site exercise and recognize empty procedure/attachment views before acting."
+    }
+  ],
+  "candidate_only": true,
+  "narration_frozen": false,
+  "parent_full_script_review_pending": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "scope_limits": [
+    "Read-only Calls context and response-control visibility. No actual response, dispatch, close, record creation, note/attachment upload or provider delivery is demonstrated.",
+    "Separate finished Responder orientation, communications and certification lessons remain unchanged. Broad calls/records and readiness drafts retain their gaps.",
+    "Empty screens are described as the current visible result; no hidden API/store inspection or complete backend inventory claim.",
+    "No GPS, offline persistence, camera/voice, permission, security or hardware result is claimed."
+  ]
+}

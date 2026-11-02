@@ -1,0 +1,231 @@
+{
+  "checked_at": "2026-10-27T18:48:23.104703+00:00",
+  "scope": "Read-only diagnosis of isolated resgrid-academy-oct25, fictional department51. No browser, HTTP/API request, application edit, support-pin change or database write.",
+  "symptom": {
+    "call_type_id": 51001,
+    "name": "Structure Fire",
+    "type_has_custom_icon_key": true,
+    "matching_icon_row_exists": false,
+    "all_typeicons_rows": 0,
+    "migration_version": 289,
+    "image_route_observed_status": 404
+  },
+  "read_only_database_observations": {
+    "transaction": "BEGIN READ ONLY; SELECT statements; ROLLBACK",
+    "typeicons_statistics": {
+      "inserts": 3,
+      "updates": 0,
+      "deletes": 3,
+      "live_estimate": 0,
+      "dead_estimate": 3
+    },
+    "data_column_type": "bytea",
+    "owner_key_column_type": "character varying",
+    "icon_row_key_column_type": "character varying",
+    "user_triggers": [],
+    "rules": [],
+    "indexes": [
+      "primary key typeiconid",
+      "unique iconkey",
+      "departmentid/typekind/typeid"
+    ],
+    "authentication_tables_read": false,
+    "configuration_secrets_read": false
+  },
+  "sanitized_gateway_observations": [
+    {
+      "completed_at": "2026-10-27T18:37:41Z",
+      "method": "POST",
+      "path": "/User/Types/EditCallType",
+      "status": 302,
+      "count": 3
+    },
+    {
+      "completed_at": "2026-10-27T18:37:41Z",
+      "method": "GET",
+      "path": "/TypeIcons/<saved-icon-key>",
+      "status": 404,
+      "count": 3
+    },
+    {
+      "completed_at": "2026-10-27T18:40:36Z",
+      "method": "GET",
+      "path": "/TypeIcons/<saved-icon-key>",
+      "status": 404,
+      "count": 1
+    }
+  ],
+  "filtered_web_and_postgres_typeicon_exception_lines": 0,
+  "root_cause": {
+    "finding": "Concurrent replacement cleanup can delete another in-flight upload, including the key finally stored on the type. Three same-second completed form submissions plus three inserted/deleted rows are consistent with this exact race.",
+    "source_algorithm": "UploadIconAsync inserts a new image, updates the owner type to that key, then DeleteSlotAsync deletes all other same-slot keys. Those operations use separate autocommit connections when no ambient unit of work exists; neither the service nor repository owns a replacement transaction/owner row lock.",
+    "evidence_limit": "Gateway logs establish the three concurrent submissions and table statistics establish insert/delete totals. Exact SQL interleaving was not logged. The retained deterministic in-memory reproduction demonstrates a permitted source execution with the observed orphan and counts; it does not invent a query trace.",
+    "not_indicated": [
+      "image decode or PNG corruption (there are no bytes to decode)",
+      "missing migration",
+      "authentication or MFA failure",
+      "missing route alias",
+      "file URL permission failure"
+    ]
+  },
+  "deterministic_offline_reproduction": {
+    "kind": "in-memory source-operation model, not a live DB experiment",
+    "schedule": [
+      {
+        "request": "A",
+        "operation": "insert new icon",
+        "rows": [
+          "A"
+        ],
+        "type_pointer": null
+      },
+      {
+        "request": "B",
+        "operation": "insert new icon",
+        "rows": [
+          "A",
+          "B"
+        ],
+        "type_pointer": null
+      },
+      {
+        "request": "C",
+        "operation": "insert new icon",
+        "rows": [
+          "A",
+          "B",
+          "C"
+        ],
+        "type_pointer": null
+      },
+      {
+        "request": "A",
+        "operation": "point type at new icon",
+        "rows": [
+          "A",
+          "B",
+          "C"
+        ],
+        "type_pointer": "A"
+      },
+      {
+        "request": "B",
+        "operation": "point type at new icon",
+        "rows": [
+          "A",
+          "B",
+          "C"
+        ],
+        "type_pointer": "B"
+      },
+      {
+        "request": "C",
+        "operation": "point type at new icon",
+        "rows": [
+          "A",
+          "B",
+          "C"
+        ],
+        "type_pointer": "C"
+      },
+      {
+        "request": "A",
+        "operation": "delete same-slot icons except own key",
+        "deleted": [
+          "B",
+          "C"
+        ],
+        "rows": [
+          "A"
+        ],
+        "type_pointer": "C"
+      },
+      {
+        "request": "B",
+        "operation": "delete same-slot icons except own key",
+        "deleted": [
+          "A"
+        ],
+        "rows": [],
+        "type_pointer": "C"
+      },
+      {
+        "request": "C",
+        "operation": "delete same-slot icons except own key",
+        "deleted": [],
+        "rows": [],
+        "type_pointer": "C"
+      }
+    ],
+    "final_type_pointer": "C",
+    "final_icon_rows": [],
+    "total_inserts": 3,
+    "total_deletes": 3,
+    "orphan_reproduced": true,
+    "serialized_comparison": {
+      "final_pointer": "C",
+      "rows": [
+        "C"
+      ],
+      "inserts": 3,
+      "deletes": 2,
+      "working_reference": true
+    }
+  },
+  "safest_fix_before_implementation": [
+    "Use a database transaction for a complete replacement, beginning before ownership/slot serialization and before insertion. Serialize on the department-owned type row, using PostgreSQL SELECT FOR UPDATE or SQL Server equivalent UPDLOCK/HOLDLOCK. All participating repository operations must share that connection and transaction.",
+    "Apply the same owner/slot serialization discipline to base uploads, variant uploads and removals, so no concurrent cleanup can remove another replacement. Preserve tenant scoping, existing authentication/authorization, immutable key semantics and variant independence.",
+    "On any failure roll back insertion, pointer update and cleanup together. Retain prior working reference. Avoid an in-process-only lock because multiple web/API instances can write concurrently.",
+    "Add a genuine concurrent-upload regression against an isolated test database. After overlapping replacements, every stored base key and returned active variant must resolve to retained nonempty PNG bytes; no cross-tenant/slot deletion. Existing single-operation mocked and DB tests do not exercise this schedule.",
+    "Separately consider preventing ordinary type-field updates from overwriting server-owned IconKey with a stale loaded value. This did not need to be assumed for the demonstrated replacement-cleanup race."
+  ],
+  "safe_operational_recovery_option": "After normal UI access and deliberate disposal of duplicate pending form submissions, a single ordinary re-upload from one form can restore a valid reference. This would be recovery only, not proof that the concurrency defect is fixed. No recovery performed by this agent.",
+  "changes_performed": [],
+  "source_evidence": [
+    {
+      "repo": "Core",
+      "file": "Core/Resgrid.Services/TypeIconsService.cs",
+      "sha256": "de91e3831355b3aeec16acbb0c276311f779c9c4d93108387440cab0c65736f1"
+    },
+    {
+      "repo": "Core",
+      "file": "Repositories/Resgrid.Repositories.DataRepository/TypeIconsRepository.cs",
+      "sha256": "641b04bd1d43583b6f31ddea48b845bfc97c618d8b49d82720bfe57486426522"
+    },
+    {
+      "repo": "Core",
+      "file": "Repositories/Resgrid.Repositories.DataRepository/RmsRepositories.cs",
+      "sha256": "f28b631fb44de8fa35216ea5770293ecb308d78a082110b14ad25e9dff04d68e"
+    },
+    {
+      "repo": "Core",
+      "file": "Repositories/Resgrid.Repositories.DataRepository/RepositoryBase.cs",
+      "sha256": "abbfbebefce7e38b85cf9966eeefef35c1badc43ceeae0c0159f032419b0fd3f"
+    },
+    {
+      "repo": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Controllers/TypesController.cs",
+      "sha256": "09870ae55e8d1038b40b4ed6742c7c71ae1f75e05067574475d192dd1f57afb2"
+    },
+    {
+      "repo": "Core",
+      "file": "Web/Resgrid.Web/Controllers/TypeIconsController.cs",
+      "sha256": "b5cf07c782122bf3fe79d3ded412aa0e194a6a7b13eae8d3eeeb352115cbb1ca"
+    },
+    {
+      "repo": "Core",
+      "file": "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0285_AddTypeIconsPg.cs",
+      "sha256": "592bbb7945818d11d837f20bd3c99e4e698e85354f19f9e2c3c0d350456160ba"
+    },
+    {
+      "repo": "Core",
+      "file": "Tests/Resgrid.Tests/Repositories/TypeIconsDatabaseTests.cs",
+      "sha256": "7d94f0cab63462cc8fb903aa3b7f18097c0279f8b5155b99b4db34990c7cd3ef"
+    },
+    {
+      "repo": "Core",
+      "file": "Tests/Resgrid.Tests/Services/TypeIconTests.cs",
+      "sha256": "cadcd0af9d1fb471eb4d51b919b0daf4845ab594b1b020c0bdd729d97e230284"
+    }
+  ]
+}

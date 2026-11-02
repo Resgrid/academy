@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Actual User full Reporting narration listening receipt",
+  "type": "object",
+  "required": [
+    "reviewer",
+    "reviewed_at",
+    "lesson_sha256",
+    "audio_sha256",
+    "complete_natural_narration",
+    "evidence"
+  ],
+  "properties": {
+    "reviewer": {
+      "const": "User"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lesson_sha256": {
+      "const": "9df3ae7d5998b85bf989e744e70aee5f8d93bb1212497def4631aaf661411fd7"
+    },
+    "audio_sha256": {
+      "const": "c2b447cf277ece5ab21762932864b0d2197cfc4319140e2cf312027dc7dd86ea"
+    },
+    "complete_natural_narration": {
+      "const": true
+    },
+    "evidence": {
+      "type": "string",
+      "minLength": 15
+    },
+    "question_call_id": {
+      "type": "string"
+    }
+  },
+  "description": "No example approval is supplied. Runtime additionally requires URL-free content, actual complete/natural human response evidence, timezone-aware chronology after the actual QA, and an operator-supplied exact receipt SHA256. Technical signal checks do not establish human listening."
+}

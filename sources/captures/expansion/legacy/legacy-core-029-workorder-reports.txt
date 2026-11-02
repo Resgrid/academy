@@ -1,0 +1,359 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:            
+    - link " Logs":
+      - /url: /User/Logs
+      - generic: 
+      - text: Logs
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness" [expanded]:
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - list:
+      - link " Work orders":
+        - /url: /User/WorkOrders
+        - generic: 
+        - text: Work orders
+      - link " Checklists":
+        - /url: /User/Checklists
+        - generic: 
+        - text: Checklists
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Maintenance reports" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Work orders":
+    - /url: /User/WorkOrders
+  - text: /
+  - strong: Maintenance reports
+- generic: Current state of work orders created in the selected range. Open includes completed work awaiting closure. MTTR is elapsed time from first start to latest completion, including holds and reopens; invalid times are excluded. Costs are rounded per entry, separated by currency, and exclude voided or unissued parts. Unknown costs and legacy labor currency remain unknown; no exchange rates are assumed.
+- list:
+  - link " Work orders":
+    - /url: /User/WorkOrders
+    - generic: 
+    - text: Work orders
+  - link " Preventive maintenance":
+    - /url: /User/WorkOrders/Recurrences
+    - generic: 
+    - text: Preventive maintenance
+  - link " Maintenance reports":
+    - /url: /User/WorkOrders/Reports
+    - generic: 
+    - text: Maintenance reports
+  - link " Service history":
+    - /url: /User/WorkOrders/History
+    - generic: 
+    - text: Service history
+  - link " Bulk operations":
+    - /url: /User/WorkOrders/Bulk
+    - generic: 
+    - text: Bulk operations
+  - link " Work Order Settings":
+    - /url: /User/WorkOrders/Settings
+    - generic: 
+    - text: Work Order Settings
+- heading "Maintenance reports" [level=5]
+- generic: 
+- text: Current state of work orders created in the selected range. Open includes completed work awaiting closure. MTTR is elapsed time from first start to latest completion, including holds and reopens; invalid times are excluded. Costs are rounded per entry, separated by currency, and exclude voided or unissued parts. Unknown costs and legacy labor currency remain unknown; no exchange rates are assumed.
+- generic: Created from (inclusive)
+- textbox "Created from (inclusive)": 2025-10-25T13:57:42.363
+- generic: Created before (exclusive)
+- textbox "Created before (exclusive)": 2026-10-25T13:57:42.363
+- generic: Status
+- combobox "Status":
+  - option "All" [selected]
+  - option "Requested"
+  - option "Accepted"
+  - option "Assigned"
+  - option "In progress"
+  - option "On hold"
+  - option "Completed"
+  - option "Closed"
+  - option "Rejected"
+  - option "Duplicate"
+  - option "Cancelled"
+- generic: Priority
+- combobox "Priority":
+  - option "All" [selected]
+  - option "Low"
+  - option "Normal"
+  - option "High"
+  - option "Emergency"
+- generic: Unit
+- combobox "Unit":
+  - option "All" [selected]
+  - option "Engine 51"
+  - option "Truck 81"
+  - option "Squad 3"
+  - option "Ambulance 61"
+  - option "Battalion 25"
+  - option "Reserve Engine 51"
+- generic: Group
+- combobox "Group":
+  - option "All" [selected]
+  - option "Firehouse 51"
+  - option "Command"
+  - option "Engine 51"
+  - option "Truck 81"
+  - option "Squad 3"
+  - option "Ambulance 61"
+- generic: Equipment
+- combobox "Equipment"
+- button " Filter":
+  - generic: 
+  - text: Filter
+- heading "Total work orders" [level=5]
+- heading "2" [level=1]
+- text: "Calculated at: 10/25/2026 13:57:42"
+- heading "Open work orders" [level=5]
+- heading "2" [level=1]
+- heading "Overdue work orders" [level=5]
+- heading "0" [level=1]
+- heading "Preventive maintenance compliance" [level=5]
+- heading "—%" [level=1]
+- text: "On time / due: 0 / 0"
+- generic: 
+- text: Active time is time in progress; waiting includes requests, acceptance, assignment and holds. Downtime is the union of safety holds per order. Missing status history stays unknown. Preventive compliance uses original due dates, including overdue unfinished work. Repeated failures share an asset or unit and a recorded cause.
+- table:
+  - rowgroup:
+    - row "Mean repair time (hours) — Completed repairs measured 0 Repairs missing valid times 0":
+      - rowheader "Mean repair time (hours)"
+      - cell "—"
+      - rowheader "Completed repairs measured"
+      - cell "0"
+      - rowheader "Repairs missing valid times"
+      - cell "0"
+    - row "Active repair hours 0 Waiting hours 0 Safety-hold downtime hours 0":
+      - rowheader "Active repair hours"
+      - cell "0"
+      - rowheader "Waiting hours"
+      - cell "0"
+      - rowheader "Safety-hold downtime hours"
+      - cell "0"
+    - row "Repeated failures 0 Missed response targets 0 Missed repair targets 0":
+      - rowheader "Repeated failures"
+      - cell "0"
+      - rowheader "Missed response targets"
+      - cell "0"
+      - rowheader "Missed repair targets"
+      - cell "0"
+    - row "Orders with incomplete time history 2":
+      - rowheader "Orders with incomplete time history"
+      - cell "2"
+      - rowheader
+      - cell
+      - columnheader
+      - cell
+- generic: Open by priority
+- table:
+  - rowgroup:
+    - row "Low 0":
+      - rowheader "Low"
+      - cell "0"
+    - row "Normal 1":
+      - rowheader "Normal"
+      - cell "1"
+    - row "High 1":
+      - rowheader "High"
+      - cell "1"
+    - row "Emergency 0":
+      - rowheader "Emergency"
+      - cell "0"
+- generic: Open by age
+- table:
+  - rowgroup:
+    - row "0–6 days 2":
+      - rowheader "0–6 days"
+      - cell "2"
+    - row "7–29 days 0":
+      - rowheader "7–29 days"
+      - cell "0"
+    - row "30–89 days 0":
+      - rowheader "30–89 days"
+      - cell "0"
+    - row "90+ days 0":
+      - rowheader "90+ days"
+      - cell "0"
+- generic: Costs
+- table:
+  - rowgroup:
+    - row "Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+      - columnheader "Currency"
+      - columnheader "Labor"
+      - columnheader "Parts"
+      - columnheader "Vendor charges"
+      - columnheader "Known total"
+      - columnheader "Labor entries with unknown cost"
+      - columnheader "Part entries with unknown cost"
+  - rowgroup
+- heading "Service history" [level=3]
+- button " Export CSV":
+  - generic: 
+  - text: Export CSV
+- table:
+  - rowgroup:
+    - row "Number Title Status Priority Created Repair time (hours) Active repair hours Waiting hours Safety-hold downtime hours Costs":
+      - columnheader "Number"
+      - columnheader "Title"
+      - columnheader "Status"
+      - columnheader "Priority"
+      - columnheader "Created"
+      - columnheader "Repair time (hours)"
+      - columnheader "Active repair hours"
+      - columnheader "Waiting hours"
+      - columnheader "Safety-hold downtime hours"
+      - columnheader "Costs"
+  - rowgroup:
+    - row "WO-2026-000002 Ambulance 61 — scheduled equipment inspection Requested Normal 10/25/2026 13:19:29 — — — 0 Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+      - cell "WO-2026-000002"
+      - cell "Ambulance 61 — scheduled equipment inspection":
+        - link "Ambulance 61 — scheduled equipment inspection":
+          - /url: /User/WorkOrders/Detail/5fb3a964-e718-5873-9706-24cdac81ae7d
+      - cell "Requested"
+      - cell "Normal"
+      - cell "10/25/2026 13:19:29"
+      - cell "—"
+      - cell "—"
+      - cell "—"
+      - cell "0"
+      - cell "Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+        - table:
+          - rowgroup:
+            - row "Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+              - columnheader "Currency"
+              - columnheader "Labor"
+              - columnheader "Parts"
+              - columnheader "Vendor charges"
+              - columnheader "Known total"
+              - columnheader "Labor entries with unknown cost"
+              - columnheader "Part entries with unknown cost"
+          - rowgroup
+    - row "WO-2026-000001 Reserve Engine 51 — warning lamp investigation Assigned High 10/25/2026 13:19:29 — — — 0 Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+      - cell "WO-2026-000001"
+      - cell "Reserve Engine 51 — warning lamp investigation":
+        - link "Reserve Engine 51 — warning lamp investigation":
+          - /url: /User/WorkOrders/Detail/e74bf081-8f2b-55be-a1b4-e5ba15cb43b3
+      - cell "Assigned"
+      - cell "High"
+      - cell "10/25/2026 13:19:29"
+      - cell "—"
+      - cell "—"
+      - cell "—"
+      - cell "0"
+      - cell "Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+        - table:
+          - rowgroup:
+            - row "Currency Labor Parts Vendor charges Known total Labor entries with unknown cost Part entries with unknown cost":
+              - columnheader "Currency"
+              - columnheader "Labor"
+              - columnheader "Parts"
+              - columnheader "Vendor charges"
+              - columnheader "Known total"
+              - columnheader "Labor entries with unknown cost"
+              - columnheader "Part entries with unknown cost"
+          - rowgroup
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

@@ -1,0 +1,512 @@
+{
+  "kind": "source_grounded_certification_administration_trace",
+  "source_only": true,
+  "source_evidence": {
+    "file": "expansion/plans/core-certification-administration-source-trace-20261028/source-evidence.json",
+    "sha256": "37b7296d0174033eac886c665716f432c2610f63b18e2d7b386b82738b2c4b0e"
+  },
+  "baseline_observations": {
+    "file": "expansion/plans/core-certification-administration-source-trace-20261028/baseline-six-source-observations.json",
+    "sha256": "56c7efd4870d7914e38c605ddfe40a7cf597da25d1eac0e8c3733cec60448046"
+  },
+  "permissions": {
+    "defaults": "ManageCertifications42,ViewCertifications43,ManageCertificationSetup44 default to department administrators. Department-admin fallback is explicit in the controller. Own personnel records remain visible; group-admin status alone does not authorize viewing others.",
+    "operations": {
+      "ViewCertifications": "Dashboard, other member/record read, unit read, CSV.",
+      "ManageCertifications": "Admin Add, other member edit/renew/credits/status/Verify, unit record management. It does not permit self-verification.",
+      "ManageCertificationSetup": "Types/templates/department settings/role requirement writes. Setup alone redirects dashboard to Types and does not show member evaluations.",
+      "Reports_View": "Interactive Compliance report uses the separate Reports_View policy and personnel visibility matrix."
+    },
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "lines": [
+          64,
+          67,
+          259,
+          264,
+          622,
+          658
+        ],
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/Certifications/CertificationPermissionCatalog.cs",
+        "lines": [
+          14,
+          16
+        ],
+        "sha256": "16adcf94ba89ba12301a6785877e7959ee35b0b94875a5f1d582747194af895e"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/PermissionTypes.cs",
+        "lines": [
+          188,
+          193
+        ],
+        "sha256": "0529eeb4e40790eb8048404efcd9997678381e7f5efee703b6f7f8025d2916ff"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Helpers/ClaimsAuthorizationHelper.cs",
+        "lines": [
+          320,
+          322
+        ],
+        "sha256": "567e77550cd29a2b2edc5bd537620d1288ccdac13ba41f322e11103197253009"
+      }
+    ]
+  },
+  "normal_review_route": {
+    "routes": [
+      "/User/Certifications",
+      "/User/Certifications/Person?userId={actualSelectedMemberId}",
+      "/User/Certifications/Record?id={actualReturnedRecordId}"
+    ],
+    "visible_navigation": "Dashboard member name opens Person; record name opens Record. A populated typed dashboard cell links directly to Record. Person Add record goes to the Profile add form; use Dashboard Add Certification for the explicit admin Member selector exercise.",
+    "own_no_verify": "Record view only renders Verify when CanManage, PendingVerification and not IsSelf. Service independently refuses holder self-verification. This is the expected boundary on existing Boden51001.",
+    "verify_submit_boundary": {
+      "kind": "plain HTML POST form submit",
+      "visible_label": "Verify",
+      "modal": false,
+      "native_confirm": false,
+      "before_capture": "Pending Casey record with Verify visible.",
+      "after_required_capture": "Actual saved-message/readback on Record: Active,VerifiedbyBoden and timestamp. No success claim until those real screens exist.",
+      "post_route": "normal form generated for Certifications/Verify?id={actual record ID}; no direct/API replay."
+    },
+    "edit_renew_credit": "Own or Manage canEdit; Edit uses Profile/EditCertification?certId. Renew and Addcredit use Bootstrap modals. Status changes use Bootstrap statusModal. No status test on baseline records.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/Index.cshtml",
+        "lines": [
+          130,
+          148
+        ],
+        "sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/Person.cshtml",
+        "lines": [
+          11,
+          33,
+          37
+        ],
+        "sha256": "8439b75d402b60a3355605b9a38f6352b5f30f4e554d8b3fb87b79e7db677c87"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/Record.cshtml",
+        "lines": [
+          11,
+          65,
+          75,
+          145,
+          177
+        ],
+        "sha256": "aa90118b29041bcf0948c8e5ea4f5458d96c2f635fc02835224e2adb9f934fdc"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "lines": [
+          652,
+          685,
+          706,
+          717
+        ],
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "lines": [
+          419,
+          438
+        ],
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      }
+    ]
+  },
+  "catalog": {
+    "new_type_route": "/User/Certifications/EditType",
+    "types_route": "/User/Certifications/Types",
+    "visible_fields": {
+      "TypeName": "Type",
+      "TypeCode": "Code",
+      "Category": "Category",
+      "AppliesTo": "Applies to",
+      "IssuingAuthority": "Issuing authority",
+      "Description": "Description",
+      "DefaultValidityMonths": "Default validity (months)",
+      "NeverExpires": "Never expires",
+      "RenewalCreditHoursRequired": "Credit hours per renewal",
+      "RequiresVerification": "Requires supervisor verification",
+      "Active": "Active",
+      "Save": "Save"
+    },
+    "defaults": {
+      "Category": "Other",
+      "AppliesTo": "Person",
+      "IsActive": true,
+      "RequiresVerification": false,
+      "NeverExpires": false,
+      "DefaultValidityMonths": null,
+      "RenewalCreditHoursRequired": null
+    },
+    "rules": [
+      "Code is normalized and unique within department; blank code is generated from name.",
+      "Default validity is optional1–600months; NeverExpires clears it. New Add form does not auto-calculate expiry from it. Renew modal suggests existingexpiry(or today)+defaultmonths(or12).",
+      "Unit scope hides person-only verification/credits and service forcibly clears both. Unit statuses are Active,Expired,Suspended; no unit verification/education lifecycle.",
+      "Scope cannot change after person or unit records reference the type. Code cannot change after a role requirement references it.",
+      "Inactive types are hidden from new active-person selections; existing records are retained. Do not equate category labels or starter templates with external credential validity."
+    ],
+    "template_gallery": {
+      "entry": "Types → Template gallery",
+      "behavior": "Bootstrap modal with filter and template checkboxes; Addselected POST copies selected templates into department-owned catalog types. Matching existing codes are disabled and service rejects duplicatecodes. Filter/Cancel are read-only; applying templates is a write.",
+      "exercise": "Read-only gallery/filter only. Leave allboxesunchecked,Cancel. Do not apply statutory templates.",
+      "scope": "Person and Unit templates; category,authority,validity andverification flags are configurable starter data, not a legal/clinical authority."
+    },
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "lines": [
+          327,
+          394,
+          418,
+          432
+        ],
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/Types.cshtml",
+        "lines": [
+          11,
+          13,
+          67,
+          106
+        ],
+        "sha256": "af0d073eae7560bd9a033067daa478a06466fc8b981e3f3be7eb16659de5a650"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/EditType.cshtml",
+        "lines": [
+          20,
+          100,
+          114
+        ],
+        "sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Models/Certifications/CertificationViews.cs",
+        "lines": [
+          92,
+          113
+        ],
+        "sha256": "f72246babafdf6264e471966104549e07bf4de1d5ffb570faa5384595b3ca311"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "lines": [
+          290,
+          361
+        ],
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      }
+    ]
+  },
+  "admin_add_record": {
+    "route": "/User/Certifications/Add",
+    "labels": [
+      "Member",
+      "Type",
+      "Name",
+      "Number",
+      "Valid Area",
+      "Issued by",
+      "Issued on",
+      "Expires on",
+      "File",
+      "Save"
+    ],
+    "selectable_subjects": "Normal selectable personnel only; fresh department membership validation on POST. Types are active nondeleted Person-scoped only.",
+    "default_status": "Controller posts Active; service turns NEW typed Active into PendingVerification when type.RequiresVerification istrue, even when created by an administrator. No immediate sign-off implied.",
+    "date_boundary": "Expireson is nullable; NeverExpires type forcesnull. For an expiring type with no expiry recorded, evaluator treats no date as openended. Enter the explicit future exercise expiry instead of assuming a type default filledit.",
+    "uploads": "Optional normal chooser; accepted jpg/jpeg/png/gif/pdf/doc/docx/txt/xls/xlsx up to10MB. No upload in minimal exercise; no document-authenticity claim.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "lines": [
+          176,
+          255
+        ],
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "lines": [
+          158,
+          184
+        ],
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/Certifications/CertificationRequirementEvaluator.cs",
+        "lines": [
+          29,
+          37
+        ],
+        "sha256": "8be6db36f7d704f2305c4a965fe39b29d02477f99ec57eb8d934e00f65d61ec0"
+      }
+    ]
+  },
+  "role_requirements": {
+    "entry": "Personnel → Roles → Required certifications (existing role row; read-only exercise).",
+    "route": "/User/Certifications/RoleRequirements?roleId={actualExistingRoleId}",
+    "fields": [
+      "Type",
+      "Mandatory",
+      "Any-of group",
+      "Allow trainee",
+      "Grace override(days)",
+      "Add requirement",
+      "Save",
+      "Member eligibility"
+    ],
+    "semantics": [
+      "Only active Person types may be added to role requirements.",
+      "BlankAnyOfGroup rows are independent AND requirements; same numericAnyOfGroup forms OR alternatives.",
+      "Only failing mandatory requirements make role evaluation unqualified/removable; advisory failures are warnings.",
+      "Active eligible;Trainee onlyifAllowTrainee;Pending onlyifdepartmentTreatPendingVerificationAsValid. Nondeletedtypedmatchingtypeandexpiry>=evaluationdate,orNeverExpires/noexpiry,are required.",
+      "Grace override supersedes departmentdefault; failure anchor useslatestlapsedexpiry,thenmemberSinceifprovided,thenrequirementAddedOn. Removal is strictlyAFTER deadline.",
+      "Off skips membership checks;WarnOnly permitsroleaddswithwarnings;Enforce blocksunqualifiednewroleadds andworker may removeexistingrole memberships aftergrace.",
+      "Saving requirements replaces omitted rows; do not Save any baseline role in this exercise."
+    ],
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Personnel/Roles.cshtml",
+        "lines": [
+          101,
+          104
+        ],
+        "sha256": "484454283e13df63d992a62de4c2e0054a3f7d833415ee44401e9cce744a3f0b"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "lines": [
+          486,
+          520
+        ],
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+        "lines": [
+          30,
+          70,
+          93,
+          115
+        ],
+        "sha256": "2e8a15f2136efe7ddc11ba5d8c020cce089e080c20a04945c5db34ce5ae40dcf"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "lines": [
+          754,
+          791
+        ],
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/Certifications/CertificationRequirementEvaluator.cs",
+        "lines": [
+          18,
+          126
+        ],
+        "sha256": "8be6db36f7d704f2305c4a965fe39b29d02477f99ec57eb8d934e00f65d61ec0"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/PersonnelRolesService.cs",
+        "lines": [
+          46,
+          70
+        ],
+        "sha256": "e089e39006b1397e7909f8ad4e27388267f714ef748d1d225dc6de481bbd3b12"
+      }
+    ]
+  },
+  "settings_and_worker": {
+    "observed_saved_policy": "Off;grace30;pending-as-validfalse;leaddays60,30,14,7,1;notifyholdertrue;admindigesttrue.004/005areunsavedoptions;006Offrestored,noSave.",
+    "off_boundary": "Off is role-enforcement mode, not a global expiry/notification off switch. Sweep expiration/lead-day events and enabledholder/digest paths occur before/after the rolemode branch.",
+    "scheduler": "Source schedules hourly command34; worker checks SweepEnabled and eachdepartmentlocalhour(default6),claims once perlocalday, releasesclaim onfailure. Runtime execution/delivery not tested here.",
+    "notifications": "Expiry andlead-day domain events/holderpreferences/digest path exist; provider delivery or actual receipt is not proven by checkedsettings. WarnOnly records failing mandatory evaluations for summary; individual impending-removal notices belong toEnforce.",
+    "enforce_submit": "Selecting Enforce alone savesnothing. Normal Settings Save when transitioningtoEnforce invokes nativeJSconfirmation andserverConfirmEnforcevalidation; do not submit it for footage.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/Settings.cshtml",
+        "lines": [
+          23,
+          75,
+          84,
+          93
+        ],
+        "sha256": "2dab4a54b1176253c78d0e94583172b771134e41baaae5df739d96911d4a972f"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "lines": [
+          453,
+          477
+        ],
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.Sweep.cs",
+        "lines": [
+          38,
+          90,
+          134,
+          203
+        ],
+        "sha256": "1bba903a08aa898d7bba37599253c6f0fb293f334d484d49dcd8783370311e6f"
+      },
+      {
+        "repo": "Core",
+        "path": "Workers/Resgrid.Workers.Framework/Logic/CertificationExpiryLogic.cs",
+        "lines": [
+          21,
+          59
+        ],
+        "sha256": "b5f1d3df37b0bfc540b26b983d23f10276d08817d5c8f32328aa5e5fe714aa78"
+      },
+      {
+        "repo": "Core",
+        "path": "Workers/Resgrid.Workers.Console/Program.cs",
+        "lines": [
+          579,
+          585
+        ],
+        "sha256": "e263ac7223fcda8932574a317b6596a0b1823c23fe6e6d4c344f2e5f1c41932e"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Config/CertificationConfig.cs",
+        "lines": [
+          10,
+          16
+        ],
+        "sha256": "8fa32e60ca86fa4ab26835b4dfdf4178714e4b27de41f5263dc044167d30618d"
+      }
+    ]
+  },
+  "csv_pdf": {
+    "csv": {
+      "entry": "Dashboard Export CSV",
+      "route": "/User/Certifications/DashboardCsv?scope=person&category={optional}&groupId={optional}&roleId={optional}",
+      "columns": [
+        "Member or Unit",
+        "Code",
+        "Type",
+        "Category",
+        "Status",
+        "Expireson",
+        "Daysuntilexpiry"
+      ],
+      "scope": "Current category/scope and person group/role intersection. CSV excludes certification numbers/issuers/attachments/protectedvalues; no download success until actual file inspected.",
+      "evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+          "lines": [
+            295,
+            320
+          ],
+          "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/Index.cshtml",
+          "lines": [
+            30
+          ],
+          "sha256": "0b0f196c3a3c6ac2b5aaa5689479d53a25ba6b4a2f4ffe8592bb89ca7da040a4"
+        }
+      ]
+    },
+    "report": {
+      "entry": "Compliance report tab, or Reports → Compliance report → View report",
+      "route": "/User/Reports/CertificationComplianceReport",
+      "kind": "Printable HTML report with People and Units matrices; no app one-click PDF button in this view. Browser Print→SavePDF is a browser operation, not demonstrated here.",
+      "scheduled_pdf": "Separate Profile/Reporting→AddNewScheduledReport can select CertificationCompliance report14. Source deliveryworker renders internalHTML and converts toPDF for email ifconfigured/allowed. Do not create schedules or claim delivery/provider availability from this source-only trace.",
+      "visibility": "Interactive report applies Reports_View andpersonvisibilitymatrix; scheduled internaldepartment report differs. Never invoke internalreport endpoint as a workaround.",
+      "evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "lines": [
+            270,
+            306,
+            755,
+            757
+          ],
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Reports/CertificationComplianceReport.cshtml",
+          "lines": [
+            1,
+            90
+          ],
+          "sha256": "663840224390ef25f2b978444d2e5d25b42b2189988f7406bdd805f1fdc6a68b"
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Controllers/ProfileController.cs",
+          "lines": [
+            134,
+            143
+          ],
+          "sha256": "d006c5fcff866505ab291f5e6674900d482161f9e84cb578012d43de7029b0c5"
+        },
+        {
+          "repo": "Core",
+          "path": "Workers/Resgrid.Workers.Framework/Logic/ReportDeliveryLogic.cs",
+          "lines": [
+            94,
+            128
+          ],
+          "sha256": "6c327fa5c318a3dda454fc336f3a4c24e3ac8e60a1ece85202cdc91a9ea77a11"
+        }
+      ]
+    }
+  },
+  "limits": [
+    "This is source research/capture planning, not a canonical narration or qualified lesson.",
+    "Only firstsix sourcecaptures independently reviewed here; future newtype/Caseyverification outcomes are planned, not asserted.",
+    "No browser,DB,app/security/config/globalpolicy/role mutation by reviewer.",
+    "No legal,clinical,accreditation or realoperational qualification claims.",
+    "No BigBoard work in this priority trace."
+  ]
+}

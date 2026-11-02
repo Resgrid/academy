@@ -1,0 +1,428 @@
+{
+  "id": "core-certification-administration",
+  "title": "Create certification types and verify another member’s record",
+  "app": "Core",
+  "audience": [
+    "department administrators",
+    "certification record reviewers"
+  ],
+  "summary": "Create a fictional Person type and record, verify another member, confirm saved holdings and type constraints, inspect unchanged policy, and compare filters with the actual HTML report.",
+  "prerequisites": [
+    "Use a fictional practice department and your existing certification view, management and setup permissions.",
+    "Choose another fictional member for review; record holders cannot verify their own records.",
+    "Use Reports permission for the separate HTML report. Leave existing role requirements and global policies unchanged."
+  ],
+  "scenes": [
+    {
+      "id": "overview",
+      "title": "Separate records, review and self-verification",
+      "route": "/User/Certifications",
+      "capture_refs": [
+        "001-certification-dashboard-before-review",
+        "002-existing-renewal-pending-record"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Certifications",
+        "Pending verification",
+        "Wallace Boden",
+        "Edit",
+        "Renew"
+      ],
+      "narration": "Certifications brings together the types your department tracks and the records held by people or units. In this fictional Chicago Fire department, the dashboard starts with one record pending verification. Boden can inspect his own pending record, but this page offers no Verify button. Record holders cannot verify their own records. We will create a clearly marked software exercise for another member, then use the normal administrative review path. Use the viewing, management, and setup permissions your department has assigned.",
+      "practice": "Identify the pending count, then compare the holder of a record with the signed-in reviewer.",
+      "source_limits": [
+        "Department counter cards and filter controls only. Lower dashboard rows are clipped; no whole-person matrix or specific lower-row navigation proof.",
+        "Existing holder Boden Pending record is read only. Verify is absent as expected for self-verification; no attempt, renewal or credit was performed in this administration exercise."
+      ]
+    },
+    {
+      "id": "catalog",
+      "title": "Inspect types and the template gallery",
+      "route": "/User/Certifications",
+      "capture_refs": [
+        "001-certification-dashboard-before-review",
+        "007-certification-types-baseline",
+        "008-template-gallery-sar-filter"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Certification types",
+        "Template gallery",
+        "SAR",
+        "Code",
+        "Applies to",
+        "Validity",
+        "Records",
+        "Requirements",
+        "Cancel"
+      ],
+      "narration": "Choose Certification types. The table separates each stable code, category, scope, validity, record count, and requirement count. Template gallery opens a separate selection window. Enter SAR in its filter to inspect relevant starter entries. Their displayed names, authorities, and validity periods are catalog starting points that your department must review. Keep every checkbox clear and use Cancel; nothing is added. We will create our own fictional Person type so the software exercise is distinct from the existing types.",
+      "practice": "Filter the gallery without selecting or adding a template, then return to the catalog.",
+      "source_limits": [
+        "Department counter cards and filter controls only. Lower dashboard rows are clipped; no whole-person matrix or specific lower-row navigation proof.",
+        "Actual baseline three Person types and counts. No edits/deletes of those original types.",
+        "Foreground gallery/filter SAR and unselected checkboxes only. Dim background catalog is excluded. Cancel inspection; no Add selected or template application."
+      ]
+    },
+    {
+      "id": "type-identity",
+      "title": "Give the exercise its own type and code",
+      "route": "/User/Certifications/Types",
+      "capture_refs": [
+        "007-certification-types-baseline",
+        "009-new-person-type-blank",
+        "010-prepared-type-identity"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "New type",
+        "Type",
+        "TRAINING ONLY - Record review 20261028",
+        "Code",
+        "TRN-REVIEW-20261028",
+        "Category",
+        "Other",
+        "Applies to",
+        "Person",
+        "Issuing authority",
+        "Description"
+      ],
+      "narration": "Choose New type. Enter Training Only, Record Review, followed by the exercise date, as the Type. Give it the explicit code TRN-REVIEW-20261028. A stable, recognizable code helps distinguish this type later in tables and integrations. Keep Category as Other and Applies to as Person. Enter Academy Software Exercise, marked fictional, as the Issuing authority. The Description explicitly identifies a software verification exercise and says that it is not a professional qualification or authorization.",
+      "practice": "Prepare a unique fictional type name, code, issuer, and purpose before saving.",
+      "source_limits": [
+        "Actual baseline three Person types and counts. No edits/deletes of those original types.",
+        "Blank upper type fields only. Lower verification label is clipped; Active/Save are offscreen. Use011 for all options and Save.",
+        "Prepared own type; no stored proof until012. Do not infer actual issued-record dates from Default validity."
+      ]
+    },
+    {
+      "id": "type-options",
+      "title": "Save the verification rule and read back the type",
+      "route": "/User/Certifications/EditType#DefaultValidityMonths",
+      "capture_refs": [
+        "011-type-verification-save-ready",
+        "012-saved-type-catalog"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Default validity (months)",
+        "12",
+        "Never expires",
+        "Credit hours per renewal",
+        "Requires supervisor verification",
+        "Active",
+        "Save",
+        "Saved.",
+        "TRN-REVIEW-20261028",
+        "Records",
+        "Requirements",
+        "0"
+      ],
+      "narration": "Set Default validity to twelve months and leave Never expires clear. Credit hours per renewal stays blank. Check Requires supervisor verification and keep Active checked. The help explains that new records remain pending until someone with management rights signs them off. Use Save, then read the returned catalog row. Our code is present, its scope is Person, and its validity is twelve months. Both Records and Requirements are zero: creating this type has not created a member record or attached a role requirement.",
+      "practice": "Save only your own exercise type and verify its code, twelve-month validity, and zero counts.",
+      "source_limits": [
+        "Complete prepared own Person type, options and Save;012 proves save. Verification ON, Never expires OFF, credit hours blank, Active ON.",
+        "Saved own new type with zero Records and zero Requirements. No role requirement was added."
+      ]
+    },
+    {
+      "id": "member",
+      "title": "Start an administrative record for Casey",
+      "route": "/User/Certifications",
+      "capture_refs": [
+        "013-dashboard-add-launcher",
+        "014-new-record-blank",
+        "015-selected-type-dates-still-blank"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Add Certification",
+        "Member",
+        "Matthew Casey",
+        "Type",
+        "TRAINING ONLY - Record review 20261028",
+        "Issued on",
+        "Expires on",
+        "mm/dd/yyyy"
+      ],
+      "narration": "On the dashboard, choose Add Certification. This administrative form has an explicit Member selector. Choose Matthew Casey, then select the new training type. Check the selected member and type together before entering identifying information. Notice that Issued on and Expires on are still blank after selecting the type. The type’s twelve-month setting has not filled these fields on this form. We will enter the intended exercise dates explicitly rather than assume that a date was calculated.",
+      "practice": "Select the intended fictional member and new type, then inspect both date fields.",
+      "source_limits": [
+        "Actual Dashboard Add Certification launcher. Casey row/record selection is not pictured in this viewport.",
+        "Blank upper Add fields only. File/Save are clipped or offscreen; use016. No hidden member list promoted.",
+        "Selected Casey/type but issued/expiry fields remain blank. No type-default expiry autofill was observed."
+      ]
+    },
+    {
+      "id": "record-save",
+      "title": "Enter explicit identity and dates, then save",
+      "route": "/User/Certifications/Add#Input_RecievedOn",
+      "capture_refs": [
+        "016-prepared-record-save-ready",
+        "017-saved-record-pending-counter"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Name",
+        "TRAINING ONLY - Software record review",
+        "Number",
+        "DEMO-CASEY-REVIEW-20261028",
+        "Valid Area",
+        "Academy training department only",
+        "Issued by",
+        "Academy Software Exercise (fictional)",
+        "10/28/2026",
+        "10/28/2027",
+        "File",
+        "Save",
+        "Saved.",
+        "Pending verification",
+        "2"
+      ],
+      "narration": "Use Training Only, Software Record Review as the Name and the DEMO-CASEY-REVIEW number shown here. Valid Area says Academy training department only, and Issued by repeats our fictional software issuer. Enter October twenty-eighth, twenty twenty-six as the issue date and October twenty-eighth, twenty twenty-seven as the expiry. File is optional and remains empty. Save once. The returned dashboard reports Saved and now has two pending records. Saving the record did not automatically complete its required verification.",
+      "practice": "Save the explicit dates and exercise number, then check the returned pending count.",
+      "source_limits": [
+        "Complete prepared new record with explicit dates and empty optional file chooser; no uploaded document. Save is pictured;017/018 prove stored Pending state.",
+        "Saved dashboard and department-global Pending counter2 only. Casey row is offscreen. Do not invent a click on a hidden Casey cell."
+      ]
+    },
+    {
+      "id": "verify",
+      "title": "Verify another member and confirm persistence",
+      "route": "/User/Certifications/Record/51015",
+      "capture_refs": [
+        "018-pending-other-member-verify-button",
+        "019-verified-active-record",
+        "020-active-verified-fresh-readback"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Pending verification",
+        "Matthew Casey",
+        "TRAINING ONLY - Software record review",
+        "Verify",
+        "Active",
+        "Verified by",
+        "Wallace Boden",
+        "2026-10-28"
+      ],
+      "narration": "Here is Casey’s saved record. Read its member, type, number, and expiry before using Verify. This button submits the review directly. The returned record is Active and shows Verified by Wallace Boden with the displayed date. Open the record again and check that the same status and reviewer remain. This confirms the stored software review. It does not establish that a real qualification was earned. We leave renewal, credits, suspension, and revocation unchanged throughout this exercise.",
+      "practice": "Review your own fictional record for another member, then confirm the stored reviewer and status.",
+      "source_limits": [
+        "Actual other-member Pending record and normal Verify button. No self-verification; no verification dialog or native confirmation is claimed.",
+        "Actual result Active and Verified by Boden, date2026-10-28 only. No hidden time, qualification award, worker or provider result.",
+        "Fresh normal record readback retains Active and Verified by Boden. No status/renewal/credit action was used."
+      ]
+    },
+    {
+      "id": "holdings",
+      "title": "Compare the person’s existing and new records",
+      "route": "/User/Certifications/Record/51015",
+      "capture_refs": [
+        "020-active-verified-fresh-readback",
+        "021-person-holdings-saved-record"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Matthew Casey",
+        "Name",
+        "Type",
+        "Expires on",
+        "Status",
+        "Firefighter qualification",
+        "TRAINING ONLY - Software record review",
+        "2027-10-28",
+        "Active"
+      ],
+      "narration": "Use Matthew Casey’s member link to open his holdings. The table lists each record separately with its name, type, expiry, and status. The existing Firefighter qualification remains, and the new training review appears on another row with its own date and Active status. Compare the exact record name and type before opening or editing anything. This person view helps you distinguish a newly added exercise record from an older record that should remain untouched.",
+      "practice": "Find both rows and identify the new exercise without changing the original record.",
+      "source_limits": [
+        "Fresh normal record readback retains Active and Verified by Boden. No status/renewal/credit action was used.",
+        "Casey holdings show existing original record plus new training record. No new assignment or role qualification is inferred."
+      ]
+    },
+    {
+      "id": "type-readback",
+      "title": "Check counts and the locked scope",
+      "route": "/User/Certifications/Person?userId=DA25F49E-FEA4-5C8D-82D9-163D7D2023F9",
+      "capture_refs": [
+        "021-person-holdings-saved-record",
+        "022-type-one-record-zero-requirements",
+        "023-saved-type-person-scope-locked",
+        "024-saved-type-options-readback"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Certification types",
+        "TRN-REVIEW-20261028",
+        "Records",
+        "1",
+        "Requirements",
+        "0",
+        "Edit",
+        "Applies to",
+        "Person",
+        "Code",
+        "Requires supervisor verification"
+      ],
+      "narration": "Return through Certification types. Our row now has one Record and still has zero Requirements. Use that row’s Edit control to inspect the saved type. Applies to is disabled at Person because a record now references it. Code remains editable here; code locking applies when role requirements reference the type. The lower options still show twelve months, verification required, and Active checked. This is a readback only. We do not change the code, add a role requirement, or save another type update.",
+      "practice": "Read the one-record, zero-requirement counts and inspect the stored type without editing it.",
+      "source_limits": [
+        "Casey holdings show existing original record plus new training record. No new assignment or role qualification is inferred.",
+        "New type now has one Record and zero Requirements. Edit/Settings launchers are readable. No requirement editor or role change was executed.",
+        "Upper saved type readback: Applies to Person is disabled; Code is still editable with zero role requirements. Lower options/Save are offscreen; use024. No changes submitted.",
+        "Saved type options preserved after record creation. No type update performed. Code-lock rule is source-corroborated; no code-edit experiment."
+      ]
+    },
+    {
+      "id": "policy",
+      "title": "Distinguish role enforcement from notifications",
+      "route": "/User/Certifications/Types",
+      "capture_refs": [
+        "022-type-one-record-zero-requirements",
+        "003-policy-current-off",
+        "004-warn-only-policy-option-unsaved",
+        "005-enforce-policy-option-unsaved",
+        "006-notification-policy-save-visible",
+        "026-global-settings-unchanged"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Settings",
+        "Enforcement mode",
+        "Off – requirements are informational only",
+        "Warn only – allow role changes, show warnings, notify",
+        "Enforce",
+        "Enforce removes members from roles whose mandatory certifications lapsed; the removal is audited and the member is notified.",
+        "Grace period (days)",
+        "30",
+        "Notify (days before expiry)",
+        "60,30,14,7,1",
+        "Notify the holder directly",
+        "Send department administrators a nightly digest",
+        "Save"
+      ],
+      "narration": "Settings separates role enforcement from expiry notifications. The saved mode is Off, with thirty days of grace and pending records not treated as valid for role requirements. Warn only permits role changes with warnings; Enforce can block unqualified role additions and remove members after grace. We inspect these choices, restore Off, and leave Save untouched. Off does not disable expiry processing or notifications. The holder and administrator-digest options remain checked, with lead days of sixty, thirty, fourteen, seven, and one. These settings do not prove message delivery.",
+      "practice": "Read the current role and notification policies, leaving every saved setting unchanged.",
+      "source_limits": [
+        "New type now has one Record and zero Requirements. Edit/Settings launchers are readable. No requirement editor or role change was executed.",
+        "Current Off policy and readable settings only. Save is offscreen; no settings save or notification delivery.",
+        "Warn only selected for inspection but UNSAVED. No role change, worker evaluation, notice or delivery executed.",
+        "Enforce selector text is horizontally truncated; retain only literal Enforce prefix and fully legible warning/help. Unsaved; no role removal or enforcement outcome.",
+        "Off restored; notification values and Save are fully visible, but Save was not pressed. This is policy inspection, not a policy change or delivery test.",
+        "Fresh settings remain Off/grace30/pending-invalid/leads60,30,14,7,1/both notices checked. Save is offscreen; no policy mutation. Off is role enforcement only, not a global notification switch."
+      ]
+    },
+    {
+      "id": "report",
+      "title": "Filter the dashboard and read the actual report",
+      "route": "/User/Certifications?scope=person&category=&groupId=51004&roleId=",
+      "capture_refs": [
+        "028-filtered-group-final-holdings",
+        "027-compliance-report-foreground-correct"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Group",
+        "Truck 81",
+        "Matthew Casey",
+        "TRN-REVIEW-20261028",
+        "2027-10-28",
+        "Pending verification",
+        "1",
+        "Export CSV",
+        "Compliance report",
+        "Active"
+      ],
+      "narration": "On the dashboard, Group is filtered to Truck 81. Five member rows appear, including Casey’s new expiry under the training code. The Pending verification card still describes the department, not just these filtered rows. Export CSV is available for the current filters; no file is downloaded here. Choose Compliance report to open the HTML report. In Casey’s row, the training column shows the same expiry and Active status. Read that actual row rather than infer a status from a color or a total.",
+      "practice": "Compare Casey’s filtered expiry with the training column in the HTML report.",
+      "source_limits": [
+        "Truck81 filter shows five rows and Casey expiry2027-10-28. Pending1 card is department-global, not a filtered-row count. Export CSV is available but not downloaded.",
+        "Real HTML report foreground; Casey row readable. Boden row is clipped and excluded. No Unit section, PDF generation, CSV download, scheduled report or delivery proof."
+      ]
+    },
+    {
+      "id": "adapt",
+      "title": "Use a clear review process across sectors",
+      "route": "/User/Certifications/Record/51015",
+      "capture_refs": [
+        "020-active-verified-fresh-readback",
+        "028-filtered-group-final-holdings"
+      ],
+      "capture_intent": "Show each named launcher/control before prepared values or actual result; use only the scoped foreground sources in this order.",
+      "required_labels": [
+        "Matthew Casey",
+        "Active",
+        "Verified by",
+        "TRN-REVIEW-20261028",
+        "2027-10-28"
+      ],
+      "narration": "Chicago Fire can use this pattern to organize a clearly identified exercise record. Community care and mental health teams can track operational training without patient detail. Search and rescue can distinguish person records from equipment records; security teams can organize reviewed staff records; wildland teams can keep seasonal training references current; and industrial response teams can separate staff records from unit inspections. In every setting, define the type, enter deliberate dates, use an authorized reviewer, and verify saved status. A software label alone does not authorize real duties.",
+      "practice": "Define one appropriate fictional type and identify who should review it in your team.",
+      "source_limits": [
+        "Fresh normal record readback retains Active and Verified by Boden. No status/renewal/credit action was used.",
+        "Truck81 filter shows five rows and Casey expiry2027-10-28. Pending1 card is department-global, not a filtered-row count. Export CSV is available but not downloaded."
+      ]
+    }
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Separate a fictional exercise record from existing department records and use a non-holder reviewer.",
+    "Community care and mental health": "Track operational training references without patient detail or clinical-authority claims.",
+    "Search and rescue": "Distinguish reviewed person records from equipment records; starter templates require department review.",
+    "Security": "Organize staff training records and their stored review status without treating a software label as authorization.",
+    "Wildland": "Keep seasonal training references and explicit dates current; do not infer readiness from a color alone.",
+    "Industrial response": "Keep staff records distinct from unit inspection records, using the appropriate scope and reviewer."
+  },
+  "source_files": [
+    "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+    "Web/Resgrid.Web/Areas/User/Models/Certifications/CertificationViews.cs",
+    "Core/Resgrid.Services/CertificationService.cs",
+    "Core/Resgrid.Services/CertificationService.Sweep.cs",
+    "Core/Resgrid.Model/Certifications/CertificationModels.cs",
+    "Core/Resgrid.Model/Certifications/CertificationPermissionCatalog.cs",
+    "Core/Resgrid.Model/Certifications/CertificationRequirementEvaluator.cs",
+    "Core/Resgrid.Model/Certifications/CertificationTypeTemplateCatalog.cs",
+    "Core/Resgrid.Model/DepartmentCertificationType.cs",
+    "Core/Resgrid.Model/PersonnelCertification.cs",
+    "Core/Resgrid.Model/PermissionTypes.cs",
+    "Core/Resgrid.Services/PersonnelRolesService.cs",
+    "Web/Resgrid.Web/Helpers/ClaimsAuthorizationHelper.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/ProfileController.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/_Tabs.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Types.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/EditType.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Add.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Person.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Record.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Unit.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Certifications/Settings.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Personnel/Roles.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Units/EditUnit.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/CertificationComplianceReport.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Reports/Index.cshtml",
+    "Core/Resgrid.Localization/Areas/User/Certifications/Certifications.resx",
+    "Core/Resgrid.Localization/Areas/User/Profile/Profile.en.resx",
+    "Core/Resgrid.Config/CertificationConfig.cs",
+    "Workers/Resgrid.Workers.Framework/Logic/CertificationExpiryLogic.cs",
+    "Workers/Resgrid.Workers.Framework/Logic/ReportDeliveryLogic.cs",
+    "Workers/Resgrid.Workers.Console/Program.cs",
+    "Core/Resgrid.Model/ReportTypes.cs"
+  ],
+  "source_evidence": {
+    "file": "expansion/plans/core-certification-administration-source-trace-20261028/source-evidence.json",
+    "sha256": "37b7296d0174033eac886c665716f432c2610f63b18e2d7b386b82738b2c4b0e",
+    "core_head": "6f83872110b0382f2911d099e95d6a4ef7da8315"
+  },
+  "candidate_only": true,
+  "source_review_required": true,
+  "bounded_scope_only": true,
+  "whole_module_operations_complete": false,
+  "export_ready": true,
+  "publication_approved": false,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-certification-administration-take-02/evidence.reviewed.json"
+}

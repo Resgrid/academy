@@ -1,0 +1,218 @@
+﻿@using Resgrid.Model
+@using Resgrid.Web.Helpers
+@model Resgrid.Web.Areas.User.Models.Shifts.ShiftsIndexModel
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Shifts.Shifts> localizer
+@{
+	var moduleTitle = await departmentTerms.NameAsync(DepartmentTerms.Shifts, localizer["ShiftsHeader"]);
+	ViewBag.Title = "Resgrid | " + moduleTitle;
+	Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+	ViewBag.LoadAngular = true;
+}
+
+@section Styles
+{
+	<style>
+		.nohover {
+			text-decoration: none !important;
+			color: black !important;
+		}
+
+			.nohover a a:hover {
+				text-decoration: none !important;
+				color: black !important;
+			}
+
+		small {
+			font-size: 70%;
+			color: #000 !important;
+		}
+	</style>
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>@moduleTitle</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+			</li>
+			<li class="active">
+				<strong>@moduleTitle</strong>
+			</li>
+		</ol>
+	</div>
+		<div class="col-sm-8">
+			<div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+				<a id="yourShiftsButton" class="btn btn-primary top-button" title="@localizer["YourShiftsButton"]" href="@Url.Action("YourShifts", "Shifts", new {area = "User"})">@localizer["YourShiftsButton"]</a>
+				<a id="onDutyButton" class="btn btn-success top-button" title="@localizer["OnDutyButton"]" href="@Url.Action("OnDuty", "Shifts", new {area = "User"})">@localizer["OnDutyButton"]</a>
+				@if (Model.IsUserAdminOrGroupAdmin)
+				{
+					<a id="shiftApprovalsButton" class="btn btn-warning top-button" title="@localizer["ApprovalsButton"]" href="@Url.Action("Approvals", "Shifts", new {area = "User"})">
+						@localizer["ApprovalsButton"]
+						@if (Model.PendingApprovalsCount > 0)
+						{
+							<span class="badge">@Model.PendingApprovalsCount</span>
+						}
+					</a>
+					<a id="shiftDayStaffingButton" class="btn btn-info top-button" title="@localizer["ShiftStaffingButton"]" href="@Url.Action("ShiftStaffing", "Shifts", new {area = "User"})">@localizer["ShiftStaffingButton"]</a>
+				}
+			</div>
+		</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="wrapper wrapper-content">
+			<partial name="_ShiftsMessage" />
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>@localizer["RecurringGroupShifts"]</h5>
+					<div class="ibox-tools">
+						@if (ClaimsAuthorizationHelper.CanCreateShift())
+						{
+							<div class="buttons-actions">
+								<a id="manageInvitesButton" title="@localizer["AddRecurringGroupShift"]" class="btn btn-success" asp-controller="Shifts" asp-action="NewShift" asp-route-area="User">@localizer["AddRecurringGroupShift"]</a>
+							</div>
+						}
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>@localizer["NameColumn"]</th>
+									<th>@localizer["TypeColumn"]</th>
+									<th>@localizer["ScheduleColumn"]</th>
+									<th>@localizer["GroupsColumn"]</th>
+									<th>@localizer["PersonnelColumn"]</th>
+									<th class="span1"></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var g in Model.Shifts)
+								{
+									<tr>
+										<td>
+											@g.Name
+											@if (g.RequireApproval == true)
+											{
+												<span class="label label-warning" title="@localizer["RequireApprovalLabel"]">@localizer["ApprovalRequiredBadge"]</span>
+											}
+										</td>
+										<td>
+											@if (g.AssignmentType == (int)ShiftAssignmentTypes.Assigned)
+											{
+												@Html.Raw(localizer["AssignedType"].Value)
+											}
+											else
+											{
+												@Html.Raw(localizer["SignupType"].Value)
+											}
+										</td>
+										<td>
+											@if (g.ScheduleType == (int)ShiftScheduleTypes.Manual)
+											{
+												@Html.Raw(localizer["ManualSchedule"].Value)
+											}
+											else if (g.ScheduleType == (int)ShiftScheduleTypes.Custom)
+											{
+												@Html.Raw(localizer["CustomSchedule"].Value)
+											}
+											else if (g.ScheduleType == (int)ShiftScheduleTypes.FortyEightNintySix)
+											{
+												@Html.Raw(localizer["Schedule48_96"].Value)
+											}
+											else if (g.ScheduleType == (int)ShiftScheduleTypes.TwentyFourFortyEight)
+											{
+												@Html.Raw(localizer["Schedule24_48"].Value)
+											}
+											else if (g.ScheduleType == (int)ShiftScheduleTypes.TwentyFourSeventyTwo)
+											{
+												@Html.Raw(localizer["Schedule24_72"].Value)
+											}
+										</td>
+										<td>
+											@if (g.Groups != null && g.Groups.Count > 0)
+											{
+												@Html.Raw(g.Groups.Count)
+											}
+											else
+											{
+												@Html.Raw("0")
+											}
+										</td>
+										<td>
+											@if (g.Personnel != null && g.Personnel.Count > 0)
+											{
+												@Html.Raw(g.Personnel.Count)
+											}
+											else
+											{
+												@Html.Raw("0")
+											}
+										</td>
+										<td>
+											<a asp-controller="Shifts" asp-action="ShiftCalendar" asp-route-area="User" asp-route-shiftId="@g.ShiftId" class='btn btn-xs btn-primary'>@localizer["ViewCalendarButton"]</a>
+											@* Department admins, and group admins whose groups make up the whole shift. *@
+											@if (Model.ManageableShiftIds.Contains(g.ShiftId))
+											{
+												@if (Model.CanUpdateShifts)
+												{
+													<a asp-controller="Shifts" asp-action="EditShiftDetails" asp-route-area="User" asp-route-shiftId="@g.ShiftId" class='btn btn-xs btn-primary'>@localizer["EditDetailsButton"]</a>
+													<a asp-controller="Shifts" asp-action="EditShiftDays" asp-route-area="User" asp-route-shiftId="@g.ShiftId" class='btn btn-xs btn-success'>@localizer["EditCalendarButton"]</a>
+													<a asp-controller="Shifts" asp-action="EditShiftGroups" asp-route-area="User" asp-route-shiftId="@g.ShiftId" class='btn btn-xs btn-info'>@localizer["EditGroupsButton"]</a>
+												}
+												@if (Model.CanDeleteShifts)
+												{
+													<form method="post" asp-controller="Shifts" asp-action="DeleteShift" asp-route-area="User" style="display:inline;">
+														<input type="hidden" name="shiftId" value="@g.ShiftId" />
+														<button type="submit" class='btn btn-xs btn-danger' data-confirm="@localizer["DeleteShiftWarning"] @g.Name ?">@localizer["DeleteButton"]</button>
+													</form>
+												}
+											}
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>@localizer["CalendarSectionHeader"]</h5>
+          <div class="ibox-tools">
+            @if (ClaimsAuthorizationHelper.CanCreateShift())
+			{
+              <div class="buttons-actions">
+                <a id="addUnitShiftButton" title="@localizer["AddStaticShift"]" class="btn btn-success" href="@Url.Action("New", "Workshifts", new {area = "User"})">@localizer["AddStaticShift"]</a>
+              </div>
+			}
+          </div>
+        </div>
+        <div class="ibox-content">
+          <rg-shifts-calendar></rg-shifts-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      &nbsp;&nbsp;<br/>
+	  &nbsp;&nbsp;<br/>
+	  &nbsp;&nbsp;<br/>
+	  &nbsp;&nbsp;
+    </div>
+  </div>
+
+@section Scripts
+{
+}

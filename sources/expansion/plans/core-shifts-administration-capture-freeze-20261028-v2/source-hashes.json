@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "id": "core-shifts-administration",
+  "status": "frozen source-only recurring-shift input; no narration audio or video qualification",
+  "candidate_version": "expansion/plans/core-shifts-administration-candidate-20261028-v2",
+  "historical_v1_static_and_training_preserved": true,
+  "parent_spoken_script_review_completed_before_v2": true,
+  "narrated_source_sha256": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4",
+  "authoring_sha256": "740d95ed47379c7945a095006e325945fa5028c9bac8e61a28cbd69272aa6447",
+  "spoken_words": 996,
+  "scenes": 12,
+  "reviewed_sources": 24,
+  "narration_unchanged_from_v1_sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f",
+  "source_evidence": {
+    "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-evidence.json",
+    "sha256": "830eb757b05b5cc29a050eff25fc2edf4299b68cf92e96c6e2d7957744b5f7ed"
+  },
+  "input_files": [
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/manifest.json",
+      "sha256": "b5ee334f8af8575525ec5141c4c63095c5741372ab60c9222058c6ec988bb502"
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028-reviewed/manifest.json",
+      "sha256": "97d1415642f327a05648b4bab5bacec9b4405c59b2d5da1b00bc6c121f46200c"
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/candidate.json",
+      "sha256": "44ce9754ff576afbef1322e01018bb6a24aab261e8bd394b5920be1f3891465b"
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/screen-sequence.json",
+      "sha256": "5c15bfc0ab92438f181e8a5deba267a14cc2a0885c3309e8912ff54813c02b4c"
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f"
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-evidence.json",
+      "sha256": "830eb757b05b5cc29a050eff25fc2edf4299b68cf92e96c6e2d7957744b5f7ed"
+    },
+    {
+      "file": "production/author_core_shifts_candidates_20261028.py",
+      "sha256": "78bf5f273ac8c4dbae5c0ad237c9664728b0bca50abbed374d34be42d1d3dc89"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "core-shifts-administration.narrated-source.json",
+      "sha256": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4"
+    },
+    {
+      "file": "core-shifts-administration.captures.reviewed.json",
+      "sha256": "bc0f4791680591af2eaceb92e56072b026b41f9566a67e16444740fd7908d3bb"
+    },
+    {
+      "file": "core-shifts-administration.screen-sequence.json",
+      "sha256": "3235f8f614d206f509a63e000e0165fa2d80e9bd7555bf10a95053c94402d099"
+    },
+    {
+      "file": "narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f"
+    }
+  ],
+  "source_revisions": [
+    {
+      "scene_id": "assigned-start",
+      "before_capture_refs": [
+        "002-assigned-start-prepared"
+      ],
+      "after_capture_refs": [
+        "001-shifts-baseline",
+        "002-assigned-start-prepared"
+      ],
+      "added_required_labels": [
+        "Add Recurring Group Shift",
+        "New Shift"
+      ],
+      "reason": "Show actual001 Add Recurring Group Shift launcher before prepared002 New Shift.",
+      "narration_unchanged": true
+    },
+    {
+      "scene_id": "verify",
+      "before_capture_refs": [
+        "009-assigned-details-reopened",
+        "010-assigned-member-reopened",
+        "014-assigned-day-saved",
+        "015-assigned-roster-saved"
+      ],
+      "after_capture_refs": [
+        "008-assigned-created-list",
+        "009-assigned-details-reopened",
+        "010-assigned-member-reopened",
+        "013-assigned-calendar-date-context",
+        "014-assigned-day-saved",
+        "015-assigned-roster-saved"
+      ],
+      "added_required_labels": [
+        "Edit Details",
+        "Calendar",
+        "November 2026",
+        "04",
+        "Upcoming",
+        "Assigned"
+      ],
+      "reason": "Actual008 Edit Details launcher precedes reopened009/010;013 shared November calendar precedes dated014/015. The calendar tile is truncated; full row above identifies the practice, and the dated detail supplies full identity.",
+      "narration_unchanged": true
+    },
+    {
+      "scene_id": "policy",
+      "before_capture_refs": [
+        "016-multiple-group-policy-readonly",
+        "039-approvals-current-empty"
+      ],
+      "after_capture_refs": [
+        "016-multiple-group-policy-readonly",
+        "001-shifts-baseline",
+        "039-approvals-current-empty"
+      ],
+      "added_required_labels": [
+        "Approvals"
+      ],
+      "reason": "Read-only016 policy, then actual001 Approvals launcher before039 empty queues. No approval action is demonstrated.",
+      "narration_unchanged": true
+    }
+  ],
+  "limits": [
+    "Specific View Calendar widget failed; only actual shared calendar and dated details are used.",
+    "Actual013 calendar tile text is truncated. Its November2026 date and04entry identify the click context; full assigned row above and014/015 supply full identity.",
+    "No executed member signup, approval/denial, trade or attendance; empty queues are not completed approval.",
+    "Fully staffed reflects one configured Officer slot, not physical arrival, qualification or live unit crew assignment.",
+    "Static workshift editor discrepancies remain incomplete, unchanged and outside this narrated recurring-shift freeze."
+  ],
+  "no_canonical_ready_site_target_app_or_git_operation": true
+}

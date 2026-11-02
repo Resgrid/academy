@@ -1,0 +1,29 @@
+{
+  "kind": "manual_normal_UI_reference_only_no_execution",
+  "automatic_execution": false,
+  "department_scope": "Fictional training department only",
+  "already_recorded_state": "Employer name, establishment, Casey worker, one-day October28 Volunteer employment/assignment and2Regularhours already exist; approval is off.",
+  "replay_gate": "Inspect existing records first. Use existing example read-only. New practice requires a separate authorized fixture with a unique establishment code, nonoverlapping dated periods/assignments and new external reference; do not repeat these Save actions on original records.",
+  "identifiers": "Read actual newly generated row IDs from normal UI. No captured GUID or member numeric ID is forced.",
+  "preserve": [
+    "Existing real employer/coverage/identifiers/contact/address values",
+    "Existing personnel roles, crew staffing, calls and deployments",
+    "Unknown classifications and blank mapping fields for this fictional exercise",
+    "ApprovedOFF and blank approved payroll cost"
+  ],
+  "upsert_note": "Source shows matched nonblank External source+External id can update an existing work entry. Never reuse the captured reference to manufacture another result.",
+  "success_checks": [
+    "Fresh employer name readback",
+    "Savedestablishment catalog+date/timezone readback",
+    "Existingmember worker link",
+    "Savedone-dayemployment+defaults",
+    "Savedone-dayassignment+ILreadback",
+    "Saved2Regularhours/ApprovedNo+freshupper/lowerreadback"
+  ],
+  "out_of_scope": [
+    "No workforce setting/permission changes",
+    "No compensation/resource-cost/cost-run saves or approvals",
+    "No payroll/export/coverage/attendance outcome",
+    "No account invitations, imports or external provider actions"
+  ]
+}

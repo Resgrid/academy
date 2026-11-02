@@ -1,0 +1,162 @@
+{
+  "id": "app-dispatch-orientation",
+  "title": "Dispatch: access and the operating workspace",
+  "app": "Dispatch",
+  "audience": [
+    "Dispatchers",
+    "Communications specialists",
+    "Duty supervisors"
+  ],
+  "summary": "Set up access, read the dispatch console, and use calls, personnel and units to focus the working view.",
+  "prerequisites": [
+    "A training department and an operator permitted to use Dispatch.",
+    "Reachable configured API and a populated department roster, active calls and statuses.",
+    "For SSO, MFA and shared-device demonstrations, prepare the actual configured provider and second-factor methods.",
+    "Use a wide browser capture plus a narrow or native layout segment; keep credentials and recovery secrets out of frame."
+  ],
+  "scenes": [
+    {
+      "title": "Choose the right operating role",
+      "route": "/onboarding",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Next",
+        "Skip"
+      ],
+      "narration": "Dispatch is the working screen for the person coordinating calls and resources. A communications specialist can keep several incidents in view, while a duty supervisor can focus on staffing and unit availability. Begin with a training department so the practice call cannot reach operational responders. On first launch, move through onboarding with Next, or use Skip to reach sign-in. A browser gives the console room for several panels. A phone or narrow window presents the same work more compactly, so learn where navigation and actions move before using that surface during a busy shift.",
+      "practice": "Choose a fire or community-response training role and describe the information you need before dispatching.",
+      "id": "app-dispatch-orientation-scene-01"
+    },
+    {
+      "title": "Server, account and alternate sign-in",
+      "route": "/login",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Username",
+        "Password"
+      ],
+      "narration": "At sign-in, check the server address before entering your username and password. Self-hosted teams must point the app at their own configured service. Use the language choice when needed, then sign in with the account assigned to you. Access depends on department rights; a successful password check does not itself grant permission to use Dispatch. If your organization uses single sign-on, open that option, enter the requested username and department identifier, and follow the configured provider. Complete the available second-factor challenge. Recovery and enrollment depend on your account and server configuration, so use those paths only with prepared demonstration credentials.",
+      "practice": "Identify the training server and complete the sign-in method your organization actually uses.",
+      "id": "app-dispatch-orientation-scene-02"
+    },
+    {
+      "title": "Shared dispatch workstations",
+      "route": "/login/shared-device",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Shared device"
+      ],
+      "narration": "A shared dispatch desk needs a clear operator identity. Open Shared device, turn on shared use where your deployment supports it, and give the installation a recognizable label. The server can then apply shift and idle-lock behavior to that workstation. During a shift, use the shared-session controls to lock the screen or end your shift. Unlocking follows the operator’s configured verification method. Keep this separate from a personal installation’s password lock, which we cover with settings. For a handover exercise, prepare a second authorized operator and verify the next sign-in rather than assuming that closing a browser ends a session.",
+      "practice": "Label a security control-room workstation and rehearse a shift handover without displaying authentication secrets.",
+      "id": "app-dispatch-orientation-scene-03"
+    },
+    {
+      "title": "Read and arrange the console",
+      "route": "/home",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Active Calls",
+        "Personnel",
+        "Units",
+        "Resources",
+        "Notes"
+      ],
+      "narration": "The home console brings active calls, people, units, resources, notes and activity together. Start at the summary area and identify the counts and any weather, pending-call or scheduled-call indicators. Use the view controls to show the panels needed for your role, then refresh the working data. Search inside a panel to reduce a long list without changing the incident itself. A missing panel may reflect your view selection, while a missing feature can reflect server configuration or access. In the browser, spread the panels across the available space. On the native or narrow layout, check the arrangement and scroll positions before continuing.",
+      "practice": "Arrange a search-and-rescue coordination view and locate its active call, available people and vehicles.",
+      "id": "app-dispatch-orientation-scene-04"
+    },
+    {
+      "title": "Focus the incident and follow activity",
+      "route": "/home",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Activity",
+        "Radio",
+        "Call Activity"
+      ],
+      "narration": "Select a call in Active Calls. That selection focuses related panels and map information on the incident, helping you avoid mixing one response with another. Read the active-filter indicator and clear it when you need the department-wide view again. The activity area offers different views of operational changes, radio traffic and call-related activity. Use the appropriate tab, then open Details when a short console row needs explanation. Live updates require the configured realtime services and another client producing real changes. A static list is useful for orientation, but it does not establish that live delivery is working.",
+      "practice": "Switch between an EMS response and a separate industrial alarm, then clear the call filter.",
+      "id": "app-dispatch-orientation-scene-05"
+    },
+    {
+      "title": "Inspect and update the resource state",
+      "route": "/home",
+      "capture_intent": "Record the named screen and the described controls using staged training data; verify visible labels and permissions before performing the action.",
+      "required_labels": [
+        "Set Status",
+        "Staffing",
+        "Update Status"
+      ],
+      "narration": "Selecting a person or unit makes its contextual actions available. For personnel, choose the status or staffing action, review the available department choices, and add a destination or note where offered. For a unit, check the destination carefully; a different destination from the call may require a reason. Multi-select units only when the intended status applies to all of them, then review the reported result before retrying any failures. Open Personnel or Units from navigation to inspect an individual’s contact details, roles and current state, or a vehicle’s assigned roles and information. These views help explain availability; changing a status is an operational action.",
+      "practice": "Update two training units to a common status and inspect a volunteer’s staffing information before assigning them.",
+      "id": "app-dispatch-orientation-scene-06"
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "A dispatcher compares an ambulance and engine before focusing on the medical call."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A volunteer coordinator checks staffing before assigning a welfare visit."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A coordination desk filters to the search and checks available vehicles."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A shared control-room workstation changes operators at shift handover."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "A duty supervisor watches several active incidents without retaining the wrong filter."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "A plant dispatcher verifies a vehicle destination and the reason for a change."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/index.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/index.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/login-form.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/sso.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/recovery.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/login/shared-device.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/_layout.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/home.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/(app)/home.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/active-call-filter-banner.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/active-calls-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/activity-log-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/add-note-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/animated-refresh-icon.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/animated-refresh-icon.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/bulk-unit-actions-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/dashboard-view-toggles.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/dispatch-ticker-shared.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/dispatch-ticker.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/dispatch-ticker.web.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/index.ts",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/map-widget.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/notes-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/panel-header.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/personnel-actions-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/personnel-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/ptt-channel-selector.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/ptt-interface.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/resources-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/stats-header.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/unit-actions-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/unit-crew-line.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/unit-multi-select.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/unit-status-sheets.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/units-panel.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/components/dispatch-console/weather-widget.tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/personnel/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/app/units/[id].tsx",
+    "/Users/shawn/Documents/dev/Dispatch/src/translations/en.json"
+  ]
+}

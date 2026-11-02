@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "planned-route-form-practice",
+  "status": "incomplete normal UI save; source preparation only",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "create_execution": false,
+    "assign_unit": false,
+    "claim_saved_route": false
+  },
+  "plan": {
+    "name": "Academy Training Route - Core",
+    "description": "Fictional software exercise with two checkpoints. No real travel, deployment or access approval.",
+    "unit": "Assign at start time",
+    "status": "Draft",
+    "route_color": "#3388ff",
+    "profile": "driving",
+    "geofence_radius_meters": 100,
+    "use_station_as_start": false,
+    "use_station_as_end": false,
+    "optimize_stop_order": false,
+    "start": {"latitude": 41.8721, "longitude": -87.6523},
+    "end": {"latitude": 41.8741, "longitude": -87.6483}
+  },
+  "stops": [
+    {
+      "order": 1,
+      "name": "Academy Checkpoint A",
+      "type": "Waypoint",
+      "priority": "Normal",
+      "latitude": 41.872437,
+      "longitude": -87.648926,
+      "address": "TRAINING ONLY - Checkpoint A",
+      "dwell_minutes": 5,
+      "notes": "TRAINING ONLY - Software route practice; no arrival recorded."
+    },
+    {
+      "order": 2,
+      "name": "Academy Checkpoint B",
+      "type": "Waypoint",
+      "priority": "Normal",
+      "latitude": 41.873822,
+      "longitude": -87.648153,
+      "address": "TRAINING ONLY - Checkpoint B",
+      "dwell_minutes": 3,
+      "existing_contact_name": "Community Centre (fictional)",
+      "contact_phone": "312-555-0111",
+      "notes": "TRAINING ONLY - Checkpoint B software exercise; no arrival recorded."
+    }
+  ],
+  "observed_save_result": {
+    "date": "2026-10-28",
+    "two_stops_staged": true,
+    "actual_numbered_markers_rendered": true,
+    "create_route_clicked": true,
+    "returned_to_form_with_zero_stops": true,
+    "separate_route_list_remained_empty": true,
+    "exact_server_validation_reason_known": false
+  },
+  "replay_notes": [
+    "Use the actual normal route form and map picker. Stop-coordinate fields are read-only; do not inject coordinates or modify hidden pending-stop state.",
+    "Let map zoom animations settle and inspect the final visible coordinates before staging each stop. Initial out-of-area clicks were corrected before any stop was staged.",
+    "Do not seed a saved plan or execution to disguise this failed UI save.",
+    "Resolve the normal save path before recording a successful route creation, assignment, execution or archive workflow."
+  ]
+}

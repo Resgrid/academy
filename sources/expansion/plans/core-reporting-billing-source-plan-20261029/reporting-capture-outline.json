@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "proposed_lesson_id": "core-department-reporting",
+  "working_title": "Read department reports and verify a scoped CSV export",
+  "audience": "Department administrators and authorized report viewers",
+  "purpose": "Run date/group-scoped HTML reports, read source attribution and verify a real file export without scheduling deliveries.",
+  "status": "source_only_not_canonical_not_frozen_not_captured",
+  "scenes": [
+    {
+      "id": "R01-reporting-launcher",
+      "app": "Core",
+      "route": "/User/Reports/Index",
+      "capture_intent": "Open normal Reports and locate each chosen report before navigating.",
+      "required_visible_labels": [
+        "Reporting",
+        "Staffing Report",
+        "Call Summary Report",
+        "Call Unit Times",
+        "View Report"
+      ],
+      "ordinary_read_only_actions": [
+        "Use sidebar Reports",
+        "Capture multiple normal scroll positions if needed"
+      ],
+      "result_to_record": "Genuine catalog with visible chosen launchers.",
+      "status": "proposed_not_captured",
+      "limits": []
+    },
+    {
+      "id": "R02-availability-readonly",
+      "app": "Core",
+      "route": "/User/Department/ModuleSettings",
+      "capture_intent": "Inspect existing Reports module switch and return without saving.",
+      "required_visible_labels": [
+        "Reports"
+      ],
+      "ordinary_read_only_actions": [
+        "Open existing Module settings from department settings",
+        "Read Reports switch; do not toggle or Save"
+      ],
+      "result_to_record": "Actual unchanged displayed availability; distinguish separate permission.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Do not claim module toggle is authorization revocation. Module settings is a broad save form."
+      ]
+    },
+    {
+      "id": "R03-current-staffing",
+      "app": "Core",
+      "route": "/User/Reports/StaffingReport",
+      "capture_intent": "Read HTML staffing counts, member rows and next scheduled change.",
+      "required_visible_labels": [
+        "Resgrid Staffing Report",
+        "Name",
+        "Group"
+      ],
+      "ordinary_read_only_actions": [
+        "Use Staffing Report View Report",
+        "Scroll to one readable existing fictional member and scheduled column"
+      ],
+      "result_to_record": "Actual report generation time, counts and row values.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "No actual attendance, crew occupancy, device presence or changed staffing claim. No Personnel Report contact/PII capture."
+      ]
+    },
+    {
+      "id": "R04-summary-parameters",
+      "app": "Core",
+      "route": "/User/Reports/CallSummaryReportParams",
+      "capture_intent": "Choose date range and All Groups with controls visible before Run.",
+      "required_visible_labels": [
+        "Call Summary Report",
+        "Report Start Time",
+        "Report End Time",
+        "Group",
+        "All Groups",
+        "Run Report"
+      ],
+      "ordinary_read_only_actions": [
+        "Use normal date controls:2026-10-25 00:00 to2026-10-29 23:59 department-local",
+        "Retain All Groups",
+        "Capture prepared form",
+        "Run Report"
+      ],
+      "result_to_record": "Actual redirected HTML report for requested range.",
+      "status": "proposed_not_captured",
+      "limits": []
+    },
+    {
+      "id": "R05-summary-result",
+      "app": "Core",
+      "route": "/User/Reports/CallSummaryReport?start=<actual>&end=<actual>&groupId=0",
+      "capture_intent": "Inspect actual total/type summaries and one complete existing call row.",
+      "required_visible_labels": [
+        "Call Summary Report",
+        "Total Calls",
+        "Calls",
+        "Number",
+        "Logged On",
+        "Closed On"
+      ],
+      "ordinary_read_only_actions": [
+        "Capture top totals and lower call list in separate full viewports"
+      ],
+      "result_to_record": "Visible date range, totals, open/closed distinction and actual row.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Do not invent expected totals or treat blank on-scene/response times as zero. Source recorded statuses do not verify physical arrival."
+      ]
+    },
+    {
+      "id": "R06-group-comparison",
+      "app": "Core",
+      "route": "/User/Reports/CallSummaryReportParams",
+      "capture_intent": "Compare one existing group to All Groups and read the actual placement help.",
+      "required_visible_labels": [
+        "Group",
+        "Calls are placed in the group whose geofence contains the call's location. A call outside every geofence, or without a location, is placed in the group most of its dispatched units and personnel belong to. Choosing a group also includes the groups beneath it.",
+        "Run Report"
+      ],
+      "ordinary_read_only_actions": [
+        "Return through normal report parameters",
+        "Choose actual existing Firehouse51 group",
+        "Run and capture actual group heading/result"
+      ],
+      "result_to_record": "Observed filtered count; explain descendants and attribution only as shown.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Do not assert current group membership alone determines call placement or promise a particular count."
+      ]
+    },
+    {
+      "id": "R07-unit-times-parameters",
+      "app": "Core",
+      "route": "/User/Reports/CallUnitTimesReportParams",
+      "capture_intent": "Show actual Call Unit Times date controls before running.",
+      "required_visible_labels": [
+        "Call Unit Times",
+        "Report Start Time",
+        "Report End Time",
+        "Run Report"
+      ],
+      "ordinary_read_only_actions": [
+        "Return to Reporting",
+        "Use Call Unit Times launcher",
+        "Set same date range with normal picker",
+        "Run Report"
+      ],
+      "result_to_record": "Real HTML report for the requested range.",
+      "status": "proposed_not_captured",
+      "limits": []
+    },
+    {
+      "id": "R08-unit-times-row",
+      "app": "Core",
+      "route": "/User/Reports/CallUnitTimesReport?start=<actual>&end=<actual>",
+      "capture_intent": "Read one complete already-recorded fictional call/unit row and its source label.",
+      "required_visible_labels": [
+        "Call Unit Times",
+        "Dispatched",
+        "En Route",
+        "On Scene",
+        "Cleared",
+        "Linked By"
+      ],
+      "ordinary_read_only_actions": [
+        "Locate existing own closed training call51011/FD51-2026-0003 if present",
+        "Capture actual matching number/title and Engine51 row; no data changes"
+      ],
+      "result_to_record": "Actual timestamps/blanks and literal linkage source.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "If that call has no row, retain honest state and use another existing fictional row. Do not synthesize status history."
+      ]
+    },
+    {
+      "id": "R09-csv-option",
+      "app": "Core",
+      "route": "/User/Reports/CallUnitTimesReport?start=<actual>&end=<actual>",
+      "capture_intent": "Show Download CSV before an optional normal file download.",
+      "required_visible_labels": [
+        "Download CSV"
+      ],
+      "ordinary_read_only_actions": [
+        "Capture actual Download CSV control",
+        "If supported normal browser download succeeds, retain original bytes/hash and read header/sample row"
+      ],
+      "result_to_record": "Actual CSV bytes verified against the displayed range/source data, or explicitly option-only.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "No PDF, spreadsheet upload, external submission or invented download success."
+      ]
+    },
+    {
+      "id": "R10-delivery-preview-optional",
+      "app": "Core",
+      "route": "/User/Profile/Reporting",
+      "capture_intent": "Differentiate current report viewing from an automatic delivery schedule.",
+      "required_visible_labels": [
+        "Report delivery schedules"
+      ],
+      "ordinary_read_only_actions": [
+        "Open own Profile Reporting through actual Report delivery launcher",
+        "Capture existing schedule list",
+        "Optionally open Add new scheduled report, inspect fields then Cancel without Save"
+      ],
+      "result_to_record": "Read-only schedule/form evidence only.",
+      "status": "proposed_not_captured",
+      "limits": [
+        "Saving creates active delivery work. Do not save/run/enable, send email or claim delivery. Omit this scene if identity/PII cannot be framed safely."
+      ]
+    }
+  ],
+  "six_sector_examples": [
+    {
+      "sector": "Chicago Fire / fire operations",
+      "report_example": "Compare fictional recorded call and apparatus timestamps; do not equate them with physical response verification.",
+      "billing_example": "Review practice customer defaults and capacity without charging for an exercise."
+    },
+    {
+      "sector": "Community care and mental health response",
+      "report_example": "Review aggregate software workload with no patient detail or clinical interpretation.",
+      "billing_example": "Separate coordination customer contact data from any clinical or coverage determination."
+    },
+    {
+      "sector": "Search and rescue",
+      "report_example": "Review exercise resource history without publishing a real subject location.",
+      "billing_example": "Read logistics-customer settings without claiming reimbursement or deploying resources."
+    },
+    {
+      "sector": "Security",
+      "report_example": "Read fictional staffing/status snapshots without certifying presence at a protected site.",
+      "billing_example": "Review contract-customer defaults without opening a live payment or changing rates."
+    },
+    {
+      "sector": "Wildland",
+      "report_example": "Compare recorded software resource activity without claiming payroll or reimbursement readiness.",
+      "billing_example": "Keep billing identity, own-provider setup and subscription entitlement separate."
+    },
+    {
+      "sector": "Industrial response",
+      "report_example": "Read exercise summaries without certifying inspection, work, safety or regulatory compliance.",
+      "billing_example": "Use only fictional customer details and leave amounts, registrations and payment controls unchanged."
+    }
+  ],
+  "stop_conditions": [
+    "Missing normal permission/module UI",
+    "Unexpected personal or protected values",
+    "Report/error/loading page must remain a gap",
+    "Browser download not supported: retain control-only evidence",
+    "Never create a report delivery schedule or use internal worker URL"
+  ]
+}

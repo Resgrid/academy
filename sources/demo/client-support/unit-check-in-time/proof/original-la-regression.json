@@ -1,0 +1,53 @@
+{
+  "success": false,
+  "suite_count": 1,
+  "tests": 11,
+  "passed": 6,
+  "failed": 5,
+  "cases": [
+    {
+      "title": "uses the process timezone under test",
+      "status": "passed"
+    },
+    {
+      "title": "renders the same five-minute age and local history instant for naive UTC",
+      "status": "failed"
+    },
+    {
+      "title": "renders the same five-minute age and local history instant for explicit Z",
+      "status": "passed"
+    },
+    {
+      "title": "renders the same five-minute age and local history instant for explicit negative offset",
+      "status": "passed"
+    },
+    {
+      "title": "renders the same five-minute age and local history instant for explicit positive offset",
+      "status": "passed"
+    },
+    {
+      "title": "renders the same five-minute age and local history instant for offset without colon",
+      "status": "passed"
+    },
+    {
+      "title": "shows an unknown instant instead of a fabricated recent check-in for null",
+      "status": "failed"
+    },
+    {
+      "title": "shows an unknown instant instead of a fabricated recent check-in for undefined",
+      "status": "failed"
+    },
+    {
+      "title": "shows an unknown instant instead of a fabricated recent check-in for ",
+      "status": "failed"
+    },
+    {
+      "title": "shows an unknown instant instead of a fabricated recent check-in for not-a-timestamp",
+      "status": "failed"
+    },
+    {
+      "title": "does not mask a genuinely future zoned timestamp by clamping its age",
+      "status": "passed"
+    }
+  ]
+}

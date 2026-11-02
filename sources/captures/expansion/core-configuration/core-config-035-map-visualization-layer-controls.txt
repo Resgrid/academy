@@ -1,0 +1,690 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 4":
+      - /url: "#"
+      - generic: 
+      - generic: "4"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Map Visualizations" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Mapping":
+    - /url: /User/Mapping
+  - text: /
+  - strong: Map Visualizations
+- paragraph: Heat maps and data overlays of your calls, responses and unit movement.
+- button "Hide the side panel" [expanded]: ☰
+- heading "Call hot zones" [level=3]
+- button "Save as new"
+- button "Download CSV"
+- button "Copy link"
+- button "Full screen"
+- complementary:
+  - tablist:
+    - tab "Library"
+    - tab "Customize" [selected]
+  - tabpanel:
+    - heading "When" [level=3]
+    - generic: Date range
+    - combobox "Date range":
+      - option "Last 24 hours"
+      - option "Last 7 days"
+      - option "Last 30 days"
+      - option "Last 90 days"
+      - option "Last 12 months" [selected]
+      - option "Last 2 years"
+      - option "Last 5 years"
+      - option "Custom dates"
+    - generic: Days of the week
+    - group "Days of the week":
+      - button "Mon"
+      - button "Tue"
+      - button "Wed"
+      - button "Thu"
+      - button "Fri"
+      - button "Sat"
+      - button "Sun"
+    - generic: Hours of the day
+    - group "Hours of the day":
+      - button "00"
+      - button "01"
+      - button "02"
+      - button "03"
+      - button "04"
+      - button "05"
+      - button "06"
+      - button "07"
+      - button "08"
+      - button "09"
+      - button "10"
+      - button "11"
+      - button "12"
+      - button "13"
+      - button "14"
+      - button "15"
+      - button "16"
+      - button "17"
+      - button "18"
+      - button "19"
+      - button "20"
+      - button "21"
+      - button "22"
+      - button "23"
+    - paragraph: Leave everything unselected to include every day and hour. Times are in your department's time zone.
+    - heading "Which calls" [level=3]
+    - generic: One call
+    - searchbox "One call"
+    - paragraph: Pick a call to show only that call and where its units and members went.
+    - generic: Call types
+    - button "All":
+      - generic: All
+      - generic: ▾
+    - generic: Priorities
+    - button "All":
+      - generic: All
+      - generic: ▾
+    - generic: Outcomes
+    - button "All":
+      - generic: All
+      - generic: ▾
+    - generic: Home station or group
+    - button "All":
+      - generic: All
+      - generic: ▾
+    - generic: Units involved
+    - button "All":
+      - generic: All
+      - generic: ▾
+    - generic: Minimum calls at a location
+    - spinbutton "Minimum calls at a location": "0"
+    - paragraph: Show only locations with at least this many calls in the date range. 0 shows every call.
+    - heading "Layers" [level=3]
+    - paragraph: "Layers are drawn in order: the top layer in this list is drawn on top of the map."
+    - group "Calls":
+      - checkbox "Calls" [checked]
+      - generic: Calls
+      - button "Move down (draw below)" [disabled]: ↓
+      - button "Move up (draw above)" [disabled]: ↑
+      - button "Remove layer" [disabled]: ✕
+      - generic: Layer name
+      - textbox "Layer name":
+        - /placeholder: Calls
+      - generic: Data
+      - combobox "Data" [active]:
+        - option "Calls" [selected]
+        - option "Unit responses"
+        - option "Personnel responses"
+        - option "Responder origins"
+        - option "Unit status positions"
+        - option "Unit paths"
+        - option "Personnel paths"
+      - paragraph: One point per call, at the call's location.
+      - generic: Show as
+      - combobox "Show as":
+        - option "Heat map" [selected]
+        - option "Dots"
+        - option "Hexagon grid"
+      - generic: Weight each point by
+      - combobox "Weight each point by":
+        - option "Count" [selected]
+        - option "Minutes to first on scene"
+        - option "Minutes to first responding"
+        - option "Minutes until closed"
+        - option "Units dispatched"
+        - option "Personnel responded"
+        - option "Distance to station"
+        - option "Calls at the same location"
+      - generic: Colors
+      - combobox "Colors":
+        - option "Classic heat" [selected]
+        - option "Fire"
+        - option "Viridis (color-blind friendly)"
+        - option "Blues"
+        - option "Green to red"
+      - generic: Opacity
+      - slider "Opacity": "0.75"
+      - generic: Heat radius
+      - slider "Heat radius": "22"
+      - generic: Heat intensity
+      - slider "Heat intensity": "1"
+    - button "Add a layer"
+    - heading "Stations and distances" [level=3]
+    - checkbox "Show stations on the map" [checked]
+    - generic: Show stations on the map
+    - generic: Distance unit
+    - combobox "Distance unit":
+      - option "km" [selected]
+      - option "mi"
+    - generic: Coverage rings around stations
+    - textbox "Coverage rings around stations"
+    - paragraph: Up to 4 distances, separated by commas, for example 1.5, 2.5, 5. Rings are straight-line distance, not drive time.
+    - generic: Distance bands
+    - textbox "Distance bands"
+    - paragraph: Used when coloring by distance to station. Leave empty for the defaults.
+    - generic: Response time bands (minutes)
+    - textbox "Response time bands (minutes)"
+    - paragraph: Used when coloring by response time band, for example 4, 8, 12, 20. Leave empty for the defaults.
+- img "Marker"
+- button "Zoom in": +
+- button "Zoom out": −
+- link "Leaflet":
+  - /url: https://leafletjs.com
+  - text: Leaflet
+- text: "| © OpenStreetMap contributors CC-BY-SA"
+- generic "Legend":
+  - checkbox "Calls" [checked]
+  - generic: Calls
+  - generic: Fewer
+  - generic: More
+- paragraph: Showing 10/26/2025 to 10/26/2026
+- generic: "9"
+- generic: Calls
+- generic: 100%
+- generic: Calls with a location
+- generic: —
+- generic: Median time to on scene
+- generic: —
+- generic: 90th percentile time to on scene
+- paragraph: Response times appear when a layer uses a response time measure or band and units set on-scene statuses.
+- heading "When calls come in" [level=4]
+- table "When calls come in":
+  - caption: When calls come in
+  - rowgroup:
+    - row "Days of the week 00 03 06 09 12 15 18 21":
+      - columnheader "Days of the week":
+        - generic: Days of the week
+      - columnheader "00"
+      - columnheader
+      - columnheader
+      - columnheader "03"
+      - columnheader
+      - columnheader
+      - columnheader "06"
+      - columnheader
+      - columnheader
+      - columnheader "09"
+      - columnheader
+      - columnheader
+      - columnheader "12"
+      - columnheader
+      - columnheader
+      - columnheader "15"
+      - columnheader
+      - columnheader
+      - columnheader "18"
+      - columnheader
+      - columnheader
+      - columnheader "21"
+      - columnheader
+      - columnheader
+  - rowgroup:
+    - row "Mon 0 0 0 0 0 0 0 0 0 0 0 0 2 0 2 0 0 0 0 0 0 0 0 0":
+      - rowheader "Mon"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "2":
+        - generic: "2"
+      - cell "0":
+        - generic: "0"
+      - cell "2":
+        - generic: "2"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+    - row "Tue 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0":
+      - rowheader "Tue"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+    - row "Wed 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0":
+      - rowheader "Wed"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+    - row "Thu 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0":
+      - rowheader "Thu"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+    - row "Fri 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0":
+      - rowheader "Fri"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+    - row "Sat 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0":
+      - rowheader "Sat"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "1":
+        - generic: "1"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+    - row "Sun 0 0 0 0 0 0 0 0 0 0 0 1 2 0 1 0 0 0 0 0 0 0 0 0":
+      - rowheader "Sun"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "1":
+        - generic: "1"
+      - cell "2":
+        - generic: "2"
+      - cell "0":
+        - generic: "0"
+      - cell "1":
+        - generic: "1"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+      - cell "0":
+        - generic: "0"
+- heading "Most common call types" [level=4]
+- list:
+  - generic: Structure Fire
+  - generic: "4"
+  - generic: Investigation
+  - generic: "2"
+  - generic: Rescue
+  - generic: "2"
+  - generic: Medical
+  - generic: "1"
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

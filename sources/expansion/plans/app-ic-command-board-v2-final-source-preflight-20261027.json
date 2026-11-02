@@ -1,0 +1,907 @@
+{
+  "lesson_id": "app-ic-command-board",
+  "reviewer": "Codex source/actual-JPEG correspondence review",
+  "reviewed_at": "2026-10-27T22:01:31.102691+00:00",
+  "kind": "source_preflight_only",
+  "narrated_source_sha256": "d25f95a7ef930001dfcdac28ba41f48cdf95eb79476fc81e6047bb6225c244c5",
+  "narration_txt_sha256": "57e3f9bb09d5f476f3c2f6b178d8664e2990df06f4d1ed88078282291deab1fe",
+  "source_checks_passed": true,
+  "scene_count": 9,
+  "word_count": 887,
+  "untimed_span_count": 28,
+  "source_image_count": 19,
+  "source_file_pins_checked": 14,
+  "literal_label_correspondence_checks": [
+    {
+      "scene_id": "01",
+      "span_index": 1,
+      "kind": "read",
+      "claim_reviewed": "Existing call identity and explicit fictional training location.",
+      "required_labels_by_capture": {
+        "ic-39-call-context-chicago-map": [
+          "Call Details",
+          "TRAINING — Warehouse alarm (DEMO-0001)",
+          "Training site 1 (fictional), Chicago, IL"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "01",
+      "span_index": 2,
+      "kind": "open_existing",
+      "claim_reviewed": "Open the existing active command from the loaded call.",
+      "required_labels_by_capture": {
+        "ic-39-call-context-chicago-map": [
+          "Active Command",
+          "Open Command Board"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-27-persisted-command-structure"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "01",
+      "span_index": 3,
+      "kind": "read",
+      "claim_reviewed": "Board identity and named commander; no establish/reopen action.",
+      "required_labels_by_capture": {
+        "ic-27-persisted-command-structure": [
+          "Command Board",
+          "#DEMO-0001 TRAINING — Warehouse alarm",
+          "IC: WALLACE BODEN"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "02",
+      "span_index": 1,
+      "kind": "read",
+      "claim_reviewed": "Saved Search Division/Squad3 assignment, empty Staging and advisory badges.",
+      "required_labels_by_capture": {
+        "ic-27-persisted-command-structure": [
+          "Command Structure",
+          "Search Division — TRAINING",
+          "Staging — TRAINING",
+          "Squad 3",
+          "ROTATE",
+          "REQUIREMENTS",
+          "No resources assigned to this lane"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "02",
+      "span_index": 2,
+      "kind": "read",
+      "claim_reviewed": "All-selected pool, visible filter options and three saved resource entries. No filter result or Add Resource mutation.",
+      "required_labels_by_capture": {
+        "ic-35-persisted-resource-pool": [
+          "Resources",
+          "All",
+          "Unassigned",
+          "Assigned",
+          "Squad 3",
+          "Engine 51",
+          "Exercise Gate Marshal"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "02",
+      "span_index": 3,
+      "kind": "read",
+      "claim_reviewed": "Herrmann riding position differs from Engine51 command lane allocation.",
+      "required_labels_by_capture": {
+        "ic-35-persisted-resource-pool": [
+          "Engine 51",
+          "Christopher Herrmann",
+          "Officer / Team Lead",
+          "ROLES 1/1",
+          "UNASSIGNED"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {
+        "Officer / Team Lead": "Officer or Team Lead"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "03",
+      "span_index": 1,
+      "kind": "open_form",
+      "claim_reviewed": "Empty Tactical Objectives and the correct section Add control.",
+      "required_labels_by_capture": {
+        "ic-28-persisted-timer-and-sections": [
+          "Tactical Objectives",
+          "Add",
+          "No tactical objectives yet"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-29-objective-prepared"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "03",
+      "span_index": 2,
+      "kind": "create",
+      "claim_reviewed": "Prepared Benchmark form plus actual later created objective, not just a typed field.",
+      "required_labels_by_capture": {
+        "ic-29-objective-prepared": [
+          "Add Objective",
+          "Type",
+          "Benchmark",
+          "Objective",
+          "TRAINING — Primary search checked",
+          "Add"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-30-objective-progress-details",
+        "ic-51-persisted-command-log"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "03",
+      "span_index": 3,
+      "kind": "update_progress",
+      "claim_reviewed": "50% progress stored; close-out form is reference-only and remains unsubmitted.",
+      "required_labels_by_capture": {
+        "ic-30-objective-progress-details": [
+          "TRAINING — Primary search checked",
+          "Progress",
+          "50%",
+          "Outcome",
+          "Close-out note",
+          "Complete Objective"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-48-persisted-timer-objective-need",
+        "ic-51-persisted-command-log"
+      ],
+      "spoken_references": {
+        "50%": "fifty percent"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "04",
+      "span_index": 1,
+      "kind": "prepare_form",
+      "claim_reviewed": "Foreground Add Need category, name, requested quantity2 and internal-fictional scope. Needs is page context; no modal-background control is treated as interactive.",
+      "required_labels_by_capture": {
+        "ic-31-need-prepared": [
+          "Add Need",
+          "Category",
+          "Medical",
+          "Need",
+          "TRAINING — Rehab medical resources",
+          "Qty",
+          "2",
+          "Details",
+          "Fictional exercise: two rehab positions at staging. Internal tracking only.",
+          "Add"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {
+        "2": "two"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "04",
+      "span_index": 2,
+      "kind": "create",
+      "claim_reviewed": "Add Medical need; actual following saved heading still OPEN/0of2. No entity request, provider or arrival.",
+      "required_labels_by_capture": {
+        "ic-31-need-prepared": [
+          "Add",
+          "TRAINING — Rehab medical resources",
+          "Qty",
+          "2"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-32-need-partial-fill",
+        "ic-51-persisted-command-log"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "04",
+      "span_index": 3,
+      "kind": "read",
+      "claim_reviewed": "Saved status OPEN with MEDICAL0/2, despite the separate unsaved Fill input1.",
+      "required_labels_by_capture": {
+        "ic-32-need-partial-fill": [
+          "TRAINING — Rehab medical resources",
+          "OPEN",
+          "MEDICAL • 0/2"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {
+        "MEDICAL • 0/2": "zero of two filled"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "05",
+      "span_index": 1,
+      "kind": "save_partial_fill",
+      "claim_reviewed": "Prepared Fill1/reason then actual Save Fill returned as1/2 with audit history.",
+      "required_labels_by_capture": {
+        "ic-32-need-partial-fill": [
+          "Fill",
+          "1",
+          "of 2",
+          "Note / Reason",
+          "Save Fill",
+          "TRAINING ONLY — one fictional rehab position assigned internally."
+        ]
+      },
+      "returned_state_sources": [
+        "ic-34-need-saved-history",
+        "ic-33-saved-objective-and-partial-need",
+        "ic-48-persisted-timer-objective-need",
+        "ic-51-persisted-command-log"
+      ],
+      "spoken_references": {
+        "Note / Reason": "Note or Reason"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "05",
+      "span_index": 2,
+      "kind": "read_saved_history",
+      "claim_reviewed": "Reopened Partial Fill1/2 and attribution/reason.",
+      "required_labels_by_capture": {
+        "ic-34-need-saved-history": [
+          "PARTIAL FILL",
+          "MEDICAL • 1/2",
+          "History",
+          "Wallace Boden",
+          "Fill 0 → 1 / 2",
+          "TRAINING ONLY — one fictional rehab position assigned internally."
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {
+        "MEDICAL • 1/2": "one of two"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "05",
+      "span_index": 3,
+      "kind": "read_saved_board",
+      "claim_reviewed": "Saved need1/2 beside an incomplete objective50%; no closure or complete state asserted.",
+      "required_labels_by_capture": {
+        "ic-33-saved-objective-and-partial-need": [
+          "TRAINING — Rehab medical resources",
+          "MEDICAL • 1/2",
+          "PARTIAL FILL",
+          "TRAINING — Primary search checked",
+          "BENCHMARK • 50%"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {
+        "MEDICAL • 1/2": "one of two",
+        "BENCHMARK • 50%": "fifty percent"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "06",
+      "span_index": 1,
+      "kind": "open_form",
+      "claim_reviewed": "Notes/Add Note entry followed by actual prepared west-gate note body.",
+      "required_labels_by_capture": {
+        "ic-33-saved-objective-and-partial-need": [
+          "Notes",
+          "Add Note"
+        ],
+        "ic-37-command-note-visibility": [
+          "TRAINING ONLY — Staging remains at the fictional west gate. No operational deployment."
+        ]
+      },
+      "returned_state_sources": [
+        "ic-37-command-note-visibility"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": "Keep the held untimed span text and recipe unchanged. In the future timed recipe use source33 for Notes/Add Note, then cut to existing frozen source37 for the stated west-gate note body, at a genuine transcript anchor. No guessed cut time; no new capture needed.",
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "06",
+      "span_index": 2,
+      "kind": "save_internal_note",
+      "claim_reviewed": "Internal selected with exact visibility helper, Public alternative and Save; actual retained note follows.",
+      "required_labels_by_capture": {
+        "ic-37-command-note-visibility": [
+          "Visibility",
+          "Internal",
+          "Public",
+          "Visible to command staff only — the log records who added it, not the text",
+          "Save"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-49-persisted-note-role-files",
+        "ic-51-persisted-command-log"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "06",
+      "span_index": 3,
+      "kind": "read_saved_note_role",
+      "claim_reviewed": "Retained INTERNAL note/body and existing MatthewCasey SAFETYOFFICER role; no role mutation/message.",
+      "required_labels_by_capture": {
+        "ic-49-persisted-note-role-files": [
+          "INTERNAL",
+          "TRAINING ONLY — Staging remains at the fictional west gate. No operational deployment.",
+          "ICS Role Assignments",
+          "SAFETY OFFICER",
+          "Matthew Casey"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "07",
+      "span_index": 1,
+      "kind": "read_limit",
+      "claim_reviewed": "Persisted overdue reminder and Acknowledge reference; neither acknowledging nor restarting demonstrated.",
+      "required_labels_by_capture": {
+        "ic-48-persisted-timer-objective-need": [
+          "Timers & PAR",
+          "TRAINING PAR reminder",
+          "OVERDUE",
+          "Acknowledge"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {
+        "Timers & PAR": "Timers and PAR",
+        "OVERDUE": "overdue"
+      },
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "07",
+      "span_index": 2,
+      "kind": "read_limit",
+      "claim_reviewed": "Accountability explicitly lacks configured definitions; no successful check-in/PAR.",
+      "required_labels_by_capture": {
+        "ic-50-persisted-resources-accountability": [
+          "Accountability",
+          "Refresh",
+          "Check-in timers are active, but no timers are configured for this call."
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "07",
+      "span_index": 3,
+      "kind": "practice_limit",
+      "claim_reviewed": "Practice identifies missing check-in configuration, with the limiting UI still visible.",
+      "required_labels_by_capture": {
+        "ic-50-persisted-resources-accountability": [
+          "Accountability",
+          "Check-in timers are active, but no timers are configured for this call."
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "08",
+      "span_index": 1,
+      "kind": "read_map",
+      "claim_reviewed": "Actual Chicago streets and named Squad3/SearchDivision marker. Explicit simulated training position, no device-GPS proof.",
+      "required_labels_by_capture": {
+        "ic-44-incident-map-chicago-v3": [
+          "Incident Map",
+          "Squad 3",
+          "Search Division — TRAINING"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "08",
+      "span_index": 2,
+      "kind": "pan_save_view",
+      "claim_reviewed": "Actual pointer pan moves marker right of center; Save View followed by reopened/reloaded actual same framing.",
+      "required_labels_by_capture": {
+        "ic-45-incident-map-manual-pan-v3": [
+          "Incident Map",
+          "Save View",
+          "Squad 3",
+          "Search Division — TRAINING"
+        ]
+      },
+      "returned_state_sources": [
+        "ic-46-incident-map-saved-view-reopened-v3",
+        "ic-47-incident-map-saved-view-reloaded-v3"
+      ],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "08",
+      "span_index": 3,
+      "kind": "read_saved_map",
+      "claim_reviewed": "Actual route return and reopened saved framing; no separate entry-control image needed by the retrospective sentence.",
+      "required_labels_by_capture": {
+        "ic-46-incident-map-saved-view-reopened-v3": [
+          "Incident Map",
+          "Squad 3",
+          "Search Division — TRAINING"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "08",
+      "span_index": 4,
+      "kind": "read_limit",
+      "claim_reviewed": "Actual full-reload persisted framing; annotation controls are visible while placement/native/location/offline explicitly unverified.",
+      "required_labels_by_capture": {
+        "ic-47-incident-map-saved-view-reloaded-v3": [
+          "Incident Map",
+          "Save View",
+          "Line",
+          "Area",
+          "Text",
+          "Squad 3",
+          "Search Division — TRAINING"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "09",
+      "span_index": 1,
+      "kind": "read_log",
+      "claim_reviewed": "Actual timestamped objective and need changes with attributed need-fill text.",
+      "required_labels_by_capture": {
+        "ic-51-persisted-command-log": [
+          "Incident Log",
+          "Objective 'TRAINING — Primary search checked' progress 50%",
+          "Objective 'TRAINING — Primary search checked' added",
+          "Need 'TRAINING — Rehab medical resources' added"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": "The full original log also visibly contains its fill0to1of2 line with the fictional reason. That exact row is retained in raw pixels; do not fabricate a broader history or claim future actions.",
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "09",
+      "span_index": 2,
+      "kind": "read_log",
+      "claim_reviewed": "Non-public note marker excludes note body; map-created entry present after Save View.",
+      "required_labels_by_capture": {
+        "ic-51-persisted-command-log": [
+          "Incident Log",
+          "Incident map created by Wallace Boden (Command) [Incident Commander]"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": "Retrospective reference to Save View does not claim the button is on the log page. Keep actual non-public attribution row readable.",
+      "source_correspondence_reviewed": true
+    },
+    {
+      "scene_id": "09",
+      "span_index": 3,
+      "kind": "practice_limit",
+      "claim_reviewed": "Read-only handover compares actual recorded progress/fill; no Transfer/End/closure, field outcome or delivery claim.",
+      "required_labels_by_capture": {
+        "ic-51-persisted-command-log": [
+          "Incident Log",
+          "Objective 'TRAINING — Primary search checked' progress 50%"
+        ]
+      },
+      "returned_state_sources": [],
+      "spoken_references": {},
+      "editorial_requirement": null,
+      "source_correspondence_reviewed": true
+    }
+  ],
+  "sector_companions": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Use a training primary-search benchmark, a rehab need of two positions and the saved lane/pool comparison. Progress and partial fill remain application tracking entries.",
+      "practice": "Record fifty-percent search progress and one of two fictional rehab positions; verify both in the incident log.",
+      "basis": [
+        "03:benchmark/progress",
+        "04:medicalneed",
+        "05:partialfill",
+        "09:log"
+      ]
+    },
+    {
+      "sector": "Community response",
+      "scenario": "At a fictional community event, track two medical cover positions, a partial fill and an internal staging note using the same captured controls.",
+      "practice": "Describe the one remaining position and check the note audience before handover; do not imply an external dispatch.",
+      "basis": [
+        "04:medicalneed",
+        "05:partialfill",
+        "06:internalnote"
+      ]
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a search-sector benchmark and a clearly attributed internal rendezvous note. A reminder is separate from a confirmed team check-in.",
+      "practice": "Compare the benchmark, reminder and log, and identify which accountability information is absent.",
+      "basis": [
+        "03:benchmark/progress",
+        "06:internalnote",
+        "07:reminder/configurationlimit"
+      ]
+    },
+    {
+      "sector": "Security",
+      "scenario": "Read the saved command allocation and external gate-marshal entry before documenting a fictional perimeter need.",
+      "practice": "Explain why an entry in the resource pool does not establish a lane assignment, arrival or completed gate coverage.",
+      "basis": [
+        "02:lane/pool",
+        "04:quantifiedneed"
+      ]
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Frame an incident map around the training area, preserve its view and use a benchmark to describe work still underway.",
+      "practice": "Reopen the saved framing and verify the objective history; do not claim annotation placement or device GPS.",
+      "basis": [
+        "03:benchmark/progress",
+        "08:pansavedview"
+      ]
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Maintain an internal staging note and a quantified medical support gap during a fictional plant exercise.",
+      "practice": "Save a partial fill with a reason and compare its attributed history with the incident log before handover.",
+      "basis": [
+        "04:medicalneed",
+        "05:partialfill",
+        "06:internalnote",
+        "09:log"
+      ]
+    }
+  ],
+  "sector_coverage_limit": "These are six practice companions grounded in the same captured fictional warehouse workflow, not six separately filmed sector deployments.",
+  "source_images": [
+    {
+      "id": "ic-39-call-context-chicago-map",
+      "file": "captures/expansion/ic/ic-39-call-context-chicago-map.jpg",
+      "sha256": "ca6318fd247a5a8ae970e0be2b3375843c7866bc9c14c585a328d70f4f2be0e0",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T20:09:06.956Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-27-persisted-command-structure",
+      "file": "captures/expansion/ic/ic-27-persisted-command-structure.jpg",
+      "sha256": "2baa6213f31c10d3727c58ef275b13bdb4869838ec6094b78f662c2151d99a32",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:48:07.290Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-35-persisted-resource-pool",
+      "file": "captures/expansion/ic/ic-35-persisted-resource-pool.jpg",
+      "sha256": "37aa12d272c61d90cddc063298871ab160efd51a83b2154d7757342fb20eac04",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:50:26.557Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-28-persisted-timer-and-sections",
+      "file": "captures/expansion/ic/ic-28-persisted-timer-and-sections.jpg",
+      "sha256": "233ce5531c3293a10c6008b26830f36d8eab79cd942b24220d888f17aa63d1ec",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:48:21.245Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-29-objective-prepared",
+      "file": "captures/expansion/ic/ic-29-objective-prepared.jpg",
+      "sha256": "4d59b094aaac2ece8a3c0cf49091f25c975858ad415d01ace2d62258e0c13d7d",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:48:38.519Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-30-objective-progress-details",
+      "file": "captures/expansion/ic/ic-30-objective-progress-details.jpg",
+      "sha256": "107b6d4cfa03ca0221a4430c75faba703e914d314bbd2f7ba5c41ca0e45128ec",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:49:02.966Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-31-need-prepared",
+      "file": "captures/expansion/ic/ic-31-need-prepared.jpg",
+      "sha256": "beb0c9b0715eef5c170d581795f750d7c875b7cbf4fba7e4372f65157cc1b8eb",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:49:24.406Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-32-need-partial-fill",
+      "file": "captures/expansion/ic/ic-32-need-partial-fill.jpg",
+      "sha256": "bf6259f0153c6bb90896328847bd43f47bcda9e7900cb0444cc56e07c551c02b",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:49:38.587Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-34-need-saved-history",
+      "file": "captures/expansion/ic/ic-34-need-saved-history.jpg",
+      "sha256": "381985d0c9d181d9a16fb96f47a7a4c5c6e5a9aa7d74197412653fefa4d24924",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:50:09.028Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-33-saved-objective-and-partial-need",
+      "file": "captures/expansion/ic/ic-33-saved-objective-and-partial-need.jpg",
+      "sha256": "e781627f2d2c59a3d54f1b81208dad03aecc2c226147a5b400b5c900e0bd2ea1",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:49:53.605Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-37-command-note-visibility",
+      "file": "captures/expansion/ic/ic-37-command-note-visibility.jpg",
+      "sha256": "241e131c5e8f40178f3587b5e7a628a0b66a0386fd3ebf9838da415485492940",
+      "width": 1434,
+      "height": 739,
+      "captured_at": "2026-10-26T19:50:54.167Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-49-persisted-note-role-files",
+      "file": "captures/expansion/ic/ic-49-persisted-note-role-files.jpg",
+      "sha256": "376c369d2f9b26f1569eba9cfab5c36503f25722ca9345ecbe0db7e24c4d0e91",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:43:32.072Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-48-persisted-timer-objective-need",
+      "file": "captures/expansion/ic/ic-48-persisted-timer-objective-need.jpg",
+      "sha256": "e5a68c5030b9961912286d9f9aca3ac7ce4b127d2f894eb8d6dc3c94e5a51929",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:43:18.780Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-50-persisted-resources-accountability",
+      "file": "captures/expansion/ic/ic-50-persisted-resources-accountability.jpg",
+      "sha256": "db5da272f6532a1dcf24ddc49adfae4889c55bd4b648f7853c84dfd0ccde6a32",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:43:39.220Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-51-persisted-command-log",
+      "file": "captures/expansion/ic/ic-51-persisted-command-log.jpg",
+      "sha256": "4eb52b7db6b95000d68dd37bb0190541c57dd3f2140a355b701f93f16bf235a2",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:43:45.420Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-44-incident-map-chicago-v3",
+      "file": "captures/expansion/ic/ic-44-incident-map-chicago-v3.jpg",
+      "sha256": "235d1885cea66285c1c8e1620cf09b1bb897b7883fa6b58bd30b23cdd74d8ee4",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:38:57.798Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-45-incident-map-manual-pan-v3",
+      "file": "captures/expansion/ic/ic-45-incident-map-manual-pan-v3.jpg",
+      "sha256": "33a902b26d119610628e2d304fa571d4b85a16f06517827fb38faec7cb8869f7",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:41:34.574Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-46-incident-map-saved-view-reopened-v3",
+      "file": "captures/expansion/ic/ic-46-incident-map-saved-view-reopened-v3.jpg",
+      "sha256": "a64b93a5f226fc57b0d048f002112ee6b426a18c325b8a01744476ebb64ac69f",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:42:13.492Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    },
+    {
+      "id": "ic-47-incident-map-saved-view-reloaded-v3",
+      "file": "captures/expansion/ic/ic-47-incident-map-saved-view-reloaded-v3.jpg",
+      "sha256": "232c52af198d260eeebd8ec0280cc600fab0991dd7cc56983e0e1d491687de76",
+      "width": 1434,
+      "height": 773,
+      "captured_at": "2026-10-27T15:42:24.083Z",
+      "reviewed_at": "2026-10-27T21:52:14.508847+00:00",
+      "unchanged_original_bytes": true
+    }
+  ],
+  "hash_inventory": [
+    {
+      "file": "expansion/lessons/app-ic-command-board.json",
+      "sha256": "d25f95a7ef930001dfcdac28ba41f48cdf95eb79476fc81e6047bb6225c244c5",
+      "bytes": 20810
+    },
+    {
+      "file": "production/author_ic_command_take_01.py",
+      "sha256": "4ff6e2b041db49a43c34871d05c95dcc9b619810335b3c8f7b5f594b9e8593c1",
+      "bytes": 6225
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-take-01.untimed-v2.json",
+      "sha256": "ba31b779e41df45b95a005967e620a74828f4291f30638dd66405bb857760862",
+      "bytes": 22578
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-author-recipe-verification-20261027.json",
+      "sha256": "90f9d4c106883b79309a6f1390f304531be2a26867edad17e9ff9dddda5de35b",
+      "bytes": 1151
+    },
+    {
+      "file": "captures/expansion/ic/command-maintenance-reviewed-subset-20261027.json",
+      "sha256": "5ff13eecbdae60aaf530fa0b361f52026bc9dce05249513c5919d4859279969c",
+      "bytes": 53115
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/app-ic-command-board.broad-draft-before.json",
+      "sha256": "0840eeed5b6f8120775fce0f8c693ba26b8833c4bcfe081dc8024ad45ac78d68",
+      "bytes": 22475
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/app-ic-command-board.narrated-source.json",
+      "sha256": "d25f95a7ef930001dfcdac28ba41f48cdf95eb79476fc81e6047bb6225c244c5",
+      "bytes": 20810
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/captures.reviewed.json",
+      "sha256": "5ff13eecbdae60aaf530fa0b361f52026bc9dce05249513c5919d4859279969c",
+      "bytes": 53115
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/narration.txt",
+      "sha256": "57e3f9bb09d5f476f3c2f6b178d8664e2990df06f4d1ed88078282291deab1fe",
+      "bytes": 5620
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/source-readiness.json",
+      "sha256": "b4cc532993bef651f06001ab86b279f8aa19b0a065b181371439b28a69f90203",
+      "bytes": 4900
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/source-revision.json",
+      "sha256": "99ef419a816d750fca97fe54116101f3023ae3d3b2b34b21d2d2441ee746cc21",
+      "bytes": 3493
+    },
+    {
+      "file": "expansion/plans/app-ic-command-board-capture-freeze-20261027-v2/untimed-screen-sequence.json",
+      "sha256": "23474e5d7bebd79b2c65e94eafe261dc3c697e34463956d4cc0140b4efcbbf6f",
+      "bytes": 13389
+    }
+  ],
+  "review_limits": [
+    "The matching actual JPEG pixels were personally inspected before freeze. This final pass rechecks exact identity/dimensions/accepted observations and semantic correspondence; it does not pretend hashes authenticate pixels.",
+    "No narration or frozen untimed recipe changed. Source6.1 needs a future editorial cut from33to37 for note-body speech; genuine anchors must decide timing.",
+    "No scene relies on accessible icon names, screenshot modification, dimmed modal-background controls, fabricated map tiles, device telemetry or unobserved operational completion.",
+    "Saved fills, notes, progress and framing are application state. No physical arrival, delivered notification, native hardware, successful check-in/PAR, actual offline replay, upload, transfer or command/call closure was demonstrated."
+  ],
+  "missing_source_assets": [],
+  "actual_audio_approved": false,
+  "caption_timing_approved": false,
+  "timed_plan_authored": false,
+  "rendered_video_approved": false,
+  "browser_playback_approved": false,
+  "export_ready": false
+}

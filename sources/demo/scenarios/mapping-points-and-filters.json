@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "mapping-points-and-filters-training",
+  "mode": "manual normal UI replay",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "preserve_existing_records": true
+  },
+  "poi_type": {
+    "name": "Academy Staging",
+    "color": "#0080ff",
+    "is_destination": true,
+    "marker": "default pin",
+    "icon": "none",
+    "custom_icon_upload": false
+  },
+  "poi": {
+    "name": "Academy Staging Point",
+    "latitude": 41.8721,
+    "longitude": -87.6523,
+    "address": "TRAINING ONLY - 1000 Training Avenue",
+    "note": "Fictional exercise assembly point. No real deployment or access approval."
+  },
+  "replay_steps": [
+    "Open Mapping > Manage POIs. Reuse the exact existing Academy Staging category if present; do not duplicate it.",
+    "If absent, use Add POI Type, enter its name, check Is Destination, retain default pin and blue color, then save.",
+    "Verify name, color and Destination Yes in the saved list.",
+    "Open View > List to check for an existing Academy Staging Point; reuse it if its values match.",
+    "If absent, use Add, enter the separate paired coordinates, fictional address and note, then Add POI.",
+    "Verify the saved List row and reopen Edit to read back values without changing them.",
+    "Return to Mapping, filter for Academy Staging Point, check Show POIs and inspect the marker and popup.",
+    "Uncheck Show POIs and observe its marker disappear; recheck and verify it returns.",
+    "Restore category visibility and clear the text filter after recording."
+  ],
+  "recorded_result": {
+    "recorded_on": "2026-10-28",
+    "poi_type_saved": true,
+    "poi_saved_and_reopened": true,
+    "main_map_marker_and_popup_observed": true,
+    "visibility_toggle_verified": true,
+    "new_layer_saved": false,
+    "new_layer_failure_restored": true,
+    "operational_location_or_gps_verification": false
+  },
+  "limits": [
+    "The coordinates locate a fictional exercise point on a public basemap; they do not designate a real staging area or authorize access.",
+    "No call, notification, deployment, route, geocoding, import or custom-icon upload is invoked by this scenario.",
+    "A separate new-layer attempt failed in PostgreSQL. Do not retry it as part of this scenario or claim a saved overlay.",
+    "The type-specific popup currently shows escaped HTML; use the actual operating-map popup and the List/Edit views for the focused walkthrough."
+  ]
+}

@@ -1,0 +1,298 @@
+﻿@using Resgrid.Framework
+@model Resgrid.WebCore.Areas.User.Models.Units.UnitStaffingView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Units.Units> localizer
+@{
+    ViewBag.Title = "Resgrid | " + @localizer["UnitStaffingHeader"];
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+@functions {
+    static string StaffingLabelClass(Resgrid.Model.UnitStaffingLevel level)
+    {
+        switch (level)
+        {
+            case Resgrid.Model.UnitStaffingLevel.FullyStaffed: return "label-success";
+            case Resgrid.Model.UnitStaffingLevel.Degraded: return "label-warning";
+            case Resgrid.Model.UnitStaffingLevel.PartiallyStaffed: return "label-warning";
+            case Resgrid.Model.UnitStaffingLevel.NotStaffed: return "label-danger";
+            default: return "label-default";
+        }
+    }
+
+    static string StaffingLabelText(Resgrid.Model.UnitStaffingLevel level)
+    {
+        switch (level)
+        {
+            case Resgrid.Model.UnitStaffingLevel.FullyStaffed: return "Fully Staffed";
+            case Resgrid.Model.UnitStaffingLevel.Degraded: return "Degraded";
+            case Resgrid.Model.UnitStaffingLevel.PartiallyStaffed: return "Partially Staffed";
+            case Resgrid.Model.UnitStaffingLevel.NotStaffed: return "Not Staffed";
+            default: return "No Roles";
+        }
+    }
+}
+@section Styles
+{
+    <style type="text/css">
+        .selectize-control.personnelDropdown .selectize-dropdown > div {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .selectize-control.personnelDropdown .selectize-dropdown .by {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .selectize-control.personnelDropdown .selectize-dropdown .name {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .selectize-control.personnelDropdown .selectize-dropdown .title {
+            display: block;
+        }
+
+        .selectize-control.personnelDropdown .selectize-dropdown .description {
+            font-size: 12px;
+            display: block;
+            color: #a0a0a0;
+            white-space: nowrap;
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .selectize-control.personnelDropdown .selectize-dropdown .meta {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 10px;
+        }
+
+            .selectize-control.personnelDropdown .selectize-dropdown .meta li {
+                margin: 0;
+                padding: 0;
+                display: inline;
+                margin-right: 10px;
+            }
+
+                .selectize-control.personnelDropdown .selectize-dropdown .meta li span {
+                    font-weight: bold;
+                }
+
+        .selectize-control.personnelDropdown::before {
+            -moz-transition: opacity 0.2s;
+            -webkit-transition: opacity 0.2s;
+            transition: opacity 0.2s;
+            content: ' ';
+            z-index: 2;
+            position: absolute;
+            display: block;
+            top: 12px;
+            right: 34px;
+            width: 16px;
+            height: 16px;
+            background: url(images/spinner.gif);
+            background-size: 16px 16px;
+            opacity: 0;
+        }
+
+        .selectize-control.personnelDropdown.loading::before {
+            opacity: 0.4;
+        }
+    </style>
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["UnitStaffingHeader"]</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li>
+                <a asp-controller="Units" asp-action="Index" asp-route-area="User">@commonLocalizer["UnitsModule"]</a>
+            </li>
+            <li class="active">
+                <strong>@localizer["UnitStaffingHeader"]</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    @if (Model.Units != null && Model.Units.Any() && Model.GetTotalRoles() > 0)
+                    {
+                        <form class="form-horizontal" role="form" asp-controller="Units" asp-action="UnitStaffing" asp-route-area="User" method="post">
+
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-1">
+                                    @Html.AntiForgeryToken()
+                                    <div asp-validation-summary="All" class="text-danger"></div>
+                                </div>
+                            </div>
+
+                            @foreach (var unit in Model.Units)
+                            {
+                                if (unit.Roles.Any())
+                                {
+                                    var staffing = Model.GetStaffingForUnit(unit.UnitId);
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            @unit.Name
+                                            @if (staffing != null && staffing.HasDefinedRoles)
+                                            {
+                                                <br />
+                                                <span class="label @StaffingLabelClass(staffing.Level)" title="@staffing.Summary">@StaffingLabelText(staffing.Level)</span>
+                                            }
+                                        </label>
+                                        <div class="col-sm-10" id="unitAssignments">
+                                            @foreach (var role in unit.Roles)
+                                            {
+                                                var activeRole = Model.ActiveRoles.FirstOrDefault(x => x.UnitId == role.UnitId && x.Role == role.Name);
+                                                var requiredRoleName = Model.GetPersonnelRoleName(role.PersonnelRoleId);
+                                                var currentUserQualified = activeRole == null || !role.PersonnelRoleId.HasValue || Model.DoesUserHoldPersonnelRole(activeRole.UserId, role.PersonnelRoleId.Value);
+
+                                                <div class="row" style="margin-bottom: 6px;">
+                                                    <div class="col-md-5">
+                                                        @role.Name
+                                                        @if (!string.IsNullOrWhiteSpace(requiredRoleName))
+                                                        {
+                                                            <br />
+                                                            <small class="text-muted">Requires: @requiredRoleName @(role.PersonnelRoleRequired ? "(Required)" : "(Preferred)")</small>
+                                                        }
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <select id="Role_@role.UnitRoleId" name="Role_@role.UnitRoleId" class="selectize personnelDropdown" style="width:100%;" data-required-role="@requiredRoleName" data-required="@(role.PersonnelRoleRequired ? "true" : "false")">
+                                                            @if (activeRole == null)
+                                                            {
+                                                                <option value="" selected>@localizer["NotOccupied"]</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="">@localizer["NotOccupied"]</option>
+                                                            }
+                                                            @foreach (var user in Model.Users)
+                                                            {
+                                                                if (activeRole != null && activeRole.UserId == user.UserId)
+                                                                {
+                                                                    <option data-data='@Html.Raw("{")"UserId":"@user.UserId","Name":"@user.Name","GroupName":"@user.DepartmentGroupName","Roles":"@user.RoleNames"@Html.Raw("}")' value="@user.UserId" selected>@user.Name</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option data-data='@Html.Raw("{")"UserId":"@user.UserId","Name":"@user.Name","GroupName":"@user.DepartmentGroupName","Roles":"@user.RoleNames"@Html.Raw("}")' value="@user.UserId">@user.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                        <span class="help-block role-warning" style="@(currentUserQualified ? "display:none;" : "")color: @(role.PersonnelRoleRequired ? "#a94442" : "#8a6d3b");">
+                                                            @if (!currentUserQualified)
+                                                            {
+                                                                <text>Assigned member does not hold the @requiredRoleName role.</text>
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <a class="btn btn-white" asp-controller="Shifts" asp-action="Index" asp-route-area="User">@commonLocalizer["Cancel"]</a>
+                                    <button class="btn btn-primary" type="submit">@commonLocalizer["Save"]</button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p>@localizer["NoUnitsToStaff"]</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+    @if (Model.IsDepartmentAdmin)
+    {
+        <script>
+            var groupId = 0;
+            var isAdmin = true;
+        </script>
+    }
+    else
+    {
+        <script>
+            var groupId = '@Model.GroupId';
+            var isAdmin = false;
+        </script>
+    }
+
+    <script src="~/js/app/internal/units/resgrid.units.setstaffing.js" asp-append-version="true"></script>
+    <script>
+        // Live qualification warning: when a member is chosen for a seat that requires a personnel role
+        // they don't hold, surface a warning. Hard "required" seats are also blocked server-side on save.
+        $(function () {
+            // The member's roles for a picked option. setstaffing.js turns these selects into selectize controls on
+            // document ready, before this runs; selectize keeps each option's data-data in its own option store and
+            // leaves only the selected <option> (without data-data) in the select, so read the store first.
+            function rolesForOption(el, val) {
+                if (el.selectize && el.selectize.options && el.selectize.options[val])
+                    return el.selectize.options[val].Roles || '';
+
+                var data = $(el).find('option[value="' + val + '"]').attr('data-data');
+                return data ? (JSON.parse(data).Roles || '') : null;
+            }
+
+            function checkRoleQualification(el) {
+                var $sel = $(el);
+                var required = $sel.attr('data-required-role');
+                if (!required) return;
+
+                var isHard = $sel.attr('data-required') === 'true';
+                var $warning = $sel.closest('.col-md-7').find('.role-warning');
+                var val = $sel.val();
+
+                if (!val) { $warning.hide(); return; }
+
+                var qualified = false;
+                try {
+                    var roleNames = rolesForOption(el, val);
+                    if (roleNames !== null) {
+                        var roles = roleNames.split(',').map(function (s) { return s.trim(); });
+                        qualified = roles.indexOf(required) !== -1;
+                    }
+                } catch (e) {
+                    // Malformed option data -- leave qualified as false (safe default) so the warning shows.
+                    if (window.console) console.warn('Failed to parse personnel role data for qualification check', e);
+                }
+
+                if (qualified) {
+                    $warning.hide();
+                } else {
+                    $warning.css('color', isHard ? '#a94442' : '#8a6d3b')
+                        .text('Assigned member does not hold the ' + required + (isHard ? ' role (required).' : ' role (preferred).'))
+                        .show();
+                }
+            }
+
+            $(document).on('change', 'select.personnelDropdown[data-required-role]', function () {
+                checkRoleQualification(this);
+            });
+
+            $('select.personnelDropdown[data-required-role]').each(function () {
+                checkRoleQualification(this);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,400 @@
+{
+  "kind": "isolated_Responder_Records_contract_verification",
+  "checked_at": "2026-10-30T06:32:39.007556+00:00",
+  "passed_focused_checks": true,
+  "scope": "Four isolated production files and two new synthetic regressions. Original Responder/Core/auth/store/API/context/catalog/ADP/offline policy/dependencies and seven previous compatibility outputs remain unchanged.",
+  "source_only_runtime_support": true,
+  "browser_api_db_reload_retry_actions": false,
+  "post_reload_ui_save_readback": "UNVERIFIED; Root review/restart/normal UI capture still required.",
+  "root_functional_review": "Root personally reviewed the minimal four production diffs and approved the existing randomUUID, classification0/1/2,nested raw-cell mapping/withholding/legacy compatibility,and Values detail input.",
+  "metadata": {
+    "file": "contract-metadata.json",
+    "sha256": "314aa7d7fbb2147bdd5288141d965b3517309243a7590e3d82779c2390092a16"
+  },
+  "patch": {
+    "file": "responder-records-contract.patch",
+    "sha256": "658a52dc9e115bbe8d25ec5533e36a9b1768a68ed6a39724ee317c084fe757f5"
+  },
+  "preparer": {
+    "file": "prepare.py",
+    "sha256": "cf619fd65f0785532eb2f31cfe44ee162609cc8d635887fa1b67b6a5476dcea7",
+    "default_mode": "read_only",
+    "actual_live_apply_observation": "proofs/applied-20261030.json",
+    "final_current_observation": "proofs/final-current-20261030.json",
+    "fresh_source_replay": "proofs/fresh-source-replay-20261030.json"
+  },
+  "changes": [
+    {
+      "file": "src/app/records/[id].tsx",
+      "original_before_sha256": "a7e383fa04adaa4fac93d9a06c29511c2f76a037cedeea916b30f1aaf5b6a4a5",
+      "isolated_after_sha256": "e69cd71d297573d0ab642c141b662d62ced54ca857a4e5063f453da57559a9d8"
+    },
+    {
+      "file": "src/app/records/__tests__/contract.test.tsx",
+      "original_before_sha256": null,
+      "isolated_after_sha256": "807e773bdab918403dcef32836fec9132c7dd3e407f25f98ca17079d949557b2"
+    },
+    {
+      "file": "src/app/records/new.tsx",
+      "original_before_sha256": "ea4c9f258469f4c9e891d6ae61e10921bff981698d4f7ffd67b984675be29a29",
+      "isolated_after_sha256": "8906bf61e4352d2b789bb6b87d34bd237f958681d4cb9b35ad17867b2387525b"
+    },
+    {
+      "file": "src/lib/records/__tests__/wire-contract.test.ts",
+      "original_before_sha256": null,
+      "isolated_after_sha256": "9c05c063b3e8fe086f8c33635f12c50f410d3351fc844f7e87d67249ee618a69"
+    },
+    {
+      "file": "src/lib/records/schema.ts",
+      "original_before_sha256": "48ffaff017c1036557165827012c2d670f73c331d05ebfa39e1b6632b7a3bf78",
+      "isolated_after_sha256": "b2753caf7cf835a2904c5c31428927da889862fec4f416ea6fed2d1d272e549e"
+    },
+    {
+      "file": "src/models/v4/records/index.ts",
+      "original_before_sha256": "ec1e2b992f871bd8de630645d84e19786e8a4ea8fdc8cdfb2c7206984d0b177d",
+      "isolated_after_sha256": "235a90c1528115d2f98a3b3d5c793cb4b662998d0388afa5c9964ed3bf9bece4"
+    }
+  ],
+  "checks": {
+    "existing_initial_baseline": {
+      "suites": 7,
+      "passed": 63,
+      "scope": "lib/records,stores/records,components/records"
+    },
+    "new_before_regressions": {
+      "suites": 2,
+      "tests": 9,
+      "expected_contract_failures": 8,
+      "resumed_identity_passes": 1,
+      "setup_failures": 0,
+      "act_warnings": 0
+    },
+    "final_focused": {
+      "suites": 10,
+      "passed": 76,
+      "new_tests": 9,
+      "additional_preexisting_detail_tests": 4,
+      "act_warnings": 0
+    },
+    "temporary_preparer_guards": {
+      "passed": 11,
+      "scope": "unknown edits,original target,source/Core/gate/snapshot drift,symlinks,partial production state,new tests,no-write checks,rollback,idempotent apply"
+    },
+    "eslint_all6_explicit_no_ignore": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "Responder_config_Prettierr_all6": "passed",
+    "guarded_and_unified_patch_fresh_temp_replay": "both six exact hashes match",
+    "whole_project_build_or_typecheck": "not run/not claimed"
+  },
+  "crypto_test_boundary": "Actual production screen and Records store are exercised with a mocked expo-crypto UUID and mocked API endpoints. Valid request GUID format and idempotency forwarding are asserted. No native cryptography/provider/hardware execution is claimed.",
+  "unchanged_predicate_source": [
+    {
+      "name": "isProtected",
+      "source_text_unchanged": true,
+      "sha256": "2f5a7581fb249e87fce0c2505131e36ea7494efb7975d8fffb58725f66ad3a8a"
+    },
+    {
+      "name": "isRestricted",
+      "source_text_unchanged": true,
+      "sha256": "87cee8ac1eb77f3460f5309b88ac4877bb4c96697b032e29f17b30c1f709699c"
+    },
+    {
+      "name": "canAuthorOffline",
+      "source_text_unchanged": true,
+      "sha256": "a78da87ef4b92164af2ce98db48b81d0b6b0a7397460ae6428f20ae06594448f"
+    }
+  ],
+  "original_and_core_pins": {
+    "original_files": [
+      {
+        "file": "src/app/records/[id].tsx",
+        "sha256": "a7e383fa04adaa4fac93d9a06c29511c2f76a037cedeea916b30f1aaf5b6a4a5"
+      },
+      {
+        "file": "src/app/records/new.tsx",
+        "sha256": "ea4c9f258469f4c9e891d6ae61e10921bff981698d4f7ffd67b984675be29a29"
+      },
+      {
+        "file": "src/lib/records/schema.ts",
+        "sha256": "48ffaff017c1036557165827012c2d670f73c331d05ebfa39e1b6632b7a3bf78"
+      },
+      {
+        "file": "src/models/v4/records/index.ts",
+        "sha256": "ec1e2b992f871bd8de630645d84e19786e8a4ea8fdc8cdfb2c7206984d0b177d"
+      },
+      {
+        "file": "src/stores/records/store.ts",
+        "sha256": "6abf83a60da75bc683005bc27782f28ba130830b4ec7948e9be7654fb9b31b67"
+      },
+      {
+        "file": "src/hooks/use-records-context.ts",
+        "sha256": "b940d3f77d58d0c429fc0f4983a4b9f25b02a21fa1a7962a569cd09fa1cb6d53"
+      },
+      {
+        "file": "src/api/records/records.ts",
+        "sha256": "6d03ad7caa62dae63a29a64484a49003ca72a704f09d59c460d891066222d3c7"
+      },
+      {
+        "file": "src/stores/auth/store.tsx",
+        "sha256": "f2ea0078c05bbe369fb7c317e2b07942899190196e39af4125f8a969d9f22248"
+      },
+      {
+        "file": "package.json",
+        "sha256": "1630632fe5be149f37326ea0aaae68717761330fb8f6d2352ed8fa7358c16b69"
+      },
+      {
+        "file": "yarn.lock",
+        "sha256": "7d64c68d5052edb39aa3ac296fc40e17c6985725f127430296e59486e1769bc9"
+      }
+    ],
+    "core_contract_files": [
+      {
+        "file": "Core/Resgrid.Model/Records/RmsRecordDefinitions.cs",
+        "sha256": "fa9504d78b0474ad76e40da2113707b55208086af217aaaa6611cdb8e37adeab"
+      },
+      {
+        "file": "Core/Resgrid.Services/Records/RecordsService.cs",
+        "sha256": "ef743169e47e0726a181353fb9af69341bb390764c4d95ef89e61725c0fcd28d"
+      },
+      {
+        "file": "Web/Resgrid.Web.Services/Helpers/RecordsRms1bApiMapper.cs",
+        "sha256": "3651f791535a8d225b01c328b75c4fe12482777cc652ef4a07df7f7c1cbd93f8"
+      },
+      {
+        "file": "Web/Resgrid.Web.Services/Models/v4/Records/RecordsRms1bApiModels.cs",
+        "sha256": "40e56c43646392a515d45de65f890ae4626a60d88d2c1141aac6b928aa568bf6"
+      },
+      {
+        "file": "Core/Resgrid.Services/Records/FieldRecordsService.cs",
+        "sha256": "fbf365ed17e4e2a8a448547621907dc9196971717068d0105a04765ace7f873f"
+      },
+      {
+        "file": "Web/Resgrid.Web.Services/Controllers/v4/RecordsController.cs",
+        "sha256": "07d0984f17028a42eafe01e031fe24b0ed3b7c53ce6906e7d91c0ec2c550ae9c"
+      }
+    ],
+    "existing_compatibility_files": [
+      {
+        "file": "metro.config.js",
+        "sha256": "b866143b413e5fcd7d0633722220cc528209fb92a085bc32cf55a87c3b0d1ffa"
+      },
+      {
+        "file": "src/api/calendar/calendar.ts",
+        "sha256": "d10813fc208903c0b6eb73270bbed7a5d06e3c913c7b99befc4547a8b9232739"
+      },
+      {
+        "file": "src/app/(app)/settings.tsx",
+        "sha256": "c8b6b51f9c68f4766ae203536fb0c960386683c3fbb0790565ac3f230769954d"
+      },
+      {
+        "file": "src/components/calls/call-detail-menu.tsx",
+        "sha256": "9bc6faaa66b7dcaced09ba76e2c53ddb8509936bb6c0d1710709dab5e501e44d"
+      },
+      {
+        "file": "src/stubs/mapbox-web-compat.ts",
+        "sha256": "7ec5c3ec1400f6a824528a77104005cbfe583e9ea8a055a3f7d62aa88d304e9b"
+      },
+      {
+        "file": "src/stubs/react-native-webview.web.tsx",
+        "sha256": "bdba77e62384804020b82dcb4eb31d645d641c1cf0aafeb56ead9c9f60f5128d"
+      },
+      {
+        "file": "src/stubs/rnmapbox-maps.web.tsx",
+        "sha256": "67a4c7f3161fc72481e1467f2d89e50277319d0e591431bb13e65b80b86e4a75"
+      }
+    ]
+  },
+  "history": {
+    "first_apply_metadata_sha256": "feaeeaccb3e35b59391d553338754d2c24e4673c38525059e396d711194adee6",
+    "first_formatting_version": "history/pre-app-editorconfig-format/",
+    "first_apply_observation_preserved": true,
+    "formatting_correction": "Initial external snapshot formatting inherited Core editor settings. Final source and patch use Responder editor settings; first snapshots and apply proof retained.",
+    "test_only_revisions": "Initial unstable translation mock retained in history/initial-regression-tests; stable beforeproof has zero act/setup errors. Testing Library lint cleanup retained in history/before-explicit-test-lint."
+  },
+  "privacy": {
+    "scanner": "scripts/audit_public_repo.py:scan_stream unchanged",
+    "known_private_values_checked": 17,
+    "values_printed": false,
+    "files_checked": 48,
+    "findings": []
+  },
+  "package_files_before_final_reports": [
+    {
+      "file": "README.md",
+      "sha256": "be5ccf40cf43446d315425b2f0251f264deb538f7f6ae19b998662b6a1b824ee"
+    },
+    {
+      "file": "after/src/app/records/[id].tsx",
+      "sha256": "e69cd71d297573d0ab642c141b662d62ced54ca857a4e5063f453da57559a9d8"
+    },
+    {
+      "file": "after/src/app/records/__tests__/contract.test.tsx",
+      "sha256": "807e773bdab918403dcef32836fec9132c7dd3e407f25f98ca17079d949557b2"
+    },
+    {
+      "file": "after/src/app/records/new.tsx",
+      "sha256": "8906bf61e4352d2b789bb6b87d34bd237f958681d4cb9b35ad17867b2387525b"
+    },
+    {
+      "file": "after/src/lib/records/__tests__/wire-contract.test.ts",
+      "sha256": "9c05c063b3e8fe086f8c33635f12c50f410d3351fc844f7e87d67249ee618a69"
+    },
+    {
+      "file": "after/src/lib/records/schema.ts",
+      "sha256": "b2753caf7cf835a2904c5c31428927da889862fec4f416ea6fed2d1d272e549e"
+    },
+    {
+      "file": "after/src/models/v4/records/index.ts",
+      "sha256": "235a90c1528115d2f98a3b3d5c793cb4b662998d0388afa5c9964ed3bf9bece4"
+    },
+    {
+      "file": "before/src/app/records/[id].tsx",
+      "sha256": "a7e383fa04adaa4fac93d9a06c29511c2f76a037cedeea916b30f1aaf5b6a4a5"
+    },
+    {
+      "file": "before/src/app/records/new.tsx",
+      "sha256": "ea4c9f258469f4c9e891d6ae61e10921bff981698d4f7ffd67b984675be29a29"
+    },
+    {
+      "file": "before/src/lib/records/schema.ts",
+      "sha256": "48ffaff017c1036557165827012c2d670f73c331d05ebfa39e1b6632b7a3bf78"
+    },
+    {
+      "file": "before/src/models/v4/records/index.ts",
+      "sha256": "ec1e2b992f871bd8de630645d84e19786e8a4ea8fdc8cdfb2c7206984d0b177d"
+    },
+    {
+      "file": "contract-metadata.json",
+      "sha256": "314aa7d7fbb2147bdd5288141d965b3517309243a7590e3d82779c2390092a16"
+    },
+    {
+      "file": "core-contract-excerpts.json",
+      "sha256": "1f117bae10af1ad9cc4871813b476ee03a87d99b41d6e90f290f2fc4f8b4466f"
+    },
+    {
+      "file": "history/before-explicit-test-lint/contract-metadata.json",
+      "sha256": "9eb8e3498e46c60d96f4e768cd0daf74adf257f2a062573fe20a91905a9e8940"
+    },
+    {
+      "file": "history/before-explicit-test-lint/prepare.py",
+      "sha256": "64f6f0532f0c4c46e009f7aac503d875659957679a6d047860cc7d0f1610adfd"
+    },
+    {
+      "file": "history/before-explicit-test-lint/responder-records-contract.patch",
+      "sha256": "5fc07145da212189d63ff7606c07040adb55801dd64843d50d10a41b3b592ae3"
+    },
+    {
+      "file": "history/before-explicit-test-lint/src/app/records/__tests__/contract.test.tsx",
+      "sha256": "4a19a839365c73facf0c057b64258e5410326de0a1233b4930742a534b9f4b32"
+    },
+    {
+      "file": "history/initial-regression-tests/src/app/records/__tests__/contract.test.tsx",
+      "sha256": "c8c5938292da960fa3c2a2314fc09a404287cddcee8021b34b147cf3807f9275"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/after/src/app/records/[id].tsx",
+      "sha256": "75e02a2f67d25cba46384e418947e57c2780abb7b56f9a1f88d40de095d2e14f"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/after/src/app/records/__tests__/contract.test.tsx",
+      "sha256": "8fe424832cf1e7668a52e2e42c4a98a711471e239babf1c2e7471a46f5ae5cbd"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/after/src/app/records/new.tsx",
+      "sha256": "094b50c9b8d6162f8eda2b9a615b16f59872aef6b9b085ef33445d9826742134"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/after/src/lib/records/__tests__/wire-contract.test.ts",
+      "sha256": "4da8b6b133d5b14f41c44bd935b2897fa65d2bb1c793a3552b94e93fe6d978ae"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/after/src/lib/records/schema.ts",
+      "sha256": "c4a71c2746bc8b40e8e15f2a4e47133fcde14d5199059d3263bf9bfffb1f7f3a"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/after/src/models/v4/records/index.ts",
+      "sha256": "527ffedfcff8c3dd9b2970060d31f05ae56adbf47c04c1f1e9f1dfae097f9977"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/contract-metadata.json",
+      "sha256": "feaeeaccb3e35b59391d553338754d2c24e4673c38525059e396d711194adee6"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/prepare.py",
+      "sha256": "90a8524fe49b24f893c720cc63d8e86998701453b37660f0bc9ba3026688dd8e"
+    },
+    {
+      "file": "history/pre-app-editorconfig-format/responder-records-contract.patch",
+      "sha256": "c09f218f803cdb59c6ba6f06c56b303a37fe6ffd51eba7c8d7548522cfd05f72"
+    },
+    {
+      "file": "prepare.py",
+      "sha256": "cf619fd65f0785532eb2f31cfe44ee162609cc8d635887fa1b67b6a5476dcea7"
+    },
+    {
+      "file": "proofs/applied-20261030.json",
+      "sha256": "44b4e95a281be613a3f5d5d672049af0fefc5dde96004e0ed157c5217a30732c"
+    },
+    {
+      "file": "proofs/final-current-20261030.json",
+      "sha256": "32e25cce0dee42ed1f8790e00e555b08b3fc535d2081a03b99bc741471b2d188"
+    },
+    {
+      "file": "proofs/formatted-current-20261030.json",
+      "sha256": "30cdfb34877f4ce4584eb92bf0f6a5982863e9d255478cc9212f46e4c136bdbb"
+    },
+    {
+      "file": "proofs/fresh-source-replay-20261030.json",
+      "sha256": "4f7870699f8e85e04791d393d9221764b6f694a6665e1c9dca27c05b54f8b0ee"
+    },
+    {
+      "file": "proofs/logs/baseline-focused.log",
+      "sha256": "e01c8f69262dbd488dcc486d7b7cb50d0a6506c8da643c8af15e52f95e69667c"
+    },
+    {
+      "file": "proofs/logs/before-regressions-stable.log",
+      "sha256": "cbb9d4fed65601bf1b26e417fc2efd40b665901dc4af90b80ad318d7a6182738"
+    },
+    {
+      "file": "proofs/logs/release-eslint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "proofs/logs/release-focused.log",
+      "sha256": "bb94f15ce087f0ebbebeccb16a6097a7bce8e220aa71d317fd46bb9fdac3ac5e"
+    },
+    {
+      "file": "proofs/logs/release-prepare-tests-11.log",
+      "sha256": "a411e48184cd92c5a05508eb5a650b78b7f50a202349825205361c2e01fdce28"
+    },
+    {
+      "file": "proofs/logs/release-prettier.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "file": "responder-records-contract.patch",
+      "sha256": "658a52dc9e115bbe8d25ec5533e36a9b1768a68ed6a39724ee317c084fe757f5"
+    },
+    {
+      "file": "tests/test_prepare.py",
+      "sha256": "8e927dd556c4ea04adf7aadac7f5a7290cf45619fc0a5a967f2765950fe6c119"
+    }
+  ],
+  "commands": {
+    "read_only": "python3 prepare.py --target <isolated-Responder> --original <original-Responder> --core-source <Core>",
+    "apply": "python3 prepare.py --target <isolated-Responder> --original <original-Responder> --core-source <Core> --apply",
+    "app_tests": "node node_modules/jest/bin/jest.js --runInBand --coverage=false --reporters=default --cacheDirectory=/private/tmp/academy-responder-records-contract-jest src/lib/records src/stores/records src/components/records src/app/records/__tests__",
+    "prepare_tests": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_prepare.py -v"
+  },
+  "not_done": [
+    "Original/Core edits",
+    "Generic source-profile or historical helper/provenance rewrites",
+    "Dependencies installs",
+    "Runtime restart/reload",
+    "Record/API/DB retry or any user-data mutation",
+    "New recording/media/canonical/site/target qualification",
+    "Git operations"
+  ]
+}

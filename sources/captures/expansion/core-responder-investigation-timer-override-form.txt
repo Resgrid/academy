@@ -1,0 +1,339 @@
+Wallace Boden
+ Home
+ Calls
+ Personnel
+ Units
+ Contacts
+ Mapping
+ Shifts
+Records
+ Reports
+ Documents
+ Calendar
+ Notes
+ Trainings
+ Inventory
+Readiness
+Workforce & Business Ops
+0
+ 
+4
+Firehouse 51 — Training Department 
+ 
+Help 
+ 
+ 
+Call & Dispatch Settings
+Home  Department Settings  Call & Dispatch Settings
+Group Dispatch Settings
+Use Shift for Group Dispatch
+Expand dispatched groups using the resolved on-duty roster. An empty shift result falls back to group members; preview both cases.
+Set Status for Shift Personnel On Dispatch
+Apply the configured status to shift-dispatched personnel. This only takes effect with shift dispatch enabled.
+Person Call Dispatch Status
+Default
+StandingBy
+NotResponding
+Responding
+OnScene
+AvailableStation
+RespondingToStation
+RespondingToScene
+OnUnit
+Person Call Release Status
+Default
+StandingBy
+NotResponding
+Responding
+OnScene
+AvailableStation
+RespondingToStation
+RespondingToScene
+OnUnit
+Group-Scoped Dispatch
+Scope Dispatch to Group Areas
+Limit supported dispatch views to the member's group subtree. Department administrators and configured department-wide roles keep department-wide access.
+When on, each member's active call lists, maps and nearest unit board show only their own group and the groups beneath it: calls inside those groups' boundaries or dispatched to them, plus any call the member reported or was dispatched to. Department admins and the roles below keep a department-wide view. Nothing is copied or moved, so handing dispatch to another desk at shift change is only a change of role.
+Department-Wide Dispatch Roles
+Chief
+Officer
+Rescue Technician
+Paramedic
+Firefighter
+Driver / Operator
+Members holding any of these roles (for example a central dispatch center) see every area while scoping is on. Assign or remove the role to hand dispatch over; it takes effect on their next page load.
+Unit Dispatch Settings
+Also Dispatch To Assigned Personnel
+Expand unit dispatch to its assigned crew. Review duplicate routes, current assignments and recipient permissions.
+Also Dispatch To Entire Group
+Expand unit dispatch to the station group. This can substantially increase the recipient audience.
+Unit Call Dispatch Status
+Default (Dispatched, Responding or En Route)
+Leave the unit's status unchanged
+Available
+Responding
+On Scene
+Made Contact
+Investigating
+Dispatched
+Cleared
+Returning
+Staging
+Unavailable
+En Route
+Transporting
+Delivering
+At Patient
+At Hospital
+Searching
+Loading
+Standby
+On Patrol
+Maintenance
+On Break
+Completed
+In Quarters
+Set on the units dispatched to a call. Pick what the status means: each unit gets the status of its own status set with that meaning (the first by order), so one setting works for unit types with different custom statuses. Default sets Dispatched (or Responding, or En Route) on units with custom statuses and Responding on units with the built-in statuses.
+Unit Call Release Status
+Default (back in service)
+Leave the unit's status unchanged
+Available
+Responding
+On Scene
+Made Contact
+Investigating
+Dispatched
+Cleared
+Returning
+Staging
+Unavailable
+En Route
+Transporting
+Delivering
+At Patient
+At Hospital
+Searching
+Loading
+Standby
+On Patrol
+Maintenance
+On Break
+Completed
+In Quarters
+Set, by meaning in the same way, on the units still working a call when it is closed or they are taken off it. A unit already back in service, out of service (unavailable, maintenance or on a break) or working another call keeps its status; custom statuses are read by their base type. Default sets the unit's back-in-service status (Cleared, Available or In Quarters) on custom statuses and Released on the built-in statuses.
+Personnel on Unit Set Unit Status
+Allow personnel status updates to influence their assigned unit status. Review automation and crew assignment together.
+When a unit submits a status and users are setup on roles, the users status will be set to On Unit.
+Hold to set status
+Unit and Responder apps set a status with a two-second press and hold instead of a tap followed by Next or Submit. Statuses that need a note or destination still open that step.
+In the Unit and Responder apps, crews press and hold a status button for two seconds to set it, instead of tapping it and then pressing Next or Submit. Prevents accidental taps and forgotten confirmations. A status that needs a note or a destination choice still opens its next step.
+Close call when last unit clears
+An active call closes on its own when its last dispatched unit reports back in service or out of service. Units still working, a call with no unit dispatched and a call under an active incident command keep it open.
+An active call closes on its own when the last unit dispatched to it reports back in service or out of service (a status whose base type is Available, In Quarters, Cleared, Unavailable or Maintenance). Every other dispatched unit must also have reported finished since its dispatch. Only units count: a call with no unit dispatched, a call under an active incident command, or a unit still returning or transporting keeps the call open for the dispatcher.
+Check-In Timer Settings
+Auto-Enable Check-In Timers for New Calls
+Automatically start configured check-in timers for new calls. Review timer targets and escalation before enabling it.
+When enabled, all new calls will automatically have check-in timers turned on.
+Run Cards & Automatic Dispatch
+Automatic resource selection mode
+Off (Manual Dispatch)
+Station Based Dispatching
+Closest Unit Response
+How the system selects units and personnel to fill a run card: by the station response area containing the call (cascading to the next nearest station on shortfall) or by the closest available resources.
+Automatically dispatch recommended resources
+Allow the recommendation path to dispatch automatically where enabled. Preview recipients and verify local procedures first.
+When on, matched run cards dispatch resources immediately on call creation. When off, recommendations pre-populate the New Call page for dispatcher review.
+Rest period (minutes)
+After a unit or person is dispatched, deprioritize them for this many minutes so the same resources are not dispatched back to back. 0 disables.
+Minimum unit staffing to dispatch
+Off (No Staffing Gate)
+At Least Partially Staffed
+At Least Degraded
+Fully Staffed Only
+Units staffed below this level are not selected even when their status matches. Units without defined roles always pass.
+Enable move-up / backfill recommendations
+After dispatch selection, check station coverage minimums and recommend relocating resources to depleted stations.
+Closest Unit Response Tuning
+Maximum unit location age (seconds)
+Maximum personnel location age (seconds)
+Maximum response radius (meters)
+Include stale locations
+Order by driving ETA
+Re-rank the closest candidates using routed drive time instead of straight-line distance. Uses the mapping provider and may add cost and latency.
+ETA shortlist size
+In-quarters turnout (seconds)
+Time a unit at its station needs before it is moving. Applies to units in an In Quarters status and to units with no GPS position (taken to be at their station). Added to the travel time when ranking closest units. 0 = none.
+Mobile turnout (seconds)
+Time a unit that is already out and available needs before it is moving to a new call. Applies to units ranked from their GPS position. Added to the travel time when ranking closest units. 0 = none.
+Personnel turnout (seconds)
+Added to a person's travel time when run card rows that accept people compare them with units.
+Dispatch freed units to calls awaiting them
+Off: dispatchers are alerted when a matching unit becomes available. On: the unit is sent to the highest-priority waiting call automatically. Run cards can override this.
+Automatic dispatch limit (seconds, 0 = none)
+A freed unit further away than this is alerted, not sent. The alert itself always fires.
+Response codes
+Optional per-unit codes for run card proposals, such as C3 for lights and siren. Leave empty to keep codes out of every screen.
+Code	Name	Colour	Retired	
+Add code
+Show codes to crews (unit push and field apps)
+New Call Form Fields
+Choose which built-in fields appear on the new call form and which must be completed before a call can be created and sent to the field. Name, nature, priority and type are always shown and always required. The same rules apply when a call is edited or an archived call is added.
+Field	Visible	Required
+Address		
+GPS Coordinates		
+what3words		
+Plus Code		
+Destination		
+Indoor Location		
+Note		
+Reporter Name		
+Reporter Contact Info		
+External Call ID		
+Incident ID		
+Reference ID		
+Protocols		
+Linked Call		
+Scheduled Dispatch		
+Dispatch Recipients		
+Cancel Save
+Station Coverage Minimums
+
+Define the minimum number of each unit type or personnel role that should remain available at a station. When a dispatch would drop coverage below a minimum, the system recommends move-ups.
+
+Station	Unit Type / Role	Minimum Available	Radius (meters, closest-unit mode)	Enabled	
+Firehouse 51
+ 
+Engine
+Aerial
+Rescue
+Ambulance
+Command
+Chief
+Officer
+Rescue Technician
+Paramedic
+Firefighter
+Driver / Operator
+   Save
+Default Timer Configurations
+
+These define the default check-in intervals for each target type. They apply to all calls unless overridden by call type/priority rules below.
+
+Target Type	Unit Type	Duration (minutes)	Warning Threshold (minutes)	Enabled	Active States	
+Add New Default Timer
+Target Type
+Personnel
+Unit Type
+IC (Incident Commander)
+PAR (Personnel Accountability)
+Hazmat Exposure
+Sector Rotation
+Rehab
+Duration (minutes)
+Warning Threshold (minutes)
+Enabled
+Active States
+Responding
+Not Responding
+On Scene
+Standing By
+Available Station
+Responding to Station
+Responding to Scene
+On Unit
+Any "Available" status
+Any "Not Responding" status
+Any "Responding" status
+Any "On Scene" status
+Any "Made Contact" status
+Any "Investigating" status
+Any "Dispatched" status
+Any "Cleared" status
+Any "Returning" status
+Any "Staging" status
+Any "Unavailable" status
+Any "En Route" status
+Any "Transporting" status
+Any "Delivering" status
+Any "At Patient" status
+Any "At Hospital" status
+Any "Searching" status
+Any "Loading" status
+Any "Standby" status
+Any "On Patrol" status
+Any "Maintenance" status
+Any "On Break" status
+Any "Completed" status
+Any "In Quarters" status
+Leave empty for "All States".
+Add Timer Config
+Call Type / Priority Overrides
+
+Overrides take precedence over default timers when a call matches the specified type and/or priority.
+
+Call Type ID	Call Priority	Target Type	Unit Type	Duration (minutes)	Warning Threshold (minutes)	Enabled	Active States	
+Add New Override
+Call Type ID
+-- Any --
+Structure Fire
+Medical
+Rescue
+Investigation
+Call Priority
+-- Any --
+Low
+Medium
+High
+Emergency
+Target Type
+Personnel
+Unit Type
+IC (Incident Commander)
+PAR (Personnel Accountability)
+Hazmat Exposure
+Sector Rotation
+Rehab
+Duration (minutes)
+Warning Threshold (minutes)
+Enabled
+Active States
+Responding
+Not Responding
+On Scene
+Standing By
+Available Station
+Responding to Station
+Responding to Scene
+On Unit
+Any "Available" status
+Any "Not Responding" status
+Any "Responding" status
+Any "On Scene" status
+Any "Made Contact" status
+Any "Investigating" status
+Any "Dispatched" status
+Any "Cleared" status
+Any "Returning" status
+Any "Staging" status
+Any "Unavailable" status
+Any "En Route" status
+Any "Transporting" status
+Any "Delivering" status
+Any "At Patient" status
+Any "At Hospital" status
+Any "Searching" status
+Any "Loading" status
+Any "Standby" status
+Any "On Patrol" status
+Any "Maintenance" status
+Any "On Break" status
+Any "Completed" status
+Any "In Quarters" status
+Leave empty for "All States".
+Add Override
+✨
+Assistant
+ 
+💬
+Chat
+Copyright Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

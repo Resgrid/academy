@@ -1,0 +1,271 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- form:
+  - heading "Edit Matthew Casey Profile" [level=2]
+  - list:
+    - link "Home":
+      - /url: /User/Home/Dashboard
+    - text: /
+    - strong: Edit Profile
+  - link "Change Users Password":
+    - /url: /User/Profile/ResetPasswordForUser?userId=DA25F49E-FEA4-5C8D-82D9-163D7D2023F9
+  - link "Staffing Schedules":
+    - /url: /User/Profile/ViewSchedules?userId=DA25F49E-FEA4-5C8D-82D9-163D7D2023F9
+  - link "Certifications":
+    - /url: /User/Certifications/Person?userId=DA25F49E-FEA4-5C8D-82D9-163D7D2023F9
+  - generic: ID Number
+  - textbox "Custom Identication Number": DEMO-5102
+  - generic: First Name
+  - textbox "First Name": Matthew
+  - generic: Last Name
+  - textbox "Last Name": Casey
+  - generic: Email Address
+  - textbox "Email Address": <redacted>
+  - generic "We recommend verifying your email address to ensure uninterrupted delivery of dispatches and notifications.":
+    - generic: 
+  - generic: Email Addresses must be unique
+  - generic: Language
+  - combobox:
+    - option "English (United States)" [selected]
+    - option "Spanish (Latin America)"
+    - option "Swedish"
+    - option "German"
+    - option "French"
+    - option "Italian"
+    - option "Polish"
+    - option "Ukrainian"
+    - option "Arabic"
+    - option "Greek"
+  - generic: "Note: Multi-lingual support in Resgrid is not fully supported. Some parts of the website will still be in English and we are working to get everything translated. Our support services (Helpdesk, Github, Discord, etc) and documentation are only available in English."
+  - generic: Time Zone
+  - combobox
+  - combobox "(GMT-06:00) Central Time (US & Canada)":
+    - textbox "(GMT-06:00) Central Time (US & Canada)"
+  - generic: Home Number
+  - textbox "Home Phone Number"
+  - generic: Mobile Number
+  - textbox "Mobile Phone Number"
+  - generic: Mobile Carrier
+  - combobox
+  - combobox "None":
+    - textbox "None"
+  - generic: Group
+  - combobox
+  - combobox "Truck 81":
+    - textbox "Truck 81"
+  - generic: Is Group Admin?
+  - checkbox [checked]
+  - generic: Roles
+  - listbox:
+    - option [selected]: Officer
+    - option [selected]: TRAINING ONLY - Community response navigator
+  - combobox:
+    - list:
+      - generic "Remove all items": ×
+      - listitem "Officer": × Officer
+      - listitem "TRAINING ONLY - Community response navigator": × TRAINING ONLY - Community response navigator
+      - searchbox
+  - heading "Emergency Contacts" [level=3]
+  - paragraph: Emergency contacts are specific to this department and are stored with your department's data protection settings. You can add more than one.
+  - table:
+    - rowgroup:
+      - row "Name Relationship Phone number Alternate Email Primary":
+        - columnheader "Name"
+        - columnheader "Relationship"
+        - columnheader "Phone number"
+        - columnheader "Alternate"
+        - columnheader "Email"
+        - columnheader "Primary"
+        - columnheader
+    - rowgroup:
+      - row "No emergency contacts have been added.":
+        - cell "No emergency contacts have been added."
+  - button "Add Emergency Contact"
+  - heading "Physical Address" [level=3]
+  - generic: Address
+  - textbox "Physical Street Address"
+  - generic: City
+  - textbox "Physical City"
+  - generic: State
+  - textbox "Physical State\\Province"
+  - generic: Postal Code
+  - textbox "Physical Zip\\Postal Code"
+  - generic: Country
+  - combobox
+  - combobox "United States":
+    - textbox "United States"
+  - heading "Mailing Address" [level=3]
+  - generic: Same as Physical?
+  - checkbox
+  - generic: Address
+  - textbox "Mailing Street Address"
+  - generic: City
+  - textbox "Mailing City"
+  - generic: State
+  - textbox "Mailing State\\Province"
+  - generic: Postal Code
+  - textbox "Mailing Zip\\Postal Code"
+  - generic: Country
+  - combobox
+  - combobox "United States":
+    - textbox "United States"
+  - heading "Department Settings" [level=3]
+  - generic: User Type
+  - generic: Normal User
+  - radio
+  - generic: Department Admin
+  - radio [checked]
+  - generic: Disable User
+  - checkbox
+  - generic: Hide User
+  - checkbox [active]
+  - link "Cancel":
+    - /url: /User/Home/Dashboard
+  - button "Save"
+  - generic: click here to set a picture
+  - generic: picture changes may take up to 24 hours
+  - heading "Call Options" [level=5]
+  - generic: Email
+  - generic: ON OFF
+  - generic: Text
+  - generic: ON OFF
+  - generic: Push
+  - generic: ON OFF
+  - heading "Telephone (Voice) Options" [level=5]
+  - generic: Enabled
+  - generic: ON OFF
+  - generic: Call Home
+  - generic: ON OFF
+  - generic: Call Mobile
+  - generic: ON OFF
+  - heading "Message Options" [level=5]
+  - generic: Email
+  - generic: ON OFF
+  - generic: Text
+  - generic: ON OFF
+  - generic: Push
+  - generic: ON OFF
+  - heading "Notification Options" [level=5]
+  - generic: Email
+  - generic: ON OFF
+  - generic: Push
+  - generic: ON OFF
+  - generic: Enable Modern Application Sounds
+  - generic: ON OFF
+  - generic: Use modern notification sounds instead of the legacy sounds. If your department enables modern sounds, they are used regardless of this setting.
+  - heading "Other Notification Options" [level=5]
+  - generic: Don't Receive Newsletters
+  - generic: ON OFF
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

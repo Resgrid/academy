@@ -1,0 +1,460 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Map Icon Legend" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Mapping":
+    - /url: /User/Mapping
+  - text: /
+  - strong: Map Icon Legend
+- paragraph: Every icon the map shows for calls, units and personnel. A call's icon follows its type and priority, a unit's its type and status, and a member's their role and status. Staffing levels never change an icon.
+- heading "How an icon is picked" [level=4]
+- list:
+  - listitem: An icon uploaded for the type or role for that exact priority or status.
+  - listitem: Otherwise the type's or role's own uploaded icon, with a badge in the color of the priority or status.
+  - listitem: Otherwise the built-in pin in the color of the priority or status.
+- paragraph: A priority or status with no meaning set is colored by what its name suggests, such as Emergency or Out of Service; one whose name suggests nothing shows a gray pin, as does a unit or member that has set no status. Set meanings on the Custom Statuses and Call Priorities pages to be sure.
+- heading "Status colors" [level=5]
+- paragraph: Units and personnel take the color of their status's meaning.
+- table:
+  - rowgroup:
+    - row "Available Available, Cleared, On Patrol, Completed, In Quarters":
+      - cell
+      - cell "Available Available, Cleared, On Patrol, Completed, In Quarters":
+        - strong: Available
+        - generic: Available, Cleared, On Patrol, Completed, In Quarters
+    - row "Dispatched Dispatched":
+      - cell
+      - cell "Dispatched Dispatched":
+        - strong: Dispatched
+        - generic: Dispatched
+    - row "Responding Responding, En Route":
+      - cell
+      - cell "Responding Responding, En Route":
+        - strong: Responding
+        - generic: Responding, En Route
+    - row "On scene On Scene, Made Contact, Investigating, At Patient, Searching":
+      - cell
+      - cell "On scene On Scene, Made Contact, Investigating, At Patient, Searching":
+        - strong: On scene
+        - generic: On Scene, Made Contact, Investigating, At Patient, Searching
+    - row "Transporting Transporting, Delivering, At Hospital, Loading":
+      - cell
+      - cell "Transporting Transporting, Delivering, At Hospital, Loading":
+        - strong: Transporting
+        - generic: Transporting, Delivering, At Hospital, Loading
+    - row "Returning Returning":
+      - cell
+      - cell "Returning Returning":
+        - strong: Returning
+        - generic: Returning
+    - row "Staging and standby Staging, Standby":
+      - cell
+      - cell "Staging and standby Staging, Standby":
+        - strong: Staging and standby
+        - generic: Staging, Standby
+    - row "On break On Break":
+      - cell
+      - cell "On break On Break":
+        - strong: On break
+        - generic: On Break
+    - row "Unavailable Not Responding, Unavailable, Maintenance":
+      - cell
+      - cell "Unavailable Not Responding, Unavailable, Maintenance":
+        - strong: Unavailable
+        - generic: Not Responding, Unavailable, Maintenance
+    - 'row "No meaning or no status No meaning: gray pin"':
+      - cell
+      - 'cell "No meaning or no status No meaning: gray pin"':
+        - strong: No meaning or no status
+        - generic: "No meaning: gray pin"
+- heading "Priority colors" [level=5]
+- paragraph: Calls take the color of their priority's meaning.
+- table:
+  - rowgroup:
+    - row "Low":
+      - cell
+      - cell "Low":
+        - strong: Low
+    - row "Medium":
+      - cell
+      - cell "Medium":
+        - strong: Medium
+    - row "High":
+      - cell
+      - cell "High":
+        - strong: High
+    - row "Emergency":
+      - cell
+      - cell "Emergency":
+        - strong: Emergency
+    - 'row "No meaning: gray pin"':
+      - cell
+      - 'cell "No meaning: gray pin"': "No meaning: gray pin"
+- heading "Calls" [level=5]
+- paragraph: One row per call type, one column per priority.
+- table:
+  - rowgroup:
+    - row "Type Routine Urgent Emergency":
+      - columnheader "Type"
+      - columnheader "Routine": Routine
+      - columnheader "Urgent": Urgent
+      - columnheader "Emergency": Emergency
+      - columnheader
+  - rowgroup:
+    - row "Calls with no type Calls with no type · Routine · Built-in pin Calls with no type · Urgent · Built-in pin Calls with no type · Emergency · Built-in pin":
+      - cell "Calls with no type"
+      - cell "Calls with no type · Routine · Built-in pin":
+        - img "Calls with no type · Routine · Built-in pin"
+      - cell "Calls with no type · Urgent · Built-in pin":
+        - img "Calls with no type · Urgent · Built-in pin"
+      - cell "Calls with no type · Emergency · Built-in pin":
+        - img "Calls with no type · Emergency · Built-in pin"
+      - cell
+    - row "Investigation Investigation · Routine · Built-in pin Investigation · Urgent · Built-in pin Investigation · Emergency · Built-in pin Edit icons":
+      - cell "Investigation"
+      - cell "Investigation · Routine · Built-in pin":
+        - img "Investigation · Routine · Built-in pin"
+      - cell "Investigation · Urgent · Built-in pin":
+        - img "Investigation · Urgent · Built-in pin"
+      - cell "Investigation · Emergency · Built-in pin":
+        - img "Investigation · Emergency · Built-in pin"
+      - cell "Edit icons":
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=2&typeId=51004
+    - row "Medical Medical · Routine · Built-in pin Medical · Urgent · Built-in pin Medical · Emergency · Built-in pin Edit icons":
+      - cell "Medical"
+      - cell "Medical · Routine · Built-in pin":
+        - img "Medical · Routine · Built-in pin"
+      - cell "Medical · Urgent · Built-in pin":
+        - img "Medical · Urgent · Built-in pin"
+      - cell "Medical · Emergency · Built-in pin":
+        - img "Medical · Emergency · Built-in pin"
+      - cell "Edit icons":
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=2&typeId=51002
+    - row "Rescue Rescue · Routine · Built-in pin Rescue · Urgent · Built-in pin Rescue · Emergency · Built-in pin Edit icons":
+      - cell "Rescue"
+      - cell "Rescue · Routine · Built-in pin":
+        - img "Rescue · Routine · Built-in pin"
+      - cell "Rescue · Urgent · Built-in pin":
+        - img "Rescue · Urgent · Built-in pin"
+      - cell "Rescue · Emergency · Built-in pin":
+        - img "Rescue · Emergency · Built-in pin"
+      - cell "Edit icons":
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=2&typeId=51003
+    - row "Structure Fire Structure Fire · Routine · Type or role icon with a status or priority badge Structure Fire · Urgent · Type or role icon with a status or priority badge Structure Fire · Emergency · Type or role icon with a status or priority badge Edit icons":
+      - cell "Structure Fire"
+      - cell "Structure Fire · Routine · Type or role icon with a status or priority badge":
+        - img "Structure Fire · Routine · Type or role icon with a status or priority badge"
+      - cell "Structure Fire · Urgent · Type or role icon with a status or priority badge":
+        - img "Structure Fire · Urgent · Type or role icon with a status or priority badge"
+      - cell "Structure Fire · Emergency · Type or role icon with a status or priority badge":
+        - img "Structure Fire · Emergency · Type or role icon with a status or priority badge"
+      - cell "Edit icons":
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=2&typeId=51001
+- heading "Units" [level=5]
+- paragraph: One row per unit type, with the statuses of its status set.
+- table:
+  - rowgroup:
+    - 'row "Units with no type Status set: Built-in unit statuses Units with no type · Responding · Built-in pin Responding Units with no type · Available · Built-in pin Available Units with no type · Committed · Built-in pin Committed Units with no type · On Scene · Built-in pin On Scene Units with no type · Staging · Built-in pin Staging Units with no type · Returning · Built-in pin Returning Units with no type · Out of Service · Built-in pin Out of Service"':
+      - 'cell "Units with no type Status set: Built-in unit statuses"':
+        - strong: Units with no type
+        - generic: "Status set: Built-in unit statuses"
+      - cell "Units with no type · Responding · Built-in pin Responding Units with no type · Available · Built-in pin Available Units with no type · Committed · Built-in pin Committed Units with no type · On Scene · Built-in pin On Scene Units with no type · Staging · Built-in pin Staging Units with no type · Returning · Built-in pin Returning Units with no type · Out of Service · Built-in pin Out of Service":
+        - img "Units with no type · Responding · Built-in pin"
+        - generic: Responding
+        - img "Units with no type · Available · Built-in pin"
+        - generic: Available
+        - img "Units with no type · Committed · Built-in pin"
+        - generic: Committed
+        - img "Units with no type · On Scene · Built-in pin"
+        - generic: On Scene
+        - img "Units with no type · Staging · Built-in pin"
+        - generic: Staging
+        - img "Units with no type · Returning · Built-in pin"
+        - generic: Returning
+        - img "Units with no type · Out of Service · Built-in pin"
+        - generic: Out of Service
+    - 'row "Aerial Status set: Built-in unit statuses Edit icons Aerial · Responding · Built-in pin Responding Aerial · Available · Built-in pin Available Aerial · Committed · Built-in pin Committed Aerial · On Scene · Built-in pin On Scene Aerial · Staging · Built-in pin Staging Aerial · Returning · Built-in pin Returning Aerial · Out of Service · Built-in pin Out of Service"':
+      - 'cell "Aerial Status set: Built-in unit statuses Edit icons"':
+        - strong: Aerial
+        - generic: "Status set: Built-in unit statuses"
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=1&typeId=51002
+      - cell "Aerial · Responding · Built-in pin Responding Aerial · Available · Built-in pin Available Aerial · Committed · Built-in pin Committed Aerial · On Scene · Built-in pin On Scene Aerial · Staging · Built-in pin Staging Aerial · Returning · Built-in pin Returning Aerial · Out of Service · Built-in pin Out of Service":
+        - img "Aerial · Responding · Built-in pin"
+        - generic: Responding
+        - img "Aerial · Available · Built-in pin"
+        - generic: Available
+        - img "Aerial · Committed · Built-in pin"
+        - generic: Committed
+        - img "Aerial · On Scene · Built-in pin"
+        - generic: On Scene
+        - img "Aerial · Staging · Built-in pin"
+        - generic: Staging
+        - img "Aerial · Returning · Built-in pin"
+        - generic: Returning
+        - img "Aerial · Out of Service · Built-in pin"
+        - generic: Out of Service
+    - 'row "Ambulance Status set: Built-in unit statuses Edit icons Ambulance · Responding · Built-in pin Responding Ambulance · Available · Built-in pin Available Ambulance · Committed · Built-in pin Committed Ambulance · On Scene · Built-in pin On Scene Ambulance · Staging · Built-in pin Staging Ambulance · Returning · Built-in pin Returning Ambulance · Out of Service · Built-in pin Out of Service"':
+      - 'cell "Ambulance Status set: Built-in unit statuses Edit icons"':
+        - strong: Ambulance
+        - generic: "Status set: Built-in unit statuses"
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=1&typeId=51004
+      - cell "Ambulance · Responding · Built-in pin Responding Ambulance · Available · Built-in pin Available Ambulance · Committed · Built-in pin Committed Ambulance · On Scene · Built-in pin On Scene Ambulance · Staging · Built-in pin Staging Ambulance · Returning · Built-in pin Returning Ambulance · Out of Service · Built-in pin Out of Service":
+        - img "Ambulance · Responding · Built-in pin"
+        - generic: Responding
+        - img "Ambulance · Available · Built-in pin"
+        - generic: Available
+        - img "Ambulance · Committed · Built-in pin"
+        - generic: Committed
+        - img "Ambulance · On Scene · Built-in pin"
+        - generic: On Scene
+        - img "Ambulance · Staging · Built-in pin"
+        - generic: Staging
+        - img "Ambulance · Returning · Built-in pin"
+        - generic: Returning
+        - img "Ambulance · Out of Service · Built-in pin"
+        - generic: Out of Service
+    - 'row "Command Status set: Built-in unit statuses Edit icons Command · Responding · Built-in pin Responding Command · Available · Built-in pin Available Command · Committed · Built-in pin Committed Command · On Scene · Built-in pin On Scene Command · Staging · Built-in pin Staging Command · Returning · Built-in pin Returning Command · Out of Service · Built-in pin Out of Service"':
+      - 'cell "Command Status set: Built-in unit statuses Edit icons"':
+        - strong: Command
+        - generic: "Status set: Built-in unit statuses"
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=1&typeId=51005
+      - cell "Command · Responding · Built-in pin Responding Command · Available · Built-in pin Available Command · Committed · Built-in pin Committed Command · On Scene · Built-in pin On Scene Command · Staging · Built-in pin Staging Command · Returning · Built-in pin Returning Command · Out of Service · Built-in pin Out of Service":
+        - img "Command · Responding · Built-in pin"
+        - generic: Responding
+        - img "Command · Available · Built-in pin"
+        - generic: Available
+        - img "Command · Committed · Built-in pin"
+        - generic: Committed
+        - img "Command · On Scene · Built-in pin"
+        - generic: On Scene
+        - img "Command · Staging · Built-in pin"
+        - generic: Staging
+        - img "Command · Returning · Built-in pin"
+        - generic: Returning
+        - img "Command · Out of Service · Built-in pin"
+        - generic: Out of Service
+    - 'row "Engine Status set: Built-in unit statuses Edit icons Engine · Responding · Type or role icon with a status or priority badge Responding Engine · Available · Uploaded for this status or priority Available Engine · Committed · Type or role icon with a status or priority badge Committed Engine · On Scene · Type or role icon with a status or priority badge On Scene Engine · Staging · Type or role icon with a status or priority badge Staging Engine · Returning · Type or role icon with a status or priority badge Returning Engine · Out of Service · Type or role icon with a status or priority badge Out of Service"':
+      - 'cell "Engine Status set: Built-in unit statuses Edit icons"':
+        - strong: Engine
+        - generic: "Status set: Built-in unit statuses"
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=1&typeId=51001
+      - cell "Engine · Responding · Type or role icon with a status or priority badge Responding Engine · Available · Uploaded for this status or priority Available Engine · Committed · Type or role icon with a status or priority badge Committed Engine · On Scene · Type or role icon with a status or priority badge On Scene Engine · Staging · Type or role icon with a status or priority badge Staging Engine · Returning · Type or role icon with a status or priority badge Returning Engine · Out of Service · Type or role icon with a status or priority badge Out of Service":
+        - img "Engine · Responding · Type or role icon with a status or priority badge"
+        - generic: Responding
+        - img "Engine · Available · Uploaded for this status or priority"
+        - generic: Available
+        - img "Engine · Committed · Type or role icon with a status or priority badge"
+        - generic: Committed
+        - img "Engine · On Scene · Type or role icon with a status or priority badge"
+        - generic: On Scene
+        - img "Engine · Staging · Type or role icon with a status or priority badge"
+        - generic: Staging
+        - img "Engine · Returning · Type or role icon with a status or priority badge"
+        - generic: Returning
+        - img "Engine · Out of Service · Type or role icon with a status or priority badge"
+        - generic: Out of Service
+    - 'row "Rescue Status set: Built-in unit statuses Edit icons Rescue · Responding · Built-in pin Responding Rescue · Available · Built-in pin Available Rescue · Committed · Built-in pin Committed Rescue · On Scene · Built-in pin On Scene Rescue · Staging · Built-in pin Staging Rescue · Returning · Built-in pin Returning Rescue · Out of Service · Built-in pin Out of Service"':
+      - 'cell "Rescue Status set: Built-in unit statuses Edit icons"':
+        - strong: Rescue
+        - generic: "Status set: Built-in unit statuses"
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=1&typeId=51003
+      - cell "Rescue · Responding · Built-in pin Responding Rescue · Available · Built-in pin Available Rescue · Committed · Built-in pin Committed Rescue · On Scene · Built-in pin On Scene Rescue · Staging · Built-in pin Staging Rescue · Returning · Built-in pin Returning Rescue · Out of Service · Built-in pin Out of Service":
+        - img "Rescue · Responding · Built-in pin"
+        - generic: Responding
+        - img "Rescue · Available · Built-in pin"
+        - generic: Available
+        - img "Rescue · Committed · Built-in pin"
+        - generic: Committed
+        - img "Rescue · On Scene · Built-in pin"
+        - generic: On Scene
+        - img "Rescue · Staging · Built-in pin"
+        - generic: Staging
+        - img "Rescue · Returning · Built-in pin"
+        - generic: Returning
+        - img "Rescue · Out of Service · Built-in pin"
+        - generic: Out of Service
+- heading "Personnel" [level=5]
+- paragraph: A member shows the icon of the first role they hold, in role order, that has one. A member On Unit takes the color of their unit's status.
+- table:
+  - rowgroup:
+    - row "Role Responding Not Responding On Scene Standing By Available Station Responding to Station Responding to Scene On Unit":
+      - columnheader "Role"
+      - columnheader "Responding"
+      - columnheader "Not Responding"
+      - columnheader "On Scene"
+      - columnheader "Standing By"
+      - columnheader "Available Station"
+      - columnheader "Responding to Station"
+      - columnheader "Responding to Scene"
+      - columnheader "On Unit"
+      - columnheader
+  - rowgroup:
+    - 'row "Members with no role icon Members with no role icon · Responding · Built-in pin Members with no role icon · Not Responding · Built-in pin Members with no role icon · On Scene · Built-in pin Members with no role icon · Standing By · Built-in pin Members with no role icon · Available Station · Built-in pin Members with no role icon · Responding to Station · Built-in pin Members with no role icon · Responding to Scene · Built-in pin Members with no role icon · On Unit · No meaning: gray pin"':
+      - cell "Members with no role icon"
+      - cell "Members with no role icon · Responding · Built-in pin":
+        - img "Members with no role icon · Responding · Built-in pin"
+      - cell "Members with no role icon · Not Responding · Built-in pin":
+        - img "Members with no role icon · Not Responding · Built-in pin"
+      - cell "Members with no role icon · On Scene · Built-in pin":
+        - img "Members with no role icon · On Scene · Built-in pin"
+      - cell "Members with no role icon · Standing By · Built-in pin":
+        - img "Members with no role icon · Standing By · Built-in pin"
+      - cell "Members with no role icon · Available Station · Built-in pin":
+        - img "Members with no role icon · Available Station · Built-in pin"
+      - cell "Members with no role icon · Responding to Station · Built-in pin":
+        - img "Members with no role icon · Responding to Station · Built-in pin"
+      - cell "Members with no role icon · Responding to Scene · Built-in pin":
+        - img "Members with no role icon · Responding to Scene · Built-in pin"
+      - 'cell "Members with no role icon · On Unit · No meaning: gray pin"':
+        - 'img "Members with no role icon · On Unit · No meaning: gray pin"'
+      - cell
+    - row "Officer Officer · Responding · Type or role icon with a status or priority badge Officer · Not Responding · Type or role icon with a status or priority badge Officer · On Scene · Type or role icon with a status or priority badge Officer · Standing By · Uploaded for this status or priority Officer · Available Station · Type or role icon with a status or priority badge Officer · Responding to Station · Type or role icon with a status or priority badge Officer · Responding to Scene · Type or role icon with a status or priority badge Officer · On Unit · Uploaded for this status or priority Edit icons":
+      - cell "Officer"
+      - cell "Officer · Responding · Type or role icon with a status or priority badge":
+        - img "Officer · Responding · Type or role icon with a status or priority badge"
+      - cell "Officer · Not Responding · Type or role icon with a status or priority badge":
+        - img "Officer · Not Responding · Type or role icon with a status or priority badge"
+      - cell "Officer · On Scene · Type or role icon with a status or priority badge":
+        - img "Officer · On Scene · Type or role icon with a status or priority badge"
+      - cell "Officer · Standing By · Uploaded for this status or priority":
+        - img "Officer · Standing By · Uploaded for this status or priority"
+      - cell "Officer · Available Station · Type or role icon with a status or priority badge":
+        - img "Officer · Available Station · Type or role icon with a status or priority badge"
+      - cell "Officer · Responding to Station · Type or role icon with a status or priority badge":
+        - img "Officer · Responding to Station · Type or role icon with a status or priority badge"
+      - cell "Officer · Responding to Scene · Type or role icon with a status or priority badge":
+        - img "Officer · Responding to Scene · Type or role icon with a status or priority badge"
+      - cell "Officer · On Unit · Uploaded for this status or priority":
+        - img "Officer · On Unit · Uploaded for this status or priority"
+      - cell "Edit icons":
+        - link "Edit icons":
+          - /url: /User/Mapping/StatusIcons?kind=4&typeId=51002
+- heading "Stations, hydrants and points of interest" [level=5]
+- paragraph: These icons do not change with status.
+- generic: Station
+- generic: Hydrant
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

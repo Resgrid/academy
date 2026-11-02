@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "id": "core-groups-units-administration",
+  "kind": "read_only_source_trace_for_future_actual_UI",
+  "no_browser_DB_or_live_config_observation": true,
+  "exact_English_labels": {
+    "groups": {
+      "AddNewGroup": "Add New Group",
+      "GroupName": "Group Name",
+      "NewGroupHeading": "New Group",
+      "GroupType": "Group type",
+      "OrganizationalGroup": "Organizational Group",
+      "StationGroup": "Station Group",
+      "ParentGroup": "Parent Group",
+      "StationAddress": "Station Address",
+      "Street": "Street",
+      "City": "City",
+      "StateProvince": "State/Province",
+      "ZipPostalCode": "Zip/Postal Code",
+      "Country": "Country",
+      "GpsCoordinates": "Gps Coordinates",
+      "What3WordsAddress": "what3words Address",
+      "UsersOneGroupNote": "Users can only be in one group at a time. If you don't see your user in the list they are already in a group.",
+      "GroupAdmins": "Group Admins",
+      "GroupUsers": "Group Users",
+      "SaveGroup": "Save Group"
+    },
+    "units": {
+      "AddRole": "Add Role",
+      "NewUnitHeader": "New Unit",
+      "RoleName": "Role Name",
+      "RequiredPersonnelRoleHeader": "Required Personnel Role",
+      "RequiredHeader": "Required?",
+      "BrowseRoleTemplates": "Browse Templates"
+    },
+    "unit_types": {
+      "NewUnitTypeHeader": "New Unit Type",
+      "UnitTypeActionsLabel": "Actions (Custom Unit Statuses)",
+      "UnitTypeMapIconLabel": "Map Icon",
+      "UnitTypeNameLabel": "Unit Type Name",
+      "UnitTypeClassLabel": "Class",
+      "BaseTypeNone": "None"
+    }
+  },
+  "groups": {
+    "routes": {
+      "list": "/User/Groups",
+      "create": "/User/Groups/NewGroup",
+      "edit": "/User/Groups/EditGroup?departmentGroupId={actual own group ID}"
+    },
+    "type_and_validation": "New defaults OrganizationalGroup1. StationGroup2 accepts an address route, a coordinate route, or What3Words. Group.Name is required, max50. The chosen group type is displayed disabled on Edit; no conversion exercise is supported. Use unique names and read the catalog before creation; do not assume a duplicate-name validator exists.",
+    "parent": "Normal New parent dropdown offers None plus top-level groups. Edit offers top-level groups excluding itself. Either group type can have a parent. Server helper independently rejects absent/cross-department/self/descendant parents and cycles. The create page ParentGroup is outside StationAddress and remains a normal field; obsolete ParentFields script references are not evidence that the actual dropdown is hidden.",
+    "station_validation": "When What3Words is blank and BOTH latitude/longitude are empty, Station validates Street,City,Country,PostalCode,State. With a coordinate route, always enter BOTH valid latitude/longitude values. The controller’s emptiness branch is not a robust half-pair validator; do not teach a partial coordinate as valid.",
+    "geo_provider_effects": "Nonblank What3Words invokes the configured geo provider during the POST before final ModelState success. Address-route save persists an Address; later group/map coordinate resolution can geocode that address or department fallback. Stored valid coordinate pairs resolve before boundary/address/provider fallbacks. Manual fictional complete pair with blank What3Words/address avoids the W3W/address-resolution path for that station; no GPS/device lookup or real-address validation is implied.",
+    "selectors": "GroupAdmins and GroupUsers are explicit width100% multi-selects. New recipient lookup filter3/filterNotInGroup excludes anyone in any department group. Edit adds ignoreGroupId so current members can be retained. Existing members/admins load asynchronously as named chips. A person cannot appear in both lists; UI rejects overlap and server also validates it. Existing grouped members cannot be silently added to another group.",
+    "whole_selection_save": "Edit builds the complete desired membership list from both submitted selectors. DepartmentGroupsService.UpdateAsync removes omitted members, adds new ones and updates IsAdmin; submitting no selected members clears the group. Wait for every baseline chip before any populated-group save. This plan never edits existing memberships or grants GroupAdmin.",
+    "provider_and_communications": "Group create generates internal dispatch/message alias strings and audits/refreshes projections; this is not an inbound-email or message-delivery test. Leave SelectPrinter/GetPrinters/API-key/printing/fax paths untouched; printer selection invokes PrintNode-related calls and persists encrypted credentials if configured.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/GroupsController.cs",
+        "line_start": 75,
+        "line_end": 184,
+        "sha256": "8c5f6c355cd1c0821a2b7d52268344393f10df8b9842b905029dea451fa80f20"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/GroupsController.cs",
+        "line_start": 184,
+        "line_end": 268,
+        "sha256": "8c5f6c355cd1c0821a2b7d52268344393f10df8b9842b905029dea451fa80f20"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/GroupsController.cs",
+        "line_start": 387,
+        "line_end": 606,
+        "sha256": "8c5f6c355cd1c0821a2b7d52268344393f10df8b9842b905029dea451fa80f20"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/DepartmentGroup.cs",
+        "line_start": 45,
+        "line_end": 55,
+        "sha256": "cd52a9e4516774248611a6bae941a56d8f2be322761e17255565ff88a86bb3ca"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/Helpers/DepartmentGroupHierarchy.cs",
+        "line_start": 84,
+        "line_end": 105,
+        "sha256": "ce5324f977df41d5e08580ce34f9dfe65043b0dc3b3204e007809e83e7bcfe64"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/DepartmentGroupsService.cs",
+        "line_start": 340,
+        "line_end": 389,
+        "sha256": "66fe47a675cd724d9f166c4655bc5483f307fb1c80a8ba6ee5d54fd13ac32c9e"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/DepartmentGroupsService.cs",
+        "line_start": 552,
+        "line_end": 590,
+        "sha256": "66fe47a675cd724d9f166c4655bc5483f307fb1c80a8ba6ee5d54fd13ac32c9e"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/DepartmentController.cs",
+        "line_start": 2027,
+        "line_end": 2084,
+        "sha256": "e5963981bc43c3b72ba3e0b49656fe01b123340f00e6393713f45c1b883dc397"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/wwwroot/js/app/internal/groups/resgrid.groups.newgroup.js",
+        "line_start": 20,
+        "line_end": 76,
+        "sha256": "e9f11cc61439192afeee11a26c8d8728b24d5fa3cc3027437fa19aef484c7aff"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/wwwroot/js/app/internal/groups/resgrid.groups.editgroup.js",
+        "line_start": 10,
+        "line_end": 98,
+        "sha256": "c7193dbaf25badc7ea037a817c6b78847ae45e1694e11b8a74e6fabaf091294a"
+      }
+    ]
+  },
+  "units": {
+    "routes": {
+      "list": "/User/Units",
+      "create": "/User/Units/NewUnit",
+      "edit": "/User/Units/EditUnit?unitId={actual own unit ID}",
+      "types": "/User/Department/Types",
+      "new_type": "/User/Types/NewUnitType",
+      "crew_assignments": "/User/Units/UnitStaffing"
+    },
+    "availability": "Units Index shows Add capability according to CanDepartmentAddNewUnit. Use the ordinary visible launcher; no plan/feature override. Standard create/update permissions and same-department checks still apply.",
+    "type": "A unit’s Type selector uses department type NAMES as values. Create only an own new type with explicit ClassNone, ActionsStandardActions, MapIconDefault and no custom file. Do not rename/delete existing types or change status sets. Type controller requires a nonblank name and normal add permission; existing map/status/class effects are type configuration, not crew assignment.",
+    "station": "New Unit lists NoStation plus Station-type department groups; Organizational groups are not offered in the station list. A station is optional in the controller. Prefer the own new Station for clear readback. Do not change station assignments of existing units.",
+    "seat_definitions": "Name is required and checked for department duplicate name. Unit role names must be unique within the posted form; blank roles are skipped. AddRole appends a role name, optional RequiredPersonnelRole selector and Required? checkbox. This configures a seat/requirement, not a person. BrowseTemplates appends role rows locally; template application is not saved until the unit save. Inspect/Close rather than apply if not needed.",
+    "required_vs_preferred": "For a seat linked to a personnel role, Required? checked blocks an unqualified person assignment in UnitStaffing; unchecked is a preferred qualification and may produce degraded staffing instead. A personnel-role match is a software role condition, not professional authorization or physical presence.",
+    "edit_replacement": "EditUnit replaces that unit’s seat definitions through SetRolesForUnitAsync, which clears old definitions and re-inserts posted ones; no rows clears all definitions. Restrict edits to the own new unused unit; do not resave Engine51 or other existing seat definitions.",
+    "global_staffing_hazard": "UnitStaffing Save validates required personnel-role conditions first, but then deletes active crew for EVERY department unit and rebuilds only submitted nonempty Role_* selections. Keep this screen READ-ONLY in the planned lesson. This preserves Engine51/Herrmann and all existing crew. Do not use a filtered/partially loaded or incomplete form for an own-unit-only save.",
+    "normal_creation_side_effect": "NewUnit saves the row/roles then calls the configured Novu CreateUnitSubscriber path. It attempts subscriber registration, not notification delivery. No provider/backend configuration or secret entry is part of this exercise; if UI reports an error, verify actual saved list/readback before retrying to avoid duplicates.",
+    "no_status_claim": "Creation is not a dispatch/check-in/arrival/status action. Read the actual returned list; do not infer availability, staffed ratio, map position or a delivered notification from a successful form submit.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+        "line_start": 89,
+        "line_end": 100,
+        "sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+        "line_start": 161,
+        "line_end": 272,
+        "sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+        "line_start": 280,
+        "line_end": 396,
+        "sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+        "line_start": 600,
+        "line_end": 663,
+        "sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+        "line_start": 43,
+        "line_end": 101,
+        "sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/wwwroot/js/app/internal/units/resgrid.units.newunit.js",
+        "line_start": 7,
+        "line_end": 52,
+        "sha256": "5ccdbd73bb5c9e9e976f96064aa1f41a9cab052a5bf90da63db24df98a689e98"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/UnitsService.cs",
+        "line_start": 662,
+        "line_end": 699,
+        "sha256": "204b321b59530286b224ee76c220dc33f14ab07485e8557943c9bd7d4bc40a56"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/TypesController.cs",
+        "line_start": 79,
+        "line_end": 175,
+        "sha256": "09870ae55e8d1038b40b4ed6742c7c71ae1f75e05067574475d192dd1f57afb2"
+      },
+      {
+        "repo": "Core",
+        "path": "Providers/Resgrid.Providers.Messaging/NovuProvider.cs",
+        "line_start": 185,
+        "line_end": 221,
+        "sha256": "e5867dd54d8870409848ca0a5b279c8f7836ce63905009fe50d820ab72bf4282"
+      },
+      {
+        "repo": "Core",
+        "path": "Providers/Resgrid.Providers.Messaging/NovuProvider.cs",
+        "line_start": 276,
+        "line_end": 290,
+        "sha256": "e5867dd54d8870409848ca0a5b279c8f7836ce63905009fe50d820ab72bf4282"
+      }
+    ]
+  },
+  "source_only_limits": [
+    "No new entities, UI operations, DB queries, provider requests, configuration or permission changes were performed by this reviewer.",
+    "Every proposed save/result still requires genuine normal UI captures and fresh readback. No successful group/unit/provider action is asserted here.",
+    "Group selectors may honestly be empty because all current fictional personnel already belong to groups. Do not move them or create credentials/invites just to populate the demonstration.",
+    "No global crew assignment save, existing unit/type/group edit, hidden input injection, geolocation permission, real location or template/statutory claim."
+  ]
+}

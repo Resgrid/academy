@@ -1,0 +1,185 @@
+import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FlatList } from 'react-native';
+
+import { getChannel, getThread } from '@/api/chat/chat';
+import { buildLocationMetadata } from '@/components/chat/chat-utils';
+import { MessageBubble } from '@/components/chat/message-bubble';
+import { MessageComposer } from '@/components/chat/message-composer';
+import { Box } from '@/components/ui/box';
+import { Divider } from '@/components/ui/divider';
+import { BottomAnchoredKeyboardView } from '@/components/ui/keyboard-avoiding-view';
+import { Spinner } from '@/components/ui/spinner';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { logger } from '@/lib/logging';
+import { type ChatChannelResultData, ChatChannelType, ChatMessagePriority, type ChatMessageResultData, ChatMessageType } from '@/models/v4/chat';
+import useAuthStore from '@/stores/auth/store';
+import { useChatStore } from '@/stores/chat/store';
+import { useChatSystemStatus } from '@/stores/feature-flags/store';
+
+export default function ThreadScreen() {
+  const { t } = useTranslation();
+  const params = useLocalSearchParams<{ messageId: string; channelId: string }>();
+  const messageId = Array.isArray(params.messageId) ? params.messageId[0] : params.messageId;
+  const channelId = Array.isArray(params.channelId) ? params.channelId[0] : params.channelId;
+
+  const currentUserId = useAuthStore((s) => s.userId);
+  const listedChannel = useChatStore((s) => s.channels.find((c) => c.ChatChannelId === channelId));
+  // Incident channels are held per-call rather than in the main list, so a thread opened from a
+  // command board has to be looked up there too.
+  const incidentChannel = useChatStore((s) => {
+    if (!channelId) return undefined;
+    for (const forCall of Object.values(s.incidentChannelsByCallId)) {
+      const match = forCall.find((c) => c.ChatChannelId === channelId);
+      if (match) return match;
+    }
+    return undefined;
+  });
+  const [apiChannel, setApiChannel] = useState<ChatChannelResultData | null>(null);
+  const channelMessages = useChatStore((s) => (channelId ? s.messagesByChannel[channelId] : undefined));
+  const [fetchedReplies, setFetchedReplies] = useState<ChatMessageResultData[]>([]);
+  const chatStatus = useChatSystemStatus();
+  const isChatEnabled = chatStatus === 'enabled';
+
+  const channel = listedChannel ?? incidentChannel ?? apiChannel ?? null;
+
+  /**
+   * A thread reached by deep link (a push notification) can arrive before any channel list has
+   * loaded, and the channel may not be in that list at all. Without resolving it the screen cannot
+   * tell an incident channel from an ordinary one, and the reply would post under the sender's own
+   * name instead of the Incident Commander's — so fetch it directly and keep the composer shut
+   * until it lands.
+   */
+  useEffect(() => {
+    if (!isChatEnabled || !channelId || listedChannel || incidentChannel) return;
+    let cancelled = false;
+    getChannel(channelId)
+      .then((response) => {
+        if (!cancelled) {
+          setApiChannel(response.Data ?? null);
+        }
+      })
+      .catch((error) => logger.error({ message: 'chat: failed to resolve thread channel', context: { error, channelId } }));
+    return () => {
+      cancelled = true;
+    };
+  }, [channelId, isChatEnabled, listedChannel, incidentChannel]);
+
+  // IC delta: thread replies in command-type channels also post as the Incident Commander.
+  const isCommandChannel =
+    channel?.ChannelType === ChatChannelType.Incident ||
+    channel?.ChannelType === ChatChannelType.IncidentLane ||
+    channel?.ChannelType === ChatChannelType.IncidentCommand ||
+    channel?.ChannelType === ChatChannelType.IncidentLeads ||
+    channel?.ChannelType === ChatChannelType.IncidentDispatch;
+
+  // An archived channel is a point-in-time record: the server rejects new posts, so do not offer them.
+  const isFrozen = !!channel?.IsArchived;
+
+  const root = useMemo(() => (channelMessages ?? []).find((m) => m.ChatMessageId === messageId), [channelMessages, messageId]);
+
+  useEffect(() => {
+    if (!isChatEnabled) return;
+    if (!messageId) return;
+    getThread(messageId, undefined, 50)
+      .then((response) => setFetchedReplies(response.Data ?? []))
+      .catch((error) => logger.error({ message: 'chat: failed to load thread', context: { error, messageId } }));
+  }, [messageId, isChatEnabled]);
+
+  // Merge fetched replies with any realtime/optimistic replies already in the channel cache.
+  const replies = useMemo(() => {
+    const map = new Map<string, ChatMessageResultData>();
+    for (const m of fetchedReplies) map.set(m.ChatMessageId, m);
+    for (const m of channelMessages ?? []) {
+      if (m.ThreadRootMessageId === messageId) {
+        const existing = map.get(m.ChatMessageId);
+        map.set(m.ChatMessageId, existing ? { ...existing, ...m } : m);
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.MessageSeq - b.MessageSeq);
+  }, [fetchedReplies, channelMessages, messageId]);
+
+  const inverted = useMemo(() => replies.slice().reverse(), [replies]);
+
+  const handleSendText = useCallback(
+    (body: string, urgent: boolean) => {
+      if (!channelId || !messageId) return;
+      void useChatStore.getState().sendMessage({ channelId, body, threadRootMessageId: messageId, priority: urgent ? ChatMessagePriority.Urgent : ChatMessagePriority.Normal, asIncidentCommander: isCommandChannel });
+    },
+    [channelId, messageId, isCommandChannel]
+  );
+
+  const handleSendLocation = useCallback(
+    (latitude: number, longitude: number, urgent: boolean) => {
+      if (!channelId || !messageId) return;
+      void useChatStore.getState().sendMessage({
+        channelId,
+        body: t('chat.shared_location'),
+        messageType: ChatMessageType.Location,
+        metadataJson: buildLocationMetadata(latitude, longitude),
+        threadRootMessageId: messageId,
+        priority: urgent ? ChatMessagePriority.Urgent : ChatMessagePriority.Normal,
+        asIncidentCommander: isCommandChannel,
+      });
+    },
+    [channelId, messageId, t, isCommandChannel]
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: ChatMessageResultData }) => (
+      <MessageBubble
+        message={item}
+        isOwn={!!item.SenderUserId && item.SenderUserId === currentUserId}
+        showSender
+        currentUserId={currentUserId}
+        onLongPress={() => undefined}
+        onToggleReaction={(m, emoji, mine) => {
+          if (!channelId) return;
+          if (mine) void useChatStore.getState().removeReaction(m.ChatMessageId, channelId, emoji);
+          else void useChatStore.getState().addReaction(m.ChatMessageId, channelId, emoji);
+        }}
+      />
+    ),
+    [currentUserId, channelId]
+  );
+
+  // Chat.System flag not yet resolved: wait instead of redirecting away from a valid deep link.
+  if (chatStatus === 'unknown') {
+    return (
+      <Box className="size-full flex-1 items-center justify-center bg-background-0">
+        <Stack.Screen options={{ title: t('chat.thread'), headerShown: true, headerBackTitle: '' }} />
+        <Spinner />
+      </Box>
+    );
+  }
+
+  // Chat.System feature flag off: block deep links into threads.
+  if (chatStatus === 'disabled') {
+    return <Redirect href="/" />;
+  }
+
+  return (
+    <Box className="size-full flex-1 bg-background-0">
+      <Stack.Screen options={{ title: t('chat.thread'), headerShown: true, headerBackTitle: '' }} />
+
+      <BottomAnchoredKeyboardView>
+        {root ? (
+          <VStack className="border-b border-outline-200 bg-background-50 py-2">
+            <Text className="px-4 text-xs font-semibold uppercase text-typography-400">{t('chat.original_message')}</Text>
+            <MessageBubble message={root} isOwn={!!root.SenderUserId && root.SenderUserId === currentUserId} showSender currentUserId={currentUserId} onLongPress={() => undefined} onToggleReaction={() => undefined} />
+          </VStack>
+        ) : null}
+
+        <Divider />
+
+        <FlatList data={inverted} inverted keyExtractor={(item: ChatMessageResultData) => item.ChatMessageId} renderItem={renderItem} contentContainerStyle={{ paddingVertical: 8 }} />
+
+        {/* Threads carry text and location only; omitting the image/GIF callbacks keeps
+            those actions out of the composer instead of showing dead buttons. */}
+        <MessageComposer onSendText={handleSendText} onSendLocation={handleSendLocation} onTyping={() => undefined} placeholder={t('chat.reply_placeholder')} allowUrgent={false} disabled={!channel || isFrozen} />
+      </BottomAnchoredKeyboardView>
+    </Box>
+  );
+}

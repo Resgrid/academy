@@ -1,0 +1,58 @@
+{
+  "id": "core-training-administration-20261028",
+  "mode": "Manual normal-UI replay definition only; helper executes no application operations",
+  "department": "Isolated fictional Department51 Firehouse51",
+  "actual_returned_training_id_parent_provenance": 51004,
+  "training": {
+    "name": "Academy - Shared contact verification exercise",
+    "description": "TRAINING ONLY - Practice finding and checking fictional operational contacts.",
+    "training_text": "TRAINING ONLY. Open Contacts and find Academy Partner Directory. Check the contact identity, category and current phone details before using them. Reopen the saved contact after an edit to verify the result. This exercise does not authorize real outreach.",
+    "minimum_score_percent": 100,
+    "due_date": "2026-11-15",
+    "add_all_personnel": true
+  },
+  "quiz": {
+    "question": "What should you do after updating a shared contact?",
+    "answers": [
+      {
+        "text": "Reopen the saved contact and verify the updated details.",
+        "correct": true
+      },
+      {
+        "text": "Assume the edit was saved without checking.",
+        "correct": false
+      }
+    ]
+  },
+  "attachment": {
+    "file": "demo/training-fixtures/academy-contact-verification.txt",
+    "sha256": "fd9983216bfc96d9b26c2293673413814ad90a74cf5ee4e7cf28c2deb91070c2"
+  },
+  "actors": {
+    "creator_editor_and_assigned_learner": "Wallace Boden",
+    "actual_assigned_count": 14,
+    "actual_completed_learner_count": 1,
+    "other_pending_count": 13
+  },
+  "guards": [
+    "Confirm the isolated fictional department; search the exact training name and reopen rather than duplicate or overwrite an unknown training.",
+    "Use actual returned IDs;51004 is observed provenance, not a reusable reserved insertion ID.",
+    "Add all Personnel intentionally assigns the whole fictional department despite narrower selected inputs. Use a separately reviewed audience outside this sandbox.",
+    "Keep the three baseline trainings and all existing assignment history unchanged. No Reset User, deletion, permission, authentication or credential operation.",
+    "Use the retained software-only TXT; no real-person information, external delivery, clinical/credential or accreditation claim."
+  ],
+  "replay": [
+    "New Training→name/description/Training Text→Minimum Score100→Due Date11/15/2026→Add all Personnel.",
+    "Add Question→two answers→firstcorrectradio→Add Training once→catalog and initial Report.",
+    "Open learner View→review actual content; viewing this quiz-bearing training is not quiz submission.",
+    "Edit same new training→Choose Files ownTXT→ordinary Save Training→reopen learner page and verify listed filename.",
+    "Take Quiz→Next→correct answer→Next→lower-rightFinish once→catalogTraining Complete→Report100Pass."
+  ],
+  "readback_boundaries": [
+    "CurrentlyAssigned14 and final reportall14 verify audience; initialreport008 clipsfinaltwo.",
+    "Chooser010filename is truncated; saved012 provesfullfilename. No actualdownload/open captured.",
+    "Score100/Pass applies to Boden only;13othersPending. Completion timestamp and threshold result are separate.",
+    "Current source without quiz can markcompletiononview; this demonstrated training containsaquiz.",
+    "004popup/011clippedSave excluded; source freeze awaits normal viewport SaveTraining shot."
+  ]
+}

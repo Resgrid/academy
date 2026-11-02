@@ -1,0 +1,40 @@
+{
+  "kind": "native_create_pre_tap_guard_failure_retained",
+  "observed_at": "2026-10-29T05:22:46.981207+00:00",
+  "source_only": true,
+  "publishable": false,
+  "previous_host_sentinel_sha256": "39e5884b4f6759d16d0e45253a373ce2e4793483b92f9c0647540360c312ff9e",
+  "previous_host_attempt": {
+    "request_id": "cbd8c383-b278-4ddf-8d5c-5f3959eed205",
+    "queued_at": "2026-10-29T05:19:16.041281+00:00",
+    "one_ui_attempt_only": true,
+    "outcome": "pending actual normal UI observation"
+  },
+  "actual_ui_request_response": {
+    "request": {
+      "id": "cbd8c383-b278-4ddf-8d5c-5f3959eed205",
+      "action": "submit_training_call"
+    },
+    "response": {
+      "at": "2026-10-29T05:19:16Z",
+      "error": "guarded(\"Immutable actual field is missing or ambiguous in its named section\")",
+      "id": "cbd8c383-b278-4ddf-8d5c-5f3959eed205",
+      "ok": false,
+      "source_only": true
+    }
+  },
+  "native_tap_sentinel_exists": false,
+  "tap_not_reached_source_reason": "V6 submit calls immutable field readback before resolving Create; the named-field readback threw. Native sentinel write and target.tap occur only later. No queued action remains and no automatic retry was sent.",
+  "driver_file": "production/native-unit-call-create-v6-20261029/AcademyUnitDriver.swift",
+  "driver_sha256": "c40df26623c3323a521673fcbd1c0f7a68a4d5365415ff017c7572c6fd31c4f7",
+  "unchanged_form_capture": {
+    "file": "captures/expansion/unit-native-call-response-20261028/046-submit-guard-stopped-before-create-tap.png",
+    "sha256": "d25f04e2b3106fe430c29eb63319b32677ca09ba2e114b18c3257d0f807ed440"
+  },
+  "actual_ax_finding": "At the bottom viewport, Name/section anchors remain negative-y but both offscreen TextViews are absent from the public immutable snapshot. No offscreen textarea value is asserted.",
+  "first_reviewed_packet": {
+    "file": "expansion/audits/unit-native-call-prepared-review-20261029.json",
+    "sha256": "cec69a0e28d9e387679d91c8f4f15d9600c06b6854b5ebddfc1e628a5ebe9a26"
+  },
+  "new_attempt_policy": "Preserve consumed original host sentinel; a new uniquely named guarded request may proceed only after root reviews the UI-only sequential verification correction. One actual Create remains authorized, no duplicate retry."
+}

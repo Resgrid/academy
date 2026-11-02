@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-10-27T21:19:19.172717+00:00",
+  "scope": "Read-only original Unit source and retained original screenshots/DOM; proposed patch only under stage _reports, no app source edit, no browser/DB/provider action.",
+  "observed_failure": {
+    "id": "021-fullscreen-map-wrong-location-observed",
+    "file": "captures/expansion/unit-response-20261027/021-fullscreen-map-wrong-location-observed.jpg",
+    "sha256": "25858ee5e37c2c7c5deee0d78afc08e1ce1d71dfb27a8b5ac84560393c458dc7",
+    "actual_pixels": "Loaded western US cartography with red marker near Nevada/Sacramento, while title is the fictional vehicle rescue and address says Chicago. The prior inline Static Images preview is Chicago.",
+    "eligible_for_correct_mapping_proof": false,
+    "no_actual_GPS_or_navigation_success": true
+  },
+  "confirmed_source_paths": [
+    {
+      "path": "Unit/src/app/call/[id].tsx:200",
+      "finding": "Detail parses call Latitude/Longitude or Geolocation. Both inline StaticMap and FullScreenMap receive the same chosen mapLatitude/mapLongitude. No intentional alternate full-screen destination is present."
+    },
+    {
+      "path": "Unit/src/components/maps/static-map.tsx:43",
+      "finding": "Inline map uses Mapbox Static Images HTTP URL constructed directly from supplied longitude/latitude and zoom; it does not exercise the web Camera adapter."
+    },
+    {
+      "path": "Unit/src/components/maps/full-screen-map.tsx:29",
+      "finding": "Full screen passes identical [longitude,latitude] to Camera centerCoordinate and PointAnnotation, zoom15. It supplies no MapView initialCenter/initialZoom."
+    },
+    {
+      "path": "Unit/src/components/maps/map-view.web.tsx:265",
+      "finding": "MapView constructor uses optional initialCenter/initialZoom; absent values start at department/fallback center and zoom4. This is separate from the child Camera movement."
+    },
+    {
+      "path": "Unit/src/components/maps/map-view.web.tsx:537",
+      "finding": "Imperative setCamera unconditionally forwards optional zoom/bearing/pitch values, including undefined."
+    },
+    {
+      "path": "Unit/src/components/maps/map-view.web.tsx:615",
+      "finding": "Initial defaultSettings jumpTo and initial controlled jumpTo unconditionally forward optional bearing/pitch (and optional zoom); initialized is marked before jumpTo. Exceptions are swallowed."
+    },
+    {
+      "path": "Unit/src/components/maps/map-view.web.tsx:647",
+      "finding": "Subsequent controlled easeTo/flyTo options also include undefined zoom/bearing/pitch. Rendering/projection guards catch errors but do not make invalid numeric options safe."
+    },
+    {
+      "path": "Unit/node_modules/mapbox-gl/dist/mapbox-gl.js",
+      "finding": "Installed MapboxGL3.18.1 jumpTo/easeTo test property presence for numeric camera options. A present undefined bearing/pitch/zoom is numeric-coerced to NaN; an omitted option keeps the existing value. Undefined center is explicitly ignored/falls back to previous position."
+    }
+  ],
+  "probe": {
+    "installed_sdk_version": "3.18.1",
+    "actual_sdk_entry_sha256": "4d4b4217fe592a21fd1c7f022aa12bfcd1c08ae7c4cf9f3588a8d45990e18c8f",
+    "actual_sdk_package_sha256": "97bf991d8635b1177c1fa401193430d817288124e176eeb7ffc258319624a0fa",
+    "original_source_sha256": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a",
+    "proposed_source_sha256": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+    "portable_script": {
+      "file": "expansion/audits/unit-web-camera-optional-values-probe-20261027.cjs",
+      "sha256": "87edadc8e83905073f0c14641b9ab924de992cf3c09aef5f2257da9582b3145c"
+    },
+    "actual_original_run": {
+      "file": "expansion/audits/unit-web-camera-original-probe-20261027.json",
+      "sha256": "2ddde911b22771e6b4e6da6d3226381355e8838c7fce0b68fdff388e599f6a17",
+      "cases": 16,
+      "nonfinite": 8
+    },
+    "actual_proposed_run": {
+      "file": "expansion/audits/unit-web-camera-proposed-patch-probe-20261027.json",
+      "sha256": "560b918ecedbc67c8a1817b854dfe14f245659f6cd2e1f0a4137fcc049603e1a",
+      "cases": 16,
+      "nonfinite": 0
+    },
+    "react_component_regression": {
+      "file": "expansion/audits/unit-web-camera-regression-review-20261027.json",
+      "sha256": "34dd628fc3299b860d204d4324800af831d1e3162a649c1028ab365dbd7ef082",
+      "original": "5fail,5pass",
+      "proposed": "10pass",
+      "four_actual_Camera_paths_exercised": true,
+      "valid_zero_and_defined_values_preserved": true,
+      "omitted_center_preserved": true
+    },
+    "limits": "Offline tests execute real installed SDK numeric option handling on a minimal map host and actual Camera React effects in jsdom. They do not render cartography or execute easeTo/flyTo animation interpolation. The normal repository Jest setup is currently blocked by missing react-native-permissions; isolated web test harness ran successfully."
+  },
+  "diagnosis": "A confirmed shared web Camera numeric-option contract defect is sufficient to corrupt camera state despite correct supplied incident coordinates. It strongly matches the observed unchanged fallback framing. This static/offline audit does not establish every runtime cause of the Nevada marker; actual cartography/marker correctness must be retested after an authorized patch.021 remains rejected.",
+  "unsaved_create_form_findings": {
+    "authority": "Parent reported live UI input/readback during its separate recording; this audit did not access that browser.",
+    "typed_GPS_only": "Typing coordinates changes the text form Controller, but not selectedLocation. Opening FullScreenLocationPicker then receives no initialLocation and may use department/fallback/default; that first default view does not establish the typed point was parsed.",
+    "GPS_magnifier": "searchCoordinates validates/parses input and calls onLocationFound with that exact point even when reverse-geocoding fails. handleLocationSelected sets selectedLocation, latitude, longitude and formats the visible coordinates to6decimal places. A warning means address lookup failed, not that the parsed coordinate was replaced with Nevada.",
+    "create_payload": "onSubmit uses selectedLocation latitude/longitude and the hidden form latitude/longitude set by the callback. It does not parse the unconfirmed text Controller alone.",
+    "safe_normal_UI_boundary": [
+      "Full-screen picker X calls onClose only. Close without Set Location to avoid changing the form.",
+      "Inline LocationPicker has no own Cancel/dismiss button. Leave its map and Confirm Location untouched and scroll past it, or cancel the entire unsaved form through its real Cancel.",
+      "Do not choose My Location or accept device permissions. Do not click a wrong-location map to manufacture a point.",
+      "Before any authorized Create, read back the real formatted coordinates and fictional address after the real GPS magnifier, preserve narrow recipients, and verify the actual saved detail/location afterward. A wrong interactive map remains a recording gap, never successful location-selection evidence."
+    ]
+  },
+  "proposed_fix": {
+    "file": "_reports/Unit-camera-optional-values-20261027.patch",
+    "sha256": "4a40a58dd289fcf10884a5ced0b61debe88f3351d28c58de82d8471b10a1137f",
+    "scope": "Unit map-view.web.tsx four numeric Camera option objects plus a colocated10-test regression. Omit only undefined zoom/bearing/pitch; retain valid0/defined values. No native implementation, provider/auth/permission or unrelated type changes.",
+    "application_status": "Proposed only by this agent; parent reviews/applies separately. No Unit app source changed by this task.",
+    "real_UI_acceptance": [
+      "Reopen a known Chicago call; full-screen actual cartography, marker/address and useful zoom must all agree with its inline map.",
+      "On a newly parsed fictional Chicago point, inline and full-screen picker coordinates/marker must agree; dismiss unconfirmed wrong state and never grant real GPS.",
+      "No undefined camera numeric values/errors, no loading/error gray canvas, no forced default center.",
+      "Retain original021 failure and new passing captures separately; only actual reviewed corrected captures can close mapping gaps."
+    ]
+  },
+  "source_pins": [
+    {
+      "app": "Unit",
+      "path": "src/app/call/[id].tsx",
+      "sha256": "e6f88c2b1468959840f7fe81b32b2637ee1982f35be4f9aefc5cfd8e4596d605"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/full-screen-map.tsx",
+      "sha256": "5cf96b50c162a6bf108ae51404f8784c0c2a979fb2926ad4bc44c026439467d3"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/static-map.tsx",
+      "sha256": "686f48a2c69ddbd942d855e9b55a257aef342e78c9912c8a8962e8e508467a66"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/mapbox.web.ts",
+      "sha256": "41bcb61dc66c82cb61b6877c9652eb9311839c69171f7e0582b69efb51b72b39"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/map-view.web.tsx",
+      "sha256": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a"
+    },
+    {
+      "app": "Unit",
+      "path": "src/lib/map-center.ts",
+      "sha256": "764ec620f3d343997575f3a7b0fbb88d0289ad3c804ed77cd3f578c76bd6aff3"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/location-picker.tsx",
+      "sha256": "bae2900ead9605962583e6af18eb4d7e0a372ff57737a760d76b0df7d2ddf8e7"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/full-screen-location-picker.tsx",
+      "sha256": "2875fda0b37dd936993127f22e22dd0ae333d95d7cf85c671eedf372b4692402"
+    },
+    {
+      "app": "Unit",
+      "path": "src/hooks/use-call-location-search.ts",
+      "sha256": "fd9e7b93e9ef1ca50ea36a590f2bbd143bc7969eb2fba94be13c46d9772a7a8e"
+    },
+    {
+      "app": "Unit",
+      "path": "src/app/call/new/index.tsx",
+      "sha256": "5fc816e59645c51234c8b4f1d4ca049c22da54ebe74fab04f813bb7b8bff378b"
+    },
+    {
+      "app": "Unit",
+      "path": "src/components/maps/__tests__/full-screen-map.test.tsx",
+      "sha256": "4e9347a59bb2cdda9637a033c69cbd1af03c4e3f3a5b261c1c24364a0a3378ff"
+    }
+  ],
+  "reviewed_capture_subset": {
+    "file": "captures/expansion/unit-response-20261027/reviewed-unit-response-subset.json",
+    "sha256": "24eb31ddd1e4be489d4b868e8b8752f2ca490c80e8072c73ca9cc7467333edd8",
+    "accepted": 19,
+    "excluded": 2
+  }
+}

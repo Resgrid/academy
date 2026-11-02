@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "title": "Parent complete Records cue/source review receipt",
+  "required": [
+    "reviewer",
+    "reviewed_at",
+    "lesson_sha256",
+    "audio_sha256",
+    "correspondence_sha256",
+    "compact_sha256",
+    "complete_cue_correspondence_reviewed",
+    "screen_holds_and_required_controls_reviewed",
+    "cues",
+    "accepted_spans",
+    "continuous_holds",
+    "source_images"
+  ],
+  "properties": {
+    "lesson_sha256": {
+      "const": "e3df33c2315187e211c0e5c83f8ea0468c22cb549230c0cb752d736853ad9bc5"
+    },
+    "audio_sha256": {
+      "const": "f7f1235fb74e25a008a7c53d34c6309e67feb31f42cdeab46c314d7860babdc6"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewer": {
+      "const": "Codex /root"
+    },
+    "correspondence_sha256": {
+      "const": "75e76faaaae9da34210fc99b507721f750829477c4e842fa0c393a26614e6637"
+    },
+    "compact_sha256": {
+      "const": "5332aa4b69cdd7e6bcd03dc0a6429815fca8b4d6c44fce83947f02ec774827b9"
+    },
+    "complete_cue_correspondence_reviewed": {
+      "const": true
+    },
+    "screen_holds_and_required_controls_reviewed": {
+      "const": true
+    },
+    "cues": {
+      "const": 112
+    },
+    "accepted_spans": {
+      "const": 20
+    },
+    "continuous_holds": {
+      "const": 17
+    },
+    "source_images": {
+      "const": 16
+    }
+  },
+  "description": "Reviews the whole exact112cue/screen map, not merely a representative frame. Retained source reviews can be cited honestly; no new original-size inspection is required or inferred."
+}

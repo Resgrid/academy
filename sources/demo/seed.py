@@ -145,7 +145,7 @@ if (ROOT/'feature-flags.json').exists():
     for flag in json.loads((ROOT/'feature-flags.json').read_text()):
         key=flag['flagkey']
         if key.startswith(('Ai.','Payments.','Security.','Chatbot.')) or key in ('Invoicing.OnlinePayments','Dispatch.AiTemplate','Admin.Assist'): continue
-        add('featureflagoverrides','featureflagoverrideid',featureflagoverrideid=61000+flag['featureflagid'],featureflagid=flag['featureflagid'],departmentid=department,isenabled=True,flagvalue='true',reason='Academy tutorial fixture. Local checkout features may be unreleased; no production feature policy is changed.',expireson=now+dt.timedelta(days=365),createdon=now,createdbyuserid=admin)
+        add('featureflagoverrides','featureflagoverrideid',featureflagoverrideid=61000+flag['featureflagid'],featureflagid=flag['featureflagid'],departmentid=department,isenabled=True,flagvalue='true',reason='Academy tutorial fixture. Local checkout features may be unreleased; no production feature policy is changed.',expireson=now+dt.timedelta(days=365),createdon=now,createdbyuserid=None)
 # Preserve UI serial inserts after explicit demo identifiers.
 sql.append("DO $$ DECLARE r record; m bigint; BEGIN FOR r IN SELECT table_name,column_name FROM information_schema.columns WHERE table_schema='public' AND (column_default LIKE 'nextval(%' OR is_identity='YES') LOOP EXECUTE format('SELECT max(%I) FROM public.%I',r.column_name,r.table_name) INTO m; IF m IS NOT NULL THEN PERFORM setval(pg_get_serial_sequence('public.'||r.table_name,r.column_name),m,true); END IF; END LOOP; END $$;")
 sql.append('COMMIT;')

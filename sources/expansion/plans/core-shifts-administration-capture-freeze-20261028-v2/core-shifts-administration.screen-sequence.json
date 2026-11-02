@@ -1,0 +1,320 @@
+{
+  "id": "core-shifts-administration",
+  "source_complete": true,
+  "status": "control-first source-only freeze; no audio or timing",
+  "scenes": [
+    {
+      "scene_id": "schedules",
+      "title": "Choose the schedule you need",
+      "capture_refs": [
+        "001-shifts-baseline"
+      ],
+      "required_labels": [
+        "Recurring Group Shifts",
+        "Add Recurring Group Shift",
+        "Calendar",
+        "Add Static Shift",
+        "Your Shifts",
+        "On Duty Now"
+      ],
+      "narration": "Shifts brings two kinds of scheduling into one place. Recurring Group Shifts organizes people and required roles across dated shift days. Add Static Shift creates a separate fixed window for resources. Start by identifying the work you need to coordinate. In our fictional Chicago Fire department, we will create an assigned personnel schedule, then a separate signup schedule. Your Shifts, On Duty Now, Approvals and Shift Staffing are separate views. A scheduled roster gives you recorded coverage; check current operational information separately.",
+      "practice": "Identify Add Recurring Group Shift and Add Static Shift, then decide which matches your practice task.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "assigned-start",
+      "title": "Name an Assigned shift",
+      "capture_refs": [
+        "001-shifts-baseline",
+        "002-assigned-start-prepared"
+      ],
+      "required_labels": [
+        "Name",
+        "Code",
+        "TRN28A",
+        "Assignment Type",
+        "Assigned",
+        "Color",
+        "Signups and trades need supervisor approval",
+        "Next",
+        "Add Recurring Group Shift",
+        "New Shift"
+      ],
+      "narration": "Choose Add Recurring Group Shift to open New Shift. Enter a distinctive practice name and the short code T R N twenty-eight A. Assignment Type is Assigned, so the administrator chooses the people for this schedule. Use a light background color because the calendar text is black. The supervisor approval checkbox is clear in this example. That control governs signups and trades; it is not the list of assigned personnel. Review these choices before using Next to open Schedule.",
+      "practice": "Prepare a uniquely named Assigned shift and read its code, color and approval setting before continuing.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "manual-days",
+      "title": "Select a date and both times",
+      "capture_refs": [
+        "004-assigned-schedule-corrected"
+      ],
+      "required_labels": [
+        "Start Time",
+        "09:00",
+        "End Time",
+        "11:00",
+        "NOVEMBER 2026",
+        "4",
+        "Slots >"
+      ],
+      "narration": "Schedule gives you a multi-month date picker and separate Start Time and End Time fields. Our example selects November fourth, twenty twenty-six, from nine to eleven in the morning. Check both displayed times after leaving the fields and confirm the intended date is highlighted. This is a manually selected schedule, even though it appears under Recurring Group Shifts. The wizard shown here does not offer a rotation preset. Once the date and times are correct, continue to the Slots stage.",
+      "practice": "Select one future practice date and verify both time fields after leaving them.",
+      "source_limits": [
+        "November4selected; Next below viewport, so no spoken click-on-Next instruction is attached to this picture."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "minimums",
+      "title": "Configure the group and role minimum",
+      "capture_refs": [
+        "005-assigned-group-role-prepared"
+      ],
+      "required_labels": [
+        "Add Group to Shift",
+        "Shift Group",
+        "Firehouse 51",
+        "Shift Role",
+        "Officer",
+        "Roles Count",
+        "1",
+        "Add Role to Group"
+      ],
+      "narration": "In Slots, Add Group to Shift adds a group row. Firehouse fifty-one is selected here. Add Role to Group creates a required-role row for that group. Choose Officer and leave Roles Count at one. These values define what coverage the schedule should compare against its roster. Adding a role minimum does not assign a person. Review the group, role and count together, then continue to Personnel. Use the department’s published role conventions when configuring your own coverage requirements.",
+      "practice": "Add one practice group with one existing role and a required count of one.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "assigned-person",
+      "title": "Choose an assigned member",
+      "capture_refs": [
+        "006-assigned-personnel-prepared"
+      ],
+      "required_labels": [
+        "Personnel >",
+        "Non-Group Personnel",
+        "Firehouse 51",
+        "Matthew Casey",
+        "Next"
+      ],
+      "narration": "Personnel separates Non-Group Personnel from the individual group pickers. Non-group entries are described as floaters or standbys. In the Firehouse fifty-one picker, choose Matthew Casey. His selected name is visible as a chip. Leave the other group pickers empty for this small exercise. The text explains that assigned people fill role slots according to their group and roles. Verify the selected member under the intended group; selecting a name elsewhere is a different assignment. Use Next when that review is complete.",
+      "practice": "Select one eligible existing practice member under the intended group and verify the visible chip.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "finish",
+      "title": "Submit once and inspect the new row",
+      "capture_refs": [
+        "007-assigned-finish-review",
+        "008-assigned-created-list"
+      ],
+      "required_labels": [
+        "Finish",
+        "TRAINING ONLY - Coverage authoring 20261028",
+        "Assigned",
+        "Manual",
+        "Groups",
+        "Personnel",
+        "Edit Details",
+        "Edit Calendar",
+        "Edit Groups"
+      ],
+      "narration": "The Finish stage contains an instruction and a separate Finish control at the lower right. That lower control creates the schedule. Submit once and read the returned row in Recurring Group Shifts. Our new row says Assigned and Manual, with one group and one person. It offers View Calendar, Edit Details, Edit Calendar and Edit Groups. Those actions inspect different parts of the saved schedule. Confirm the new row before opening an editor or assuming that a prepared wizard has already been stored.",
+      "practice": "Create your own practice schedule once and verify its returned type, schedule mode and counts.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "verify",
+      "title": "Verify the stored fields and dated roster",
+      "capture_refs": [
+        "008-assigned-created-list",
+        "009-assigned-details-reopened",
+        "010-assigned-member-reopened",
+        "013-assigned-calendar-date-context",
+        "014-assigned-day-saved",
+        "015-assigned-roster-saved"
+      ],
+      "required_labels": [
+        "TRN28A",
+        "09:00",
+        "11:00",
+        "Matthew Casey",
+        "4 Nov 2026",
+        "Required",
+        "Needed",
+        "Officer",
+        "1",
+        "0",
+        "Fully staffed",
+        "Roster",
+        "Edit Details",
+        "Calendar",
+        "November 2026",
+        "04",
+        "Upcoming",
+        "Assigned"
+      ],
+      "narration": "Reopen Edit Details to check the stored name, code, light blue color and nine-to-eleven time window. Casey remains selected under Firehouse fifty-one. In the shared calendar, open the November fourth entry. Its day detail is Upcoming and shows the same times. The Officer row says Required one and Needed zero; the roster lists Casey as Assigned. Fully staffed means this configured one-role requirement is filled. It does not establish arrival, qualifications or an apparatus crew assignment. Read the actual role counts behind the summary.",
+      "practice": "Leave and reopen the saved details, then inspect the dated role requirement and named roster.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Update Shift fully legible in actual pixels despite generic raw DOM clipping false-negative; no Update clicked.",
+        "Calendar tile title is truncated. The separate own row above supplies full name;014provides actual dated detail.",
+        "4Nov2026and all role/roster fields readable in actual pixels; generic date-label false-negative corrected here. Fully staffed is relative to one configured Officer slot.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "signup",
+      "title": "Prepare a separate approval-enabled Signup shift",
+      "capture_refs": [
+        "017-signup-approval-start",
+        "018-signup-dates-prepared",
+        "019-signup-group-role-prepared",
+        "020-signup-no-preassigned-members",
+        "021-signup-finish-before-save"
+      ],
+      "required_labels": [
+        "TRN28S",
+        "Assignment Type",
+        "Signup",
+        "Signups and trades need supervisor approval",
+        "09:00",
+        "11:00",
+        "Officer",
+        "Roles Count",
+        "1",
+        "Personnel >",
+        "Finish"
+      ],
+      "narration": "For a signup schedule, create a separate practice entry with code T R N twenty-eight S and Assignment Type Signup. Check Signups and trades need supervisor approval. The help says that a signup or trade does not put anyone on duty until a group supervisor approves it. Select November fifth and sixth, using the same morning time window and one required Officer for Firehouse fifty-one. Leave every Personnel picker empty. Members can request their own dates separately. Review Finish and submit this new schedule once.",
+      "practice": "Prepare a separate future Signup schedule with approval enabled and no preassigned people.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Upper heading offscreen; both future date cells and09:00/11:00are readable. No saved result until022/024/026.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "signup-result",
+      "title": "Read the saved Signup day without assuming coverage",
+      "capture_refs": [
+        "022-signup-created-approval-row",
+        "023-signup-details-reopened",
+        "024-signup-dates-reopened",
+        "026-signup-day-stable-empty"
+      ],
+      "required_labels": [
+        "Approval required",
+        "TRN28S",
+        "Signup",
+        "Upcoming",
+        "Open slots: 1",
+        "Required",
+        "Needed",
+        "Roster",
+        "Nobody is on this day yet.",
+        "Signup for Shift with Firehouse 51"
+      ],
+      "narration": "The saved row now carries Approval required. Reopen its details and calendar to verify the setting, times and two selected dates. On November fifth, the day detail is Signup and Upcoming. It shows Open slots one, an Officer requirement of one, and Nobody is on this day yet. Your Status says that the current user is not on this day, and a group signup button is available. An empty roster remains unfilled even though the schedule has been created. A member request and its supervisor review are separate operations.",
+      "practice": "Open the saved Signup day and compare Required, Needed and the actual roster before reporting coverage.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "November5/6highlights readable; current-day active CSS selector alone is not a selected-date list. Two shared-calendar entries and day51110 independently read back; Nov6childID not opened.",
+        "No member request, pending row, approval, trade or attendance executed. Signupbutton is visible availability only."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "policy",
+      "title": "Review the separate group policy and approval queue",
+      "capture_refs": [
+        "016-multiple-group-policy-readonly",
+        "001-shifts-baseline",
+        "039-approvals-current-empty"
+      ],
+      "required_labels": [
+        "Shift Signup Settings",
+        "Allow Signups For Multiple Groups",
+        "Shift Approvals",
+        "No sign-ups are waiting for approval.",
+        "No trades are waiting for approval.",
+        "Approvals"
+      ],
+      "narration": "Department Shift Settings has a separate Allow Signups For Multiple Groups option. It is off here and remains unchanged. The help asks you to review overlaps and local coverage rules separately. This department policy is different from the approval checkbox on an individual shift. Open Approvals to review waiting signups and trades in groups you supervise. Both queues are empty in this example. The page states that a pending request does not put anyone on duty until it is approved. An empty queue is not a completed approval.",
+      "practice": "Read the existing multiple-group policy, then distinguish an empty approval queue from an approved request.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "current-duty",
+      "title": "Separate a future roster from current duty",
+      "capture_refs": [
+        "040-current-on-duty-readonly"
+      ],
+      "required_labels": [
+        "On Duty Now",
+        "A Shift — Firehouse 51",
+        "Fully staffed",
+        "Wallace Boden",
+        "Christopher Herrmann"
+      ],
+      "narration": "On Duty Now shows a timestamp and the currently active shift, grouped by assignment. Here the existing A Shift is active, with its recorded members and roles. Our new November dates are future schedules. Keep those two questions separate: who is scheduled on a selected day, and which schedule is active now. The page says it refreshes every minute and also offers Refresh. These are recorded roster views; use the appropriate operational workflow to verify current availability and other information your team needs.",
+      "practice": "Read the current-duty timestamp and compare its active shift with your future practice date.",
+      "source_limits": [
+        "Read-only existing current AShift roster,10fictional members. New future shift creation is not physical arrival, live unit crew selection or qualification."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    },
+    {
+      "scene_id": "adapt",
+      "title": "Apply the same review habit",
+      "capture_refs": [
+        "001-shifts-baseline",
+        "014-assigned-day-saved"
+      ],
+      "required_labels": [
+        "Recurring Group Shifts",
+        "Required",
+        "Needed",
+        "Roster"
+      ],
+      "narration": "Chicago Fire can use this pattern to coordinate station coverage. Community care and mental health teams can schedule operational team coverage without patient detail. Search and rescue can organize standby roles; security teams can coordinate site coverage; wildland crews can plan relief rosters; and industrial response teams can schedule drill support. In every setting, choose the right assignment type, state the group and role requirements clearly, and verify the saved dated roster. Handle member requests, approvals, attendance and trades through their own reviewed steps.",
+      "practice": "Choose one sector scenario and write the group, role, date and saved-result checks your team would use.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "4Nov2026and all role/roster fields readable in actual pixels; generic date-label false-negative corrected here. Fully staffed is relative to one configured Officer slot."
+      ],
+      "timing": "untimed source-only freeze; no cue, cut or duration estimate"
+    }
+  ]
+}

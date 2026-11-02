@@ -1,0 +1,69 @@
+@model Resgrid.Web.Areas.User.Models.IndoorMaps.IndoorMapIndexView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.IndoorMaps.IndoorMaps> localizer
+@{
+    ViewBag.Title = "Resgrid | " + localizer["IndoorMapsPageTitle"];
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["IndoorMapsHeader"]</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li class="active">
+                <strong>@localizer["IndoorMapsHeader"]</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+            <a class="btn btn-success" asp-controller="IndoorMaps" asp-action="New" asp-route-area="User">@localizer["NewIndoorMap"]</a>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="indoorMapsTable">
+                            <thead>
+                                <tr>
+                                    <th>@localizer["Name"]</th>
+                                    <th>@localizer["Description"]</th>
+                                    <th>@localizer["Created"]</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.IndoorMaps != null)
+                                {
+                                    foreach (var map in Model.IndoorMaps)
+                                    {
+                                        <tr>
+                                            <td>@map.Name</td>
+                                            <td>@map.Description</td>
+                                            <td>@map.AddedOn.ToString("g")</td>
+                                            <td style="text-align:right;">
+                                                <a class="btn btn-primary btn-xs" asp-controller="IndoorMaps" asp-action="Floors" asp-route-id="@map.IndoorMapId" asp-route-area="User"><i class="fa fa-layer-group"></i> @localizer["Floors"]</a>
+                                                <a class="btn btn-info btn-xs" asp-controller="IndoorMaps" asp-action="Edit" asp-route-id="@map.IndoorMapId" asp-route-area="User"><i class="fa fa-pencil"></i> @localizer["Edit"]</a>
+                                                <a class="btn btn-danger btn-xs" asp-controller="IndoorMaps" asp-action="Delete" asp-route-id="@map.IndoorMapId" asp-route-area="User" onclick="return confirm('@JsEncoder.Encode(localizer["DeleteIndoorMapConfirm"])');"><i class="fa fa-trash"></i> @localizer["Delete"]</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/app/internal/indoormaps/resgrid.indoormaps.index.js" asp-append-version="true"></script>
+}

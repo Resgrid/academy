@@ -1,0 +1,70 @@
+{
+  "kind": "pre_audio_QA_Reporting_proposed_correspondence_preflight",
+  "proposal_only": true,
+  "source_scenes": 13,
+  "sources": 23,
+  "source_intervals": 27,
+  "unchanged_actual_service_cues": 115,
+  "words_whitespace": 1021,
+  "held_freeze_reported_word_count": 1023,
+  "words_or_original_freeze_changed": false,
+  "minimum_closed_hold_seconds": 4.389,
+  "last_observed_service_cue_end_seconds": 431.969,
+  "decoded_audio_duration_seconds": null,
+  "final_hold_end_seconds": null,
+  "original_image_DOM_and_review_hashes_checked": true,
+  "new_pixel_review_claimed": false,
+  "caption_splits_or_estimated_word_positions": false,
+  "tests": {
+    "method": "python3 -m unittest sources/production/tests/test_prepare_core_reporting_proposed_correspondence_20261029.py",
+    "passed": 6,
+    "failed": 0,
+    "scope": "Actual held cue/source hashes and semantic screenshot order; invented literal/spoken references, within-cue cuts, absent controls, flash holds and invalid service markers rejected."
+  },
+  "privacy": {
+    "method": "Unchanged scripts/audit_public_repo.py scan_bytes ordinary rule scan",
+    "files": 7,
+    "bytes": 217787,
+    "findings": [],
+    "additional_known_private_values_checked": 0,
+    "reason": "No new credential or token file read is authorized. Root may perform separate known-value scan."
+  },
+  "files": [
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-take-01-proposed-20261029/captures.held-review.json",
+      "sha256": "9d823a5338d207ca99e334c48f8d1e5ef3c38b2d72894c4667e5ded98419193c"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-take-01-proposed-20261029/correspondence.proposed.json",
+      "sha256": "dbc42bf1b97fe5b112256bf1368b85997a93149c324801cee4614168510987bc"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-take-01-proposed-20261029/cue-screen-correspondence.txt",
+      "sha256": "89d2a0e35c59c43c7a3eb81c52466f7e7397d39a0f84c4a7fac681883e09e5bc"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-take-01-proposed-20261029/ordered27span.compact.txt",
+      "sha256": "9b3342576efe11ff9539655eb988fe5e079546377af471a85b114b49614a8091"
+    },
+    {
+      "file": "expansion/plans/core-reporting-fundamentals-take-01-proposed-20261029/provenance.json",
+      "sha256": "d9ba41d15b8de0fee3bdb76ac8d2b63a52ae88161502eafe70022a1280d52b42"
+    },
+    {
+      "file": "production/prepare_core_reporting_proposed_correspondence_20261029.py",
+      "sha256": "620f91bd5e39fcc612d25ecbc9308d8ba96becf17ec2da52d5bfbf89fd357dfd"
+    },
+    {
+      "file": "production/tests/test_prepare_core_reporting_proposed_correspondence_20261029.py",
+      "sha256": "83263abbee7e41dc10001be8a0f7ad035b7e4ab60bd41b9c54990951184d668e"
+    }
+  ],
+  "pending": [
+    "Parent review of actual115cue and27span proposal.",
+    "Approved actual audio export plus full decoded-media/per-cue energy QA.",
+    "URL-free real User full natural-narration listening review.",
+    "Final authoring, render/frame/caption review, genuine browser playback and all public qualification gates."
+  ],
+  "renderer_plan_created": false,
+  "canonical_or_ready_or_site_changed": false
+}

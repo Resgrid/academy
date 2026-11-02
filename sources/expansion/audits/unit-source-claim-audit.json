@@ -1,0 +1,3007 @@
+{
+  "audited_at": "2026-10-26T19:08:15.698056+00:00",
+  "app": "Unit",
+  "source_root": "Unit",
+  "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+  "method": "Read-only implementation, translations, UI reachability, state/permission/native boundaries and API/store review. No browser interaction or media generation.",
+  "critical_findings": [
+    {
+      "id": "conditional_status_hold",
+      "source": "src/components/sidebar/sidebar-content.tsx",
+      "needle": "StatusHoldToConfirm",
+      "finding": "Holding for two seconds and Hold to submit depend on department configuration. Normal mode uses ordinary submission; Current on quick buttons is accessibility text/ring, not guaranteed literal paint.",
+      "line": 40,
+      "source_sha256": "9ab368da76eeffb5ac6bb7bb79dce697aa2aaf77d3c11ce9d35666fb7307f944"
+    },
+    {
+      "id": "set_active_opens_status",
+      "source": "src/app/call/[id].tsx",
+      "needle": "setStatusBottomSheetOpen(true)",
+      "finding": "Set Active saves incident selection then opens status selection with call preselected; unit status has not yet been submitted.",
+      "line": 169,
+      "source_sha256": "e6f88c2b1468959840f7fe81b32b2637ee1982f35be4f9aefc5cfd8e4596d605"
+    },
+    {
+      "id": "route_checkin_without_fix",
+      "source": "src/app/routes/stop/[id].tsx",
+      "needle": "const lat = userLat ?? 0",
+      "finding": "Manual route check-in substitutes0,0 without device fix; software state change is not physical-arrival proof.",
+      "line": 125,
+      "source_sha256": "f45d803b92154461ab896d30d8a2e3cd6b65a2b8d301a3f8131d07da235b09b8"
+    },
+    {
+      "id": "api_only_route_actions",
+      "source": "src/stores/routes/store.ts",
+      "needle": "pauseRouteInstance: async",
+      "finding": "Pause/resume/cancel/acknowledge functions exist in API/store but are not invoked by current rendered route controls. Cancelled history text and Acknowledge badge are state displays.",
+      "line": 171,
+      "source_sha256": "197c053160fc1784cbc7ab4ef2cf8daaffcffd620e25c5cd24ea7ea38f42afa6"
+    },
+    {
+      "id": "ack_badge_only",
+      "source": "src/app/routes/history/instance/[id].tsx",
+      "needle": "deviation.IsAcknowledged",
+      "finding": "Acknowledge is conditional badge text only, with no onPress action in DeviationCard.",
+      "line": 458,
+      "source_sha256": "450303326ab3ade1bae7820ef04e043f70c70593fdd6d5bc8ba3ce0426f3674a"
+    },
+    {
+      "id": "end_native_alert",
+      "source": "src/app/routes/active.tsx",
+      "needle": "Alert.alert(t('routes.end_route')",
+      "finding": "End Route confirmation uses native Alert; browser confirmation/completion requires actual verification or separately authorized retained compatibility fix.",
+      "line": 217,
+      "source_sha256": "0dd50b62a34a8185b3833a8822822473ba71a64a8322352274067558bd6f3c8a"
+    },
+    {
+      "id": "inventory_native_alert",
+      "source": "src/app/(app)/inventory/count/[id].tsx",
+      "needle": "Alert.alert(t('inventory.completeTitle')",
+      "finding": "Complete and Cancel count use native Alert. Do not treat a web button click as posted adjustments. Controlled-item witness remains a separate web workflow.",
+      "line": 57,
+      "source_sha256": "3f242c728bcdb2f054580cc46a2bf817623b33ecf60846fa400acea5f49d5a98"
+    },
+    {
+      "id": "indoor_zone_route_only",
+      "source": "src/app/maps/indoor/[id].tsx",
+      "needle": "pathname: '/call/new'",
+      "finding": "Zone action routes with zoneName/zoneId. New-call source does not consume these params; no coordinate or recipient prefill can be claimed.",
+      "line": 74,
+      "source_sha256": "4f1be6a015f4b50fed2355545f809e29c626068f8b0d0f9f260468eee8fd2259"
+    },
+    {
+      "id": "unit_web_implementations",
+      "source": "src/components/maps/map-view.web.tsx",
+      "needle": "onDidFinishLoadingMap?.()",
+      "finding": "Unit already has a real web map event/camera adapter and HtmlRenderer.web; Responder installed-SDK/WebView failures do not establish Unit failures.",
+      "line": 309,
+      "source_sha256": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a"
+    },
+    {
+      "id": "icon_evidence",
+      "source": "src/components/sidebar/unit-sidebar.tsx",
+      "needle": "accessibilityLabel={isMapLocked",
+      "finding": "Lock/unlock are icon accessible names. Need actual DOM control boxes plus separate screenshot review; never append semantic names to literal visible_labels.",
+      "line": 85,
+      "source_sha256": "ed610223d2b14c2b6bd24f33270ef1b5d15848b474d0a74c4ec384eeac7138fd"
+    },
+    {
+      "id": "voice_connected_only",
+      "source": "src/components/livekit/livekit-bottom-sheet.tsx",
+      "needle": "livekit.audio_settings",
+      "finding": "Audio Settings and Disconnect belong to connected view; empty picker does not support claiming those controls or hardware/provider success.",
+      "line": 224,
+      "source_sha256": "6eddea19033a8315199c20895c6f36df63d950ca94e013a235d54c3f9f1aca21"
+    },
+    {
+      "id": "unit_no_approval",
+      "source": "src/lib/operations/capabilities.ts",
+      "needle": "approveTime: false",
+      "finding": "Unit writes crew/individual time and usage/expenses and can draft F42; it intentionally does not offer supervisor time approval.",
+      "line": 15,
+      "source_sha256": "fa78324c84245cc8d18a844be97fb98916375075b83cae975b7315c88a9d2146"
+    },
+    {
+      "id": "checklist_web_vault",
+      "source": "src/lib/checklists/vault.ts",
+      "needle": "const native = Platform.OS !== 'web'",
+      "finding": "Checklist web vault is memory-only; native uses device-only keys/envelopes. Other feature offline behavior must be inspected separately.",
+      "line": 9,
+      "source_sha256": "7bc6277fa5b37587bafd2b12d537dd16a54a46b755ed3bc44c566cf531b18bdb"
+    },
+    {
+      "id": "passkey_conditional",
+      "source": "src/app/(app)/account-security.tsx",
+      "needle": "ownGroup?.RegistrationAvailable && passkeysSupported()",
+      "finding": "Add passkey is conditional and credential changes are outside this recording authorization.",
+      "line": 194,
+      "source_sha256": "95a7cfc1917c0a89f14f19805ec688448372efdd3f56dc03fb7904c68f041fe9"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "app-unit-01-access-and-crew",
+      "lesson_file": "expansion/lessons/app-unit-01-access-and-crew.json",
+      "before_sha256": "24140705580bb3ade6ef08961cebd7475ae0faa41bfe6ba6e1d9a694bf41a2f3",
+      "after_sha256": "294324f3934a6ebec9eeccde7e506d5ce15aa7e967dc6c58dc1a1be0b84bbedc",
+      "words": 638,
+      "scenes": [
+        {
+          "id": "01-understand-the-person-and-the-apparatus",
+          "route": "/",
+          "required_labels": [
+            "Settings"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Show authenticated member identity and active-unit context; open Settings."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "02-complete-first-launch-and-choose-the-server",
+          "route": "/onboarding -> /login",
+          "required_labels": [
+            "Next",
+            "Skip",
+            "Server URL",
+            "Language"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture each actual onboarding page and empty login with Language; open Server URL without displaying credentials."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "03-sign-in-with-an-available-method",
+          "route": "/login -> /login/sso",
+          "required_labels": [
+            "Username",
+            "Password",
+            "Sign In",
+            "Sign in with SSO"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture empty password/SSO entry; show only verification choices actually offered, without changing methods or exercising a real provider."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "04-configure-a-shared-installation-deliberately",
+          "route": "/login/shared-device",
+          "required_labels": [
+            "Shared device",
+            "This is a shared device",
+            "Device label (optional)",
+            "Save"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Shared device setup and show toggle/label/Save; if configuration is changed, verify normal next sign-in rather than injecting session state."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "05-practice-lock-and-shift-handoff",
+          "route": "/",
+          "required_labels": [
+            "Shared device"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture actual shared-session bar if server offers it, then permitted Lock/End shift/Switch operator states; never fabricate idle deadlines or unlock choices."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "06-select-the-apparatus-you-actually-have",
+          "route": "/settings",
+          "required_labels": [
+            "Active Unit",
+            "Select Unit",
+            "Current Unit"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Active Unit/Select Unit and choose authorized Engine51; verify Current Unit."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "07-assign-the-actual-crew-roles",
+          "route": "Sidebar Roles",
+          "required_labels": [
+            "Unit Role Assignments",
+            "Save"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Unit Role Assignments for Engine51 and show the existing Officer/TeamLead seat51001 assigned only to Christopher Herrmann; reopen to verify without changing crew, other units, staffing or qualifications."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "08-read-the-unit-status-before-changing-it",
+          "route": "Sidebar Status",
+          "required_labels": [
+            "Select Status",
+            "Current status"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Use an existing training call Set Active to open Select Status; capture current banner and actual configured options; submit only an authorized fictional unit change using the currently offered mode."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "09-understand-the-sidebar-incident-context",
+          "route": "Sidebar Call",
+          "required_labels": [
+            "Select Active Call",
+            "View Call Details",
+            "Directions",
+            "Deselect"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Show Select Active Call and selected call card; inspect details/directions controls; Deselect may use actual browser confirmation, without launching external maps."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "10-keep-account-security-and-recovery-visible",
+          "route": "/settings -> /account-security",
+          "required_labels": [
+            "Sign-in and security",
+            "Authenticator app",
+            "Passkeys for this app",
+            "Recent verifications"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open account security and no-challenge recovery prerequisite; no passkey/MFA/device credential changes."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        }
+      ],
+      "sector_examples": [
+        {
+          "sector": "Fire / EMS",
+          "scenario": "A new ambulance crew takes over a mounted tablet.",
+          "practice": "Confirm the individual session, active ambulance, and crew roles before opening the call."
+        },
+        {
+          "sector": "Community response",
+          "scenario": "Several volunteers share one support vehicle across shifts.",
+          "practice": "Use the shared-device label and a deliberate account handoff."
+        },
+        {
+          "sector": "Security",
+          "scenario": "A patrol device needs the correct vehicle and driver context.",
+          "practice": "Check Current Unit and role assignments at the start of the round."
+        }
+      ]
+    },
+    {
+      "id": "app-unit-02-response-and-checks",
+      "lesson_file": "expansion/lessons/app-unit-02-response-and-checks.json",
+      "before_sha256": "972392198459130da7e91e1de77493d572a2c0097cac1c9118d52ad0bbe8f864",
+      "after_sha256": "4d2a6ad9f9e6c3a737f3ce96439b0cb712c531e3cf6d596fddc8ce32d2caa768",
+      "words": 763,
+      "scenes": [
+        {
+          "id": "01-find-the-correct-call",
+          "route": "/calls",
+          "required_labels": [
+            "New Call",
+            "Clear search"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Show Calls search, a fictional result, clear control, and actual New Call entry if permitted."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "02-read-the-incident-before-responding",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Info",
+            "Contact",
+            "Protocols",
+            "Dispatched",
+            "Activity"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open existing51002 or another non-reserved training call; scroll Info/Contact/Protocols/Dispatched/Activity and capture real contents or empty states."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "03-set-the-active-incident-and-check-routing",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Set Active",
+            "Select Status",
+            "View on map",
+            "Route"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture Set Active and resulting Select Status before any unit transition; inspect internal map views; external Route handoffs remain unexercised."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "04-update-unit-status-with-a-destination",
+          "route": "Sidebar Status",
+          "required_labels": [
+            "Select Status"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture source-offered destination/note steps and actual Submit or hold control; verify saved result, and label genuine queue state only if it occurs."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "05-keep-the-seated-crew-accurate",
+          "route": "Sidebar Roles",
+          "required_labels": [
+            "Unit Role Assignments",
+            "Save"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Unit Role Assignments for Engine51 and show the existing Officer/TeamLead seat51001 assigned only to Christopher Herrmann; reopen to verify without changing crew, other units, staffing or qualifications."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "06-create-a-call-with-the-permitted-fields",
+          "route": "/call/new",
+          "required_labels": [
+            "Create New Call",
+            "Name",
+            "Nature",
+            "Priority",
+            "Type"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open actual creation form and policy-required fields; do not Create until Core coordinator authorizes an independent numbered exercise."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "07-resolve-the-call-location-and-destination",
+          "route": "/call/new",
+          "required_labels": [
+            "Address",
+            "GPS Coordinates",
+            "what3words",
+            "Plus Code",
+            "Select Location on Map"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Show location input modes and permitted fictional coordinate/map selection; never accept real GPS permissions or claim external lookup success."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "08-dispatch-and-edit-with-a-reviewed-scope",
+          "route": "/call/new -> /call/[id]/edit",
+          "required_labels": [
+            "Dispatch To",
+            "Create",
+            "Edit Call",
+            "Save"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Inspect actual dispatch recipients/scheduling; after authorization create or edit a dedicated TRAINING call, verify saved fields without provider-delivery claims."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "09-share-concise-incident-evidence",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Notes",
+            "Images",
+            "Files",
+            "Site Info",
+            "History"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Create a clearly labelled training note and verify it; inspect Images/Files upload controls and real SiteInfo/History views."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "10-use-check-ins-command-and-video-appropriately",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Check-In",
+            "Command",
+            "Video"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Inspect Check-In target/timer and history; Command/Video need prepared internal incident/feed data, otherwise record honest empty states."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "11-complete-the-crew-s-checklist-deliberately",
+          "route": "/checklists",
+          "required_labels": [
+            "Due checks",
+            "Start checklist",
+            "Save progress",
+            "Submit checklist"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Select active-unit checklist; capture required/conditional fields, save/resume/submit only fictional answers, and actual witness boundary without attestation."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "12-close-deselect-and-reset-deliberately",
+          "route": "/call/[id] -> Sidebar Call",
+          "required_labels": [
+            "Close Call",
+            "Close Type",
+            "Close Note",
+            "Deselect"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Use a separate approved disposable call for actual closure; keep51002 open and avoid parent-reserved51006. Capture Close form/result, Deselect confirmation/result, and unit status separately."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        }
+      ],
+      "sector_examples": [
+        {
+          "sector": "Fire / EMS",
+          "scenario": "An ambulance crew receives a call, travels to the incident, and later moves to a destination.",
+          "practice": "Compare both endpoints and each configured unit status transition."
+        },
+        {
+          "sector": "Search and rescue",
+          "scenario": "A rescue vehicle needs remote staging and crew check-ins.",
+          "practice": "Validate coordinates, inspect the timer target, and keep the crew roles current."
+        },
+        {
+          "sector": "Industrial response",
+          "scenario": "A unit responds to a test alarm with a pre-entry equipment check.",
+          "practice": "Use the call’s Site Info and the correctly targeted checklist without conflating their states."
+        }
+      ]
+    },
+    {
+      "id": "app-unit-03-routes-and-inventory",
+      "lesson_file": "expansion/lessons/app-unit-03-routes-and-inventory.json",
+      "before_sha256": "c556eeab48a7d23ce0f0231b64e4c4ecf0d554755f2a9950bac93a9f41d56599",
+      "after_sha256": "301aceaf5283ee8afdf0fe7a2dff64b24c6f59ab263011961a63d4baf16878bb",
+      "words": 768,
+      "scenes": [
+        {
+          "id": "01-browse-the-routes-and-poi-context",
+          "route": "/routes",
+          "required_labels": [
+            "Routes"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture Routes/My Unit/All Routes and POIs, search/filter/sort using prepared actual data."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "02-review-the-plan-before-starting",
+          "route": "/routes/start",
+          "required_labels": [
+            "Planned Arrival",
+            "Planned Departure",
+            "Dwell Time",
+            "Start Route"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open a route assigned to Engine51; show ordered stops, schedule and Start Route; no reassignment to bypass eligibility."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "03-read-the-active-route-s-progress",
+          "route": "/routes/active",
+          "required_labels": [
+            "Current Step",
+            "Stops Completed",
+            "Directions"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Show actual active instance, progress/next-stop and direction availability; do not claim a provider journey."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "04-check-in-at-the-intended-stop",
+          "route": "/routes/stop/[id]",
+          "required_labels": [
+            "Stop Detail",
+            "Check In",
+            "Schedule"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open a pending training stop, capture manual Check In and resulting state; explicitly disclose no location fix and0,0 fallback if applicable."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "05-keep-stop-notes-and-contacts-useful",
+          "route": "/routes/stop/[id] -> /routes/stop/contact",
+          "required_labels": [
+            "Contact Details",
+            "Notes",
+            "Save"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open stop contact and save a clearly fictional visit note; verify persisted note."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "06-check-out-after-the-work-is-complete",
+          "route": "/routes/stop/[id]",
+          "required_labels": [
+            "Check Out",
+            "Completed"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Check Out an InProgress fictional stop and verify Completed/progress."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "07-skip-with-a-reason-instead-of-hiding-a-visit",
+          "route": "/routes/active -> /routes/stop/[id]",
+          "required_labels": [
+            "Skip",
+            "Skip Reason"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Skip reason modal on a separate pending stop; submit a clear training reason and verify Skipped."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "08-review-deviations-before-acknowledging-them",
+          "route": "/routes/history/instance/[id]",
+          "required_labels": [
+            "Deviations",
+            "Stops"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open actual instance Deviations and any already-recorded acknowledgement badge. No acknowledgement/Pause/Resume/Cancel action is rendered."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "09-end-the-route-and-inspect-its-history",
+          "route": "/routes/active -> /routes/history/[planId] -> /routes/history/instance/[id]",
+          "required_labels": [
+            "End Route",
+            "Route Summary",
+            "Stops",
+            "Deviations"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Inspect End Route and its actual confirmation behavior; claim ended only after real result. Open an existing legitimate historical instance for summary/stops/deviations."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "10-inspect-what-the-selected-apparatus-carries",
+          "route": "/inventory",
+          "required_labels": [
+            "Inventory",
+            "Count the inventory",
+            "Recent counts"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Inventory for Engine51 and populated compartments/serial/bulk items plus Recent counts; distinguish setup/access empty states from physical absence."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "11-count-actual-quantities-and-save-progress",
+          "route": "/inventory/count/[id]",
+          "required_labels": [
+            "Expected",
+            "Present",
+            "Missing",
+            "Save progress"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Start an independent fictional count with Adjust Inventory permission; capture serialized Present/Missing, bulk quantities, difference count and actual Save progress result."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "12-complete-cancel-or-obtain-the-required-witness",
+          "route": "/inventory/count/[id]",
+          "required_labels": [
+            "Complete",
+            "Cancel count"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Inspect Complete/Cancel count and real confirmation behavior on separate disposable counts; controlled-item change needs existing approved fixture and actual Awaiting witness, no web witness action claimed."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        }
+      ],
+      "sector_examples": [
+        {
+          "sector": "Security",
+          "scenario": "A patrol round includes an inaccessible checkpoint and a late arrival.",
+          "practice": "Use Skip Reason, inspect the deviation, and review the final route history."
+        },
+        {
+          "sector": "Community response",
+          "scenario": "A welfare route needs accurate visit notes and arrival/departure records.",
+          "practice": "Check in, record a concise note, and check out after the practice visit."
+        },
+        {
+          "sector": "Industrial response",
+          "scenario": "A plant inspection vehicle carries controlled and serialized equipment.",
+          "practice": "Save a count with a discrepancy and hand the controlled-item witness step to the authorized web user."
+        }
+      ]
+    },
+    {
+      "id": "app-unit-04-field-workspace",
+      "lesson_file": "expansion/lessons/app-unit-04-field-workspace.json",
+      "before_sha256": "04df927054b3a4c28958ce32569c33c3e65f4e684a546f0ecd0f33b55c0192c4",
+      "after_sha256": "a6a23b9bb9823f63adc901c21a9c67f9eff5ba74f45e775606b8bf0112722c38",
+      "words": 924,
+      "scenes": [
+        {
+          "id": "01-follow-the-apparatus-and-control-the-map",
+          "route": "/",
+          "required_labels": [
+            "Lock map to unit",
+            "Unlock map"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture legible real cartography and current unit; review named lock/unlock icons with DOM bounds and actual image review; show recenter only if genuinely offered."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "02-inspect-pins-and-useful-map-overlays",
+          "route": "/",
+          "required_labels": [
+            "View Call Details",
+            "Set as Current Call"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Select real incident/resource/POI pins and review actual details; enable only actual supplied route/geofence/layer overlays."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "03-use-custom-map-layers-for-the-task",
+          "route": "/maps -> /maps/custom/[id]",
+          "required_labels": [
+            "Custom Maps",
+            "Layer Toggles",
+            "Region"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Use a guarded local custom-map fixture with real source layer/region data; capture catalog, Layer Toggles and rendered layer changes."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "04-find-a-building-floor-or-zone",
+          "route": "/maps/search -> /maps/indoor/[id]",
+          "required_labels": [
+            "Indoor Maps",
+            "Zone",
+            "Dispatch to this zone"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Use an actual indoor-map/floor/zone fixture; capture floor selection, zone info and Dispatch to this zone opening the real form, explicitly verify absent/unconsumed prefill."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "05-read-the-weather-alert-itself",
+          "route": "/weather-alerts -> /weather-alert/[id]",
+          "required_labels": [
+            "Weather Alerts"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture Weather Alerts search/severity filters; use clearly fictional prepared alert for detail/polygon/instructions, or disclose No Weather Alerts."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "06-coordinate-in-chat-and-verify-assistant-advice",
+          "route": "/chat -> /chat/[channelId] -> /chatbot",
+          "required_labels": [
+            "New Group",
+            "Type a message"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Capture actual Chat entry, recipients/group/thread/composer/attachment choices; internal fictional sends only. Assistant workspace view only, no AI provider query."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "07-inspect-voice-streams-and-real-device-settings",
+          "route": "Sidebar Voice Channels -> Audio Streams -> /settings",
+          "required_labels": [
+            "Voice Channels",
+            "Audio Streams"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open actual Voice Channels and Audio Streams availability; connected-only Audio Settings/Disconnect must not be required when no approved session exists. No device permissions/provider join."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "08-consult-the-department-s-field-references",
+          "route": "/contacts -> /notes -> /protocols",
+          "required_labels": [
+            "Contact Details",
+            "Pre-Plan",
+            "Files",
+            "Calls"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open actual contact details/preplan/files/calls and department Note/Protocol HTML through Unit’s existing HtmlRenderer.web. No Responder patch assumed."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "09-create-a-field-record-in-the-correct-context",
+          "route": "/records -> /records/new",
+          "required_labels": [
+            "Assigned to you",
+            "Drafts",
+            "New Record",
+            "Save and send"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Records catalog and contextual training form; create a clearly labelled legitimate server draft and verify actual draft reference and context."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "10-handle-record-attachments-and-offline-states",
+          "route": "/records/[id]",
+          "required_labels": [
+            "Attachments"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Inspect record Attachments and supported lifecycle actions; upload only authorized training file if allowed and verify stored result. Actual local/returned/final states require their own source-supported scenario."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "11-separate-external-orders-from-daily-operations",
+          "route": "/records/deployments -> /records/connectors",
+          "required_labels": [
+            "Deployments",
+            "External connectors",
+            "Read feed now"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open Records deployments/fills and connector readiness/run/reconciliation views; never invoke Read feed now against a real provider or expose credentials."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "12-record-the-crew-s-deployment-day",
+          "route": "/operations/[id]",
+          "required_labels": [
+            "Time",
+            "Start crew time report",
+            "Save entries",
+            "Submit report"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Open independent fictional deployment rostered to Engine51; choose a new date if crew draft already exists. Capture actual crew time form/save result, leaving signatures/approval unexercised."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "13-capture-expenses-and-readings-without-claiming-submission",
+          "route": "/operations/[id]",
+          "required_labels": [
+            "Expenses",
+            "Add expense",
+            "Usage",
+            "Add reading",
+            "F-42",
+            "Validate"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Inspect Expenses/Usage forms and permitted fictional saved inputs only if authorized; capture actual F-42 local draft/validation failure without external submission."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        },
+        {
+          "id": "14-set-reliable-preferences-and-verify-recovery",
+          "route": "/settings",
+          "required_labels": [
+            "Modern Notification Sounds",
+            "Background Geolocation",
+            "Realtime Geolocation",
+            "Keep Alive",
+            "Settings"
+          ],
+          "checked_at": "2026-10-26T19:08:15.698056+00:00",
+          "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+          "status": "source_reconciled_not_capture_verified",
+          "remaining_capture_operations": [
+            "Show actual settings/toggles, shared installation and logout views; no GPS/audio/notification permissions, no native background or durable-storage success claims."
+          ],
+          "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+        }
+      ],
+      "sector_examples": [
+        {
+          "sector": "Wildland / mutual aid",
+          "scenario": "A deployed apparatus needs weather context, crew time, receipts, and usage readings.",
+          "practice": "Separate the order feed, operational report, F-42 validation, and web submission responsibilities."
+        },
+        {
+          "sector": "Industrial response",
+          "scenario": "A crew needs floor and zone context before responding.",
+          "practice": "Verify the actual indoor floor, zone label, preplan, and permitted dispatch action."
+        },
+        {
+          "sector": "Community response",
+          "scenario": "A shared vehicle supports a mapped event and team communications.",
+          "practice": "Use the configured custom layers and a scoped group conversation, then document a training activity."
+        }
+      ]
+    }
+  ],
+  "not_rendered_as_unit_app_features": [
+    "No standalone Responder departmental Inbox/Sent workflow",
+    "No Responder shifts/calendar/certification/work-order screens in this Unit route tree",
+    "Route Pause/Resume/Cancel/Acknowledge operations are API/store capabilities without current rendered action controls"
+  ],
+  "capture_order": [
+    "Authenticate fictional Boden on dedicated Unit tab only; selectEngine51 and verify both member+unit.",
+    "Orientation/roles/status/call-context views, using existing permitted calls and preserving parent run-card resources.",
+    "Route fixture with assigned Engine51, actual pending→InProgress→Completed/Skipped stop states and genuine history; observe native-alert boundary for End Route.",
+    "Independent compartment/whole-unit counts with serialized+bulk examples, server-save proof and actual completion/cancellation/witness boundary.",
+    "Unit04 map/layers/indoor/weather/references/chat/voice availability/records/deployment/settings views; use each real source component and state."
+  ],
+  "native_browser_limits": [
+    "Unit uses its own mapbox.web and HtmlRenderer.web; do not assume Responder failures or blindly copy its adapters.",
+    "Native Alert is used for End Route and inventory completion/cancellation; actual web failure is not yet observed by this audit.",
+    "Deselect already has a web window.confirm fallback; logout uses the existing Unit confirmation UI.",
+    "Physical GPS/geofence/arrival, microphone/BT/PTT/push/background delivery remain untested and permission prompts must not be accepted.",
+    "Checklist web vault is memory-only; Records offline support is definition-specific; inventory count progress uses server requests.",
+    "Voice Audio Settings/Disconnect require an actual connected provider session, outside current no-provider authorization."
+  ],
+  "media_status": {
+    "natural_narration_spend": false,
+    "actual_capture_done_by_audit": false,
+    "video_complete": false,
+    "publishable": false
+  },
+  "api_inventory_reference": "responder-unit.json: apps[name=Unit].api_inventory",
+  "source_inventory_sha256": "81edf6429c1d277951b0374c7fbcf5fc0d1b76660cb05ab813c860372ff71db6",
+  "api_inventory": [
+    {
+      "source": "Unit/src/api/call-video-feeds/call-video-feeds.ts",
+      "endpoints": [
+        {
+          "line": 6,
+          "endpoint": "/CallVideoFeeds/GetCallVideoFeeds",
+          "code": "const getCallVideoFeedsApi = createApiEndpoint('/CallVideoFeeds/GetCallVideoFeeds');"
+        },
+        {
+          "line": 7,
+          "endpoint": "/CallVideoFeeds/SaveCallVideoFeed",
+          "code": "const saveCallVideoFeedApi = createApiEndpoint('/CallVideoFeeds/SaveCallVideoFeed');"
+        },
+        {
+          "line": 8,
+          "endpoint": "/CallVideoFeeds/EditCallVideoFeed",
+          "code": "const editCallVideoFeedApi = createApiEndpoint('/CallVideoFeeds/EditCallVideoFeed');"
+        },
+        {
+          "line": 9,
+          "endpoint": "/CallVideoFeeds/DeleteCallVideoFeed",
+          "code": "const deleteCallVideoFeedApi = createApiEndpoint('/CallVideoFeeds/DeleteCallVideoFeed');"
+        }
+      ],
+      "functions": [
+        "getCallVideoFeeds",
+        "saveCallVideoFeed",
+        "editCallVideoFeed",
+        "deleteCallVideoFeed"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/callFiles.ts",
+      "endpoints": [
+        {
+          "line": 32,
+          "endpoint": "/CallFiles/GetFilesForCall",
+          "code": "const getCallFilesApi = createApiEndpoint('/CallFiles/GetFilesForCall');"
+        },
+        {
+          "line": 33,
+          "endpoint": "/CallFiles/SaveCallFile",
+          "code": "const saveCallFileApi = createApiEndpoint('/CallFiles/SaveCallFile');"
+        }
+      ],
+      "functions": [
+        "getCallAttachmentFile",
+        "saveBlobAsFile",
+        "getFiles",
+        "getCallImages",
+        "getCallFiles",
+        "getCallAudio",
+        "saveCallFile",
+        "saveCallImage",
+        "saveCallFileAttachment"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/callLocationHistory.ts",
+      "endpoints": [
+        {
+          "line": 10,
+          "endpoint": "/Calls/GetCallLocationHistory",
+          "code": "const getCallLocationHistoryApi = createApiEndpoint('/Calls/GetCallLocationHistory');"
+        }
+      ],
+      "functions": [
+        "getCallLocationHistory"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/callNotes.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/CallNotes/GetCallNotes",
+          "code": "const getCallNotesApi = createApiEndpoint('/CallNotes/GetCallNotes');"
+        },
+        {
+          "line": 6,
+          "endpoint": "/CallNotes/SaveCallNote",
+          "code": "const saveCallNoteApi = createApiEndpoint('/CallNotes/SaveCallNote');"
+        }
+      ],
+      "functions": [
+        "getCallNotes",
+        "saveCallNote"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/callPriorities.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/CallPriorities/GetAllCallPriorites",
+          "code": "const callsPrioritesApi = createCachedApiEndpoint('/CallPriorities/GetAllCallPriorites', {"
+        }
+      ],
+      "functions": [
+        "getCallPriorities"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/callSiteInfo.ts",
+      "endpoints": [
+        {
+          "line": 10,
+          "endpoint": "/Calls/GetCallSiteInfo",
+          "code": "const getCallSiteInfoApi = createApiEndpoint('/Calls/GetCallSiteInfo');"
+        }
+      ],
+      "functions": [
+        "getCallSiteInfo"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/callTypes.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/CallTypes/GetAllCallTypes",
+          "code": "const callsTypesApi = createCachedApiEndpoint('/CallTypes/GetAllCallTypes', {"
+        }
+      ],
+      "functions": [
+        "getCallTypes"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/calls.ts",
+      "endpoints": [
+        {
+          "line": 11,
+          "endpoint": "/Calls/GetActiveCalls",
+          "code": "const callsApi = createCachedApiEndpoint('/Calls/GetActiveCalls', {"
+        },
+        {
+          "line": 15,
+          "endpoint": "/Calls/GetCall",
+          "code": "const getCallApi = createApiEndpoint('/Calls/GetCall');"
+        },
+        {
+          "line": 16,
+          "endpoint": "/Calls/GetCallExtraData",
+          "code": "const getCallExtraDataApi = createApiEndpoint('/Calls/GetCallExtraData');"
+        },
+        {
+          "line": 17,
+          "endpoint": "/Calls/SaveCall",
+          "code": "const createCallApi = createApiEndpoint('/Calls/SaveCall');"
+        },
+        {
+          "line": 18,
+          "endpoint": "/Calls/EditCall",
+          "code": "const updateCallApi = createApiEndpoint('/Calls/EditCall');"
+        },
+        {
+          "line": 19,
+          "endpoint": "/Calls/CloseCall",
+          "code": "const closeCallApi = createApiEndpoint('/Calls/CloseCall');"
+        },
+        {
+          "line": 175,
+          "endpoint": "/Calls/GetActiveCalls",
+          "code": "cacheManager.remove('/Calls/GetActiveCalls');"
+        },
+        {
+          "line": 214,
+          "endpoint": "/Calls/GetActiveCalls",
+          "code": "cacheManager.remove('/Calls/GetActiveCalls');"
+        },
+        {
+          "line": 235,
+          "endpoint": "/Calls/GetActiveCalls",
+          "code": "cacheManager.remove('/Calls/GetActiveCalls');"
+        }
+      ],
+      "functions": [
+        "getCalls",
+        "getCallExtraData",
+        "getCall",
+        "createCall",
+        "updateCall",
+        "closeCall"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/incidentCommand.ts",
+      "endpoints": [
+        {
+          "line": 14,
+          "endpoint": "/IncidentCommand/GetResourceIncidentView/${encodeURIComponent(String(callId))}",
+          "code": "const getResourceIncidentViewApi = createApiEndpoint(`/IncidentCommand/GetResourceIncidentView/${encodeURIComponent(String(callId))}`);"
+        }
+      ],
+      "functions": [
+        "getResourceIncidentView"
+      ]
+    },
+    {
+      "source": "Unit/src/api/calls/newCallFieldPolicy.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Calls/GetNewCallFieldPolicy",
+          "code": "const getNewCallFieldPolicyApi = createApiEndpoint('/Calls/GetNewCallFieldPolicy');"
+        }
+      ],
+      "functions": [
+        "getNewCallFieldPolicy"
+      ]
+    },
+    {
+      "source": "Unit/src/api/chat/chat.ts",
+      "endpoints": [
+        {
+          "line": 35,
+          "endpoint": "/Chat/GetChannels",
+          "code": "const response = await api.get<ChatV4Response<ChatChannelResultData[]>>(`${CHAT}/GetChannels`, {"
+        },
+        {
+          "line": 43,
+          "endpoint": "/Chat/GetChannel",
+          "code": "const response = await api.get<ChatV4Response<ChatChannelResultData>>(`${CHAT}/GetChannel`, { params: { channelId }, signal });"
+        },
+        {
+          "line": 48,
+          "endpoint": "/Chat/CreateDirectMessage",
+          "code": "const response = await api.post<ChatV4Response<ChatChannelResultData>>(`${CHAT}/CreateDirectMessage`, input);"
+        },
+        {
+          "line": 53,
+          "endpoint": "/Chat/CreateAdHocChannel",
+          "code": "const response = await api.post<ChatV4Response<ChatChannelResultData>>(`${CHAT}/CreateAdHocChannel`, input);"
+        },
+        {
+          "line": 58,
+          "endpoint": "/Chat/UpdateChannel",
+          "code": "const response = await api.put<ChatV4Response<ChatChannelResultData>>(`${CHAT}/UpdateChannel`, input, { params: { channelId } });"
+        },
+        {
+          "line": 63,
+          "endpoint": "/Chat/ArchiveChannel",
+          "code": "const response = await api.delete<ChatActionResult>(`${CHAT}/ArchiveChannel`, { params: { channelId } });"
+        },
+        {
+          "line": 72,
+          "endpoint": "/Chat/GetMembers",
+          "code": "const response = await api.get<ChatV4Response<ChatMemberResultData[]>>(`${CHAT}/GetMembers`, { params: { channelId }, signal });"
+        },
+        {
+          "line": 77,
+          "endpoint": "/Chat/AddMembers",
+          "code": "const response = await api.post<ChatV4Response<ChatMemberResultData[]>>(`${CHAT}/AddMembers`, input, { params: { channelId } });"
+        },
+        {
+          "line": 82,
+          "endpoint": "/Chat/RemoveMember",
+          "code": "const response = await api.delete<ChatActionResult>(`${CHAT}/RemoveMember`, { params: { channelId, userId } });"
+        },
+        {
+          "line": 87,
+          "endpoint": "/Chat/SetNotificationPreference",
+          "code": "const response = await api.put<ChatActionResult>(`${CHAT}/SetNotificationPreference`, input, { params: { channelId } });"
+        },
+        {
+          "line": 96,
+          "endpoint": "/Chat/GetMessages",
+          "code": "const response = await api.get<ChatV4Response<ChatMessageResultData[]>>(`${CHAT}/GetMessages`, {"
+        },
+        {
+          "line": 104,
+          "endpoint": "/Chat/GetMessagesAfter",
+          "code": "const response = await api.get<ChatV4Response<ChatMessageResultData[]>>(`${CHAT}/GetMessagesAfter`, {"
+        },
+        {
+          "line": 112,
+          "endpoint": "/Chat/GetThread",
+          "code": "const response = await api.get<ChatV4Response<ChatMessageResultData[]>>(`${CHAT}/GetThread`, {"
+        },
+        {
+          "line": 120,
+          "endpoint": "/Chat/SendMessage",
+          "code": "const response = await api.post<ChatV4Response<ChatMessageResultData>>(`${CHAT}/SendMessage`, input, { params: { channelId } });"
+        },
+        {
+          "line": 125,
+          "endpoint": "/Chat/EditMessage",
+          "code": "const response = await api.put<ChatV4Response<ChatMessageResultData>>(`${CHAT}/EditMessage`, input, { params: { messageId } });"
+        },
+        {
+          "line": 130,
+          "endpoint": "/Chat/DeleteMessage",
+          "code": "const response = await api.delete<ChatActionResult>(`${CHAT}/DeleteMessage`, { params: { messageId } });"
+        },
+        {
+          "line": 139,
+          "endpoint": "/Chat/AddReaction",
+          "code": "const response = await api.post<ChatActionResult>(`${CHAT}/AddReaction`, input, { params: { messageId } });"
+        },
+        {
+          "line": 144,
+          "endpoint": "/Chat/RemoveReaction",
+          "code": "const response = await api.delete<ChatActionResult>(`${CHAT}/RemoveReaction`, { params: { messageId, emoji } });"
+        },
+        {
+          "line": 149,
+          "endpoint": "/Chat/Ack",
+          "code": "const response = await api.post<ChatActionResult>(`${CHAT}/Ack`, {}, { params: { messageId } });"
+        },
+        {
+          "line": 154,
+          "endpoint": "/Chat/GetMyPendingAcks",
+          "code": "const response = await api.get<ChatV4Response<ChatAckResultData[]>>(`${CHAT}/GetMyPendingAcks`, { signal });"
+        },
+        {
+          "line": 159,
+          "endpoint": "/Chat/MarkRead",
+          "code": "const response = await api.put<ChatActionResult>(`${CHAT}/MarkRead`, input, { params: { channelId } });"
+        },
+        {
+          "line": 164,
+          "endpoint": "/Chat/PinMessage",
+          "code": "const response = await api.post<ChatActionResult>(`${CHAT}/PinMessage`, {}, { params: { messageId } });"
+        },
+        {
+          "line": 169,
+          "endpoint": "/Chat/UnpinMessage",
+          "code": "const response = await api.delete<ChatActionResult>(`${CHAT}/UnpinMessage`, { params: { messageId } });"
+        },
+        {
+          "line": 174,
+          "endpoint": "/Chat/GetPins",
+          "code": "const response = await api.get<ChatV4Response<ChatMessageResultData[]>>(`${CHAT}/GetPins`, { params: { channelId }, signal });"
+        },
+        {
+          "line": 193,
+          "endpoint": "/Chat/UploadAttachment",
+          "code": "const response = await api.post<ChatAttachmentUploadedResult>(`${CHAT}/UploadAttachment`, form, {"
+        },
+        {
+          "line": 227,
+          "endpoint": "/Chat/Search",
+          "code": "const response = await api.get<ChatV4Response<ChatMessageResultData[]>>(`${CHAT}/Search`, {"
+        },
+        {
+          "line": 235,
+          "endpoint": "/Chat/SearchGifs",
+          "code": "const response = await api.get<ChatV4Response<GifResultData[]>>(`${CHAT}/SearchGifs`, {"
+        },
+        {
+          "line": 243,
+          "endpoint": "/Chat/GetPresence",
+          "code": "const response = await api.get<GetChatPresenceResult>(`${CHAT}/GetPresence`, {"
+        },
+        {
+          "line": 251,
+          "endpoint": "/Chat/FlagMessage",
+          "code": "const response = await api.post<ChatActionResult>(`${CHAT}/FlagMessage`, input, { params: { messageId } });"
+        },
+        {
+          "line": 257,
+          "endpoint": "/ChatModeration/DeleteMessage",
+          "code": "const response = await api.post<ChatActionResult>(`${MODERATION}/DeleteMessage`, {}, { params: { messageId, reason } });"
+        }
+      ],
+      "functions": [
+        "getChannels",
+        "getChannel",
+        "createDirectMessage",
+        "createAdHocChannel",
+        "updateChannel",
+        "archiveChannel",
+        "getMembers",
+        "addMembers",
+        "removeMember",
+        "setNotificationPreference",
+        "getMessages",
+        "getMessagesAfter",
+        "getThread",
+        "sendMessage",
+        "editMessage",
+        "deleteMessage",
+        "addReaction",
+        "removeReaction",
+        "ackMessage",
+        "getMyPendingAcks",
+        "markRead",
+        "pinMessage",
+        "unpinMessage",
+        "getPins",
+        "uploadAttachment",
+        "getChatAttachmentUrl",
+        "getChatAttachmentThumbnailUrl",
+        "getChatAttachmentImageSource",
+        "searchMessages",
+        "searchGifs",
+        "getPresence",
+        "flagMessage",
+        "moderatorDeleteMessage"
+      ]
+    },
+    {
+      "source": "Unit/src/api/chat/chatbot.ts",
+      "endpoints": [
+        {
+          "line": 9,
+          "endpoint": "/Chatbot/GetChatChannel",
+          "code": "const response = await api.get<ChatbotChannelResponse>(`${CHATBOT}/GetChatChannel`, { signal });"
+        },
+        {
+          "line": 18,
+          "endpoint": "/Chatbot/SendChatMessage",
+          "code": "const response = await api.post<ChatbotSendResponse>(`${CHATBOT}/SendChatMessage`, {"
+        },
+        {
+          "line": 27,
+          "endpoint": "/Chatbot/NewChatSession",
+          "code": "const response = await api.post<ChatbotSessionResponse>(`${CHATBOT}/NewChatSession`, {});"
+        }
+      ],
+      "functions": [
+        "getChatbotChannel",
+        "sendChatbotMessage",
+        "newChatbotSession"
+      ]
+    },
+    {
+      "source": "Unit/src/api/check-in-timers/check-in-timers.ts",
+      "endpoints": [
+        {
+          "line": 8,
+          "endpoint": "/CheckInTimers/GetTimerStatuses",
+          "code": "const getTimerStatusesApi = createApiEndpoint('/CheckInTimers/GetTimerStatuses');"
+        },
+        {
+          "line": 9,
+          "endpoint": "/CheckInTimers/GetTimersForCall",
+          "code": "const getTimersForCallApi = createApiEndpoint('/CheckInTimers/GetTimersForCall');"
+        },
+        {
+          "line": 10,
+          "endpoint": "/CheckInTimers/PerformCheckIn",
+          "code": "const performCheckInApi = createApiEndpoint('/CheckInTimers/PerformCheckIn');"
+        },
+        {
+          "line": 11,
+          "endpoint": "/CheckInTimers/GetCheckInHistory",
+          "code": "const getCheckInHistoryApi = createApiEndpoint('/CheckInTimers/GetCheckInHistory');"
+        },
+        {
+          "line": 12,
+          "endpoint": "/CheckInTimers/ToggleCallTimers",
+          "code": "const toggleCallTimersApi = createApiEndpoint('/CheckInTimers/ToggleCallTimers');"
+        }
+      ],
+      "functions": [
+        "getTimerStatuses",
+        "getTimersForCall",
+        "performCheckIn",
+        "getCheckInHistory",
+        "toggleCallTimers"
+      ]
+    },
+    {
+      "source": "Unit/src/api/checklists/checklists.ts",
+      "endpoints": [
+        {
+          "line": 7,
+          "endpoint": "/ChecklistRuns/GetChecklistAccess",
+          "code": "export const getChecklistAccess = async () => (await api.get<ChecklistResult<ChecklistAccess>>('/ChecklistRuns/GetChecklistAccess')).data.Data;"
+        },
+        {
+          "line": 9,
+          "endpoint": "/ChecklistRuns/GetDueChecklists",
+          "code": "(await api.get<ChecklistResult<ChecklistDuePage>>('/ChecklistRuns/GetDueChecklists', { params: { page, unitId, forCurrentUser: !unitId } })).data.Data;"
+        },
+        {
+          "line": 10,
+          "endpoint": "/ChecklistRuns/GetChecklistRun",
+          "code": "export const getChecklistRun = async (id: string) => (await api.get<ChecklistResult<ChecklistRun>>('/ChecklistRuns/GetChecklistRun', { params: { id } })).data.Data;"
+        },
+        {
+          "line": 11,
+          "endpoint": "/ChecklistRuns/GetChecklistRun",
+          "code": "export const previewChecklistOccurrence = async (occurrenceId: string) => (await api.get<ChecklistResult<ChecklistRun>>('/ChecklistRuns/GetChecklistRun', { params: { occurrenceId } })).data.Data;"
+        },
+        {
+          "line": 12,
+          "endpoint": "/ChecklistRuns/StartChecklistRun",
+          "code": "export const startChecklistRun = async (input: ChecklistStart) => (await api.post<ChecklistResult<ChecklistRun>>('/ChecklistRuns/StartChecklistRun', input)).data.Data;"
+        },
+        {
+          "line": 14,
+          "endpoint": "/ChecklistRuns/${submit ? ",
+          "code": "(await api.post<ChecklistResult<ChecklistRun>>(`/ChecklistRuns/${submit ? 'CompleteChecklistRun' : 'SaveChecklistRunProgress'}`, { Id: id, Input: input })).data.Data;"
+        },
+        {
+          "line": 16,
+          "endpoint": "/ChecklistRuns/UploadChecklistRunFile",
+          "code": "(await api.post<ChecklistResult<ChecklistRun>>('/ChecklistRuns/UploadChecklistRunFile', { Id: id, Revision: revision, ItemId: image.itemId, Name: image.name, ContentType: image.contentType, Data: image.base64 })).data"
+        },
+        {
+          "line": 19,
+          "endpoint": "/ChecklistRuns/AttestChecklistRun",
+          "code": "(await api.post<ChecklistResult<ChecklistRun>>('/ChecklistRuns/AttestChecklistRun', { Id: id, SubmissionHash: submissionHash, Attestation: attestation })).data.Data;"
+        },
+        {
+          "line": 20,
+          "endpoint": "/ChecklistRuns/GetChecklistHistory",
+          "code": "export const getChecklistHistory = async (page: number, unitId?: string) => (await api.get<ChecklistResult<ChecklistHistory[]>>('/ChecklistRuns/GetChecklistHistory', { params: { page, unitId } })).data;"
+        },
+        {
+          "line": 24,
+          "endpoint": "/ChecklistRuns/GetChecklistRunFile",
+          "code": "const response = await api.get<ArrayBuffer>('/ChecklistRuns/GetChecklistRunFile', { params: { id }, responseType: 'arraybuffer' });"
+        }
+      ],
+      "functions": [
+        "getChecklistAccess",
+        "getDueChecklists",
+        "getChecklistRun",
+        "previewChecklistOccurrence",
+        "startChecklistRun",
+        "saveChecklistRun",
+        "uploadChecklistImage",
+        "attestChecklistRun",
+        "getChecklistHistory",
+        "getChecklistImage"
+      ]
+    },
+    {
+      "source": "Unit/src/api/config/index.ts",
+      "endpoints": [
+        {
+          "line": 6,
+          "endpoint": "/Config/GetConfig",
+          "code": "const getConfigApi = createCachedApiEndpoint('/Config/GetConfig', {"
+        },
+        {
+          "line": 11,
+          "endpoint": "/Config/GetSystemConfig",
+          "code": "const getSystemConfigApi = createCachedApiEndpoint('/Config/GetSystemConfig', {"
+        }
+      ],
+      "functions": [
+        "getConfig",
+        "getSystemConfig"
+      ]
+    },
+    {
+      "source": "Unit/src/api/config/terminology.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Config/GetTerminology",
+          "code": "const getTerminologyApi = createApiEndpoint('/Config/GetTerminology');"
+        }
+      ],
+      "functions": [
+        "getTerminology"
+      ]
+    },
+    {
+      "source": "Unit/src/api/contacts/contactCallHistory.ts",
+      "endpoints": [
+        {
+          "line": 9,
+          "endpoint": "/Contacts/GetContactCallHistory",
+          "code": "const getContactCallHistoryApi = createApiEndpoint('/Contacts/GetContactCallHistory');"
+        }
+      ],
+      "functions": [
+        "getContactCallHistory"
+      ]
+    },
+    {
+      "source": "Unit/src/api/contacts/contactFiles.ts",
+      "endpoints": [
+        {
+          "line": 10,
+          "endpoint": "/ContactFiles/GetFilesForContact",
+          "code": "const getContactFilesApi = createApiEndpoint('/ContactFiles/GetFilesForContact');"
+        },
+        {
+          "line": 11,
+          "endpoint": "/ContactFiles/UploadContactFile",
+          "code": "const uploadContactFileApi = createApiEndpoint('/ContactFiles/UploadContactFile');"
+        },
+        {
+          "line": 12,
+          "endpoint": "/ContactFiles/DeleteContactFile",
+          "code": "const deleteContactFileApi = createApiEndpoint('/ContactFiles/DeleteContactFile');"
+        }
+      ],
+      "functions": [
+        "getContactFiles",
+        "uploadContactFile",
+        "deleteContactFile",
+        "getContactFileBase64"
+      ]
+    },
+    {
+      "source": "Unit/src/api/contacts/contactNotes.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Contacts/GetContactNotesByContactId",
+          "code": "const getContactNotesApi = createApiEndpoint('/Contacts/GetContactNotesByContactId');"
+        }
+      ],
+      "functions": [
+        "getContactNotes"
+      ]
+    },
+    {
+      "source": "Unit/src/api/contacts/contactPreplans.ts",
+      "endpoints": [
+        {
+          "line": 18,
+          "endpoint": "/Contacts/GetContactPreplan",
+          "code": "const getContactPreplanApi = createApiEndpoint('/Contacts/GetContactPreplan');"
+        },
+        {
+          "line": 19,
+          "endpoint": "/Contacts/SaveContactPreplan",
+          "code": "const saveContactPreplanApi = createApiEndpoint('/Contacts/SaveContactPreplan');"
+        },
+        {
+          "line": 20,
+          "endpoint": "/Contacts/DeleteContactPreplan",
+          "code": "const deleteContactPreplanApi = createApiEndpoint('/Contacts/DeleteContactPreplan');"
+        },
+        {
+          "line": 21,
+          "endpoint": "/Contacts/GetContactHazards",
+          "code": "const getContactHazardsApi = createApiEndpoint('/Contacts/GetContactHazards');"
+        },
+        {
+          "line": 22,
+          "endpoint": "/Contacts/SaveContactHazard",
+          "code": "const saveContactHazardApi = createApiEndpoint('/Contacts/SaveContactHazard');"
+        },
+        {
+          "line": 23,
+          "endpoint": "/Contacts/DeleteContactHazard",
+          "code": "const deleteContactHazardApi = createApiEndpoint('/Contacts/DeleteContactHazard');"
+        }
+      ],
+      "functions": [
+        "getContactPreplan",
+        "saveContactPreplan",
+        "deleteContactPreplan",
+        "getContactHazards",
+        "saveContactHazard",
+        "deleteContactHazard"
+      ]
+    },
+    {
+      "source": "Unit/src/api/contacts/contacts.ts",
+      "endpoints": [
+        {
+          "line": 10,
+          "endpoint": "/Contacts/GetAllContacts",
+          "code": "const getAllContactsApi = createCachedApiEndpoint('/Contacts/GetAllContacts', {"
+        },
+        {
+          "line": 15,
+          "endpoint": "/Contacts/GetAllContactCategories",
+          "code": "const getAllContactCategoriesApi = createCachedApiEndpoint('/Contacts/GetAllContactCategories', {"
+        },
+        {
+          "line": 20,
+          "endpoint": "/Contacts/GetContactById",
+          "code": "const getContactApi = createApiEndpoint('/Contacts/GetContactById');"
+        },
+        {
+          "line": 25,
+          "endpoint": "/Contacts/GetAllContacts",
+          "code": "cacheManager.remove('/Contacts/GetAllContacts');"
+        }
+      ],
+      "functions": [
+        "getAllContacts",
+        "getContact",
+        "getAllContactCategories"
+      ]
+    },
+    {
+      "source": "Unit/src/api/data-protection/data-protection.ts",
+      "endpoints": [
+        {
+          "line": 109,
+          "endpoint": "/MfaApproval/Request",
+          "code": "const response = await api.post<{ Data: { ApprovalRequestId: string; MatchNumber: string; ExpiresIn: number } }>('/MfaApproval/Request', { Purpose: 'adp' });"
+        },
+        {
+          "line": 114,
+          "endpoint": "/MfaApproval/Status",
+          "code": "const response = await api.post<{ Data: { State: 'pending' | 'approved' | 'denied' | 'expired' | 'canceled' | 'consumed'; ExpiresAt: string | null } }>('/MfaApproval/Status', { ApprovalRequestId: approvalRequestId });"
+        },
+        {
+          "line": 119,
+          "endpoint": "/MfaApproval/Cancel",
+          "code": "await api.post('/MfaApproval/Cancel', { ApprovalRequestId: approvalRequestId });"
+        },
+        {
+          "line": 136,
+          "endpoint": "/Sso/Begin",
+          "code": "const response = await api.post<{ Data: { AuthorizeUrl: string; SsoTransactionId: string; ExpiresIn: number } }>('/Sso/Begin', {"
+        }
+      ],
+      "functions": [
+        "getDataProtectionCapabilities",
+        "requestProtectedGrant",
+        "verifyStepUp",
+        "getStepUpMethods",
+        "getStepUpPasskeyOptions",
+        "verifyStepUpPasskey",
+        "requestStepUpApproval",
+        "getStepUpApprovalStatus",
+        "cancelStepUpApproval",
+        "completeStepUpApproval",
+        "beginStepUpSso",
+        "completeStepUpFederated"
+      ]
+    },
+    {
+      "source": "Unit/src/api/devices/push.ts",
+      "endpoints": [
+        {
+          "line": 7,
+          "endpoint": "/Devices/RegisterUnitDevice",
+          "code": "const registerUnitDeviceApi = createApiEndpoint('/Devices/RegisterUnitDevice');"
+        },
+        {
+          "line": 8,
+          "endpoint": "/Devices/UnRegisterWebPush",
+          "code": "const unRegisterWebPushApi = createApiEndpoint('/Devices/UnRegisterWebPush');"
+        },
+        {
+          "line": 9,
+          "endpoint": "/Devices/UnRegisterNativePush",
+          "code": "const unRegisterNativePushApi = createApiEndpoint('/Devices/UnRegisterNativePush');"
+        }
+      ],
+      "functions": [
+        "registerUnitDevice",
+        "unRegisterWebPush",
+        "unRegisterNativePush"
+      ]
+    },
+    {
+      "source": "Unit/src/api/dispatch/dispatch.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Dispatch/GetNewCallData",
+          "code": "const getNewCallDataApi = createApiEndpoint('/Dispatch/GetNewCallData');"
+        },
+        {
+          "line": 6,
+          "endpoint": "/Dispatch/GetSetUnitStatusData",
+          "code": "const getSetUnitStatusDataApi = createApiEndpoint('/Dispatch/GetSetUnitStatusData');"
+        }
+      ],
+      "functions": [
+        "getNewCallData",
+        "getSetUnitStatusData",
+        "getSetUnitState"
+      ]
+    },
+    {
+      "source": "Unit/src/api/feature-flags/feature-flags.ts",
+      "endpoints": [
+        {
+          "line": 29,
+          "endpoint": "/FeatureToggles/GetAll",
+          "code": "const response = await api.get<FeatureTogglesResult>(`${FEATURE_TOGGLES}/GetAll`, { signal });"
+        },
+        {
+          "line": 35,
+          "endpoint": "/FeatureToggles/GetState",
+          "code": "const response = await api.get<FeatureToggleResult>(`${FEATURE_TOGGLES}/GetState`, { params: { key }, signal });"
+        }
+      ],
+      "functions": [
+        "getAllFeatureFlags",
+        "getFeatureFlagState"
+      ]
+    },
+    {
+      "source": "Unit/src/api/groups/groups.ts",
+      "endpoints": [
+        {
+          "line": 7,
+          "endpoint": "/Groups/GetAllGroups",
+          "code": "const getAllGroupsApi = createCachedApiEndpoint('/Groups/GetAllGroups', {"
+        },
+        {
+          "line": 12,
+          "endpoint": "/Groups/GetAllGroups",
+          "code": "const getGroupsApi = createApiEndpoint('/Groups/GetAllGroups');"
+        }
+      ],
+      "functions": [
+        "getAllGroups",
+        "getGroup"
+      ]
+    },
+    {
+      "source": "Unit/src/api/inventory/inventory.ts",
+      "endpoints": [
+        {
+          "line": 7,
+          "endpoint": "/Inventory/GetAccess",
+          "code": "export const getInventoryAccess = async (unitId: number) => (await api.get<InventoryApiResult<InventoryFieldAccess>>('/Inventory/GetAccess', { params: { unitId } })).data.Data;"
+        },
+        {
+          "line": 9,
+          "endpoint": "/Inventory/GetUnitEquipment",
+          "code": "export const getUnitEquipment = async (unitId: number) => (await api.get<InventoryApiResult<InventoryEquipment[]>>('/Inventory/GetUnitEquipment', { params: { unitId } })).data.Data;"
+        },
+        {
+          "line": 11,
+          "endpoint": "/Inventory/GetCounts",
+          "code": "export const getCounts = async (locationId: string, page = 0) => (await api.get<InventoryApiResult<InventoryPage<InventoryCount>>>('/Inventory/GetCounts', { params: { page, locationId } })).data.Data;"
+        },
+        {
+          "line": 13,
+          "endpoint": "/Inventory/GetCount",
+          "code": "export const getCount = async (id: string) => (await api.get<InventoryApiResult<InventoryCountDetail>>('/Inventory/GetCount', { params: { id } })).data.Data;"
+        },
+        {
+          "line": 21,
+          "endpoint": "/Inventory/StartCount",
+          "code": "(await api.post<InventoryApiResult<InventoryCountDetail>>('/Inventory/StartCount', { Id: id, LocationId: locationId, Name: name, Note: note ?? null, IncludeCatalogItems: false, IncludeChildLocations: true })).data"
+        },
+        {
+          "line": 25,
+          "endpoint": "/Inventory/SaveCount",
+          "code": "(await api.post<InventoryApiResult<InventoryCountDetail>>('/Inventory/SaveCount', { CountId: countId, Revision: revision, Lines: lines })).data.Data;"
+        },
+        {
+          "line": 28,
+          "endpoint": "/Inventory/CompleteCount",
+          "code": "(await api.post<InventoryApiResult<InventoryCountResult>>('/Inventory/CompleteCount', { CountId: countId, Revision: revision, RequestId: requestId })).data.Data;"
+        },
+        {
+          "line": 30,
+          "endpoint": "/Inventory/CancelCount",
+          "code": "export const cancelCount = async (countId: string, revision: number) => (await api.post<InventoryApiResult<unknown>>('/Inventory/CancelCount', { CountId: countId, Revision: revision })).data;"
+        }
+      ],
+      "functions": [
+        "getInventoryAccess",
+        "getUnitEquipment",
+        "getCounts",
+        "getCount",
+        "startCount",
+        "saveCount",
+        "completeCount",
+        "cancelCount"
+      ]
+    },
+    {
+      "source": "Unit/src/api/mapping/mapping.ts",
+      "endpoints": [
+        {
+          "line": 24,
+          "endpoint": "/Mapping/GetMayLayers",
+          "code": "const getMayLayersApi = createApiEndpoint('/Mapping/GetMayLayers');"
+        },
+        {
+          "line": 25,
+          "endpoint": "/Mapping/GetMapDataAndMarkers",
+          "code": "const getMapDataAndMarkersApi = createApiEndpoint('/Mapping/GetMapDataAndMarkers');"
+        },
+        {
+          "line": 26,
+          "endpoint": "/Mapping/GetPoi",
+          "code": "const getPoiApi = createCachedApiEndpoint('/Mapping/GetPoi', {"
+        },
+        {
+          "line": 30,
+          "endpoint": "/Mapping/GetPois",
+          "code": "const getPoisApi = createCachedApiEndpoint('/Mapping/GetPois', {"
+        },
+        {
+          "line": 34,
+          "endpoint": "/Mapping/GetPoiTypes",
+          "code": "const getPoiTypesApi = createCachedApiEndpoint('/Mapping/GetPoiTypes', {"
+        },
+        {
+          "line": 40,
+          "endpoint": "/Mapping/GetIndoorMaps",
+          "code": "const getIndoorMapsApi = createCachedApiEndpoint('/Mapping/GetIndoorMaps', {"
+        },
+        {
+          "line": 44,
+          "endpoint": "/Mapping/GetIndoorMap",
+          "code": "const getIndoorMapApi = createApiEndpoint('/Mapping/GetIndoorMap');"
+        },
+        {
+          "line": 45,
+          "endpoint": "/Mapping/GetIndoorMapFloor",
+          "code": "const getIndoorMapFloorApi = createApiEndpoint('/Mapping/GetIndoorMapFloor');"
+        },
+        {
+          "line": 46,
+          "endpoint": "/Mapping/GetIndoorMapZonesGeoJSON",
+          "code": "const getIndoorMapZonesGeoJSONApi = createApiEndpoint('/Mapping/GetIndoorMapZonesGeoJSON');"
+        },
+        {
+          "line": 47,
+          "endpoint": "/Mapping/SearchIndoorLocations",
+          "code": "const searchIndoorLocationsApi = createApiEndpoint('/Mapping/SearchIndoorLocations');"
+        },
+        {
+          "line": 48,
+          "endpoint": "/Mapping/GetNearbyIndoorMaps",
+          "code": "const getNearbyIndoorMapsApi = createApiEndpoint('/Mapping/GetNearbyIndoorMaps');"
+        },
+        {
+          "line": 51,
+          "endpoint": "/Mapping/GetCustomMaps",
+          "code": "const getCustomMapsApi = createCachedApiEndpoint('/Mapping/GetCustomMaps', {"
+        },
+        {
+          "line": 55,
+          "endpoint": "/Mapping/GetCustomMap",
+          "code": "const getCustomMapApi = createApiEndpoint('/Mapping/GetCustomMap');"
+        },
+        {
+          "line": 56,
+          "endpoint": "/Mapping/GetCustomMapLayer",
+          "code": "const getCustomMapLayerApi = createApiEndpoint('/Mapping/GetCustomMapLayer');"
+        },
+        {
+          "line": 57,
+          "endpoint": "/Mapping/GetMapLayerGeoJSON",
+          "code": "const getMapLayerGeoJSONApi = createApiEndpoint('/Mapping/GetMapLayerGeoJSON');"
+        },
+        {
+          "line": 58,
+          "endpoint": "/Mapping/GetCustomMapRegionsGeoJSON",
+          "code": "const getCustomMapRegionsGeoJSONApi = createApiEndpoint('/Mapping/GetCustomMapRegionsGeoJSON');"
+        },
+        {
+          "line": 59,
+          "endpoint": "/Mapping/SearchCustomMapRegions",
+          "code": "const searchCustomMapRegionsApi = createApiEndpoint('/Mapping/SearchCustomMapRegions');"
+        },
+        {
+          "line": 62,
+          "endpoint": "/Mapping/GetAllActiveLayers",
+          "code": "const getAllActiveLayersApi = createCachedApiEndpoint('/Mapping/GetAllActiveLayers', {"
+        },
+        {
+          "line": 66,
+          "endpoint": "/Mapping/SearchAllMapFeatures",
+          "code": "const searchAllMapFeaturesApi = createApiEndpoint('/Mapping/SearchAllMapFeatures');"
+        }
+      ],
+      "functions": [
+        "getMapDataAndMarkers",
+        "getPoiTypes",
+        "getPois",
+        "getPoi",
+        "getMayLayers",
+        "getIndoorMaps",
+        "getIndoorMap",
+        "getIndoorMapFloor",
+        "getIndoorMapZonesGeoJSON",
+        "searchIndoorLocations",
+        "getNearbyIndoorMaps",
+        "getCustomMaps",
+        "getCustomMap",
+        "getCustomMapLayer",
+        "getMapLayerGeoJSON",
+        "getCustomMapRegionsGeoJSON",
+        "searchCustomMapRegions",
+        "getAllActiveLayers",
+        "searchAllMapFeatures",
+        "getFloorImageUrl",
+        "getCustomMapLayerImageUrl",
+        "getCustomMapTileUrl"
+      ]
+    },
+    {
+      "source": "Unit/src/api/messaging/messages.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Messages/GetRecipients",
+          "code": "const recipientsApi = createCachedApiEndpoint('/Messages/GetRecipients', {"
+        }
+      ],
+      "functions": [
+        "getRecipients"
+      ]
+    },
+    {
+      "source": "Unit/src/api/mfa/account-security.ts",
+      "endpoints": [
+        {
+          "line": 74,
+          "endpoint": "/AccountSecurity/Methods",
+          "code": "export const getAccountMethods = () => data<AccountMethodsData>(api.get('/AccountSecurity/Methods'));"
+        },
+        {
+          "line": 77,
+          "endpoint": "/AccountSecurity/ReportActivity",
+          "code": "export const reportActivity = (activityId: string) => data<{ SessionEnded: boolean; NextSteps: string[] }>(api.post('/AccountSecurity/ReportActivity', { ActivityId: activityId }));"
+        },
+        {
+          "line": 81,
+          "endpoint": "/AccountSecurity/Reauthenticate",
+          "code": "export const reauthenticateWithPassword = (password: string) => data<{ VerifiedAt: string }>(api.post('/AccountSecurity/Reauthenticate', { Password: password }));"
+        },
+        {
+          "line": 93,
+          "endpoint": "/Sso/Begin",
+          "code": "api.post('/Sso/Begin', {"
+        },
+        {
+          "line": 104,
+          "endpoint": "/Sso/Redeem",
+          "code": "data<SsoRedeemData>(api.post('/Sso/Redeem', { SsoTransactionId: ssoTransactionId, SsoCode: ssoCode, CodeVerifier: codeVerifier }));"
+        },
+        {
+          "line": 114,
+          "endpoint": "/Mfa/StepUpOptions",
+          "code": "export const getStepUpOptions = (operation: string) => data<StepUpOptionsData>(api.get('/Mfa/StepUpOptions', { params: { operation } }));"
+        },
+        {
+          "line": 124,
+          "endpoint": "/Mfa/VerifyStepUp",
+          "code": "export const verifyStepUp = (input: VerifyStepUpInput) => data<{ VerifiedAt: string; ExpiresAt: string }>(api.post('/Mfa/VerifyStepUp', input as unknown as Record<string, unknown>));"
+        },
+        {
+          "line": 128,
+          "endpoint": "/Passkeys/RegistrationOptions",
+          "code": "export const getPasskeyRegistrationOptions = () => data<PasskeyCeremonyData>(api.post('/Passkeys/RegistrationOptions', {}));"
+        },
+        {
+          "line": 131,
+          "endpoint": "/Passkeys/CompleteRegistration",
+          "code": "data<PasskeyData>(api.post('/Passkeys/CompleteRegistration', { RequestId: requestId, Credential: credential, DisplayName: displayName }));"
+        },
+        {
+          "line": 139,
+          "endpoint": "/Passkeys/Rename",
+          "code": "export const renamePasskey = (passkeyId: string, displayName: string) => data<PasskeyChangeData>(api.post('/Passkeys/Rename', { PasskeyId: passkeyId, DisplayName: displayName }));"
+        },
+        {
+          "line": 141,
+          "endpoint": "/Passkeys/Revoke",
+          "code": "export const revokePasskey = (passkeyId: string) => data<PasskeyChangeData>(api.post('/Passkeys/Revoke', { PasskeyId: passkeyId }));"
+        },
+        {
+          "line": 144,
+          "endpoint": "/Passkeys/SetApproval",
+          "code": "export const setPasskeyApproval = (passkeyId: string, enabled: boolean) => data<PasskeyChangeData>(api.post('/Passkeys/SetApproval', { PasskeyId: passkeyId, Enabled: enabled }));"
+        },
+        {
+          "line": 147,
+          "endpoint": "/MfaApproval/Installations/Disable",
+          "code": "data<{ InstallationsStopped: number; PasskeysStopped: number }>(api.post('/MfaApproval/Installations/Disable', installationId ? { InstallationId: installationId, All: false } : { All: true }));"
+        }
+      ],
+      "functions": [
+        "getAccountMethods",
+        "reportActivity",
+        "reauthenticateWithPassword",
+        "beginSsoReauthentication",
+        "redeemSsoReauthentication",
+        "getStepUpOptions",
+        "verifyStepUp",
+        "getPasskeyRegistrationOptions",
+        "completePasskeyRegistration",
+        "renamePasskey",
+        "revokePasskey",
+        "setPasskeyApproval",
+        "stopApprovalInstallations"
+      ]
+    },
+    {
+      "source": "Unit/src/api/notes/notes.ts",
+      "endpoints": [
+        {
+          "line": 11,
+          "endpoint": "/Notes/GetAllNotes",
+          "code": "const getAllNotesApi = createCachedApiEndpoint('/Notes/GetAllNotes', {"
+        },
+        {
+          "line": 16,
+          "endpoint": "/Notes/GetDispatchNote",
+          "code": "const getDispatchNoteApi = createCachedApiEndpoint('/Notes/GetDispatchNote', {"
+        },
+        {
+          "line": 21,
+          "endpoint": "/Notes/GetNoteCategories",
+          "code": "const getNoteCategoriesApi = createCachedApiEndpoint('/Notes/GetNoteCategories', {"
+        },
+        {
+          "line": 26,
+          "endpoint": "/Notes/GetAllUnexpiredNotesByCategory",
+          "code": "const getAllUnexpiredNotesByCategoryApi = createApiEndpoint('/Notes/GetAllUnexpiredNotesByCategory');"
+        },
+        {
+          "line": 28,
+          "endpoint": "/Notes/GetNote",
+          "code": "const getNoteApi = createApiEndpoint('/Notes/GetNote');"
+        },
+        {
+          "line": 30,
+          "endpoint": "/Notes/SaveNote",
+          "code": "const saveNoteApi = createApiEndpoint('/Notes/SaveNote');"
+        },
+        {
+          "line": 68,
+          "endpoint": "/Notes/GetAllNotes",
+          "code": "cacheManager.remove('/Notes/GetAllNotes');"
+        }
+      ],
+      "functions": [
+        "getAllNotes",
+        "getDispatchNote",
+        "getAllUnexpiredNotesByCategory",
+        "getNote",
+        "getNoteCategories",
+        "saveNote"
+      ]
+    },
+    {
+      "source": "Unit/src/api/novu/inbox.ts",
+      "endpoints": [
+        {
+          "line": 3,
+          "endpoint": "/Inbox/DeleteMessage",
+          "code": "const getGroupsApi = createApiEndpoint('/Inbox/DeleteMessage');"
+        },
+        {
+          "line": 4,
+          "endpoint": "/Inbox/GetUnitSubscriberHash",
+          "code": "const getUnitSubscriberHashApi = createApiEndpoint('/Inbox/GetUnitSubscriberHash');"
+        }
+      ],
+      "functions": [
+        "deleteMessage",
+        "getUnitSubscriberHash"
+      ]
+    },
+    {
+      "source": "Unit/src/api/operations/operations.ts",
+      "endpoints": [
+        {
+          "line": 22,
+          "endpoint": "/Deployments/GetAccess",
+          "code": "export const getDeploymentAccess = async () => (await api.get<OperationsResult<DeploymentAccess>>('/Deployments/GetAccess')).data.Data;"
+        },
+        {
+          "line": 23,
+          "endpoint": "/Deployments/GetDeployments",
+          "code": "export const getDeployments = async (active = true) => (await api.get<OperationsResult<Deployment[]>>('/Deployments/GetDeployments', { params: { active, skip: 0, take: 100 } })).data.Data;"
+        },
+        {
+          "line": 24,
+          "endpoint": "/Deployments/GetDeployment",
+          "code": "export const getDeployment = async (id: string) => (await api.get<OperationsResult<Deployment>>('/Deployments/GetDeployment', { params: { id } })).data.Data;"
+        },
+        {
+          "line": 25,
+          "endpoint": "/Deployments/GetDeploymentByCallId",
+          "code": "export const getDeploymentByCallId = async (callId: number) => (await api.get<OperationsResult<Deployment>>('/Deployments/GetDeploymentByCallId', { params: { callId } })).data.Data;"
+        },
+        {
+          "line": 34,
+          "endpoint": "/TimeReports/GetTimeReports",
+          "code": "export const getTimeReports = async (deploymentId: string) => (await api.get<OperationsResult<TimeReport[]>>('/TimeReports/GetTimeReports', { params: { deploymentId } })).data.Data;"
+        },
+        {
+          "line": 35,
+          "endpoint": "/TimeReports/GetTimeReport",
+          "code": "export const getTimeReport = async (id: string) => (await api.get<OperationsResult<TimeReport>>('/TimeReports/GetTimeReport', { params: { id } })).data.Data;"
+        },
+        {
+          "line": 38,
+          "endpoint": "/TimeReports/NewTimeReport",
+          "code": "await api.post<TimeReportResponse>('/TimeReports/NewTimeReport', {"
+        },
+        {
+          "line": 49,
+          "endpoint": "/TimeReports/SaveTimeEntries",
+          "code": "await api.post<TimeReportResponse>('/TimeReports/SaveTimeEntries', {"
+        },
+        {
+          "line": 54,
+          "endpoint": "/TimeReports/SubmitTimeReport",
+          "code": "export const submitTimeReport = async (id: string) => (await api.post<TimeReportResponse>('/TimeReports/SubmitTimeReport', { Id: id })).data;"
+        },
+        {
+          "line": 57,
+          "endpoint": "/TimeReports/SignTimeReport",
+          "code": "(await api.post<TimeReportResponse>('/TimeReports/SignTimeReport', { Id: id, ContractorSigned: contractorSigned, CustomerSignerName: customerSignerName || null })).data;"
+        },
+        {
+          "line": 58,
+          "endpoint": "/TimeReports/ApproveTimeReport",
+          "code": "export const approveTimeReport = async (id: string) => (await api.post<TimeReportResponse>('/TimeReports/ApproveTimeReport', { Id: id })).data;"
+        },
+        {
+          "line": 60,
+          "endpoint": "/TimeReports/GetExpenses",
+          "code": "export const getExpenses = async (deploymentId: string) => (await api.get<OperationsResult<Expense[]>>('/TimeReports/GetExpenses', { params: { deploymentId } })).data.Data;"
+        },
+        {
+          "line": 62,
+          "endpoint": "/TimeReports/SaveExpense",
+          "code": "export const saveExpense = async (input: ExpenseInput) => (await api.post<OperationsResult<Expense>>('/TimeReports/SaveExpense', input, { timeout: 60000 })).data.Data;"
+        },
+        {
+          "line": 63,
+          "endpoint": "/TimeReports/DeleteExpense",
+          "code": "export const deleteExpense = async (id: string) => (await api.delete<OperationsResult<null>>('/TimeReports/DeleteExpense', { params: { id } })).data;"
+        },
+        {
+          "line": 65,
+          "endpoint": "/FieldCost/GetAccess",
+          "code": "export const getFieldCostAccess = async () => (await api.get<OperationsResult<FieldCostAccess>>('/FieldCost/GetAccess')).data.Data;"
+        },
+        {
+          "line": 66,
+          "endpoint": "/FieldCost/GetResourceUsage",
+          "code": "export const getResourceUsage = async (deploymentId: string) => (await api.get<OperationsResult<ResourceUsage[]>>('/FieldCost/GetResourceUsage', { params: { deploymentId } })).data.Data;"
+        },
+        {
+          "line": 67,
+          "endpoint": "/FieldCost/AddResourceUsage",
+          "code": "export const addResourceUsage = async (input: ResourceUsageInput) => (await api.post<OperationsResult<ResourceUsage>>('/FieldCost/AddResourceUsage', input)).data.Data;"
+        },
+        {
+          "line": 69,
+          "endpoint": "/CalOesMars/GetAccess",
+          "code": "export const getCalOesMarsAccess = async () => (await api.get<OperationsResult<CalOesMarsAccess>>('/CalOesMars/GetAccess')).data.Data;"
+        },
+        {
+          "line": 70,
+          "endpoint": "/CalOesMars/GetQueue",
+          "code": "export const getCalOesMarsQueue = async () => (await api.get<OperationsResult<CalOesMarsQueueItem[]>>('/CalOesMars/GetQueue')).data.Data;"
+        },
+        {
+          "line": 71,
+          "endpoint": "/CalOesMars/GetWorkItem",
+          "code": "export const getCalOesMarsWorkItem = async (id: string) => (await api.get<OperationsResult<CalOesMarsWorkItem>>('/CalOesMars/GetWorkItem', { params: { id } })).data.Data;"
+        },
+        {
+          "line": 72,
+          "endpoint": "/CalOesMars/BuildF42",
+          "code": "export const buildF42 = async (deploymentId: string) => (await api.post<OperationsResult<CalOesMarsWorkItem>>('/CalOesMars/BuildF42', { DeploymentId: deploymentId })).data.Data;"
+        },
+        {
+          "line": 73,
+          "endpoint": "/CalOesMars/Validate",
+          "code": "export const validateCalOesMarsWorkItem = async (id: string) => (await api.post<OperationsResult<CalOesMarsValidation>>('/CalOesMars/Validate', null, { params: { id } })).data.Data;"
+        }
+      ],
+      "functions": [
+        "getDeploymentAccess",
+        "getDeployments",
+        "getDeployment",
+        "getDeploymentByCallId",
+        "getTimeReports",
+        "getTimeReport",
+        "newTimeReport",
+        "saveTimeEntries",
+        "submitTimeReport",
+        "signTimeReport",
+        "approveTimeReport",
+        "getExpenses",
+        "saveExpense",
+        "deleteExpense",
+        "getFieldCostAccess",
+        "getResourceUsage",
+        "addResourceUsage",
+        "getCalOesMarsAccess",
+        "getCalOesMarsQueue",
+        "getCalOesMarsWorkItem",
+        "buildF42",
+        "validateCalOesMarsWorkItem"
+      ]
+    },
+    {
+      "source": "Unit/src/api/personnel/personnel.ts",
+      "endpoints": [
+        {
+          "line": 8,
+          "endpoint": "/Personnel/GetPersonnelInfo",
+          "code": "const getPersonnelInfoApi = createApiEndpoint('/Personnel/GetPersonnelInfo');"
+        },
+        {
+          "line": 10,
+          "endpoint": "/Personnel/GetAllPersonnelInfos",
+          "code": "const getAllPersonnelInfosApi = createApiEndpoint('/Personnel/GetAllPersonnelInfos');"
+        },
+        {
+          "line": 12,
+          "endpoint": "/Personnel/GetPersonnelFilterOptions",
+          "code": "const ugetPersonnelFilterOptionsApi = createCachedApiEndpoint('/Personnel/GetPersonnelFilterOptions', {"
+        }
+      ],
+      "functions": [
+        "getPersonnelInfo",
+        "getAllPersonnelInfos",
+        "getUnitsFilterOptions"
+      ]
+    },
+    {
+      "source": "Unit/src/api/protocols/protocols.ts",
+      "endpoints": [
+        {
+          "line": 6,
+          "endpoint": "/Protocols/GetAllProtocols",
+          "code": "const getAllProtocolsApi = createCachedApiEndpoint('/Protocols/GetAllProtocols', {"
+        },
+        {
+          "line": 11,
+          "endpoint": "/Protocols/GetProtocol",
+          "code": "const getProtocolApi = createApiEndpoint('/Protocols/GetProtocol');"
+        }
+      ],
+      "functions": [
+        "getAllProtocols",
+        "getProtocol"
+      ]
+    },
+    {
+      "source": "Unit/src/api/records/deployments.ts",
+      "endpoints": [
+        {
+          "line": 12,
+          "endpoint": "/RecordDeployments/List",
+          "code": "const listDeploymentsApi = createApiEndpoint('/RecordDeployments/List');"
+        },
+        {
+          "line": 13,
+          "endpoint": "/RecordDeployments/Get",
+          "code": "const getDeploymentApi = createApiEndpoint('/RecordDeployments/Get');"
+        },
+        {
+          "line": 14,
+          "endpoint": "/RecordDeploymentConnectors/List",
+          "code": "const listConnectorsApi = createApiEndpoint('/RecordDeploymentConnectors/List');"
+        },
+        {
+          "line": 15,
+          "endpoint": "/RecordDeploymentConnectors/Get",
+          "code": "const getConnectorApi = createApiEndpoint('/RecordDeploymentConnectors/Get');"
+        },
+        {
+          "line": 16,
+          "endpoint": "/RecordDeploymentConnectors/Runs",
+          "code": "const connectorRunsApi = createApiEndpoint('/RecordDeploymentConnectors/Runs');"
+        },
+        {
+          "line": 17,
+          "endpoint": "/RecordDeploymentConnectors/Reconciliation",
+          "code": "const reconciliationApi = createApiEndpoint('/RecordDeploymentConnectors/Reconciliation');"
+        },
+        {
+          "line": 51,
+          "endpoint": "/RecordDeploymentConnectors/Run?id=${encodeURIComponent(id)}",
+          "code": "const runApi = createApiEndpoint(`/RecordDeploymentConnectors/Run?id=${encodeURIComponent(id)}`);"
+        }
+      ],
+      "functions": [
+        "getRecordDeployments",
+        "getRecordDeployment",
+        "getRecordDeploymentConnectors",
+        "getRecordDeploymentConnector",
+        "getRecordDeploymentConnectorRuns",
+        "getRecordDeploymentReconciliation",
+        "runRecordDeploymentConnector"
+      ]
+    },
+    {
+      "source": "Unit/src/api/records/field-records.ts",
+      "endpoints": [
+        {
+          "line": 17,
+          "endpoint": "/FieldRecords/Preflight",
+          "code": "const preflightApi = createApiEndpoint('/FieldRecords/Preflight');"
+        },
+        {
+          "line": 18,
+          "endpoint": "/FieldRecords/Catalog",
+          "code": "const catalogApi = createApiEndpoint('/FieldRecords/Catalog');"
+        },
+        {
+          "line": 19,
+          "endpoint": "/FieldRecords/Prefill",
+          "code": "const prefillApi = createApiEndpoint('/FieldRecords/Prefill');"
+        },
+        {
+          "line": 20,
+          "endpoint": "/FieldRecords/Sync",
+          "code": "const syncApi = createApiEndpoint('/FieldRecords/Sync');"
+        },
+        {
+          "line": 21,
+          "endpoint": "/FieldRecords/Assignments",
+          "code": "const assignmentsApi = createApiEndpoint('/FieldRecords/Assignments');"
+        },
+        {
+          "line": 22,
+          "endpoint": "/FieldRecords/RecordAssignments",
+          "code": "const recordAssignmentsApi = createApiEndpoint('/FieldRecords/RecordAssignments');"
+        },
+        {
+          "line": 23,
+          "endpoint": "/FieldRecords/AcknowledgeAssignment",
+          "code": "const acknowledgeAssignmentApi = createApiEndpoint('/FieldRecords/AcknowledgeAssignment');"
+        },
+        {
+          "line": 24,
+          "endpoint": "/FieldRecords/Telemetry",
+          "code": "const telemetryApi = createApiEndpoint('/FieldRecords/Telemetry');"
+        },
+        {
+          "line": 25,
+          "endpoint": "/FieldRecords/CompleteAssignment",
+          "code": "const completeAssignmentApi = createApiEndpoint('/FieldRecords/CompleteAssignment');"
+        }
+      ],
+      "functions": [
+        "getFieldRecordsPreflight",
+        "getFieldRecordsCatalog",
+        "getFieldRecordPrefill",
+        "syncFieldRecords",
+        "getFieldRecordAssignments",
+        "getAssignmentsForRecord",
+        "reportFieldRecordTelemetry",
+        "acknowledgeAssignment",
+        "completeAssignment"
+      ]
+    },
+    {
+      "source": "Unit/src/api/records/record-uploads.ts",
+      "endpoints": [
+        {
+          "line": 40,
+          "endpoint": "/Records/BeginUpload",
+          "code": "const beginUploadApi = createApiEndpoint('/Records/BeginUpload');"
+        },
+        {
+          "line": 41,
+          "endpoint": "/Records/UploadChunk",
+          "code": "const uploadChunkApi = createApiEndpoint('/Records/UploadChunk');"
+        },
+        {
+          "line": 42,
+          "endpoint": "/Records/GetUpload",
+          "code": "const getUploadApi = createApiEndpoint('/Records/GetUpload');"
+        },
+        {
+          "line": 43,
+          "endpoint": "/Records/CompleteUpload",
+          "code": "const completeUploadApi = createApiEndpoint('/Records/CompleteUpload');"
+        },
+        {
+          "line": 44,
+          "endpoint": "/Records/AbortUpload",
+          "code": "const abortUploadApi = createApiEndpoint('/Records/AbortUpload');"
+        },
+        {
+          "line": 45,
+          "endpoint": "/Records/GetAttachments",
+          "code": "const getAttachmentsApi = createApiEndpoint('/Records/GetAttachments');"
+        },
+        {
+          "line": 46,
+          "endpoint": "/Records/RemoveAttachment",
+          "code": "const removeAttachmentApi = createApiEndpoint('/Records/RemoveAttachment');"
+        }
+      ],
+      "functions": [
+        "beginRecordUpload",
+        "uploadRecordChunk",
+        "getRecordUpload",
+        "completeRecordUpload",
+        "abortRecordUpload",
+        "getRecordAttachments",
+        "removeRecordAttachment"
+      ]
+    },
+    {
+      "source": "Unit/src/api/records/records.ts",
+      "endpoints": [
+        {
+          "line": 9,
+          "endpoint": "/Records/GetRecord",
+          "code": "const getRecordApi = createApiEndpoint('/Records/GetRecord');"
+        },
+        {
+          "line": 10,
+          "endpoint": "/Records/CreateDraft",
+          "code": "const createDraftApi = createApiEndpoint('/Records/CreateDraft');"
+        },
+        {
+          "line": 11,
+          "endpoint": "/Records/SaveDraft",
+          "code": "const saveDraftApi = createApiEndpoint('/Records/SaveDraft');"
+        },
+        {
+          "line": 12,
+          "endpoint": "/Records/SubmitForReview",
+          "code": "const submitForReviewApi = createApiEndpoint('/Records/SubmitForReview');"
+        },
+        {
+          "line": 13,
+          "endpoint": "/Records/Finalize",
+          "code": "const finalizeApi = createApiEndpoint('/Records/Finalize');"
+        },
+        {
+          "line": 14,
+          "endpoint": "/Records/Cancel",
+          "code": "const cancelApi = createApiEndpoint('/Records/Cancel');"
+        },
+        {
+          "line": 15,
+          "endpoint": "/RecordDefinitions/Version",
+          "code": "const definitionVersionApi = createApiEndpoint('/RecordDefinitions/Version');"
+        }
+      ],
+      "functions": [
+        "getRecord",
+        "getRecordDefinitionVersion",
+        "createRecordDraft",
+        "saveRecordDraft",
+        "submitRecordForReview",
+        "finalizeRecord",
+        "cancelRecord"
+      ]
+    },
+    {
+      "source": "Unit/src/api/routes/routes.ts",
+      "endpoints": [
+        {
+          "line": 35,
+          "endpoint": "/Routes/GetRoutePlans",
+          "code": "const getRoutePlansApi = createCachedApiEndpoint('/Routes/GetRoutePlans', {"
+        },
+        {
+          "line": 41,
+          "endpoint": "/Routes/StartRoute",
+          "code": "const startRouteApi = createApiEndpoint('/Routes/StartRoute');"
+        },
+        {
+          "line": 42,
+          "endpoint": "/Routes/EndRoute",
+          "code": "const endRouteApi = createApiEndpoint('/Routes/EndRoute');"
+        },
+        {
+          "line": 43,
+          "endpoint": "/Routes/PauseRoute",
+          "code": "const pauseRouteApi = createApiEndpoint('/Routes/PauseRoute');"
+        },
+        {
+          "line": 44,
+          "endpoint": "/Routes/ResumeRoute",
+          "code": "const resumeRouteApi = createApiEndpoint('/Routes/ResumeRoute');"
+        },
+        {
+          "line": 45,
+          "endpoint": "/Routes/CancelRoute",
+          "code": "const cancelRouteApi = createApiEndpoint('/Routes/CancelRoute');"
+        },
+        {
+          "line": 48,
+          "endpoint": "/Routes/GetActiveRoutes",
+          "code": "const getActiveRoutesApi = createApiEndpoint('/Routes/GetActiveRoutes');"
+        },
+        {
+          "line": 51,
+          "endpoint": "/Routes/CheckInAtStop",
+          "code": "const checkInAtStopApi = createApiEndpoint('/Routes/CheckInAtStop');"
+        },
+        {
+          "line": 52,
+          "endpoint": "/Routes/CheckOutFromStop",
+          "code": "const checkOutFromStopApi = createApiEndpoint('/Routes/CheckOutFromStop');"
+        },
+        {
+          "line": 53,
+          "endpoint": "/Routes/SkipStop",
+          "code": "const skipStopApi = createApiEndpoint('/Routes/SkipStop');"
+        },
+        {
+          "line": 54,
+          "endpoint": "/Routes/GeofenceCheckIn",
+          "code": "const geofenceCheckInApi = createApiEndpoint('/Routes/GeofenceCheckIn');"
+        },
+        {
+          "line": 55,
+          "endpoint": "/Routes/UpdateStopNotes",
+          "code": "const updateStopNotesApi = createApiEndpoint('/Routes/UpdateStopNotes');"
+        },
+        {
+          "line": 58,
+          "endpoint": "/Routes/GetUnacknowledgedDeviations",
+          "code": "const getUnacknowledgedDeviationsApi = createApiEndpoint('/Routes/GetUnacknowledgedDeviations');"
+        },
+        {
+          "line": 61,
+          "endpoint": "/Routes/GetActiveRouteInstances",
+          "code": "const getActiveRouteInstancesApi = createApiEndpoint('/Routes/GetActiveRouteInstances');"
+        },
+        {
+          "line": 62,
+          "endpoint": "/Routes/GetScheduledRoutes",
+          "code": "const getScheduledRoutesApi = createApiEndpoint('/Routes/GetScheduledRoutes');"
+        },
+        {
+          "line": 72,
+          "endpoint": "/Routes/GetRoutePlansForUnit/${encodeURIComponent(unitId)}",
+          "code": "const response = await api.get<GetRoutePlansResult>(`/Routes/GetRoutePlansForUnit/${encodeURIComponent(unitId)}`);"
+        },
+        {
+          "line": 77,
+          "endpoint": "/Routes/GetRoutePlan/${encodeURIComponent(routePlanId)}",
+          "code": "const response = await api.get<GetRoutePlanResult>(`/Routes/GetRoutePlan/${encodeURIComponent(routePlanId)}`);"
+        },
+        {
+          "line": 85,
+          "endpoint": "/Routes/GetRoutePlans",
+          "code": "cacheManager.remove('/Routes/GetRoutePlans');"
+        },
+        {
+          "line": 91,
+          "endpoint": "/Routes/GetRoutePlans",
+          "code": "cacheManager.remove('/Routes/GetRoutePlans');"
+        },
+        {
+          "line": 107,
+          "endpoint": "/Routes/GetRoutePlans",
+          "code": "cacheManager.remove('/Routes/GetRoutePlans');"
+        },
+        {
+          "line": 114,
+          "endpoint": "/Routes/GetActiveRouteForUnit/${encodeURIComponent(unitId)}",
+          "code": "const response = await api.get<GetActiveRouteForUnitResult>(`/Routes/GetActiveRouteForUnit/${encodeURIComponent(unitId)}`);"
+        },
+        {
+          "line": 124,
+          "endpoint": "/Routes/GetRouteProgress/${encodeURIComponent(instanceId)}",
+          "code": "const response = await api.get<GetRouteProgressResult>(`/Routes/GetRouteProgress/${encodeURIComponent(instanceId)}`);"
+        },
+        {
+          "line": 129,
+          "endpoint": "/Routes/GetStopsForInstance/${encodeURIComponent(instanceId)}",
+          "code": "const response = await api.get<GetRouteInstanceStopsResult>(`/Routes/GetStopsForInstance/${encodeURIComponent(instanceId)}`);"
+        },
+        {
+          "line": 134,
+          "endpoint": "/Routes/GetInstanceDirections/${encodeURIComponent(instanceId)}",
+          "code": "const response = await api.get<GetDirectionsResult>(`/Routes/GetInstanceDirections/${encodeURIComponent(instanceId)}`);"
+        },
+        {
+          "line": 139,
+          "endpoint": "/Routes/GetDirections/${encodeURIComponent(routePlanId)}",
+          "code": "const response = await api.get<GetDirectionsResult>(`/Routes/GetDirections/${encodeURIComponent(routePlanId)}`);"
+        },
+        {
+          "line": 173,
+          "endpoint": "/Routes/GetStopContact/${encodeURIComponent(routeStopId)}",
+          "code": "const response = await api.get<ContactResult>(`/Routes/GetStopContact/${encodeURIComponent(routeStopId)}`);"
+        },
+        {
+          "line": 178,
+          "endpoint": "/Routes/GetRouteContacts/${encodeURIComponent(routePlanId)}",
+          "code": "const response = await api.get<ContactsResult>(`/Routes/GetRouteContacts/${encodeURIComponent(routePlanId)}`);"
+        },
+        {
+          "line": 190,
+          "endpoint": "/Routes/AcknowledgeDeviation/${encodeURIComponent(deviationId)}",
+          "code": "const response = await api.post<SaveRoutePlanResult>(`/Routes/AcknowledgeDeviation/${encodeURIComponent(deviationId)}`, {});"
+        },
+        {
+          "line": 197,
+          "endpoint": "/Routes/GetRouteHistory/${encodeURIComponent(routePlanId)}",
+          "code": "const response = await api.get<GetRouteInstancesResult>(`/Routes/GetRouteHistory/${encodeURIComponent(routePlanId)}`);"
+        }
+      ],
+      "functions": [
+        "getRoutePlans",
+        "getRoutePlansForUnit",
+        "getRoutePlan",
+        "startRoute",
+        "endRoute",
+        "pauseRoute",
+        "resumeRoute",
+        "cancelRoute",
+        "getActiveRouteForUnit",
+        "getActiveRoutes",
+        "getRouteProgress",
+        "getStopsForInstance",
+        "getInstanceDirections",
+        "getDirections",
+        "checkInAtStop",
+        "checkOutFromStop",
+        "skipStop",
+        "geofenceCheckIn",
+        "updateStopNotes",
+        "getStopContact",
+        "getRouteContacts",
+        "getUnacknowledgedDeviations",
+        "acknowledgeDeviation",
+        "getRouteHistory",
+        "getActiveRouteInstances",
+        "getScheduledRoutes"
+      ]
+    },
+    {
+      "source": "Unit/src/api/satuses/statuses.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Statuses/GetAllStatusesForPersonnel",
+          "code": "const getAllPersonnelStatusesApi = createApiEndpoint('/Statuses/GetAllStatusesForPersonnel');"
+        },
+        {
+          "line": 7,
+          "endpoint": "/Statuses/GetAllStaffingsForPersonnel",
+          "code": "const getAllPersonnelStaffingsApi = createApiEndpoint('/Statuses/GetAllStaffingsForPersonnel');"
+        },
+        {
+          "line": 9,
+          "endpoint": "/Statuses/GetAllUnitStatuses",
+          "code": "const getAllUnitStatusesApi = createApiEndpoint('/Statuses/GetAllUnitStatuses');"
+        }
+      ],
+      "functions": [
+        "getAllPersonnelStatuses",
+        "getAllPersonnelStaffings",
+        "getAllUnitStatuses"
+      ]
+    },
+    {
+      "source": "Unit/src/api/security/security.ts",
+      "endpoints": [
+        {
+          "line": 5,
+          "endpoint": "/Security/GetCurrentUsersRights",
+          "code": "const getCurrentUsersRightsApi = createApiEndpoint('/Security/GetCurrentUsersRights');"
+        }
+      ],
+      "functions": [
+        "getCurrentUsersRights"
+      ]
+    },
+    {
+      "source": "Unit/src/api/units/unitLocation.ts",
+      "endpoints": [
+        {
+          "line": 6,
+          "endpoint": "/UnitLocation/SetUnitLocation",
+          "code": "const setUnitLocationApi = createApiEndpoint('/UnitLocation/SetUnitLocation');"
+        },
+        {
+          "line": 7,
+          "endpoint": "/UnitLocation/GetLatestUnitLocation",
+          "code": "const getUnitLocationApi = createApiEndpoint('/UnitLocation/GetLatestUnitLocation');"
+        }
+      ],
+      "functions": [
+        "setUnitLocation",
+        "getUnitLocation"
+      ]
+    },
+    {
+      "source": "Unit/src/api/units/unitRoles.ts",
+      "endpoints": [
+        {
+          "line": 9,
+          "endpoint": "/UnitRoles/GetRolesForUnit",
+          "code": "const getRolesForUnitApi = createCachedApiEndpoint('/UnitRoles/GetRolesForUnit', {"
+        },
+        {
+          "line": 14,
+          "endpoint": "/UnitRoles/GetRoleAssignmentsForUnit",
+          "code": "const getRoleAssignmentsForUnitApi = createApiEndpoint('/UnitRoles/GetRoleAssignmentsForUnit');"
+        },
+        {
+          "line": 15,
+          "endpoint": "/UnitRoles/SetRoleAssignmentsForUnit",
+          "code": "const setRoleAssignmentsForUnitApi = createApiEndpoint('/UnitRoles/SetRoleAssignmentsForUnit');"
+        },
+        {
+          "line": 16,
+          "endpoint": "/UnitRoles/GetAllUnitRolesAndAssignmentsForDepartment",
+          "code": "const getAllUnitRolesAndAssignmentsForDepartmentApi = createApiEndpoint('/UnitRoles/GetAllUnitRolesAndAssignmentsForDepartment');"
+        }
+      ],
+      "functions": [
+        "getRolesForUnit",
+        "getRoleAssignmentsForUnit",
+        "setRoleAssignmentsForUnit",
+        "getAllUnitRolesAndAssignmentsForDepartment"
+      ]
+    },
+    {
+      "source": "Unit/src/api/units/unitStatuses.ts",
+      "endpoints": [
+        {
+          "line": 7,
+          "endpoint": "/UnitStatus/GetAllUnitStatuses",
+          "code": "const getAllUnitStatusesApi = createApiEndpoint('/UnitStatus/GetAllUnitStatuses');"
+        },
+        {
+          "line": 8,
+          "endpoint": "/UnitStatus/GetUnitStatus",
+          "code": "const getUnitStatusApi = createApiEndpoint('/UnitStatus/GetUnitStatus');"
+        },
+        {
+          "line": 9,
+          "endpoint": "/UnitStatus/SaveUnitStatus",
+          "code": "const saveUnitStatusApi = createApiEndpoint('/UnitStatus/SaveUnitStatus');"
+        }
+      ],
+      "functions": [
+        "getAllUnitStatuses",
+        "getUnitStatus",
+        "saveUnitStatus"
+      ]
+    },
+    {
+      "source": "Unit/src/api/units/units.ts",
+      "endpoints": [
+        {
+          "line": 7,
+          "endpoint": "/Units/GetAllUnits",
+          "code": "const unitsApi = createCachedApiEndpoint('/Units/GetAllUnits', {"
+        },
+        {
+          "line": 12,
+          "endpoint": "/Units/GetAllUnitsInfos",
+          "code": "const unitsInfosApi = createCachedApiEndpoint('/Units/GetAllUnitsInfos', {"
+        },
+        {
+          "line": 17,
+          "endpoint": "/Units/GetUnitsFilterOptions",
+          "code": "const unitsFilterOptionsApi = createCachedApiEndpoint('/Units/GetUnitsFilterOptions', {"
+        }
+      ],
+      "functions": [
+        "getUnits",
+        "getUnitsInfos",
+        "getUnitsFilterOptions"
+      ]
+    },
+    {
+      "source": "Unit/src/api/voice/index.ts",
+      "endpoints": [
+        {
+          "line": 9,
+          "endpoint": "/Voice/ConnectToSession",
+          "code": "const getConnectToSessionApi = createApiEndpoint('/Voice/ConnectToSession');"
+        },
+        {
+          "line": 11,
+          "endpoint": "/Voice/CanConnectToVoiceSession",
+          "code": "const getCanConnectToVoiceSessionApi = createApiEndpoint('/Voice/CanConnectToVoiceSession');"
+        },
+        {
+          "line": 13,
+          "endpoint": "/Voice/GetDepartmentVoiceSettings",
+          "code": "//const getDepartmentVoiceSettingsApi = createCachedApiEndpoint('/Voice/GetDepartmentVoiceSettings', {"
+        },
+        {
+          "line": 18,
+          "endpoint": "/Voice/GetDepartmentVoiceSettings",
+          "code": "const getDepartmentVoiceSettingsApi = createApiEndpoint('/Voice/GetDepartmentVoiceSettings');"
+        },
+        {
+          "line": 20,
+          "endpoint": "/Voice/GetDepartmentAudioStreams",
+          "code": "const getDepartmentAudioStreamsApi = createCachedApiEndpoint('/Voice/GetDepartmentAudioStreams', {"
+        }
+      ],
+      "functions": [
+        "getDepartmentVoiceSettings",
+        "getConnectToSession",
+        "getDepartmentAudioStreams",
+        "getCanConnectToVoiceSession"
+      ]
+    },
+    {
+      "source": "Unit/src/api/weather-alerts/weather-alerts.ts",
+      "endpoints": [
+        {
+          "line": 9,
+          "endpoint": "/WeatherAlerts/GetActiveAlerts",
+          "code": "const getActiveAlertsApi = createCachedApiEndpoint('/WeatherAlerts/GetActiveAlerts', { ttl: 60 * 1000, enabled: true });"
+        },
+        {
+          "line": 11,
+          "endpoint": "/WeatherAlerts/GetWeatherAlert/${encodeURIComponent(alertId)}",
+          "code": "const getWeatherAlertEndpoint = (alertId: string) => createApiEndpoint(`/WeatherAlerts/GetWeatherAlert/${encodeURIComponent(alertId)}`);"
+        },
+        {
+          "line": 12,
+          "endpoint": "/WeatherAlerts/GetAlertsNearLocation",
+          "code": "const getAlertsNearLocationApi = createApiEndpoint('/WeatherAlerts/GetAlertsNearLocation');"
+        },
+        {
+          "line": 13,
+          "endpoint": "/WeatherAlerts/GetAlertHistory",
+          "code": "const getAlertHistoryApi = createApiEndpoint('/WeatherAlerts/GetAlertHistory');"
+        },
+        {
+          "line": 14,
+          "endpoint": "/WeatherAlerts/GetSettings",
+          "code": "const getSettingsApi = createCachedApiEndpoint('/WeatherAlerts/GetSettings', { ttl: 5 * 60 * 1000, enabled: true });"
+        },
+        {
+          "line": 15,
+          "endpoint": "/WeatherAlerts/GetZones",
+          "code": "const getZonesApi = createCachedApiEndpoint('/WeatherAlerts/GetZones', { ttl: 5 * 60 * 1000, enabled: true });"
+        }
+      ],
+      "functions": [
+        "getActiveAlerts",
+        "getWeatherAlert",
+        "getAlertsNearLocation",
+        "getAlertHistory",
+        "getWeatherAlertSettings",
+        "getWeatherAlertZones"
+      ]
+    },
+    {
+      "source": "Unit/src/lib/auth/api.tsx",
+      "endpoints": [
+        {
+          "line": 75,
+          "endpoint": "/connect/token",
+          "code": "const response = await authApi.post<AuthResponse>('/connect/token', data);"
+        },
+        {
+          "line": 155,
+          "endpoint": "/connect/token",
+          "code": "const response = await authApi.post<AuthResponse>('/connect/token', data);"
+        },
+        {
+          "line": 173,
+          "endpoint": "/connect/token",
+          "code": "const response = await authApi.post<AuthResponse>('/connect/token', data);"
+        },
+        {
+          "line": 208,
+          "endpoint": "/connect/external-token",
+          "code": "const response = await authApi.post<AuthResponse>('/connect/external-token', data);"
+        }
+      ],
+      "functions": [
+        "loginTransactionFrom",
+        "loginRequest",
+        "completionGrantRequest",
+        "refreshTokenRequest",
+        "ssoExternalTokenRequest"
+      ]
+    }
+  ],
+  "lesson_word_total_all_eight": 6491,
+  "fixture_invariants": [
+    "Preserve Engine51 unit role51001 Officer/TeamLead = Christopher Herrmann only. The other five units remain unassigned; do not change member status, shift assignments or qualifications for this crew example.",
+    "Parent retained the guarded normal-UI assignment and reopened proof separately; source audit does not claim to have captured Unit role UI itself."
+  ],
+  "installed_audit_at": "2026-10-26T19:25:20.535298+00:00"
+}

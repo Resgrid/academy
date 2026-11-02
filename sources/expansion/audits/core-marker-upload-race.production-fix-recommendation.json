@@ -1,0 +1,24 @@
+{
+  "created_at": "2026-10-27T18:52:03.690595+00:00",
+  "status": "recommendation only; no application change authorized or performed",
+  "diagnosis_file": "research/core-marker-upload-race-20261027.json",
+  "diagnosis_sha256": "6a358a1e098ea45c659e8a4c5eb5859ef3e9b9412148407203d22e31dd838024",
+  "observed_facts": {
+    "same_second_completed_upload_posts": 3,
+    "icon_inserts": 3,
+    "icon_deletes": 3,
+    "remaining_icon_rows": 0,
+    "orphaned_saved_type": 51001
+  },
+  "inference_limit": "Gateway logs establish the three concurrent submissions and table statistics establish insert/delete totals. Exact SQL interleaving was not logged. The retained deterministic in-memory reproduction demonstrates a permitted source execution with the observed orphan and counts; it does not invent a query trace.",
+  "recommended_fix": [
+    "Use a database transaction for a complete replacement, beginning before ownership/slot serialization and before insertion. Serialize on the department-owned type row, using PostgreSQL SELECT FOR UPDATE or SQL Server equivalent UPDLOCK/HOLDLOCK. All participating repository operations must share that connection and transaction.",
+    "Apply the same owner/slot serialization discipline to base uploads, variant uploads and removals, so no concurrent cleanup can remove another replacement. Preserve tenant scoping, existing authentication/authorization, immutable key semantics and variant independence.",
+    "On any failure roll back insertion, pointer update and cleanup together. Retain prior working reference. Avoid an in-process-only lock because multiple web/API instances can write concurrently.",
+    "Add a genuine concurrent-upload regression against an isolated test database. After overlapping replacements, every stored base key and returned active variant must resolve to retained nonempty PNG bytes; no cross-tenant/slot deletion. Existing single-operation mocked and DB tests do not exercise this schedule.",
+    "Separately consider preventing ordinary type-field updates from overwriting server-owned IconKey with a stale loaded value. This did not need to be assumed for the demonstrated replacement-cleanup race."
+  ],
+  "recovery_is_not_fix": "One normal UI re-upload after duplicate submissions settle can repair the fictional orphan. It does not fix concurrent replacement cleanup.",
+  "source_profile_pins_changed": false,
+  "security_or_routes_changed": false
+}

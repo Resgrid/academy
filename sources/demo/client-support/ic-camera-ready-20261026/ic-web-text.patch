@@ -1,0 +1,475 @@
+--- a/src/components/ui/text/index.web.tsx
++++ b/src/components/ui/text/index.web.tsx
+@@ -1,10 +1,15 @@
+ import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
+ import React from 'react';
++import type { TextProps as NativeTextProps } from 'react-native';
++
++import { toDomProps } from '@/components/ui/utils/dom-props';
+ 
+ import { textStyle } from './styles';
+ 
+-type ITextProps = React.ComponentProps<'span'> &
+-  VariantProps<typeof textStyle> & {
++type ITextProps = Omit<React.ComponentProps<'span'>, 'style'> &
++  VariantProps<typeof textStyle> &
++  Pick<NativeTextProps, 'onPress' | 'accessibilityRole' | 'accessibilityLabel' | 'accessibilityHint' | 'accessibilityState' | 'accessibilityValue'> & {
++    style?: React.CSSProperties | NativeTextProps['style'];
+     numberOfLines?: number;
+     ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
+     testID?: string;
+@@ -34,9 +39,7 @@
+           highlight,
+           class: className,
+         })}
+-        data-testid={testID}
+-        {...props}
+-        style={lineClampStyle ? { ...lineClampStyle, ...style } : style}
++        {...toDomProps({ ...props, testID, style: [lineClampStyle, style] })}
+         ref={ref}
+       />
+     );
+--- /dev/null
++++ b/src/components/ui/utils/dom-props.ts
+@@ -0,0 +1,75 @@
++import { StyleSheet, type StyleProp, type TextStyle } from 'react-native';
++
++// Browser Text receives React Native props from shared app components.
++const nativeOnlyProps = new Set([
++  'testID', 'onPress', 'onLongPress', 'numberOfLines', 'ellipsizeMode',
++  'adjustsFontSizeToFit', 'allowFontScaling', 'maxFontSizeMultiplier', 'minimumFontScale',
++  'suppressHighlighting', 'selectable', 'selectionColor', 'textBreakStrategy',
++  'lineBreakStrategyIOS', 'dataDetectorType', 'onTextLayout', 'onLayout',
++  'nativeID', 'hitSlop', 'collapsable', 'needsOffscreenAlphaCompositing',
++  'accessible', 'accessibilityRole', 'accessibilityLabel', 'accessibilityHint',
++  'accessibilityState', 'accessibilityValue', 'accessibilityActions',
++  'onAccessibilityAction', 'importantForAccessibility', 'accessibilityLiveRegion',
++  'accessibilityElementsHidden', 'onStartShouldSetResponder', 'onMoveShouldSetResponder',
++  'onResponderGrant', 'onResponderMove', 'onResponderRelease', 'onResponderTerminate',
++  'onResponderTerminationRequest',
++]);
++
++const isRecord = (value: unknown): value is Record<string, unknown> =>
++  typeof value === 'object' && value !== null && !Array.isArray(value);
++
++/** Flatten native styles and preserve equivalent DOM actions and accessibility. */
++export function toDomProps<T extends object>(props: T): Record<string, unknown> {
++  const native = props as Record<string, unknown>;
++  const dom: Record<string, unknown> = {};
++  for (const [name, value] of Object.entries(native)) {
++    if (!nativeOnlyProps.has(name)) {
++      dom[name] = name === 'style' ? StyleSheet.flatten(value as StyleProp<TextStyle>) : value;
++    }
++  }
++
++  const setDefault = (name: string, value: unknown) => {
++    if (value !== undefined && dom[name] === undefined) dom[name] = value;
++  };
++  setDefault('data-testid', native.testID);
++  setDefault('id', native.nativeID);
++  setDefault('aria-label', native.accessibilityLabel);
++  setDefault('aria-description', native.accessibilityHint);
++  const role = native.accessibilityRole;
++  if (typeof role === 'string' && role !== 'text') {
++    const roleAliases: Record<string, string> = {
++      header: 'heading', image: 'img', imagebutton: 'button', keyboardkey: 'button',
++      none: 'presentation', adjustable: 'slider', summary: 'region',
++    };
++    setDefault('role', roleAliases[role] ?? role);
++  }
++  if (isRecord(native.accessibilityState)) {
++    for (const state of ['disabled', 'selected', 'checked', 'busy', 'expanded']) {
++      setDefault(`aria-${state}`, native.accessibilityState[state]);
++    }
++  }
++  if (isRecord(native.accessibilityValue)) {
++    for (const value of ['min', 'max', 'now', 'text']) {
++      setDefault(`aria-value${value}`, native.accessibilityValue[value]);
++    }
++  }
++  if (native.accessibilityLiveRegion !== undefined) {
++    setDefault('aria-live', native.accessibilityLiveRegion === 'none' ? 'off' : native.accessibilityLiveRegion);
++  }
++  if (native.accessibilityElementsHidden === true || native.importantForAccessibility === 'no-hide-descendants') {
++    setDefault('aria-hidden', true);
++  }
++
++  if (typeof native.onPress === 'function' && dom.onClick === undefined) {
++    dom.onClick = native.onPress;
++    setDefault('role', 'button');
++    setDefault('tabIndex', 0);
++    setDefault('onKeyDown', (event: { key: string; preventDefault: () => void; currentTarget: { click: () => void } }) => {
++      if (event.key === 'Enter' || (event.key === ' ' && dom.role !== 'link')) {
++        event.preventDefault();
++        event.currentTarget.click();
++      }
++    });
++  }
++  return dom;
++}
+--- a/metro.config.js
++++ b/metro.config.js
+@@ -2,12 +2,22 @@
+ 
+ const { getSentryExpoConfig } = require('@sentry/react-native/metro');
+ //const { getDefaultConfig } = require('expo/metro-config');
++const fs = require('fs');
+ const path = require('path');
+ const { withNativewind } = require('nativewind/metro');
+ 
+ const config = getSentryExpoConfig(__dirname, {
+   isCSSEnabled: true,
+ });
++
++// Recording checkout reuses the source installation without writing to it.
++// Metro must be able to see the real destination of the node_modules symlink.
++const linkedNodeModules = fs.realpathSync(path.join(__dirname, 'node_modules'));
++if (linkedNodeModules !== path.join(__dirname, 'node_modules')) {
++  config.watchFolders = [...new Set([...(config.watchFolders || []), linkedNodeModules])];
++  config.resolver.nodeModulesPaths = [...new Set([...(config.resolver.nodeModulesPaths || []), linkedNodeModules])];
++}
++
+ 
+ // 1. Watch all files within the monorepo
+ // 2. Let Metro know where to resolve packages and in what order
+--- a/src/components/maps/map-view.web.tsx
++++ b/src/components/maps/map-view.web.tsx
+@@ -11,6 +11,9 @@
+ 
+ import { useDepartmentMapCenter } from '@/lib/map-center';
+ import { onMapboxAccessTokenChange } from '@/lib/mapbox-token';
++
++import { createWebCameraBridge, readWebCameraChange } from './web-camera-bridge';
++import { findWebCameraDeclaration, renderReadyWebMapChildren, resolveWebCameraSettings, type WebCameraDeclaration } from './web-camera-settings';
+ 
+ // Keep mapbox-gl on the token in use (the built-in one, or the server-supplied one once Mapbox has verified
+ // it), now and on every change. The listener runs inside the token store's state change, before React
+@@ -171,7 +174,7 @@
+   style?: React.CSSProperties;
+   styleURL?: string;
+   onDidFinishLoadingMap?: () => void;
+-  onCameraChanged?: (event: { properties: { isUserInteraction: boolean } }) => void;
++  onCameraChanged?: (event: { properties: { isUserInteraction: boolean; center: [number, number]; zoom: number } }) => void;
+   children?: React.ReactNode;
+   testID?: string;
+   logoEnabled?: boolean;
+@@ -209,6 +212,10 @@
+     },
+     ref
+   ) => {
++    const declaredCamera = findWebCameraDeclaration(children, Camera);
++    const declaredSettings = resolveWebCameraSettings(declaredCamera ?? {});
++    const cameraCenter = initialCenter ?? declaredSettings.centerCoordinate;
++    const cameraZoom = initialZoom ?? declaredSettings.zoomLevel;
+     const mapContainer = useRef<HTMLDivElement>(null);
+     const map = useRef<any | null>(null);
+     // The map whose style finished loading, and that style. Children render only while it is the style asked
+@@ -273,10 +280,10 @@
+         // A map rebuilt for a style change keeps the previous map's view instead.
+         const startCenter = carriedCamera
+           ? carriedCamera.center
+-          : initialCenter && isFinite(initialCenter[0]) && isFinite(initialCenter[1])
+-            ? initialCenter
++          : cameraCenter && isFinite(cameraCenter[0]) && isFinite(cameraCenter[1])
++            ? cameraCenter
+             : ([departmentCenter.longitude, departmentCenter.latitude] as [number, number]); // Department center
+-        const startZoom = carriedCamera ? carriedCamera.zoom : initialZoom != null && isFinite(initialZoom) ? initialZoom : 4;
++        const startZoom = carriedCamera ? carriedCamera.zoom : cameraZoom != null && isFinite(cameraZoom) ? cameraZoom : 4;
+ 
+         const newMap = new mapboxgl.Map({
+           container: mapContainer.current,
+@@ -319,7 +326,8 @@
+           if (wasUser) {
+             hasUserMovedRef.current = true;
+           }
+-          onCameraChanged?.({ properties: { isUserInteraction: wasUser } });
++          const cameraChange = readWebCameraChange(newMap, wasUser);
++          if (cameraChange) onCameraChanged?.(cameraChange);
+         });
+ 
+         map.current = newMap;
+@@ -428,7 +436,8 @@
+     // has not already moved the map themselves.
+     useEffect(() => {
+       if (!isLoaded || !map.current) return;
+-      if (initialCenter && isFinite(initialCenter[0]) && isFinite(initialCenter[1])) return;
++      if (cameraCenter && isFinite(cameraCenter[0]) && isFinite(cameraCenter[1])) return;
++      if (declaredCamera?.bounds) return;
+       if (hasUserMovedRef.current) return;
+ 
+       const center = `${departmentCenter.longitude},${departmentCenter.latitude}`;
+@@ -437,7 +446,7 @@
+ 
+       // Tagged programmatic so moveend does not report this as a user interaction.
+       map.current.easeTo({ center: [departmentCenter.longitude, departmentCenter.latitude], duration: 500 }, { _programmatic: true });
+-    }, [isLoaded, initialCenter, departmentCenter.longitude, departmentCenter.latitude]);
++    }, [isLoaded, cameraCenter, declaredCamera?.bounds, departmentCenter.longitude, departmentCenter.latitude]);
+ 
+     // Keep the map canvas in sync with container size changes.
+     useEffect(() => {
+@@ -474,7 +483,9 @@
+           minHeight: style?.height || style?.minHeight || 100,
+         }}
+       >
+-        {isLoaded && <MapContext.Provider value={loaded.map}>{children}</MapContext.Provider>}
++        <MapContext.Provider value={isLoaded ? loaded.map : null}>
++          {renderReadyWebMapChildren(children, Camera, isLoaded)}
++        </MapContext.Provider>
+       </div>
+     );
+   }
+@@ -483,12 +494,8 @@
+ MapView.displayName = 'MapView';
+ 
+ // Camera Props interface
+-interface CameraProps {
++interface CameraProps extends WebCameraDeclaration {
+   ref?: React.Ref<any>;
+-  centerCoordinate?: [number, number];
+-  zoomLevel?: number;
+-  heading?: number;
+-  pitch?: number;
+   animationDuration?: number;
+   animationMode?: string;
+   followUserLocation?: boolean;
+@@ -502,68 +509,23 @@
+ }
+ 
+ // Camera component
+-export const Camera = forwardRef<any, CameraProps>(({ centerCoordinate, zoomLevel, heading, pitch, animationDuration = 1000, animationMode, followUserLocation, followZoomLevel, bounds, padding }, ref) => {
++export const Camera = forwardRef<any, CameraProps>(({ defaultSettings, centerCoordinate: controlledCenter, zoomLevel: controlledZoom, heading: controlledHeading, pitch: controlledPitch, animationDuration = 1000, animationMode, followUserLocation, followZoomLevel, bounds, padding }, ref) => {
++  const { centerCoordinate, zoomLevel, heading, pitch } = resolveWebCameraSettings({
++    defaultSettings, centerCoordinate: controlledCenter, zoomLevel: controlledZoom, heading: controlledHeading, pitch: controlledPitch,
++  });
+   const map = useContext(MapContext);
+   const geolocateControl = useRef<any | null>(null);
+   const hasInitialized = useRef(false);
+ 
++  // This ref exists before map/style load so parent mount effects can queue their
++  // source-specified recenter request instead of losing it through an absent ref.
++  const bridgeRef = useRef<ReturnType<typeof createWebCameraBridge> | null>(null);
++  if (!bridgeRef.current) bridgeRef.current = createWebCameraBridge();
+   useImperativeHandle(ref, () => ({
+-    setCamera: (options: { centerCoordinate?: [number, number]; zoomLevel?: number; heading?: number; pitch?: number; animationDuration?: number }) => {
+-      if (!map) return;
+-
+-      if (options.centerCoordinate && (!isFinite(options.centerCoordinate[0]) || !isFinite(options.centerCoordinate[1]))) {
+-        return;
+-      }
+-
+-      map.easeTo(
+-        {
+-          center: options.centerCoordinate,
+-          zoom: options.zoomLevel,
+-          bearing: options.heading,
+-          pitch: options.pitch,
+-          duration: options.animationDuration || 1000,
+-        },
+-        { _programmatic: true }
+-      );
+-    },
+-
+-    /** flyTo supports both array form flyTo([lng, lat], duration) and options-object form */
+-    flyTo: (coordinatesOrOptions: any, duration?: number) => {
+-      if (!map) return;
+-
+-      if (Array.isArray(coordinatesOrOptions)) {
+-        // Native Mapbox Camera API: flyTo([lng, lat], animationDuration)
+-        const [lng, lat] = coordinatesOrOptions;
+-        if (!isFinite(lng) || !isFinite(lat)) return;
+-        map.flyTo({ center: [lng, lat] as [number, number], duration: duration || 1000 }, { _programmatic: true });
+-      } else {
+-        // Options-object form: flyTo({ center, zoom, ... })
+-        const opts = coordinatesOrOptions;
+-        if (opts?.center && Array.isArray(opts.center) && (!isFinite(opts.center[0]) || !isFinite(opts.center[1]))) return;
+-        map.flyTo(opts, { _programmatic: true });
+-      }
+-    },
+-
+-    /** fitBounds(ne, sw, padding?, duration?) — matches native Mapbox Camera API */
+-    fitBounds: (ne: [number, number], sw: [number, number], pad?: number | number[], duration?: number) => {
+-      if (!map) return;
+-
+-      const paddingObj = Array.isArray(pad) ? { top: pad[0] ?? 60, right: pad[1] ?? 60, bottom: pad[2] ?? 60, left: pad[3] ?? 60 } : { top: pad ?? 60, right: pad ?? 60, bottom: pad ?? 60, left: pad ?? 60 };
+-
+-      try {
+-        map.fitBounds(
+-          [
+-            [sw[0], sw[1]],
+-            [ne[0], ne[1]],
+-          ],
+-          { padding: paddingObj, duration: duration || 1000 },
+-          { _programmatic: true }
+-        );
+-      } catch {
+-        // ignore projection errors
+-      }
+-    },
+-  }));
++    setCamera: bridgeRef.current!.setCamera,
++    flyTo: bridgeRef.current!.flyTo,
++    fitBounds: bridgeRef.current!.fitBounds,
++  }), []);
+ 
+   // Handle bounds prop (declarative camera fitting)
+   useEffect(() => {
+@@ -625,13 +587,13 @@
+         return;
+       }
+ 
+-      const cameraOptions = {
++      const cameraOptions: Record<string, unknown> = {
+         center: centerCoordinate as [number, number],
+-        zoom: zoomLevel,
+-        bearing: heading,
+-        pitch: pitch,
+         duration: animationDuration,
+       };
++      if (zoomLevel !== undefined) cameraOptions.zoom = zoomLevel;
++      if (heading !== undefined) cameraOptions.bearing = heading;
++      if (pitch !== undefined) cameraOptions.pitch = pitch;
+ 
+       try {
+         if (animationMode === 'flyTo') {
+@@ -644,6 +606,12 @@
+       }
+     }
+   }, [map, centerCoordinate, zoomLevel, heading, pitch, animationDuration, animationMode]);
++
++  useEffect(() => {
++    const bridge = bridgeRef.current!;
++    bridge.setMap(map);
++    return () => bridge.setMap(null);
++  }, [map]);
+ 
+   // Handle followUserLocation
+   useEffect(() => {
+--- /dev/null
++++ b/src/components/maps/web-camera-settings.ts
+@@ -0,0 +1,48 @@
++import React from 'react';
++
++export interface WebCameraSettings {
++  centerCoordinate?: [number, number];
++  zoomLevel?: number;
++  heading?: number;
++  pitch?: number;
++}
++
++export interface WebCameraDeclaration extends WebCameraSettings {
++  defaultSettings?: WebCameraSettings;
++  bounds?: { ne: [number, number]; sw: [number, number] };
++  children?: React.ReactNode;
++}
++
++/** Native Camera defaultSettings remain the initial values until a controlled prop replaces them. */
++export function resolveWebCameraSettings(props: WebCameraDeclaration): WebCameraSettings {
++  return {
++    centerCoordinate: props.centerCoordinate ?? props.defaultSettings?.centerCoordinate,
++    zoomLevel: props.zoomLevel ?? props.defaultSettings?.zoomLevel,
++    heading: props.heading ?? props.defaultSettings?.heading,
++    pitch: props.pitch ?? props.defaultSettings?.pitch,
++  };
++}
++
++/** Use the caller's declared camera before map construction and before department fallback recentering. */
++export function findWebCameraDeclaration(children: React.ReactNode, cameraType: React.ElementType): WebCameraDeclaration | undefined {
++  for (const child of React.Children.toArray(children)) {
++    if (!React.isValidElement<WebCameraDeclaration>(child)) continue;
++    if (child.type === cameraType) return child.props;
++    if (child.type === React.Fragment) {
++      const nested = findWebCameraDeclaration(child.props.children, cameraType);
++      if (nested) return nested;
++    }
++  }
++  return undefined;
++}
++
++/** Keep Camera refs mounted before style load without prematurely mounting map sources/layers. */
++export function renderReadyWebMapChildren(children: React.ReactNode, cameraType: React.ElementType, ready: boolean): React.ReactNode {
++  return React.Children.map(children, child => {
++    if (!React.isValidElement<WebCameraDeclaration>(child)) return ready ? child : null;
++    if (child.type === React.Fragment) {
++      return React.cloneElement(child, undefined, renderReadyWebMapChildren(child.props.children, cameraType, ready));
++    }
++    return ready || child.type === cameraType ? child : null;
++  });
++}
+--- /dev/null
++++ b/src/components/maps/web-camera-bridge.ts
+@@ -0,0 +1,75 @@
++/** Web compatibility for the native Camera ref. No coordinates are manufactured here. */
++export interface WebImperativeCameraSettings {
++  centerCoordinate?: [number, number];
++  zoomLevel?: number;
++  heading?: number;
++  pitch?: number;
++  animationDuration?: number;
++}
++
++type CameraCommand = { method: 'easeTo' | 'flyTo'; options: Record<string, unknown> } | {
++  method: 'fitBounds'; bounds: [[number, number], [number, number]]; options: Record<string, unknown>;
++};
++const coordinate = (value: unknown): value is [number, number] => Array.isArray(value) && value.length === 2 && value.every(Number.isFinite);
++const numeric = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
++
++/** Retain the latest native camera request while its web map/style is not ready. */
++export function createWebCameraBridge() {
++  let map: any = null;
++  let pending: CameraCommand | null = null;
++  function apply(command: CameraCommand) {
++    if (!map || map.__removed) {
++      pending = command;
++      return;
++    }
++    if (command.method === 'fitBounds') map.fitBounds(command.bounds, command.options, { _programmatic: true });
++    else map[command.method](command.options, { _programmatic: true });
++  }
++  return {
++    setMap(next: any) {
++      map = next;
++      if (map && !map.__removed && pending) {
++        const command = pending;
++        pending = null;
++        apply(command);
++      }
++    },
++    setCamera(settings: WebImperativeCameraSettings) {
++      if (settings.centerCoordinate !== undefined && !coordinate(settings.centerCoordinate)) return;
++      if ([settings.zoomLevel, settings.heading, settings.pitch, settings.animationDuration].some(value => value !== undefined && !numeric(value))) return;
++      const options: Record<string, unknown> = { duration: settings.animationDuration ?? 1000 };
++      if (settings.centerCoordinate !== undefined) options.center = settings.centerCoordinate;
++      if (settings.zoomLevel !== undefined) options.zoom = settings.zoomLevel;
++      if (settings.heading !== undefined) options.bearing = settings.heading;
++      if (settings.pitch !== undefined) options.pitch = settings.pitch;
++      apply({ method: 'easeTo', options });
++    },
++    flyTo(coordinatesOrOptions: unknown, duration?: number) {
++      if (Array.isArray(coordinatesOrOptions)) {
++        if (!coordinate(coordinatesOrOptions) || (duration !== undefined && !numeric(duration))) return;
++        apply({ method: 'flyTo', options: { center: coordinatesOrOptions, duration: duration ?? 1000 } });
++      } else if (coordinatesOrOptions && typeof coordinatesOrOptions === 'object') {
++        const options = Object.fromEntries(Object.entries(coordinatesOrOptions).filter(([, value]) => value !== undefined));
++        if (options.center !== undefined && !coordinate(options.center)) return;
++        if (['zoom', 'bearing', 'pitch', 'duration'].some(key => options[key] !== undefined && !numeric(options[key]))) return;
++        apply({ method: 'flyTo', options });
++      }
++    },
++    fitBounds(ne: [number, number], sw: [number, number], pad?: number | number[], duration?: number) {
++      if (!coordinate(ne) || !coordinate(sw) || (duration !== undefined && !numeric(duration))) return;
++      if (pad !== undefined && !(numeric(pad) || (Array.isArray(pad) && pad.every(numeric)))) return;
++      const padding = Array.isArray(pad)
++        ? { top: pad[0] ?? 60, right: pad[1] ?? 60, bottom: pad[2] ?? 60, left: pad[3] ?? 60 }
++        : { top: pad ?? 60, right: pad ?? 60, bottom: pad ?? 60, left: pad ?? 60 };
++      apply({ method: 'fitBounds', bounds: [sw, ne], options: { padding, duration: duration ?? 1000 } });
++    },
++  };
++}
++
++/** Report the real map transform using the center/zoom fields consumed by native screens. */
++export function readWebCameraChange(map: any, isUserInteraction: boolean) {
++  const center = map.getCenter();
++  const zoom = map.getZoom();
++  if (!numeric(center?.lng) || !numeric(center?.lat) || !numeric(zoom)) return undefined;
++  return { properties: { isUserInteraction, center: [center.lng, center.lat] as [number, number], zoom } };
++}

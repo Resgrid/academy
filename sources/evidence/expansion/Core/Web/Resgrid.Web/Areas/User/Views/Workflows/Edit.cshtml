@@ -1,0 +1,1742 @@
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Inventory.Inventory> inventoryStrings
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.WorkOrders.WorkOrders> workOrderStrings
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Invoicing.Invoicing> invoicingStrings
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Checklists.Checklists> checklistStrings
+@model Resgrid.Model.Workflow
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Workflows.Workflows> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.ProtectedWorkflows.ProtectedWorkflows> pwLocalizer
+@{
+    var isProtectedWorkflow = (bool)(ViewBag.IsProtectedWorkflow ?? false);
+    ViewData["Title"] = "Resgrid | " + localizer["EditWorkflowHeader"];
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+    var credentialsJson = (string)(ViewBag.CredentialsJson ?? "[]");
+    var triggerEventTypeName = Resgrid.Model.Invoicing.InvoiceWorkflowPayload.IsInvoice(Model.TriggerEventType) ? invoicingStrings[((Resgrid.Model.WorkflowTriggerEventType)Model.TriggerEventType).ToString()].Value : Resgrid.Model.Inventories.InventoryWorkflowPayload.IsInventory(Model.TriggerEventType) ? inventoryStrings[((Resgrid.Model.WorkflowTriggerEventType)Model.TriggerEventType).ToString()].Value : Resgrid.Model.WorkOrders.WorkOrderWorkflowPayload.IsWorkOrder(Model.TriggerEventType) ? workOrderStrings[((Resgrid.Model.WorkflowTriggerEventType)Model.TriggerEventType).ToString()].Value : Resgrid.Model.Checklists.ChecklistWorkflowPayload.IsChecklist((int)Model.TriggerEventType) ? checklistStrings[((Resgrid.Model.WorkflowTriggerEventType)Model.TriggerEventType).ToString()].Value : (string)(ViewBag.TriggerEventTypeName ?? Model.TriggerEventType.ToString());
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/codemirror/lib/codemirror.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/codemirror/theme/monokai.min.css" asp-append-version="true" />
+    <style>
+        .CodeMirror { height: 220px; font-size: 12px; }
+        .step-card { border: 1px solid #e7eaec; padding: 15px; margin-bottom: 10px; border-radius: 4px; background: #f9f9f9; }
+        /* extra-large modal */
+        .modal-xl { width: 96%; max-width: 1200px; }
+        /* variable chip buttons */
+        .var-chip { display: inline-block; margin: 2px 2px 2px 0; padding: 2px 7px; font-size: 11px; font-family: monospace;
+                    background: #eef2ff; border: 1px solid #c5cef5; border-radius: 3px; cursor: pointer; color: #3a4a9f;
+                    white-space: nowrap; }
+        .var-chip:hover { background: #c5cef5; }
+        .var-chip-array { background: #eefaf4; border-color: #7ec8a0; color: #1a6b3c; }
+        .var-chip-array:hover { background: #c8edda; }
+        /* action-config panels */
+        .action-config-panel { display: none; }
+        .action-config-panel.active { display: block; }
+        /* modal left/right columns */
+        .step-modal-left  { padding-right: 20px; border-right: 1px solid #e7eaec; }
+        .step-modal-right { padding-left: 16px; }
+        /* small section label */
+        .config-section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #888; margin: 12px 0 6px; letter-spacing: .04em; }
+    </style>
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-6">
+        <h2>@localizer["EditWorkflowHeader"]: @Model.Name</h2>
+        <ol class="breadcrumb">
+            <li><a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a></li>
+            <li><a asp-action="Index">@localizer["WorkflowsHeader"]</a></li>
+            <li class="active"><strong>@localizer["Edit"]</strong></li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (TempData["GalleryCreated"] is string galleryCreated)
+    {
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> @localizer[galleryCreated]</div>
+    }
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Workflow settings -->
+            <div class="ibox">
+                <div class="ibox-title"><h5>@localizer["WorkflowSettings"]</h5></div>
+                <div class="ibox-content">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="WorkflowId" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Name">@localizer["Name"]</label>
+                            <input asp-for="Name" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description">@localizer["Description"]</label>
+                            <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label asp-for="TriggerEventType">@localizer["TriggerEvent"]</label>
+                                    <input type="hidden" asp-for="TriggerEventType" />
+                                    <p class="form-control-static">
+                                        <strong>@triggerEventTypeName</strong>
+                                        <br /><small class="text-muted">@localizer["TriggerEventLocked"]</small>
+                                        @if ((bool)(ViewBag.RecordsTriggersAvailable ?? false) && Model.TriggerEventType == (int)Resgrid.Model.WorkflowTriggerEventType.LogAdded)
+                                        {
+                                            <br /><small class="text-warning"><i class="fa fa-exclamation-triangle"></i> @localizer["LogAddedCompatibilityWarning"]</small>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label asp-for="MaxRetryCount">@localizer["MaxRetries"]</label>
+                                    <input asp-for="MaxRetryCount" type="number" class="form-control" min="0" max="10" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label asp-for="RetryBackoffBaseSeconds">@localizer["BackoffSeconds"]</label>
+                                    <input asp-for="RetryBackoffBaseSeconds" type="number" class="form-control" min="1" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox"><label><input asp-for="IsEnabled" type="checkbox" /> @localizer["Enabled"]</label></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">@localizer["SaveChanges"]</button>
+                        <a asp-action="Index" class="btn btn-default">@localizer["Cancel"]</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Steps -->
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>@localizer["Steps"]</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-xs btn-primary" id="addStepBtn" type="button">
+                            <i class="fa fa-plus"></i> @localizer["AddStep"]
+                        </button>
+                    </div>
+                </div>
+                <div class="ibox-content" id="stepsContainer">
+                    @if (Model.Steps != null)
+                    {
+                        foreach (var step in Model.Steps.OrderBy(s => s.StepOrder))
+                        {
+                            <div class="step-card" data-step-id="@step.WorkflowStepId">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>@localizer["ActionType"]</label>
+                                        <p>
+                                            <strong>@(localizer["ActionType_" + (Resgrid.Model.WorkflowActionType)step.ActionType])</strong>
+                                            @if (!string.IsNullOrWhiteSpace(step.ConditionExpression))
+                                            {
+                                                <span class="badge badge-info" title="@step.ConditionExpression" style="margin-left:4px;">
+                                                    <i class="fa fa-filter"></i> @localizer["StepConditional"]
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label>@localizer["Order"]</label>
+                                        <p>@step.StepOrder</p>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label>@localizer["Enabled"]</label>
+                                        <p>@(step.IsEnabled ? localizer["Yes"].Value : localizer["No"].Value)</p>
+                                    </div>
+                                    <div class="col-sm-5 text-right">
+                                        <button type="button" class="btn btn-xs btn-default edit-step-btn"
+                                                data-step='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(step))'>
+                                            <i class="fa fa-pencil"></i> @localizer["Edit"]
+                                        </button>
+                                        <button type="button" class="btn btn-xs btn-danger delete-step-btn"
+                                                data-step-id="@step.WorkflowStepId"
+                                                data-workflow-id="@Model.WorkflowId">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>@localizer["TemplatePeek"]</label>
+                                    <pre class="small">@(step.OutputTemplate?.Length > 120 ? step.OutputTemplate.Substring(0, 120) + "..." : step.OutputTemplate)</pre>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- ADP Protected Workflows: the release panel loads here when the department has turned the feature on. -->
+            <div id="protectedReleasePanelHost" data-url="@Url.Action("Panel", "ProtectedWorkflows", new { area = "User", workflowId = Model.WorkflowId })"></div>
+        </div>
+
+        <!-- Variable reference panel (right sidebar on main page) -->
+        <div class="col-lg-4">
+            <div class="ibox">
+                <div class="ibox-title"><h5><i class="fa fa-info-circle"></i> @localizer["TemplateVariables"]</h5></div>
+                <div class="ibox-content small">
+                    <p class="text-muted">@localizer["CommonVariables"]</p>
+                    <ul class="list-unstyled">
+                        <li><code>{{ department.name }}</code></li>
+                        <li><code>{{ department.code }}</code></li>
+                        <li><code>{{ department.address.full }}</code></li>
+                        <li><code>{{ timestamp.utc_now }}</code></li>
+                        <li><code>{{ timestamp.department_now }}</code></li>
+                        <li><code>{{ user.full_name }}</code></li>
+                        <li><code>{{ user.email }}</code></li>
+                    </ul>
+                    <hr />
+                    <p class="text-muted">@localizer["CallEventVariables"]</p>
+                    <ul class="list-unstyled">
+                        <li><code>{{ call.name }}</code></li>
+                        <li><code>{{ call.nature }}</code></li>
+                        <li><code>{{ call.address }}</code></li>
+                        <li><code>{{ call.priority_text }}</code></li>
+                        <li><code>{{ call.state_text }}</code></li>
+                        <li><code>{{ call.logged_on }}</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     Add / Edit Step Modal  (extra-large, two-column layout)
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="stepModal" tabindex="-1" role="dialog" aria-labelledby="stepModalLabel">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="stepModalLabel">@localizer["AddStep"]</h4>
+            </div>
+            <div class="modal-body" style="padding: 20px 24px;">
+
+                <!-- hidden state -->
+                <input type="hidden" id="stepId" />
+                <input type="hidden" id="stepWorkflowId" value="@Model.WorkflowId" />
+
+                <div class="row">
+                    <!-- ── LEFT COLUMN ── -->
+                    <div class="col-md-8 step-modal-left">
+
+                        <!-- Row 1 : ActionType / Order / Enabled -->
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>@localizer["ActionType"] <span class="text-danger">*</span></label>
+                                    <select id="stepActionType" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>@localizer["Order"]</label>
+                                    <input type="number" id="stepOrder" class="form-control" min="0" value="0" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>&nbsp;</label><br />
+                                    <div class="checkbox" style="margin-top:4px;">
+                                        <label><input type="checkbox" id="stepIsEnabled" checked /> @localizer["Enabled"]</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Action Config Panels ── -->
+                        <div class="config-section-label">@localizer["ActionConfig"]</div>
+
+                        @if ((bool)(ViewBag.RecordsExportAvailable ?? false))
+                        {
+                            <!-- Records report export (RMS plan 5.6): email attaches it, file actions upload it -->
+                            <div class="form-group" id="cfg_export_group" style="display:none;">
+                                <label>@localizer["ExportTemplate"]</label>
+                                <select id="cfg_export_template" class="form-control"><option value="">@localizer["ExportTemplateNone"]</option></select>
+                                <span class="help-block">@localizer["ExportTemplateHelp"]</span>
+                            </div>
+                        }
+
+                        <!-- 0 · SendEmail -->
+                        <div class="action-config-panel" data-action="0">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldTo"] <span class="text-danger">*</span></label>
+                                        <input type="text" id="cfg_email_to" class="form-control" placeholder="user@example.com, user2@example.com" />
+                                        <span class="help-block">@localizer["FieldToHelp"]</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldCc"]</label>
+                                        <input type="text" id="cfg_email_cc" class="form-control" placeholder="@localizer["OptionalPlaceholder"]" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>@localizer["FieldSubject"] <span class="text-danger">*</span></label>
+                                <input type="text" id="cfg_email_subject" class="form-control" placeholder="@(localizer["SubjectPlaceholder", "{{ call.name }}"])" />
+                            </div>
+                        </div>
+
+                        <!-- 1 · SendSms -->
+                        <div class="action-config-panel" data-action="1">
+                            <div class="form-group">
+                                <label>@localizer["FieldToPhone"] <span class="text-danger">*</span></label>
+                                <input type="text" id="cfg_sms_to" class="form-control" placeholder="+15551234567" />
+                                <span class="help-block">@localizer["FieldToPhoneHelp"]</span>
+                            </div>
+                        </div>
+
+                        <!-- 2 · CallApiGet -->
+                        <div class="action-config-panel" data-action="2">
+                            <div class="form-group">
+                                <label>@localizer["FieldUrl"] <span class="text-danger">*</span></label>
+                                <input type="url" id="cfg_apiget_url" class="form-control" placeholder="https://api.example.com/notify" />
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <input type="text" id="cfg_apiget_ct" class="form-control" value="application/json" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldTimeoutSeconds"]</label>
+                                        <input type="number" id="cfg_apiget_timeout" class="form-control" value="30" min="1" max="300" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3 · CallApiPost -->
+                        <div class="action-config-panel" data-action="3">
+                            <div class="form-group">
+                                <label>@localizer["FieldUrl"] <span class="text-danger">*</span></label>
+                                <input type="url" id="cfg_apipost_url" class="form-control" placeholder="https://api.example.com/webhook" />
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <input type="text" id="cfg_apipost_ct" class="form-control" value="application/json" list="pwContentTypes" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldTimeoutSeconds"]</label>
+                                        <input type="number" id="cfg_apipost_timeout" class="form-control" value="30" min="1" max="300" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4 · CallApiPut -->
+                        <div class="action-config-panel" data-action="4">
+                            <div class="form-group">
+                                <label>@localizer["FieldUrl"] <span class="text-danger">*</span></label>
+                                <input type="url" id="cfg_apiput_url" class="form-control" placeholder="https://api.example.com/resource/1" />
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <input type="text" id="cfg_apiput_ct" class="form-control" value="application/json" list="pwContentTypes" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldTimeoutSeconds"]</label>
+                                        <input type="number" id="cfg_apiput_timeout" class="form-control" value="30" min="1" max="300" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (isProtectedWorkflow)
+                        {
+                            <datalist id="pwContentTypes">
+                                @foreach (var contentType in Resgrid.Model.ProtectedStepOptions.AllowedContentTypes)
+                                {
+                                    <option value="@contentType"></option>
+                                }
+                            </datalist>
+                            <!-- Protected (EHR) delivery options for API POST / PUT steps -->
+                            <div id="cfg_protected_options" style="display:none; border-left: 3px solid #1ab394; padding-left: 10px; margin-bottom: 10px;">
+                                <div class="config-section-label"><i class="fa fa-shield"></i> @pwLocalizer["StepOptionsHeader"]</div>
+                                <p class="text-muted" style="font-size:11px;">@pwLocalizer["StepOptionsHelp"]</p>
+                                <div class="row">
+                                    <div class="col-sm-6 form-group">
+                                        <label>@pwLocalizer["StepSuccessRule"]</label>
+                                        <select id="cfg_pw_rule" class="form-control">
+                                            <option value="http_2xx">@pwLocalizer["Rule_http_2xx"]</option>
+                                            <option value="json_path">@pwLocalizer["Rule_json_path"]</option>
+                                            <option value="xpath">@pwLocalizer["Rule_xpath"]</option>
+                                            <option value="hl7_ack">@pwLocalizer["Rule_hl7_ack"]</option>
+                                            <option value="fhir_operation_outcome">@pwLocalizer["Rule_fhir_operation_outcome"]</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3 form-group">
+                                        <label>@pwLocalizer["StepRulePath"]</label>
+                                        <input type="text" id="cfg_pw_rule_path" class="form-control" placeholder="$.status" />
+                                    </div>
+                                    <div class="col-sm-3 form-group">
+                                        <label>@pwLocalizer["StepRuleExpected"]</label>
+                                        <input type="text" id="cfg_pw_rule_expected" class="form-control" placeholder="ok" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>@pwLocalizer["StepCapture"]</label>
+                                    <textarea id="cfg_pw_capture" class="form-control" rows="3" placeholder="fhir_location_id | Encounter | ehr_encounter_id"></textarea>
+                                    <small class="text-muted">@pwLocalizer["StepCaptureHelp"]</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 form-group">
+                                        <label>@pwLocalizer["StepIdempotencyHeader"]</label>
+                                        <input type="text" id="cfg_pw_idem" class="form-control" placeholder="Idempotency-Key" />
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label>@pwLocalizer["StepIfNoneExist"]</label>
+                                        <input type="text" id="cfg_pw_ifnoneexist" class="form-control" placeholder="identifier=https://resgrid.com/call|{{ call.id }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- 5 · CallApiDelete -->
+                        <div class="action-config-panel" data-action="5">
+                            <div class="form-group">
+                                <label>@localizer["FieldUrl"] <span class="text-danger">*</span></label>
+                                <input type="url" id="cfg_apidel_url" class="form-control" placeholder="https://api.example.com/resource/1" />
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <input type="text" id="cfg_apidel_ct" class="form-control" value="application/json" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldTimeoutSeconds"]</label>
+                                        <input type="number" id="cfg_apidel_timeout" class="form-control" value="30" min="1" max="300" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6 · UploadFileFtp -->
+                        <div class="action-config-panel" data-action="6">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldRemotePath"]</label>
+                                        <input type="text" id="cfg_ftp_path" class="form-control" value="/" placeholder="/uploads" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldFilename"]</label>
+                                        <input type="text" id="cfg_ftp_filename" class="form-control" placeholder="report.txt" />
+                                        <span class="help-block">@localizer["FieldFilenameHelp"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7 · UploadFileSftp -->
+                        <div class="action-config-panel" data-action="7">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldRemotePath"]</label>
+                                        <input type="text" id="cfg_sftp_path" class="form-control" value="/" placeholder="/uploads" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldFilename"]</label>
+                                        <input type="text" id="cfg_sftp_filename" class="form-control" placeholder="report.txt" />
+                                        <span class="help-block">@localizer["FieldFilenameHelp"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8 · UploadFileS3 -->
+                        <div class="action-config-panel" data-action="8">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldS3Key"]</label>
+                                        <input type="text" id="cfg_s3_key" class="form-control" placeholder="reports/workflow_output.txt" />
+                                        <span class="help-block">@localizer["FieldS3KeyHelp"]</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <input type="text" id="cfg_s3_ct" class="form-control" value="text/plain" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 9 · SendTeamsMessage -->
+                        <div class="action-config-panel" data-action="9">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldCardTitle"]</label>
+                                        <input type="text" id="cfg_teams_title" class="form-control" placeholder="@localizer["TeamsTitlePlaceholder"]" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldThemeColor"]</label>
+                                        <input type="text" id="cfg_teams_color" class="form-control" value="0076D7" placeholder="0076D7" />
+                                        <span class="help-block">@localizer["FieldThemeColorHelp"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 10 · SendSlackMessage -->
+                        <div class="action-config-panel" data-action="10">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldChannel"]</label>
+                                        <input type="text" id="cfg_slack_channel" class="form-control" placeholder="#general" />
+                                        <span class="help-block">@localizer["FieldChannelHelp"]</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldBotUsername"]</label>
+                                        <input type="text" id="cfg_slack_username" class="form-control" placeholder="@localizer["BotUsernamePlaceholder"]" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldIconEmoji"]</label>
+                                        <input type="text" id="cfg_slack_emoji" class="form-control" placeholder=":fire:" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 11 · SendDiscordMessage -->
+                        <div class="action-config-panel" data-action="11">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldBotUsername"]</label>
+                                        <input type="text" id="cfg_discord_username" class="form-control" placeholder="@localizer["BotUsernamePlaceholder"]" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldAvatarUrl"]</label>
+                                        <input type="url" id="cfg_discord_avatar" class="form-control" placeholder="https://…/avatar.png" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 12 · UploadFileAzureBlob -->
+                        <div class="action-config-panel" data-action="12">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldBlobPath"]</label>
+                                        <input type="text" id="cfg_azure_blob" class="form-control" placeholder="reports/output.txt" />
+                                        <span class="help-block">@localizer["FieldBlobPathHelp"]</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Content-Type</label>
+                                        <input type="text" id="cfg_azure_ct" class="form-control" value="text/plain" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 13 · UploadFileBox -->
+                        <div class="action-config-panel" data-action="13">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldFolderId"]</label>
+                                        <input type="text" id="cfg_box_folder" class="form-control" value="0" placeholder="0" />
+                                        <span class="help-block">@localizer["FieldFolderIdHelp"]</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldFilename"]</label>
+                                        <input type="text" id="cfg_box_filename" class="form-control" placeholder="report.txt" />
+                                        <span class="help-block">@localizer["FieldFilenameHelp"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 14 · UploadFileDropbox -->
+                        <div class="action-config-panel" data-action="14">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldTargetPath"]</label>
+                                        <input type="text" id="cfg_dropbox_path" class="form-control" value="/" placeholder="/reports" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>@localizer["FieldFilename"]</label>
+                                        <input type="text" id="cfg_dropbox_filename" class="form-control" placeholder="report.txt" />
+                                        <span class="help-block">@localizer["FieldFilenameHelp"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>@localizer["FieldWriteMode"]</label>
+                                <select id="cfg_dropbox_mode" class="form-control">
+                                    <option value="overwrite">@localizer["WriteModeOverwrite"]</option>
+                                    <option value="add">@localizer["WriteModeAdd"]</option>
+                                    <option value="update">@localizer["WriteModeUpdate"]</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- ── Credential Selector ── -->
+                        <div id="credentialRow" class="form-group" style="display:none; margin-top:4px;">
+                            <label for="stepCredentialId">
+                                <i class="fa fa-key"></i> @localizer["StepCredential"]
+                                <span id="credentialRequired" class="text-danger" style="display:none;"> *</span>
+                            </label>
+                            <select id="stepCredentialId" class="form-control">
+                                <option value="">@localizer["CredentialNoneOption"]</option>
+                            </select>
+                            <span id="credentialHelp" class="help-block"></span>
+                            <div id="credentialWarning" class="alert alert-warning" style="display:none; margin-top:6px; padding:6px 10px; font-size:12px;">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                @localizer["NoMatchingCredentials"]
+                                <a asp-action="CredentialNew" asp-route-area="User" target="_blank">@localizer["AddCredentialNow"]</a>
+                            </div>
+                        </div>
+
+                        <!-- ── Condition Expression ── -->
+                        <div class="config-section-label" style="margin-top:14px;">@localizer["ConditionExpression"] <small class="text-muted">@localizer["OptionalSuffix"]</small></div>
+                        <p class="text-muted" style="font-size:11px; margin-bottom:6px;">
+                            @* The sentence is HTML-encoded first, then the <code> markup is formatted into its {0}. *@
+                            @Html.Raw(string.Format(Html.Encode(localizer["ConditionHelp"].Value), "<code>true</code>"))
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-sm" id="conditionTabs" style="margin-bottom:8px;">
+                            <li class="active"><a href="#conditionVisual" data-toggle="tab"><i class="fa fa-th-list"></i> @localizer["VisualBuilder"]</a></li>
+                            <li><a href="#conditionRaw" data-toggle="tab"><i class="fa fa-code"></i> @localizer["RawExpression"]</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="conditionVisual">
+                                <div id="conditionRuleRows"></div>
+                                <button type="button" class="btn btn-xs btn-default" id="addConditionRuleBtn" style="margin-top:6px;">
+                                    <i class="fa fa-plus"></i> @localizer["AddRule"]
+                                </button>
+                                <p class="text-muted" style="font-size:10px; margin-top:4px;">@localizer["RulesJoinedWithAnd"]</p>
+                            </div>
+                            <div class="tab-pane" id="conditionRaw">
+                                <textarea id="stepConditionExpression" class="form-control" rows="3"
+                                          placeholder="{{ call.name | string.contains &quot;Fire&quot; }}"></textarea>
+                            </div>
+                        </div>
+                        <div style="margin-top:6px;">
+                            <button type="button" class="btn btn-xs btn-info" id="testConditionBtn">
+                                <i class="fa fa-play"></i> @localizer["TestCondition"]
+                            </button>
+                            <span id="conditionTestResult" style="margin-left:8px; font-size:12px;"></span>
+                        </div>
+                        <div id="conditionParseError" class="alert alert-warning" style="display:none; margin-top:6px; padding:6px 10px; font-size:12px;"></div>
+
+                        <!-- ── Output Template ── -->
+                        <div class="config-section-label" style="margin-top:14px;">@localizer["OutputTemplate"] <span class="text-danger">*</span></div>
+                        <p class="text-muted" style="font-size:11px; margin-bottom:6px;">
+                            @localizer["TemplateSyntaxHelp"]
+                        </p>
+                        <textarea id="stepOutputTemplate" class="form-control"></textarea>
+                        @if (isProtectedWorkflow)
+                        {
+                            <div id="pwEscapeWarning" class="alert alert-warning" style="display:none; margin-top:6px; padding:6px 10px; font-size:12px;">@pwLocalizer["Warning_unescaped_protected_value"]</div>
+                        }
+
+                        <div id="stepSaveError" class="alert alert-danger" style="display:none; margin-top:12px;"></div>
+                    </div>
+
+                    <!-- ── RIGHT COLUMN — variable reference ── -->
+                    <div class="col-md-4 step-modal-right">
+                        <p class="config-section-label" style="margin-top:0;">@localizer["TemplateVariables"]</p>
+                        @{
+                            // These help sentences show example chips and the "for" keyword as markup. Each sentence
+                            // is HTML-encoded, then the markup is formatted into its {0}/{1}, so translators control word order.
+                            var scalarChip = "<span class=\"var-chip\" style=\"cursor:default; pointer-events:none;\">" + Html.Encode(localizer["VariableKindScalar"].Value) + "</span>";
+                            var arrayChip = "<span class=\"var-chip var-chip-array\" style=\"cursor:default; pointer-events:none;\">" + Html.Encode(localizer["VariableKindArray"].Value) + " &#x21C4;</span>";
+                            const string forKeyword = "<code>for</code>";
+                        }
+                        <p class="text-muted" style="font-size:11px;">
+                            @Html.Raw(string.Format(Html.Encode(localizer["VariablesHelpScalar"].Value), scalarChip))
+                            @Html.Raw(string.Format(Html.Encode(localizer["VariablesHelpArray"].Value), arrayChip, forKeyword))
+                        </p>
+
+                        <p class="text-muted" style="font-size:11px; margin-bottom:4px;"><strong>@localizer["CommonVariables"]</strong></p>
+                        <div id="varChipsCommon">
+                            @foreach (var v in new[] {
+                                "department.name","department.code","department.address.full",
+                                "timestamp.utc_now","timestamp.department_now",
+                                "user.full_name","user.email" })
+                            {
+                                <span class="var-chip" data-var="{{ @v }}">{{ @v }}</span>
+                            }
+                        </div>
+
+                        <p class="text-muted" style="font-size:11px; margin: 10px 0 4px;"><strong>@localizer["CallEventVariables"]</strong></p>
+                        <div id="varChipsCall">
+                            @foreach (var v in new[] {
+                                "call.name","call.nature","call.address",
+                                "call.priority_text","call.state_text","call.logged_on",
+                                "call.call_id","call.type","call.contact_name","call.contact_info",
+                                "call.geo_location_data","call.incident_number" })
+                            {
+                                <span class="var-chip" data-var="{{ @v }}">{{ @v }}</span>
+                            }
+                        </div>
+
+                        <p class="text-muted" style="font-size:11px; margin: 10px 0 4px;"><strong>@localizer["CallCollectionsHeader"]</strong></p>
+                        <p class="text-muted" style="font-size:10px; margin-bottom:4px;">
+                            @Html.Raw(string.Format(Html.Encode(localizer["CallCollectionsHelp"].Value), forKeyword))
+                        </p>
+                        <div id="varChipsCallArrays">
+                            <span class="var-chip var-chip-array"
+                                  data-array="call.dispatches"
+                                  data-alias="dispatch"
+                                  data-fields="dispatch.user_id, dispatch.dispatch_count, dispatch.dispatched_on"
+                                  title="@(localizer["ArrayFieldsTooltip", "user_id, dispatch_count, dispatched_on"])">
+                                call.dispatches &#x21C4;
+                            </span>
+                            <span class="var-chip var-chip-array"
+                                  data-array="call.unit_dispatches"
+                                  data-alias="unit"
+                                  data-fields="unit.unit_id, unit.unit_name, unit.dispatch_count, unit.dispatched_on"
+                                  title="@(localizer["ArrayFieldsTooltip", "unit_id, unit_name, dispatch_count, dispatched_on"])">
+                                call.unit_dispatches &#x21C4;
+                            </span>
+                            <span class="var-chip var-chip-array"
+                                  data-array="call.group_dispatches"
+                                  data-alias="group"
+                                  data-fields="group.group_id, group.group_name, group.dispatch_count, group.dispatched_on"
+                                  title="@(localizer["ArrayFieldsTooltip", "group_id, group_name, dispatch_count, dispatched_on"])">
+                                call.group_dispatches &#x21C4;
+                            </span>
+                            <span class="var-chip var-chip-array"
+                                  data-array="call.role_dispatches"
+                                  data-alias="role"
+                                  data-fields="role.role_id, role.role_name, role.dispatch_count, role.dispatched_on"
+                                  title="@(localizer["ArrayFieldsTooltip", "role_id, role_name, dispatch_count, dispatched_on"])">
+                                call.role_dispatches &#x21C4;
+                            </span>
+                            <span class="var-chip var-chip-array"
+                                  data-array="call.notes_list"
+                                  data-alias="note"
+                                  data-fields="note.note, note.source, note.timestamp, note.user_id"
+                                  title="@(localizer["ArrayFieldsTooltip", "note, source, timestamp, user_id"])">
+                                call.notes_list &#x21C4;
+                            </span>
+                            <span class="var-chip var-chip-array"
+                                  data-array="call.contacts"
+                                  data-alias="contact"
+                                  data-fields="contact.contact_id, contact.contact_type"
+                                  title="@(localizer["ArrayFieldsTooltip", "contact_id, contact_type"])">
+                                call.contacts &#x21C4;
+                            </span>
+                        </div>
+
+                        <p class="text-muted" style="font-size:11px; margin: 10px 0 4px;"><strong>@localizer["UnitPersonnelVariables"]</strong></p>
+                        <div id="varChipsUnit">
+                            @foreach (var v in new[] {
+                                "unit.name","unit.type","unit.group_name",
+                                "personnel.full_name","personnel.email","personnel.role" })
+                            {
+                                <span class="var-chip" data-var="{{ @v }}">{{ @v }}</span>
+                            }
+                        </div>
+                    </div>
+                </div><!-- /.row -->
+            </div><!-- /.modal-body -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@localizer["Cancel"]</button>
+                <button type="button" class="btn btn-primary" id="saveStepBtn">
+                    <i class="fa fa-save"></i> @localizer["SaveChanges"]
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Delete Step Confirmation Modal -->
+<div class="modal fade" id="deleteStepModal" tabindex="-1" role="dialog" aria-labelledby="deleteStepModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteStepModalLabel"><i class="fa fa-trash text-danger"></i> @localizer["DeleteStep"]</h4>
+            </div>
+            <div class="modal-body">
+                <p>@localizer["DeleteStepConfirm"]</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@localizer["Cancel"]</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteStepBtn">
+                    <i class="fa fa-trash"></i> @localizer["Delete"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/app/internal/protectedworkflows/resgrid.protectedworkflows.js" asp-append-version="true"></script>
+    <script>
+        // The panel is a server-rendered partial (it carries its own localized strings and handlers).
+        $(function () {
+            var host = $('#protectedReleasePanelHost');
+            if (host.length) {
+                $.get(host.data('url')).done(function (html) { host.html(html); });
+            }
+        });
+    </script>
+    <script src="~/lib/codemirror/lib/codemirror.min.js" asp-append-version="true"></script>
+    <script src="~/lib/codemirror/mode/xml/xml.min.js" asp-append-version="true"></script>
+    <script src="~/lib/codemirror/mode/javascript/javascript.min.js" asp-append-version="true"></script>
+    <script src="~/lib/codemirror/mode/css/css.min.js" asp-append-version="true"></script>
+    <script src="~/lib/codemirror/mode/htmlmixed/htmlmixed.min.js" asp-append-version="true"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        // ── Credentials data (injected from server) ───────────────────────────
+        // credentialType values match WorkflowCredentialType enum:
+        //   0=Smtp, 1=Twilio, 2=Ftp, 3=Sftp, 4=AwsS3, 5=HttpBearer, 6=HttpBasic,
+        //   7=HttpApiKey, 8=MicrosoftTeams, 9=Slack, 10=Discord, 11=AzureBlobStorage,
+        //   12=Box, 13=Dropbox
+        var ALL_CREDENTIALS = @Html.Raw(credentialsJson);
+
+        // Maps WorkflowActionType → accepted WorkflowCredentialType values
+        // Actions that need no credential (e.g. HTTP calls can be unauthenticated) are
+        // listed with their optional types; actions where a credential is mandatory are
+        // marked accordingly in CREDENTIAL_REQUIRED.
+        var ACTION_CREDENTIAL_TYPES = {
+            0:  [0],           // SendEmail        → Smtp
+            1:  [1],           // SendSms          → Twilio
+            2:  [5, 6, 7],     // CallApiGet       → HttpBearer, HttpBasic, HttpApiKey
+            3:  [5, 6, 7],     // CallApiPost      → HttpBearer, HttpBasic, HttpApiKey
+            4:  [5, 6, 7],     // CallApiPut       → HttpBearer, HttpBasic, HttpApiKey
+            5:  [5, 6, 7],     // CallApiDelete    → HttpBearer, HttpBasic, HttpApiKey
+            6:  [2],           // UploadFileFtp    → Ftp
+            7:  [3],           // UploadFileSftp   → Sftp
+            8:  [4],           // UploadFileS3     → AwsS3
+            9:  [8],           // SendTeamsMessage → MicrosoftTeams
+            10: [9],           // SendSlackMessage → Slack
+            11: [10],          // SendDiscordMessage → Discord
+            12: [11],          // UploadFileAzureBlob → AzureBlobStorage
+            13: [12],          // UploadFileBox    → Box
+            14: [13]           // UploadFileDropbox → Dropbox
+        };
+
+        // Action types where a credential is mandatory (not optional)
+        var CREDENTIAL_REQUIRED = { 0:1, 1:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1, 13:1, 14:1 };
+
+        var CREDENTIAL_HELP = {
+            0:  '@JsEncoder.Encode(localizer["CredentialHelpSmtp"])',
+            1:  '@JsEncoder.Encode(localizer["CredentialHelpTwilio"])',
+            2:  '@JsEncoder.Encode(localizer["CredentialHelpHttp"])',
+            3:  '@JsEncoder.Encode(localizer["CredentialHelpHttp"])',
+            4:  '@JsEncoder.Encode(localizer["CredentialHelpHttp"])',
+            5:  '@JsEncoder.Encode(localizer["CredentialHelpHttp"])',
+            6:  '@JsEncoder.Encode(localizer["CredentialHelpFtp"])',
+            7:  '@JsEncoder.Encode(localizer["CredentialHelpSftp"])',
+            8:  '@JsEncoder.Encode(localizer["CredentialHelpS3"])',
+            9:  '@JsEncoder.Encode(localizer["CredentialHelpTeams"])',
+            10: '@JsEncoder.Encode(localizer["CredentialHelpSlack"])',
+            11: '@JsEncoder.Encode(localizer["CredentialHelpDiscord"])',
+            12: '@JsEncoder.Encode(localizer["CredentialHelpAzure"])',
+            13: '@JsEncoder.Encode(localizer["CredentialHelpBox"])',
+            14: '@JsEncoder.Encode(localizer["CredentialHelpDropbox"])'
+        };
+
+        // ── Filter the credential <select> for the chosen action type ─────────
+        function filterCredentials(actionType, selectedCredId) {
+            var t = parseInt(actionType, 10);
+            var acceptedTypes = ACTION_CREDENTIAL_TYPES[t] || [];
+            var isRequired    = !!CREDENTIAL_REQUIRED[t];
+            var helpText      = CREDENTIAL_HELP[t] || '';
+            var matched       = ALL_CREDENTIALS.filter(function (c) {
+                return acceptedTypes.indexOf(c.credentialType) !== -1;
+            });
+
+            var row     = document.getElementById('credentialRow');
+            var sel     = document.getElementById('stepCredentialId');
+            var reqMark = document.getElementById('credentialRequired');
+            var help    = document.getElementById('credentialHelp');
+            var warning = document.getElementById('credentialWarning');
+
+            // Hide the whole row if this action type uses no credentials at all
+            if (acceptedTypes.length === 0) {
+                row.style.display = 'none';
+                sel.value = '';
+                return;
+            }
+
+            row.style.display = '';
+            reqMark.style.display = isRequired ? '' : 'none';
+            help.textContent = helpText;
+
+            // Rebuild options
+            sel.innerHTML = '<option value="">' + escapeHtml(isRequired ? '@JsEncoder.Encode(localizer["SelectCredentialOption"])' : '@JsEncoder.Encode(localizer["CredentialNoneUnauthenticated"])') + '</option>';
+            matched.forEach(function (c) {
+                var o = document.createElement('option');
+                o.value = c.id;
+                o.textContent = c.name;
+                sel.appendChild(o);
+            });
+
+            // Restore previously selected value
+            if (selectedCredId) sel.value = selectedCredId;
+
+            // Show warning if no matching credentials exist
+            warning.style.display = matched.length === 0 ? '' : 'none';
+        }
+
+        // ── CodeMirror ────────────────────────────────────────────────────────
+        var templateEditor = CodeMirror.fromTextArea(
+            document.getElementById('stepOutputTemplate'), {
+                mode: 'htmlmixed',
+                theme: 'monokai',
+                lineNumbers: true,
+                lineWrapping: true
+            });
+
+        // Advice, not a block: a protected value placed in JSON, XML or HL7 without json_escape / xml_escape / hl7_escape
+        // can break the payload's structure (the send then fails validation instead of going out malformed).
+        (function () {
+            var warning = document.getElementById('pwEscapeWarning');
+            if (!warning) return;
+            function check() {
+                var unescaped = false;
+                var blocks = templateEditor.getValue().match(/\{\{[\s\S]*?\}\}/g) || [];
+                blocks.forEach(function (block) {
+                    if (/(^|[^\w.])protected\s*[.\[]/.test(block) && !/(json_escape|xml_escape|hl7_escape)/.test(block)) unescaped = true;
+                });
+                var contentType = ((document.getElementById('cfg_apipost_ct') || {}).value || '') + ((document.getElementById('cfg_apiput_ct') || {}).value || '');
+                warning.style.display = unescaped && contentType.indexOf('text/plain') < 0 ? 'block' : 'none';
+            }
+            templateEditor.on('change', check);
+            setTimeout(check, 0);
+        })();
+
+        // Refresh when modal opens so dimensions are correct
+        $('#stepModal').on('shown.bs.modal', function () { templateEditor.refresh(); });
+
+        // ── Populate ActionType <select> ──────────────────────────────────────
+        var ACTION_LABELS = {
+            0:  '@JsEncoder.Encode(localizer["ActionType_SendEmail"])',
+            1:  '@JsEncoder.Encode(localizer["ActionType_SendSms"])',
+            2:  '@JsEncoder.Encode(localizer["ActionType_CallApiGet"])',
+            3:  '@JsEncoder.Encode(localizer["ActionType_CallApiPost"])',
+            4:  '@JsEncoder.Encode(localizer["ActionType_CallApiPut"])',
+            5:  '@JsEncoder.Encode(localizer["ActionType_CallApiDelete"])',
+            6:  '@JsEncoder.Encode(localizer["ActionType_UploadFileFtp"])',
+            7:  '@JsEncoder.Encode(localizer["ActionType_UploadFileSftp"])',
+            8:  '@JsEncoder.Encode(localizer["ActionType_UploadFileS3"])',
+            9:  '@JsEncoder.Encode(localizer["ActionType_SendTeamsMessage"])',
+            10: '@JsEncoder.Encode(localizer["ActionType_SendSlackMessage"])',
+            11: '@JsEncoder.Encode(localizer["ActionType_SendDiscordMessage"])',
+            12: '@JsEncoder.Encode(localizer["ActionType_UploadFileAzureBlob"])',
+            13: '@JsEncoder.Encode(localizer["ActionType_UploadFileBox"])',
+            14: '@JsEncoder.Encode(localizer["ActionType_UploadFileDropbox"])'
+        };
+        var sel = document.getElementById('stepActionType');
+        Object.keys(ACTION_LABELS).forEach(function (k) {
+            var o = document.createElement('option');
+            o.value = k;
+            o.textContent = ACTION_LABELS[k];
+            sel.appendChild(o);
+        });
+
+        // ── Show / hide config panel on action-type change ────────────────────
+        function showConfigPanel(actionType) {
+            document.querySelectorAll('.action-config-panel').forEach(function (p) {
+                p.classList.remove('active');
+            });
+            var panel = document.querySelector('.action-config-panel[data-action="' + actionType + '"]');
+            if (panel) panel.classList.add('active');
+            showExportGroup(actionType);
+            var protectedOptions = document.getElementById('cfg_protected_options');
+            if (protectedOptions) protectedOptions.style.display = (parseInt(actionType, 10) === 3 || parseInt(actionType, 10) === 4) ? 'block' : 'none';
+        }
+
+        // ── Protected (EHR) delivery options ───────────────────────────────────
+        // Keys the structured API editor does not own (headers, success rule, capture, idempotency) survive a save.
+        var loadedApiExtras = {};
+        function pick(cfg, name) {
+            for (var key in cfg) { if (Object.prototype.hasOwnProperty.call(cfg, key) && key.toLowerCase() === name.toLowerCase()) return cfg[key]; }
+            return undefined;
+        }
+        function readApiExtras(cfg) {
+            var extras = {};
+            ['headers', 'successRule', 'responseCapture', 'idempotencyHeader', 'ifNoneExist'].forEach(function (name) {
+                var value = pick(cfg, name);
+                if (value !== undefined && value !== null) extras[name] = value;
+            });
+            return extras;
+        }
+        function fillProtectedOptions(extras) {
+            if (!document.getElementById('cfg_protected_options')) return;
+            var rule = extras.successRule || {};
+            document.getElementById('cfg_pw_rule').value = (typeof rule === 'string' ? rule : (pick(rule, 'type') || 'http_2xx'));
+            document.getElementById('cfg_pw_rule_path').value = typeof rule === 'string' ? '' : (pick(rule, 'path') || '');
+            document.getElementById('cfg_pw_rule_expected').value = typeof rule === 'string' ? '' : (pick(rule, 'expected') || '');
+            document.getElementById('cfg_pw_capture').value = (extras.responseCapture || []).map(function (c) {
+                return [pick(c, 'source') || '', pick(c, 'expression') || '', pick(c, 'key') || ''].join(' | ');
+            }).join('\n');
+            document.getElementById('cfg_pw_idem').value = extras.idempotencyHeader || '';
+            document.getElementById('cfg_pw_ifnoneexist').value = extras.ifNoneExist || '';
+        }
+        function withApiExtras(config) {
+            if (loadedApiExtras.headers) config.headers = loadedApiExtras.headers;
+            if (!document.getElementById('cfg_protected_options')) {
+                ['successRule', 'responseCapture', 'idempotencyHeader', 'ifNoneExist'].forEach(function (name) {
+                    if (loadedApiExtras[name] !== undefined) config[name] = loadedApiExtras[name];
+                });
+                return config;
+            }
+            var ruleType = document.getElementById('cfg_pw_rule').value;
+            if (ruleType && ruleType !== 'http_2xx') {
+                config.successRule = { type: ruleType };
+                var path = document.getElementById('cfg_pw_rule_path').value.trim();
+                var expected = document.getElementById('cfg_pw_rule_expected').value.trim();
+                if (path) config.successRule.path = path;
+                if (expected) config.successRule.expected = expected;
+            }
+            var capture = document.getElementById('cfg_pw_capture').value.split(/\r?\n/).map(function (line) {
+                var parts = line.split('|').map(function (p) { return p.trim(); });
+                if (parts.length < 3 || !parts[0] || !parts[2]) return null;
+                var entry = { source: parts[0], key: parts[2] };
+                if (parts[1]) entry.expression = parts[1];
+                return entry;
+            }).filter(function (entry) { return entry; });
+            if (capture.length) config.responseCapture = capture;
+            var idem = document.getElementById('cfg_pw_idem').value.trim();
+            if (idem) config.idempotencyHeader = idem;
+            var ifNoneExist = document.getElementById('cfg_pw_ifnoneexist').value.trim();
+            if (ifNoneExist) config.ifNoneExist = ifNoneExist;
+            return config;
+        }
+
+        sel.addEventListener('change', function () {
+            showConfigPanel(this.value);
+            filterCredentials(this.value, null);
+        });
+
+        // ── Variable chips → insert into editor ───────────────────────────────
+        document.querySelectorAll('.var-chip').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                var doc    = templateEditor.getDoc();
+                var cursor = doc.getCursor();
+
+                if (this.classList.contains('var-chip-array')) {
+                    // Array chip — insert a for-loop snippet
+                    var arrayPath = this.dataset.array;
+                    var alias     = this.dataset.alias;
+                    var fields    = this.dataset.fields ? this.dataset.fields.split(',').map(function(f){ return f.trim(); }) : [];
+                    var indent    = '  ';
+                    var lines     = ['{{ for ' + alias + ' in ' + arrayPath + ' }}'];
+                    fields.forEach(function(f) {
+                        lines.push(indent + '{{ ' + f + ' }}');
+                    });
+                    lines.push('{{ end }}');
+                    doc.replaceRange(lines.join('\n'), cursor);
+                } else {
+                    // Scalar chip — insert simple expression
+                    var snippet = this.dataset.var;
+                    doc.replaceRange(snippet, cursor);
+                }
+
+                templateEditor.focus();
+            });
+        });
+
+        // ── Records report export selector (RMS plan 5.6) ─────────────────────
+        var exportTemplates = @Html.Raw(ViewBag.RecordsExportTemplatesJson ?? "[]");
+        var exportActionTypes = [0, 6, 7, 8, 12, 13, 14];
+        (function () {
+            var sel = document.getElementById('cfg_export_template');
+            if (!sel) return;
+            exportTemplates.forEach(function (t) {
+                var opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = t.name + ' (' + t.key + ' · ' + t.format + ' · ' + t.scope + ')';
+                sel.appendChild(opt);
+            });
+        })();
+        function showExportGroup(actionType) {
+            var group = document.getElementById('cfg_export_group');
+            if (!group) return;
+            group.style.display = exportActionTypes.indexOf(parseInt(actionType, 10)) >= 0 ? 'block' : 'none';
+        }
+        function withExport(config) {
+            var sel = document.getElementById('cfg_export_template');
+            if (sel && sel.value) config.recordsExportTemplateId = sel.value;
+            return JSON.stringify(config);
+        }
+
+        // ── Build ActionConfig JSON from structured fields ─────────────────────
+        function buildActionConfig(actionType) {
+            var t = parseInt(actionType, 10);
+            switch (t) {
+                case 0:  // SendEmail
+                    return withExport({
+                        to:      document.getElementById('cfg_email_to').value.trim(),
+                        cc:      document.getElementById('cfg_email_cc').value.trim() || null,
+                        subject: document.getElementById('cfg_email_subject').value.trim()
+                    });
+                case 1:  // SendSms
+                    return JSON.stringify({
+                        to: document.getElementById('cfg_sms_to').value.trim()
+                    });
+                case 2:  // CallApiGet
+                    return JSON.stringify({
+                        url:            document.getElementById('cfg_apiget_url').value.trim(),
+                        contentType:    document.getElementById('cfg_apiget_ct').value.trim() || null,
+                        timeoutSeconds: parseInt(document.getElementById('cfg_apiget_timeout').value, 10) || 30
+                    });
+                case 3:  // CallApiPost
+                    return JSON.stringify(withApiExtras({
+                        url:            document.getElementById('cfg_apipost_url').value.trim(),
+                        contentType:    document.getElementById('cfg_apipost_ct').value.trim() || null,
+                        timeoutSeconds: parseInt(document.getElementById('cfg_apipost_timeout').value, 10) || 30
+                    }));
+                case 4:  // CallApiPut
+                    return JSON.stringify(withApiExtras({
+                        url:            document.getElementById('cfg_apiput_url').value.trim(),
+                        contentType:    document.getElementById('cfg_apiput_ct').value.trim() || null,
+                        timeoutSeconds: parseInt(document.getElementById('cfg_apiput_timeout').value, 10) || 30
+                    }));
+                case 5:  // CallApiDelete
+                    return JSON.stringify({
+                        url:            document.getElementById('cfg_apidel_url').value.trim(),
+                        contentType:    document.getElementById('cfg_apidel_ct').value.trim() || null,
+                        timeoutSeconds: parseInt(document.getElementById('cfg_apidel_timeout').value, 10) || 30
+                    });
+                case 6:  // UploadFileFtp
+                    return withExport({
+                        remotePath: document.getElementById('cfg_ftp_path').value.trim() || '/',
+                        filename:   document.getElementById('cfg_ftp_filename').value.trim() || null
+                    });
+                case 7:  // UploadFileSftp
+                    return withExport({
+                        remotePath: document.getElementById('cfg_sftp_path').value.trim() || '/',
+                        filename:   document.getElementById('cfg_sftp_filename').value.trim() || null
+                    });
+                case 8:  // UploadFileS3
+                    return withExport({
+                        s3Key:       document.getElementById('cfg_s3_key').value.trim() || null,
+                        contentType: document.getElementById('cfg_s3_ct').value.trim() || 'text/plain'
+                    });
+                case 9:  // SendTeamsMessage
+                    return JSON.stringify({
+                        title:      document.getElementById('cfg_teams_title').value.trim() || null,
+                        themeColor: document.getElementById('cfg_teams_color').value.trim() || '0076D7'
+                    });
+                case 10: // SendSlackMessage
+                    return JSON.stringify({
+                        channel:   document.getElementById('cfg_slack_channel').value.trim() || null,
+                        username:  document.getElementById('cfg_slack_username').value.trim() || null,
+                        iconEmoji: document.getElementById('cfg_slack_emoji').value.trim() || null
+                    });
+                case 11: // SendDiscordMessage
+                    return JSON.stringify({
+                        username:  document.getElementById('cfg_discord_username').value.trim() || null,
+                        avatarUrl: document.getElementById('cfg_discord_avatar').value.trim() || null
+                    });
+                case 12: // UploadFileAzureBlob
+                    return withExport({
+                        blobName:    document.getElementById('cfg_azure_blob').value.trim() || null,
+                        contentType: document.getElementById('cfg_azure_ct').value.trim() || 'text/plain'
+                    });
+                case 13: // UploadFileBox
+                    return withExport({
+                        folderId: document.getElementById('cfg_box_folder').value.trim() || '0',
+                        filename: document.getElementById('cfg_box_filename').value.trim() || null
+                    });
+                case 14: // UploadFileDropbox
+                    return withExport({
+                        targetPath: document.getElementById('cfg_dropbox_path').value.trim() || '/',
+                        filename:   document.getElementById('cfg_dropbox_filename').value.trim() || null,
+                        writeMode:  document.getElementById('cfg_dropbox_mode').value
+                    });
+                default:
+                    return null;
+            }
+        }
+
+        // ── Populate structured fields from a saved ActionConfig JSON ──────────
+        function populateActionConfig(actionType, jsonStr) {
+            var cfg = {};
+            try { if (jsonStr) cfg = JSON.parse(jsonStr); } catch (_) {}
+            var t = parseInt(actionType, 10);
+            function val(id, v) {
+                var el = document.getElementById(id);
+                if (el) el.value = v != null ? v : '';
+            }
+            val('cfg_export_template', cfg.recordsExportTemplateId || cfg.RecordsExportTemplateId || '');
+            showExportGroup(t);
+            loadedApiExtras = readApiExtras(cfg);
+            fillProtectedOptions(loadedApiExtras);
+            switch (t) {
+                case 0:
+                    val('cfg_email_to',      cfg.to || cfg.To || '');
+                    val('cfg_email_cc',      cfg.cc || cfg.Cc || '');
+                    val('cfg_email_subject', cfg.subject || cfg.Subject || '');
+                    break;
+                case 1:
+                    val('cfg_sms_to', cfg.to || cfg.To || '');
+                    break;
+                case 2:
+                    val('cfg_apiget_url',     cfg.url || cfg.Url || '');
+                    val('cfg_apiget_ct',      cfg.contentType || cfg.ContentType || 'application/json');
+                    val('cfg_apiget_timeout', cfg.timeoutSeconds || cfg.TimeoutSeconds || 30);
+                    break;
+                case 3:
+                    val('cfg_apipost_url',     cfg.url || cfg.Url || '');
+                    val('cfg_apipost_ct',      cfg.contentType || cfg.ContentType || 'application/json');
+                    val('cfg_apipost_timeout', cfg.timeoutSeconds || cfg.TimeoutSeconds || 30);
+                    break;
+                case 4:
+                    val('cfg_apiput_url',     cfg.url || cfg.Url || '');
+                    val('cfg_apiput_ct',      cfg.contentType || cfg.ContentType || 'application/json');
+                    val('cfg_apiput_timeout', cfg.timeoutSeconds || cfg.TimeoutSeconds || 30);
+                    break;
+                case 5:
+                    val('cfg_apidel_url',     cfg.url || cfg.Url || '');
+                    val('cfg_apidel_ct',      cfg.contentType || cfg.ContentType || 'application/json');
+                    val('cfg_apidel_timeout', cfg.timeoutSeconds || cfg.TimeoutSeconds || 30);
+                    break;
+                case 6:
+                    val('cfg_ftp_path',     cfg.remotePath || cfg.RemotePath || '/');
+                    val('cfg_ftp_filename', cfg.filename   || cfg.Filename   || '');
+                    break;
+                case 7:
+                    val('cfg_sftp_path',     cfg.remotePath || cfg.RemotePath || '/');
+                    val('cfg_sftp_filename', cfg.filename   || cfg.Filename   || '');
+                    break;
+                case 8:
+                    val('cfg_s3_key', cfg.s3Key || cfg.S3Key || '');
+                    val('cfg_s3_ct',  cfg.contentType || cfg.ContentType || 'text/plain');
+                    break;
+                case 9:
+                    val('cfg_teams_title', cfg.title || cfg.Title || '');
+                    val('cfg_teams_color', cfg.themeColor || cfg.ThemeColor || '0076D7');
+                    break;
+                case 10:
+                    val('cfg_slack_channel',  cfg.channel   || cfg.Channel   || '');
+                    val('cfg_slack_username', cfg.username  || cfg.Username  || '');
+                    val('cfg_slack_emoji',    cfg.iconEmoji || cfg.IconEmoji || '');
+                    break;
+                case 11:
+                    val('cfg_discord_username', cfg.username  || cfg.Username  || '');
+                    val('cfg_discord_avatar',   cfg.avatarUrl || cfg.AvatarUrl || '');
+                    break;
+                case 12:
+                    val('cfg_azure_blob', cfg.blobName    || cfg.BlobName    || '');
+                    val('cfg_azure_ct',   cfg.contentType || cfg.ContentType || 'text/plain');
+                    break;
+                case 13:
+                    val('cfg_box_folder',   cfg.folderId || cfg.FolderId || '0');
+                    val('cfg_box_filename', cfg.filename || cfg.Filename || '');
+                    break;
+                case 14:
+                    val('cfg_dropbox_path',     cfg.targetPath || cfg.TargetPath || '/');
+                    val('cfg_dropbox_filename', cfg.filename   || cfg.Filename   || '');
+                    var modeEl = document.getElementById('cfg_dropbox_mode');
+                    if (modeEl) modeEl.value = cfg.writeMode || cfg.WriteMode || 'overwrite';
+                    break;
+            }
+        }
+
+        // ── Localized text helpers ─────────────────────────────────────────────
+        // Fills {0} with a function replacement, so a '$' in the value is not read as a replacement pattern.
+        function formatText(template, value) {
+            return template.replace('{0}', function () { return value; });
+        }
+
+        // For localized text put into HTML strings; escapes quotes too, since some of it lands in attributes.
+        function escapeHtml(value) {
+            return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // ── Validate required fields per action type ───────────────────────────
+        function requiredMessage(label) {
+            return formatText('@JsEncoder.Encode(localizer["FieldRequired"])', label);
+        }
+
+        function validateConfig(actionType) {
+            var t = parseInt(actionType, 10);
+            var errors = [];
+            function req(id, label) {
+                var el = document.getElementById(id);
+                if (!el || !el.value.trim()) errors.push(requiredMessage(label));
+            }
+            switch (t) {
+                case 0: req('cfg_email_to', '@JsEncoder.Encode(localizer["FieldTo"])'); req('cfg_email_subject', '@JsEncoder.Encode(localizer["FieldSubject"])'); break;
+                case 1: req('cfg_sms_to', '@JsEncoder.Encode(localizer["FieldToPhone"])'); break;
+                case 2: req('cfg_apiget_url',  '@JsEncoder.Encode(localizer["FieldUrl"])'); break;
+                case 3: req('cfg_apipost_url', '@JsEncoder.Encode(localizer["FieldUrl"])'); break;
+                case 4: req('cfg_apiput_url',  '@JsEncoder.Encode(localizer["FieldUrl"])'); break;
+                case 5: req('cfg_apidel_url',  '@JsEncoder.Encode(localizer["FieldUrl"])'); break;
+            }
+            return errors;
+        }
+
+        // ── Reset all config fields ────────────────────────────────────────────
+        function resetAllConfigFields() {
+            loadedApiExtras = {};
+            fillProtectedOptions({});
+            ['cfg_email_to','cfg_email_cc','cfg_email_subject',
+             'cfg_sms_to',
+             'cfg_apiget_url','cfg_apipost_url','cfg_apiput_url','cfg_apidel_url'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            ['cfg_apiget_ct','cfg_apipost_ct','cfg_apiput_ct','cfg_apidel_ct'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.value = 'application/json';
+            });
+            ['cfg_apiget_timeout','cfg_apipost_timeout','cfg_apiput_timeout','cfg_apidel_timeout'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.value = '30';
+            });
+            var defaults = {
+                cfg_ftp_path:'/', cfg_ftp_filename:'',
+                cfg_sftp_path:'/', cfg_sftp_filename:'',
+                cfg_s3_key:'', cfg_s3_ct:'text/plain',
+                cfg_teams_title:'', cfg_teams_color:'0076D7',
+                cfg_slack_channel:'', cfg_slack_username:'', cfg_slack_emoji:'',
+                cfg_discord_username:'', cfg_discord_avatar:'',
+                cfg_azure_blob:'', cfg_azure_ct:'text/plain',
+                cfg_box_folder:'0', cfg_box_filename:'',
+                cfg_dropbox_path:'/', cfg_dropbox_filename:''
+            };
+            Object.keys(defaults).forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.value = defaults[id];
+            });
+            var modeEl = document.getElementById('cfg_dropbox_mode');
+            if (modeEl) modeEl.value = 'overwrite';
+            var exportEl = document.getElementById('cfg_export_template');
+            if (exportEl) exportEl.value = '';
+        }
+
+        // ── Open modal for ADD ────────────────────────────────────────────────
+        document.getElementById('addStepBtn').addEventListener('click', function () {
+            document.getElementById('stepModalLabel').textContent = '@JsEncoder.Encode(localizer["AddStep"])';
+            document.getElementById('stepId').value = '';
+            document.getElementById('stepWorkflowId').value = '@Model.WorkflowId';
+            document.getElementById('stepActionType').value = '0';
+            document.getElementById('stepOrder').value = '0';
+            document.getElementById('stepIsEnabled').checked = true;
+            resetAllConfigFields();
+            templateEditor.setValue('');
+            document.getElementById('stepConditionExpression').value = '';
+            clearConditionRules();
+            document.getElementById('conditionTestResult').textContent = '';
+            document.getElementById('conditionParseError').style.display = 'none';
+            document.getElementById('stepSaveError').style.display = 'none';
+            $('#conditionTabs a[href="#conditionVisual"]').tab('show');
+            showConfigPanel(0);
+            filterCredentials(0, null);
+            $('#stepModal').modal('show');
+        });
+
+        // ── Condition Builder ─────────────────────────────────────────────────
+        var CONDITION_VARIABLES = [
+            'department.name','department.code','department.address.full',
+            'timestamp.utc_now','timestamp.department_now',
+            'user.full_name','user.email',
+            'call.name','call.nature','call.address','call.priority_text',
+            'call.state_text','call.logged_on','call.call_id','call.type',
+            'call.contact_name','call.contact_info','call.incident_number',
+            'unit.name','unit.type','unit.state_text',
+            'personnel.full_name','personnel.email','personnel.status_text','personnel.staffing_text'
+        ];
+
+        var CONDITION_OPERATORS = [
+            { value: 'contains',        label: '@JsEncoder.Encode(localizer["OpContains"])',    needsValue: true  },
+            { value: 'not_contains',    label: '@JsEncoder.Encode(localizer["OpNotContains"])', needsValue: true  },
+            { value: 'equals',          label: '@JsEncoder.Encode(localizer["OpEquals"])',      needsValue: true  },
+            { value: 'not_equals',      label: '@JsEncoder.Encode(localizer["OpNotEquals"])',   needsValue: true  },
+            { value: 'starts_with',     label: '@JsEncoder.Encode(localizer["OpStartsWith"])',  needsValue: true  },
+            { value: 'ends_with',       label: '@JsEncoder.Encode(localizer["OpEndsWith"])',    needsValue: true  },
+            { value: 'is_empty',        label: '@JsEncoder.Encode(localizer["OpIsEmpty"])',     needsValue: false },
+            { value: 'is_not_empty',    label: '@JsEncoder.Encode(localizer["OpIsNotEmpty"])',  needsValue: false }
+        ];
+
+        function buildVarOptions() {
+            return CONDITION_VARIABLES.map(function (v) {
+                return '<option value="' + v + '">' + v + '</option>';
+            }).join('');
+        }
+
+        function buildOpOptions() {
+            return CONDITION_OPERATORS.map(function (o) {
+                return '<option value="' + o.value + '">' + escapeHtml(o.label) + '</option>';
+            }).join('');
+        }
+
+        function addConditionRule(variable, operator, value) {
+            var row = document.createElement('div');
+            row.className = 'condition-rule-row';
+            row.style.cssText = 'display:flex;align-items:center;gap:4px;margin-bottom:4px;';
+            row.innerHTML =
+                '<select class="form-control condition-var" style="width:40%;">' + buildVarOptions() + '</select>' +
+                '<select class="form-control condition-op"  style="width:30%;">' + buildOpOptions()  + '</select>' +
+                '<input  type="text" class="form-control condition-val" style="width:24%;" placeholder="' + escapeHtml('@JsEncoder.Encode(localizer["ConditionValuePlaceholder"])') + '">' +
+                '<button type="button" class="btn btn-xs btn-danger condition-remove"><i class="fa fa-times"></i></button>';
+            document.getElementById('conditionRuleRows').appendChild(row);
+
+            // Set values if provided
+            if (variable) row.querySelector('.condition-var').value = variable;
+            if (operator)  row.querySelector('.condition-op').value  = operator;
+            if (value)     row.querySelector('.condition-val').value  = value;
+
+            // Toggle value input visibility based on operator
+            function toggleVal() {
+                var op = row.querySelector('.condition-op').value;
+                var needsVal = CONDITION_OPERATORS.find(function(o){return o.value===op;});
+                row.querySelector('.condition-val').style.display = (needsVal && needsVal.needsValue) ? '' : 'none';
+            }
+            row.querySelector('.condition-op').addEventListener('change', toggleVal);
+            toggleVal();
+
+            // Remove rule
+            row.querySelector('.condition-remove').addEventListener('click', function () {
+                row.remove();
+                syncConditionExpressionFromRules();
+            });
+
+            // Live sync
+            row.querySelector('.condition-var').addEventListener('change', syncConditionExpressionFromRules);
+            row.querySelector('.condition-op').addEventListener('change',  syncConditionExpressionFromRules);
+            row.querySelector('.condition-val').addEventListener('input',   syncConditionExpressionFromRules);
+        }
+
+        function clearConditionRules() {
+            document.getElementById('conditionRuleRows').innerHTML = '';
+        }
+
+        function buildScribanClause(variable, operator, value) {
+            var v = variable, val = value ? '"' + value.replace(/"/g, '\\"') + '"' : '""';
+            switch (operator) {
+                case 'contains':     return '(' + v + ' | string.contains ' + val + ')';
+                case 'not_contains': return '!(' + v + ' | string.contains ' + val + ')';
+                case 'equals':       return '(' + v + ' == ' + val + ')';
+                case 'not_equals':   return '(' + v + ' != ' + val + ')';
+                case 'starts_with':  return '(' + v + ' | string.starts_with ' + val + ')';
+                case 'ends_with':    return '(' + v + ' | string.ends_with ' + val + ')';
+                case 'is_empty':     return '((' + v + ') == null || (' + v + ') == "")';
+                case 'is_not_empty': return '((' + v + ') != null && (' + v + ') != "")';
+                default:             return 'true';
+            }
+        }
+
+        function syncConditionExpressionFromRules() {
+            var rows = document.querySelectorAll('#conditionRuleRows .condition-rule-row');
+            if (rows.length === 0) {
+                document.getElementById('stepConditionExpression').value = '';
+                return;
+            }
+            var clauses = [];
+            rows.forEach(function (row) {
+                var variable = row.querySelector('.condition-var').value;
+                var operator = row.querySelector('.condition-op').value;
+                var value    = row.querySelector('.condition-val').value;
+                clauses.push(buildScribanClause(variable, operator, value));
+            });
+            var expr = clauses.length === 1 ? '{{ ' + clauses[0] + ' }}' : '{{ ' + clauses.join(' && ') + ' }}';
+            document.getElementById('stepConditionExpression').value = expr;
+        }
+
+        function tryParseConditionToRules(expr) {
+            // Only handle the patterns we generate: {{ clause }} or {{ clause && clause ... }}
+            var match = expr.trim().match(/^\{\{\s*(.+?)\s*\}\}$/);
+            if (!match) return null;
+            var inner = match[1];
+            // Split on ' && ' to get individual clauses
+            var clauses = inner.split(/\s*&&\s*/);
+            var rules = [];
+            var opPatterns = [
+                { re: /^\((.+?)\s*\|\s*string\.contains\s+"(.*?)"\)$/,       op: 'contains',     neg: false },
+                { re: /^!\((.+?)\s*\|\s*string\.contains\s+"(.*?)"\)$/,      op: 'not_contains', neg: false },
+                { re: /^\((.+?)\s*\|\s*string\.starts_with\s+"(.*?)"\)$/,    op: 'starts_with',  neg: false },
+                { re: /^\((.+?)\s*\|\s*string\.ends_with\s+"(.*?)"\)$/,      op: 'ends_with',    neg: false },
+                { re: /^\((.+?)\s*==\s*"(.*?)"\)$/,                          op: 'equals',       neg: false },
+                { re: /^\((.+?)\s*!=\s*"(.*?)"\)$/,                          op: 'not_equals',   neg: false },
+                { re: /^\(\((.+?)\)\s*==\s*null\s*\|\|\s*\((.+?)\)\s*==\s*""\)$/, op: 'is_empty',     special: true },
+                { re: /^\(\((.+?)\)\s*!=\s*null\s*&&\s*\((.+?)\)\s*!=\s*""\)$/,   op: 'is_not_empty', special: true }
+            ];
+            for (var i = 0; i < clauses.length; i++) {
+                var c = clauses[i].trim();
+                var matched = false;
+                for (var p = 0; p < opPatterns.length; p++) {
+                    var m = c.match(opPatterns[p].re);
+                    if (m) {
+                        rules.push({
+                            variable: m[1].trim(),
+                            operator: opPatterns[p].op,
+                            value:    opPatterns[p].special ? '' : m[2]
+                        });
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) return null; // Can't parse — use raw tab
+            }
+            return rules;
+        }
+
+        function loadConditionRules(rules) {
+            clearConditionRules();
+            rules.forEach(function (r) {
+                addConditionRule(r.variable, r.operator, r.value);
+            });
+        }
+
+        document.getElementById('addConditionRuleBtn').addEventListener('click', function () {
+            addConditionRule(null, 'equals', null);
+            syncConditionExpressionFromRules();
+        });
+
+        // Sync raw expression back to hidden field when user types in raw tab
+        document.getElementById('stepConditionExpression').addEventListener('input', function () {});
+
+        // When switching to raw tab, pre-fill from rules; when switching to visual, try to parse
+        $('#conditionTabs a').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr('href');
+            if (target === '#conditionRaw') {
+                // Already synced — nothing extra needed; raw textarea has the current expression
+            } else if (target === '#conditionVisual') {
+                var raw = document.getElementById('stepConditionExpression').value.trim();
+                if (raw) {
+                    var parsed = tryParseConditionToRules(raw);
+                    if (parsed) {
+                        loadConditionRules(parsed);
+                    } else {
+                        // Can't parse — switch back to raw tab with a warning
+                        $('#conditionTabs a[href="#conditionRaw"]').tab('show');
+                        var warn = document.getElementById('conditionParseError');
+                        warn.textContent = '@JsEncoder.Encode(localizer["ConditionTooComplex"])';
+                        warn.style.display = 'block';
+                    }
+                } else {
+                    clearConditionRules();
+                }
+            }
+        });
+
+        // ── Test Condition button ─────────────────────────────────────────────
+        document.getElementById('testConditionBtn').addEventListener('click', function () {
+            if ($('#conditionTabs li.active a').attr('href') === '#conditionVisual') {
+                syncConditionExpressionFromRules();
+            }
+            var expr        = document.getElementById('stepConditionExpression').value.trim();
+            var resultSpan  = document.getElementById('conditionTestResult');
+            var parseErrDiv = document.getElementById('conditionParseError');
+            if (!expr) {
+                resultSpan.textContent = 'ℹ️ ' + '@JsEncoder.Encode(localizer["ConditionNone"])';
+                parseErrDiv.style.display = 'none';
+                return;
+            }
+            resultSpan.textContent = '⏳ ' + '@JsEncoder.Encode(localizer["ConditionTesting"])';
+            parseErrDiv.style.display = 'none';
+            fetch('/User/Workflows/ValidateCondition', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    conditionExpression: expr,
+                    triggerEventType: parseInt(document.getElementById('stepWorkflowId').dataset.triggerEventType || '0', 10),
+                    samplePayloadJson: null
+                })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!data.isValid) {
+                    resultSpan.textContent = '';
+                    parseErrDiv.textContent = '⚠️ ' + (data.parseErrors || []).join(' ');
+                    parseErrDiv.style.display = 'block';
+                } else if (data.evaluatedResult !== undefined && data.evaluatedResult !== null) {
+                    var isTruthy = data.evaluatedResult !== '' && data.evaluatedResult.toLowerCase() !== 'false';
+                    resultSpan.textContent = isTruthy
+                        ? '✅ ' + formatText('@JsEncoder.Encode(localizer["ConditionWillRun"])', data.evaluatedResult)
+                        : '❌ ' + formatText('@JsEncoder.Encode(localizer["ConditionWillSkip"])', data.evaluatedResult);
+                } else {
+                    resultSpan.textContent = '✅ ' + '@JsEncoder.Encode(localizer["ConditionSyntaxValid"])';
+                }
+            })
+            .catch(function () {
+                resultSpan.textContent = '⚠️ ' + '@JsEncoder.Encode(localizer["ConditionTestFailed"])';
+            });
+        });
+
+        // ── Open modal for EDIT ───────────────────────────────────────────────
+        document.querySelectorAll('.edit-step-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = JSON.parse(this.dataset.step);
+                var actionType = step.ActionType !== undefined ? step.ActionType : step.actionType;
+                var credId     = step.WorkflowCredentialId || step.workflowCredentialId || null;
+                document.getElementById('stepModalLabel').textContent = '@JsEncoder.Encode(localizer["Edit"])';
+                document.getElementById('stepId').value           = step.WorkflowStepId || step.workflowStepId || '';
+                document.getElementById('stepWorkflowId').value   = step.WorkflowId    || step.workflowId    || '@Model.WorkflowId';
+                document.getElementById('stepActionType').value   = actionType;
+                document.getElementById('stepOrder').value        = step.StepOrder !== undefined ? step.StepOrder : step.stepOrder;
+                document.getElementById('stepIsEnabled').checked  = step.IsEnabled !== undefined ? step.IsEnabled : step.isEnabled;
+                resetAllConfigFields();
+                populateActionConfig(actionType, step.ActionConfig || step.actionConfig || '');
+                // Normalise line endings to \n so CodeMirror displays them correctly
+                // regardless of whether \r\n (Windows) was stored in the database.
+                var rawTemplate = (step.OutputTemplate || step.outputTemplate || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                templateEditor.setValue(rawTemplate);
+                // Populate condition expression — try visual builder first, fall back to raw tab
+                var rawCondition = (step.ConditionExpression || step.conditionExpression || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                document.getElementById('stepConditionExpression').value = rawCondition;
+                if (rawCondition) {
+                    var parsed = tryParseConditionToRules(rawCondition);
+                    if (parsed) {
+                        loadConditionRules(parsed);
+                        // Activate visual tab
+                        $('#conditionTabs a[href="#conditionVisual"]').tab('show');
+                    } else {
+                        // Too complex — stay on raw tab
+                        $('#conditionTabs a[href="#conditionRaw"]').tab('show');
+                    }
+                } else {
+                    clearConditionRules();
+                    syncConditionExpressionFromRules();
+                    $('#conditionTabs a[href="#conditionVisual"]').tab('show');
+                }
+                document.getElementById('conditionTestResult').textContent = '';
+                document.getElementById('conditionParseError').style.display = 'none';
+                document.getElementById('stepSaveError').style.display = 'none';
+                showConfigPanel(actionType);
+                filterCredentials(actionType, credId);
+                $('#stepModal').modal('show');
+            });
+        });
+
+        // ── Save step ─────────────────────────────────────────────────────────
+        document.getElementById('saveStepBtn').addEventListener('click', function () {
+            var actionType   = document.getElementById('stepActionType').value;
+            var credentialId = document.getElementById('stepCredentialId').value || null;
+            var errorBox     = document.getElementById('stepSaveError');
+
+            // Sync raw condition textarea from active tab before saving
+            if ($('#conditionTabs li.active a').attr('href') === '#conditionVisual') {
+                syncConditionExpressionFromRules();
+            }
+
+            // Client-side validation
+            var errors = validateConfig(actionType);
+            if (!templateEditor.getValue().trim()) errors.push(requiredMessage('@JsEncoder.Encode(localizer["OutputTemplate"])'));
+            if (CREDENTIAL_REQUIRED[parseInt(actionType, 10)] && !credentialId) {
+                errors.push('@JsEncoder.Encode(localizer["CredentialRequired"])');
+            }
+            if (errors.length) {
+                errorBox.textContent = errors.join(' ');
+                errorBox.style.display = 'block';
+                return;
+            }
+            errorBox.style.display = 'none';
+
+            var conditionVal = (document.getElementById('stepConditionExpression').value || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+
+            var payload = {
+                workflowStepId:       document.getElementById('stepId').value || null,
+                workflowId:           document.getElementById('stepWorkflowId').value,
+                actionType:           parseInt(actionType, 10),
+                stepOrder:            parseInt(document.getElementById('stepOrder').value, 10),
+                isEnabled:            document.getElementById('stepIsEnabled').checked,
+                actionConfig:         buildActionConfig(actionType),
+                // Normalise to \n so line endings are stored consistently in the DB.
+                outputTemplate:       templateEditor.getValue().replace(/\r\n/g, '\n').replace(/\r/g, '\n'),
+                workflowCredentialId: credentialId,
+                conditionExpression:  conditionVal || null
+            };
+
+            fetch('/User/Workflows/SaveStep', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value },
+                body: JSON.stringify(payload)
+            })
+            .then(function (r) {
+                if (!r.ok) return r.text().then(function (t) { throw new Error(t || r.statusText); });
+                return r.json();
+            })
+            .then(function () {
+                $('#stepModal').modal('hide');
+                location.reload();
+            })
+            .catch(function (err) {
+                errorBox.textContent = err.message || '@JsEncoder.Encode(localizer["SaveStepFailed"])';
+                errorBox.style.display = 'block';
+            });
+        });
+
+        // ── Delete step ───────────────────────────────────────────────────────
+        var pendingDeleteStepId = null;
+
+        document.querySelectorAll('.delete-step-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                pendingDeleteStepId = this.dataset.stepId;
+                $('#deleteStepModal').modal('show');
+            });
+        });
+
+        document.getElementById('confirmDeleteStepBtn').addEventListener('click', function () {
+            if (!pendingDeleteStepId) return;
+            var stepId = pendingDeleteStepId;
+            pendingDeleteStepId = null;
+            $('#deleteStepModal').modal('hide');
+
+            fetch('/User/Workflows/DeleteStep/' + encodeURIComponent(stepId), {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value }
+            })
+            .then(function (r) {
+                if (!r.ok) throw new Error(r.statusText);
+                location.reload();
+            })
+            .catch(function (err) { alert(formatText('@JsEncoder.Encode(localizer["DeleteStepFailed"])', err.message)); });
+        });
+
+    }());
+    </script>
+}

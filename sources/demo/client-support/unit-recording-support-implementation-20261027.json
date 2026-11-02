@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "implemented_at": "2026-10-27T22:10:42.359972+00:00",
+  "support_version": "unit-web-recording-20261027",
+  "authorization": "Parent reviewed and approved implementing the independent opt-in preparer/launcher contract; no generic CLI/profile/pin migration was authorized or performed.",
+  "kind": "new_helpers_revision_preserving_prior_proof_freeze",
+  "prior_proof_checkpoint": {
+    "file": "sources/demo/client-support/unit-recording-support-preflight-20261027.json",
+    "sha256": "b03628cf9b4dfa83451005da236af1570094b84422260e542c1034d8207722dc",
+    "all45_files_byte_identical": true
+  },
+  "approved_plan": {
+    "file": "sources/demo/client-support/unit-recording-integration-plan-20261027.json",
+    "sha256": "ba35d2e7fe050a4526b8646fef9085e12bc36fa361cd196cd833505914137784"
+  },
+  "baseline": {
+    "file": "sources/demo/client-support/unit-recording-source-baseline-20261027.json",
+    "sha256": "34019db05b8c57bf95f12cc3b0d5b1b4654055215da6358d3aec1448146b91c9"
+  },
+  "files": [
+    {
+      "file": "sources/demo/client-support/unit_recording_support.py",
+      "sha256": "537dcde96878611724676bfc61626d2ce92c3c1f52a136e81eb70fb0cdaa24e2",
+      "bytes": 21495
+    },
+    {
+      "file": "sources/demo/client-support/unit-recording-prepare.py",
+      "sha256": "2e7be6684fa9634b7fccc5f91a96dc8926c5d037e9a45ade6033886ff9796666",
+      "bytes": 1283
+    },
+    {
+      "file": "sources/demo/client-support/unit-recording-launch.py",
+      "sha256": "ec1a07349e9358e6a225a2a8451527e7f5c09a945131c750658ab438e3c5d2da",
+      "bytes": 1312
+    },
+    {
+      "file": "sources/demo/client-support/README.unit-recording.md",
+      "sha256": "9672c09b8879bf0ee5330bba192cb1cb2f0a6f4b87244ecea088d2aa438234a6",
+      "bytes": 3788
+    },
+    {
+      "file": "scripts/tests/test_unit_recording_support.py",
+      "sha256": "da7b783a97c3c2fe31081054b966963a73405de8cb2f3963a6341c12c284d9f2",
+      "bytes": 20176
+    },
+    {
+      "file": "sources/demo/README.expansion.md",
+      "sha256": "761722a155bc6d0c5f8ea0e2b4dc38e223dc01f47f5d462b98f8738aca0d6662",
+      "bytes": 11153
+    }
+  ],
+  "validation": {
+    "passed": true,
+    "tests_run": 27,
+    "failures": 0,
+    "errors": 0,
+    "tests": [
+      {
+        "test": "unit_support_guard_tests.ReviewedSupportBundleTest.test_actual_bundle_checksums_are_valid_without_git_or_credentials",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.ReviewedSupportBundleTest.test_cli_parser_rejects_invalid_options_without_echoing_values",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.ReviewedSupportBundleTest.test_retained_real_patches_produce_all_four_reviewed_outputs_without_a_live_checkout",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_authenticated_patch_path_escape_is_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_baseline_patch_or_helper_identity_tamper_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_copy_interruption_never_creates_accepted_provenance",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_corrupted_output_and_forged_provenance_do_not_launch",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_exact_hunk_position_required_no_fuzzy_apply",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_existing_even_empty_destination_preserved",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_extra_private_env_or_empty_directory_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_helper_revision_change_requires_fresh_preparation",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_launch_inherits_key_only_in_memory_and_preserves_local_no_browser_flags",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_launch_requires_inherited_key_without_start_or_value_disclosure",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_managed_source_symlink_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_only_explicit_loopback_origins_and_safe_ports_accepted",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_original_overlapping_outside_and_linked_destinations_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_partial_output_hash_mismatch_refused_before_directory_creation",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_plan_needs_no_source_credentials_git_or_writes",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_prepare_applies_both_exact_patches_excludes_private_and_preserves_source",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_recording_only_test_already_present_is_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_runtime_cache_allowed_but_cache_symlink_is_not",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_runtime_directory_must_not_hide_an_environment_directory",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_source_hash_or_lock_or_sdk_tamper_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_tracked_source_symlink_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_untracked_inputs_cannot_be_supplied_as_pinned_tracked_files",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_wrong_dependency_link_or_later_sdk_change_refused",
+        "status": "passed"
+      },
+      {
+        "test": "unit_support_guard_tests.UnitRecordingSupportTests.test_wrong_head_and_dirty_or_untracked_inputs_refused_before_copy",
+        "status": "passed"
+      }
+    ],
+    "method": "Temporary synthetic source/dependency fixtures with mocked read-only Git state. No Git process/init/commit/push, live app copy, real server, browser, API/DB/provider operation or target install. Actual retained baseline/patch files were also applied in a temporary fixture, producing all4reviewed output hashes without input mutation.",
+    "plan_contract": "Both plans are exercised with an empty test environment and a Git boundary that must not be called; tests assert no file changes.",
+    "launch_contract": "Only mocked process execution is exercised; key preserved in memory, absent from command/stdout/provenance. Invalid args avoid echoing values.",
+    "python_bytecode": "Both CLI entrypoints disable bytecode writes before importing the shared helper, preserving the read-only plan contract."
+  },
+  "preserved": {
+    "generic_prepare_apps_unchanged": true,
+    "generic_launch_app_unchanged": true,
+    "source_profiles_loader_and_definition_unchanged": true,
+    "global_definition_sha256": "33f47db954c7ddcf2c4c2c73017d329ec5168ddb812bb47902ca7088acf49c97",
+    "private_pins_not_written": true,
+    "original_Unit_not_edited": true,
+    "no_server_browser_target_or_Git_actions": true
+  },
+  "runtime_status": "No live isolated copy or Expo boot was performed by this implementation. Parent owns actual restart and browser verification; no map/image/native/provider/media qualification inferred."
+}

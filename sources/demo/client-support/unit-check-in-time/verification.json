@@ -1,0 +1,98 @@
+{
+  "kind": "unit_check_in_utc_presentation_fix",
+  "recorded_at": "2026-10-28T00:44:21.680473+00:00",
+  "scope": "Only timer card and history UTC API timestamp presentation, colocated regression and existing card-test storage mock. No server/policy/clock/state changes.",
+  "before_sha256": {
+    "src/components/check-in-timers/check-in-timer-card.tsx": "32d45cb8d7f086ae3bfcf3ead022dfd5a931cf8a2ed9ba7af07ea0be309d591b",
+    "src/components/check-in-timers/check-in-history-list.tsx": "e7d4b3ae777e71d01ab9d2120d43a509728dc961c8efa6e0016513d53953cfc5",
+    "src/components/check-in-timers/__tests__/check-in-timer-card.test.tsx": "014e4aa4e2359d49046036604ac6be3bad1c68effd04f18969ae69be71000c5b"
+  },
+  "after_sha256": {
+    "src/components/check-in-timers/check-in-timer-card.tsx": "ae66385b0ee1b70f3492b2af3e7b6fa706528d81450b84c682f206973628e625",
+    "src/components/check-in-timers/check-in-history-list.tsx": "fdfcb4cf5d4f7d4f65a0ec6096c1d0cefe2c3256f7ac306e80c22979937d749d",
+    "src/components/check-in-timers/__tests__/check-in-timer-card.test.tsx": "4b7648ac319826d6d0c7debfd080e754400a482558c18783d64a113236a9a905",
+    "src/components/check-in-timers/__tests__/check-in-utc-dates.test.tsx": "b73b29eeae316b8fcdadaeb0f05cc297f83b370bd91210b163398d4ab21561a0"
+  },
+  "new_file_baseline_absent": "src/components/check-in-timers/__tests__/check-in-utc-dates.test.tsx",
+  "preserved_map_image_sha256": {
+    "src/components/maps/map-view.web.tsx": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+    "src/components/maps/__tests__/camera.web.test.tsx": "0d12a7d0e22c0b6bbb84525987a60895e15effc3ba9bf3e6f1ad822318c95e14",
+    "src/components/calls/call-images-modal.tsx": "2c26aea273f0abfcd0bd76ecdee8c87e3c6e77edbffe4486e2007deb4d9ed430",
+    "src/components/calls/__tests__/call-images-modal.test.tsx": "e8700bfe936e8d5e3c99edb5021104b1e8414527f2317c0db91ae3434dec7b9d"
+  },
+  "unit_existing_parser": {
+    "file": "src/lib/utils.ts",
+    "sha256": "89601746c6df7a77b6fbee9bc8bac0bc0002f173f9ee17c4511aaaa0147a740f",
+    "function": "parseApiUtcDate",
+    "behavior": "Absent/invalid -> null; naive API UTC -> appendZ; explicit Z or positive/negative offsets retained. Not changed."
+  },
+  "source_contract": [
+    {
+      "file": "Core/Resgrid.Services/CheckInTimerService.cs",
+      "sha256": "c55be35b6f412647e0728902ff72a62c0099b263aa56037f3a99465efe37b1a9",
+      "observation": "record.Timestamp = DateTime.UtcNow at339; resolved LastCheckIn references stored Timestamp."
+    },
+    {
+      "file": "Web/Resgrid.Web.Services/Controllers/v4/CheckInTimersController.cs",
+      "sha256": "d76a626734531d78fbd676a846f35dd1a2cf1687f0b68b081e9341d9f2be0513",
+      "observation": "GetTimerStatuses LastCheckIn passthrough and GetCheckInHistory Timestamp passthrough."
+    },
+    {
+      "file": "Web/Resgrid.Web.Services/Models/v4/CheckInTimers/CheckInTimerModels.cs",
+      "sha256": "1c795f6b41d39de377371921c4b29f7201278f6adb579c5b24a7d37ec506e520",
+      "observation": "Nullable DateTime LastCheckIn and DateTime Timestamp DTO fields."
+    },
+    {
+      "file": "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0056_AddingCheckInTimersPg.cs",
+      "sha256": "6e461c233c711d14467fe09a665f7cceae06b64f8c63be173c0eb79403f8dd6a",
+      "observation": "checkinrecords timestamp stored as AsDateTime; zone may be omitted after row serialization."
+    }
+  ],
+  "dependency_inputs": [
+    {
+      "file": "package.json",
+      "sha256": "31431c61d50287e204a6d093576520c460a34598964ac905b38a5a7e5cd5c9cd"
+    },
+    {
+      "file": "yarn.lock",
+      "sha256": "dabc6b25d8761ecb2532c841e0efb115053c1c5acb5ed022d71a4208a6bf73d1"
+    },
+    {
+      "file": "node_modules/date-fns/package.json",
+      "sha256": "4569c5b08a8bc61281236014c2a43490142579e1f47550cf51297607feba4b9b"
+    }
+  ],
+  "installed_date_fns_version": "4.1.0",
+  "original_direct_probe": {
+    "timezone": "America/Los_Angeles",
+    "now": "2026-10-27T23:50:00Z",
+    "naive_timestamp": "2026-10-27T23:45:00",
+    "naive_age_minutes": -415,
+    "explicit_z_age_minutes": 5
+  },
+  "proof": {
+    "fixed_utc": {
+      "tests": 20,
+      "passed": 20,
+      "failed": 0
+    },
+    "fixed_america_los_angeles": {
+      "tests": 20,
+      "passed": 20,
+      "failed": 0
+    },
+    "preserved_original_la_expected_failure": {
+      "tests": 11,
+      "failed": 5,
+      "passed": 6
+    },
+    "format": "All4modified files Prettiercheck passed",
+    "lint": "Both production components passed targeted no-cache ESLint; new test is ignored by repository configured test exclusion, not claimed linted."
+  },
+  "runtime_status": "Actual app/source fix applied through approved filesystem escalation. Parent must restart known CI-mode Expo server with --clear and verify actual normal UI; no browser/server/DB/API/app-store action performed by child.",
+  "capture_reproducibility": "Separate retained third patch only; independent Unit recording preparer v1 still applies camera/images only. No generic prepare_apps/source_profiles/private pins or existing helper recipes changed. Any optional recording-support revision must explicitly pin/apply this extra patch before claiming reproduction.",
+  "no_claims": [
+    "No new capture, successful browser regression, narration, canonical/site/media qualification.",
+    "No timestamp clamping, timezone/server clock change, GPS or check-in mutation."
+  ]
+}

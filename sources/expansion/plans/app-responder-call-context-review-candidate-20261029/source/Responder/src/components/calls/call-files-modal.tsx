@@ -1,0 +1,327 @@
+import * as FileSystem from 'expo-file-system/legacy';
+import { useFocusEffect } from 'expo-router';
+import * as Sharing from 'expo-sharing';
+import { Download, File, X } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Alert, Pressable, ScrollView } from 'react-native';
+
+import { getCallAttachmentFile } from '@/api/calls/callFiles';
+import { CustomBottomSheet } from '@/components/ui/bottom-sheet';
+import { Box } from '@/components/ui/box';
+import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/heading';
+import { HStack } from '@/components/ui/hstack';
+import { Spinner } from '@/components/ui/spinner';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { type CallFileResultData } from '@/models/v4/callFiles/callFileResultData';
+import { useCallDetailStore } from '@/stores/calls/detail-store';
+
+interface CallFilesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  callId: string;
+}
+
+export const CallFilesModal: React.FC<CallFilesModalProps> = ({ isOpen, onClose, callId }) => {
+  const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
+  const { colorScheme } = useColorScheme();
+  const { callFiles, isLoadingFiles, errorFiles, fetchCallFiles } = useCallDetailStore();
+  const [downloadingFiles, setDownloadingFiles] = useState<Record<string, number>>({});
+
+  // Dynamic colors based on color scheme
+  const backgroundColor = useMemo(() => (colorScheme === 'dark' ? '#111827' : '#FFFFFF'), [colorScheme]);
+  const handleIndicatorColor = useMemo(() => (colorScheme === 'dark' ? '#4B5563' : '#D1D5DB'), [colorScheme]);
+  const iconColor = useMemo(() => (colorScheme === 'dark' ? '#F3F4F6' : '#111827'), [colorScheme]);
+
+  // Track if modal was actually opened to avoid false close events
+  const wasModalOpenRef = useRef(false);
+
+  // Track analytics when modal becomes visible
+  useFocusEffect(
+    useCallback(() => {
+      if (isOpen) {
+        wasModalOpenRef.current = true;
+        try {
+          trackEvent('call_files_modal_viewed', {
+            timestamp: new Date().toISOString(),
+            callId,
+            fileCount: callFiles?.length || 0,
+            hasFiles: Boolean(callFiles?.length),
+            isLoading: isLoadingFiles,
+            hasError: Boolean(errorFiles),
+          });
+        } catch (error) {
+          // Analytics errors should not break the component
+          console.warn('Failed to track call files modal analytics:', error);
+        }
+      }
+    }, [isOpen, trackEvent, callId, callFiles?.length, isLoadingFiles, errorFiles])
+  );
+
+  // Fetch files when the sheet opens.
+  useEffect(() => {
+    if (isOpen) {
+      fetchCallFiles(callId);
+    }
+  }, [isOpen, callId, fetchCallFiles]);
+
+  const handleClose = useCallback(() => {
+    if (wasModalOpenRef.current) {
+      try {
+        trackEvent('call_files_modal_closed', {
+          timestamp: new Date().toISOString(),
+          callId,
+          wasManualClose: true,
+        });
+      } catch (error) {
+        console.warn('Failed to track call files modal close analytics:', error);
+      }
+      wasModalOpenRef.current = false;
+    }
+
+    onClose();
+  }, [callId, onClose, trackEvent]);
+
+  // Format file size for display
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  // Format date for display
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Download and open file
+  const handleDownloadFile = async (file: CallFileResultData) => {
+    if (!file.Url || downloadingFiles[file.Id]) return;
+
+    try {
+      // Track analytics for file download start
+      trackEvent('call_file_download_started', {
+        timestamp: new Date().toISOString(),
+        callId,
+        fileId: file.Id,
+        fileName: file.FileName || file.Name || 'unknown',
+        fileSize: file.Size,
+        mimeType: file.Mime || 'unknown',
+      });
+
+      setDownloadingFiles((prev) => ({ ...prev, [file.Id]: 0 }));
+
+      const fileData = await getCallAttachmentFile(file.Url, {
+        onEvent: (event) => {
+          if (event.type === 'progress' && event.progress !== undefined) {
+            setDownloadingFiles((prev) => ({ ...prev, [file.Id]: event.progress! }));
+          }
+        },
+      });
+
+      // Create a temporary file
+      const fileName = file.FileName || file.Name || `file_${file.Id}`;
+      const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+
+      // Convert blob to base64
+      const base64Data = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          // Remove data URL prefix if present
+          const base64 = result.split(',')[1] || result;
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(fileData);
+      });
+
+      // Write file to device
+      await FileSystem.writeAsStringAsync(fileUri, base64Data, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Share/open the file
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType: file.Mime || 'application/octet-stream',
+          dialogTitle: file.Name || file.FileName,
+        });
+
+        // Track successful download
+        trackEvent('call_file_download_completed', {
+          timestamp: new Date().toISOString(),
+          callId,
+          fileId: file.Id,
+          fileName: file.FileName || file.Name || 'unknown',
+          fileSize: file.Size,
+          mimeType: file.Mime || 'unknown',
+          wasShared: true,
+        });
+      } else {
+        Alert.alert(t('calls.files.share_error'), 'Sharing is not available on this device');
+
+        // Track completed download but failed share
+        trackEvent('call_file_download_completed', {
+          timestamp: new Date().toISOString(),
+          callId,
+          fileId: file.Id,
+          fileName: file.FileName || file.Name || 'unknown',
+          fileSize: file.Size,
+          mimeType: file.Mime || 'unknown',
+          wasShared: false,
+        });
+      }
+
+      setDownloadingFiles((prev) => {
+        const newState = { ...prev };
+        delete newState[file.Id];
+        return newState;
+      });
+    } catch (error) {
+      console.error('Error downloading file:', error);
+
+      // Track download error
+      trackEvent('call_file_download_failed', {
+        timestamp: new Date().toISOString(),
+        callId,
+        fileId: file.Id,
+        fileName: file.FileName || file.Name || 'unknown',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+
+      Alert.alert(t('calls.files.open_error'), error instanceof Error ? error.message : 'Unknown error occurred');
+      setDownloadingFiles((prev) => {
+        const newState = { ...prev };
+        delete newState[file.Id];
+        return newState;
+      });
+    }
+  };
+
+  // Render individual file item
+  const renderFileItem = (file: CallFileResultData) => {
+    const isDownloading = downloadingFiles[file.Id] !== undefined;
+    const downloadProgress = downloadingFiles[file.Id] || 0;
+
+    return (
+      <Pressable
+        key={file.Id}
+        onPress={() => handleDownloadFile(file)}
+        className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+        style={{ opacity: isDownloading ? 0.7 : 1 }}
+        testID={`file-item-${file.Id}`}
+      >
+        <HStack space="md" className="items-center">
+          <File size={24} color="#6B7280" />
+          <VStack className="flex-1" space="xs">
+            <Text className="font-medium text-gray-900 dark:text-gray-100" numberOfLines={1}>
+              {file.Name || file.FileName || t('calls.files.file_name')}
+            </Text>
+            <HStack space="md" className="items-center">
+              <Text className="text-sm text-gray-500 dark:text-gray-400">{formatFileSize(file.Size)}</Text>
+              {file.Timestamp && <Text className="text-sm text-gray-500 dark:text-gray-400">{formatDate(file.Timestamp)}</Text>}
+            </HStack>
+          </VStack>
+          <Box className="items-center justify-center">
+            {isDownloading ? (
+              <VStack className="items-center" space="xs">
+                <Spinner size="small" />
+                <Text className="text-xs text-gray-500">{Math.round(downloadProgress)}%</Text>
+              </VStack>
+            ) : (
+              <Download size={20} color="#6B7280" />
+            )}
+          </Box>
+        </HStack>
+      </Pressable>
+    );
+  };
+
+  // Render files list content
+  const renderFilesContent = () => {
+    if (isLoadingFiles) {
+      return (
+        <Box className="flex-1 items-center justify-center py-8">
+          <Spinner size="large" />
+          <Text className="mt-4 text-gray-600 dark:text-gray-400">{t('common.loading')}</Text>
+        </Box>
+      );
+    }
+
+    if (errorFiles) {
+      return (
+        <Box className="flex-1 items-center justify-center py-8">
+          <Text className="text-center text-red-600 dark:text-red-400">{t('calls.files.error')}</Text>
+          <Text className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">{errorFiles}</Text>
+          <Button
+            variant="outline"
+            onPress={() => {
+              try {
+                trackEvent('call_files_retry_pressed', {
+                  timestamp: new Date().toISOString(),
+                  callId,
+                  error: errorFiles,
+                });
+              } catch (error) {
+                console.warn('Failed to track call files retry analytics:', error);
+              }
+              fetchCallFiles(callId);
+            }}
+            className="mt-4"
+            size="sm"
+          >
+            <Text>{t('common.retry')}</Text>
+          </Button>
+        </Box>
+      );
+    }
+
+    if (!callFiles || callFiles.length === 0) {
+      return (
+        <Box className="flex-1 items-center justify-center py-8">
+          <File size={48} color="#9CA3AF" />
+          <Text className="mt-4 text-gray-600 dark:text-gray-400">{t('calls.files.no_files')}</Text>
+          <Text className="mt-2 text-center text-sm text-gray-500 dark:text-gray-500">{t('calls.files.no_files_description')}</Text>
+        </Box>
+      );
+    }
+
+    return (
+      <VStack space="md" className="w-full">
+        {callFiles.map(renderFileItem)}
+      </VStack>
+    );
+  };
+
+  return (
+    <CustomBottomSheet isOpen={isOpen} onClose={handleClose} snapPoints={[67]} minHeight="min-h-[500px]" testID="call-files-modal-sheet">
+      <VStack style={{ flex: 1, backgroundColor }} testID="call-files-modal">
+        {/* Fixed Header */}
+        <VStack space="md" style={{ backgroundColor }}>
+          <Box className="w-full flex-row items-center justify-between border-b border-gray-200 px-4 pb-4 pt-2 dark:border-gray-700">
+            <Heading size="lg">{t('calls.files.title')}</Heading>
+            <Button variant="link" onPress={handleClose} className="p-1" testID="close-button">
+              <X size={24} color={iconColor} />
+            </Button>
+          </Box>
+        </VStack>
+
+        {/* Scrollable Files List */}
+        <ScrollView testID="scroll-view" style={{ flex: 1, backgroundColor }} showsVerticalScrollIndicator={true} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 16 }}>
+          {renderFilesContent()}
+        </ScrollView>
+      </VStack>
+    </CustomBottomSheet>
+  );
+};
+
+export default CallFilesModal;

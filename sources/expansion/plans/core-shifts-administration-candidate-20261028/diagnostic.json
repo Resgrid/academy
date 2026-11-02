@@ -1,0 +1,185 @@
+{
+  "kind": "observed_static_workshift_and_calendar_discrepancies",
+  "reviewed_at": "2026-10-28T22:09:16Z",
+  "source_only": true,
+  "application_code_changed": false,
+  "db_read_or_write_performed": false,
+  "browser_lease_released": true,
+  "raw_manifest": {
+    "file": "captures/expansion/core-shifts-administration-20261028/manifest.json",
+    "sha256": "b5ee334f8af8575525ec5141c4c63095c5741372ab60c9222058c6ec988bb502"
+  },
+  "observations": [
+    {
+      "id": "specific-calendar-widget",
+      "observed": "The own specific View Calendar page showed an empty widget; actual scoped browser console reported ReferenceError: FullCalendar is not defined. The shared Shifts calendar displayed and opened the new dated entries.",
+      "captures": [
+        "011-assigned-calendar-empty-diagnostic",
+        "013-assigned-calendar-date-context",
+        "014-assigned-day-saved"
+      ],
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/ShiftCalendar.cshtml",
+          "sha256": "5df6ddb532921107957333806aeb8bbd2c515852e499d5c56d3f4a877838cf9b",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/ShiftCalendar.cshtml",
+          "lines": [
+            13,
+            63
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/js/app/internal/shifts/resgrid.shifts.calendar.js",
+          "sha256": "0b958f963d54052e0ecba04966229632a3ad094a6d9a21e8a8c10caca0524a83",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/wwwroot/js/app/internal/shifts/resgrid.shifts.calendar.js",
+          "lines": [
+            11
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/libman.json",
+          "sha256": "1ae574d54c9be1cc2d80a30f093dc8bae1d903213ffb0185c0829f32872e8e8a",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/libman.json",
+          "lines": [
+            270,
+            271
+          ]
+        }
+      ],
+      "local_file_observation": "Web/Resgrid.Web/wwwroot/lib/fullcalendar/index.global.min.js is absent in the inspected Core checkout.",
+      "inference": "Missing or unrestored FullCalendar assets are consistent with the runtime error. No HTTP status, response body or CSP/network trace was collected; exact deployed-file failure is not proven.",
+      "recommendation_not_performed": "Verify the declared library restore and published asset presence; retest the normal calendar. No route/security workaround or asset change was performed."
+    },
+    {
+      "id": "static-time-roundtrip",
+      "observed": "Prepared 2026/11/04 09:00 to 2026/11/05 09:00; saved ViewDay shows 4 Nov 2026 09:00. Fresh Edit shows 11/4/2026 3:00:00 AM and 11/5/2026 3:00:00 AM.",
+      "captures": [
+        "032-static-own-unit-selected",
+        "035-static-final-window-before-create",
+        "036-static-day-saved",
+        "037-static-edit-readback-upper",
+        "038-static-edit-discrepancy-warning"
+      ],
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs",
+          "sha256": "3ee6c1ca45f9046ec3797666519ac7f1e985b140500b3c08e1dc7db71fa282bb",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs",
+          "lines": [
+            67,
+            85,
+            107,
+            108
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Core/Resgrid.Services/WorkShiftsService.cs",
+          "sha256": "5dc33e31dcb10530f3cfe264a4ce9f30529ba6ca0def388dea0fba9953084e3a",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Services/WorkShiftsService.cs",
+          "lines": [
+            44,
+            45,
+            79,
+            80
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Core/Resgrid.Model/Helpers/TimeConverterHelper.cs",
+          "sha256": "b391a7b34dd896efda98e5ea16dcae6c08437c1815775dc1a82d235f4f9dbf89",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Model/Helpers/TimeConverterHelper.cs",
+          "lines": [
+            13,
+            47,
+            54
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Workshifts/ViewDay.cshtml",
+          "sha256": "cd336e7628a69a2675aa787397df7f18e8735c52f28940b331a393fa3715f75d",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Workshifts/ViewDay.cshtml",
+          "lines": [
+            52,
+            56
+          ]
+        }
+      ],
+      "inference": "Create stores posted wall-clock values through ToUniversalTime, whereas Edit GET applies the department TimeConverter and ViewDay prints raw Start.Hour/Minute. These inconsistent paths are consistent with the observed six-hour difference. Host timezone, DateTime.Kind and persisted SQL values were not traced; source inspection is not a traced SQL ordering or timezone proof.",
+      "recommendation_not_performed": "Use an explicit department-local-to-UTC boundary for create/update and department-local display consistently, then test round trips and daylight-saving boundaries. Do not submit the inconsistent editor."
+    },
+    {
+      "id": "static-unit-preselection",
+      "observed": "Saved ViewDay lists the new training unit; fresh Edit Units is blank. The warning says updates clear existing assignments/signups and reapply settings. No Update or delete was performed.",
+      "captures": [
+        "036-static-day-saved",
+        "038-static-edit-discrepancy-warning"
+      ],
+      "source_evidence": [
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs",
+          "sha256": "3ee6c1ca45f9046ec3797666519ac7f1e985b140500b3c08e1dc7db71fa282bb",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs",
+          "lines": [
+            96,
+            110,
+            129,
+            142
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Models/Workshifts/NewWorkshiftView.cs",
+          "sha256": "08317fdef06ac4962c7675c23dcb2832fc8bb26ad9537665f62eeb40a7de497a",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Models/Workshifts/NewWorkshiftView.cs",
+          "lines": [
+            10
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/Areas/User/Views/Workshifts/Edit.cshtml",
+          "sha256": "d6ae1555c0ac94ca5c39f3c6c8cc330dd3922f5c8f0136a5cca1540e3ff5bec5",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Workshifts/Edit.cshtml",
+          "lines": [
+            107
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Web/Resgrid.Web/wwwroot/js/app/internal/workshifts/resgrid.workshifts.new.js",
+          "sha256": "5320ee52dc1aede437362eb50499970b00d2cf6ddc279438208e36d361a9f4d2",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/wwwroot/js/app/internal/workshifts/resgrid.workshifts.new.js",
+          "lines": [
+            27
+          ]
+        },
+        {
+          "repo": "Core",
+          "path": "Core/Resgrid.Services/WorkShiftsService.cs",
+          "sha256": "5dc33e31dcb10530f3cfe264a4ce9f30529ba6ca0def388dea0fba9953084e3a",
+          "snapshot_file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Services/WorkShiftsService.cs",
+          "lines": [
+            87,
+            109,
+            156
+          ]
+        }
+      ],
+      "inference": "Edit GET loads the Shift and its Entities but does not populate UnitsAssigned; the AJAX Select2 initialization does not restore selected unit options. This is consistent with the blank editor, despite the saved association. No update was attempted to test potential assignment loss.",
+      "recommendation_not_performed": "Populate the authorized existing unit IDs and selected options before editing, preserve associations on unchanged submissions, and test the destructive rebuild boundary before teaching an update."
+    }
+  ],
+  "module_gaps": [
+    "No member signup request, pending approval/denial, trade or attendance action was recorded.",
+    "No automatic static unit commit/release, role fill, travel or availability effect was established.",
+    "No Big Board footage or app launch in this batch."
+  ],
+  "no_fix_claimed": true
+}

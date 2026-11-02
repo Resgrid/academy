@@ -1,0 +1,11 @@
+			SelectNonDispatchedScheduledCallsByDateQuery = @"
+					SELECT *
+					FROM %SCHEMA%.%TABLENAME%
+					WHERE ([HasBeenDispatched] = 0 OR ([HasBeenDispatched] = 1 AND [DispatchClaimedOn] < %STALEBEFORE%)) AND [IsDeleted] = 0 AND [DispatchOn] IS NOT NULL AND [DispatchOn] >= %STARTDATE% AND [DispatchOn] <= %ENDDATE%";
+			SelectNonDispatchedScheduledCallsByDidQuery = @"
+					SELECT *
+					FROM %SCHEMA%.%TABLENAME%
+					WHERE [HasBeenDispatched] = 0 AND [IsDeleted] = 0 AND [State] = 0 AND [DepartmentId] = %DID%";
+			SelectPendingCallsByDidQuery = @"
+					SELECT *
+					FROM %SCHEMA%.%TABLENAME%

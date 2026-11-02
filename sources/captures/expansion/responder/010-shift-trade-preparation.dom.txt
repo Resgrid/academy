@@ -1,0 +1,79 @@
+- generic: Resgrid Responder
+- generic: W
+- generic: Wallace Boden
+- text: Firehouse 51 — Training Department
+- separator
+- text: Voice
+- text: Stream
+- text: Home
+- text: Messages
+- text: Contacts
+- text: Map
+- text: Notes
+- text: Protocols
+- text: Calendar
+- text: Shifts
+- text: Weather Alerts
+- text: Checklists
+- text: Records
+- text: Deployments
+- text: Work orders
+- text: My certifications
+- text: Chat
+- text: Assistant
+- text: Settings
+- tablist:
+  - tab "Today":
+    - generic: Today
+  - tab "My Shifts":
+    - generic: My Shifts
+  - tab "Calendar":
+    - generic: Calendar
+  - tab "Trades":
+    - generic: Trades
+  - tab "On Duty":
+    - generic: On Duty
+  - tab "Approvals, 1 pending":
+    - generic: Approvals
+    - generic: "1"
+- textbox "Input Field":
+  - /placeholder: Search shifts...
+- button "A Shift — Firehouse 51, Sun, Oct 25, 2026, 8:00 AM – 8:00 AM (next day), Fully staffed, Active now, You are on":
+  - generic: A Shift — Firehouse 51Sun, Oct 25, 2026
+  - generic: Active now
+  - text: 8:00 AM – 8:00 AM (next day)
+  - text: Fully staffed
+  - generic: You are on
+  - generic: Assigned
+- button "Community standby signup, Sun, Oct 25, 2026, 8:00 AM – 12:00 PM, Fully staffed, You are on":
+  - generic: Community standby signupSun, Oct 25, 2026
+  - text: 8:00 AM – 12:00 PM
+  - text: Fully staffed
+  - generic: You are on
+  - generic: Sign-up
+  - generic: Approval required
+- dialog:
+  - dialog:
+    - text: A Shift — Firehouse 51
+    - generic: Active now
+    - text: Sunday, October 25, 2026
+    - text: Scheduled for
+    - generic: 8:00 AM – 8:00 AM (next day)
+    - generic: Assigned
+    - text: Fully staffed
+    - text: Request a tradeChoose who you would like to take this shift. Everyone you pick is asked, then you choose from their offers.
+    - checkbox "Blake Gallo, Truck 81 · Firefighter":
+      - generic: Blake GalloTruck 81 · Firefighter
+    - checkbox "Darren Ritter, Engine 51 · Firefighter":
+      - generic: Darren RitterEngine 51 · Firefighter
+    - checkbox "Gabriela Dawson, Ambulance 61 · Paramedic":
+      - generic: Gabriela DawsonAmbulance 61 · Paramedic
+    - checkbox "Leslie Shay, Ambulance 61 · Paramedic":
+      - generic: Leslie ShayAmbulance 61 · Paramedic
+    - text: Note
+    - textbox "Input Field" [active]:
+      - /placeholder: Add a note (optional)
+    - button "Back":
+      - generic: Back
+    - button "Send request" [disabled]:
+      - generic: Send request

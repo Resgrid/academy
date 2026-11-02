@@ -1,0 +1,174 @@
+﻿@using Resgrid.Framework
+@inject Resgrid.Model.Services.IFeatureToggleService featureToggleService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resgrid.Localization.Areas.User.AdminAssist.AdminAssist> aaLocalizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resgrid.Localization.Areas.User.Search.Search> searchLocalizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resgrid.Localization.Areas.User.DepartmentImport.DepartmentImport> importLocalizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Resgrid.Localization.Areas.User.Department.Department> departmentLocalizer
+@{
+	// Admin Assist opens on its setup tabs (Admin.Setup), or on its Admin AI tab once Admin.Assist and Ai.AdminAssist are on.
+	var adminAssistVisible = ClaimsAuthorizationHelper.IsUserDepartmentAdmin() &&
+		(await Resgrid.Services.AdminAssist.AdminAssistFeatureAvailability.IsEnabledAsync(featureToggleService, ClaimsAuthorizationHelper.GetDepartmentId(), true, Context.RequestAborted) ||
+		 await Resgrid.Services.AdminAssist.AdminAssistFeatureAvailability.IsWorkspaceEnabledAsync(featureToggleService, ClaimsAuthorizationHelper.GetDepartmentId(), Context.RequestAborted));
+	// Chat.System gates the moderation console link; it is only useful to department or group admins.
+	var chatModerationVisible = ClaimsAuthorizationHelper.IsUserDepartmentOrGroupAdmin(0) &&
+		await featureToggleService.IsEnabledAsync(FeatureFlagKeys.ChatSystem, ClaimsAuthorizationHelper.GetDepartmentId());
+	// The search box is hidden below the md breakpoint; phones and small tablets get an icon to the Search page instead.
+	var searchVisible = await featureToggleService.IsEnabledAsync(FeatureFlagKeys.SearchUnified, ClaimsAuthorizationHelper.GetDepartmentId());
+	// Import & Migration: department administrators (permission 72) once Onboarding.MigrationWizard is on.
+	var importVisible = ClaimsAuthorizationHelper.IsUserDepartmentAdmin() &&
+		await featureToggleService.IsEnabledAsync(FeatureFlagKeys.OnboardingMigrationWizard, ClaimsAuthorizationHelper.GetDepartmentId());
+	// Calls awaiting resources (conditional run cards): dispatchers only; the badge stays hidden until a call is waiting.
+	var awaitingResourcesVisible = ClaimsAuthorizationHelper.CanCreateCall() &&
+		await featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCards, ClaimsAuthorizationHelper.GetDepartmentId()) &&
+		await featureToggleService.IsEnabledAsync(FeatureFlagKeys.DispatchRunCardConditions, ClaimsAuthorizationHelper.GetDepartmentId());
+}
+<div class="row border-bottom" style="height: 50px;">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header" style="width: 60%;">
+            <div class="hidden-sm hidden-xs" id="top-icons-area">
+            </div>
+
+            <div class="hidden-xs hidden-sm" style="float:right; width: 70%; padding-top: 4px;"> 
+                <div id="autocomplete" data-placeholder="@searchLocalizer["Placeholder"]" data-search-all-label="@searchLocalizer["SearchAllResults"]" data-search-button-label="@searchLocalizer["SearchButton"]"></div>
+            </div>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            @if (searchVisible)
+            {
+                <li class="hidden-md hidden-lg" id="menu-search">
+                    <a asp-controller="Search" asp-action="Index" asp-route-area="User" title="@searchLocalizer["PageTitle"]" aria-label="@searchLocalizer["PageTitle"]"><i class="fa fa-search" aria-hidden="true"></i></a>
+                </li>
+            }
+            @if (awaitingResourcesVisible)
+            {
+                <li id="awaitingResourcesNav" style="display: none"
+                    data-awaitingtitle="@departmentLocalizer["AwaitingResourcesLabel"]"
+                    data-awaitingdispatchto="@departmentLocalizer["AwaitingDispatchTo"]"
+                    data-awaitingdispatchunit="@departmentLocalizer["AwaitingDispatchUnit"]"
+                    data-awaitingdismiss="@departmentLocalizer["AwaitingDismiss"]"
+                    data-awaitingdismissprompt="@departmentLocalizer["AwaitingDismissPrompt"]"
+                    data-awaitingsentinstead="@departmentLocalizer["AwaitingSentInstead"]"
+                    data-awaitingavailable="@departmentLocalizer["AwaitingAvailableNow"]"
+                    data-awaitingnoneavailable="@departmentLocalizer["AwaitingNoneAvailable"]"
+                    data-awaitingnone="@departmentLocalizer["AwaitingNone"]">
+                    <a asp-controller="Dispatch" asp-action="AwaitingResources" asp-route-area="User" title="@departmentLocalizer["AwaitingResourcesLabel"]" aria-label="@departmentLocalizer["AwaitingResourcesLabel"]">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <span class="label label-danger" id="awaitingResourcesCount">0</span>
+                    </a>
+                    <span id="awaitingResourcesToken" style="display: none">@Html.AntiForgeryToken()</span>
+                </li>
+            }
+            <li class="btn dropdown" id="menu-department">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="text">@ClaimsAuthorizationHelper.GetDepartmentName().Truncate(45)</span>&nbsp;<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                    {
+                        @if (adminAssistVisible)
+                        {
+                            <li class="@Html.IsSelected(controller: "AdminAssist")"><a asp-controller="AdminAssist" asp-action="Index" asp-route-area="User">@aaLocalizer["Ui.Title"]</a></li>
+                        }
+                        <li class="@Html.IsSelected(controller: "Department", action: "Settings")"><a asp-controller="Department" asp-action="Settings" asp-route-area="User">@commonLocalizer["DepartmentSettings"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Department", action: "Profile")"><a asp-controller="Department" asp-action="Profile" asp-route-area="User">@commonLocalizer["DepartmentProfile"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Groups", action: "Index")"><a asp-controller="Groups" asp-action="Index" asp-route-area="User">@commonLocalizer["StationAndGroups"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Department", action: "CallSettings")"><a asp-controller="Department" asp-action="CallSettings" asp-route-area="User">@commonLocalizer["CallSettings"]</a></li>
+                        <li class="@Html.IsSelected(controller: "CustomStatuses", action: "Index")"><a asp-controller="CustomStatuses" asp-action="Index" asp-route-area="User">@commonLocalizer["CustomStatuses"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Department", action: "TextSettings")"><a asp-controller="Department" asp-action="TextSettings" asp-route-area="User">@commonLocalizer["TextMessaging"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Templates", action: "Index")"><a asp-controller="Templates" asp-action="Index" asp-route-area="User">@commonLocalizer["Templates"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Protocols", action: "Index")"><a asp-controller="Protocols" asp-action="Index" asp-route-area="User">@commonLocalizer["Protocols"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Department", action: "Types")"><a asp-controller="Department" asp-action="Types" asp-route-area="User">@commonLocalizer["Types"]</a></li>
+                        <li class="@Html.IsSelected(controller: "DistributionLists", action: "Index")"><a asp-controller="DistributionLists" asp-action="Index" asp-route-area="User">@commonLocalizer["DistributionLists"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Workflows", action: "Index")"><a asp-controller="Workflows" asp-action="Index" asp-route-area="User">Workflows</a></li>
+                        <li class="@Html.IsSelected(controller: "UserDefinedFields", action: "Index")"><a asp-controller="UserDefinedFields" asp-action="Index" asp-route-area="User">@commonLocalizer["UserDefinedFields"]</a></li>
+                        <li class="@Html.IsSelected(controller: "Security", action: "Index")"><a asp-controller="Security" asp-action="Index" asp-route-area="User">@commonLocalizer["SecurityAndPermissions"]</a></li>
+                        @if (chatModerationVisible)
+                        {
+                            <li class="@Html.IsSelected(controller: "Moderation", action: "Index")"><a asp-controller="Moderation" asp-action="Index" asp-route-area="User">@commonLocalizer["ChatModerationModule"]</a></li>
+                        }
+                        <li class="@Html.IsSelected(controller: "Subscription", action: "Index")"><a asp-controller="Subscription" asp-action="Index" asp-route-area="User">@commonLocalizer["SubAndBilling"]</a></li>
+                        @if (importVisible)
+                        {
+                            <li class="@Html.IsSelected(controller: "DepartmentImport")"><a asp-controller="DepartmentImport" asp-action="Index" asp-route-area="User">@importLocalizer["ModuleName"]</a></li>
+                        }
+                        <li class="divider"></li>
+                    }
+                    @if (chatModerationVisible && !ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                    {
+                        @* Group admins don't get the department-admin block above, so the moderation link lives here for them. *@
+                        <li class="@Html.IsSelected(controller: "Moderation", action: "Index")"><a asp-controller="Moderation" asp-action="Index" asp-route-area="User">@commonLocalizer["ChatModerationModule"]</a></li>
+                    }
+                    @*<li class="@Html.IsSelected(controller: "Connect", action: "Index")"><a asp-controller="Connect" asp-action="Index" asp-route-area="User">@commonLocalizer["Connect"]</a></li>*@
+                    <li class="@Html.IsSelected(controller: "Voice", action: "Index")"><a asp-controller="Voice" asp-action="Index" asp-route-area="User">@commonLocalizer["AudioPushToTalk"]</a></li>
+                    @*<li class="@Html.IsSelected(controller: "Orders", action: "Index")"><a asp-controller="Orders" asp-action="Index" asp-route-area="User">@commonLocalizer["Orders"]</a></li>*@
+                    <li class="@Html.IsSelected(controller: "Links", action: "Index")"><a asp-controller="Links" asp-action="Index" asp-route-area="User">@commonLocalizer["Links"]</a></li>
+                    @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                    {
+                        @* Alert rules are department-admin only (NotificationsController). *@
+                        <li class="@Html.IsSelected(controller: "Notifications", action: "Index")"><a asp-controller="Notifications" asp-action="Index" asp-route-area="User">@commonLocalizer["Notifications"]</a></li>
+                    }
+                    @*<li class="@Html.IsSelected(controller: "WeatherAlerts", action: "Index")"><a asp-controller="WeatherAlerts" asp-action="Index" asp-route-area="User">Weather Alerts</a></li>*@
+                    <li class="@Html.IsSelected(controller: "Command", action: "Index")"><a asp-controller="Command" asp-action="Index" asp-route-area="User">@commonLocalizer["Commands"]</a></li>
+                    <li><a href="https://bigboard.resgrid.com" target="_blank">@commonLocalizer["BigBoard"]</a></li>
+                    <li><a href="https://dispatch.resgrid.com" target="_blank">@commonLocalizer["Dispatch"]</a></li>
+                </ul>
+            </li>
+            <li class="btn dropdown" id="menu-help">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="text">@commonLocalizer["Help"]</span>&nbsp;<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Resgrid.Config.SystemBehaviorConfig.HelpAndSupportUrl" target="_blank">@commonLocalizer["HelpAndSupport"]</a></li>
+                    @*<li><a href="https://resgrid.wistia.com/projects/9irn4g1q8c" target="_blank">@commonLocalizer["Videos"]</a></li>*@
+                    <li><a href="@Resgrid.Config.SystemBehaviorConfig.BlogUrl" target="_blank">@commonLocalizer["Blog"]</a></li>
+                    <li><a href="@Resgrid.Config.UrlsConfig.SystemStatusPageUrl" target="_blank">@commonLocalizer["StatusPage"]</a></li>
+                    <li><a href="@Resgrid.Config.SystemBehaviorConfig.ContactUsUrl" target="_blank">@commonLocalizer["ContactUs"]</a></li>
+                </ul>
+            </li>
+            <li>
+                <form id="setLanguageForm" asp-controller="Account" asp-action="SetLanugage" asp-route-area="" method="post">
+                    <input type="hidden" id="culture" name="culture" value="" />
+                    <input type="hidden" id="returnUrl" name="returnUrl" value="" />
+                    <div class="dropdown">
+                        <a href="#" id="languageDropdown" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                            <img id="languageDropdownCurrentLang" src="/images/flags/32/United-States.png" width="32" height="32" alt="Language">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="en"><img src="/images/flags/32/United-States.png" width="32" height="32" alt="English"> English</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="es"><img src="/images/flags/32/Mexico.png" width="32" height="32" alt="Spanish"> Spanish</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="sv"><img src="/images/flags/32/Sweden.png" width="32" height="32" alt="Swedish"> Swedish</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="de"><img src="/images/flags/32/Germany.png" width="32" height="32" alt="German"> German</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="fr"><img src="/images/flags/32/France.png" width="32" height="32" alt="French"> French</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="it"><img src="/images/flags/32/Italy.png" width="32" height="32" alt="Italian"> Italian</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="pl"><img src="/images/flags/32/Poland.png" width="32" height="32" alt="Polish"> Polish</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="uk"><img src="/images/flags/32/Ukraine.png" width="32" height="32" alt="Ukrainian"> Ukrainian</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="ar"><img src="/images/flags/32/Saudi-Arabia.png" width="32" height="32" alt="Arabic"> Arabic</a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="#" class="langDropdownSelection" data-locale="el"><img src="/images/flags/32/Greece.png" width="32" height="32" alt="Greek"> Greek</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </li>
+            <li>
+				<form asp-controller="Account" asp-action="LogOff" asp-route-area="" method="post" style="display:inline">
+					@Html.AntiForgeryToken()
+					<button type="submit" class="btn btn-link" title="Log out" aria-label="Log out"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
+				</form>
+            </li>
+        </ul>
+    </nav>
+</div>

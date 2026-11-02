@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "id": "core-customer-billing-review",
+  "reviewed_at": "2026-10-29T05:56:37Z",
+  "reviewer": "Codex /root/core_configuration_coverage",
+  "raw_manifests": [
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/manifest.json",
+      "sha256": "536b818fd75257956d00b63f8b22c91c0601dcbe3a527a20a73c73ef83d591a4"
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/manifest.json",
+      "sha256": "b00967b2fc09932ff58bf3414a9b6210af3985350e1fe013308b1e1e21352bf0"
+    }
+  ],
+  "original_images_individually_viewed": 16,
+  "accepted_bounded_images": 15,
+  "excluded_prefix": "015",
+  "review_method": "Contact sheet followed by every original1280x720 or1434x773JPEG displayed individually; literal foreground text compared with relevant non-email DOM. Full DOM byte streams hashed and scanned; BillingEmail input value deliberately not inspected.",
+  "row_reviews": [
+    {
+      "id": "001-invoicing-catalog-no-invoices",
+      "file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.jpg",
+      "sha256": "e63175e351e0e3aa3e56ff6394352ff7a0a4cb61f62ce675639ac9bac76a1309",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.dom.txt",
+      "dom_sha256": "ff65c2550a6781736ab700e72a99dde46dc485104384d149925aa4605f4a73bb",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Actual empty fictional customer-invoice list. Zero invoices/balances do not prove a payment or settlement. New invoice is visible but unused; no draft or number consumed."
+      ]
+    },
+    {
+      "id": "002-billing-identity-empty-defaults",
+      "file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.jpg",
+      "sha256": "0524296ecca3b1d17ada2ad2591d121410ead5f4cafc5fda8990b84d5d4d81e1",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.dom.txt",
+      "dom_sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Identity form fields are blank. GET may construct unsaved defaults; this is not saved billing-identity proof. Only Billing identity tab is offered; no provider configuration/result is shown."
+      ]
+    },
+    {
+      "id": "003-billing-registrations-readonly",
+      "file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.jpg",
+      "sha256": "58fd7123de6ec2f2677eab5a0671708747ca3fef074caba93c8cd195eb8082c0",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.dom.txt",
+      "dom_sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "All registration fields pictured are empty. Do not infer registrations or legal/tax coverage. Invoice footer field is blank."
+      ]
+    },
+    {
+      "id": "004-footer-pay-link-display-preferences",
+      "file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.jpg",
+      "sha256": "8f9d0b7d2a9ca4e9c0ed77f29920591f5f95ab203daa5cc53974cf94da2dea7a",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.dom.txt",
+      "dom_sha256": "8fe91e124329fcf7688a6621c46aec917deecbebc5f3910021099237cfd2964f",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Actual displayed link-expiry30 and checked display preference are form values, not successful link generation, payment connection, invoice document or provider collection. Save untouched."
+      ]
+    },
+    {
+      "id": "005-rate-card-catalog-empty",
+      "file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.jpg",
+      "sha256": "0734f513705f2d4a268e8b454e71f8b3df6eccba9d72a76ea994afaf5d54d742",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.dom.txt",
+      "dom_sha256": "830812e7fed17327acb0418beb00c882391c0b0c8a9bebff414e82eda5f40367",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Actual catalog is empty. Help describes department default versus customer-pinned card; no card/rate saved."
+      ]
+    },
+    {
+      "id": "006-new-rate-card-unsaved-preview",
+      "file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.jpg",
+      "sha256": "d5db3f12c9a138d327fe96de2c5f5d0edc3a29f25617ec7bbeb22ab92e8f6081",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.dom.txt",
+      "dom_sha256": "4f41b71b2f4fd09b0c0731ad7adeb776f0bf490f19e9c7ee04063097fcc82104",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "New unsaved card form; blank Name/Description, department default unchecked, Active checked. Rate card items panel says save first. Cancel/Save controls are pictured; neither any Save nor rate item operation is claimed."
+      ]
+    },
+    {
+      "id": "007-aging-no-outstanding-invoices",
+      "file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.jpg",
+      "sha256": "5f128a5e8fc7a530e488458921f87ec2bf51dccbd58581c715bbc1e7c0c667e8",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.dom.txt",
+      "dom_sha256": "73de2f599f4d72b3b3470a050fdbb4ecd479eb5b7ee4c02da322c5b7fee5b725",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "All actual aging buckets zero, with an As of timestamp. Empty No outstanding invoices is not proof customers paid or a collection was performed. Populated per-currency detail is not demonstrated."
+      ]
+    },
+    {
+      "id": "008-existing-fictional-customer-contact",
+      "file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.jpg",
+      "sha256": "8f0fc2595968ba7639a64f2c465dcf826bca3e9069fe8a96a2e602af0db35d84",
+      "dom_file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.dom.txt",
+      "dom_sha256": "973b2f31541ff4a13d4401682da7b7007289b09eb7fc3c1ff56cda09dd9037ab",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Existing company contact and its View control visible; no new contact or directory edit in this lesson. Company row is bottom of viewport but full name/View are readable."
+      ]
+    },
+    {
+      "id": "009-customer-billing-no-profile",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.jpg",
+      "sha256": "7ba626e40159935056765928764d386be7a8959d12796327242b1aa1000587f2",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.dom.txt",
+      "dom_sha256": "5edde24b110ffb112ae7bcc841f9555ad9680832b333645da43bf8b741dfebac",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Settled contact Billing section states no profile yet and no invoices. Directory category is numeric; do not narrate it as the named category. Fictional display email is not a billing-address readback; no email value is used by the candidate."
+      ]
+    },
+    {
+      "id": "010-unsaved-customer-terms-discount-rate-defaults",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.jpg",
+      "sha256": "7e6b921cb756277bd57fa1bbdf89a96a75f18c4df3aadc6f1d32d9d4a8e2f9db",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.dom.txt",
+      "dom_sha256": "a284dd6b0eaf62e1df62c95f4697ec15fb9e69c5378b36aac5518ddbde976d0b",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Unsaved customer-profile defaults, not stored profile proof. Terms30 and blank discount; default card and schedule; PO unchecked; Active checked. Top Terms input reaches viewport boundary; only reading labels/value is taught, no fill interaction. BillingEmail input stays outside the viewport; its value is not inspected or retained in reviewed metadata."
+      ]
+    },
+    {
+      "id": "011-unsaved-address-tax-components-save-controls",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.jpg",
+      "sha256": "1f22ccb635dbd1cb69d08ad4f72d6d4ff69e1bd25185e5a5d1f6de7963afa314",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.dom.txt",
+      "dom_sha256": "0ba758149921b442a95d5ad5b49e0250c6b3a0abfc4165fabb8e5d8892839441",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Lower unsaved profile form only; no persisted address/tax profile, tax determination, invoice or Send result. BillingEmail remains outside viewport and is not read. PO label at top is clipped; use010 for it. Save/Cancel fully visible."
+      ]
+    },
+    {
+      "id": "012-department-menu-subscription-entry",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.jpg",
+      "sha256": "c2dba9d00551401da3de7f5bc9aa60bb8a807d35407ae078b6a416e9ad3fa29f",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.dom.txt",
+      "dom_sha256": "15733db9df50d48cf545380606bcd7a1c6ab57e06b94bbb717a7b7fe38a7ac81",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Actual department menu Subscription & Billing launcher is pictured. No security/settings item selected and no provider/account change."
+      ]
+    },
+    {
+      "id": "013-local-subscription-distinct-from-customer-invoicing",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.jpg",
+      "sha256": "5c4f27bdf9648e9192d39c80ff3a813efc57afd22e44f94facc23594825124c5",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.dom.txt",
+      "dom_sha256": "009f6fe9af0cae0eb50f795f36c0feecb0510fc21c4927e2cc881633e97a8e25",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Legacy local training-plan screen; values and add-on snippets are not current commercial pricing/capacity recommendations. No purchase/cancel/renewal/billing-info operation performed."
+      ]
+    },
+    {
+      "id": "014-entities-tab-legacy-plan-readonly",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.jpg",
+      "sha256": "a6b08ecbcc2137b052a6205f867249497e30338f52daabeeb396049e8e00d6b3",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.dom.txt",
+      "dom_sha256": "c40ab4be1e7a4e054fe8111c5f02958efc1dbdb97aec707208e0cc9432fc2331",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Entities tab shows Active Legacy Subscription notice, not a modern entity-capacity selection form. Legacy14/Unlimited is not taught as the actual all-plan capacity rule. No provider/plan operation."
+      ]
+    },
+    {
+      "id": "015-fresh-customer-still-no-billing-profile",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/015-fresh-customer-still-no-billing-profile.jpg",
+      "sha256": "fbb0a37a1e849733f526b500cae22d830bd1e6333cd976cc5bb89f6ef3dfc5e1",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/015-fresh-customer-still-no-billing-profile.dom.txt",
+      "dom_sha256": "5edde24b110ffb112ae7bcc841f9555ad9680832b333645da43bf8b741dfebac",
+      "decision": "excluded_transition",
+      "limits": [
+        "Fade/transition;009supplies settled no-profile source."
+      ]
+    },
+    {
+      "id": "016-fresh-invoicing-no-invoices",
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.jpg",
+      "sha256": "26152be556d7e838dcd60bc6814c0d092c0446483aa2d00abfdf9139329b5d4a",
+      "dom_file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.dom.txt",
+      "dom_sha256": "a4579333f40829cab202f5482fb0f633d3d44ffe4edfde8fcca7dafb90e19df9",
+      "decision": "accepted_bounded_source",
+      "limits": [
+        "Fresh invoice list still0invoices/0outstanding/0overdue. It establishes no invoice was created in this read-only exercise, not a stored customer-profile success. The separate015contact fade is excluded."
+      ]
+    }
+  ],
+  "metadata_bounds": [
+    "010Terms/value readable at upper viewport edge; no typing interaction taught.",
+    "011PO label clipped at top; use010 for complete checkbox label.",
+    "013/014 are genuine legacy-plan display; no modern entity-selector claim.",
+    "009category is numeric rather than a named category; not part of billing teaching.",
+    "No stored success is inferred from a new/default form;015does not supply fresh settled profile readback."
+  ],
+  "parent_script_review_pending": true,
+  "frozen": false,
+  "audio_or_video_qualified": false
+}

@@ -1,0 +1,77 @@
+PROPOSED source mapping; human listening/timing review pending. No final assembly.
+
+01 | invoicing | 0.0 -> 28.31 | 001-invoicing-catalog-no-invoices
+Labels: ["Invoicing", "Invoices", "Rate Cards", "Aging", "Billing settings", "Outstanding balance", "Overdue balance", "No invoices."]
+Customer invoicing tracks what your department bills to its customers. In our fictional Chicago Fire practice department, the Invoicing page shows Invoices, Rate Cards, Aging and Billing settings. The list is empty, and the balance tiles show zero. Read these as the current account contents, not proof that payments were collected. This walkthrough inspects configuration and account views; we leave New invoice unused and keep all financial data unchanged.
+
+02 | identity | 28.31 -> 32.81 | 001-invoicing-catalog-no-invoices
+Labels: ["Billing settings"]
+Choose Billing settings to inspect what invoices say about the department.
+
+03 | identity | 32.81 -> 58.599 | 002-billing-identity-empty-defaults
+Labels: ["Billing identity", "Legal business name", "Remit-to address", "City", "State / province", "Postal code", "Country"]
+Billing identity contains Legal business name and the remit-to address, with city, state or province, postal code and country. These fields supply the identity used on invoice documents. They are blank in this exercise. An empty form may be showing initial defaults; it is not evidence that a complete billing identity has been saved. Identify the needed organizational information before planning any later change.
+
+04 | registrations | 58.599 -> 73.919 | 003-billing-registrations-readonly
+Labels: ["Registrations", "Tax registration number", "Secondary tax registration", "SAM UEI", "CAGE code", "Workers' comp account"]
+The Registrations section separates tax registrations, SAM UEI, CAGE code and workers’ compensation account information. Each field is empty here. These are distinct organization identifiers, not interchangeable account names.
+
+05 | registrations | 73.919 -> 91.579 | 004-footer-pay-link-display-preferences
+Labels: ["Invoice footer", "Pay link expiry (days)", "Show a \"Pay online\" link on invoices", "Save"]
+Invoice footer supplies text printed under totals. Below it, Pay link expiry is thirty days and the Show a Pay online link preference is checked. That display preference alone does not establish a usable payment connection or generate a link. We inspect the controls without using Save.
+
+06 | rate-cards | 91.579 -> 108.72 | 005-rate-card-catalog-empty
+Labels: ["Rate Cards", "No rate cards yet.", "New rate card"]
+Rate Cards describes the charge schedule: unit or personnel time, flat fees, mileage and materials. A customer can pin a card instead of using the department default. The catalog currently says No rate cards yet. New rate card opens the definition form.
+
+07 | rate-cards | 108.72 -> 122.95 | 006-new-rate-card-unsaved-preview
+Labels: ["New rate card", "Name", "Description", "Department default (used when a customer has no pinned rate card)", "Active", "Save the rate card before adding items."]
+Name and Description are blank; Department default is unchecked and Active is checked. The items panel says to save the card before adding items. This is an unsaved form, with no charge items or default card created.
+
+08 | customer | 122.95 -> 130.88 | 008-existing-fictional-customer-contact
+Labels: ["Contacts", "Academy Logistics Desk (fictional)", "View"]
+For customer-specific settings, open Contacts and use View on Academy Logistics Desk, our existing fictional company.
+
+09 | customer | 130.88 -> 151.549 | 009-customer-billing-no-profile
+Labels: ["Academy Logistics Desk (fictional)", "Billing", "Billing profile", "No billing profile yet. Save one to start invoicing this contact.", "Set up billing profile", "No invoices."]
+Its Billing section says No billing profile yet and No invoices. A directory contact and a billing profile are separate records. Set up billing profile opens a form for that contact; it does not itself save a profile or issue an invoice. Keep that distinction when assessing whether a customer is actually ready for invoicing.
+
+10 | terms | 151.549 -> 184.029 | 010-unsaved-customer-terms-discount-rate-defaults
+Labels: ["Terms (net days)", "Default discount %", "Rate card", "Default rate schedule", "Use the department default", "Purchase order number required on invoices", "Active (new invoices may be created)"]
+The new customer form shows thirty net days, a blank Default discount, and department-default choices for Rate card and Default rate schedule. Customer terms help set an unset invoice due date when it moves to Sent; contract terms can take precedence. The discount is a default for a new draft. The schedule help concerns contractor bids and deployments when no contract names a schedule. Purchase order required is unchecked and Active is checked. These are unsaved preferences, not completed invoice transactions.
+
+11 | address-tax | 184.029 -> 215.04 | 011-unsaved-address-tax-components-save-controls
+Labels: ["Billing address", "Use the contact's mailing address", "Tax exempt", "Tax rate %", "Tax components", "Name", "Rate %", "Registration number", "Notes", "Cancel", "Save"]
+Use the contact’s mailing address is checked. That selects an address source; it does not verify that the directory address is complete. Tax exempt is unchecked, with a blank Tax rate and empty component rows for Name, Rate and Registration number. The form supports up to three named components. Notes, Cancel and Save appear below. Use only organization-approved values in a real billing setup. For this inspection, leave all fields unchanged and do not save a customer profile.
+
+12 | aging | 215.04 -> 246.799 | 007-aging-no-outstanding-invoices
+Labels: ["Accounts receivable aging", "Current", "1-30 days past due", "31-60 days past due", "61-90 days past due", "90+ days past due", "Total", "No outstanding invoices."]
+Aging groups positive outstanding balances by how far they are past due. Read Current, one to thirty, thirty-one to sixty, sixty-one to ninety, and ninety-plus days with Total and the displayed as-of time. Here every bucket is zero and the page says No outstanding invoices. That is consistent with the empty invoice account. It does not demonstrate receipt of a payment, a collection action or a customer settlement. Review the underlying invoice before acting on a populated aging result.
+
+13 | subscription | 246.799 -> 254.33 | 012-department-menu-subscription-entry
+Labels: ["Subscription & Billing"]
+The department menu has a separate Subscription and Billing entry. Use that to review the department’s Resgrid service plan.
+
+14 | subscription | 254.33 -> 264.16 | 013-local-subscription-distinct-from-customer-invoicing
+Labels: ["Subscription Plan & Billing", "Legacy Plan"]
+Subscription Plan and Billing concerns the department’s subscription, not invoices to Academy Logistics Desk. This department displays a Legacy Plan notice.
+
+15 | subscription | 264.16 -> 284.69 | 014-entities-tab-legacy-plan-readonly
+Labels: ["Subscription Plan & Billing", "Entities", "Active Legacy Subscription"]
+Selecting Entities shows Active Legacy Subscription rather than an entity-selection form. Read the notices that apply to your own department. The example’s displayed legacy amounts and counters should not be used to price another plan or infer its limits. No purchase, cancellation or payment-detail change is part of this review.
+
+16 | review-result | 284.69 -> 311.599 | 016-fresh-invoicing-no-invoices
+Labels: ["Invoicing", "Invoices", "Outstanding balance", "Overdue balance", "No invoices."]
+The final Invoicing view still shows no invoices, zero outstanding balance and zero overdue balance. Reviewing an unsaved rate card or customer form has not created an invoice. Keep your review notes specific: which identity fields need confirmation, which customer defaults need a decision, and which subscription notice applies. A form inspected is different from a configuration saved or a financial action completed.
+
+17 | sector-examples | 311.599 -> 324.459 | 009-customer-billing-no-profile
+Labels: ["Academy Logistics Desk (fictional)", "Billing profile"]
+Chicago Fire can distinguish a training-service customer from its department subscription. Community care and mental-health teams can review an operational partner’s billing setup without putting client histories into Notes.
+
+18 | sector-examples | 324.459 -> 334.509 | 005-rate-card-catalog-empty
+Labels: ["Rate Cards", "New rate card"]
+Search-and-rescue coordinators can identify the intended customer for an exercise; security teams can separate a customer-specific rate card from the department default.
+
+19 | sector-examples | 334.509 -> 349.13525 | 007-aging-no-outstanding-invoices
+Labels: ["Accounts receivable aging", "Total", "No outstanding invoices."]
+Wildland teams can review a bounded customer account, and industrial teams can inspect outstanding-balance categories. In all six settings, confirm the organization, customer and account scope before any authorized financial change.

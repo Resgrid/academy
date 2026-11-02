@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "historical_parent_UI_operations_with_actual_readbacks",
+  "record_id": "0795ea02-2d42-4940-8d1a-d95094281f75",
+  "scope": "Initialentrybatch only; currentlive later amendment kept separate.",
+  "operations": [
+    {
+      "operation": "PreparetypedTraining",
+      "captures": [
+        "001-published-training-entry-form",
+        "002-prepared-software-training-record",
+        "003-prepared-narrative-no-attendance",
+        "004-record-unit-time-fields-unselected",
+        "006-first-draft-save-controls-before-save"
+      ],
+      "result": "Prepared only; savecontrolpictured006."
+    },
+    {
+      "operation": "Create once viaSaveDraft",
+      "captures": [
+        "007-fresh-saved-training-draft"
+      ],
+      "result": "OwnDraftD-YXS93/Command/sameID, nofinalnumber."
+    },
+    {
+      "operation": "ReviseNarrative normalUI",
+      "captures": [
+        "009-corrected-visible-training-narrative",
+        "010-fresh-revised-draft-readback"
+      ],
+      "result": "Correct textfreshstored. LaterSavecontrolnotpictured;008failed editdiagnostic excluded."
+    },
+    {
+      "operation": "AttachpublicTXT viaDetails/0Unrestricted",
+      "captures": [
+        "011-public-handout-unrestricted-prepared",
+        "012-fresh-saved-public-handout"
+      ],
+      "result": "Actualstored358bytefile; newchooserresetRestrictednotstoredclass."
+    },
+    {
+      "operation": "AttestandFinalize once",
+      "captures": [
+        "013-own-software-record-finalize-prepared",
+        "014-fresh-finalized-training-number"
+      ],
+      "result": "InitialFinalizedTRN-2026-0002/draftrefpreserved."
+    },
+    {
+      "operation": "ViewHistoryfirstrevision",
+      "captures": [
+        "015-finalized-attachment-and-history",
+        "016-saved-training-revision-content",
+        "017-revision-public-attachment-metadata"
+      ],
+      "result": "ActualimmutableHTMLrevision/classification/hashmatchingpublicfile."
+    },
+    {
+      "operation": "ReturnRecordsqueue",
+      "captures": [
+        "019-final-records-list-originals-preserved"
+      ],
+      "result": "OwnTRN2plusoriginaltwoRowsstillshown."
+    }
+  ],
+  "failed_operations_preserved": [
+    {
+      "capture": "008-edit-training-narrative-revision",
+      "result": "Richtextreplacementwrongtext; corrected009later."
+    },
+    {
+      "capture": "018-export-blocked-by-client-diagnostic",
+      "result": "NormalExportclientblocked; no download/retry/bypass."
+    }
+  ],
+  "no_click_timestamps_inferred": true,
+  "reviewer_performed_no_UI_DB_changes": true
+}

@@ -1,0 +1,350 @@
+import { MessageCircle } from 'lucide-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView } from 'react-native';
+
+import { CustomBottomSheet } from '@/components/ui/bottom-sheet';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Heading } from '@/components/ui/heading';
+import { HStack } from '@/components/ui/hstack';
+import { Icon } from '@/components/ui/icon';
+import { Input, InputField } from '@/components/ui/input';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { type CommandStructureNode, type IncidentMap, type IncidentNeed, IncidentNeedStatus, type TacticalObjective, TacticalObjectiveStatus } from '@/models/v4/incidentCommand/incidentCommandModels';
+import { type PersonnelInfoResultData } from '@/models/v4/personnel/personnelInfoResultData';
+
+import { DEFAULT_WORK_TIME_AMBER_MINUTES, DEFAULT_WORK_TIME_RED_MINUTES } from './landscape-structure-board';
+
+/** One lead slot being edited: a Resgrid user OR an external contact. */
+interface LeadDraft {
+  userId: string | null;
+  name: string;
+  phone: string;
+  email: string;
+}
+
+const emptyLead: LeadDraft = { userId: null, name: '', phone: '', email: '' };
+
+const leadFromNode = (userId?: string | null, name?: string | null, phone?: string | null, email?: string | null): LeadDraft => ({
+  userId: userId ?? null,
+  name: name ?? '',
+  phone: phone ?? '',
+  email: email ?? '',
+});
+
+interface LaneDetailsSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  node: CommandStructureNode | null;
+  objectives: TacticalObjective[];
+  needs: IncidentNeed[];
+  /** Named incident maps offered by the "attached map" picker. */
+  maps?: IncidentMap[];
+  users: PersonnelInfoResultData[];
+  /** Persist the edited lane fields (merged into the stored lane by the caller). */
+  onSave: (commandStructureNodeId: string, patch: Partial<CommandStructureNode>) => void;
+  /** Active resources sitting in this lane — drives the delete confirmation options. */
+  resourceCount?: number;
+  /** Delete the lane; disposition decides what happens to its resources first. */
+  onDelete?: (commandStructureNodeId: string, disposition: 'pool' | 'release') => void;
+  /** Start a 1:1 with a lead. Only offered for Resgrid users — external leads have no account to message. */
+  onMessageLead?: (userId: string) => void;
+}
+
+/** Edit an existing lane: leads (primary/secondary — Resgrid user or external contact) and linked objectives/need. */
+export const LaneDetailsSheet: React.FC<LaneDetailsSheetProps> = ({ isOpen, onClose, node, objectives, needs, maps, users, onSave, resourceCount = 0, onDelete, onMessageLead }) => {
+  const { t } = useTranslation();
+  const [primaryLead, setPrimaryLead] = useState<LeadDraft>(emptyLead);
+  const [secondaryLead, setSecondaryLead] = useState<LeadDraft>(emptyLead);
+  const [primaryObjectiveId, setPrimaryObjectiveId] = useState<string | null>(null);
+  const [secondaryObjectiveId, setSecondaryObjectiveId] = useState<string | null>(null);
+  const [linkedNeedId, setLinkedNeedId] = useState<string | null>(null);
+  const [linkedMapId, setLinkedMapId] = useState<string | null>(null);
+  /** Work-time (crew fatigue) thresholds in minutes; blank = that color disabled. */
+  const [workTimeAmber, setWorkTimeAmber] = useState('');
+  const [workTimeRed, setWorkTimeRed] = useState('');
+  /** Two-step delete: swaps the sheet body for the confirmation view. */
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+
+  // Re-seed the draft each time a lane is opened
+  useEffect(() => {
+    if (node && isOpen) {
+      setPrimaryLead(leadFromNode(node.PrimaryLeadUserId, node.PrimaryLeadName, node.PrimaryLeadPhone, node.PrimaryLeadEmail));
+      setSecondaryLead(leadFromNode(node.SecondaryLeadUserId, node.SecondaryLeadName, node.SecondaryLeadPhone, node.SecondaryLeadEmail));
+      setPrimaryObjectiveId(node.PrimaryObjectiveId ?? null);
+      setSecondaryObjectiveId(node.SecondaryObjectiveId ?? null);
+      setLinkedNeedId(node.LinkedNeedId ?? null);
+      setLinkedMapId(node.LinkedMapId ?? null);
+      setWorkTimeAmber(node.WorkTimeAmberMinutes === undefined || node.WorkTimeAmberMinutes === null ? String(DEFAULT_WORK_TIME_AMBER_MINUTES) : String(node.WorkTimeAmberMinutes));
+      setWorkTimeRed(node.WorkTimeRedMinutes === undefined || node.WorkTimeRedMinutes === null ? String(DEFAULT_WORK_TIME_RED_MINUTES) : String(node.WorkTimeRedMinutes));
+      setIsConfirmingDelete(false);
+    }
+  }, [node, isOpen]);
+
+  const handleSave = useCallback(() => {
+    if (!node) {
+      return;
+    }
+    onSave(node.CommandStructureNodeId, {
+      PrimaryLeadUserId: primaryLead.userId,
+      PrimaryLeadName: primaryLead.userId ? null : primaryLead.name.trim() || null,
+      PrimaryLeadPhone: primaryLead.userId ? null : primaryLead.phone.trim() || null,
+      PrimaryLeadEmail: primaryLead.userId ? null : primaryLead.email.trim() || null,
+      SecondaryLeadUserId: secondaryLead.userId,
+      SecondaryLeadName: secondaryLead.userId ? null : secondaryLead.name.trim() || null,
+      SecondaryLeadPhone: secondaryLead.userId ? null : secondaryLead.phone.trim() || null,
+      SecondaryLeadEmail: secondaryLead.userId ? null : secondaryLead.email.trim() || null,
+      PrimaryObjectiveId: primaryObjectiveId,
+      SecondaryObjectiveId: secondaryObjectiveId,
+      LinkedNeedId: linkedNeedId,
+      LinkedMapId: linkedMapId,
+      // Blank = unset (client defaults 20/40); explicit 0 = that color disabled.
+      WorkTimeAmberMinutes: workTimeAmber.trim() === '' ? undefined : parseInt(workTimeAmber, 10) || 0,
+      WorkTimeRedMinutes: workTimeRed.trim() === '' ? undefined : parseInt(workTimeRed, 10) || 0,
+    });
+    onClose();
+  }, [node, primaryLead, secondaryLead, primaryObjectiveId, secondaryObjectiveId, linkedNeedId, linkedMapId, workTimeAmber, workTimeRed, onSave, onClose]);
+
+  const openObjectives = objectives.filter((o) => o.Status !== TacticalObjectiveStatus.Complete);
+  const openNeeds = needs.filter((n) => n.Status !== IncidentNeedStatus.Cancelled && n.Status !== IncidentNeedStatus.Met);
+
+  const renderLeadEditor = (slot: 'primary' | 'secondary', lead: LeadDraft, setLead: (value: LeadDraft) => void) => (
+    <VStack space="xs">
+      <HStack className="items-center justify-between">
+        <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">{slot === 'primary' ? t('command.primary_lead_label') : t('command.secondary_lead_label')}</Text>
+        {onMessageLead && lead.userId ? (
+          <Pressable accessibilityLabel={t('command.message_lead')} onPress={() => onMessageLead(lead.userId as string)} className="p-2" hitSlop={8} testID={`lane-lead-${slot}-message`}>
+            <Icon as={MessageCircle} size="md" className="text-blue-600 dark:text-blue-400" />
+          </Pressable>
+        ) : null}
+      </HStack>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <HStack space="sm">
+          <Button size="xs" variant={!lead.userId ? 'solid' : 'outline'} onPress={() => setLead({ ...lead, userId: null })} testID={`lane-lead-${slot}-external`}>
+            <ButtonText>{t('command.lead_external_label')}</ButtonText>
+          </Button>
+          {users.map((user) => (
+            <Button
+              key={user.UserId}
+              size="xs"
+              variant={lead.userId === user.UserId ? 'solid' : 'outline'}
+              onPress={() => setLead({ ...emptyLead, userId: lead.userId === user.UserId ? null : user.UserId })}
+              testID={`lane-lead-${slot}-user-${user.UserId}`}
+            >
+              <ButtonText>{`${user.FirstName} ${user.LastName}`}</ButtonText>
+            </Button>
+          ))}
+        </HStack>
+      </ScrollView>
+      {!lead.userId ? (
+        <VStack space="xs">
+          <Input size="sm" variant="outline">
+            <InputField placeholder={t('command.lead_name_placeholder')} value={lead.name} onChangeText={(v) => setLead({ ...lead, name: v })} testID={`lane-lead-${slot}-name`} />
+          </Input>
+          <HStack space="sm">
+            <Input size="sm" variant="outline" className="flex-1">
+              <InputField keyboardType="phone-pad" placeholder={t('command.lead_phone_placeholder')} value={lead.phone} onChangeText={(v) => setLead({ ...lead, phone: v })} testID={`lane-lead-${slot}-phone`} />
+            </Input>
+            <Input size="sm" variant="outline" className="flex-1">
+              <InputField
+                keyboardType="email-address"
+                autoCapitalize="none"
+                placeholder={t('command.lead_email_placeholder')}
+                value={lead.email}
+                onChangeText={(v) => setLead({ ...lead, email: v })}
+                testID={`lane-lead-${slot}-email`}
+              />
+            </Input>
+          </HStack>
+        </VStack>
+      ) : null}
+    </VStack>
+  );
+
+  return (
+    <CustomBottomSheet isOpen={isOpen} onClose={onClose} snapPoints={[85]}>
+      <ScrollView className="w-full" showsVerticalScrollIndicator={false}>
+        <VStack space="md" className="w-full pb-6">
+          <Heading size="md">{node ? t('command.edit_lane_title', { lane: node.Name }) : t('command.edit_lane')}</Heading>
+
+          {isConfirmingDelete ? (
+            <VStack space="md" testID="lane-delete-confirm">
+              <Text className="text-sm text-gray-700 dark:text-gray-300">{resourceCount > 0 ? t('command.delete_lane_resources_message', { count: resourceCount }) : t('command.delete_lane_message')}</Text>
+
+              {resourceCount > 0 ? (
+                <>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onPress={() => {
+                      if (node) {
+                        onDelete?.(node.CommandStructureNodeId, 'pool');
+                      }
+                      onClose();
+                    }}
+                    testID="lane-delete-move-resources"
+                  >
+                    <ButtonText>{t('command.delete_lane_move_resources')}</ButtonText>
+                  </Button>
+                  <Button
+                    size="lg"
+                    action="negative"
+                    onPress={() => {
+                      if (node) {
+                        onDelete?.(node.CommandStructureNodeId, 'release');
+                      }
+                      onClose();
+                    }}
+                    testID="lane-delete-release-resources"
+                  >
+                    <ButtonText>{t('command.delete_lane_release_resources')}</ButtonText>
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  size="lg"
+                  action="negative"
+                  onPress={() => {
+                    if (node) {
+                      onDelete?.(node.CommandStructureNodeId, 'release');
+                    }
+                    onClose();
+                  }}
+                  testID="lane-delete-confirm-button"
+                >
+                  <ButtonText>{t('command.delete_lane_confirm')}</ButtonText>
+                </Button>
+              )}
+
+              <Button size="lg" variant="outline" onPress={() => setIsConfirmingDelete(false)} testID="lane-delete-cancel">
+                <ButtonText>{t('common.cancel')}</ButtonText>
+              </Button>
+            </VStack>
+          ) : (
+            <>
+              {renderLeadEditor('primary', primaryLead, setPrimaryLead)}
+              {renderLeadEditor('secondary', secondaryLead, setSecondaryLead)}
+
+              <VStack space="xs">
+                <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('command.primary_objective_label')}</Text>
+                <HStack className="flex-wrap" space="sm">
+                  <Button size="xs" variant={!primaryObjectiveId ? 'solid' : 'outline'} className="mb-1" onPress={() => setPrimaryObjectiveId(null)} testID="lane-primary-objective-none">
+                    <ButtonText>{t('command.none_option')}</ButtonText>
+                  </Button>
+                  {openObjectives.map((objective) => (
+                    <Button
+                      key={objective.TacticalObjectiveId}
+                      size="xs"
+                      variant={primaryObjectiveId === objective.TacticalObjectiveId ? 'solid' : 'outline'}
+                      className="mb-1"
+                      onPress={() => setPrimaryObjectiveId(objective.TacticalObjectiveId)}
+                      testID={`lane-primary-objective-${objective.TacticalObjectiveId}`}
+                    >
+                      <ButtonText>{objective.Name}</ButtonText>
+                    </Button>
+                  ))}
+                </HStack>
+              </VStack>
+
+              <VStack space="xs">
+                <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('command.secondary_objective_label')}</Text>
+                <HStack className="flex-wrap" space="sm">
+                  <Button size="xs" variant={!secondaryObjectiveId ? 'solid' : 'outline'} className="mb-1" onPress={() => setSecondaryObjectiveId(null)} testID="lane-secondary-objective-none">
+                    <ButtonText>{t('command.none_option')}</ButtonText>
+                  </Button>
+                  {openObjectives
+                    .filter((objective) => objective.TacticalObjectiveId !== primaryObjectiveId)
+                    .map((objective) => (
+                      <Button
+                        key={objective.TacticalObjectiveId}
+                        size="xs"
+                        variant={secondaryObjectiveId === objective.TacticalObjectiveId ? 'solid' : 'outline'}
+                        className="mb-1"
+                        onPress={() => setSecondaryObjectiveId(objective.TacticalObjectiveId)}
+                        testID={`lane-secondary-objective-${objective.TacticalObjectiveId}`}
+                      >
+                        <ButtonText>{objective.Name}</ButtonText>
+                      </Button>
+                    ))}
+                </HStack>
+              </VStack>
+
+              <VStack space="xs">
+                <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('command.linked_need_label')}</Text>
+                <HStack className="flex-wrap" space="sm">
+                  <Button size="xs" variant={!linkedNeedId ? 'solid' : 'outline'} className="mb-1" onPress={() => setLinkedNeedId(null)} testID="lane-linked-need-none">
+                    <ButtonText>{t('command.none_option')}</ButtonText>
+                  </Button>
+                  {openNeeds.map((need) => (
+                    <Button
+                      key={need.IncidentNeedId}
+                      size="xs"
+                      variant={linkedNeedId === need.IncidentNeedId ? 'solid' : 'outline'}
+                      className="mb-1"
+                      onPress={() => setLinkedNeedId(need.IncidentNeedId)}
+                      testID={`lane-linked-need-${need.IncidentNeedId}`}
+                    >
+                      <ButtonText>{need.Name}</ButtonText>
+                    </Button>
+                  ))}
+                </HStack>
+              </VStack>
+
+              <VStack space="xs">
+                <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('command.linked_map_label')}</Text>
+                <HStack className="flex-wrap" space="sm">
+                  <Button size="xs" variant={!linkedMapId ? 'solid' : 'outline'} className="mb-1" onPress={() => setLinkedMapId(null)} testID="lane-linked-map-none">
+                    <ButtonText>{t('command.none_option')}</ButtonText>
+                  </Button>
+                  {(maps ?? []).map((map) => (
+                    <Button
+                      key={map.IncidentMapId}
+                      size="xs"
+                      variant={linkedMapId === map.IncidentMapId ? 'solid' : 'outline'}
+                      className="mb-1"
+                      onPress={() => setLinkedMapId(map.IncidentMapId)}
+                      testID={`lane-linked-map-${map.IncidentMapId}`}
+                    >
+                      <ButtonText>{map.Name}</ButtonText>
+                    </Button>
+                  ))}
+                </HStack>
+              </VStack>
+
+              <VStack space="xs">
+                <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('command.worktime_thresholds_label')}</Text>
+                <HStack space="sm">
+                  <VStack className="flex-1" space="xs">
+                    <Text className="text-xs font-medium text-gray-600 dark:text-gray-300">{t('command.limit_worktime_amber')}</Text>
+                    <Input size="sm" variant="outline">
+                      <InputField keyboardType="number-pad" placeholder={t('command.limit_none')} value={workTimeAmber} onChangeText={(v) => setWorkTimeAmber(v.replace(/[^0-9]/g, ''))} testID="lane-worktime-amber" />
+                    </Input>
+                  </VStack>
+                  <VStack className="flex-1" space="xs">
+                    <Text className="text-xs font-medium text-gray-600 dark:text-gray-300">{t('command.limit_worktime_red')}</Text>
+                    <Input size="sm" variant="outline">
+                      <InputField keyboardType="number-pad" placeholder={t('command.limit_none')} value={workTimeRed} onChangeText={(v) => setWorkTimeRed(v.replace(/[^0-9]/g, ''))} testID="lane-worktime-red" />
+                    </Input>
+                  </VStack>
+                </HStack>
+                <Text className="text-xs text-gray-500 dark:text-gray-400">{t('command.limit_worktime_help')}</Text>
+              </VStack>
+
+              <Button size="lg" onPress={handleSave} isDisabled={!node} testID="lane-details-save">
+                <ButtonText>{t('command.save')}</ButtonText>
+              </Button>
+
+              {onDelete ? (
+                <Button size="lg" variant="outline" action="negative" onPress={() => setIsConfirmingDelete(true)} isDisabled={!node} testID="lane-details-delete">
+                  <ButtonText>{t('command.delete_lane_confirm')}</ButtonText>
+                </Button>
+              ) : null}
+            </>
+          )}
+        </VStack>
+      </ScrollView>
+    </CustomBottomSheet>
+  );
+};

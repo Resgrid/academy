@@ -1,0 +1,61 @@
+{
+  "id": "certification-administration-software-review-20261028",
+  "kind": "manual_normal_ui_proposed_fixture_not_executed_by_reviewer",
+  "department_id": 51,
+  "preserve": [
+    "Allbaselineperson/unitcertificationrecords includingBoden51001",
+    "Allbaselinecertificationtypes/role memberships/role requirements",
+    "GlobalenforcementOff/grace30/pending-as-validfalse/notificationoptions",
+    "Originalcalls,liveunitcrew,statusesanduser simulator"
+  ],
+  "new_person_type": {
+    "Type": "TRAINING ONLY - Record review 20261028",
+    "Code": "TRN-REVIEW-20261028",
+    "Category": "Other",
+    "AppliesTo": "Person",
+    "IssuingAuthority": "Academy Software Exercise (fictional)",
+    "Description": "TRAINING ONLY. Department software record-review exercise; no professional credential, accredited credit or operational qualification claimed.",
+    "DefaultValidityMonths": 12,
+    "NeverExpires": false,
+    "RenewalCreditHoursRequired": null,
+    "RequiresVerification": true,
+    "IsActive": true
+  },
+  "new_record": {
+    "Member": "Matthew Casey",
+    "Type": "New type above, selected from actual UI",
+    "Name": "TRAINING ONLY - Casey record review",
+    "Number": "TRN-CASEY-20261028",
+    "ValidArea": "Software exercise only",
+    "IssuedBy": "Academy Software Exercise (fictional)",
+    "IssuedOn": "2026-10-28",
+    "ExpiresOn": "2027-10-28",
+    "File": null,
+    "created_status_expected_from_source": "PendingVerification; actualUIauthoritative",
+    "expected_review_actor": "Wallace Boden, currentnormallyauthorizedadministrator",
+    "plain_verify_post": true
+  },
+  "returned_ids": "Unobserved/proposed; retain actualnormalUIIDsaftercreation. Do notguessorwriteDB.",
+  "guards": [
+    "If thename/codeexists,reopenandinspectitbeforeanycreate. Do notduplicateorresetexistingrecords.",
+    "No Person/Unit scopechangeafterrecordcreation.",
+    "Never attempttosignoffownBodenrecord;onlynewCaseysoftwareexercise.",
+    "No expiry/worker/notification test;futuredateiswelloutsidelead-daywindow.",
+    "No newrolerequirement,bogusaccreditedhours,statussuspension/revocation,globalsettingSave,credential/MFA/permissionchange,scheduledreport orprovideraction."
+  ],
+  "normal_replay_order": [
+    "Types→Newtype→reviewpreparedfields+Save→oneSave→returnedcatalog→freshEditreopen.",
+    "Dashboard→AddCertification→MemberCasey/newPersonType/explicitsoftwarefields+futureexpiry→Saveonce→dashboard.",
+    "NormalCaseyPerson/newrecordlink→Pending+Verifycapture→oneplainVerifyPOST→actualsavedActive/Verifiedby/time→freshreopen.",
+    "Read-onlyroleRequirement/settings/templategallery/report/UnitScopeasneeded;CSVonlyifordinarydownloadexplicitlyrecordedandinspected."
+  ],
+  "capture_outline": {
+    "file": "expansion/plans/core-certification-administration-source-trace-20261028/capture-outline.json",
+    "sha256": "b26b09ef29ef6b5971f432a9bf06b90e0e9b59a4bb98222cf1ffdacca43456e0"
+  },
+  "source_trace": {
+    "file": "expansion/plans/core-certification-administration-source-trace-20261028/source-trace.json",
+    "sha256": "5c0b6acb8ae642bf50496171c1c80bd46475a464a01d1efba63098f19ed6a1b8"
+  },
+  "executed": false
+}

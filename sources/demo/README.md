@@ -12,6 +12,11 @@ later. The Compose version supports the gateway network priority used here; see 
 [Docker service reference](https://docs.docker.com/reference/compose-file/services/#gw_priority).
 Start Docker before setup. Commands below run from the Academy repository root.
 
+This guide keeps the legacy source default. For the 25 expansion lesson sources,
+five pinned repositories, isolated compatibility patches and client launch commands,
+use [README.expansion.md](README.expansion.md). The explicit `--source-profile expansion`
+selector never replaces the legacy evidence manifest or silently changes a saved source selection.
+
 Review the setup steps without changing anything:
 
 ```sh
@@ -68,6 +73,9 @@ python3 sources/demo/manage.py stop
 python3 sources/demo/manage.py start
 ```
 
+`python3 sources/demo/manage.py plan` displays this checkout's saved stack and source
+selection without Docker or a service action.
+
 `stop` stops this profile's applications while retaining storage and infrastructure.
 Before rebuilding an existing profile, stop its applications; rerun setup to apply the
 new application build and resume. The scripts do not delete volumes, reset databases,
@@ -96,7 +104,14 @@ starting point, so configuration lessons can show both the initial and saved sta
 Capture the normal browser viewport and store the screenshots and associated evidence
 in `sources/captures/`; follow [AUTHORING.md](../../AUTHORING.md) to rebuild a lesson.
 
+`scenarios/responder-trade-records-analytics-20261101.json` retains the later trade
+exercise's fictional people, shift dates, exact note, saved request and cancellation
+results, plus the Records analytics fixture dependencies and read-only filter replay.
+Use a genuinely future day for a new trade recording and retain all existing dates.
+The completed exercise's approval covered one request and cancellation; the replay
+recipe does not automatically send another request or modify saved record history.
+
 The setup plan, credential generation, schema-checked seed generation and existing-data
 guards are tested offline. A newly created full stack still needs a live setup and browser
-sign-in check on the machine used for recording. The original production stack was used
-for the existing captures; this new profile is independent.
+sign-in check on the machine used for recording. Earlier recordings used a separate
+local training profile; this reusable profile is independent.

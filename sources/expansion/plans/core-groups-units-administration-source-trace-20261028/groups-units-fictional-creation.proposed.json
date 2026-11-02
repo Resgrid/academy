@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "groups-units-fictional-creation-proposed-20261028",
+  "executed": false,
+  "mode": "Manual guarded ordinary UI; no executable seed or automatic writes",
+  "department_id": 51,
+  "own_new_entities": {
+    "organizational_parent": {
+      "name": "TRAINING ONLY - Care coordination",
+      "type": "Organizational Group",
+      "parent": "None",
+      "group_admins": [],
+      "group_users": []
+    },
+    "station": {
+      "name": "TRAINING ONLY - Practice base 20261028",
+      "type": "Station Group",
+      "parent": "actual newly created own organizational parent",
+      "latitude": "41.8721",
+      "longitude": "-87.6523",
+      "address_fields_blank": true,
+      "what3words_blank": true,
+      "group_admins": [],
+      "group_users": []
+    },
+    "optional_own_type": {
+      "name": "TRAINING ONLY - Support vehicle",
+      "class": "None",
+      "actions": "Standard Actions",
+      "map_icon": "Default",
+      "custom_icon_file": null
+    },
+    "own_unit": {
+      "name": "TRAINING ONLY - Navigator 20261028",
+      "type": "actual own new type (or explicitly retained suitable existing type if new type unavailable)",
+      "station": "actual own new Station",
+      "positions": [
+        {
+          "role_name": "Exercise navigator",
+          "personnel_role": "TRAINING ONLY - Community response navigator (existing own role51007)",
+          "required": true
+        }
+      ],
+      "personnel_assigned": [],
+      "status_action": null
+    }
+  },
+  "guards": [
+    "Read current department/group/unit/type lists and exact names first. If own name already exists, reopen/compare instead of duplicating or overwriting. Resolve actual returned IDs through normal UI only.",
+    "Preserve EVERY existing group/membership/admin flag, unit/type/currentcrew/call/status/staffing; do not assume the only existing units are the original6, because prior training units also exist.",
+    "Create parent and station empty; inspect GroupAdmins/GroupUsers but make no selections. If no available people appear, capture that honest boundary rather than move an assigned member.",
+    "Keep both coordinate fields complete and explicitly fictional. Leave W3W/address/printer/fax/keys/provider setup/GPS/device location unchanged.",
+    "Read-only crew staffing only; no global Save. No actual person in new unit, no role-grant/admin/status/staffing operation.",
+    "Use normal visible launchers; no hidden fields, auth/feature override, direct API/DB write or secret entry."
+  ],
+  "capture_operations": [
+    {
+      "id": "baseline",
+      "route": "/User/Groups",
+      "action": "Capture real group list/counts/types/parents and AddNewGroup launcher; preserve existing rows.",
+      "mutation": false
+    },
+    {
+      "id": "org-form",
+      "route": "/User/Groups/NewGroup",
+      "action": "Show GroupTypeOrganizational/GroupName/ParentNone, empty admin/member selectors and normal SaveGroup. Prepare own parent name.",
+      "mutation": "own create only"
+    },
+    {
+      "id": "org-readback",
+      "route": "normal group list → own Edit",
+      "action": "Show returned own row, fresh name/type/ParentNone/empty selectors. If maintenance is useful, rename ONLY own unused group and fresh-read it; otherwise inspect without save.",
+      "mutation": "optional own Name only"
+    },
+    {
+      "id": "station-form",
+      "route": "/User/Groups/NewGroup",
+      "action": "Select StationGroup and own parent. Show address/GPS/W3W alternatives. Optionally attempt normal Save with name but no location for real validation; no created-row claim for validation. Then prepare complete fictional coordinate pair, W3W/address blank.",
+      "mutation": "validation attempt plus own create only"
+    },
+    {
+      "id": "station-save-readback",
+      "route": "SaveGroup → normal list → own Edit",
+      "action": "Capture SaveGroup before result, then fresh Stationtype/parent/both coordinates/empty membership, disabled type radios. No provider or map-position claim.",
+      "mutation": "own station create only"
+    },
+    {
+      "id": "membership-boundary",
+      "route": "own group Edit",
+      "action": "Inspect GroupAdmins/GroupUsers normal picker and single-group help; if empty due assigned members, show empty result. Cancel without any membership/admin selection.",
+      "mutation": false
+    },
+    {
+      "id": "type",
+      "route": "/User/Department/Types → NewUnitType",
+      "action": "Capture normal launcher, own type name/ClassNone/StandardActions/Defaulticon/no customfile and Save. Fresh-own type readback; preserve all existing type/status definitions.",
+      "mutation": "optional own type create only"
+    },
+    {
+      "id": "new-unit",
+      "route": "/User/Units → NewUnit",
+      "action": "Show Name,Type,Station list with only stations/NoStation and own Station; AddRole → uniqueExerciseNavigator seat, own existingPersonnelRole51007, Requiredchecked. Show Save before result. BrowseTemplates may be inspected/closed but not applied.",
+      "mutation": "own new unit/seat definition only"
+    },
+    {
+      "id": "unit-readback",
+      "route": "normal list → own Edit",
+      "action": "Verify actual own name/type/station/seat/required flag after leaving/reopening. Do not save Edit unless an explicit own-only correction is necessary. No crew/status outcome assumed.",
+      "mutation": false
+    },
+    {
+      "id": "crew-safety",
+      "route": "/User/Units/UnitStaffing",
+      "action": "Read-only actual baseline crew/configured seats; explain positions vs people. Do NOT Save. Verify Engine51/Herrmann remains unchanged using actual readback.",
+      "mutation": false
+    }
+  ],
+  "narration_and_capture_limits": "No canonical lesson, narration, timing, freeze or publication qualification yet; actual UI may differ in available options and must be recorded honestly."
+}

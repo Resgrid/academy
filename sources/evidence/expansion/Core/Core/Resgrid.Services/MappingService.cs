@@ -1,0 +1,230 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Resgrid.Model;
+using Resgrid.Model.Repositories;
+using Resgrid.Model.Search;
+using Resgrid.Model.Services;
+
+namespace Resgrid.Services
+{
+	public class MappingService : IMappingService
+	{
+		private readonly IPoiTypesRepository _poiTypesRepository;
+		private readonly IPoisRepository _poisRepository;
+		private readonly Lazy<IMongoRepository<MapLayer>> _mapLayersRepository;
+		private readonly IMapLayersDocRepository _mapLayersDocRepository;
+		private readonly Lazy<ISearchProjectionService> _searchProjections;
+		private readonly ITypeIconsRepository _typeIconsRepository;
+
+		public MappingService(IPoiTypesRepository poiTypesRepository, IPoisRepository poisRepository, Lazy<IMongoRepository<MapLayer>> mapLayersRepository,
+			IMapLayersDocRepository mapLayersDocRepository, Lazy<ISearchProjectionService> searchProjections = null,
+			ITypeIconsRepository typeIconsRepository = null)
+		{
+			_searchProjections = searchProjections;
+			_typeIconsRepository = typeIconsRepository;
+			_poiTypesRepository = poiTypesRepository;
+			_poisRepository = poisRepository;
+			_mapLayersRepository = mapLayersRepository;
+			_mapLayersDocRepository = mapLayersDocRepository;
+		}
+
+		public Task<PoiType> SavePOITypeAsync(PoiType type, CancellationToken cancellationToken = default(CancellationToken))
+			=> SavePOITypeAsync(type, Resgrid.Model.Onboarding.ImportEffectPolicy.Interactive, cancellationToken);
+
+		public async Task<PoiType> SavePOITypeAsync(PoiType type, Resgrid.Model.Onboarding.ImportEffectPolicy effects, CancellationToken cancellationToken)
+		{
+			var saved = await _poiTypesRepository.SaveOrUpdateAsync(type, cancellationToken);
+
+			// Each POI's projection carries its type name; a renamed type re-projects them.
+			if (effects.ImmediateSearchProjection && _searchProjections != null && saved != null && type != null && type.PoiTypeId > 0)
+			{
+				var stored = await _poiTypesRepository.GetPoiTypeByTypeIdAsync(saved.PoiTypeId);
+				foreach (var poi in stored?.Pois ?? Enumerable.Empty<Poi>())
+				{
+					poi.Type = stored;
+					await _searchProjections.Value.ProjectPoiAsync(poi, cancellationToken);
+				}
+			}
+
+			return saved;
+		}
+
+		public Task<Poi> SavePOIAsync(Poi poi, CancellationToken cancellationToken = default(CancellationToken))
+			=> SavePOIAsync(poi, Resgrid.Model.Onboarding.ImportEffectPolicy.Interactive, cancellationToken);
+
+		public async Task<Poi> SavePOIAsync(Poi poi, Resgrid.Model.Onboarding.ImportEffectPolicy effects, CancellationToken cancellationToken)
+		{
+			var saved = await _poisRepository.SaveOrUpdateAsync(poi, cancellationToken);
+			if (effects.ImmediateSearchProjection && _searchProjections != null && saved != null)
+				await _searchProjections.Value.ProjectPoiAsync(saved, cancellationToken);
+			return saved;
+		}
+
+		public async Task<List<PoiType>> GetPOITypesForDepartmentAsync(int departmentId)
+		{
+			var types = await _poiTypesRepository.GetPoiTypesByDepartmentIdAsync(departmentId);
+
+			return types.ToList();
+		}
+
+		public async Task<List<Poi>> GetPOIsForDepartmentAsync(int departmentId)
+		{
+			var poiTypes = await GetPOITypesForDepartmentAsync(departmentId);
+			var pois = new List<Poi>();
+
+			foreach (var poiType in poiTypes)
+			{
+				if (poiType.Pois == null || !poiType.Pois.Any())
+					continue;
+
+				foreach (var poi in poiType.Pois)
+				{
+					poi.Type = poiType;
+					pois.Add(poi);
+				}
+			}
+
+			return pois;
+		}
+
+		public async Task<List<Poi>> GetDestinationPOIsForDepartmentAsync(int departmentId)
+		{
+			var poiTypes = await GetPOITypesForDepartmentAsync(departmentId);
+			var pois = new List<Poi>();
+
+			foreach (var poiType in poiTypes.Where(x => x.IsDestination))
+			{
+				if (poiType.Pois == null || !poiType.Pois.Any())
+					continue;
+
+				foreach (var poi in poiType.Pois)
+				{
+					poi.Type = poiType;
+					pois.Add(poi);
+				}
+			}
+
+			return pois;
+		}
+
+		public async Task<Poi> GetPOIByIdAsync(int poiId)
+		{
+			return await _poisRepository.GetByIdAsync(poiId);
+		}
+
+		public async Task<Poi> GetDestinationPOIByIdAsync(int departmentId, int poiId)
+		{
+			return (await GetDestinationPOIsForDepartmentAsync(departmentId)).FirstOrDefault(x => x.PoiId == poiId);
+		}
+
+		public async Task<PoiType> GetTypeByIdAsync(int poiTypeId)
+		{
+			return await _poiTypesRepository.GetPoiTypeByTypeIdAsync(poiTypeId);
+		}
+
+		public async Task<bool> DeletePOITypeAsync(int poiTypeId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var type = await GetTypeByIdAsync(poiTypeId);
+
+			if (type != null)
+			{
+				var deleted = await _poiTypesRepository.DeleteAsync(type, cancellationToken);
+
+				// TypeIcons has no foreign key to the type, so its uploaded icon goes with it once the type is gone.
+				if (deleted && _typeIconsRepository != null)
+					await _typeIconsRepository.DeleteForTypeAsync(type.DepartmentId, TypeIconKinds.PoiType, type.PoiTypeId, null, cancellationToken);
+
+				if (deleted && _searchProjections != null)
+					foreach (var poi in type.Pois ?? Enumerable.Empty<Poi>())
+						await _searchProjections.Value.RemoveAsync(type.DepartmentId, SearchEntityTypes.Poi, poi.PoiId.ToString(), cancellationToken);
+				return deleted;
+			}
+
+			return false;
+		}
+
+		public async Task<bool> DeletePOIAsync(int poiId, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var poi = await GetPOIByIdAsync(poiId);
+
+			if (poi != null)
+			{
+				var type = _searchProjections != null ? await GetTypeByIdAsync(poi.PoiTypeId) : null;
+				var deleted = await _poisRepository.DeleteAsync(poi, cancellationToken);
+				if (deleted && type != null)
+					await _searchProjections.Value.RemoveAsync(type.DepartmentId, SearchEntityTypes.Poi, poi.PoiId.ToString(), cancellationToken);
+				return deleted;
+			}
+
+			return false;
+		}
+
+		public async Task<MapLayer> SaveMapLayerAsync(MapLayer mapLayer)
+		{
+			if (Config.DataConfig.DocDatabaseType == Config.DatabaseTypes.Postgres)
+			{
+				if (String.IsNullOrEmpty(mapLayer.PgId))
+					await _mapLayersDocRepository.InsertAsync(mapLayer);
+				else
+					await _mapLayersDocRepository.UpdateAsync(mapLayer);
+
+				return mapLayer;
+			}
+			else
+			{
+				if (mapLayer.Id.Timestamp == 0)
+					await _mapLayersRepository.Value.InsertOneAsync(mapLayer);
+				else
+					await _mapLayersRepository.Value.ReplaceOneAsync(mapLayer);
+
+				return mapLayer;
+			}
+		}
+
+		public async Task<List<MapLayer>> GetMapLayersForTypeDepartmentAsync(int departmentId, MapLayerTypes type)
+		{
+			if (Config.DataConfig.DocDatabaseType == Config.DatabaseTypes.Postgres)
+			{
+				var layers = await _mapLayersDocRepository.GetAllMapLayersByDepartmentIdAsync(departmentId, type);
+
+				return layers;
+			}
+			else
+			{
+				// Layers are an optional overlay on every map page. An unreachable or misconfigured Mongo (common on
+				// self-hosted installs) must not take the whole map down with it (GitHub #243): log it and draw the
+				// map without layers.
+				try
+				{
+					var layers = await _mapLayersRepository.Value.FilterByAsync(filter => filter.DepartmentId == departmentId && filter.Type == (int)type && filter.IsDeleted == false);
+
+					return layers.ToList();
+				}
+				catch (Exception ex)
+				{
+					Framework.Logging.LogException(ex, $"Unable to read map layers for department {departmentId} from the document database.");
+					return new List<MapLayer>();
+				}
+			}
+		}
+
+		public async Task<MapLayer> GetMapLayersByIdAsync(string id)
+		{
+			if (Config.DataConfig.DocDatabaseType == Config.DatabaseTypes.Postgres)
+			{
+				var layers = await _mapLayersDocRepository.GetByIdAsync(id);
+
+				return layers;
+			}
+			else
+			{
+				var layers = await _mapLayersRepository.Value.FindByIdAsync(id);
+
+				return layers;
+			}
+		}
+	}
+}

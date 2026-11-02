@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "purpose": "Reviewable simulated Reserve Engine 51 station status-location fixture",
+  "target": {
+    "department_id": 51,
+    "unit_id": 51006,
+    "name": "Reserve Engine 51",
+    "type": "Engine",
+    "station_group_id": 51001,
+    "latitude": 41.8721,
+    "longitude": -87.6523
+  },
+  "files": [
+    {
+      "file": "sources/demo/scenarios/refresh_training_unit_position.py",
+      "sha256": "5af52b0433d516c2811ca03cbc20ee4758ac7ac7333443f615e5d25a27680184"
+    },
+    {
+      "file": "scripts/tests/test_training_unit_position.py",
+      "sha256": "9d275d6a3ed9a3ac7c13e1bb62bd9fb2d4d3cddac52902808a969ae468a30a29"
+    },
+    {
+      "file": "sources/demo/scenarios/TRAINING_UNIT_POSITION.md",
+      "sha256": "0e2e9007a07304ad5d555321f9a5ea4c8918f97dc66306a15a3811a4a7e610e8"
+    }
+  ],
+  "verification": {
+    "python_ast": "passed",
+    "offline_default_help_plan": "passed",
+    "new_offline_tests": 9,
+    "existing_officer_tests": 4,
+    "tests_passed": 13,
+    "database_executed": false,
+    "docker_contacted": false,
+    "browser_used": false,
+    "fixture_written": false,
+    "database_integration": "pending explicit operator execution",
+    "map_result": "pending normal UI observation"
+  },
+  "limits": [
+    "Declared simulated status-location fallback, never device GPS or live-location telemetry.",
+    "Fresh identity and UTC/local timestamps accompany the new location fields; every other status field is copied and checked.",
+    "No application, provider or notification outcome is asserted.",
+    "No original repository, active call, live-location document or previous status row was edited."
+  ]
+}

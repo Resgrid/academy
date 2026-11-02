@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "id": "core-personnel-role-requirements",
+  "kind": "read_only_source_trace_and_proposed_normal_UI_capture",
+  "source_only": true,
+  "no_browser_or_DB_observation_by_this_reviewer": true,
+  "parent_reported_runtime_state": {
+    "basis": "Parent task message; no independent fresh UI/DB check in this task. Future held Personnel captures must bind these facts.",
+    "department_id": 51,
+    "own_new_role_id": 51007,
+    "role_name_parent_description": "TRAINING ONLY Community response navigator",
+    "literal_role_name_punctuation_not_independently_reviewed": true,
+    "members": 0,
+    "icon_added": false,
+    "original_six_roles_order_preserved": true,
+    "saved_requirements": [
+      {
+        "type_id": 51004,
+        "type_code": "TRN-REVIEW-20261028",
+        "mandatory": true,
+        "any_of_group": null,
+        "allow_trainee": false,
+        "grace_override_days": 7
+      }
+    ],
+    "global_enforcement": "Off",
+    "assignments_or_member_status_or_admin_changes": false
+  },
+  "normal_navigation": {
+    "entry_route": "/User/Personnel/Roles",
+    "entry_control": "Required certifications",
+    "row": "Own fictional role51007 only",
+    "requirements_route": "/User/Certifications/RoleRequirements?roleId=51007",
+    "back_control": "Back to roles",
+    "visibility": "Roles view shows the row launcher to department administrators. Requirements GET separately allows CanSetup or CanView; saving requires CanSetup. Eligibility requires CanView, independent of setup.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Personnel/Roles.cshtml",
+        "line_start": 94,
+        "line_end": 106,
+        "sha256": "484454283e13df63d992a62de4c2e0054a3f7d833415ee44401e9cce744a3f0b"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "line_start": 486,
+        "line_end": 520,
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+        "line_start": 11,
+        "line_end": 14,
+        "sha256": "2e8a15f2136efe7ddc11ba5d8c020cce089e080c20a04945c5db34ce5ae40dcf"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+        "line_start": 95,
+        "line_end": 103,
+        "sha256": "2e8a15f2136efe7ddc11ba5d8c020cce089e080c20a04945c5db34ce5ae40dcf"
+      }
+    ]
+  },
+  "exact_English_labels": {
+    "heading_pattern": "Required certifications – {actual role name}",
+    "columns": [
+      "Type",
+      "Mandatory",
+      "Any-of group",
+      "Allow trainee",
+      "Grace override (days)"
+    ],
+    "controls": [
+      "Add requirement",
+      "Save",
+      "Back to roles"
+    ],
+    "eligibility_heading": "Member eligibility",
+    "empty_members": "This role has no members.",
+    "Off_notice": "Enforcement is off: these requirements are informational until a department administrator turns on Warn only or Enforce in",
+    "group_help": "Rows with the same group number are satisfied by any one of them (EMT or AEMT or Paramedic); leave blank for a stand-alone requirement.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Localization/Areas/User/Certifications/Certifications.en.resx",
+        "line_start": 136,
+        "line_end": 154,
+        "sha256": "58d36b52c1f0d95254f29c24dfeacf8e3147c3a5596f14085a022d6466c44b28"
+      }
+    ]
+  },
+  "row_semantics": {
+    "type": "The dropdown contains active Person-scoped types, displayed as name (code). Unit types cannot be saved as personnel role requirements.",
+    "mandatory": "Unsatisfied Mandatory rows affect Qualified and can block role addition/remove membership under Enforce. Nonmandatory unsatisfied rows are advisory; they do not independently make Qualified false.",
+    "blank_group": "Blank/null Any-of fields create independent requirements. With both Mandatory checked, A blank and B blank means A AND B.",
+    "same_number": "Rows sharing the same non-null Any-of number form one alternative set. Any one satisfied row passes that entire set. With both Mandatory checked, A1 and B1 means A OR B.",
+    "combined_sets": "Separate numbered sets and blank mandatory rows must each be satisfied: A1/B1/Cblank means (A OR B) AND C. A1/B2 are separate one-row sets, not alternatives to each other.",
+    "distinct_types": "The service retains one saved row per type; duplicate type entries are collapsed with the last row winning. An OR demonstration needs two distinct types.",
+    "mixed_mandatory_nuance": "A satisfied row passes its numbered group regardless of other rows’ Mandatory flag. If no row passes, all failed group rows are retained, and failed mandatory rows determine Qualified. Keep both preview rows MandatoryON for a clear consistent example; no mixed-flag policy is demonstrated.",
+    "allow_trainee": "Allow trainee accepts a typed record with Trainee status for that row. Leaving it unchecked does not permit Trainee records. Pending verification is controlled separately by department TreatPendingVerificationAsValid, currently parent-reported unchecked.",
+    "validity": "A matching nondeleted typed Active record is valid through its expiry date. Never-expires types and typed records with no expiry are treated as open-ended. This software evaluation is not professional authorization.",
+    "grace": "Grace override7 replaces the department30 for removal-deadline calculations on this row. It does not make a missing/expired record valid. Under Enforce, removal occurs only after the computed deadline (strictly later by date). No removal is demonstrated, and the own role has0members/globalOff.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "line_start": 493,
+        "line_end": 500,
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "line_start": 754,
+        "line_end": 793,
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/Certifications/CertificationRequirementEvaluator.cs",
+        "line_start": 19,
+        "line_end": 37,
+        "sha256": "8be6db36f7d704f2305c4a965fe39b29d02477f99ec57eb8d934e00f65d61ec0"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Model/Certifications/CertificationRequirementEvaluator.cs",
+        "line_start": 44,
+        "line_end": 119,
+        "sha256": "8be6db36f7d704f2305c4a965fe39b29d02477f99ec57eb8d934e00f65d61ec0"
+      },
+      {
+        "repo": "Core",
+        "path": "Tests/Resgrid.Tests/Services/CertificationRequirementEvaluatorTests.cs",
+        "line_start": 46,
+        "line_end": 96,
+        "sha256": "751338ff6044869938b7237e0c3ac5831103a7c087fd902e95e97e8b5d3f7022"
+      }
+    ]
+  },
+  "save_and_preview_boundary": {
+    "add_requirement": "Add requirement is type=button. Its jQuery handler clones the hidden row template and reindexes names; it does not send a request.",
+    "new_row_defaults": "Mandatory checked; Any-of blank; Allow trainee unchecked; Grace override blank. The type defaults to the first current dropdown option, so explicitly choose a distinct intended type before describing the preview.",
+    "remove_row": "Remove-row button removes that local row and reindexes. It is not a saved deletion until the form is submitted.",
+    "no_live_eligibility": "The only page script adds/removes/reindexes rows; it does not re-evaluate Member eligibility while fields are edited. The pictured eligibility is server-rendered from saved requirements and existing members.",
+    "save": "Save is a plain HTML POST with antiforgery protection; no requirement-save native confirm or Bootstrap modal is present in this view. It replaces the entire saved type set. Omitted existing types are deleted, while retained types are updated/inserted and audited.",
+    "unsaved_exit": "Use the visible Back to roles link without Save, then the own role’s Required certifications launcher for a fresh readback. Do not infer discard from browser Back cached fields; read the reopened saved one-row state.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+        "line_start": 39,
+        "line_end": 89,
+        "sha256": "2e8a15f2136efe7ddc11ba5d8c020cce089e080c20a04945c5db34ce5ae40dcf"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+        "line_start": 142,
+        "line_end": 159,
+        "sha256": "2e8a15f2136efe7ddc11ba5d8c020cce089e080c20a04945c5db34ce5ae40dcf"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "line_start": 507,
+        "line_end": 520,
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "line_start": 772,
+        "line_end": 793,
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      },
+      {
+        "repo": "Core",
+        "path": "Tests/Resgrid.Tests/Services/CertificationServiceTests.cs",
+        "line_start": 345,
+        "line_end": 359,
+        "sha256": "d1716862db86f4d3c1aa841f278b205e7a636e04fb7e7299507576984c43fba7"
+      }
+    ]
+  },
+  "type_code_lock": {
+    "UI_rule": "EditType GET sets CodeLocked if ANY saved department role requirement references this type, regardless of Mandatory, member count or enforcement mode. Code is readonly, with the exact help text below.",
+    "help": "A role requirement references this type, so its code can no longer change.",
+    "server_rule": "SaveCertificationType independently rejects a changed code while CountByTypeIdAsync>0. It is not only a cosmetic disabled field.",
+    "scope_rule": "Person/Unit scope is independently locked when any person or unit record references the type. Casey’s existing new record already caused the scope lock before the role requirement.",
+    "expected_current_state_not_yet_pictured_here": "After parent’s saved requirement on51007, type51004 is expected to have readonly Code and disabled Person scope. A new real saved readback is required to show that state; no capture is invented.",
+    "historical_freeze": "Frozen Certification022–024 are earlier requirement0/editableCode source images. They remain valid historical footage; this later trace does not rewrite them.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Controllers/CertificationsController.cs",
+        "line_start": 351,
+        "line_end": 365,
+        "sha256": "3ab9d29c079c656c019e6c7f393d6584feff404aa26802f877136d509fc50fc7"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/EditType.cshtml",
+        "line_start": 25,
+        "line_end": 46,
+        "sha256": "bd8387b3e722c5745a37521c5870659181e69feef054f0596a6ca296732955e8"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "line_start": 330,
+        "line_end": 342,
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Localization/Areas/User/Certifications/Certifications.en.resx",
+        "line_start": 110,
+        "line_end": 110,
+        "sha256": "58d36b52c1f0d95254f29c24dfeacf8e3147c3a5596f14085a022d6466c44b28"
+      }
+    ]
+  },
+  "Off_and_zero_members": {
+    "role_membership_gate": "Off returns before certification qualification blocking/warnings in CheckRoleMembershipAsync. Saving a requirement does not change the department mode or assign a member.",
+    "evaluation": "The page can still evaluate saved requirements for actual role members when CanView. With no members it shows This role has no members; that is not proof that a person passes either AND or OR.",
+    "notifications": "Off skips the role-removal pass, not independent expiry/notification processing. No notification delivery or worker execution is established here.",
+    "evidence": [
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/PersonnelRolesService.cs",
+        "line_start": 46,
+        "line_end": 71,
+        "sha256": "e089e39006b1397e7909f8ad4e27388267f714ef748d1d225dc6de481bbd3b12"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.cs",
+        "line_start": 833,
+        "line_end": 849,
+        "sha256": "e146c12be8f852253547c70f7d87fe55b7ab44918623f0980eecd6edabe8e5c5"
+      },
+      {
+        "repo": "Core",
+        "path": "Web/Resgrid.Web/Areas/User/Views/Certifications/RoleRequirements.cshtml",
+        "line_start": 95,
+        "line_end": 106,
+        "sha256": "2e8a15f2136efe7ddc11ba5d8c020cce089e080c20a04945c5db34ce5ae40dcf"
+      },
+      {
+        "repo": "Core",
+        "path": "Core/Resgrid.Services/CertificationService.Sweep.cs",
+        "line_start": 134,
+        "line_end": 203,
+        "sha256": "1bba903a08aa898d7bba37599253c6f0fb293f334d484d49dcd8783370311e6f"
+      }
+    ]
+  },
+  "capture_limits": [
+    "Source-planned UI only; no new screenshot, browser operation, DB query, role edit, requirement save, member assignment or policy change by this reviewer.",
+    "Saved one-row state is parent-reported until reviewed new Personnel media is supplied. Proposed two-row AND/OR is an unsaved local preview only, not a saved alternative policy or actual person evaluation.",
+    "Existing baseline certification types may be selected as a distinct alternative in a local unsaved dropdown; this does not edit those types. No template application or new second type is needed for this preview.",
+    "This trace is not canonical narration, a freeze, timed sequence, audio review or publication qualification."
+  ]
+}

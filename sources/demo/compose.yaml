@@ -1,5 +1,16 @@
 name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}
 services:
+  object-store:
+    image: rustfs/rustfs@sha256:ed9210d6411d77ffceb70d94b964a3cb7d225983368bc25bebe01e995293dcc2
+    command: ["/data"]
+    environment:
+      RUSTFS_ACCESS_KEY: ${ACADEMY_OBJECT_STORE_ACCESS}
+      RUSTFS_SECRET_KEY: ${ACADEMY_OBJECT_STORE_SECRET}
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ENABLE: "false"
+      RUSTFS_OBS_LOGGER_LEVEL: error
+    volumes: ["object-store-data:/data"]
+    networks: [training]
   postgres:
     image: postgres:16-alpine
     environment:
@@ -59,7 +70,7 @@ services:
   gateway:
     image: nginx:1.27-alpine
     ports: ["127.0.0.1:${ACADEMY_WEB_PORT:-18867}:8080", "127.0.0.1:${ACADEMY_API_PORT:-18868}:8081", "127.0.0.1:${ACADEMY_EVENTING_PORT:-18869}:8082", "127.0.0.1:${ACADEMY_MAIL_PORT:-18026}:8025", "127.0.0.1:${ACADEMY_RABBIT_PORT:-15674}:8083"]
-    volumes: ["gateway-config:/etc/nginx/conf.d:ro"]
+    volumes: ["gateway-config:/etc/nginx/conf.d:ro", "config:/config:ro"]
     networks:
       training:
       ingress:
@@ -150,3 +161,4 @@ volumes:
   gateway-config:
     external: true
     name: ${ACADEMY_STACK_NAME:-resgrid-academy-capture}_gateway-config
+  object-store-data:

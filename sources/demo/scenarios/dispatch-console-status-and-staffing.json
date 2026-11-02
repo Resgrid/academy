@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "dispatch-console-status-and-staffing-training",
+  "mode": "manual normal UI replay",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "preserve_original_three_calls": true,
+    "preserve_herrmann_engine_seat": true,
+    "allow_real_device_gps": false
+  },
+  "unit_practice": {
+    "unit": "Engine 51",
+    "status": "Available",
+    "destination": "No Destination",
+    "note": "TRAINING ONLY - Dispatch status practice.",
+    "saved_readback": ["Unit Details", "Available", "Destination None", "Officer / Team Lead: Christopher Herrmann", "exact training note"]
+  },
+  "personnel_practice": {
+    "person": "Wallace Boden",
+    "staffing": "Available",
+    "note_entered": "TRAINING ONLY - Dispatch staffing practice.",
+    "response_status_preserved": "Standing By",
+    "saved_readback": ["Personnel Details", "Status Standing By", "Staffing Available", "Chief"],
+    "staffing_note_persistence_verified_in_ui": false
+  },
+  "replay_steps": [
+    "Open the ordinary signed-in Dispatch console; do not record credentials or recovery secrets.",
+    "Search calls for Community, select the community standby card, read the explicit call-filter banner and historical Call Activity.",
+    "Use Clear Filter, then clear the separate call search. They are independent controls.",
+    "Toggle Available only and inspect the unit-list result; restore it off afterward.",
+    "Search Units for Engine. Click the actual unit card, not a moving call-card resource ticker with the same name.",
+    "Select Available, explicitly retain No Destination, enter the exact unit note and verify it before Update Status.",
+    "Inspect the activity result, then open Unit Details using the card's details control to verify saved status, destination, note and crew.",
+    "Return, search Personnel for Boden, select the actual member card, and keep response status separate from Staffing.",
+    "Select Available staffing, enter the exact staffing note, verify it before Update Staffing, then inspect the app result and Personnel Details.",
+    "Restore panel searches to empty and Available only off. Preserve existing call and crew records."
+  ],
+  "recorded_result": {
+    "date": "2026-10-28",
+    "unit_status_submitted_and_reopened": true,
+    "unit_note_readback_verified": true,
+    "personnel_staffing_submitted_and_reopened": true,
+    "personnel_response_status_unchanged": true,
+    "new_call_or_dispatch_created": false,
+    "crew_assignment_changed": false,
+    "provider_notification_or_physical_readiness_verified": false
+  }
+}

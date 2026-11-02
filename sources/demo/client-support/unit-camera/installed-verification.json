@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-27T21:52:05.505777+00:00",
+  "actual_installed_source_sha256": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+  "actual_installed_test_sha256": "0d12a7d0e22c0b6bbb84525987a60895e15effc3ba9bf3e6f1ad822318c95e14",
+  "actual_source_path": "Unit/src/components/maps/map-view.web.tsx",
+  "actual_test_path": "Unit/src/components/maps/__tests__/camera.web.test.tsx",
+  "sdk_probe": {
+    "file": "demo/client-support/unit-camera/installed-sdk-probe.json",
+    "sha256": "560b918ecedbc67c8a1817b854dfe14f245659f6cd2e1f0a4137fcc049603e1a",
+    "cases": 16,
+    "nonfinite": 0
+  },
+  "commands": [
+    "node sources/demo/client-support/unit-camera/verify-camera-sdk.cjs --unit-root /path/to/Unit --source /path/to/Unit/src/components/maps/map-view.web.tsx --expect-invalid 0",
+    "ACADEMY_UNIT_ROOT=/path/to/Unit ACADEMY_CAMERA_TEST_CACHE=/private/tmp/academy-unit-camera-installed-jest node /path/to/Unit/node_modules/jest/bin/jest.js --config sources/demo/client-support/unit-camera/jest-camera.config.cjs --runInBand"
+  ],
+  "scope": "Tests directly load the actual installed patched Unit Camera/test, with caches in tmp. No proposed-copy substitution, Unit further edit, network/browser/native operation, or media qualification.",
+  "normal_repository_Jest_setup_limit": "Existing jest-setup.ts references absent react-native-permissions; focused isolated jsdom harness deliberately avoids unrelated native fixture setup while executing real Camera+SDK numeric contract.",
+  "real_cartography_retest": "Pending parent browser verification; original failed021 remains unchanged and excluded.",
+  "historical_pre_format_archive": "demo/client-support/unit-camera/history/pre-format-20261027",
+  "formatted_tests": {
+    "file": "demo/client-support/unit-camera/installed-tests-formatted.json",
+    "sha256": "5700fc0ee5e5e16462436469f9ca2c4da0e7210996dec9ff3d79ca2f0f9d48b7",
+    "passed": 10
+  },
+  "real_transform": {
+    "file": "demo/client-support/unit-camera/installed-real-transform-probe.json",
+    "sha256": "057c5767a452f808389fff7e93d43ee7885eb1dc808ede342f0db76874664b03",
+    "actual_installed_source": true,
+    "cases": 20,
+    "invalid_results": 0
+  },
+  "CI_mode_note": "Parent observed CI-mode Metro disables watch/reloads. A browser navigation alone does not invalidate cached modules. After reviewed source changes, stop/restart the same local Unit dev server with --clear and inherited credentials/Mapbox variables; retainCI, never print/save the key.",
+  "historical_pre_format_isolated_Jest": {
+    "success": true,
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "tests": [
+      {
+        "title": "initial defaultSettings preserves existing orientation when optional values are absent",
+        "status": "passed"
+      },
+      {
+        "title": "initial centerCoordinate preserves existing orientation when optional values are absent",
+        "status": "passed"
+      },
+      {
+        "title": "imperative setCamera preserves omitted zoom/orientation and accepts an omitted center",
+        "status": "passed"
+      },
+      {
+        "title": "controlled updates preserve omitted numeric values through easeTo",
+        "status": "passed"
+      },
+      {
+        "title": "controlled updates preserve omitted numeric values through flyTo",
+        "status": "passed"
+      },
+      {
+        "title": "omitted center leaves the current position unchanged for an imperative orientation update",
+        "status": "passed"
+      },
+      {
+        "title": "defaultSettings preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "initial preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "controlled preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "imperative preserves valid zero and other defined numeric values",
+        "status": "passed"
+      }
+    ],
+    "raw_result_sha256": "9923ddef5d901aa83720e1bc1f66b815ded69241822e66b384282e649785a950"
+  },
+  "isolated_actual_installed_Jest": {
+    "schema_version": 1,
+    "verified_at": "2026-10-27T21:52:05.505777+00:00",
+    "actual_installed_files": true,
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "raw_result_sha256": "198fc975694c8ed9f2a0e8e7eabf690d18eaa6f6b0db40767223b403a7e21c8a",
+    "assertions": [
+      {
+        "title": "initial defaultSettings preserves existing orientation when optional values are absent",
+        "status": "passed"
+      },
+      {
+        "title": "initial centerCoordinate preserves existing orientation when optional values are absent",
+        "status": "passed"
+      },
+      {
+        "title": "imperative setCamera preserves omitted zoom/orientation and accepts an omitted center",
+        "status": "passed"
+      },
+      {
+        "title": "controlled updates preserve omitted numeric values through easeTo",
+        "status": "passed"
+      },
+      {
+        "title": "controlled updates preserve omitted numeric values through flyTo",
+        "status": "passed"
+      },
+      {
+        "title": "omitted center leaves the current position unchanged for an imperative orientation update",
+        "status": "passed"
+      },
+      {
+        "title": "defaultSettings preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "initial preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "controlled preserves valid zero and other defined numeric values",
+        "status": "passed"
+      },
+      {
+        "title": "imperative preserves valid zero and other defined numeric values",
+        "status": "passed"
+      }
+    ],
+    "limits": "Mocked component regression only; no actual device/provider/browser upload or cartography success is claimed."
+  }
+}

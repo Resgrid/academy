@@ -1,0 +1,356 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:             
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops" [expanded]:
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - list:
+      - link " Workforce":
+        - /url: /User/Workforce
+        - generic: 
+        - text: Workforce
+      - link " Certifications":
+        - /url: /User/Certifications
+        - generic: 
+        - text: Certifications
+      - link " Invoicing":
+        - /url: /User/Invoicing
+        - generic: 
+        - text: Invoicing
+      - link " Deployments":
+        - /url: /User/Deployments
+        - generic: 
+        - text: Deployments
+      - link " Bids":
+        - /url: /User/Bids
+        - generic: 
+        - text: Bids
+      - link " Contracts":
+        - /url: /User/Contracts
+        - generic: 
+        - text: Contracts
+      - link " Cal OES MARS":
+        - /url: /User/CalOesMars
+        - generic: 
+        - text: Cal OES MARS
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Certifications" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - strong: Certifications
+- generic: Who holds what, what is expiring and what has lapsed, for people and units.
+- link " Export CSV":
+  - /url: /User/Certifications/DashboardCsv?scope=person
+  - generic: 
+  - text: Export CSV
+- link " Add Certification":
+  - /url: /User/Certifications/Add
+  - generic: 
+  - text: Add Certification
+- list:
+  - link " Dashboard":
+    - /url: /User/Certifications
+    - generic: 
+    - text: Dashboard
+  - link " Certification types":
+    - /url: /User/Certifications/Types
+    - generic: 
+    - text: Certification types
+  - link " Settings":
+    - /url: /User/Certifications/Settings
+    - generic: 
+    - text: Settings
+  - link " Compliance report":
+    - /url: /User/Reports/CertificationComplianceReport
+    - generic: 
+    - text: Compliance report
+- heading "0" [level=1]
+- text: Expired
+- heading "1" [level=1]
+- text: Expiring within 60 days
+- heading "0" [level=1]
+- text: Suspended or revoked
+- heading "1" [level=1]
+- text: Pending verification
+- heading "Dashboard" [level=5]
+- generic: Scope
+- combobox:
+  - option "People" [selected]
+  - option "Units"
+- generic: Category
+- combobox:
+  - option "All categories" [selected]
+  - option "Fire"
+  - option "EMS"
+  - option "Search and rescue"
+  - option "Wildland"
+  - option "Emergency management"
+  - option "Industrial"
+  - option "Security"
+  - option "Medical"
+  - option "Driver"
+  - option "Vehicle"
+  - option "Other"
+- generic: Group
+- combobox:
+  - option "All groups" [selected]
+  - option "Firehouse 51"
+  - option "Command"
+  - option "Engine 51"
+  - option "Truck 81"
+  - option "Squad 3"
+  - option "Ambulance 61"
+- generic: Role
+- combobox:
+  - option "All roles" [selected]
+  - option "Chief"
+  - option "Rescue Technician"
+  - option "Paramedic"
+  - option "Firefighter"
+  - option "Driver / Operator"
+  - option "Officer"
+- table:
+  - rowgroup:
+    - row "Member DEMO-CERT-3 DEMO-CERT-1 DEMO-CERT-2":
+      - columnheader "Member"
+      - columnheader "DEMO-CERT-3"
+      - columnheader "DEMO-CERT-1"
+      - columnheader "DEMO-CERT-2"
+  - rowgroup:
+    - row "Blake Gallo — 2027-10-25 —":
+      - cell "Blake Gallo":
+        - link "Blake Gallo":
+          - /url: /User/Certifications/Person?userId=B881AC8D-6919-5E1D-86D0-96608F573C57
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51012
+      - cell "—"
+    - row "Brian Zvonecek — 2027-10-25 —":
+      - cell "Brian Zvonecek":
+        - link "Brian Zvonecek":
+          - /url: /User/Certifications/Person?userId=1E52AC86-D3C5-5AB1-8713-2853DFEC4659
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51009
+      - cell "—"
+    - row "Christopher Herrmann — 2027-10-25 —":
+      - cell "Christopher Herrmann":
+        - link "Christopher Herrmann":
+          - /url: /User/Certifications/Person?userId=5F3B6868-1B66-55DD-BE56-5E6C1C6EA7D6
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51007
+      - cell "—"
+    - row "Darren Ritter — 2026-11-14 17 days left —":
+      - cell "Darren Ritter":
+        - link "Darren Ritter":
+          - /url: /User/Certifications/Person?userId=3C3A0AA3-BA6E-56BE-88A5-DB546E9F1DB5
+      - cell "—"
+      - cell "2026-11-14 17 days left":
+        - link "2026-11-14":
+          - /url: /User/Certifications/Record/51011
+        - text: 17 days left
+      - cell "—"
+    - row "Gabriela Dawson — — 2027-10-25":
+      - cell "Gabriela Dawson":
+        - link "Gabriela Dawson":
+          - /url: /User/Certifications/Person?userId=CEE3AF50-AA8D-587B-BC6B-1714646AC12D
+      - cell "—"
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51013
+    - row "Joe Cruz — 2027-10-25 —":
+      - cell "Joe Cruz":
+        - link "Joe Cruz":
+          - /url: /User/Certifications/Person?userId=CD7E8A62-8E36-55C9-993E-12115E8FF8A2
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51008
+      - cell "—"
+    - row "Kelly Severide — 2027-10-25 —":
+      - cell "Kelly Severide":
+        - link "Kelly Severide":
+          - /url: /User/Certifications/Person?userId=C0E5497B-A905-573F-A57C-DB48AE7EA46A
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51003
+      - cell "—"
+    - row "Leslie Shay — — 2027-10-25":
+      - cell "Leslie Shay":
+        - link "Leslie Shay":
+          - /url: /User/Certifications/Person?userId=6960FB48-CB3E-53B9-9364-7B73252A4E22
+      - cell "—"
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51014
+    - row "Matthew Casey — 2027-10-25 —":
+      - cell "Matthew Casey":
+        - link "Matthew Casey":
+          - /url: /User/Certifications/Person?userId=DA25F49E-FEA4-5C8D-82D9-163D7D2023F9
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51002
+      - cell "—"
+    - row "Randy McHolland 2027-10-25 — —":
+      - cell "Randy McHolland":
+        - link "Randy McHolland":
+          - /url: /User/Certifications/Person?userId=3ED4BECB-8A8C-5662-9518-638635F9D556
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51010
+      - cell "—"
+      - cell "—"
+    - row "Stella Kidd — 2027-10-25 —":
+      - cell "Stella Kidd":
+        - link "Stella Kidd":
+          - /url: /User/Certifications/Person?userId=B8963903-9870-527F-8E7C-C6B3FF02CDFF
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51004
+      - cell "—"
+    - row "Sylvie Brett — — 2027-10-25":
+      - cell "Sylvie Brett":
+        - link "Sylvie Brett":
+          - /url: /User/Certifications/Person?userId=D0214F9E-7055-54F3-A59B-202EB939343A
+      - cell "—"
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51005
+    - row "Violet Mikami — — 2027-10-25":
+      - cell "Violet Mikami":
+        - link "Violet Mikami":
+          - /url: /User/Certifications/Person?userId=C7929558-8D82-5D66-8D71-7E9094C1F2FB
+      - cell "—"
+      - cell "—"
+      - cell "2027-10-25":
+        - link "2027-10-25":
+          - /url: /User/Certifications/Record/51006
+    - row "Wallace Boden — 2028-10-27 —":
+      - cell "Wallace Boden":
+        - link "Wallace Boden":
+          - /url: /User/Certifications/Person?userId=D60727DE-3904-572A-832C-D5EBCED4F9F4
+      - cell "—"
+      - cell "2028-10-27":
+        - link "2028-10-27":
+          - /url: /User/Certifications/Record/51001
+      - cell "—"
+- paragraph: Valid Expiring soon Expired, suspended or revoked
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

@@ -1,0 +1,45 @@
+{
+  "kind": "Actual minimal-copy relocation regression for the omitted native Unit call source snapshots",
+  "passed": true,
+  "allowlist_sha256": "01a4ada862e78bd1e2cc1adacb9031fa2fe58708f751a6922b8dde27a70efc6c",
+  "guard_sha256": "c5928af57039f23adb5fb477064a4c677d70a47bf12fe8f2f1fb95cfb0a503f8",
+  "exact_native_dependencies": 224,
+  "exact_public_author_graph_files": 241,
+  "public_graph_bytes": 19931346,
+  "cases": [
+    {
+      "case": "omit_exact_before_snapshot",
+      "expected_rejection": "public source snapshot asset missing/unreadable",
+      "observed": true
+    },
+    {
+      "case": "omit_exact_after_snapshot",
+      "expected_rejection": "public source snapshot asset missing/unreadable",
+      "observed": true
+    },
+    {
+      "case": "exact_snapshot_hash_drift",
+      "expected_rejection": "public source snapshot hash differs",
+      "observed": true
+    },
+    {
+      "case": "exact_241_file_graph_in_fresh_relocation",
+      "passed": true,
+      "actual_author_result": {
+        "source_recipe_ready": true,
+        "recipe_written": false,
+        "recipe_sha256": "93f09738aec95f706104c59c3feb398aae42aa95bec67463fd05322e999d6127",
+        "final_inputs_written": false,
+        "actual_cues": 88,
+        "source_spans": 23,
+        "actual_User_hearing_required": true,
+        "actual_Root_full_map_review_passed": true,
+        "actual_Root_full_map_review_sha256": "2cc3b662b635f1302e584e35ad3c75796e4f1e54fada99c5fab10f8983bff95e",
+        "rendered_or_published": false
+      }
+    }
+  ],
+  "target_repository_or_original_source_changed": false,
+  "native_app_or_profile_or_review_or_approval_changed": false,
+  "actual_installed_target_verification": "Root must run the target author after copying the two exact allowlisted files; relocated success does not substitute for that check."
+}

@@ -1,0 +1,549 @@
+{
+  "id": "app-unit-02-response-and-checks",
+  "title": "Unit: calls, response status, and crew checks",
+  "app": "Unit",
+  "audience": "Apparatus crews and authorized members who manage call information from Unit.",
+  "summary": "Work the incident lifecycle with the correct unit and crew context, then complete the required check without confusing incident, status, and checklist states.",
+  "prerequisites": [
+    "A selected demo unit, role assignments, configured response statuses, safe dispatch recipients, and a call with location and destination.",
+    "Create/edit/close permissions for those optional branches; prepared call extras, timers, video, command, and site data.",
+    "Checklists.System enabled with a published checklist and a due or on-demand target.",
+    "Preserve Engine51 unit role51001 Officer/TeamLead = Christopher Herrmann only. The other five units remain unassigned; do not change member status, shift assignments or qualifications for this crew example."
+  ],
+  "scenes": [
+    {
+      "id": "01-find-the-correct-call",
+      "title": "Find the correct call",
+      "route": "/calls",
+      "capture_intent": "Show Calls search, a fictional result, clear control, and actual New Call entry if permitted. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "New Call",
+        "Clear search"
+      ],
+      "narration": "Open Calls, search for the training incident, and read its identifying details before opening it. Clear search restores the wider list; New Call begins a separate permitted creation flow. Confirm which operation is intended before acting. The same check applies to a mobile crisis visit, wildland response, or industrial exercise: similar titles do not establish the correct incident, location, or recipients.",
+      "practice": "Find the fictional transport incident assigned to the demo ambulance without creating a duplicate call.",
+      "source_workflow_reference": {
+        "title": "Find the correct call",
+        "narration": "Open Calls and use search to locate the training incident. Read the identifying information on the card before opening it, especially when several exercises have similar names. Clear search restores the wider active list. The New Call button starts a separate creation workflow for authorized users. Finding an existing call and creating another one have different consequences, so begin by confirming which operation the crew needs.",
+        "required_labels": [
+          "New Call",
+          "Clear search"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Find the fictional transport incident assigned to the demo ambulance without creating a duplicate call."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Show Calls search, a fictional result, clear control, and actual New Call entry if permitted."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "02-read-the-incident-before-responding",
+      "title": "Read the incident before responding",
+      "route": "/call/[id]",
+      "capture_intent": "Open existing51002 or another non-reserved training call; scroll Info/Contact/Protocols/Dispatched/Activity and capture real contents or empty states. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Info",
+        "Contact",
+        "Protocols",
+        "Dispatched",
+        "Activity"
+      ],
+      "narration": "Call Details organizes Info, Contact, Protocols, Dispatched, and Activity into separate views. Read the location and nature, then compare the dispatched resources with the active unit and crew. Activity helps explain recent changes. Open any attached protocol in context and follow your organization’s operating procedures. A matching call title is not enough when the incident address, destination, or resource assignment differs.",
+      "practice": "Read the demo call’s location, destination, and dispatched resources, and explain how they relate to the selected apparatus.",
+      "source_workflow_reference": {
+        "title": "Read the incident before responding",
+        "narration": "Call Details organizes Info, Contact, Protocols, Dispatched, and Activity into separate views. Read the location and nature, then compare the dispatched resources with the active unit and crew. Activity helps explain recent changes. Open any attached protocol in context and follow your organization’s operating procedures. A matching call title is not enough when the incident address, destination, or resource assignment differs.",
+        "required_labels": [
+          "Info",
+          "Contact",
+          "Protocols",
+          "Dispatched",
+          "Activity"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Read the demo call’s location, destination, and dispatched resources, and explain how they relate to the selected apparatus."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open existing51002 or another non-reserved training call; scroll Info/Contact/Protocols/Dispatched/Activity and capture real contents or empty states."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "03-set-the-active-incident-and-check-routing",
+      "title": "Set the active incident and check routing",
+      "route": "/call/[id]",
+      "capture_intent": "Capture Set Active and resulting Select Status before any unit transition; inspect internal map views; external Route handoffs remain unexercised. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Set Active",
+        "Select Status",
+        "View on map",
+        "Route"
+      ],
+      "narration": "Set Active selects the incident and opens Select Status with that call preselected; it does not itself complete a unit status change. View on map opens the location view. Route and the offered destination route hand off to a mapping application. Inspect the endpoint and control without opening an external service in this exercise. Unit has its own web map and HTML implementations.",
+      "practice": "Set the training call active and compare its incident marker with the intended destination before requesting directions.",
+      "source_workflow_reference": {
+        "title": "Set the active incident and check routing",
+        "narration": "Select Set Active when this is the incident the crew should follow. View on map helps compare the location with the surrounding area, while Route opens the supported mapping application. Use the destination route where offered when the next movement is to a receiving location. Confirm the endpoint first. Native directions and a browser map are different handoffs, so check which application opens before starting the journey.",
+        "required_labels": [
+          "Set Active",
+          "View on map",
+          "Route"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Set the training call active and compare its incident marker with the intended destination before requesting directions."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture Set Active and resulting Select Status before any unit transition; inspect internal map views; external Route handoffs remain unexercised."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "04-update-unit-status-with-a-destination",
+      "title": "Update unit status with a destination",
+      "route": "Sidebar Status",
+      "capture_intent": "Capture source-offered destination/note steps and actual Submit or hold control; verify saved result, and label genuine queue state only if it occurs. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Select Status"
+      ],
+      "narration": "In Select Status, choose the configured unit state and follow any destination and note steps. Calls, Stations, and POIs appear only when that state supports them. Hold to submit is used in enabled hold mode; ordinary mode uses Submit. A queued message describes local work awaiting transmission. Confirm the later saved state before saying the department received the change, and keep physical movement claims separate.",
+      "practice": "Prepare a fictional response from station to incident, choose the correct call destination, and inspect the submitted or queued status.",
+      "source_workflow_reference": {
+        "title": "Update unit status with a destination",
+        "narration": "Open Select Status and choose the configured response step. If Select Destination appears, choose the call, station, or POI that matches this movement. Add the requested note and use Hold to submit. The two-second confirmation helps make the transition deliberate. If the app reports the update is queued, inspect that state and its later synchronization rather than assuming dispatch has already received the new status.",
+        "required_labels": [
+          "Select Status",
+          "Hold to submit"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Prepare a fictional response from station to incident, choose the correct call destination, and inspect the submitted or queued status."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture source-offered destination/note steps and actual Submit or hold control; verify saved result, and label genuine queue state only if it occurs."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "05-keep-the-seated-crew-accurate",
+      "title": "Keep the seated crew accurate",
+      "route": "Sidebar Roles",
+      "capture_intent": "Open Unit Role Assignments for Engine51 and show the existing Officer/TeamLead seat51001 assigned only to Christopher Herrmann; reopen to verify without changing crew, other units, staffing or qualifications. Capture the actual Save control without claiming another crew mutation.",
+      "required_labels": [
+        "Unit Role Assignments",
+        "Save"
+      ],
+      "narration": "Return to Unit Role Assignments when the crew changes or the response requires a different configured role. Review the active unit first, choose the appropriate people, and Save the updated assignment. This gives the department a useful view of who is performing each apparatus function. It does not automatically update their personal staffing or the day’s shift roster, so make those separate changes through the appropriate workflow.",
+      "practice": "Replace a fictional relief driver in the demo role list and identify which personal or shift information still needs separate attention.",
+      "source_workflow_reference": {
+        "title": "Keep the seated crew accurate",
+        "narration": "Return to Unit Role Assignments when the crew changes or the response requires a different configured role. Review the active unit first, choose the appropriate people, and Save the updated assignment. This gives the department a useful view of who is performing each apparatus function. It does not automatically update their personal staffing or the day’s shift roster, so make those separate changes through the appropriate workflow.",
+        "required_labels": [
+          "Unit Role Assignments",
+          "Save"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Replace a fictional relief driver in the demo role list and identify which personal or shift information still needs separate attention."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Unit Role Assignments for Engine51 and show the existing Officer/TeamLead seat51001 assigned only to Christopher Herrmann; reopen to verify without changing crew, other units, staffing or qualifications."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "06-create-a-call-with-the-permitted-fields",
+      "title": "Create a call with the permitted fields",
+      "route": "/call/new",
+      "capture_intent": "Open actual creation form and policy-required fields; do not Create until Core coordinator authorizes an independent numbered exercise. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Create New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Type"
+      ],
+      "narration": "When authorized to create an incident, select New Call and read Create New Call carefully. Complete Name, Nature, Priority, and Type using the available department choices. Required fields and scheduling constraints come from the configured field policy. Keep the exercise name clear and avoid assigning a priority just because it appears first. Validation should guide a correction before a call is saved or dispatched.",
+      "practice": "Prepare an isolated industrial alarm exercise using valid choices and deliberately inspect one required-field validation message.",
+      "source_workflow_reference": {
+        "title": "Create a call with the permitted fields",
+        "narration": "When authorized to create an incident, select New Call and read Create New Call carefully. Complete Name, Nature, Priority, and Type using the available department choices. Required fields and scheduling constraints come from the configured field policy. Keep the exercise name clear and avoid assigning a priority just because it appears first. Validation should guide a correction before a call is saved or dispatched.",
+        "required_labels": [
+          "Create New Call",
+          "Name",
+          "Nature",
+          "Priority",
+          "Type"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Prepare an isolated industrial alarm exercise using valid choices and deliberately inspect one required-field validation message."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open actual creation form and policy-required fields; do not Create until Core coordinator authorizes an independent numbered exercise."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "07-resolve-the-call-location-and-destination",
+      "title": "Resolve the call location and destination",
+      "route": "/call/new",
+      "capture_intent": "Show location input modes and permitted fictional coordinate/map selection; never accept real GPS permissions or claim external lookup success. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Address",
+        "GPS Coordinates",
+        "what3words",
+        "Plus Code",
+        "Select Location on Map"
+      ],
+      "narration": "Call Location offers Address, GPS Coordinates, what3words, and Plus Code when permitted. Select Location on Map and the destination selector provide separate choices. Inspect the intended incident and destination before saving. This exercise may use clearly fictional coordinates; it does not grant device GPS permissions or establish provider lookup success. A staging point, entrance, and receiving destination can represent different operational places.",
+      "practice": "Prepare a fictional SAR staging location from coordinates and verify that the marker identifies the intended access point.",
+      "source_workflow_reference": {
+        "title": "Resolve the call location and destination",
+        "narration": "Use the Call Location controls to identify the place accurately. Address, GPS Coordinates, what3words, and Plus Code are alternative inputs when their services are available. Select Location on Map provides a visual choice, and a destination selector may be offered separately. Inspect the marker and descriptive address together. A remote staging point, a building entrance, and the eventual destination can be different places.",
+        "required_labels": [
+          "Address",
+          "GPS Coordinates",
+          "what3words",
+          "Plus Code",
+          "Select Location on Map"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Prepare a fictional SAR staging location from coordinates and verify that the marker identifies the intended access point."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Show location input modes and permitted fictional coordinate/map selection; never accept real GPS permissions or claim external lookup success."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 62
+    },
+    {
+      "id": "08-dispatch-and-edit-with-a-reviewed-scope",
+      "title": "Dispatch and edit with a reviewed scope",
+      "route": "/call/new -> /call/[id]/edit",
+      "capture_intent": "Inspect actual dispatch recipients/scheduling; after authorization create or edit a dedicated TRAINING call, verify saved fields without provider-delivery claims. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Dispatch To",
+        "Create",
+        "Edit Call",
+        "Save"
+      ],
+      "narration": "Review Dispatch To and the permitted recipients. Scheduling is offered only when field policy permits it; inspect the actual time control before Create. Edit Call and Save are separate actions for later corrections. Use fictional recipients and a coordinator-approved training call. A saved form or successful call creation does not prove push, email, SMS, or another external notification reached a recipient.",
+      "practice": "Create a training-only call with a narrow recipient scope, then correct one fictional contact detail through Edit Call.",
+      "source_workflow_reference": {
+        "title": "Dispatch and edit with a reviewed scope",
+        "narration": "Review Dispatch To and select the permitted recipients for the exercise. Dispatch Time is the scheduled path when available; check its policy requirements before Create. If a detail later changes, open Edit Call, correct the intended value, and Save. Both actions can affect other participants, so use demo recipients and inspect the resulting screen. The creation dialog alone does not prove a dispatch notification reached another device.",
+        "required_labels": [
+          "Dispatch To",
+          "Dispatch Time",
+          "Create",
+          "Edit Call",
+          "Save"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Create a training-only call with a narrow recipient scope, then correct one fictional contact detail through Edit Call."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Inspect actual dispatch recipients/scheduling; after authorization create or edit a dedicated TRAINING call, verify saved fields without provider-delivery claims."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "09-share-concise-incident-evidence",
+      "title": "Share concise incident evidence",
+      "route": "/call/[id]",
+      "capture_intent": "Create a clearly labelled training note and verify it; inspect Images/Files upload controls and real SiteInfo/History views. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Notes",
+        "Images",
+        "Files",
+        "Site Info",
+        "History"
+      ],
+      "narration": "Notes records a useful incident update, while Images and Files attach supporting material. Open Site Info for available matched preplans and hazards, and use History for earlier context. Keep uploads restricted to permitted training content and inspect the displayed item afterward. A file picker opening is only a selection step; successful storage, visibility to another user, and external delivery each require their own observed evidence.",
+      "practice": "Add a fictional access note and a sample site image, then compare the incident’s site information with its history.",
+      "source_workflow_reference": {
+        "title": "Share concise incident evidence",
+        "narration": "Notes records a useful incident update, while Images and Files attach supporting material. Open Site Info for available matched preplans and hazards, and use History for earlier context. Keep uploads restricted to permitted training content and inspect the displayed item afterward. A file picker opening is only a selection step; successful storage, visibility to another user, and external delivery each require their own observed evidence.",
+        "required_labels": [
+          "Notes",
+          "Images",
+          "Files",
+          "Site Info",
+          "History"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Add a fictional access note and a sample site image, then compare the incident’s site information with its history."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Create a clearly labelled training note and verify it; inspect Images/Files upload controls and real SiteInfo/History views."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "10-use-check-ins-command-and-video-appropriately",
+      "title": "Use check-ins, command, and video appropriately",
+      "route": "/call/[id]",
+      "capture_intent": "Inspect Check-In target/timer and history; Command/Video need prepared internal incident/feed data, otherwise record honest empty states. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Check-In",
+        "Command",
+        "Video"
+      ],
+      "narration": "Check-In presents this incident’s configured timer and history. Inspect the actual target choices before recording a training check-in. Command and Video depend on available incidents, permissions, and configured feeds; capture their real empty states when no data exists. These screens support coordination, but neither a tab nor a saved software event proves a physical arrival, background alert, remote viewer, or external video session.",
+      "practice": "Inspect a demo command assignment and check-in timer, then state which provider or background behavior has not been exercised.",
+      "source_workflow_reference": {
+        "title": "Use check-ins, command, and video appropriately",
+        "narration": "Check-In shows the configured timer context and history for this incident. Choose the correct target when recording the crew’s check-in. Command presents the resource view permitted for your role, and Video lists supported feeds when configured. Inspect these real tabs with prepared data. They support coordination, but their presence does not prove a background alert, remote viewer, or external video stream worked on another device.",
+        "required_labels": [
+          "Check-In",
+          "Command",
+          "Video"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Inspect a demo command assignment and check-in timer, then state which provider or background behavior has not been exercised."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Inspect Check-In target/timer and history; Command/Video need prepared internal incident/feed data, otherwise record honest empty states."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "11-complete-the-crew-s-checklist-deliberately",
+      "title": "Complete the crew’s checklist deliberately",
+      "route": "/checklists",
+      "capture_intent": "Select active-unit checklist; capture required/conditional fields, save/resume/submit only fictional answers, and actual witness boundary without attestation. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Due checks",
+        "Start checklist",
+        "Save progress",
+        "Submit checklist"
+      ],
+      "narration": "Due checks lets the crew choose an apparatus target and Start checklist. Read the version and required items, record only exercise answers, and explain any Not applicable choice. Save progress and Submit checklist have different outcomes; a witness-required run needs another authenticated reviewer. Photos, signatures, and durable native offline recovery require their own evidence. Checklist completion does not close the call or make the unit available.",
+      "practice": "Resume a fictional apparatus check, review a photo and reason, then prepare the checklist for submission or its required witness.",
+      "source_workflow_reference": {
+        "title": "Complete the crew’s checklist deliberately",
+        "narration": "Open Due checks and select the appropriate apparatus or crew target before Start checklist. Answer the required items, add evidence, and explain any Not applicable response with its reason. Save progress keeps a run resumable; Submit checklist moves it into a submitted state. A witness-required run needs a different authenticated reviewer. Keep checklist completion separate from a call closure or a unit becoming available.",
+        "required_labels": [
+          "Due checks",
+          "Start checklist",
+          "Save progress",
+          "Submit checklist"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Resume a fictional apparatus check, review a photo and reason, then prepare the checklist for submission or its required witness."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Select active-unit checklist; capture required/conditional fields, save/resume/submit only fictional answers, and actual witness boundary without attestation."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "12-close-deselect-and-reset-deliberately",
+      "title": "Close, deselect, and reset deliberately",
+      "route": "/call/[id] -> Sidebar Call",
+      "capture_intent": "Use a separate approved disposable call for actual closure; keep51002 open and avoid parent-reserved51006. Capture Close form/result, Deselect confirmation/result, and unit status separately. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Close Call",
+        "Close Type",
+        "Close Note",
+        "Deselect"
+      ],
+      "narration": "Close Call requires the permitted Close Type and a useful Close Note, with any offered notification choices reviewed before submission. Use a separate coordinator-approved exercise for closure. Deselect has its own confirmation and clears the selected incident; unit availability is another status action. Unit uses a browser confirmation for Deselect on web. Verify all resulting states without implying that related records or checklists were finalized.",
+      "practice": "Close a disposable exercise, clear its active selection, and review the next valid apparatus status without changing a real response.",
+      "source_workflow_reference": {
+        "title": "Close, deselect, and reset deliberately",
+        "narration": "An authorized user closes the incident with Close Call, the appropriate Close Type, and a useful Close Note. Review the optional notification scope before confirming. Deselect clears the active call selection, while the configured unit-status transition describes whether the apparatus is available for another assignment. Review all three states separately. Closing an exercise should leave a clear outcome without implying that every related record or checklist was finalized.",
+        "required_labels": [
+          "Close Call",
+          "Close Type",
+          "Close Note",
+          "Deselect"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Close a disposable exercise, clear its active selection, and review the next valid apparatus status without changing a real response."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Use a separate approved disposable call for actual closure; keep51002 open and avoid parent-reserved51006. Capture Close form/result, Deselect confirmation/result, and unit status separately."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "An ambulance crew receives a call, travels to the incident, and later moves to a destination.",
+      "practice": "Compare both endpoints and each configured unit status transition."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A rescue vehicle needs remote staging and crew check-ins.",
+      "practice": "Validate coordinates, inspect the timer target, and keep the crew roles current."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "A unit responds to a test alarm with a pre-entry equipment check.",
+      "practice": "Use the call’s Site Info and the correctly targeted checklist without conflating their states."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/calls.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/call/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/call/new/index.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/call/[id]/edit.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/status/status-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/roles/roles-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/calls/close-call-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/checklists.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/components/checklists/checklist-run-sheet.tsx"
+  ],
+  "authoring_status": "source_reconciled_awaiting_actual_captures",
+  "source_audited_at": "2026-10-26T19:08:15.698056+00:00",
+  "narration_word_count": 763,
+  "capture_limitations": [
+    "No actual Unit scene-to-screen proof is established by this source audit.",
+    "No credential/factor/device-security changes or GPS/audio/native permissions are exercised.",
+    "Unrendered API/store operations are not app-screen walkthrough actions.",
+    "No external ordering/AI/voice provider, notification delivery, physical arrival, durable native offline operation, or financial submission success is claimed."
+  ],
+  "media_status": {
+    "natural_audio": "not_frozen",
+    "speech_timed_captions": "pending",
+    "rendered_video": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "spoken_sector_examples": [
+    "mobile crisis/community care",
+    "wildland",
+    "industrial response"
+  ]
+}

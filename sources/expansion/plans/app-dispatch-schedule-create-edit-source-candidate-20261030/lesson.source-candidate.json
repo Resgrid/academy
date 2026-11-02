@@ -1,0 +1,179 @@
+{
+  "id": "app-dispatch-schedule-create-edit",
+  "title": "Create a scheduled standby and change its dispatch time",
+  "app": "Dispatch",
+  "audience": [
+    "Department dispatchers",
+    "Department administrators"
+  ],
+  "summary": "Create a planned training call, verify the saved department time, then change it through the full Edit Call form.",
+  "prerequisites": [
+    "Permission to create and edit calls in the department.",
+    "A fictional training environment and intended test recipients.",
+    "Understand that device and department clocks may differ."
+  ],
+  "scenes": [
+    {
+      "id": "prepared-call",
+      "title": "Start with a clear practice call",
+      "required_labels": [
+        "New Call",
+        "Name",
+        "Nature",
+        "Priority",
+        "Routine",
+        "Type",
+        "Medical"
+      ],
+      "narration": "Here on New Call, an authorized dispatcher is preparing a fictional community standby. The Name identifies it as training, and Nature explains the exercise. Priority is Routine and Type is Medical. Use a clear description and the choices that fit your department. These details help the next dispatcher understand the scheduled work without treating this example as a real incident."
+    },
+    {
+      "id": "recipient",
+      "title": "Choose the intended recipient",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Wallace Boden",
+        "Everyone",
+        "1 selected",
+        "Confirm"
+      ],
+      "narration": "In Select Dispatch Recipients, Wallace Boden is the one checked person. Everyone is unchecked, and the footer confirms one selected. Check both the name and the count before choosing Confirm. This training account has No location, so this selection does not demonstrate a nearest-person calculation. The point here is to keep the planned dispatch list specific."
+    },
+    {
+      "id": "schedule-check",
+      "title": "Check the schedule before creating",
+      "required_labels": [
+        "Scheduled Date & Time",
+        "10/31/2026, 8:00:00 AM",
+        "Dispatch To",
+        "1 selected",
+        "Create"
+      ],
+      "narration": "The prepared Scheduled Date and Time is October thirty-first, twenty twenty-six, at eight in the morning on this device. Dispatch To still shows one selected. When entering a new schedule, choose a time at least fifteen minutes ahead; Dispatch checks that lead time when creating the call. Before using Create, check the date, the time and the intended recipients together."
+    },
+    {
+      "id": "pending-choice",
+      "title": "Keep scheduled and pending work distinct",
+      "required_labels": [
+        "Save as pending (do not dispatch yet)",
+        "Create"
+      ],
+      "narration": "Leave Save as pending off for this scheduled-call exercise. Its explanation describes a different choice: a pending call is saved and numbered, with the proposed recipients retained, while nobody is notified and the field apps do not see it. Here, with the future date set and the pending option off, choose Create to save the scheduled call."
+    },
+    {
+      "id": "scheduled-list",
+      "title": "Check the saved scheduled entry",
+      "required_labels": [
+        "CALL #",
+        "NAME",
+        "TYPE",
+        "PRIORITY",
+        "SCHEDULED FOR",
+        "Medical",
+        "Routine",
+        "Oct 31, 2026 10:00 am"
+      ],
+      "narration": "The scheduled-call list now shows the saved entry with Medical, Routine and a Scheduled For time of October thirty-first at ten in the morning. The narrow columns shorten the call number and name on this screen. Open the row to read the complete identity and confirm the saved schedule before making further changes."
+    },
+    {
+      "id": "saved-detail",
+      "title": "Read the full call identity and time",
+      "required_labels": [
+        "Call Details",
+        "#FD51-2026-0009",
+        "TRAINING ONLY - Scheduled community standby 20261030",
+        "Scheduled for: Oct 31, 2026 10:00 am"
+      ],
+      "narration": "Call Details shows the complete call number and the training standby name. The blue Scheduled for banner and the Info date row both show ten in the morning. Read the saved result here. An entry remaining on this screen with a future schedule is not evidence that recipients have already received or acknowledged a dispatch."
+    },
+    {
+      "id": "time-zone",
+      "title": "Understand the two clock displays",
+      "required_labels": [
+        "Call Details",
+        "Scheduled for: Oct 31, 2026 10:00 am",
+        "Department Settings",
+        "Time Zone",
+        "(GMT-06:00) Central Time (US & Canada)"
+      ],
+      "narration": "Notice the difference between the eight o’clock value prepared in the picker and the ten o’clock value on the saved call. This date-and-time picker uses the device clock. The saved call views use the department clock. In Core, Department Settings shows the department Time Zone. This training department uses Central Time, United States and Canada. The named time zone handles daylight-saving changes. Check this setting when administrators and dispatchers use devices in different time zones; then read back the saved call time with the team."
+    },
+    {
+      "id": "edit-entry",
+      "title": "Use the actual Edit Call path",
+      "required_labels": [
+        "Call Details",
+        "Edit",
+        "Scheduled for: Oct 31, 2026 10:00 am"
+      ],
+      "narration": "To move this planned dispatch, use Edit on Call Details. This walkthrough follows the full Edit Call form. Keep the same call identity so the revised schedule remains attached to the original training standby."
+    },
+    {
+      "id": "edit-picker",
+      "title": "Change the day, hour and minute",
+      "required_labels": [
+        "Scheduled Date & Time",
+        "October",
+        "2026",
+        "31",
+        "Hour",
+        "09",
+        "Minute",
+        "30",
+        "Done"
+      ],
+      "narration": "In the Scheduled Date and Time picker, October thirty-first is selected. The Hour column shows nine, and the Minute column shows thirty. Set the intended date and time in these controls, then choose Done. That commits the picker value to the edit form; it has not saved the call yet."
+    },
+    {
+      "id": "edit-value",
+      "title": "Check the prepared replacement time",
+      "required_labels": [
+        "Edit Call",
+        "Scheduled Date & Time",
+        "10/31/2026, 9:30:00 AM",
+        "Dispatch To",
+        "1 selected"
+      ],
+      "narration": "The Edit Call form now shows October thirty-first at nine thirty in the morning on this device. Check that replacement value, and confirm that Dispatch To still has one selected. A changed schedule must also be at least fifteen minutes ahead. The helper explains that leaving this field empty keeps the current schedule; it does not remove the scheduled dispatch."
+    },
+    {
+      "id": "save-edit",
+      "title": "Save the changed call",
+      "required_labels": [
+        "Edit Call",
+        "Dispatch To",
+        "1 selected",
+        "Save"
+      ],
+      "narration": "At the bottom of Edit Call, choose Save to submit the change. Review the result on the call itself before telling anyone that its schedule has moved. The selected value in the editor was preparation; the saved call is the readback."
+    },
+    {
+      "id": "saved-result",
+      "title": "Verify the result and apply the pattern",
+      "required_labels": [
+        "Call Details",
+        "#FD51-2026-0009",
+        "TRAINING ONLY - Scheduled community standby 20261030",
+        "Call updated successfully",
+        "Scheduled for: Oct 31, 2026 11:30 am"
+      ],
+      "narration": "Call updated successfully appears on the same training call. The Scheduled for banner and Info row now show eleven thirty in the morning in the department clock. That is the saved result of choosing nine thirty on this device. The call is still scheduled. Use this pattern for a fire or EMS standby, a community paramedicine or mental-health coordination exercise, a search-and-rescue briefing, planned security support, a wildland contractor drill, or industrial response-team training. Agree on the event time, select the intended recipients, save the schedule, and read back the department time on the call."
+    }
+  ],
+  "source_facts": {
+    "file": "../app-dispatch-scheduled-lifecycle-source-facts-20261030/facts.json",
+    "sha256": "a577e68a6789e9a9064d940476a24ddea3546b8d0da03d953855e8b934c009bc",
+    "required_for_archival_integrity_check": false
+  },
+  "parent_full_script_review": "pending",
+  "source_only": true,
+  "source_limits": [
+    "A bounded source preparation package. Natural narration has not been generated for this script and Root complete-script review is pending.",
+    "Starts with already prepared New Call fields and a selected future date. The first new-call calendar selection and completed location-entry controls are outside the strict subset.",
+    "Original images 001–003 have accessibility snapshots but no full DOM snapshots. They remain preserved diagnostics, excluded from this lesson.",
+    "Observed schedule change uses Call Details > Edit > Scheduled Date & Time > Done > Save. It does not use the separate Reschedule sheet.",
+    "The Core supporting screenshot confirms Central Time only; the device time-zone settings page was not recorded. No Pacific setting or fixed year-round GMT offset is inferred from pixels.",
+    "No Dispatch now confirmation or accepted dispatch, delivery, acknowledgement, real operational readiness, automatic background-worker run or closure is demonstrated.",
+    "All names, call text and recipients are fictional training data. Sector examples explain applications of the shown schedule controls, not additional recorded features."
+  ]
+}

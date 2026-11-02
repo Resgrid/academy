@@ -1,0 +1,437 @@
+{
+  "schema_version": 1,
+  "kind": "source_confirmed_read_only_trace_not_runtime_observation",
+  "created_at": "2026-10-29T05:24:26.840629+00:00",
+  "Core_HEAD": "6f83872110b0382f2911d099e95d6a4ef7da8315",
+  "facts": [
+    {
+      "id": "reports-availability",
+      "status": "source_confirmed",
+      "finding": "Module settings ReportsEnabled inversely stores ReportsDisabled; SettingsHelper reads it and the sidebar conditionally displays Reports. This is visibility/configuration behavior, not evidence that a module toggle changes the separate Reports_View permission or revokes all direct endpoint access. Preserve the whole settings form and do not Save.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/DepartmentController.cs",
+          "line": 3598,
+          "through_line": 3599,
+          "sha256": "e5963981bc43c3b72ba3e0b49656fe01b123340f00e6393713f45c1b883dc397"
+        },
+        {
+          "file": "Web/Resgrid.Web/Helpers/SettingsHelper.cs",
+          "line": 61,
+          "through_line": 65,
+          "sha256": "02aa61e773a98135d1e27f632549cbadc215fb22485f0c911810e25d80accd3a"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Shared/_Navigation.cshtml",
+          "line": 206,
+          "through_line": 211,
+          "sha256": "35917815487ad28912153c39aec4eb9ed5af15450901f592f7843cf7a6f00730"
+        }
+      ]
+    },
+    {
+      "id": "reports-html",
+      "status": "source_confirmed",
+      "finding": "Reports/Index and normal report actions use Reports_View. Staffing, Call Summary and Call Unit Times return ordinary HTML views; no PDF renderer is needed for these captures. Some catalog links belong to distinct feature modules; a link does not prove their results. InternalRunReport is a worker endpoint with a secret header and is never a browser navigation shortcut.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 120,
+          "through_line": 126,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 255,
+          "through_line": 259,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 363,
+          "through_line": 372,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 723,
+          "through_line": 736,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "staffing-snapshot",
+      "status": "source_confirmed",
+      "finding": "Staffing Report uses latest staffing, department custom staffing names, member visibility checks and next scheduled staffing change. Auto-generated timestamps display Never. Protected notes use SafeDisplay. It is not a promise of actual attendance, crew-seat occupancy or current device presence.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 772,
+          "through_line": 836,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "summary-parameters",
+      "status": "source_confirmed",
+      "finding": "Normal Call Summary parameters include Report Start Time, Report End Time, Group, All Groups and Run Report. Inputs use department-local time, converted to UTC for call/log queries. A chosen group includes descendants. Invalid department group IDs are rejected.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 579,
+          "through_line": 605,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 1740,
+          "through_line": 1779,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "summary-attribution",
+      "status": "source_confirmed",
+      "finding": "Call Summary assigns calls through the group-assignment service; its visible help explains geofence-first placement then dispatched-resource majority fallback. It does not simply filter by the current viewer's membership. Run-log resources are used where present; otherwise linked status history supplies resource counts and first on-scene time. These are recorded software facts, not real attendance/arrival verification.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 1814,
+          "through_line": 1821,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 1781,
+          "through_line": 1802,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Core/Resgrid.Services/CallGroupAssignmentService.cs",
+          "line": 31,
+          "through_line": 73,
+          "sha256": "fa5a89ec0b73a2192013deccb0a890622a4fa54a20e7f3f9db2b92d5a7949424"
+        }
+      ]
+    },
+    {
+      "id": "unit-times-sources",
+      "status": "source_confirmed",
+      "finding": "Call Unit Times derives Dispatched, En Route, On Scene, Staging and Cleared from linked dispatch/status history. The view identifies Unit status, Auto-linked, Inferred or Dispatch only. Missing timestamps stay blank. Do not teach inferred links as explicit unit selection or a physical-arrival determination. A single-call route also checks call visibility.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 632,
+          "through_line": 644,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 2013,
+          "through_line": 2090,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Reports/CallUnitTimesReport.cshtml",
+          "line": 13,
+          "through_line": 25,
+          "sha256": "01b671d87f3920edd4c1353977f78381a942b70df29a12be811d78e1533dda74"
+        }
+      ]
+    },
+    {
+      "id": "csv-distinct-from-pdf",
+      "status": "source_confirmed",
+      "finding": "The real Download CSV control uses the same dates or callId and HTML report model. Its CSV headers include call number/name/type, logged/closed, unit/group, dispatch/en-route/on-scene/staging/cleared and Linked By. Cells use the shared formula-neutralizing CSV formatter; the export is a file, not an external submission. Retain actual downloaded bytes only after supported normal UI download.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Reports/CallUnitTimesReport.cshtml",
+          "line": 71,
+          "through_line": 74,
+          "sha256": "01b671d87f3920edd4c1353977f78381a942b70df29a12be811d78e1533dda74"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 646,
+          "through_line": 679,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ReportsController.cs",
+          "line": 2088,
+          "through_line": 2088,
+          "sha256": "080ea62e730182a140c8c9412c9d8d7b144ee2ce9472bbb9141f4add71e95083"
+        }
+      ]
+    },
+    {
+      "id": "scheduled-report-side-effect",
+      "status": "source_confirmed",
+      "finding": "Profile Reporting is a separate personal Report Delivery schedule screen. AddNewScheduledReport POST creates Active=true ReportDelivery work. The worker can render PDF and send email. Only read the existing list/form and Cancel/navigate away: do not Save, enable or run any delivery schedule. No schedule/worker/provider delivery proof is implied.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ProfileController.cs",
+          "line": 146,
+          "through_line": 155,
+          "sha256": "d006c5fcff866505ab291f5e6674900d482161f9e84cb578012d43de7029b0c5"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/ProfileController.cs",
+          "line": 295,
+          "through_line": 300,
+          "sha256": "d006c5fcff866505ab291f5e6674900d482161f9e84cb578012d43de7029b0c5"
+        },
+        {
+          "file": "Workers/Resgrid.Workers.Framework/Logic/ReportDeliveryLogic.cs",
+          "line": 34,
+          "through_line": 58,
+          "sha256": "6c327fa5c318a3dda454fc336f3a4c24e3ac8e60a1ece85202cdc91a9ea77a11"
+        }
+      ]
+    },
+    {
+      "id": "billing-vs-subscription",
+      "status": "source_confirmed",
+      "finding": "Customer Invoicing lives under Workforce & Business Operations and has Billing settings/customer Billing profile/Rate cards/Aging. Resgrid Subscription Plan & Billing is a separate department-menu area for plan capacity and add-ons. An invoice to a department customer is not its Resgrid subscription payment.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Invoicing/_Tabs.cshtml",
+          "line": 8,
+          "through_line": 23,
+          "sha256": "f735be62dd9a8ad21fe5f2d6f7857f3b01328a2e5bb17b5423059d9169282ce6"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Shared/_TopNavbar.cshtml",
+          "line": 86,
+          "through_line": 86,
+          "sha256": "d1ff4350e09c825c7edfdc34572e3bdd4e548dbdc08470cb02dc2d3235e867bb"
+        }
+      ]
+    },
+    {
+      "id": "invoicing-gates",
+      "status": "source_confirmed",
+      "finding": "Invoicing reads require CustomerInvoicing flag, Business Operations global setting and department enabled module; writes also require the active paid add-on. Pages retain read access to existing invoices after an add-on lapses, with a ReadOnlyNotice. Billing Settings requires Invoicing_Update; customer profile reads use Invoicing_View and contact department ownership. Do not change flags, entitlements or permissions to complete footage.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 75,
+          "through_line": 103,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 717,
+          "through_line": 731,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 879,
+          "through_line": 891,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        },
+        {
+          "file": "Core/Resgrid.Services/BusinessOperationsAccessService.cs",
+          "line": 25,
+          "through_line": 44,
+          "sha256": "0b0a529eea5a6438a9e4cc199fd14177b1c49b74a8f0ed25759877fe04424953"
+        }
+      ]
+    },
+    {
+      "id": "identity-controls",
+      "status": "source_confirmed",
+      "finding": "Billing identity contains legal business name, remit-to, optional registrations, invoice footer, pay-link expiry and document-link display. The document model consumes identity/footer, but displaying a checkbox is not proof a pay link or document was generated. Settings GET may show defaults when no identity row exists; a form is not saved-state proof. Keep all fields unchanged.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 717,
+          "through_line": 729,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 851,
+          "through_line": 864,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.Delivery.cs",
+          "line": 50,
+          "through_line": 57,
+          "sha256": "bc030e75fd7a340e85af2524d07c2e2170c838b5a5668dfe359a1202739aea3f"
+        }
+      ]
+    },
+    {
+      "id": "customer-profile-controls",
+      "status": "source_confirmed",
+      "finding": "A Billing profile is one live row per contact, separate from the contact's ordinary directory details. The GET can construct an unsaved profile and default BillingEmail from contact email. Terms, default discount, rate-card selection, active flag, billing-address choice and tax preferences are editable only with proper existing access; this plan only reads them.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 890,
+          "through_line": 906,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 101,
+          "through_line": 129,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        }
+      ]
+    },
+    {
+      "id": "terms-and-discount-effects",
+      "status": "source_confirmed",
+      "finding": "DefaultDiscountPercent is copied when a new Draft invoice is created. Terms affect an unset DueOn when a Draft is marked Sent: positive contract terms override customer terms, otherwise customer terms (fallback30days) apply. A read-only profile screen is not proof those effects executed; no Draft creation, Mark Sent or Send occurs in this plan.",
+      "source_evidence": [
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 353,
+          "through_line": 382,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 644,
+          "through_line": 647,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 896,
+          "through_line": 905,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        }
+      ]
+    },
+    {
+      "id": "rate-tax-address-effects",
+      "status": "source_confirmed",
+      "finding": "Effective rate card uses an active customer-specific card before the department default. Totals apply pre-tax discount proportionally to taxable lines, then up to the stored tax components or fallback rate unless TaxExempt. Document addressing chooses an explicit billing address when mailing-address reuse is off. These are software calculations/preferences, not tax or invoicing advice.",
+      "source_evidence": [
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 314,
+          "through_line": 326,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 591,
+          "through_line": 631,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.Delivery.cs",
+          "line": 36,
+          "through_line": 46,
+          "sha256": "bc030e75fd7a340e85af2524d07c2e2170c838b5a5668dfe359a1202739aea3f"
+        }
+      ]
+    },
+    {
+      "id": "purchase-order-limit",
+      "status": "bounded_negative_source_search_not_global_behavior_proof",
+      "finding": "The visible Purchase order number required on invoices flag is persisted on the profile. This trace found storage/display but no enforcement in the reviewed InvoicingService/Controller/Views; do not promise that enabling it blocks sending or validates a PO.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+          "line": 950,
+          "through_line": 950,
+          "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29"
+        }
+      ]
+    },
+    {
+      "id": "online-provider-boundary",
+      "status": "source_confirmed",
+      "finding": "Online payments tab is absent when collection is unavailable in the cluster and no connection exists. Department enabled switch, platform/feature availability, active add-on and usable own-provider connection are separate requirements. No Connect, disconnect, payment-method Save, pay link, hosted checkout or payment record is allowed. Missing tab is an availability fact, not a broken workflow to bypass.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Invoicing/Settings.cshtml",
+          "line": 13,
+          "through_line": 17,
+          "sha256": "01ce6a13eb429a08ac6c2528f5a4f58a4ba96b1debde8c3b1c8cee91c404f72c"
+        },
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicePaymentsService.cs",
+          "line": 109,
+          "through_line": 137,
+          "sha256": "35be3100562588ddcf2afad519f5ee4fbf1216f348f6bcdb9abdf8acfc5579a8"
+        }
+      ]
+    },
+    {
+      "id": "aging-currency",
+      "status": "source_confirmed",
+      "finding": "Aging reads positive-balance invoices into Current/1–30/31–60/61–90/90+ using elapsed days past DueOn and shows balances grouped by currency. Empty results may correctly say No outstanding invoices; they do not prove all customers have paid, or show a collection/settlement.",
+      "source_evidence": [
+        {
+          "file": "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+          "line": 797,
+          "through_line": 821,
+          "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Invoicing/Aging.cshtml",
+          "line": 65,
+          "through_line": 65,
+          "sha256": "267472ebbb89c24661a847065e07a3945989864e8166c59d6274be2ff3cd2124"
+        }
+      ]
+    },
+    {
+      "id": "subscription-authority-capacity",
+      "status": "source_confirmed",
+      "finding": "Subscription Index requires Department_Update and CanUserManageSubscriptionAsync, currently a department-admin check. The retained primer's sentence limiting changes to only the managing member is narrower than current code and should not be repeated. Plan>=36 capacity combines personnel plus units; legacy views differ. Use actual current labels and values, never historic14/Unlimited as today's count or demo$0 as pricing.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+          "line": 355,
+          "through_line": 371,
+          "sha256": "917519e156997413e481112b424dbf49cc4b6c1292748a7d60c6450923230e91"
+        },
+        {
+          "file": "Core/Resgrid.Services/AuthorizationService.cs",
+          "line": 620,
+          "through_line": 632,
+          "sha256": "ded92e6f1a862241cd6066fa61378cc850d612e64b57ba54491e66e12a225cf0"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+          "line": 422,
+          "through_line": 428,
+          "sha256": "917519e156997413e481112b424dbf49cc4b6c1292748a7d60c6450923230e91"
+        }
+      ]
+    },
+    {
+      "id": "subscription-risky-get",
+      "status": "source_confirmed",
+      "finding": "Several subscription/provider actions may create sessions or hand off to providers, including update-billing GET flows. Restrict this exercise to Index and, if needed, PaymentHistory read-only; do not follow Upgrade/Buy/Cancel/Change billing info/GetStripeSession/checkout or expose personal billing/account details. No billing API configuration, license or PDF work is proposed.",
+      "source_evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+          "line": 540,
+          "through_line": 555,
+          "sha256": "917519e156997413e481112b424dbf49cc4b6c1292748a7d60c6450923230e91"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+          "line": 1214,
+          "through_line": 1228,
+          "sha256": "917519e156997413e481112b424dbf49cc4b6c1292748a7d60c6450923230e91"
+        }
+      ]
+    }
+  ],
+  "actual_browser_DB_API_requests_by_this_agent": false,
+  "runtime_parity": "Per-file current hashes and HEAD parity are retained. This source analysis does not establish the currently running deployment or prove proposed UI results."
+}

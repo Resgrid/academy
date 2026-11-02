@@ -1,0 +1,206 @@
+﻿@using Resgrid.Model
+@using Resgrid.Web.Helpers
+@model Resgrid.Web.Areas.User.Models.Contacts.ContactsIndexView
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Contacts.Contacts> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Dispatch.LocationHistory> historyLocalizer
+@{
+    var moduleTitle = await departmentTerms.NameAsync(DepartmentTerms.Contacts, commonLocalizer["ContactsModule"]);
+    ViewBag.Title = "Resgrid | " + moduleTitle;
+    // Linked calls per contact; null (the user's dispatch scope is not department-wide) leaves the column off.
+    var callsHeader = Model.CallCounts != null ? $"<th>{Html.Encode(historyLocalizer["CallsColumn"].Value)}</th>" : "";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@moduleTitle</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li class="active">
+                <strong>@moduleTitle</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+            @if (ClaimsAuthorizationHelper.CanCreateContacts())
+            {
+                <a title="@localizer["NewContact"]" class="btn btn-success" asp-controller="Contacts" asp-action="Add" asp-route-area="User">@localizer["NewContact"]</a>
+            }
+            @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+            {
+                <a id="contactCategories" class="btn btn-info top-button" title="@localizer["UnitStaffing"]" asp-controller="Contacts" asp-action="Categories" asp-route-area="User">@localizer["Categories"]</a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content mailbox-content">
+                    <div>
+                        <div id="tree"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    @{
+                        if (Model.Contacts != null && Model.Contacts.Any())
+                        {
+                            @Html.Raw("<div id='contactsTab-1' class='contactsTabPannel'>")
+                            @Html.Raw($"<div class='table-responsive'><table class='table table-striped' data-page-length='100' width='100%'><thead><tr><th class='span1'></th><th>{Html.Encode(commonLocalizer["Name"].Value)}</th><th>{Html.Encode(commonLocalizer["Type"].Value)}</th><th>{Html.Encode(commonLocalizer["Category"].Value)}</th>{callsHeader}<th>{Html.Encode(localizer["LastUpdated"].Value)}</th><th data-searchable='false' data-orderable='false'></th></tr></thead><tbody id='contactsCategory_0'>")
+
+                            foreach (var c in Model.Contacts)
+                            {
+
+                                ContactsTableButtonTemplate(c);
+
+                                @Html.Raw("</td>")
+                                @Html.Raw("</tr>")
+
+                            }
+                            @Html.Raw("</tbody></table></div></div>")
+                        }
+                        else
+                        {
+                            @Html.Raw($"<div style='text-align:center;'><h3>{Html.Encode(localizer["NoContactsInDepartment"].Value)}</h3></div>")
+                        }
+                    }
+
+                    @{
+                        if (Model.ContactCategories != null && Model.ContactCategories.Any())
+                        {
+                            for (var i = 0; i < Model.ContactCategories.Count; i++)
+                            {
+                                var categoryContacts = (Model.Contacts ?? new List<Contact>()).Where(x => x.ContactCategoryId == Model.ContactCategories[i].ContactCategoryId).ToList();
+
+                                if (categoryContacts != null && categoryContacts.Any())
+                                {
+                                    @Html.Raw("<div id='contactsTab" + Model.ContactCategories[i].ContactCategoryId + "' class='contactsTabPannel' style='display: none;'>")
+
+                                    @Html.Raw($"<div class='table-responsive'><table class='table table-striped' data-page-length='100' width='100%'><thead><tr><th class='span1'></th><th>{Html.Encode(commonLocalizer["Name"].Value)}</th><th>{Html.Encode(commonLocalizer["Type"].Value)}</th><th>{Html.Encode(commonLocalizer["Category"].Value)}</th>{callsHeader}<th>{Html.Encode(localizer["LastUpdated"].Value)}</th><th data-searchable='false' data-orderable='false'></th></tr></thead><tbody id='contactsCategory_{Model.ContactCategories[i].ContactCategoryId}'>")
+
+
+                                    foreach (var c in categoryContacts)
+                                    {
+                                        ContactsTableButtonTemplate(c);
+
+                                        @Html.Raw("</td>")
+                                        @Html.Raw("</tr>")
+                                    }
+
+                                    @Html.Raw("</tbody></table></div></div>")
+                                }
+                                else
+                                {
+                                    @Html.Raw("<div id='contactsTab" + Model.ContactCategories[i].ContactCategoryId + "' class='contactsTabPannel' style='display: none;'>")
+                                    @Html.Raw($"<div style='text-align:center;'><h3>{Html.Encode(localizer["NoContactsInThisCategory"].Value)}</h3></div>")
+                                    @Html.Raw("</div>")
+                                }
+                            }
+                        }
+
+                        // "No Category Contacts" tree node (TreeGroup_0): contacts with no category, or whose
+                        // category has since been deleted.
+                        var categoryIds = new HashSet<string>((Model.ContactCategories ?? new List<ContactCategory>()).Select(x => x.ContactCategoryId));
+                        var uncategorizedContacts = (Model.Contacts ?? new List<Contact>()).Where(x => string.IsNullOrWhiteSpace(x.ContactCategoryId) || !categoryIds.Contains(x.ContactCategoryId)).ToList();
+
+                        if (uncategorizedContacts.Any())
+                        {
+                            @Html.Raw("<div id='contactsTab0' class='contactsTabPannel' style='display: none;'>")
+                            @Html.Raw($"<div class='table-responsive'><table class='table table-striped' data-page-length='100' width='100%'><thead><tr><th class='span1'></th><th>{Html.Encode(commonLocalizer["Name"].Value)}</th><th>{Html.Encode(commonLocalizer["Type"].Value)}</th><th>{Html.Encode(commonLocalizer["Category"].Value)}</th>{callsHeader}<th>{Html.Encode(localizer["LastUpdated"].Value)}</th><th data-searchable='false' data-orderable='false'></th></tr></thead><tbody id='contactsCategory_none'>")
+
+                            foreach (var c in uncategorizedContacts)
+                            {
+                                ContactsTableButtonTemplate(c);
+
+                                @Html.Raw("</td>")
+                                @Html.Raw("</tr>")
+                            }
+
+                            @Html.Raw("</tbody></table></div></div>")
+                        }
+                        else
+                        {
+                            @Html.Raw("<div id='contactsTab0' class='contactsTabPannel' style='display: none;'>")
+                            @Html.Raw($"<div style='text-align:center;'><h3>{Html.Encode(localizer["NoContactsInThisCategory"].Value)}</h3></div>")
+                            @Html.Raw("</div>")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ClaimsAuthorizationHelper.CanDeleteContacts())
+{
+    <form id="deleteContactForm" method="post" asp-controller="Contacts" asp-action="Delete" asp-route-area="User" asp-antiforgery="true" class="hidden">
+        <input type="hidden" name="contactId" value="" />
+    </form>
+}
+
+@{
+    void ContactsTableButtonTemplate(Contact c)
+    {
+        // Razor does not encode text built inside Html.Raw: every contact field and label below goes through
+        // Html.Encode, which also escapes apostrophes for the single-quoted attributes.
+        string timestamp;
+        if (c.EditedOn.HasValue)
+        {
+            timestamp = c.EditedOn.Value.TimeConverter(Model.Department).FormatForDepartment(Model.Department);
+        }
+        else
+        {
+            timestamp = c.AddedOn.TimeConverter(Model.Department).FormatForDepartment(Model.Department);
+        }
+
+        var reviewBadge = Model.PreplanReviewOverdueContactIds != null && Model.PreplanReviewOverdueContactIds.Contains(c.ContactId)
+            ? " <span class='badge badge-warning' title='" + Html.Encode(localizer["PreplanReviewOverdue"].Value) + "'>" + Html.Encode(localizer["PreplanReviewDue"].Value) + "</span>"
+            : "";
+        var callsCell = "";
+        if (Model.CallCounts != null)
+        {
+            var callCount = Model.CallCounts.TryGetValue(c.ContactId, out var linkedCalls) ? linkedCalls : 0;
+            callsCell = "<td data-order='" + callCount + "'>" + (callCount > 0 ? "<span class='badge badge-info'>" + callCount + "</span>" : "<span class='text-muted'>0</span>") + "</td>";
+        }
+        @Html.Raw("<tr><td></td><td>" + Html.Encode(c.GetName()) + reviewBadge + "</td><td>" + Html.Encode(c.GetTypeName()) + "</td><td>" + Html.Encode(c.GetCategoryName()) + "</td>" + callsCell + "<td>" + Html.Encode(timestamp) + "</td>")
+
+        @Html.Raw("<td>")
+
+        @if (ClaimsAuthorizationHelper.CanViewContacts())
+        {
+            @Html.Raw($"<a type='button' href='{@Url.Action("View", "Contacts", new { area = "User" })}?contactId={c.ContactId}' class='btn btn-xs btn-primary'>{Html.Encode(localizer["ViewContact"].Value)}</a>&nbsp;")
+        }
+        @if (ClaimsAuthorizationHelper.CanEditContacts())
+        {
+            @Html.Raw($"<a type='button' href='{@Url.Action("Edit", "Contacts", new { area = "User" })}?contactId={c.ContactId}' class='btn btn-xs btn-warning'>{Html.Encode(commonLocalizer["Edit"].Value)}</a>&nbsp;")
+            ;
+        }
+        @if (ClaimsAuthorizationHelper.CanDeleteContacts())
+        {
+            // Delete is POST + antiforgery: the button posts #deleteContactForm and stays disabled until the page script binds it.
+            @Html.Raw($"<button type='button' class='btn btn-xs btn-danger contact-delete' data-contact-id='{Html.Encode(c.ContactId)}' data-delete-confirm='{Html.Encode(localizer["DeleteUnitWarning"].Value)} {Html.Encode(c.GetName())}?' disabled>{Html.Encode(commonLocalizer["Delete"].Value)}</button>")
+            ;
+        }
+    }
+}
+
+@section Scripts
+{
+    <script>
+        var treeData = @Html.Raw(@Model.TreeData);
+    </script>
+
+    <script src="~/js/app/internal/contacts/resgrid.contacts.index.js" asp-append-version="true" type="text/javascript"></script>
+}

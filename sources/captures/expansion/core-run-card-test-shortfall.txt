@@ -1,0 +1,392 @@
+Wallace Boden
+ Home
+ Calls
+ Personnel
+ Units
+ Contacts
+ Mapping
+ Shifts
+Records
+ Reports
+ Documents
+ Calendar
+ Notes
+ Trainings
+ Inventory
+Readiness
+Workforce & Business Ops
+0
+ 
+3
+Firehouse 51 — Training Department 
+ 
+Help 
+ 
+ 
+Academy Training Alarm
+Home Run Cards Academy Training Alarm
+General
+Triggers
+Alarm Levels
+Dispatchable Statuses
+Test / Simulate
+
+Preview what this department's run cards would dispatch for a priority, type and location right now — nothing is dispatched.
+
+Call Priority
+Routine
+Urgent
+Emergency
+Call Type
+Structure Fire
+Medical
+Rescue
+Investigation
+Latitude / Longitude
+   Run Test
+Academy Training Alarm Alarm level 1
+Outcome: Engine available (Academy Initial Response)
+ Send the initial response after review.
+Engine within eight minutes: Yes Engine 51 0:05 / 8:00 (estimated)
+Ideal configuration not available
+Engine: short 0/1
+Unit	Row	Response	Status
+Engine 51 Engine	Engine	0:05	Available
+Personnel: Christopher Herrmann (Officer), Stella Kidd (Officer)
+Shortfalls: Engine 0/1
+Condition 'Engine within eight minutes': Yes (Engine 51 0:05 limit 8:00, estimated)
+Outcome: Engine available. Advice: Send the initial response after review.
+The ideal configuration was not available; see the fallbacks taken.
+Show raw result
+{
+  "MatchedRunCardId": 1,
+  "MatchedRunCardName": "Academy Training Alarm",
+  "AlarmLevel": 1,
+  "ModeUsed": 2,
+  "AutoDispatch": false,
+  "Units": [
+    {
+      "UnitId": 51001,
+      "UnitName": "Engine 51",
+      "UnitTypeId": 51001,
+      "UnitTypeName": "Engine",
+      "StationGroupId": 51001,
+      "StationGroupName": "Firehouse 51",
+      "SelectionReason": 3,
+      "CascadeDepth": 0,
+      "DistanceMeters": 45.24209924564031,
+      "EtaSeconds": null,
+      "PositionSource": 2,
+      "TurnoutSeconds": 0,
+      "ResponseSeconds": 5,
+      "LocationTimestamp": null,
+      "LocationIsStale": false,
+      "CurrentStatusText": "Available",
+      "CurrentStatusColor": "#d1dade",
+      "CurrentStatusTextColor": "#5E5E5E",
+      "StaffingLevel": null,
+      "SatisfiesRequirementId": 1,
+      "RequirementScope": 0,
+      "RowLabel": "Engine",
+      "ResponseCodeId": null,
+      "ResponseCode": null,
+      "ResponseCodeName": null,
+      "ResponseCodeColor": null
+    }
+  ],
+  "Personnel": [
+    {
+      "UserId": "5F3B6868-1B66-55DD-BE56-5E6C1C6EA7D6",
+      "Name": "Christopher Herrmann",
+      "RoleId": 51002,
+      "RoleName": "Officer",
+      "StationGroupId": 51003,
+      "StationGroupName": "Engine 51",
+      "SelectionReason": 3,
+      "CascadeDepth": 0,
+      "DistanceMeters": 45.24209924564031,
+      "EtaSeconds": null,
+      "LocationTimestamp": "2026-10-25T18:19:29",
+      "LocationIsStale": false,
+      "CurrentStatusText": "StandingBy",
+      "SatisfiesRequirementId": 1,
+      "RequirementScope": 0,
+      "ResponseSeconds": 5,
+      "RowLabel": "Officer",
+      "ResponseCodeId": null,
+      "ResponseCode": null,
+      "ResponseCodeName": null,
+      "ResponseCodeColor": null
+    },
+    {
+      "UserId": "B8963903-9870-527F-8E7C-C6B3FF02CDFF",
+      "Name": "Stella Kidd",
+      "RoleId": 51002,
+      "RoleName": "Officer",
+      "StationGroupId": 51004,
+      "StationGroupName": "Truck 81",
+      "SelectionReason": 3,
+      "CascadeDepth": 0,
+      "DistanceMeters": 45.24209924564031,
+      "EtaSeconds": null,
+      "LocationTimestamp": "2026-10-25T18:19:29",
+      "LocationIsStale": false,
+      "CurrentStatusText": "StandingBy",
+      "SatisfiesRequirementId": 2,
+      "RequirementScope": 1,
+      "ResponseSeconds": 5,
+      "RowLabel": "Incident officer",
+      "ResponseCodeId": null,
+      "ResponseCode": null,
+      "ResponseCodeName": null,
+      "ResponseCodeColor": null
+    }
+  ],
+  "Shortfalls": [
+    {
+      "IsUnitRequirement": true,
+      "RequirementId": 1,
+      "TypeOrRoleId": 51001,
+      "TypeOrRoleName": "Engine",
+      "AlarmLevel": 1,
+      "RequiredCount": 1,
+      "FilledCount": 0,
+      "Reason": 1,
+      "RequirementScope": 1,
+      "Outstanding": false
+    }
+  ],
+  "MoveUps": [],
+  "Notes": [
+    "Condition 'Engine within eight minutes': Yes (Engine 51 0:05 limit 8:00, estimated)",
+    "Outcome: Engine available. Advice: Send the initial response after review.",
+    "The ideal configuration was not available; see the fallbacks taken."
+  ],
+  "Decision": {
+    "LevelHasGraph": true,
+    "Pinned": false,
+    "FromPreview": false,
+    "PinnedOn": null,
+    "PinSource": null,
+    "Uncertain": false,
+    "IdealConfigurationUnavailable": true,
+    "Outcome": 0,
+    "OutcomeNodeKey": "nmvo744342",
+    "OutcomeLabel": "Engine available",
+    "PackageId": 1,
+    "PackageName": "Academy Initial Response",
+    "AdviceText": "Send the initial response after review.",
+    "Path": [
+      {
+        "NodeKey": "nmvo743vq1",
+        "Label": "Engine within eight minutes",
+        "ConditionType": 2,
+        "Result": 1,
+        "Uncertain": false,
+        "Subject": {
+          "TargetsLabel": "Engine",
+          "StatusFilter": 0,
+          "IsPerson": false,
+          "ResourceId": "51001",
+          "ResourceName": "Engine 51",
+          "ResponseSeconds": 5,
+          "TimeSource": 0,
+          "PositionSource": 2,
+          "Stale": false,
+          "CandidateCount": 1
+        },
+        "Reference": null,
+        "ThresholdSeconds": 480,
+        "RequiredCount": 1,
+        "MarginSeconds": 475,
+        "TimeSource": 0,
+        "Note": null
+      }
+    ],
+    "Fallbacks": [
+      {
+        "RowLabel": "Engine",
+        "RequirementScope": 1,
+        "RequirementId": 1,
+        "SentInstead": null,
+        "Step": 3,
+        "SubstitutePackageName": null,
+        "Outstanding": false,
+        "RequiredCount": 1,
+        "FilledCount": 0
+      }
+    ],
+    "FirstArriving": [],
+    "ResolvedRows": [
+      {
+        "Scope": 0,
+        "RequirementId": 1,
+        "ResponsePackageId": null,
+        "Label": "Engine",
+        "FillMode": 1,
+        "RequiredCount": 1,
+        "StatusFilter": 0,
+        "StatusBaseTypes": null,
+        "ResponseCodeId": null,
+        "SubstitutePackageId": null,
+        "KeepOutstanding": false,
+        "SortOrder": 0,
+        "Targets": [
+          {
+            "RunCardTargetId": 0,
+            "DepartmentId": 0,
+            "OwnerKind": 0,
+            "OwnerId": 0,
+            "TargetKind": 1,
+            "TargetRefId": 51001,
+            "IsUnitTarget": true,
+            "IsPersonTarget": false,
+            "IdValue": 0,
+            "TableName": "RunCardTargets",
+            "IdName": "RunCardTargetId",
+            "IdType": 0,
+            "IgnoredProperties": [
+              "IdValue",
+              "IdType",
+              "TableName",
+              "IdName",
+              "IsUnitTarget",
+              "IsPersonTarget"
+            ]
+          }
+        ],
+        "SubstituteRows": [],
+        "SubstitutePackageName": null
+      },
+      {
+        "Scope": 0,
+        "RequirementId": 1,
+        "ResponsePackageId": null,
+        "Label": "Officer",
+        "FillMode": 1,
+        "RequiredCount": 1,
+        "StatusFilter": 0,
+        "StatusBaseTypes": null,
+        "ResponseCodeId": null,
+        "SubstitutePackageId": null,
+        "KeepOutstanding": false,
+        "SortOrder": 1,
+        "Targets": [
+          {
+            "RunCardTargetId": 0,
+            "DepartmentId": 0,
+            "OwnerKind": 0,
+            "OwnerId": 0,
+            "TargetKind": 4,
+            "TargetRefId": 51002,
+            "IsUnitTarget": false,
+            "IsPersonTarget": true,
+            "IdValue": 0,
+            "TableName": "RunCardTargets",
+            "IdName": "RunCardTargetId",
+            "IdType": 0,
+            "IgnoredProperties": [
+              "IdValue",
+              "IdType",
+              "TableName",
+              "IdName",
+              "IsUnitTarget",
+              "IsPersonTarget"
+            ]
+          }
+        ],
+        "SubstituteRows": [],
+        "SubstitutePackageName": null
+      },
+      {
+        "Scope": 1,
+        "RequirementId": 1,
+        "ResponsePackageId": 1,
+        "Label": "Engine",
+        "FillMode": 1,
+        "RequiredCount": 1,
+        "StatusFilter": 0,
+        "StatusBaseTypes": "",
+        "ResponseCodeId": null,
+        "SubstitutePackageId": null,
+        "KeepOutstanding": false,
+        "SortOrder": 2,
+        "Targets": [
+          {
+            "RunCardTargetId": 1,
+            "DepartmentId": 51,
+            "OwnerKind": 1,
+            "OwnerId": 1,
+            "TargetKind": 1,
+            "TargetRefId": 51001,
+            "IsUnitTarget": true,
+            "IsPersonTarget": false,
+            "IdValue": 1,
+            "TableName": "RunCardTargets",
+            "IdName": "RunCardTargetId",
+            "IdType": 0,
+            "IgnoredProperties": [
+              "IdValue",
+              "IdType",
+              "TableName",
+              "IdName",
+              "IsUnitTarget",
+              "IsPersonTarget"
+            ]
+          }
+        ],
+        "SubstituteRows": [],
+        "SubstitutePackageName": null
+      },
+      {
+        "Scope": 1,
+        "RequirementId": 2,
+        "ResponsePackageId": 1,
+        "Label": "Incident officer",
+        "FillMode": 1,
+        "RequiredCount": 1,
+        "StatusFilter": 0,
+        "StatusBaseTypes": "",
+        "ResponseCodeId": null,
+        "SubstitutePackageId": null,
+        "KeepOutstanding": false,
+        "SortOrder": 3,
+        "Targets": [
+          {
+            "RunCardTargetId": 2,
+            "DepartmentId": 51,
+            "OwnerKind": 1,
+            "OwnerId": 2,
+            "TargetKind": 4,
+            "TargetRefId": 51002,
+            "IsUnitTarget": false,
+            "IsPersonTarget": true,
+            "IdValue": 2,
+            "TableName": "RunCardTargets",
+            "IdName": "RunCardTargetId",
+            "IdType": 0,
+            "IgnoredProperties": [
+              "IdValue",
+              "IdType",
+              "TableName",
+              "IdName",
+              "IsUnitTarget",
+              "IsPersonTarget"
+            ]
+          }
+        ],
+        "SubstituteRows": [],
+        "SubstitutePackageName": null
+      }
+    ]
+  },
+  "HasRecommendations": true,
+  "HasShortfalls": true
+}
+Cancel Save
+✨
+Assistant
+ 
+💬
+Chat
+Copyright Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

@@ -1,0 +1,107 @@
+01 catalog | raw001–004 | 0.000–16.479 | 001-reporting-catalog-top
+Labels: Reporting | Staffing Report | View Report
+Reports brings several questions together: who is currently staffed, what happened on calls, and which timestamps have been recorded. In our fictional Chicago Fire department, begin with the Reporting catalog. Find Staffing Report and use its View Report button.
+
+02 catalog | raw005–009 | 16.479–32.399 | 002-staffing-summary-chart
+Labels: Resgrid Staffing Report | Count | Truck 81 | Available | Unavailable | OnShift
+The report groups people by their latest recorded staffing level and provides a count and chart. Truck 81 has people in Available, Unavailable and On Shift categories. This is a staffing summary; it does not establish who physically attended an incident.
+
+03 staffing-details | raw010–014 | 32.399–51.399 | 006-staffing-detail-headers-and-members
+Labels: Name | Group | Roles | Staffing | Staffing Timestamp | Next Change | Next Staffing | Note | Wallace Boden
+Below the summary, read Name, Group, Roles, Staffing and Staffing Timestamp together. Next Change and Next Staffing describe a scheduled change when one exists. A blank cell supplies no future staffing commitment. Wallace Boden’s row also carries an explicit training note.
+
+04 staffing-details | raw015–018 | 51.399–66.640 | 003-staffing-member-details
+Labels: Matthew Casey | Truck 81 | Officer, TRAINING ONLY - Community response navigator | On Shift
+Farther down, Matthew Casey’s row shows Truck 81, Officer and the training Community Response Navigator role, with On Shift staffing. The report reads existing personnel information; running it does not edit those memberships or statuses.
+
+05 week-parameters | raw019–026 | 66.640–94.560 | 007-call-summary-date-picker-confirmed
+Labels: Call Summary Report | Report Start Time | Report End Time | Group | All Groups | Run Report
+On the Call Summary Report parameter page, check Report Start Time, Report End Time and Group before using Run Report. This example starts October twenty-fifth, twenty twenty-six, at midnight and ends October twenty-ninth at twenty-three thirty. All Groups is selected. These are department-local report boundaries. Read the complete values before running: a different start, end or group changes the population being summarized.
+
+06 week-result | raw027–031 | 94.560–111.859 | 008-call-summary-actual-period-totals
+Labels: Call Summary Report | Total Calls | Open | Unit Responses | Personnel Responses
+The resulting header repeats the selected period. This captured run contains fifteen calls, with four open, nine unit responses and four personnel responses. Response totals accumulate across calls; they are not a count of unique department members or vehicles.
+
+07 week-result | raw032–036 | 111.859–128.370 | 009-call-summary-types-states
+Labels: Call Types | Investigation | Structure Fire | Rescue | Medical | Call States | Closed | Active | Total
+The tables provide a useful cross-check. Investigation, Structure Fire, Rescue and Medical counts total fifteen. Call States separates eleven Closed from four Active. Read the table labels and denominators before comparing percentages with another report.
+
+08 attribution | raw037–045 | 128.370–160.210 | 010-call-summary-group-attribution
+Labels: Calls by Group | Each call counts once | Group | Count | Firehouse 51 | Command
+Calls by Group explains why a call belongs to a reporting group. Each call counts once. A containing group geofence is used first; otherwise the report uses the group associated with most dispatched resources. Some calls can remain unassigned. This is different from simply listing the current viewer’s group. Here, Firehouse 51 has seven calls and Command has five. Use the explanation when investigating a surprising group total instead of changing memberships to make a report match expectations.
+
+09 call-rows | raw046–049 | 160.210–177.020 | 011-call-summary-detail-columns-and-original-calls
+Labels: Calls | Number | Name | Type | Group | Logged On | Closed On | Call Length | OnScene Time | DEMO-0001 | DEMO-0002 | DEMO-0003 | Open | N/A
+The Calls table lets you inspect the rows behind the summary. Read Number, Name, Type, Group, Logged On, Closed On and the duration columns. The original three DEMO calls are still Open in this result, and their OnScene Time is N/A.
+
+10 call-rows | raw050–053 | 177.020–194.470 | 012-call-summary-lower-exercise-rows
+Labels: FD51-2026-0008 | TRAINING ONLY - Native Unit response and deselection | Open | N/A
+The lower rows include the native Unit response and deselection exercise, number ending zero zero zero eight, also Open at this report’s generation. N/A is missing usable timing information, not a zero-minute arrival. Preserve that distinction when explaining averages.
+
+11 unit-parameters | raw054–060 | 194.470–221.190 | 014-unit-times-valid-period-before-run
+Labels: Call Unit Times | Report Start Time | Report End Time | Run Report
+Call Unit Times answers a more specific question: which dispatch and status timestamps exist for each unit on each call? Its parameter form has start and end times and Run Report. Here the range starts October twenty-fourth at twenty-three thirty and ends October twenty-ninth at twenty-three thirty. That begins thirty minutes earlier than our first Call Summary. Keep those periods distinct when reconciling the results.
+
+12 unit-evidence | raw061–064 | 221.190–237.460 | 015-unit-times-dispatch-only-and-empty-status-times
+Labels: Call Unit Times | Dispatched | En Route | On Scene | Staging | Cleared | Linked By | Dispatch only
+The generated report has Dispatched, En Route, On Scene, Staging, Cleared and Linked By columns. The original DEMO rows say Dispatch only and leave later status times blank. A dispatch entry alone does not establish an arrival.
+
+13 unit-evidence | raw065–067 | 237.460–249.150 | 016-unit-times-recorded-status-source
+Labels: FD51-2026-0003 | Dispatched | En Route | On Scene | Cleared | Linked By | Unit status
+Other exercise rows say Unit status. Read the recorded timestamps as they stand; some are incomplete or out of order, so review the underlying history before calculating a duration.
+
+14 unit-evidence | raw068–071 | 249.150–265.149 | 017-unit-times-recent-call-and-no-unit-states
+Labels: FD51-2026-0008 | Ambulance 61 | Unit status | No unit was dispatched to this call or reported a status on it.
+Some calls explicitly report no unit dispatch or status data. The native exercise shows Ambulance 61 with dispatch and en-route times, while its later cells remain blank. These are software records, not independent physical-arrival verification.
+
+15 csv | raw072–079 | 265.149–297.280 | 015-unit-times-dispatch-only-and-empty-status-times
+Labels: Call Unit Times | Download CSV | Linked By | Dispatch only | Unit status
+Use Download CSV on this report to obtain its unit rows for the same parameters. The downloaded file includes call and unit identifiers, timestamps and Linked By. This exercise export contains thirteen unit rows for twelve distinct calls: a call with two units creates two rows, while a call with no unit rows contributes none. The file uses DispatchOnly and Explicit codes where the screen says Dispatch only and Unit status. Keep blank times blank, and retain the report period with your file.
+
+16 command-scope | raw080–083 | 297.280–312.059 | 018-call-summary-command-default-window-prepared
+Labels: Call Summary Report | Report Start Time | Report End Time | Group | Command | Run Report
+For a separate comparison, the parameters now show the default period spanning late December twenty twenty-five to late December twenty twenty-six. This is not the earlier October week. Select Command in Group and use Run Report.
+
+17 command-scope | raw084–085 | 312.059–319.030 | 019-command-report-scope-and-totals
+Labels: Group: Command (including the groups beneath it) | Total Calls | Open
+The result explicitly says Command, including the groups beneath it. It contains five calls and none open.
+
+18 command-scope | raw086–088 | 319.030–329.979 | 023-command-scoped-five-call-rows
+Labels: Calls | Number | Group | Command | FD51-2026-0007
+Its detail table shows those five exercise rows with Command dispatch attribution. A group filter narrows the report; it does not move resources, reassign calls or close them.
+
+19 period-tables | raw089–092 | 329.979–343.350 | 020-yearly-statistics-partial-period
+Labels: Yearly Statistics | 2025* | 2026 | Partial period: the report range covers only part of it.
+The longer period also produces Yearly Statistics. An asterisk marks a partial period; the note explains that the report covers only part of it. Do not describe that row as a complete calendar year.
+
+20 period-tables | raw093–094 | 343.350–350.600 | 021-quarterly-statistics-ytd
+Labels: Quarterly Statistics | Calls | YTD | Q4 2026
+Quarterly Statistics adds YTD, the cumulative call count within the report’s included periods for that year.
+
+21 period-tables | raw095–095 | 350.600–354.989 | 022-monthly-statistics
+Labels: Monthly Statistics | Period | Calls | YTD
+Monthly Statistics uses the same Calls and YTD distinction.
+
+22 period-tables | raw096–099 | 354.989–367.810 | 024-monthly-lower-rows-and-partial-period-note
+Labels: Oct 2026 | Nov 2026 | Dec 2026
+October contains five calls. November and December show zero calls while YTD remains five. These are results from available records in the chosen range, not forecasts of future activity.
+
+23 matched-comparison | raw100–101 | 367.810–376.780 | 025-default-window-all-groups-prepared
+Labels: Call Summary Report | Report Start Time | Report End Time | Group | All Groups | Run Report
+Return to parameters for the same default period and choose All Groups. Keep both time boundaries unchanged, then Run Report.
+
+24 matched-comparison | raw102–106 | 376.780–395.810 | 027-default-window-all-groups-sixteen-calls
+Labels: Call Summary Report | Total Calls | Open | Call States | Closed | Active | Total
+This result contains sixteen calls: four open and twelve closed. That can be compared with the five-call Command result because the periods match. It should not be treated as a new duplicate merely because the earlier October week contained fifteen. Establish the window and scope before interpreting a change in totals.
+
+25 sector-practice | raw107–110 | 395.810–409.510 | 010-call-summary-group-attribution
+Labels: Calls by Group | Group | Count
+Chicago Fire can review station call distribution; community care and mental-health teams can review operational workload without putting client histories into report notes. Search-and-rescue teams can compare mission-period groups.
+
+26 sector-practice | raw111–112 | 409.510–417.610 | 006-staffing-detail-headers-and-members
+Labels: Name | Group | Staffing | Staffing Timestamp
+Security teams can inspect recorded staffing before a patrol review, while wildland coordinators can compare seasonal reporting windows.
+
+27 sector-practice | raw113–115 | 417.610–432.170 | 015-unit-times-dispatch-only-and-empty-status-times
+Labels: Call Unit Times | Dispatched | En Route | On Scene | Linked By
+Industrial teams can examine unit status chronology during a software exercise. In each setting, choose the question, fix the period and scope, inspect the detail rows, and explain missing data before sharing an authorized result.

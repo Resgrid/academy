@@ -1,0 +1,132 @@
+﻿@using Resgrid.Web.Helpers
+@model Resgrid.Web.Areas.User.Models.Personnel.PersonnelRolesModel
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Certifications.Certifications> certificationLocalizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Personnel.Person> localizer
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Icons.IconUpload> iconLocalizer
+@{
+    ViewBag.Title = "Resgrid | " + @localizer["RolesHeader"];
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["RolesHeader"]</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li>
+                <a asp-controller="Personnel" asp-action="Index" asp-route-area="User">@commonLocalizer["PersonnelModule"]</a>
+            </li>
+            <li class="active">
+                <strong>@localizer["RolesHeader"]</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins" id="personnelContainer">
+                <div class="ibox-title">
+                    <h5>@localizer["RolesHeader"]</h5>
+                    <div class="ibox-tools">
+                        @if (Model.CanAddNewRole)
+                        {
+                            <div class="buttons-actions">
+                                <a title="@localizer["AddRoleHeader"]" class="btn btn-success" asp-controller="Personnel" asp-action="AddRole" asp-route-area="User">@localizer["AddRoleHeader"]</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @{ var canOrder = Model.CanOrderRoles && Model.Roles.Count > 1; }
+                    @if (TempData["RoleOrderSaved"] is string)
+                    {
+                        <div class="alert alert-success">@iconLocalizer["RoleOrderSaved"]</div>
+                    }
+                    @if (canOrder)
+                    {
+                        <p class="text-muted"><strong>@iconLocalizer["RoleOrderHeading"]:</strong> @iconLocalizer["RoleOrderHelp"]</p>
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="rolesTable">
+                            <thead>
+                                <tr>
+                                    @if (canOrder)
+                                    {
+                                        <th style="width: 120px;">@iconLocalizer["RoleOrderColumn"]</th>
+                                    }
+                                    <th style="width: 48px;">@iconLocalizer["IconColumn"]</th>
+                                    <th>
+                                        @commonLocalizer["Name"]
+                                    </th>
+                                    <th>
+                                        @commonLocalizer["Description"]
+                                    </th>
+                                    <th>
+                                        @localizer["UsersInRole"]
+                                    </th>
+                                    <th class='span1'>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var u in Model.Roles)
+                                {
+                                    <tr data-role-id="@u.PersonnelRoleId" draggable="@(canOrder ? "true" : "false")">
+                                        @if (canOrder)
+                                        {
+                                            <td style="white-space: nowrap;">
+                                                <span class="rg-role-order__handle" title="@iconLocalizer["RoleOrderHeading"]" aria-hidden="true"><i class="fa fa-bars"></i></span>
+                                                <span class="rg-role-order__position" data-role-position="true"></span>
+                                                <button type="button" class="btn btn-xs btn-default" data-role-move="up" title="@iconLocalizer["RoleOrderMoveUp"]" aria-label="@iconLocalizer["RoleOrderMoveUp"]: @u.Name"><i class="fa fa-arrow-up"></i></button>
+                                                <button type="button" class="btn btn-xs btn-default" data-role-move="down" title="@iconLocalizer["RoleOrderMoveDown"]" aria-label="@iconLocalizer["RoleOrderMoveDown"]: @u.Name"><i class="fa fa-arrow-down"></i></button>
+                                            </td>
+                                        }
+                                        <td>
+                                            @TypeIconHtml.Image(u, 24)
+                                        </td>
+                                        <td>
+                                            @u.Name
+                                        </td>
+                                        <td>
+                                            @u.Description
+                                        </td>
+                                        <td>
+                                            @u.Users.Count
+                                        </td>
+                                        <td>
+                                            <a style="text-decoration:none;" class="btn btn-xs btn-info" asp-controller="Personnel" asp-action="ViewRole" asp-route-area="User" asp-route-roleId="@u.PersonnelRoleId">@commonLocalizer["View"]</a>
+                                            @if (ClaimsAuthorizationHelper.IsUserDepartmentAdmin())
+                                            {
+                                                <a style="text-decoration:none;" class="btn btn-xs btn-primary" asp-controller="Personnel" asp-action="EditRole" asp-route-area="User" asp-route-roleId="@u.PersonnelRoleId">@commonLocalizer["Edit"]</a>
+                                                <a style="text-decoration:none;" class="btn btn-xs btn-primary" asp-controller="Certifications" asp-action="RoleRequirements" asp-route-area="User" asp-route-roleId="@u.PersonnelRoleId">@certificationLocalizer["RequiredCertifications"]</a>
+                                                <form style="display:inline;" asp-controller="Personnel" asp-action="DeleteRole" asp-route-area="User" asp-route-roleId="@u.PersonnelRoleId" method="post">
+                                                    <button type="submit" style="text-decoration:none;" class="btn btn-xs btn-danger" data-confirm="@localizer["RoleDeleteWarning"] @u.Name?">@commonLocalizer["Delete"]</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @if (canOrder)
+                    {
+                        <form id="roleOrderForm" asp-controller="Personnel" asp-action="SetRoleOrder" asp-route-area="User" method="post">
+                            @Html.AntiForgeryToken()
+                            <span class="text-warning" id="roleOrderUnsaved" hidden>@iconLocalizer["RoleOrderUnsaved"]</span>
+                            <button type="submit" class="btn btn-primary" id="roleOrderSave">@iconLocalizer["RoleOrderSave"]</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script src="~/js/app/internal/personnel/resgrid.personnel.roleorder.js" asp-append-version="true"></script>
+}

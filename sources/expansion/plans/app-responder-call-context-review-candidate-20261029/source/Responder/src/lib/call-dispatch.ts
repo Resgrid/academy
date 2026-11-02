@@ -1,0 +1,152 @@
+import { type CallExtraDataResultData } from '@/models/v4/calls/callExtraDataResultData';
+import { type DispatchedEventResultData } from '@/models/v4/calls/dispatchedEventResultData';
+import { type PersonnelInfoResultData } from '@/models/v4/personnel/personnelInfoResultData';
+import { type UnitRoleResultData } from '@/models/v4/unitRoles/unitRoleResultData';
+
+export interface CallAssignmentContext {
+  userId: string | null;
+  groupId: string | null;
+  roleIds: string[];
+  roleNames: string[];
+  /** Units the user currently holds an active seat (unit role) on. */
+  unitIds: string[];
+}
+
+export interface DispatchTypeStyle {
+  backgroundColor: string;
+  textColor: string;
+  label: string;
+}
+
+const normalizeValue = (value: unknown): string => {
+  if (typeof value === 'string') {
+    return value.trim().toLowerCase();
+  }
+
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  return String(value).trim().toLowerCase();
+};
+
+const uniqueValues = (values: unknown[]): string[] => {
+  return [...new Set(values.map((value) => String(value ?? '').trim()).filter((value) => value.length > 0))];
+};
+
+export const buildCallAssignmentContext = (currentUser: PersonnelInfoResultData | null, roles: UnitRoleResultData[]): CallAssignmentContext => {
+  const normalizedRoleNames = new Set((currentUser?.Roles ?? []).map((roleName) => normalizeValue(roleName)).filter((roleName) => roleName.length > 0));
+
+  const roleIds = roles
+    .filter((role) => normalizedRoleNames.has(normalizeValue(role.Name)))
+    .map((role) => role.UnitRoleId)
+    .filter((roleId) => roleId.length > 0);
+
+  // `roles` comes from GetAllUnitRolesAndAssignmentsForDepartment, where UserId is whoever is
+  // currently riding in that seat. A unit dispatch does not add its crew to the dispatch list,
+  // so these units are how the user is "on" a call they were sent to as part of an apparatus.
+  const normalizedUserId = normalizeValue(currentUser?.UserId);
+  const unitIds = normalizedUserId.length > 0 ? roles.filter((role) => normalizeValue(role.UserId) === normalizedUserId).map((role) => role.UnitId) : [];
+
+  return {
+    userId: currentUser?.UserId ?? null,
+    groupId: currentUser?.GroupId ?? null,
+    roleIds: uniqueValues(roleIds),
+    roleNames: uniqueValues(currentUser?.Roles ?? []),
+    unitIds: uniqueValues(unitIds),
+  };
+};
+
+export const getDispatchTypeStyle = (type: string): DispatchTypeStyle => {
+  const normalizedType = normalizeValue(type);
+
+  if (normalizedType.includes('user') || normalizedType.includes('personnel')) {
+    return { backgroundColor: '#2563EB', textColor: '#FFFFFF', label: 'P' };
+  }
+
+  if (normalizedType.includes('unit')) {
+    return { backgroundColor: '#D97706', textColor: '#FFFFFF', label: 'U' };
+  }
+
+  if (normalizedType.includes('group') || normalizedType.includes('station')) {
+    return { backgroundColor: '#059669', textColor: '#FFFFFF', label: 'G' };
+  }
+
+  if (normalizedType.includes('role')) {
+    return { backgroundColor: '#7C3AED', textColor: '#FFFFFF', label: 'R' };
+  }
+
+  return { backgroundColor: '#6B7280', textColor: '#FFFFFF', label: '•' };
+};
+
+/** Whether a dispatch row is a unit, using the same case-insensitive match as the "U" badge styling. */
+export const isUnitDispatchType = (type: string): boolean => {
+  const normalizedType = normalizeValue(type);
+  return !normalizedType.includes('user') && !normalizedType.includes('personnel') && normalizedType.includes('unit');
+};
+
+export const getUniqueDispatches = (dispatches: DispatchedEventResultData[]): DispatchedEventResultData[] => {
+  const seen = new Set<string>();
+
+  return dispatches.filter((dispatch) => {
+    const type = normalizeValue(dispatch.Type);
+    const nameKey = `name:${type}:${normalizeValue(dispatch.Name)}`;
+    const id = normalizeValue(dispatch.Id);
+    const idKey = id.length > 0 ? `id:${type}:${id}` : null;
+
+    if (seen.has(nameKey) || (idKey !== null && seen.has(idKey))) {
+      return false;
+    }
+
+    seen.add(nameKey);
+    if (idKey !== null) {
+      seen.add(idKey);
+    }
+    return true;
+  });
+};
+
+export const isCallActive = (state: string): boolean => {
+  const normalizedState = normalizeValue(state);
+  return normalizedState.length === 0 ? true : normalizedState === 'active';
+};
+
+export const isDispatchAssignedToUser = (dispatch: DispatchedEventResultData, context: CallAssignmentContext): boolean => {
+  const normalizedType = normalizeValue(dispatch.Type);
+  const normalizedDispatchId = normalizeValue(dispatch.Id);
+  const normalizedDispatchName = normalizeValue(dispatch.Name);
+  const normalizedDispatchGroupId = normalizeValue(dispatch.GroupId);
+  const normalizedUserId = normalizeValue(context.userId);
+  const normalizedGroupId = normalizeValue(context.groupId);
+  const roleIdSet = new Set(context.roleIds.map((roleId) => normalizeValue(roleId)));
+  const roleNameSet = new Set(context.roleNames.map((roleName) => normalizeValue(roleName)));
+
+  if (normalizedType.includes('user') || normalizedType.includes('personnel')) {
+    return normalizedDispatchId.length > 0 && normalizedDispatchId === normalizedUserId;
+  }
+
+  if (normalizedType.includes('group') || normalizedType.includes('station')) {
+    return (normalizedDispatchId.length > 0 && normalizedDispatchId === normalizedGroupId) || (normalizedDispatchGroupId.length > 0 && normalizedDispatchGroupId === normalizedGroupId);
+  }
+
+  if (normalizedType.includes('role')) {
+    return roleIdSet.has(normalizedDispatchId) || roleNameSet.has(normalizedDispatchName);
+  }
+
+  // A unit dispatch is the user's only when they hold an active role on that unit. Matched
+  // explicitly so unit dispatches cannot fall through to the identifier comparison below.
+  if (normalizedType.includes('unit')) {
+    const unitIdSet = new Set(context.unitIds.map((unitId) => normalizeValue(unitId)));
+    return normalizedDispatchId.length > 0 && unitIdSet.has(normalizedDispatchId);
+  }
+
+  return normalizedDispatchId === normalizedUserId || normalizedDispatchId === normalizedGroupId || roleIdSet.has(normalizedDispatchId) || roleNameSet.has(normalizedDispatchName);
+};
+
+export const isCurrentUserOnCall = (callExtraData: CallExtraDataResultData | null | undefined, context: CallAssignmentContext): boolean => {
+  if (!callExtraData || callExtraData.Dispatches.length === 0) {
+    return false;
+  }
+
+  return callExtraData.Dispatches.some((dispatch) => isDispatchAssignedToUser(dispatch, context));
+};

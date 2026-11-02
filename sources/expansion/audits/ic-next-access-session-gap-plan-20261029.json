@@ -1,0 +1,448 @@
+{
+  "kind": "bounded_source_only_next_ic_walkthrough_gap_audit",
+  "created_at": "2026-10-29T23:40:58.030648+00:00",
+  "app": "IC",
+  "export_ready": false,
+  "frozen_candidate_created": false,
+  "narration_or_timing_or_media_created": false,
+  "browser_or_db_or_app_source_or_session_actions": false,
+  "canonical_sources_unchanged": true,
+  "current_canonical_status": [
+    {
+      "lesson": {
+        "file": "expansion/lessons/app-ic-command-board.json",
+        "sha256": "a0e0f861dec2fe49bd44f49629f07bd767f2abb7e936ecaf406a7f9ce8431318"
+      },
+      "id": "app-ic-command-board",
+      "export_ready": true,
+      "scene_count": 9
+    },
+    {
+      "lesson": {
+        "file": "expansion/lessons/app-ic-communications-records-offline.json",
+        "sha256": "cf6306a32720a597d61aec9b2d76fd4713ffb39d0dfb04ea6d3e9ddbd943e9d7"
+      },
+      "id": "app-ic-communications-records-offline",
+      "export_ready": false,
+      "scene_count": 8
+    },
+    {
+      "lesson": {
+        "file": "expansion/lessons/app-ic-mapping-reference.json",
+        "sha256": "0bd34e40c151a8046fdf8d8242f1e52ae3fce77c2204cb4ddb42186f19ff8958"
+      },
+      "id": "app-ic-mapping-reference",
+      "export_ready": false,
+      "scene_count": 6
+    },
+    {
+      "lesson": {
+        "file": "expansion/lessons/app-ic-orientation.json",
+        "sha256": "70598732de76585a1ba987f7c224a2becde76485a22b5398e6f7ba0337f397b3"
+      },
+      "id": "app-ic-orientation",
+      "export_ready": false,
+      "scene_count": 6
+    }
+  ],
+  "recommendation": {
+    "prospective_title": "IC: verify access and a command-device session",
+    "scope": "Focused access/session orientation; it does not replace the still-pending broad original orientation draft or its calls/create/edit/readiness obligations.",
+    "reason": "Normal login has just been performed; four retained raw access sources already show safe entry forms. This route needs read-only settings/form views instead of new operational data or provider/hardware exercise.",
+    "next_actionable_route": "Signed-in IC → Settings (/settings) → Account → Server (read only), then Sign-in and security (/settings/account-security).",
+    "next_capture_labels": [
+      "App Info",
+      "Account",
+      "Server",
+      "Login Info",
+      "Sign-in and security",
+      "Shared device",
+      "Logout"
+    ],
+    "safe_first_step": "Retain a readable signed-in landing and Settings Account/AppInfo screenshot. Do not control the root tab from this agent.",
+    "cannot_freeze_yet": "No complete scene/control source set: server value illegible; SSO/current security/LoginInfo/logout entry+confirmation/signed-in shared-device explanation and successful sign-in landing remain uncaptured/unreviewed."
+  },
+  "ordered_capture_proposal": [
+    {
+      "order": 1,
+      "route": "/login",
+      "controls": [
+        "Username",
+        "Password",
+        "Sign In"
+      ],
+      "existing": [
+        "001-empty-sign-in"
+      ],
+      "missing": "Capture authenticated landing after the actual normal sign-in; preserve redacted normal-UI action provenance. Never capture populated credentials or claim MFA exercised."
+    },
+    {
+      "order": 2,
+      "route": "/settings → Account → Server",
+      "controls": [
+        "App Info",
+        "Account",
+        "Server"
+      ],
+      "existing": [],
+      "missing": "Fresh readable signed-in AppInfo+Account row with actual local API origin and Server entry control; prior account source requires fresh full-label review."
+    },
+    {
+      "order": 3,
+      "route": "/settings → Server dialog",
+      "controls": [
+        "Server",
+        "Server URL",
+        "Cancel",
+        "Save"
+      ],
+      "existing": [
+        "003-server-dialog-clean-low-contrast (rejected endpoint value)"
+      ],
+      "missing": "Legible server selection and full URL, then normal Cancel. A normal theme/viewport choice may help but must be observed. Do not Save/change server merely for footage."
+    },
+    {
+      "order": 4,
+      "route": "/login/sso",
+      "controls": [
+        "Sign in with SSO"
+      ],
+      "existing": [
+        "ic-04-sso (old blank rejected)"
+      ],
+      "missing": "Actual readable organization sign-in entry form and normal Back/Cancel only if SSO is narrated. Do not imply provider sign-in or change organization policy."
+    },
+    {
+      "order": 5,
+      "route": "/settings → Shared device (/login/shared-device)",
+      "controls": [
+        "Shared device",
+        "This is a shared device",
+        "Device label (optional)",
+        "Save"
+      ],
+      "existing": [
+        "004-shared-device-current-unsaved"
+      ],
+      "missing": "Signed-in variant showing the source next-sign-in explanation; Back without Save. To teach activation/lock/unlock/End Shift, a separate actual authorized completed scenario is required."
+    },
+    {
+      "order": 6,
+      "route": "/settings → Account → Login Info",
+      "controls": [
+        "Login Info",
+        "Username",
+        "Password",
+        "Cancel"
+      ],
+      "existing": [],
+      "missing": "Actually empty form, readable labels and normal Cancel. Source reauthenticates through login(); this is not an account password-change screen."
+    },
+    {
+      "order": 7,
+      "route": "/settings → Sign-in and security (/settings/account-security)",
+      "controls": [
+        "Sign-in and security"
+      ],
+      "existing": [],
+      "missing": "Actual current methods/organization/verification summaries, scrolled as needed; no challenge response, passkey creation, authenticator, approval installation, codes, revoke or security changes."
+    },
+    {
+      "order": 8,
+      "route": "/settings → Logout confirmation → Cancel",
+      "controls": [
+        "Logout",
+        "Cancel"
+      ],
+      "existing": [],
+      "missing": "Fresh visible entry row and complete actual confirmation text/buttons; Cancel keeps the current session. A successful Logout must not be claimed from Cancel footage. Include six-sector handover applicability in eventual spoken outro."
+    }
+  ],
+  "new_raw_manifest_observed": {
+    "file": "captures/expansion/ic-access-orientation-20261029/manifest.json",
+    "sha256": "00b90be8a2ba7d0bf16fb90b03beae32c9927cb1991dbb87195dc74d0d5831b3"
+  },
+  "new_raw_owner_observations": [
+    {
+      "id": "001-empty-sign-in",
+      "image": {
+        "file": "captures/expansion/ic-access-orientation-20261029/001-empty-sign-in.jpg",
+        "sha256": "e132429dff6f258e5ca208c0bee918c28b4addec79c54550e6e7676d2b25b2ba"
+      },
+      "owner_actually_viewed_original_file": true,
+      "disposition": "usable_candidate_not_gate_accepted",
+      "bounded_observation": "Actual empty Username/Password and Sign In, Server URL, Sign in with SSO, Shared device controls readable; no successful login result pictured.",
+      "formal_capture_acceptance_created": false
+    },
+    {
+      "id": "002-server-dialog-warning",
+      "image": {
+        "file": "captures/expansion/ic-access-orientation-20261029/002-server-dialog-warning.jpg",
+        "sha256": "42dc21e2a0743e5f4948e29cbb25d02321dee949fc49f7ff52a5d765b9347438"
+      },
+      "owner_actually_viewed_original_file": true,
+      "disposition": "diagnostic_recapture_required",
+      "bounded_observation": "Development warning present. Server value and selection have very low contrast; not accepted as configured endpoint evidence.",
+      "formal_capture_acceptance_created": false
+    },
+    {
+      "id": "003-server-dialog-clean-low-contrast",
+      "image": {
+        "file": "captures/expansion/ic-access-orientation-20261029/003-server-dialog-clean-low-contrast.jpg",
+        "sha256": "0e3e64934666049a398e505287e1d4703562da848f1f53c5d9c1fe485979e151"
+      },
+      "owner_actually_viewed_original_file": true,
+      "disposition": "recapture_required",
+      "bounded_observation": "Warning removed, but custom server selection and URL value remain nearly white on white. Labels/Cancel/Save readable; endpoint value not defensibly legible.",
+      "formal_capture_acceptance_created": false
+    },
+    {
+      "id": "004-shared-device-current-unsaved",
+      "image": {
+        "file": "captures/expansion/ic-access-orientation-20261029/004-shared-device-current-unsaved.jpg",
+        "sha256": "f18fed5e13ce010f6ea59d547151ee9d30d806caf4a6d9027d1203909257f45c"
+      },
+      "owner_actually_viewed_original_file": true,
+      "disposition": "usable_unsaved_inspection_only",
+      "bounded_observation": "Shared device explanatory text/toggle/optional label/Save visible. Source defaults local shared=true when installation is unconfigured; pictured ON is not proof saved, locked, approved, or active shared session.",
+      "formal_capture_acceptance_created": false
+    }
+  ],
+  "prior_review_source": {
+    "file": "captures/expansion/ic/source-review-20261027.json",
+    "sha256": "43b7d48179a8b31d9352614ebed2a0f6cce6b493258b52452a0d30df8bb472a9"
+  },
+  "prior_review_relevant_findings": [
+    {
+      "id": "ic-03-server",
+      "sha256": "2a42c8a35fb2dca6da35804c9b822cb9f866eec9a6c6426d179d787ea05bf4bb",
+      "visual_disposition": "recapture_required",
+      "observation": "Blank server form: required fields absent/illegible."
+    },
+    {
+      "id": "ic-04-sso",
+      "sha256": "ea3839589a712a8dd37562b7b20dcce90991b83fc7058adb4ca75c62a97608fa",
+      "visual_disposition": "recapture_required",
+      "observation": "Blank SSO entry: required controls absent/illegible."
+    },
+    {
+      "id": "ic-05-shared-device",
+      "sha256": "138c85fe79a83fea5fb03b57439659e7e4b0a7d632b59e3d6e01b74e3f835e1d",
+      "visual_disposition": "recapture_required",
+      "observation": "Shared device view is blank apart from a switch; required content missing."
+    },
+    {
+      "id": "ic-39-call-context-chicago-map",
+      "sha256": "ca6318fd247a5a8ae970e0be2b3375843c7866bc9c14c585a328d70f4f2be0e0",
+      "visual_disposition": "candidate_requires_full_label_review",
+      "observation": "Call Details viewport depicts actual Chicago streets and a call pin. This is a separate map surface from rejected wide Incident Map framing; no cross-surface recenter or saved view inference."
+    },
+    {
+      "id": "ic-40-call-information-tabs",
+      "sha256": "f4f3f3ba9c4de881c1cdeb55d2d93c2b0826cfe435bccb2983e84ac5ecc6c6ea",
+      "visual_disposition": "recapture_required",
+      "observation": "Overlapping Info rows; already rejected layout."
+    },
+    {
+      "id": "ic-41-call-readiness-empty-checks",
+      "sha256": "c1fa3e548438654b46c1a70e46359827cf1f3ebb8a7cb8aabb180399f8f4256e",
+      "visual_disposition": "candidate_requires_full_label_review",
+      "observation": "Actual empty Readiness panel says no completed checks; Squad3 row identity is partly clipped. No completed check, pass or safety outcome established. Recapture identity if needed."
+    },
+    {
+      "id": "ic-42-call-check-in-not-active",
+      "sha256": "899f0f7fc889940a951d3cd1878f3085b7f45712e6b06a38ce132146977db56f",
+      "visual_disposition": "candidate_requires_full_label_review",
+      "observation": "Actual application visible in reviewed contact sheet; exact full-resolution label curation still required before lesson evidence approval."
+    },
+    {
+      "id": "ic-43-sync-queue-empty",
+      "sha256": "674180139f66caaaaf37c5a6790958ebefce80606a9936ae23a1a5adfda671dc",
+      "visual_disposition": "candidate_requires_full_label_review",
+      "observation": "Actual Online empty queue, all four action buttons disabled. No offline write, retry or replay success demonstrated."
+    }
+  ],
+  "broader_required_app_coverage_retained": [
+    {
+      "group": "Original orientation call workflows",
+      "routes": [
+        "/calls",
+        "/call/new",
+        "/call/[id]/edit",
+        "/call/[id]"
+      ],
+      "gaps": [
+        "Readable Calls search/list and open exact record; current search source matches CallId or Nature only (not Name/Number); warehouse is a source-grounded baseline Nature term.",
+        "Create/edit/close own disposable call with actual permissions and exact recipients; no unseen success.",
+        "Re-capture Info: old ic-40 layout overlap rejected.",
+        "Readiness unit identity and actual completed check results if teaching readiness; old ic-41 is empty/clipped.",
+        "Configured check-in and stored history if teaching actual check-in; old ic-42 has no active timers."
+      ]
+    },
+    {
+      "group": "Command lifecycle/resources beyond published maintenance",
+      "routes": [
+        "/calls",
+        "/command",
+        "/command-log/[callId]"
+      ],
+      "gaps": [
+        "Actual template/new command and End/Reopen controls/results; do not start/end the existing warehouse board just to obtain footage.",
+        "Readable assignment/limits/resource details/work-time/rotation outcomes where narrated; old unstyled sources remain rejected.",
+        "Real PAR/check-in/acknowledgment branches when configured; no empty-state inference."
+      ]
+    },
+    {
+      "group": "Maps/reference beyond published incident Save View",
+      "routes": [
+        "/",
+        "/resource-map",
+        "/maps",
+        "/maps/search",
+        "/maps/custom/[id]",
+        "/maps/indoor/[id]",
+        "/contacts",
+        "/poi/[id]",
+        "/weather-alerts"
+      ],
+      "gaps": [
+        "Main-map filters/resource inspection, additional/custom maps, indoor floor/zone handoff, contacts/POI/preplans/weather need their own actual readable sources.",
+        "Existing v3 Chicago pan/Save View belongs to published command-board lesson and does not demonstrate these other map surfaces.",
+        "No device GPS, physical arrival or external weather/provider success inferred from map display."
+      ]
+    },
+    {
+      "group": "Communications/records/operations/offline",
+      "routes": [
+        "/command",
+        "/chat",
+        "/chat/[channelId]",
+        "/chat/thread/[messageId]",
+        "/chatbot",
+        "/records",
+        "/records/new",
+        "/records/deployments",
+        "/records/connectors",
+        "/operations",
+        "/operations/[id]",
+        "/settings/offline-queue"
+      ],
+      "gaps": [
+        "Actual authorized internal communication send/receipt/thread controls; LiveKit/PTT hardware/provider behavior remains separate.",
+        "Records eligible context/permissions and actual template/record/attachment workflow; context_not_verified is a gate, not data-empty proof.",
+        "Operations draft note/readback and Time/Expenses/Usage/F42 boundaries must be actually shown in IC; Unit footage is not IC evidence.",
+        "Old ic-43 depicts only Online empty queue with disabled controls; no offline write/retry/conflict/replay demonstrated.",
+        "Bluetooth Audio device and Keep Alive settings need their own actual screens/outcomes if spoken; Bluetooth UI is present on web, not automatically native-only. Keep Alive calls expo-keep-awake; visible toggle is not GPS/background service proof."
+      ]
+    }
+  ],
+  "six_sector_companion_intents": [
+    {
+      "sector": "Fire/EMS",
+      "practice": "Verify department/server and account before using a command vehicle display; no real incident response claimed."
+    },
+    {
+      "sector": "Community response",
+      "practice": "Confirm the intended service and access before a mobile crisis/community-care handover; do not display personal case data."
+    },
+    {
+      "sector": "Search and rescue",
+      "practice": "Inspect shared-device next-sign-in policy before a search-command shift; actual lock/unlock requires separate evidence."
+    },
+    {
+      "sector": "Security",
+      "practice": "Review account sign-in methods on a shared coordination terminal without changing safeguards."
+    },
+    {
+      "sector": "Wildland",
+      "practice": "Check the correct organization and session before an operational-period handover; offline/map freshness needs a separate demonstrated workflow."
+    },
+    {
+      "sector": "Industrial",
+      "practice": "Use the actual Logout confirmation deliberately on a control-room handover; Cancel demonstration does not prove a completed logout."
+    }
+  ],
+  "preserved_native_unit": {
+    "raw_png_count": 81,
+    "last_081_sha256": "279b08b03d53a37c05f3f49eee41d9b108d3b98cf395ac151c717742ab34922b",
+    "count_freeze_sha256": "421693c5a83525b284e3073eb10f6778680ecfbb62f46a5f1638b458f20376ac"
+  },
+  "source_files": [
+    {
+      "repository": "IC",
+      "file": "src/app/login/index.tsx",
+      "sha256": "e66fc7085d5ce4bf4db41b9a65327d8094ed874e254378487ba9cbc4f31d1a0f"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/login/login-form.tsx",
+      "sha256": "90a105a1abffafdd1e087c39dc1c83fc2a21ab4c16a362eb8dba27310647041b"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/login/sso.tsx",
+      "sha256": "866ec393fcb73a2f48a5845a9b4f8725d0617268555d6295d4db21914ca414fb"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/login/shared-device.tsx",
+      "sha256": "e595dd1e4214bd3f497b5ab31e0c41e612a0102910b86ba66340f2b763929015"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/(app)/settings.tsx",
+      "sha256": "18f6877386ab6cdcd478f12cbc4d744a41ef5a1881a0d20eff25c2327cda0522"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/settings/account-security.tsx",
+      "sha256": "39f0ab322f79156e5c2882522bd45cf4ab15b290152125025f86f6a48b54cea9"
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/server-url-bottom-sheet.tsx",
+      "sha256": "b642fa260f1bbb1577986899ca9bbead4095c9193e92ec1ca5a743e257cea373"
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/login-info-bottom-sheet.tsx",
+      "sha256": "25ba9b39743ff9d7fcd1b035877b2badf02ff9a3553f39f167d6d8c4e34972c3"
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/keep-alive-item.tsx",
+      "sha256": "a68ab1d95ade7663baa5ca8cda0b05917187f31009c36bdfef521635634b9f33"
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/settings/bluetooth-device-item.tsx",
+      "sha256": "eca00b70633b2e514073d717930094bfbdd1f54b0b2f26259e110e9a991f1477"
+    },
+    {
+      "repository": "IC",
+      "file": "src/lib/hooks/use-keep-alive.tsx",
+      "sha256": "2b1d64ae13594ea8c856c576dc179b6d21ea317b7827e0829330d8c7ff923626"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/(app)/calls.tsx",
+      "sha256": "0688b9496079759a11088e53fce2312e4e2f488d0cc7615712ef32d2f0751294"
+    },
+    {
+      "repository": "IC",
+      "file": "src/app/call/[id].tsx",
+      "sha256": "a3dc4c0934010596e44cfdbb5ce13e54ec28a561599736946586e72240c2a747"
+    },
+    {
+      "repository": "IC",
+      "file": "src/components/calls/call-card.tsx",
+      "sha256": "39b5ec0dd13298c02358425098503aa966623f1c84333c5abc8ade8a468b32c1"
+    },
+    {
+      "repository": "IC",
+      "file": "src/translations/en.json",
+      "sha256": "c5592d7df855e3e7f9936606cb82c1570e7a180ae3ae6d5e23bd1a83c8c59359"
+    }
+  ],
+  "publication_limit": "This is a gap/capture proposal only. No new lesson is publishable until actual full-size sources/control correspondence, exact natural narration/audio/captions, rendered QA and genuine playback pass the unchanged gates."
+}

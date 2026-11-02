@@ -1,0 +1,297 @@
+{
+  "id": "app-dispatch-pending-call-to-dispatch",
+  "title": "Save a pending call, review recipients and dispatch it",
+  "app": "Dispatch",
+  "audience": "Dispatchers and authorized operations staff who prepare and release calls.",
+  "summary": "Create one fictional pending exercise, verify its identity and proposed member, dispatch it deliberately, then close only that exercise and check the retained record.",
+  "candidate_status": "Unvoiced source candidate for parent review; no timing, media or publication qualification.",
+  "prerequisites": [
+    "Authorized fictional training department and normal Dispatch create/update access.",
+    "Use an explicitly named training exercise and permitted fictional recipient; preserve unrelated calls and command boards.",
+    "Complete the department-required fields and custom fields. This bounded example leaves location and destination blank.",
+    "Browser view recorded here. Native controls may differ; no real device location, hardware, offline behavior or provider delivery was tested."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Prepare a recognizable exercise call",
+      "route": "/call/new",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Calls",
+        "New Call",
+        "Name *",
+        "Nature *",
+        "Routine",
+        "Investigation"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "001-console-before-own-pending",
+            "file": "captures/expansion/dispatch-pending-20261028/001-console-before-own-pending.jpg"
+          },
+          {
+            "screenshot_id": "002-calls-navigation-pending-entry",
+            "file": "captures/expansion/dispatch-pending-20261028/002-calls-navigation-pending-entry.jpg"
+          },
+          {
+            "screenshot_id": "003-exact-new-call-fields",
+            "file": "captures/expansion/dispatch-pending-20261028/003-exact-new-call-fields.jpg"
+          }
+        ]
+      },
+      "narration": "Pending calls let dispatchers prepare a record before releasing it to selected responders. This walkthrough uses one clearly marked software exercise in a fictional department. Open Calls and choose New Call. Enter a recognizable Name and a concise Nature, then review Priority and Type. We select Routine and Investigation. The location and destination remain blank in this small example; for your own work, complete the fields your department requires and use an accurate, permitted incident location.",
+      "practice": "Prepare an authorized exercise title and description; check every required field before saving."
+    },
+    {
+      "id": "02",
+      "title": "Choose pending rather than immediate dispatch",
+      "route": "/call/new",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Save as pending (do not dispatch yet)",
+        "Select Recipients"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "004-pending-switch-on-and-footer",
+            "file": "captures/expansion/dispatch-pending-20261028/004-pending-switch-on-and-footer.jpg"
+          }
+        ]
+      },
+      "narration": "Turn on Save as pending, do not dispatch yet. Read the explanation beside the switch. The call will be saved and numbered, with any selected recipients retained as a proposed dispatch. Saving a pending record and dispatching it are separate decisions. This is useful when a dispatcher needs to finish a nonurgent request or review its recipient list before releasing it.",
+      "practice": "Explain the difference between a saved pending record and a dispatched call using the visible switch explanation."
+    },
+    {
+      "id": "03",
+      "title": "Review the proposed member and save",
+      "route": "/call/new",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Select Recipients",
+        "Select Dispatch Recipients",
+        "Wallace Boden",
+        "1 selected",
+        "Confirm",
+        "Save Pending Call"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "004-pending-switch-on-and-footer",
+            "file": "captures/expansion/dispatch-pending-20261028/004-pending-switch-on-and-footer.jpg"
+          },
+          {
+            "screenshot_id": "005-proposed-boden-only",
+            "file": "captures/expansion/dispatch-pending-20261028/005-proposed-boden-only.jpg"
+          },
+          {
+            "screenshot_id": "006-proposed-recipient-and-full-save",
+            "file": "captures/expansion/dispatch-pending-20261028/006-proposed-recipient-and-full-save.jpg"
+          }
+        ]
+      },
+      "narration": "Open Select Recipients and search for Wallace Boden, our fictional member. Check his row and leave Everyone unchecked. The picker shows one selected. Choose Confirm to return that proposed selection to the form. At the bottom, verify one selected, the pending switch and the full Save Pending Call button. Check the exact title and description before choosing Save Pending Call. The member selected here is still part of the proposed list.",
+      "practice": "Choose one permitted fictional member, check the selected count, and read back the exact form before saving."
+    },
+    {
+      "id": "04",
+      "title": "Read the saved identity and pending state",
+      "route": "/pending-calls",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Call #",
+        "Dispatch",
+        "#FD51-2026-0007",
+        "Pending — not yet dispatched",
+        "Dispatched",
+        "Wallace Boden"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "007-numbered-pending-identity",
+            "file": "captures/expansion/dispatch-pending-20261028/007-numbered-pending-identity.jpg"
+          },
+          {
+            "screenshot_id": "008-pending-detail-banner",
+            "file": "captures/expansion/dispatch-pending-20261028/008-pending-detail-banner.jpg"
+          },
+          {
+            "screenshot_id": "009-pending-proposed-recipient-readback",
+            "file": "captures/expansion/dispatch-pending-20261028/009-pending-proposed-recipient-readback.jpg"
+          }
+        ]
+      },
+      "narration": "The app opens the pending queue with a numbered row. Its narrow columns shorten the name and number, so open the row to read the complete identity. This example is F D fifty one, twenty twenty six, zero zero zero seven. Call Details says Pending, not yet dispatched. Open Dispatched and you can already see Wallace Boden. While the pending banner remains, that tab shows the proposed recipient; its title alone does not mean the call has been released.",
+      "practice": "Match the full detail identity to the pending row and distinguish the pending banner from the Dispatched tab name."
+    },
+    {
+      "id": "05",
+      "title": "Make the dispatch selection explicit",
+      "route": "/pending-calls",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Wallace Boden",
+        "0 selected",
+        "1 selected",
+        "Confirm"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "010-dispatch-picker-one-saved-member",
+            "file": "captures/expansion/dispatch-pending-20261028/010-dispatch-picker-one-saved-member.jpg"
+          },
+          {
+            "screenshot_id": "011-dispatch-empty-selection-disabled",
+            "file": "captures/expansion/dispatch-pending-20261028/011-dispatch-empty-selection-disabled.jpg"
+          },
+          {
+            "screenshot_id": "012-dispatch-explicit-boden-confirm",
+            "file": "captures/expansion/dispatch-pending-20261028/012-dispatch-explicit-boden-confirm.jpg"
+          }
+        ]
+      },
+      "narration": "Return to Pending Calls and choose Dispatch for that record. Review the proposed member in Select Dispatch Recipients. Here we clear Boden once: the count becomes zero and Confirm is disabled. Select him again and verify one selected, with Everyone still unchecked. Review this final choice before pressing Confirm. This is the action that releases the waiting call to the selected recipient, so use the same care you would when making a new dispatch.",
+      "practice": "Check the recipient name and count immediately before Confirm; do not infer selection from search text alone."
+    },
+    {
+      "id": "06",
+      "title": "Verify the dispatch result",
+      "route": "/call/51015",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "No pending calls",
+        "Dispatched",
+        "Wallace Boden",
+        "Dispatch additional resources"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "013-pending-empty-after-dispatch",
+            "file": "captures/expansion/dispatch-pending-20261028/013-pending-empty-after-dispatch.jpg"
+          },
+          {
+            "screenshot_id": "015-active-saved-recipient-readback",
+            "file": "captures/expansion/dispatch-pending-20261028/015-active-saved-recipient-readback.jpg"
+          }
+        ]
+      },
+      "narration": "Check the result in two places. The pending queue now says No pending calls. In the same saved call, Dispatched lists Wallace Boden, with Command as his group and User as the recipient type. The pending banner is gone, and Dispatch additional resources is available. We leave that separate action alone. These checks confirm the recorded dispatch state and selected recipient inside the app.",
+      "practice": "Verify removal from Pending and read the saved recipient in the same call before considering another action."
+    },
+    {
+      "id": "07",
+      "title": "Close only the completed exercise",
+      "route": "/call/51015",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Close Call",
+        "Close Type",
+        "Closed",
+        "Close Note",
+        "Notify everyone on the call"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "016-own-call-close-entry",
+            "file": "captures/expansion/dispatch-pending-20261028/016-own-call-close-entry.jpg"
+          },
+          {
+            "screenshot_id": "017-close-own-call-notify-off",
+            "file": "captures/expansion/dispatch-pending-20261028/017-close-own-call-notify-off.jpg"
+          }
+        ]
+      },
+      "narration": "To finish this exercise, check its title and number, then choose Close Call. Select Closed under Close Type and enter a Close Note that identifies the training activity. Turn off Notify everyone on the call for this local cleanup. Read back the type, complete note and switch before selecting the final Close Call button. Close only your exercise record; keep unrelated incidents and their command boards intact.",
+      "practice": "Read back the exercise identity, Closed type, exact note and notification switch before closing your own record."
+    },
+    {
+      "id": "08",
+      "title": "Check the console and retained record",
+      "route": "/home",
+      "capture_intent": "Use only corresponding reviewed real sources in the authored order; no fabricated views or outcomes.",
+      "required_labels": [
+        "Active Calls",
+        "No active calls",
+        "TRAINING — Warehouse alarm",
+        "#FD51-2026-0007",
+        "Call Details"
+      ],
+      "capture_evidence": {
+        "capture_refs": [
+          {
+            "screenshot_id": "023-clean-final-three-original-calls",
+            "file": "captures/expansion/dispatch-pending-20261028/023-clean-final-three-original-calls.jpg"
+          },
+          {
+            "screenshot_id": "024-clean-own-call-not-active",
+            "file": "captures/expansion/dispatch-pending-20261028/024-clean-own-call-not-active.jpg"
+          },
+          {
+            "screenshot_id": "025-clean-original-warehouse-active",
+            "file": "captures/expansion/dispatch-pending-20261028/025-clean-original-warehouse-active.jpg"
+          },
+          {
+            "screenshot_id": "020-own-record-readable-after-close",
+            "file": "captures/expansion/dispatch-pending-20261028/020-own-record-readable-after-close.jpg"
+          },
+          {
+            "screenshot_id": "023-clean-final-three-original-calls",
+            "file": "captures/expansion/dispatch-pending-20261028/023-clean-final-three-original-calls.jpg"
+          }
+        ]
+      },
+      "narration": "The console returns to three active training calls, with zero pending and zero scheduled. Search for our exercise name: the call panel shows No active calls while the department total remains three. A warehouse search still finds the original incident. Our exercise record also remains readable in Call Details, with its Close Call action removed. Clear the search when finished. This browser exercise confirms these application records; it does not establish notification delivery, a physical response or native device behavior.",
+      "practice": "Check the department total and search results separately, then clear the filter and retain the exercise reference."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "example": "Prepare a nonurgent training follow-up, review its proposed member, then dispatch and close the exercise according to department procedure."
+    },
+    {
+      "sector": "Community response",
+      "example": "Use the same pending review for a fictional care-vehicle support request; keep sensitive visit details out of general training records."
+    },
+    {
+      "sector": "Search and rescue",
+      "example": "Prepare a fictional search-support request while the authorized dispatcher verifies its selected team contact."
+    },
+    {
+      "sector": "Security",
+      "example": "Review a patrol-support exercise and explicitly choose its intended member before release."
+    },
+    {
+      "sector": "Wildland",
+      "example": "Hold a contractor-support exercise for recipient review, then verify its saved dispatch state."
+    },
+    {
+      "sector": "Industrial",
+      "example": "Prepare a fictional site-support exercise, confirm the required fields and recipient, then retain the closed record."
+    }
+  ],
+  "source_files": [
+    "Dispatch/src/app/call/new/index.web.tsx",
+    "Dispatch/src/app/(app)/pending-calls.tsx",
+    "Dispatch/src/components/calls/use-call-dispatch-now.tsx",
+    "Dispatch/src/components/calls/dispatch-selection-modal.tsx",
+    "Dispatch/src/app/call/[id].web.tsx",
+    "Dispatch/src/components/calls/close-call-bottom-sheet.tsx",
+    "Dispatch/src/api/calls/calls.ts",
+    "Dispatch/src/translations/en.json"
+  ],
+  "source_limitations": [
+    "No active4-count narration: the one console image with4active contains a development warning and is excluded.",
+    "Number/name ellipses in queue007 are intentionally excluded from exact-label evidence;008/009provide full identity.",
+    "No CancelCall branch, scheduled call, archived-call list, media upload, external delivery, native hardware or offline persistence is claimed.",
+    "The unchanged3original calls were not edited; only own51015/FD51-2026-0007was created/dispatched/closed."
+  ]
+}

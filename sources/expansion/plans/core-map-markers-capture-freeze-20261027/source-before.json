@@ -1,0 +1,244 @@
+{
+  "id": "core-map-markers",
+  "title": "Customize map markers for calls, units and personnel",
+  "app": "Core",
+  "audience": "Department administrators and mapping coordinators",
+  "summary": "Set type and role icons, add priority/status overrides, and verify the actual marker families on the map and legend.",
+  "prerequisites": [
+    "Use the fictional Chicago Fire demonstration department and authorized, geolocated training entities.",
+    "Have permission to edit call/unit types and personnel roles, with current marker features available.",
+    "Prepare simple fictional square transparent PNGs, preferably at least 128 pixels, under one megabyte.",
+    "Know the actual call priority and unit/personnel status meanings, and assign the intended types and roles before testing."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Understand what each marker describes",
+      "route": "/User/Mapping/Index",
+      "capture_intent": "Show actual labeled training call/unit/person markers.",
+      "required_labels": [
+        "Show calls",
+        "Show units",
+        "Show personnel"
+      ],
+      "narration": "Open Mapping in the Chicago Fire demonstration department and locate the fictional training call, Engine 51 and Matthew Casey. A call marker follows call type and priority. A unit marker follows unit type and current status. A person's marker follows an applicable personnel role and status. These are different families, even when all three appear near the same incident. Keep labels visible while comparing them, so the icon change remains tied to the correct named entity rather than to a similar nearby symbol.",
+      "practice": "Identify one call, unit and person and state which configuration controls each marker.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "core-config-001-mapping-before-markers"
+        ],
+        "observations": [
+          "Working populated map before custom uploads. Other viewports still needed to show the named unit and person."
+        ]
+      }
+    },
+    {
+      "id": "02",
+      "title": "Select a call type icon",
+      "route": "/User/Types/EditCallType?callTypeId=51001",
+      "capture_intent": "Open actual type edit and choose built-in icon, then upload base icon.",
+      "required_labels": [
+        "Custom icon",
+        "Priority map icons",
+        "Update"
+      ],
+      "narration": "Open Department Types and edit Structure Fire. Review its built-in map icon, then choose a fictional custom icon file if you want a department-specific design. Use a simple shape that remains readable at map size. PNG, JPEG, GIF and WebP are accepted; a square transparent image avoids a distracting box. Inspect the preview on light and dark backgrounds and in a list. Selecting a file is a preview step. Choose Update and reopen the type to confirm the icon you actually stored.",
+      "practice": "Save one readable call-type icon and verify it after reopening the page.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "03",
+      "title": "Override one call priority",
+      "route": "/User/Mapping/StatusIcons?kind=2&typeId=51001",
+      "capture_intent": "Upload one priority override and compare Default/Uploaded columns.",
+      "required_labels": [
+        "Map icons for Structure Fire",
+        "Priority",
+        "Map color",
+        "Default",
+        "Uploaded icon",
+        "Upload"
+      ],
+      "narration": "Choose Priority map icons from the call type. Each row represents a real department priority. The Default column shows the fallback, while Uploaded shows a specific replacement when one exists. Upload a distinct training icon for one priority and use that row's Upload button. This changes that call type at that priority, rather than every call in the department. Leave another priority without an override so you can compare the specific replacement with the ordinary fallback later on the map.",
+      "practice": "Create one priority-specific override and identify the row it applies to.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "04",
+      "title": "Set the unit type base icon",
+      "route": "/User/Types/EditUnitType?unitTypeId=51001",
+      "capture_intent": "Save fictional unit-type icon and show status-set association.",
+      "required_labels": [
+        "Custom icon",
+        "Status map icons",
+        "Update"
+      ],
+      "narration": "Edit the Engine unit type. Confirm the unit uses this type and the intended status set, then upload its base custom icon. Review the same small-map and list previews before choosing Update. A type icon applies to units assigned to that type; changing the type definition does not assign untyped units automatically. Reopen Engine 51 and confirm its type by name. Also inspect its current status, because the final map appearance combines the type with that status.",
+      "practice": "Confirm one actual unit is assigned to the type whose icon you changed.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "title": "Override a unit status",
+      "route": "/User/Mapping/StatusIcons?kind=1&typeId=51001",
+      "capture_intent": "Upload Responding/custom En route override and inspect fallback rows.",
+      "required_labels": [
+        "Map icons for Engine",
+        "Status",
+        "Map color",
+        "Default",
+        "Uploaded icon"
+      ],
+      "narration": "Open Status map icons for Engine. Choose the actual Available status used by Engine 51 in the exercise and upload a different icon for that row. Other statuses keep their default appearance. The map's standard style follows a status's operational meaning, not an arbitrary button color. Available, responding, on scene and unavailable therefore remain understandable across different labels. If a status lacks a recognized meaning, inspect the gray or unknown appearance instead of assuming its name establishes operational availability.",
+      "practice": "Save one unit-status override and explain why another status keeps a different appearance.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "title": "Give personnel a role icon",
+      "route": "/User/Personnel/EditRole?roleId=51002",
+      "capture_intent": "Assign Alex to fictional role, upload role base icon, save.",
+      "required_labels": [
+        "Users In Role",
+        "Custom icon",
+        "Status map icons"
+      ],
+      "narration": "Open Personnel Roles and edit Officer. Confirm Matthew Casey is already a member, then upload a fictional role icon. Save and reopen the role to confirm the stored icon. A member with several roles uses the first applicable icon in the department's role order, so inspect ordering if the result is unexpected. Role membership identifies operational organization; it does not establish qualification or authorization for a particular task. Keep certification and dispatch eligibility checks alongside the visual label.",
+      "practice": "Verify a fictional member holds the intended icon-bearing role and inspect any competing roles.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "07",
+      "title": "Override a personnel status",
+      "route": "/User/Mapping/StatusIcons?kind=4&typeId=51002",
+      "capture_intent": "Upload a role/status override and show saved row.",
+      "required_labels": [
+        "Map icons for Officer",
+        "Status",
+        "Upload",
+        "Remove"
+      ],
+      "narration": "From that role, open Status map icons and add an override for Standing By, the current personnel status of Matthew Casey. This replacement applies when the person's displayed icon comes from that role and the selected status is current. Without a specific replacement, an uploaded role icon can carry the standard status badge. Staffing levels do not change map icons. A person On Unit can reflect the linked unit's status context, so check the member's actual status and assignment before deciding the override failed.",
+      "practice": "Identify the exact role and personnel status combination your override is intended to represent.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "08",
+      "title": "Compare the full legend",
+      "route": "/User/Mapping/Legend",
+      "capture_intent": "Frame actual department icon grids and meanings.",
+      "required_labels": [
+        "Map Icon Legend"
+      ],
+      "narration": "Open Map Icon Legend from Mapping. Compare the call type across priorities, the unit type across statuses, and the personnel role across statuses. The legend helps explain the whole family, including combinations not currently represented by a nearby entity. A specific uploaded priority or status icon wins. Otherwise the type or role's own upload can carry a status badge, or a built-in pin takes the standard style. Compare like-for-like rows before returning to the operating map.",
+      "practice": "Use the legend to predict the icon for one current entity and one alternate state.",
+      "capture_evidence": {
+        "status": "partial",
+        "capture_refs": [
+          "legacy-core-013-map-icon-legend"
+        ],
+        "observations": [
+          "Actual default-family legend before custom uploads. Upload and override results still pending."
+        ]
+      }
+    },
+    {
+      "id": "09",
+      "title": "Verify actual map changes",
+      "route": "/User/Mapping/Index",
+      "capture_intent": "Capture real before/after priority/unit/personnel state changes on named markers.",
+      "required_labels": [
+        "Show calls",
+        "Show units",
+        "Show personnel",
+        "Filter marker text"
+      ],
+      "narration": "Return to Mapping and find the named training entities with labels visible. Compare the Structure Fire call at its actual priority, Engine 51 while Available, and Matthew Casey while Standing By. Match each marker to the exact type or role and priority or status row you configured. Reload the map after saving an icon so the view reads the stored definitions again. Compare the result with Map Icon Legend. An entity without a visible permitted location may have no marker to inspect, so verify location freshness and visibility controls when something is absent.",
+      "practice": "Capture the actual marker change for one priority and one status using the same named entities.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Check fallbacks and maintain readability",
+      "route": "/User/Mapping/StatusIcons?kind=<kind>&typeId=<id>",
+      "capture_intent": "Remove optional training override and show resulting legend/map fallback.",
+      "required_labels": [
+        "Remove",
+        "Default",
+        "Map Icon Legend"
+      ],
+      "narration": "To test a fallback, remove one disposable training override and revisit its legend row and map marker. Confirm the own icon with badge or the built-in styled pin appears as expected. Keep symbols distinct on light and dark maps, and use labels when an icon alone could be ambiguous. Review changes with the people who dispatch and respond, especially when a color or shape already has an established meaning. Finish with a small documented set of recognizable marker families rather than a different symbol for every label.",
+      "practice": "Verify one fallback and record your department conventions for shapes, meanings and label use.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: contrast one training call priority, an engine response status and a Search Leader role.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: distinguish clinician and peer-responder roles while keeping contact and availability meanings clear.",
+    "Search and rescue": "Search and rescue: identify search leaders and specialist units with labels and current field statuses.",
+    "Security companies and departments": "Security: keep patrol-unit and supervisor-role icons distinguishable across site maps.",
+    "Wildland contractors": "Wildland contractors: distinguish crew and support equipment while preserving familiar staging and returning meanings.",
+    "Industrial emergency response teams": "Industrial response: use consistent plant-unit and ERT role symbols; maintenance and unavailable states must remain obvious."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/MapIconResolver.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/MapIconStyles.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/TypeIcon.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Mapping/StatusIcons.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Mapping/Legend.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Shared/_TypeIconPicker.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Types/EditCallType.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Types/EditUnitType.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Personnel/EditRole.cshtml"
+  ]
+}

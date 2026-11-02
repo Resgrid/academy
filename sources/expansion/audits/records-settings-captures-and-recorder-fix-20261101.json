@@ -1,0 +1,35 @@
+{
+  "reviewed_at": "2026-11-01T18:12:47.594915+00:00",
+  "reviewer": "Root",
+  "actual_capture_count": 11,
+  "accepted_images": 7,
+  "rejected_or_superseded_ids": [
+    "002-record-pattern-year-start",
+    "003-record-pattern-and-padding",
+    "004-year-start-and-prefixes",
+    "007-prefix-table-readable"
+  ],
+  "reviewed_manifest_file": "captures/expansion/core-records-numbering-settings-20261101/captures.reviewed.json",
+  "reviewed_manifest_sha256": "d7e5f43553d17b97ccf3399d72348eeff2b40306b58e7dfc87cb328e94ebbdfa",
+  "read_only": true,
+  "department_settings_saved": false,
+  "actual_year_label_selector_visible": false,
+  "capture_recorder_correction": {
+    "file": "production/capture_application.mjs",
+    "sha256": "e723e3fdf63432b439495850842bef3387c0843754af7dda36ec3f95de732b3a",
+    "reason": "Actual scrolled page labels were excluded because propagated BODY overflow was compared with its negative scrolled box rather than the viewport. Corrected the same root handling in both label collection and painted-credential rejection.",
+    "reference": "https://www.w3.org/TR/css-overflow-3/#overflow-propagation",
+    "new_regression_cases": [
+      "Visible number-pattern field below a scrolled HTML/BODY root remains observed",
+      "A painted credential in the same layout blocks capture before any asset write",
+      "Contained BODY still clips at its own box",
+      "Nonpropagated BODY still clips at its own box"
+    ],
+    "script_suite_tests": 406,
+    "script_suite_skipped": 2,
+    "production_suite_tests": 230,
+    "all_tests_passed": true
+  },
+  "canonical_lessons_or_site_changed": false,
+  "git_mutations": 0
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-10-26T17:23:52.410343+00:00",
+  "repository": "Core",
+  "baseline_head": "6f83872110b0382f2911d099e95d6a4ef7da8315",
+  "patch": "workflow-edit-validation.patch",
+  "patch_sha256": "91c2d69d96a1be2170de88616a85e029b2fd5f84da0539d4fb836cd288b46f8f",
+  "files": [
+    {
+      "path": "Web/Resgrid.Web/Areas/User/Controllers/WorkflowsController.cs",
+      "baseline_sha256": "e82cd5145007028ef73612a13e5892bbc6ccb6df9416ac43158835b6aaf50ac2",
+      "modified_sha256": "78557f7c19df1cc95e55043f8e5402d20be147c923f1a4f52f4fade3931fc594",
+      "baseline_size_bytes": 45887,
+      "modified_size_bytes": 46390,
+      "expansion_snapshot_path": "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Controllers/WorkflowsController.cs",
+      "retained_in_patch_only": false
+    },
+    {
+      "path": "Tests/Resgrid.Tests/Web/User/WorkflowTenantIsolationTests.cs",
+      "baseline_sha256": "df5c3fc03e28c749a38d485d53f1826cd7819f8b68df3e6dca6c7e2676802603",
+      "modified_sha256": "1db1e2b42dd356dd24afb72f2d47f0f6ac8ff96feace23f6fac0950eb46cdbf1",
+      "baseline_size_bytes": 8646,
+      "modified_size_bytes": 12440,
+      "expansion_snapshot_path": null,
+      "retained_in_patch_only": true
+    }
+  ],
+  "scope": "Only the MVC WorkflowsController and WorkflowTenantIsolationTests current diff; no application file was edited by this retention task.",
+  "purpose": "Allow workflow settings edits to retain the server-owned CreatedBy value while validating posted fields; preserve ordered workflow steps.",
+  "validation_reported_by_parent": {
+    "test_suite": "WorkflowTenantIsolationTests",
+    "passed": 21,
+    "new_cases": 5,
+    "host_runtime": "Tests used .NET 10 roll-forward because the host lacks the .NET 9 runtime.",
+    "deployed_runtime": "Updated Docker .NET 9 web UI successfully enabled and saved both fictional workflows.",
+    "independently_rerun_by_retention_task": false
+  },
+  "application_policy": "Review first. Apply only to a disposable isolated checkout at baseline_head. Never apply this patch to the user's original Core checkout. No commits, pushes, staging, data reset or shared setup_demo.py edit.",
+  "retention_validation": {
+    "patch_check": "passed",
+    "checked_against": "temporary isolated two-file source tree populated from baseline_head",
+    "application_source_modified": false,
+    "patch_sha256_verified": true
+  }
+}

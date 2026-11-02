@@ -1,0 +1,2911 @@
+{
+  "schema_version": 1,
+  "lesson": "19-adp",
+  "title": "Plan protected-data access and recovery",
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "status": "BLOCKED — not a renderer-ready replacement plan",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "1580bc82f822e7df717435628308ac84b1c6577fcc6db26610711177027cc37d",
+    "normalised_words_sha256": "25402ac87213098aad63c8ec2fafee083100e1a0e5e9e40cbd5d65e7dc832bdb",
+    "word_count": 352,
+    "source_scene_count": 8,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/19-adp.mp4",
+      "sha256": "de6e41a1783720dc241e0fabea273b0eadd45d7266158499e7a6d2e2d66b6182",
+      "exists": true,
+      "duration_seconds": 159.91,
+      "bytes": 4932363
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/19-adp.m4a",
+      "sha256": "3d6be1c91181ab3578242ece58651550f521ff9594ba6a9e5dee408897d50442",
+      "exists": true,
+      "duration_seconds": 160.56,
+      "bytes": 3240756
+    },
+    "existing_video_aac_packet_payload_sha256": "852fcbc2d4bf44a7f4c296137720954bf23873f172640db2c77505c9ea561b57",
+    "srt": {
+      "file": "sources/media/19-adp.srt",
+      "sha256": "7fd2ccaf9cfd686c9b8672880109e07e8974fffbf8eaecbdb349de6d53e85578",
+      "cue_count": 50
+    },
+    "vtt": {
+      "file": "sources/media/19-adp.vtt",
+      "sha256": "c0a1959abad4afb39ea2645fe29c221d02503e71ad9e464ca788250220669e6b"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/19-adp-raw.srt",
+      "sha256": "7f2f711318d47460916555134711c0a6d4db92d1a58c653c08e9ca1c30336d85"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/19-adp-validation.json",
+      "sha256": "a951bdb60a151c171fcf496e644378a42be47da5ac2152c506eb0075b385e51e",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 51,
+      "reported_match_ratio": 0.9958,
+      "reported_duration_seconds": 163.71,
+      "reported_raw_audio_seconds": 160.56,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 159.899,
+    "caption_last_end_seconds": 159.689,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "illustrated_input_compliant": false,
+  "scenes": [
+    {
+      "index": 0,
+      "number": 1,
+      "title": "Plan protected-data access and recovery",
+      "kind": "title",
+      "narration": "Welcome to Resgrid Academy. In this lesson, we will plan protected-data access and recovery. Sensitive content needs deliberate enrollment, controlled access, key recovery, and reviewed external disclosure paths. We will explain the features, the setup decisions, and a practical way to check the result.",
+      "narration_sha256": "ecc5ed4ae2aceaca3c6b218297588948d746e0bd944a5b3190e8debbe6dcff7e",
+      "course_timing_proposal_only": {
+        "start": 0.0,
+        "duration": 19.9845
+      },
+      "actual_existing_cue_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Review enrollment/key recovery/status using synthetic data; do not expose secrets.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "intent": "Inspect actual approved-release/egress settings and state.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/ProtectedWorkflowsController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7e1b627b226386ddc09b08d02cf6767fc4185757ec452c7db51b0faebf9c4af",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/ProtectedWorkflows/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "current_file_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Protected Workflows",
+            "Protected workflow releases",
+            "Workflow",
+            "Status",
+            "Fields",
+            "Host",
+            "Recipient"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-074-data-protection:7eefd28b6531"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s01:a01",
+          "text": "Welcome to Resgrid Academy.",
+          "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            1
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 0.079,
+          "enclosing_cue_end": 1.779,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s01:a02",
+          "text": "In this lesson, we will plan protected-data access and recovery.",
+          "text_sha256": "377240edd5c8b3493e2adc4c8a0dc66674246ddba3e5d2cf9371c41c8a429830",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            2
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 2.17,
+          "enclosing_cue_end": 5.98,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s01:a03",
+          "text": "Sensitive content needs deliberate enrollment, controlled access, key recovery, and reviewed external disclosure paths.",
+          "text_sha256": "a6f1e6ca54a37ab921f328e53e26ab341b040cd01b0eb2a8f66d869ee1b91ec1",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            3,
+            4
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 6.489,
+          "enclosing_cue_end": 13.899000000000001,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s01:a04",
+          "text": "We will explain the features, the setup decisions, and a practical way to check the result.",
+          "text_sha256": "75a8e835ef7bfbbf0615c569d1eecf54b9bc5c6e62970378b3aeb88d08738c40",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            5,
+            6
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 14.359,
+          "enclosing_cue_end": 19.44,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "ADP entitlement",
+        "Test admins/MFA",
+        "ADP enforced",
+        "Test release"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 1,
+      "number": 2,
+      "title": "A department scenario",
+      "kind": "scenario",
+      "narration": "A co-response team enrolls so client-related notes are protected in every module that stores them. Protects sensitive incident and personnel content, with controlled disclosure and key recovery. The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+      "narration_sha256": "85dbc4c8a3364f80a480e4a99edd693e6e9503904563001a7444c481377089f8",
+      "course_timing_proposal_only": {
+        "start": 19.9845,
+        "duration": 18.689500000000006
+      },
+      "actual_existing_cue_ids": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Review enrollment/key recovery/status using synthetic data; do not expose secrets.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/TwoFactor/Index",
+          "intent": "Inspect authenticator status and recovery controls without exposing setup secrets.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TwoFactorController.cs",
+              "line": 119,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ed49dee10a3da622847ed09cad412a1e04ee4c33321706213b639315a27c69e1",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/TwoFactor/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "47bb384aa64c57ba3513bc6e0e793c7964574526b723c61236c3aec00a214e51",
+              "current_file_sha256": "47bb384aa64c57ba3513bc6e0e793c7964574526b723c61236c3aec00a214e51",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Two-Factor Authentication",
+            "Authenticator App (TOTP)",
+            "Regenerate Recovery Codes",
+            "Replace Authenticator",
+            "Disable 2FA",
+            "Enable Authenticator App"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "intent": "Review actual controlled release policy separately from enrollment.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 101,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/ReleaseSettings.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "current_file_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "historical_hash_matches_current": true
+            },
+            {
+              "path": "Core/Core/Resgrid.Localization/Areas/User/SystemMessages/SystemMessages.en.resx",
+              "line": 147,
+              "historical_citation_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "current_file_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "ADP release settings",
+            "SMS delivery",
+            "Voice delivery",
+            "Allow time-limited Resgrid staff support access with approval by a second staff member.",
+            "Save"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-074-data-protection:7eefd28b6531",
+        "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s02:a01",
+          "text": "A co-response team enrolls so client-related notes are protected in every module that stores them.",
+          "text_sha256": "2d35c8280471db1d1e28a53197fbbc1734700774b56d9796c8586a378ca10870",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            7,
+            8
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 20.079,
+          "enclosing_cue_end": 25.839,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s02:a02",
+          "text": "Protects sensitive incident and personnel content, with controlled disclosure and key recovery.",
+          "text_sha256": "ad41d5d87a7bfb97db3a09c2a34a89ed723895374552a9ca395ada6f4f7e9773",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            9,
+            10
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 26.26,
+          "enclosing_cue_end": 31.659,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s02:a03",
+          "text": "The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+          "text_sha256": "c3bea48c517ece285518958a0c220aae533e0f6326956bfe90b76d7010dd0a34",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            11,
+            12
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 32.14,
+          "enclosing_cue_end": 38.129,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/TwoFactor/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "ADP entitlement",
+        "Test admins/MFA",
+        "Test admin with MFA",
+        "Synthetic protected content"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 2,
+      "number": 3,
+      "title": "Data Protection",
+      "kind": "feature",
+      "narration": "Data Protection. Protection enrollment, key recovery and access controls. Review the enrollment checklist and plan key recovery before enrolling. Availability also depends on ADP. Check access in the target department.",
+      "narration_sha256": "33835f6bed00e9ec24a2772eba838593182322bf78dcd4c1eff96d2aaba9e0c5",
+      "course_timing_proposal_only": {
+        "start": 38.674,
+        "duration": 15.525000000000006
+      },
+      "actual_existing_cue_ids": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Review enrollment/key recovery/status using synthetic data; do not expose secrets.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "intent": "Review actual controlled release policy separately from enrollment.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 101,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/ReleaseSettings.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "current_file_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "historical_hash_matches_current": true
+            },
+            {
+              "path": "Core/Core/Resgrid.Localization/Areas/User/SystemMessages/SystemMessages.en.resx",
+              "line": 147,
+              "historical_citation_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "current_file_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "ADP release settings",
+            "SMS delivery",
+            "Voice delivery",
+            "Allow time-limited Resgrid staff support access with approval by a second staff member.",
+            "Save"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-074-data-protection:7eefd28b6531",
+        "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s03:a01",
+          "text": "Data Protection.",
+          "text_sha256": "77b25e3eed7664ac12b5c423fa82ae2986a96e88bc28fbe320561e4122060966",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            13
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 38.769,
+          "enclosing_cue_end": 39.769,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s03:a02",
+          "text": "Protection enrollment, key recovery and access controls.",
+          "text_sha256": "db3e54420deefb4e9985c89a7ac2a014961b411c8d26a74e6ea792018fc19d27",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            14
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 40.259,
+          "enclosing_cue_end": 43.79,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s03:a03",
+          "text": "Review the enrollment checklist and plan key recovery before enrolling.",
+          "text_sha256": "191ab1cb5f0193015fed8108fa86751f7016cd8121e15a8503bb98dde8f2096a",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            15
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 44.339,
+          "enclosing_cue_end": 48.359,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s03:a04",
+          "text": "Availability also depends on ADP.",
+          "text_sha256": "90f26abe763c7a481348dbf2c1d323bb7a5fc42c869f8a41f7858b2770b7db2e",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            16
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 48.79,
+          "enclosing_cue_end": 51.13,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s03:a05",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            17
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 51.569,
+          "enclosing_cue_end": 53.689,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "ADP entitlement",
+        "Test admins/MFA",
+        "Synthetic protected content"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 3,
+      "number": 4,
+      "title": "Protected workflows",
+      "kind": "feature",
+      "narration": "Protected workflows. Send protected data to approved outside systems through reviewed workflows. Requires the Advanced Data Protection add-on. Enrollment is a separate step: plan two-factor sign-in and key recovery first, and review the effects on search, exports and integrations. Availability also depends on ADP, Enabled. Check access in the target department.",
+      "narration_sha256": "5ce2eaa1f87a934298e47b6e10240dc3754d623f1738efb332101e7684ef2349",
+      "course_timing_proposal_only": {
+        "start": 54.199000000000005,
+        "duration": 24.845499999999994
+      },
+      "actual_existing_cue_ids": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "intent": "Inspect actual approved-release/egress settings and state.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/ProtectedWorkflowsController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7e1b627b226386ddc09b08d02cf6767fc4185757ec452c7db51b0faebf9c4af",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/ProtectedWorkflows/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "current_file_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Protected Workflows",
+            "Protected workflow releases",
+            "Workflow",
+            "Status",
+            "Fields",
+            "Host",
+            "Recipient"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Workflows/Edit?workflowId=<workflow-id>",
+          "intent": "Review protected-release panel, approved fields and destination/review decisions.",
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "existing_capture_count": 7,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/WorkflowsController.cs",
+              "line": 247,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "78557f7c19df1cc95e55043f8e5402d20be147c923f1a4f52f4fade3931fc594",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Workflows/Edit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "a2923b774328f0cc9c89a3d05f88ec3e0463c606ba2af996367f75fd43393925",
+              "current_file_sha256": "a2923b774328f0cc9c89a3d05f88ec3e0463c606ba2af996367f75fd43393925",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Edit Workflow",
+            "Workflow Settings",
+            "Name",
+            "Description",
+            "Trigger Event",
+            "Max Retries",
+            "Backoff (s)"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s04:a01",
+          "text": "Protected workflows.",
+          "text_sha256": "dedeb64d8ead2a85383bd41d2417d126042d75e368e34230f69e93a5bc521035",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            18
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 54.259,
+          "enclosing_cue_end": 55.55,
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s04:a02",
+          "text": "Send protected data to approved outside systems through reviewed workflows.",
+          "text_sha256": "587fbe736b646180e0b5d8114401b99264f1a752989fce4790a2f3cd14cb08b9",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            19
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 55.989,
+          "enclosing_cue_end": 60.429,
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s04:a03",
+          "text": "Requires the Advanced Data Protection add-on.",
+          "text_sha256": "2dbafa0596c6bb5f98c628ad7989045705f5b882b402c34d176012a95d02618b",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            20
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 60.8,
+          "enclosing_cue_end": 63.25,
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s04:a04",
+          "text": "Enrollment is a separate step: plan two-factor sign-in and key recovery first, and review the effects on search, exports and integrations.",
+          "text_sha256": "f2c7f3fc8d649f4eec97deba9243881a85dc3a28d84717a9997811af04783b36",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            21,
+            22
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 63.719,
+          "enclosing_cue_end": 72.189,
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s04:a05",
+          "text": "Availability also depends on ADP, Enabled.",
+          "text_sha256": "d8fdd71e47094dcbd7eb1129e5d6c7c82a20cacb7b3d6420297f15a105635f84",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            23
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 72.869,
+          "enclosing_cue_end": 75.99,
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s04:a06",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            24
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 76.449,
+          "enclosing_cue_end": 78.52,
+          "candidate_capture_refs": [
+            "Core:core-workflow-settings-disabled:b40bace9933b",
+            "Core:core-workflow-syntax-check:87823385f7a9",
+            "Core:core-workflow-two-ordered-step-cards:d236328ca547",
+            "Core:core-workflow-first-email-action-form:c44e4cc2f71e",
+            "Core:core-workflow-first-email-output-template:da9012f86d06",
+            "Core:core-workflow-close-disabled-backoff-thirty:fabca3c74b25",
+            "Core:core-workflow-close-own-action:c225281175b2"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Workflows/Edit?workflowId=<workflow-id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "ADP enforced",
+        "Test release",
+        "Controlled protected workflow"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 4,
+      "number": 5,
+      "title": "Advanced Data Protection",
+      "kind": "feature",
+      "narration": "Advanced Data Protection. The Advanced Data Protection add-on: extra encryption and controlled access for sensitive data. Buying does not enroll the department. Review MFA, recovery, migration and integration behavior; this is not a compliance certification. Availability also depends on ADP. Check access in the target department.",
+      "narration_sha256": "fee897ef47c1b86bf2f83e5ad5e59686460a332516e11f8c41c6cec84b78604a",
+      "course_timing_proposal_only": {
+        "start": 79.0445,
+        "duration": 23.38000000000001
+      },
+      "actual_existing_cue_ids": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Subscription/Index",
+          "intent": "Show entitlement only.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+              "line": 355,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "917519e156997413e481112b424dbf49cc4b6c1292748a7d60c6450923230e91",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Subscription/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "4f65ad7e2df8f5e1e499f0f77a8fe0e3defeff785eb0229f5c5a2662f6352c02",
+              "current_file_sha256": "4f65ad7e2df8f5e1e499f0f77a8fe0e3defeff785eb0229f5c5a2662f6352c02",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Subscription Plan & Billing",
+            "Canceled",
+            "Active",
+            "year",
+            "Warning",
+            "Entities",
+            "Active Subscription"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Show separate enrollment/recovery/migration state.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-075-subscription:be461ec4bc29",
+        "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+        "Core:legacy-core-074-data-protection:7eefd28b6531"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s05:a01",
+          "text": "Advanced Data Protection.",
+          "text_sha256": "3615042bb609b7d51a4156ee4092002230b412ce9f0dbf7715096cac7ec3b6a7",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            25
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 79.119,
+          "enclosing_cue_end": 80.739,
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s05:a02",
+          "text": "The Advanced Data Protection add-on: extra encryption and controlled access for sensitive data.",
+          "text_sha256": "202bd6aa57a4cf745249f212ed269643cf8c3c9564849539647016d600dd4e64",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            26,
+            27
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 81.29,
+          "enclosing_cue_end": 86.86,
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s05:a03",
+          "text": "Buying does not enroll the department.",
+          "text_sha256": "cdee7f5ffbde101bc068911fbe6919d4cb9ed21b9f0212ca8c54cb7ca9fc3895",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            28
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 87.39,
+          "enclosing_cue_end": 89.449,
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s05:a04",
+          "text": "Review MFA, recovery, migration and integration behavior; this is not a compliance certification.",
+          "text_sha256": "daea159677d34c2e8aef45396766472b76f9b9e41c311e5a87f9fe23a4d64217",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            29,
+            30
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 89.899,
+          "enclosing_cue_end": 96.51,
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s05:a05",
+          "text": "Availability also depends on ADP.",
+          "text_sha256": "90f26abe763c7a481348dbf2c1d323bb7a5fc42c869f8a41f7858b2770b7db2e",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            31
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 96.95,
+          "enclosing_cue_end": 99.37,
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s05:a06",
+          "text": "Check access in the target department.",
+          "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            32
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 99.87,
+          "enclosing_cue_end": 101.909,
+          "candidate_capture_refs": [
+            "Core:legacy-core-075-subscription:be461ec4bc29",
+            "Core:legacy-core-076-subscription-entities:2cceb4908ab4",
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Subscription/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Test plan",
+        "ADP configuration"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 5,
+      "number": 6,
+      "title": "Configure one useful workflow",
+      "kind": "workflow",
+      "narration": "For the training scenario, work in this order. Step 1. Confirm Advanced Data Protection access and review the enrollment checklist. Step 2. Prepare administrator MFA and department key-recovery arrangements. Step 3. Enroll through the owning screen and review supported content, search, exports, and integrations.",
+      "narration_sha256": "0c9eb12a41376d29801eef2cdd7546efb8c62a94fa51bc9f8f7a004e4da3cd3b",
+      "course_timing_proposal_only": {
+        "start": 102.42450000000001,
+        "duration": 22.53
+      },
+      "actual_existing_cue_ids": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Review enrollment/key recovery/status using synthetic data; do not expose secrets.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/TwoFactor/Index",
+          "intent": "Inspect authenticator status and recovery controls without exposing setup secrets.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TwoFactorController.cs",
+              "line": 119,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ed49dee10a3da622847ed09cad412a1e04ee4c33321706213b639315a27c69e1",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/TwoFactor/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "47bb384aa64c57ba3513bc6e0e793c7964574526b723c61236c3aec00a214e51",
+              "current_file_sha256": "47bb384aa64c57ba3513bc6e0e793c7964574526b723c61236c3aec00a214e51",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Two-Factor Authentication",
+            "Authenticator App (TOTP)",
+            "Regenerate Recovery Codes",
+            "Replace Authenticator",
+            "Disable 2FA",
+            "Enable Authenticator App"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "intent": "Review actual controlled release policy separately from enrollment.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 101,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/ReleaseSettings.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "current_file_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "historical_hash_matches_current": true
+            },
+            {
+              "path": "Core/Core/Resgrid.Localization/Areas/User/SystemMessages/SystemMessages.en.resx",
+              "line": 147,
+              "historical_citation_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "current_file_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "ADP release settings",
+            "SMS delivery",
+            "Voice delivery",
+            "Allow time-limited Resgrid staff support access with approval by a second staff member.",
+            "Save"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-074-data-protection:7eefd28b6531",
+        "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s06:a01",
+          "text": "For the training scenario, work in this order.",
+          "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            33
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 102.49,
+          "enclosing_cue_end": 105.249,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s06:a02",
+          "text": "Step 1.",
+          "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            34
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 105.71,
+          "enclosing_cue_end": 106.309,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s06:a03",
+          "text": "Confirm Advanced Data Protection access and review the enrollment checklist.",
+          "text_sha256": "da6bdbade1d6335777f2a2aaabd71587a574e2df8c8759de3437a37b24d9785e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            35
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 106.87,
+          "enclosing_cue_end": 111.139,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s06:a04",
+          "text": "Step 2.",
+          "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            36
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 111.55,
+          "enclosing_cue_end": 112.3,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s06:a05",
+          "text": "Prepare administrator MFA and department key-recovery arrangements.",
+          "text_sha256": "75da413fd009261cead70e8af428e5e7bd33257e6588e75515248e3dee815087",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            37
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 112.729,
+          "enclosing_cue_end": 116.96,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s06:a06",
+          "text": "Step 3.",
+          "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            38
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 117.389,
+          "enclosing_cue_end": 118.109,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s06:a07",
+          "text": "Enroll through the owning screen and review supported content, search, exports, and integrations.",
+          "text_sha256": "4343f07419cd354cc95fc139088bf6eb89560c5a0125cf2d3db6d15546d8516b",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            39,
+            40
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 118.58,
+          "enclosing_cue_end": 124.41,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/TwoFactor/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "ADP entitlement",
+        "Test admins/MFA",
+        "Test admin with MFA",
+        "Synthetic protected content"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 6,
+      "number": 7,
+      "title": "Verify the result",
+      "kind": "verify",
+      "narration": "Now verify the result. Use sample protected content to verify an authorized read, a denied read, and the approved recovery procedure. Review egress separately. A common problem to watch for: Buying the add-on does not enroll the department. Enrollment and migration behavior must be confirmed for the target release.",
+      "narration_sha256": "f308a98880d1e0e1348d688e778367c4e3b0218508a168304de7eef09720a90c",
+      "course_timing_proposal_only": {
+        "start": 124.95450000000001,
+        "duration": 20.859999999999943
+      },
+      "actual_existing_cue_ids": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Records/Details?id=<record-id>",
+          "intent": "Show actual synthetic protected read with grant vs denied/redacted state under intended accounts.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/RecordsController.cs",
+              "line": 808,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "7fe5dcb35ba6c27c44bd4f4cb7b664cea9d19b1cef973c2ab2070cdb9d37a767",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Records/Details.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "7577b9dfe177af5d8487e7f98a3f3756c5d82302e0846b97cd59a31b91293e05",
+              "current_file_sha256": "7577b9dfe177af5d8487e7f98a3f3756c5d82302e0846b97cd59a31b91293e05",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "View Record",
+            "Amend",
+            "Abandon amendment",
+            "Call snapshot",
+            "Narrative",
+            "Restricted section",
+            "Participants"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Review enrollment/key recovery/status using synthetic data; do not expose secrets.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "intent": "Inspect actual approved-release/egress settings and state.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/ProtectedWorkflowsController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7e1b627b226386ddc09b08d02cf6767fc4185757ec452c7db51b0faebf9c4af",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/ProtectedWorkflows/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "current_file_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Protected Workflows",
+            "Protected workflow releases",
+            "Workflow",
+            "Status",
+            "Fields",
+            "Host",
+            "Recipient"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-074-data-protection:7eefd28b6531",
+        "Core:legacy-core-op-004-training-record-saved-draft:fbfeb3b92934",
+        "Core:legacy-core-op-005-training-record-finalized:3176494fd3e8",
+        "Core:legacy-core-op-006-training-record-history:0b7ff671dac7",
+        "Core:legacy-core-op-024-work-record-saved-draft:014ec4f9063a"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s07:a01",
+          "text": "Now verify the result.",
+          "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            41
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 125.049,
+          "enclosing_cue_end": 126.539,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-op-004-training-record-saved-draft:fbfeb3b92934",
+            "Core:legacy-core-op-005-training-record-finalized:3176494fd3e8",
+            "Core:legacy-core-op-006-training-record-history:0b7ff671dac7",
+            "Core:legacy-core-op-024-work-record-saved-draft:014ec4f9063a"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s07:a02",
+          "text": "Use sample protected content to verify an authorized read, a denied read, and the approved recovery procedure.",
+          "text_sha256": "fad73e597e00837cb5760abcc151f04670974cb14f166b9cc79665a5d6cf23ae",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            42,
+            43
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 126.89,
+          "enclosing_cue_end": 133.78,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-op-004-training-record-saved-draft:fbfeb3b92934",
+            "Core:legacy-core-op-005-training-record-finalized:3176494fd3e8",
+            "Core:legacy-core-op-006-training-record-history:0b7ff671dac7",
+            "Core:legacy-core-op-024-work-record-saved-draft:014ec4f9063a"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s07:a03",
+          "text": "Review egress separately.",
+          "text_sha256": "075d6238b01b6ca188b67c6792a91f4f07371db63dad0959de05cd5321747125",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            44
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 134.15,
+          "enclosing_cue_end": 135.679,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-op-004-training-record-saved-draft:fbfeb3b92934",
+            "Core:legacy-core-op-005-training-record-finalized:3176494fd3e8",
+            "Core:legacy-core-op-006-training-record-history:0b7ff671dac7",
+            "Core:legacy-core-op-024-work-record-saved-draft:014ec4f9063a"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s07:a04",
+          "text": "A common problem to watch for: Buying the add-on does not enroll the department.",
+          "text_sha256": "354f04025cb63823eaa68946e481c5fac760ce3595720f2b012b1982bab2f051",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            45
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 136.219,
+          "enclosing_cue_end": 140.809,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-op-004-training-record-saved-draft:fbfeb3b92934",
+            "Core:legacy-core-op-005-training-record-finalized:3176494fd3e8",
+            "Core:legacy-core-op-006-training-record-history:0b7ff671dac7",
+            "Core:legacy-core-op-024-work-record-saved-draft:014ec4f9063a"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s07:a05",
+          "text": "Enrollment and migration behavior must be confirmed for the target release.",
+          "text_sha256": "7d9cb3516c5d485f757588073ff270f3cc15269f4d718321049eed22b646f962",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            46
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 141.159,
+          "enclosing_cue_end": 145.28,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-op-004-training-record-saved-draft:fbfeb3b92934",
+            "Core:legacy-core-op-005-training-record-finalized:3176494fd3e8",
+            "Core:legacy-core-op-006-training-record-history:0b7ff671dac7",
+            "Core:legacy-core-op-024-work-record-saved-draft:014ec4f9063a"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Records/Details?id=<record-id>",
+          "missing_operation_or_result": "Review these actual viewports against the narration. Only the saved actions listed in the operational scenario manifest are proved; other transitions, provider outcomes and exports remain unverified.",
+          "prior_status": "actual_ui_with_authored_training_state",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Synthetic protected record",
+        "Allowed/denied users",
+        "ADP entitlement",
+        "Test admins/MFA",
+        "ADP enforced",
+        "Test release"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 7,
+      "number": 8,
+      "title": "Try it with your department",
+      "kind": "exercise",
+      "narration": "Your practice task is simple. Document who owns enrollment, key recovery, and disclosure review. Use only synthetic protected content for the recording. Record the result, who owns the follow-up, and when it should be reviewed.",
+      "narration_sha256": "616f87f4c5ad9e2a1d885a7dd1240ce1ca61697ca12d4109453ccdd8fb0704d8",
+      "course_timing_proposal_only": {
+        "start": 145.81449999999998,
+        "duration": 14.08450000000002
+      },
+      "actual_existing_cue_ids": [
+        47,
+        48,
+        49,
+        50
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "intent": "Review enrollment/key recovery/status using synthetic data; do not expose secrets.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 170,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "current_file_sha256": "b47f5a651f0975b9ba39b1a19dd85f01a65727876636b3c7348ea149abc4dd00",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Advanced Data Protection",
+            "Protection Status",
+            "Cancel queued enrollment",
+            "Migration progress",
+            "Keep Advanced Data Protection (revoke offboarding)",
+            "Enrollment Wizard",
+            "Step 1 of 6 — What Advanced Data Protection covers"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "intent": "Review actual controlled release policy separately from enrollment.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "existing_capture_count": 1,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DataProtectionController.cs",
+              "line": 101,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7c21ba35b72b477f900a12d8156924b795e357782390c2d45fb96c5d05fc9ca",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/DataProtection/ReleaseSettings.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "current_file_sha256": "eb34d3c04e9edc375b2a634ffbf9d162c7ca49ef87274111f54198d595a06930",
+              "historical_hash_matches_current": true
+            },
+            {
+              "path": "Core/Core/Resgrid.Localization/Areas/User/SystemMessages/SystemMessages.en.resx",
+              "line": 147,
+              "historical_citation_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "current_file_sha256": "2e033d5ebc23492dbc6a3f71d3e32d0e2758e2aa6ac994484abae9c9c5349bcd",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "ADP release settings",
+            "SMS delivery",
+            "Voice delivery",
+            "Allow time-limited Resgrid staff support access with approval by a second staff member.",
+            "Save"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "intent": "Inspect actual approved-release/egress settings and state.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/ProtectedWorkflowsController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "a7e1b627b226386ddc09b08d02cf6767fc4185757ec452c7db51b0faebf9c4af",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/ProtectedWorkflows/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "current_file_sha256": "372e4ffe8d52cb975f0cfff0c65fad748ae772bf5728b43ff408a563125a9f23",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Protected Workflows",
+            "Protected workflow releases",
+            "Workflow",
+            "Status",
+            "Fields",
+            "Host",
+            "Recipient"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-074-data-protection:7eefd28b6531",
+        "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "19-adp:s08:a01",
+          "text": "Your practice task is simple.",
+          "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            47
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 145.899,
+          "enclosing_cue_end": 147.48,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s08:a02",
+          "text": "Document who owns enrollment, key recovery, and disclosure review.",
+          "text_sha256": "92ff989962504a8d757fd257d1daf65c2bb963b31a2330e9b3c63b2d2536e84e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            48
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 147.939,
+          "enclosing_cue_end": 151.969,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s08:a03",
+          "text": "Use only synthetic protected content for the recording.",
+          "text_sha256": "bb777a32eabb622b08bc057135f8f1336afa9e1ab9d77d05c0289300f604b605",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            49
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 152.35,
+          "enclosing_cue_end": 155.37,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "19-adp:s08:a04",
+          "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+          "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            50
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 155.8,
+          "enclosing_cue_end": 159.689,
+          "candidate_capture_refs": [
+            "Core:legacy-core-074-data-protection:7eefd28b6531",
+            "Core:legacy-core-078-data-protection-release-settings:2bfde2fadd15"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/Index",
+          "missing_operation_or_result": "Activate or initialize the owning workspace and add the specified fictional entities before operational capture.",
+          "prior_status": "prerequisite_screen_only",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/DataProtection/ReleaseSettings",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/ProtectedWorkflows/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "ADP entitlement",
+        "Test admins/MFA",
+        "Synthetic protected content",
+        "ADP enforced",
+        "Test release"
+      ],
+      "unsupported_or_native_only_notes": [
+        "A recovery control/configuration does not establish tested recovery; show actual approved isolated recovery evidence when claimed."
+      ],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    }
+  ],
+  "existing_actual_cues": [
+    {
+      "id": 1,
+      "start": 0.079,
+      "end": 1.779,
+      "text": "Welcome to Resgrid Academy.",
+      "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 2,
+      "start": 2.17,
+      "end": 5.98,
+      "text": "In this lesson, we will plan protected-data access and recovery.",
+      "text_sha256": "377240edd5c8b3493e2adc4c8a0dc66674246ddba3e5d2cf9371c41c8a429830",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 3,
+      "start": 6.489,
+      "end": 10.43,
+      "text": "Sensitive content needs deliberate enrollment, controlled access,",
+      "text_sha256": "46864520bea44e6616ea6cdd057dadb8a2e7b712f2145c77185f93a519bb1ed8",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 4,
+      "start": 10.649000000000001,
+      "end": 13.899000000000001,
+      "text": "key recovery, and reviewed external disclosure paths.",
+      "text_sha256": "6cfe4c6bef4806327f0ebe591ef4f5d995b781312927eb25df993d7959d5bba7",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 5,
+      "start": 14.359,
+      "end": 17.53,
+      "text": "We will explain the features, the setup decisions, and a",
+      "text_sha256": "e81ab5e8a7d3f89c3c2904902e3e1cba467afa49546505b3163c11c6525c28e1",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 6,
+      "start": 17.53,
+      "end": 19.44,
+      "text": "practical way to check the result.",
+      "text_sha256": "1ba25c999800aedfbbb5764d88a2d6c0551ab3478f936f377bf5e8914d613b73",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 7,
+      "start": 20.079,
+      "end": 23.919,
+      "text": "A co-response team enrolls so client-related notes are protected",
+      "text_sha256": "9d00fda1d3a4f7061890bd34e55f24bc6734fca0a2801266d2492f66c7a1ce34",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 8,
+      "start": 23.919,
+      "end": 25.839,
+      "text": "in every module that stores them.",
+      "text_sha256": "85d0599ce8504523bbf438fa16ea3dc26dd409b8255a8091c90ceaf7e82123cd",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 9,
+      "start": 26.26,
+      "end": 29.909,
+      "text": "Protects sensitive incident and personnel content, with controlled",
+      "text_sha256": "65fa01a00d630927427754abb851c8ae90ba1db3fbb6d37e03b815190686514f",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 10,
+      "start": 29.909,
+      "end": 31.659,
+      "text": "disclosure and key recovery.",
+      "text_sha256": "8d2997607f0ae3180297cc87a5d3e9ca5957b87538334ea0d4fdbc7cbbbd47b7",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 11,
+      "start": 32.14,
+      "end": 35.85,
+      "text": "The examples in this series use a fictional department and are teaching",
+      "text_sha256": "3059d3c51632c06ba8eb16a1a8b9f77c21fd6ae769066295627ad95e3acf1bca",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 12,
+      "start": 35.85,
+      "end": 38.129,
+      "text": "scenarios, not default settings.",
+      "text_sha256": "2316b9b48729ef8e05abd557d4876c25502aa2b281cb9dabcfa0721bcda2f886",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 13,
+      "start": 38.769,
+      "end": 39.769,
+      "text": "Data Protection.",
+      "text_sha256": "77b25e3eed7664ac12b5c423fa82ae2986a96e88bc28fbe320561e4122060966",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s03:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 14,
+      "start": 40.259,
+      "end": 43.79,
+      "text": "Protection enrollment, key recovery and access controls.",
+      "text_sha256": "db3e54420deefb4e9985c89a7ac2a014961b411c8d26a74e6ea792018fc19d27",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s03:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 15,
+      "start": 44.339,
+      "end": 48.359,
+      "text": "Review the enrollment checklist and plan key recovery before enrolling.",
+      "text_sha256": "191ab1cb5f0193015fed8108fa86751f7016cd8121e15a8503bb98dde8f2096a",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s03:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 16,
+      "start": 48.79,
+      "end": 51.13,
+      "text": "Availability also depends on ADP.",
+      "text_sha256": "90f26abe763c7a481348dbf2c1d323bb7a5fc42c869f8a41f7858b2770b7db2e",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s03:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 17,
+      "start": 51.569,
+      "end": 53.689,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s03:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 18,
+      "start": 54.259,
+      "end": 55.55,
+      "text": "Protected workflows.",
+      "text_sha256": "dedeb64d8ead2a85383bd41d2417d126042d75e368e34230f69e93a5bc521035",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 19,
+      "start": 55.989,
+      "end": 60.429,
+      "text": "Send protected data to approved outside systems through reviewed workflows.",
+      "text_sha256": "587fbe736b646180e0b5d8114401b99264f1a752989fce4790a2f3cd14cb08b9",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 20,
+      "start": 60.8,
+      "end": 63.25,
+      "text": "Requires the Advanced Data Protection add-on.",
+      "text_sha256": "2dbafa0596c6bb5f98c628ad7989045705f5b882b402c34d176012a95d02618b",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 21,
+      "start": 63.719,
+      "end": 68.08,
+      "text": "Enrollment is a separate step: plan two-factor sign-in and key recovery",
+      "text_sha256": "a5af560324f002a2770e97659efd0dabf4e0c6c18e6777b0088b1cf439131694",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 22,
+      "start": 68.08,
+      "end": 72.189,
+      "text": "first, and review the effects on search, exports and integrations.",
+      "text_sha256": "bcd7dfd3244412f539ab9b366032a5f1e854c7fd5cd53e3f740df5303ac0520b",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 23,
+      "start": 72.869,
+      "end": 75.99,
+      "text": "Availability also depends on ADP, Enabled.",
+      "text_sha256": "d8fdd71e47094dcbd7eb1129e5d6c7c82a20cacb7b3d6420297f15a105635f84",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 24,
+      "start": 76.449,
+      "end": 78.52,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s04:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 25,
+      "start": 79.119,
+      "end": 80.739,
+      "text": "Advanced Data Protection.",
+      "text_sha256": "3615042bb609b7d51a4156ee4092002230b412ce9f0dbf7715096cac7ec3b6a7",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 26,
+      "start": 81.29,
+      "end": 85.23,
+      "text": "The Advanced Data Protection add-on: extra encryption and controlled",
+      "text_sha256": "ba129d8b16aa379e8d947e94ed9ee23f22b933cbc1b18007e1a1cb8a7bf3340a",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 27,
+      "start": 85.23,
+      "end": 86.86,
+      "text": "access for sensitive data.",
+      "text_sha256": "b596b129699dd9d96776ae6b9472f9361086f9df26c96dc2443d89b4db59f580",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 28,
+      "start": 87.39,
+      "end": 89.449,
+      "text": "Buying does not enroll the department.",
+      "text_sha256": "cdee7f5ffbde101bc068911fbe6919d4cb9ed21b9f0212ca8c54cb7ca9fc3895",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 29,
+      "start": 89.899,
+      "end": 94.659,
+      "text": "Review MFA, recovery, migration and integration behavior; this is",
+      "text_sha256": "736491183aa28c8e271957985b9bb3db9b7383f45e52df839c62dde91546a129",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 30,
+      "start": 94.659,
+      "end": 96.51,
+      "text": "not a compliance certification.",
+      "text_sha256": "c08f716fe029aa8e426a74980dd381e8b3f82c106c2bf22f108f29bf349a8c3f",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 31,
+      "start": 96.95,
+      "end": 99.37,
+      "text": "Availability also depends on ADP.",
+      "text_sha256": "90f26abe763c7a481348dbf2c1d323bb7a5fc42c869f8a41f7858b2770b7db2e",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 32,
+      "start": 99.87,
+      "end": 101.909,
+      "text": "Check access in the target department.",
+      "text_sha256": "a7148ba86c4212fefcedaabeef31577d30317890272615362296f62379a80de2",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s05:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 33,
+      "start": 102.49,
+      "end": 105.249,
+      "text": "For the training scenario, work in this order.",
+      "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 34,
+      "start": 105.71,
+      "end": 106.309,
+      "text": "Step 1.",
+      "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 35,
+      "start": 106.87,
+      "end": 111.139,
+      "text": "Confirm Advanced Data Protection access and review the enrollment checklist.",
+      "text_sha256": "da6bdbade1d6335777f2a2aaabd71587a574e2df8c8759de3437a37b24d9785e",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 36,
+      "start": 111.55,
+      "end": 112.3,
+      "text": "Step 2.",
+      "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 37,
+      "start": 112.729,
+      "end": 116.96,
+      "text": "Prepare administrator MFA and department key-recovery arrangements.",
+      "text_sha256": "75da413fd009261cead70e8af428e5e7bd33257e6588e75515248e3dee815087",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 38,
+      "start": 117.389,
+      "end": 118.109,
+      "text": "Step 3.",
+      "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 39,
+      "start": 118.58,
+      "end": 121.889,
+      "text": "Enroll through the owning screen and review supported content,",
+      "text_sha256": "7207007100dd8d3c3883a98de60151095755581d2efb9749ea9eea188d70650a",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 40,
+      "start": 121.889,
+      "end": 124.41,
+      "text": "search, exports, and integrations.",
+      "text_sha256": "9e94cd659d21d9c4d6c0f962259069f615ac1892fa88f1e3df3a34204d11ab0d",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s06:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 41,
+      "start": 125.049,
+      "end": 126.539,
+      "text": "Now verify the result.",
+      "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s07:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 42,
+      "start": 126.89,
+      "end": 131.429,
+      "text": "Use sample protected content to verify an authorized read, a denied read,",
+      "text_sha256": "a293888a565ca4f7ed5320580be88554c1a8c51a62e4047bb34137d5a06add2e",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 43,
+      "start": 131.69,
+      "end": 133.78,
+      "text": "and the approved recovery procedure.",
+      "text_sha256": "f7159e82078af8cb5b5902366f373e12ad8f9712db36d4cc11dcd07ee59937bd",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 44,
+      "start": 134.15,
+      "end": 135.679,
+      "text": "Review egress separately.",
+      "text_sha256": "075d6238b01b6ca188b67c6792a91f4f07371db63dad0959de05cd5321747125",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s07:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 45,
+      "start": 136.219,
+      "end": 140.809,
+      "text": "A common problem to watch for: Buying the add-on does not enroll the department.",
+      "text_sha256": "354f04025cb63823eaa68946e481c5fac760ce3595720f2b012b1982bab2f051",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s07:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 46,
+      "start": 141.159,
+      "end": 145.28,
+      "text": "Enrollment and migration behavior must be confirmed for the target release.",
+      "text_sha256": "7d9cb3516c5d485f757588073ff270f3cc15269f4d718321049eed22b646f962",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s07:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 47,
+      "start": 145.899,
+      "end": 147.48,
+      "text": "Your practice task is simple.",
+      "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s08:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 48,
+      "start": 147.939,
+      "end": 151.969,
+      "text": "Document who owns enrollment, key recovery, and disclosure review.",
+      "text_sha256": "92ff989962504a8d757fd257d1daf65c2bb963b31a2330e9b3c63b2d2536e84e",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s08:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 49,
+      "start": 152.35,
+      "end": 155.37,
+      "text": "Use only synthetic protected content for the recording.",
+      "text_sha256": "bb777a32eabb622b08bc057135f8f1336afa9e1ab9d77d05c0289300f604b605",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s08:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 50,
+      "start": 155.8,
+      "end": 159.689,
+      "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+      "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "19-adp:s08:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    }
+  ],
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "readiness": {
+    "all_real_screens_matched": false,
+    "all_controls_and_saved_results_demonstrated": false,
+    "every_cue_screen_assignment_verified": false,
+    "speech_timing_authoritative": false,
+    "audio_timeline_binding_complete": false,
+    "strict_source_gate_passed": false,
+    "rendered_frame_review": "not run",
+    "genuine_browser_playback": "pending, separate proof required",
+    "publishable": false,
+    "retained_cue_timestamps_present": true,
+    "cue_timing_qualification": "Existing SRT timestamps are retained unchanged; audio timing/signal/listening binding still requires current-media QA. Normalized text equality alone does not verify speech timing."
+  },
+  "render_decision": "No master is prepared because real-screen/action coverage is incomplete; preserve exact missing-shot list.",
+  "not_changed": [
+    "Source lesson/narration/audio/captions",
+    "Frozen R1/R3",
+    "New site/catalog",
+    "Source screenshots and capture manifests",
+    "Original Academy repository"
+  ],
+  "existing_capture_scope": {
+    "apps_requested": [
+      "Core",
+      "Responder",
+      "Dispatch",
+      "IC"
+    ],
+    "app_counts": {
+      "Core": 480,
+      "IC": 42,
+      "Responder": 220
+    },
+    "dispatch_limitation": "No Dispatch application screenshot with a retained capture-manifest row was found in sources/captures. Unmanifested dispatch-login.jpg is not promoted; Core Dispatch MVC pages remain Core screenshots.",
+    "unit_excluded": true
+  }
+}

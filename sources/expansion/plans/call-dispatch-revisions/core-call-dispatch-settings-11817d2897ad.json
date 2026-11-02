@@ -1,0 +1,257 @@
+{
+  "id": "core-call-dispatch-settings",
+  "title": "Configure call intake, dispatch behavior and closeout",
+  "app": "Core",
+  "audience": "Department administrators and dispatch supervisors",
+  "summary": "Connect each call and dispatch setting with form behavior, recipient selection, status changes and safe closeout verification.",
+  "prerequisites": [
+    "Use the fictional Chicago Fire demonstration department with configuration and call permissions.",
+    "Prepare one training station, on-duty shift, crew, unit type and meaningful custom statuses.",
+    "Record original settings and use an isolated training notification setup.",
+    "Some resource-selection and conditional settings appear only when the corresponding features are available."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review call intake and pruning",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Show parser choice, ALL-CALL address, pruning and pipe-format help.",
+      "required_labels": [
+        "Dispatch Import Email",
+        "Prune (Auto Close) Calls",
+        "Minutes to keep call open",
+        "Email Type"
+      ],
+      "narration": "Open Call Settings in the Chicago Fire demonstration department. Dispatch Import Email is an all-call intake address, so review its audience before using it. Choose the parser appropriate to your source. The Resgrid format help explains a pipe-separated message, including address and nature. Prune and Minutes to keep call open govern the configured email-call cleanup behavior. Save an intentional value and check it after reload. A saved duration is a setting; a completed automatic close needs its own observed result.",
+      "practice": "Identify the parser, intake audience and any automatic pruning choice before using an inbound source.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "02",
+      "title": "Keep intake and numbering distinct",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Show call-number controls and navigation to text intake settings.",
+      "required_labels": [
+        "Call Numbering",
+        "Call number pattern",
+        "Sequence digits"
+      ],
+      "narration": "Call Numbering on this page controls new call identifiers. Review pattern, sequence digits, year start and next number; use the numbering lesson before changing a continuation counter. Existing calls keep their issued numbers. Text-message intake has its own Text Settings, separate from choosing an email parser. Decide which intake channels your department actually uses and verify each with a controlled sample. A call appearing in the dashboard proves intake created it, while recipient receipt remains a separate communication check.",
+      "practice": "Record which settings page owns each enabled intake channel and its verification sample.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "03",
+      "title": "Set group and shift behavior",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show shift-routing toggles and personnel dispatch/release choices.",
+      "required_labels": [
+        "Group Dispatch Settings",
+        "Use Shift for Group Dispatch",
+        "Set Status for Shift Personnel On Dispatch",
+        "Person Call Dispatch Status",
+        "Person Call Release Status"
+      ],
+      "narration": "Open Dispatch Settings. In Group Dispatch Settings, decide whether dispatching a group should use its on-duty shift personnel. If you want automatic personnel status changes for that route, also enable Set Status for Shift Personnel On Dispatch and choose dispatch and release statuses. Both choices matter. Prepare a real current training shift before testing. Sending a group without an applicable on-duty roster does not create one. Inspect the selected personnel and their status history after the training call.",
+      "practice": "Compare the group's actual shift roster with the audience and personnel statuses expected on dispatch.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "04",
+      "title": "Review group scope and exceptions",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show group-scoped dispatch and actual role exceptions.",
+      "required_labels": [
+        "Group-Scoped Dispatch",
+        "Scope Dispatch to Group Areas",
+        "Department-Wide Dispatch Roles"
+      ],
+      "narration": "Group-Scoped Dispatch controls which group areas a user's dispatch view covers. Review Scope Dispatch to Group Areas and the personnel roles allowed a department-wide view. Use a fictional site or station account to test the intended scope, then compare an authorized supervisor's view. A role exception should be deliberate and tied to responsibility. If a resource disappears from a dispatch list, investigate scope and permissions along with status and location. A smaller list does not by itself mean the resource was removed from the department.",
+      "practice": "Explain who needs a local dispatch view and who legitimately needs a department-wide exception.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "title": "Configure units and recipient fan-out",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show unit crew/group fan-out, meaning targets and per-type overrides.",
+      "required_labels": [
+        "Unit Dispatch Settings",
+        "Also Dispatch To Assigned  Personnel",
+        "Also Dispatch To Entire Group",
+        "Unit Call Dispatch Status",
+        "Unit Call Release Status"
+      ],
+      "narration": "In Unit Dispatch Settings, choose whether a unit dispatch also notifies its assigned personnel or entire group. Review the resulting audience before saving. Select dispatch and release status targets by their operational meaning, then inspect unit-type overrides. A type-specific status choice wins for that type. Read warnings when a custom set has no matching status or several matches. Use Engine 51 for the test and record its prior status, so the later change can be traced to the dispatch rather than guessed.",
+      "practice": "Document the unit's intended recipient fan-out and resolved dispatch and release statuses.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "title": "Understand linked status controls",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show personnel-on-unit, hold-to-confirm and last-unit-close toggles/help.",
+      "required_labels": [
+        "Personnel on Unit Set Unit Status",
+        "Hold to set status",
+        "Close call when last unit clears"
+      ],
+      "narration": "Review Personnel on Unit Set Unit Status: a unit status submission can place its assigned crew into the On Unit context. Hold to set status changes confirmation behavior in the Unit and Responder apps; test the actual app gesture before teaching it as completed. Close call when last unit clears can close an active call when every dispatched unit has reported finished. Returning and transporting still represent work in progress. Calls without dispatched units or with active incident command remain for an appropriate closeout decision.",
+      "practice": "State which linked behaviors are enabled and which require an actual app or unit-status test.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "07",
+      "title": "Tune recommendations and waiting resources",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show gated recommendation, turnout, response-code and waiting-call sections.",
+      "required_labels": [
+        "Run Cards & Automatic Dispatch",
+        "Closest Unit Response Tuning",
+        "Response codes"
+      ],
+      "narration": "Where Run Cards are available, review selection mode, automatic dispatch, rest period, minimum staffing and move-up choices. Location age, radius, stale-position handling, routed ETA and turnout settings affect recommendations. Conditional responses add personnel turnout, waiting-call behavior and response codes. Review whether freed units should only alert dispatchers or be sent automatically to waiting calls. Keep review mode for practice. These settings deserve a saved card test and a real New Call comparison; an attractive recommendation panel does not prove the full response is staffed or delivered.",
+      "practice": "Identify one tuning choice and verify its practical effect with the run-card or nearest-resource lesson.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "08",
+      "title": "Configure timer rules and coverage",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show actual timer/default/override forms and station coverage rows.",
+      "required_labels": [
+        "Check-In Timer Settings",
+        "Auto-Enable Check-In Timers for New Calls",
+        "Default Timer Configurations",
+        "Call Type / Priority Overrides"
+      ],
+      "narration": "Review check-in auto-enable, then the default timer configurations and call type or priority overrides. Choose target, duration, warning threshold and active states appropriate to the exercise. Save each form and inspect the resulting row; the main settings Save does not replace the separate timer controls. If station coverage requirements are available, inspect their station, unit or role target, minimum count and radius. Use a training call to confirm timers begin in the intended states and coverage advice reflects the actual remaining resources.",
+      "practice": "Create one suitable training timer rule and confirm its stored row and call behavior.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "09",
+      "title": "Make the New Call form useful",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Change field policy, save, open New Call and show real validation.",
+      "required_labels": [
+        "New Call Form Fields",
+        "Visible",
+        "Required"
+      ],
+      "narration": "Find New Call Form Fields. Make GPS Coordinates and Note visible and required for our exercise, and hide an unused External Call ID. Save, then open a fresh New Call form. Confirm required markers and the hidden field's absence, and test an incomplete unsent form before correcting it. Hidden fields cannot remain mandatory. Plus Code can be shown or hidden but cannot be required; require GPS when a usable point is essential. Name, nature, priority and type remain central call fields.",
+      "practice": "Verify one visibility change and one required-field validation on the actual call form.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Verify dispatch and release effects",
+      "route": "/User/Dispatch/CloseCall?callId=<id>",
+      "capture_intent": "Show actual training call close form and before/after unit/personnel status history.",
+      "required_labels": [
+        "Completed Type",
+        "Send Notification",
+        "Completed Notes",
+        "Close Call"
+      ],
+      "narration": "Save an department-approved training call with the intended group and unit, then inspect its recipients and automatic status changes. On Close Call, choose the completion type, enter training completion notes and review Send Notification separately. Leave it off for a training practice that should not notify anyone. Close and compare release statuses. A unit already back in service, unavailable, on a break or assigned to another open call can keep its current status. Closing this call should not pull it away from other work.",
+      "practice": "Compare actual dispatch and release history for one unit and the on-duty personnel affected.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "title": "Check automatic and guarded closeout",
+      "route": "/User/Dispatch/Dashboard",
+      "capture_intent": "Show actual two-unit last-clear result or incident-command blocker.",
+      "required_labels": [
+        "Calls"
+      ],
+      "narration": "For a last-unit-clear exercise, dispatch two training units, then have them report finished after dispatch. The first clearing unit should leave the call open while the other still works. Inspect the last qualifying change and the resulting call state. An active incident command blocks ordinary call closure and needs its command closeout first. A future scheduled call that never dispatched has no applied dispatch status to release. Verify the specific call's history and final state instead of applying a blanket rule to every closed item.",
+      "practice": "Explain one case that should auto-close and one that should remain open, using actual training history.",
+      "capture_evidence": {
+        "status": "pending",
+        "capture_refs": [],
+        "observations": [
+          "Capture and saved-state verification are in progress. No preview is treated as a saved result."
+        ]
+      }
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: compare a current station shift and two fictional units through dispatch, release and last-unit close.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: keep occupied response teams from becoming available merely because an unrelated visit closes.",
+    "Search and rescue": "Search and rescue: use field policies and check-in rules suitable for staging and extended search activity.",
+    "Security companies and departments": "Security: scope patrol dispatch by site while preserving appropriate supervisor access.",
+    "Wildland contractors": "Wildland contractors: review shift and rest assumptions across overnight assignments and long returns.",
+    "Industrial emergency response teams": "Industrial response: preserve unavailable or maintenance states when closing a call involving plant equipment."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Department/CallSettings.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Department/DispatchSettings.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/DepartmentController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/DispatchController.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/CallDispatchStatusService.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/CallAutoCloseService.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/NewCallFieldPolicy.cs"
+  ]
+}

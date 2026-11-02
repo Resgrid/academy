@@ -1,0 +1,75 @@
+{
+  "kind": "actual_ui_action_ledger",
+  "recorded_at": "2026-10-30T23:33:35.181822+00:00",
+  "application": "Dispatch",
+  "call_id": "51017",
+  "call_number": "FD51-2026-0009",
+  "fictional_exercise": true,
+  "actions": [
+    {
+      "operation": "Open Calls menu, New Call",
+      "result": "Actual New Call form visible."
+    },
+    {
+      "operation": "Fill Name and Nature; choose Routine and Medical",
+      "result": "TRAINING ONLY - Scheduled community standby 20261030; fictional practice nature."
+    },
+    {
+      "operation": "Open Schedule Dispatch, Scheduled Date & Time; choose October31 2026, hour08 minute00; Done",
+      "result": "10/31/2026, 8:00:00 AM visible in picker field."
+    },
+    {
+      "operation": "Enter training address, latitude41.8721 longitude-87.6523",
+      "result": "Fictional community-response practice location; no real incident."
+    },
+    {
+      "operation": "Open Select Recipients, search Wallace Boden, select only that demo user and Confirm",
+      "result": "One checked demo user in chooser; summary only says1selected. No other recipient selected."
+    },
+    {
+      "operation": "Create with Save as pending off",
+      "result": "Call created successfully; scheduled-count1; ScheduledCalls listsFD51-2026-0009, Oct31 10:00am."
+    },
+    {
+      "operation": "Open that call, Edit; Scheduled Date & Time hour09 minute30, Done",
+      "result": "10/31/2026, 9:30:00 AM visible before Save."
+    },
+    {
+      "operation": "Save",
+      "result": "Same call number returned; ScheduledforOct31 11:30am visible."
+    },
+    {
+      "operation": "Click Dispatch now",
+      "result": "Native confirmation asks Dispatch this call now? Everyone on its dispatch list is notified immediately. Browser-control focus stalled; no accepted confirmation, dispatch result or closure has been established."
+    },
+    {
+      "operation": "Read Core Setup Wizard, Department Settings owning screen",
+      "result": "TimeZone shows (GMT-06:00) Central Time (US & Canada). No setting saved."
+    }
+  ],
+  "source_runtime": {
+    "profile_sha256": "fa769eb7cbbeb443aaaae7d8d98c5d88d6d533278126508bd1523d457e0511a2",
+    "served_bundle_sha256": "2456468afff4564a7482a2c1dbaacddee73b36310d4fad57ac17b0352f89ea53"
+  },
+  "capture_state": {
+    "source_only": true,
+    "export_ready": false,
+    "natural_narration_generated": false,
+    "raw001_to003": "Original JPEG and actual accessibility text, without full DOM recorder observations. Do not fabricate missing DOM history.",
+    "dom_backed004_to013": "Raw capture manifest; personal pixel/label/clipping review still required.",
+    "known_raw_metadata_corrections_needed": [
+      "004 shows selected Routine and Medical in pixels, but this generic recorder does not collect HTML select values. Missing raw labels must be resolved through genuine review or fresh actual observation.",
+      "006 recipient summary is 1selected; WallaceBoden is visible in005chooser, not006summary.",
+      "007 table clips call number, name and address. Full number/title are visible in008detail and012result."
+    ]
+  },
+  "inferred_successes_forbidden": [
+    "automatic timed dispatch execution",
+    "notification delivery",
+    "dispatch-now confirmation accepted",
+    "call closure",
+    "physical availability or readiness",
+    "clinically meaningful care or real patient data"
+  ],
+  "private_auth_retained": false
+}

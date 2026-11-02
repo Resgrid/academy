@@ -1,0 +1,163 @@
+{
+  "id": "app-responder-call-notes-personnel-checkin",
+  "app": "Responder",
+  "title": "Responder: add call notes and record a personnel check-in",
+  "summary": "Add a note to the intended call, verify the saved text and author, then make a named personnel check-in and inspect its timer and history.",
+  "audience": [
+    "Responders using call notes and check-ins",
+    "Department trainers",
+    "Personnel accountability coordinators"
+  ],
+  "prerequisites": [
+    "An authorized Responder session with the appropriate call and check-in controls available.",
+    "A fictional practice call and permission to record your own personnel check-in.",
+    "Department procedures for operational notes, check-in intervals and missed check-ins."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Identify the call before adding a note",
+      "narration": "Call notes keep an incident update with the call it belongs to. Begin by reading the title and call number in Call Details. This example is Training Only, Responder call and check-in practice, F D fifty-one, twenty twenty-six, zero zero zero one. Its Nature describes a fictional industrial alarm exercise. Check the incident identity before adding information, especially when several calls have similar names. Choose Notes to open this call's notes.",
+      "practice": "Verify the intended practice incident and find its Notes control.",
+      "required_labels": [
+        "Call Details",
+        "TRAINING ONLY — Responder call and check-in practice (FD51-2026-0001)",
+        "Notes"
+      ],
+      "capture_refs": [
+        "208-disposable-call-created"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Review and submit a useful call note",
+      "narration": "The Call Notes panel has a search field, an entry area and Add Note. In this prepared example, the entry records that a virtual access plan was reviewed in the Academy software exercise, with no real response or physical inspection requested. Use a clear update that distinguishes an observation, a request and completed work. Review the text before choosing Add Note. Avoid putting an update on the wrong incident simply because a notes panel is already open.",
+      "practice": "Review the prepared fictional note and identify Add Note before submitting it.",
+      "required_labels": [
+        "Call Notes",
+        "Search notes...",
+        "TRAINING ONLY — virtual access plan reviewed in the Academy software exercise. No real response or physical inspection requested.",
+        "Add Note"
+      ],
+      "capture_refs": [
+        "213-disposable-call-note-prepared"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Verify the saved note after reopening",
+      "narration": "Reopen Call Notes and read the saved entry. The same complete text now appears in the list with Wallace Boden as its author and a recorded timestamp. The entry area below is empty again. Verify the actual saved text as well as its author; a prepared message in an entry field is different from a listed note. This gives the next person reviewing the call a specific update they can find and understand.",
+      "practice": "Compare the saved note with the prepared text, author and timestamp.",
+      "required_labels": [
+        "Call Notes",
+        "TRAINING ONLY — virtual access plan reviewed in the Academy software exercise. No real response or physical inspection requested.",
+        "Wallace Boden",
+        "10/26/2026 15:00:00"
+      ],
+      "capture_refs": [
+        "215-disposable-call-note-reopened"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Read the named personnel timer",
+      "narration": "On the same call, open the Check-In tab. This view shows Wallace Boden, the Personnel type, a timer and Check In. The recorded timer has forty-two minutes and twenty-eight seconds remaining, with seventeen point five of sixty minutes elapsed. Read whose timer you are viewing before taking action. Quick Check-In and Check-In History are also visible. For this exercise, choose the Check In button on Wallace Boden's card to review the named confirmation.",
+      "practice": "Read the intended person and timer, then identify Check In on that card.",
+      "required_labels": [
+        "Check-In",
+        "Wallace Boden",
+        "Personnel",
+        "42:28",
+        "17.5 / 60 min",
+        "Check In",
+        "Quick Check-In",
+        "Check-In History ▼"
+      ],
+      "capture_refs": [
+        "218-personnel-timer-before-check-in"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Review the person, type and optional note",
+      "narration": "The sheet identifies Select Check-In Type, Wallace Boden. Personnel is selected, and Add Note is optional. This exercise note explicitly describes a virtual personnel check-in for Academy software practice. A software entry should accurately describe what was recorded. Check the named person, selected type and note, then choose Confirm Check-In once. Keep actual personnel accountability and any missed check-in response aligned with your department's procedures.",
+      "practice": "Verify the named person, selected Personnel type and truthful practice note before Confirm Check-In.",
+      "required_labels": [
+        "Select Check-In Type: Wallace Boden",
+        "Personnel",
+        "Add Note (Optional)",
+        "TRAINING ONLY — virtual personnel check-in for Academy software practice. No physical arrival, GPS or safety verification is asserted.",
+        "Confirm Check-In"
+      ],
+      "capture_refs": [
+        "219-personnel-check-in-confirmation"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Inspect the returned timer and saved history",
+      "narration": "The returned Personnel card now shows fifty-nine minutes and thirty-eight seconds remaining and Last check-in, zero point one minutes ago. Below it, the expanded Check-In History contains a Personnel entry, the same practice note and its timestamp. Review the saved history as well as the changed timer. This recording demonstrates the software check-in; it does not establish physical arrival or a field safety check. A visible saved entry is the result to verify before relying on the software record in a handover.",
+      "practice": "Verify the refreshed timer and the matching note and timestamp in expanded Check-In History.",
+      "required_labels": [
+        "Wallace Boden",
+        "Personnel",
+        "59:38",
+        "Last check-in: 0.1 min ago",
+        "0.1 / 60 min",
+        "Check-In History ▲",
+        "TRAINING ONLY — virtual personnel check-in for Academy software practice. No physical arrival, GPS or safety verification is asserted.",
+        "2026-10-26 20:13"
+      ],
+      "capture_refs": [
+        "220-personnel-check-in-history"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Use consistent updates across different teams",
+      "narration": "Community paramedicine and mental health response teams can use clear updates during coordinated outreach. Search-and-rescue teams can keep support staff informed, security teams can document post updates, wildland contractors can coordinate crew activity, and industrial emergency teams can maintain standby accountability. Fire and EMS departments can apply the same habits. Select the intended call, record only what you mean, and inspect the saved note or check-in history before handing over to another team member.",
+      "practice": "Practice incident identity, clear notes and named check-in verification using fictional data for your department.",
+      "required_labels": [
+        "Check-In History ▲",
+        "Personnel",
+        "TRAINING ONLY — virtual personnel check-in for Academy software practice. No physical arrival, GPS or safety verification is asserted."
+      ],
+      "capture_refs": [
+        "220-personnel-check-in-history"
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Record an appropriate call update and verify a named personnel check-in during a station exercise."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Keep outreach coordination notes clear and distinguish a software check-in from a field assessment."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Give authorized support personnel a readable call update and inspect check-in history."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Record an appropriate post update and verify the intended staff member's check-in."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Keep crew coordination updates with the intended exercise call and inspect the saved record."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Practice a fictional standby update and named personnel accountability entry."
+    }
+  ],
+  "scope_limits": [
+    "Historical local Responder web captures for the same fictional call51009/FD51-2026-0001; no new call, note or check-in is created during source authoring.",
+    "Covers saved call-note text and an individual Personnel check-in only. Field GPS, physical safety, missed-check-in alerts, unit check-ins, Quick Check-In behavior and provider delivery are outside this recording.",
+    "The exact app screens, source timestamps and timer values are retained; no current operational state is asserted."
+  ],
+  "export_ready": false,
+  "publication_mode": "source_candidate_only"
+}

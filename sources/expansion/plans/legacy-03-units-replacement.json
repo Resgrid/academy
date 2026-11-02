@@ -1,0 +1,3065 @@
+{
+  "schema_version": 1,
+  "lesson": "03-units",
+  "title": "Represent apparatus, crews, and GPS devices",
+  "audited_at": "2026-10-26T21:14:58.088195+00:00",
+  "status": "BLOCKED — not a renderer-ready replacement plan",
+  "source_course": {
+    "file": "sources/course.json",
+    "sha256": "7ecf29cae5234d3c4fa2ce42a2bdf38196b3a01c0b441c363621cde8eca37453"
+  },
+  "narration": {
+    "text_sha256": "aaec42932340ad4f728bddadb69a84fc583ede9337280aa90129efc9ef52b7b8",
+    "normalised_words_sha256": "7d9ffe223cb45a028b6ee5a402e62147fbe96510a168953b8b9962d88cf3478a",
+    "word_count": 349,
+    "source_scene_count": 10,
+    "script_caption_exact_normalized": true,
+    "alignment_ratio": 1.0,
+    "differences": []
+  },
+  "media": {
+    "existing_illustrated_video": {
+      "file": "sources/media/03-units.mp4",
+      "sha256": "b0c10801b2244ff1aedefaff9c55167ca9600931d4b57830b1bbd177103b0a4f",
+      "exists": true,
+      "duration_seconds": 146.7,
+      "bytes": 4330831
+    },
+    "raw_natural_narration_audio": {
+      "file": "sources/production/descript/natural/audio/03-units.m4a",
+      "sha256": "8d02948f817c128cc2a529a05cf436b3d886116fe2a29b5a287f083bf9c364c2",
+      "exists": true,
+      "duration_seconds": 146.48,
+      "bytes": 2956902
+    },
+    "existing_video_aac_packet_payload_sha256": "f0abeba6199e3197e94fbe93864eb14c2326506df1ac3f357332f4eafd5fa74e",
+    "srt": {
+      "file": "sources/media/03-units.srt",
+      "sha256": "d503d7f69f96a6fe9c24348946fe653f3b795cb0712c7f73d294472cc1bb7c3e",
+      "cue_count": 46
+    },
+    "vtt": {
+      "file": "sources/media/03-units.vtt",
+      "sha256": "21d2e3f63400cb6f3d992cccee6af3173d4ad6c7498ef29f8aa181d48a663033"
+    },
+    "raw_speech_srt": {
+      "file": "sources/production/descript/natural/captions/03-units-raw.srt",
+      "sha256": "926c25a242bf84c23d24b61d3bbf6f38490480a12e02170d8e2a8dcda0338fa3"
+    },
+    "retained_natural_validation": {
+      "file": "sources/production/descript/natural/03-units-validation.json",
+      "sha256": "fcd4b82f5672a8faae713736f631b7350a665450070bc9fe6d53e0fa12ace05e",
+      "reported_voice": "Warm Lulu",
+      "reported_cues": 47,
+      "reported_match_ratio": 0.9958,
+      "reported_duration_seconds": 150.53,
+      "reported_raw_audio_seconds": 146.48,
+      "reported_transition_pause_seconds": 0.45,
+      "human_playback": "pending",
+      "human_listening": "pending"
+    },
+    "course_metadata_duration_seconds": 146.674,
+    "caption_last_end_seconds": 146.45,
+    "timing_rule": "The listed caption timestamps are retained observations, never invented timing. Enclosing cue bounds are not word timestamps. Do not pair final SRT with raw audio unless the actual retained pause assembly is reproduced and revalidated.",
+    "replacement_audio_recommendation": "Reuse/retain the actual AAC track from the hash-pinned current final video with matching SRT, or reproduce the documented raw-audio transition-pause assembly and fully QA it. No audio is synthesized here."
+  },
+  "illustrated_input_compliant": false,
+  "scenes": [
+    {
+      "index": 0,
+      "number": 1,
+      "title": "Represent apparatus, crews, and GPS devices",
+      "kind": "title",
+      "narration": "Welcome to Resgrid Academy. In this lesson, we will represent apparatus, crews, and gps devices. A vehicle name alone does not tell a dispatcher its type, home station, crew, or location source. We will explain the features, the setup decisions, and a practical way to check the result.",
+      "narration_sha256": "7154f777d6a79f410e54d4800fabaa26ae084ff7b59020fa79b90d6887744954",
+      "course_timing_proposal_only": {
+        "start": 0.0,
+        "duration": 20.1145
+      },
+      "actual_existing_cue_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Units/Index",
+          "intent": "Inspect Engine 1/Rescue 1 type, station, status and crew.",
+          "candidate_capture_refs": [
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770"
+          ],
+          "existing_capture_count": 8,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 89,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "db05d44d60f86883678e9f62b13c6e4a68c6a5ad0f76aae69c2459f273199173",
+              "current_file_sha256": "db05d44d60f86883678e9f62b13c6e4a68c6a5ad0f76aae69c2459f273199173",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Name",
+            "Type",
+            "Status",
+            "Timestamp",
+            "Set Status",
+            "No Units in Department",
+            "No Un-Grouped Units"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "intent": "Show actual crew assignments to the selected training unit.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 161,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/UnitStaffing.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "current_file_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Unit Staffing",
+            "Save",
+            "Units",
+            "Not Occupied"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-007-units:7c97b7e9eb30",
+        "Core:legacy-core-037-unit-staffing:3396986a22d3"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s01:a01",
+          "text": "Welcome to Resgrid Academy.",
+          "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            1
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 0.029,
+          "enclosing_cue_end": 1.7690000000000001,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s01:a02",
+          "text": "In this lesson, we will represent apparatus, crews, and gps devices.",
+          "text_sha256": "502854ba4d2dcd084d5c6ec19a82f099aee7cc1caa0f5a2eddc3e9adcc347eda",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            2
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 2.16,
+          "enclosing_cue_end": 7.13,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s01:a03",
+          "text": "A vehicle name alone does not tell a dispatcher its type, home station, crew, or location source.",
+          "text_sha256": "1bd3aef0e8d751a049ebfa545ef4876d5677e0555b2e9324e6bd286394132439",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            3,
+            4
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 7.619,
+          "enclosing_cue_end": 14.06,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s01:a04",
+          "text": "We will explain the features, the setup decisions, and a practical way to check the result.",
+          "text_sha256": "75a8e835ef7bfbbf0615c569d1eecf54b9bc5c6e62970378b3aeb88d08738c40",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            5,
+            6
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 14.5,
+          "enclosing_cue_end": 19.579,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Units/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine 1",
+        "Academy Rescue 1",
+        "Alex Example",
+        "Officer/Engineer roles"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 1,
+      "number": 2,
+      "title": "A department scenario",
+      "kind": "scenario",
+      "narration": "Engine 1 and Rescue 1 are added with their unit types and assigned to Station 1. Units let dispatchers send the right resources and let everyone see which apparatus is available. The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+      "narration_sha256": "61acaa97c5cea2be829a5daa2d23ce1f945b96f5e9ad0651dca624ce5e4bf1e7",
+      "course_timing_proposal_only": {
+        "start": 20.1145,
+        "duration": 17.510500000000008
+      },
+      "actual_existing_cue_ids": [
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Types/EditUnitType?unitTypeId=<id>",
+          "intent": "Show engine base class, map icon, status set and seats.",
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TypesController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "09870ae55e8d1038b40b4ed6742c7c71ae1f75e05067574475d192dd1f57afb2",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Types/EditUnitType.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e55e651e4cff31ea3a7b3fc0b519ce68c48b37f8b95b1edd5097af4eebb1ceb1",
+              "current_file_sha256": "e55e651e4cff31ea3a7b3fc0b519ce68c48b37f8b95b1edd5097af4eebb1ceb1",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Edit Unit Type",
+            "Unit Type Name",
+            "Class",
+            "Actions (Custom Unit Statuses)",
+            "Map Icon",
+            "Status map icons",
+            "Update"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "intent": "Enter fictional name, type, station and crew-role seats.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 314,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "current_file_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Unit",
+            "Name",
+            "Type",
+            "Station",
+            "Roles",
+            "Role Name",
+            "Required Personnel Role"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/UnitTracking/Index",
+          "intent": "Show actual tracking device-to-unit assignment and last received test position.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitTrackingController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "1caf533aed181369224e7a50e6fcb6ca714c9eb0cc1e0c81bd8a11fb80bb9941",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/UnitTracking/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "1102896d2050b1c55e298bc7d68b71677a9ee293fb32aec3949f15d73272f594",
+              "current_file_sha256": "1102896d2050b1c55e298bc7d68b71677a9ee293fb32aec3949f15d73272f594",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Hardware GPS tracking",
+            "Name",
+            "Tracking profile",
+            "Device identifier",
+            "Status",
+            "Last seen",
+            "Last valid fix"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s02:a01",
+          "text": "Engine 1 and Rescue 1 are added with their unit types and assigned to Station 1.",
+          "text_sha256": "2ca4293687f738df4cf6d325e76737716a649fb3b4fb537fbc45e8972507166e",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            7
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 20.2,
+          "enclosing_cue_end": 24.849,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s02:a02",
+          "text": "Units let dispatchers send the right resources and let everyone see which apparatus is available.",
+          "text_sha256": "c11c3cc2ab17a999aa35fb79922a8a80d53886e27fbb1f61c45b5bea0b6f2fa1",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            8,
+            9
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 25.419,
+          "enclosing_cue_end": 30.829,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s02:a03",
+          "text": "The examples in this series use a fictional department and are teaching scenarios, not default settings.",
+          "text_sha256": "c3bea48c517ece285518958a0c220aae533e0f6326956bfe90b76d7010dd0a34",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            10,
+            11
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 31.239,
+          "enclosing_cue_end": 37.05,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Types/EditUnitType?unitTypeId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/UnitTracking/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine type",
+        "Academy Engine 1",
+        "Controlled tracker ID"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 2,
+      "number": 3,
+      "title": "Units",
+      "kind": "feature",
+      "narration": "Units. Your apparatus, vehicles and response teams. Add each unit with its type and home station group.",
+      "narration_sha256": "48c790729e92f27f42c5fbc50495304cfd3e8fafd4ec7e202ec1bc9f6023db3a",
+      "course_timing_proposal_only": {
+        "start": 37.625,
+        "duration": 8.234000000000002
+      },
+      "actual_existing_cue_ids": [
+        12,
+        13,
+        14
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Units/Index",
+          "intent": "Inspect Engine 1/Rescue 1 type, station, status and crew.",
+          "candidate_capture_refs": [
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770"
+          ],
+          "existing_capture_count": 8,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 89,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "db05d44d60f86883678e9f62b13c6e4a68c6a5ad0f76aae69c2459f273199173",
+              "current_file_sha256": "db05d44d60f86883678e9f62b13c6e4a68c6a5ad0f76aae69c2459f273199173",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Name",
+            "Type",
+            "Status",
+            "Timestamp",
+            "Set Status",
+            "No Units in Department",
+            "No Un-Grouped Units"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-007-units:7c97b7e9eb30"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s03:a01",
+          "text": "Units.",
+          "text_sha256": "d7123589814992df6764a3bd9ff7672d6c3c23ee753dabf3233537fcd8a77670",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            12
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 37.75,
+          "enclosing_cue_end": 38.329,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s03:a02",
+          "text": "Your apparatus, vehicles and response teams.",
+          "text_sha256": "1da33d0c47383db26fbfcd9ca8018ba118f4e6aaadc81b9ae4eed6423b227882",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            13
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 38.719,
+          "enclosing_cue_end": 41.65,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s03:a03",
+          "text": "Add each unit with its type and home station group.",
+          "text_sha256": "5e883a5b6d86764a4e25af35be687f58bef61b2e5fb4851cbcc7014d771c2033",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            14
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 42.189,
+          "enclosing_cue_end": 45.279,
+          "candidate_capture_refs": [
+            "Core:legacy-core-007-units:7c97b7e9eb30",
+            "Core:23-custom-unit-picker:578b4991a47f",
+            "Core:28-search-status-call-note:b6ba8f6f0b90",
+            "Core:29-search-status-saved:a1a2b2dd0f4e",
+            "Core:core-nearest-unit-readiness-list:4885bbff9228",
+            "Core:core-nearest-unavailable-reserve-unit:4eafd1a3eb52",
+            "Core:core-nearest-unit-overview-current-statuses:4885bbff9228",
+            "Core:03-units:075c9cfdc770"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Units/Index",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine 1",
+        "Academy Rescue 1"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 3,
+      "number": 4,
+      "title": "Unit types",
+      "kind": "feature",
+      "narration": "Unit types. Categories such as Engine, Ladder or Ambulance. Create unit types before adding units so each unit can be classified.",
+      "narration_sha256": "5faccd555eaa4921939eac7bafd8452688e1647a5f068e9c713501c1c9fa23ee",
+      "course_timing_proposal_only": {
+        "start": 45.859,
+        "duration": 9.855500000000006
+      },
+      "actual_existing_cue_ids": [
+        15,
+        16,
+        17
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Types/EditUnitType?unitTypeId=<id>",
+          "intent": "Show engine base class, map icon, status set and seats.",
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TypesController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "09870ae55e8d1038b40b4ed6742c7c71ae1f75e05067574475d192dd1f57afb2",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Types/EditUnitType.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e55e651e4cff31ea3a7b3fc0b519ce68c48b37f8b95b1edd5097af4eebb1ceb1",
+              "current_file_sha256": "e55e651e4cff31ea3a7b3fc0b519ce68c48b37f8b95b1edd5097af4eebb1ceb1",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Edit Unit Type",
+            "Unit Type Name",
+            "Class",
+            "Actions (Custom Unit Statuses)",
+            "Map Icon",
+            "Status map icons",
+            "Update"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s04:a01",
+          "text": "Unit types.",
+          "text_sha256": "df5654799c3409bd3f89aa37130dd0abee1606eb66f475a99df14bc6ad0f4f3e",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            15
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 45.989,
+          "enclosing_cue_end": 46.76,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s04:a02",
+          "text": "Categories such as Engine, Ladder or Ambulance.",
+          "text_sha256": "7577aa4efd0bc639962d89d47b3f0613e3c55d4d0c28b82126a88fb9bcf55343",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            16
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 47.179,
+          "enclosing_cue_end": 50.46,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s04:a03",
+          "text": "Create unit types before adding units so each unit can be classified.",
+          "text_sha256": "2b9b5e95db03bfd99513cd41c43593e9048d6ce47d44b78d33ec456955b196ac",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            17
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 50.819,
+          "enclosing_cue_end": 55.099,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Types/EditUnitType?unitTypeId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine type"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 4,
+      "number": 5,
+      "title": "Hardware location tracking",
+      "kind": "feature",
+      "narration": "Hardware location tracking. GPS devices that report unit locations. Register each tracking device and link it to its unit.",
+      "narration_sha256": "bd4862cebcf1147c48125e466f002f8b703f84dd7a9884b5aded1d64f24105be",
+      "course_timing_proposal_only": {
+        "start": 55.7145,
+        "duration": 9.149500000000003
+      },
+      "actual_existing_cue_ids": [
+        18,
+        19,
+        20
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/UnitTracking/Index",
+          "intent": "Show actual tracking device-to-unit assignment and last received test position.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitTrackingController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "1caf533aed181369224e7a50e6fcb6ca714c9eb0cc1e0c81bd8a11fb80bb9941",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/UnitTracking/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "1102896d2050b1c55e298bc7d68b71677a9ee293fb32aec3949f15d73272f594",
+              "current_file_sha256": "1102896d2050b1c55e298bc7d68b71677a9ee293fb32aec3949f15d73272f594",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Hardware GPS tracking",
+            "Name",
+            "Tracking profile",
+            "Device identifier",
+            "Status",
+            "Last seen",
+            "Last valid fix"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Mapping/Index",
+          "intent": "Verify corresponding unit marker and stale/missing position context.",
+          "candidate_capture_refs": [
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4"
+          ],
+          "existing_capture_count": 6,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs",
+              "line": 120,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "19fb3acc765290e9d9f5bbedf2aab0445b9563d254f6ca218076ed0a7ea136bd",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "6e851f93c32709bcb49fba7117f1d5b5c9a6cce1357078c75220a8a72156543b",
+              "current_file_sha256": "6e851f93c32709bcb49fba7117f1d5b5c9a6cce1357078c75220a8a72156543b",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "&times;",
+            "Map Options",
+            "Close",
+            "Save",
+            "Map Icon Legend",
+            "Heat maps and data overlays of your calls, responses and unit movement.",
+            "Map Visualizations"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:core-config-001-mapping-before-markers:1dcf9947e1f7"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s05:a01",
+          "text": "Hardware location tracking.",
+          "text_sha256": "eedbe03eeb370e57394711703b6b0c1e49d01abec0ace96ca7e8d9ded66bad88",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            18
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 55.88,
+          "enclosing_cue_end": 57.5,
+          "candidate_capture_refs": [
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s05:a02",
+          "text": "GPS devices that report unit locations.",
+          "text_sha256": "7873087c41c2ed88ffd8935257cb1e1913e3745730f8b2f6d954b8a514c50e9d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            19
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 57.909,
+          "enclosing_cue_end": 60.749,
+          "candidate_capture_refs": [
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s05:a03",
+          "text": "Register each tracking device and link it to its unit.",
+          "text_sha256": "65163ad6f36ec0dbc7c88c3b61b2db334692fd87fb36c81d318fd9dd81b0936a",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            20
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 61.169,
+          "enclosing_cue_end": 64.359,
+          "candidate_capture_refs": [
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/UnitTracking/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Mapping/Index",
+          "missing_operation_or_result": "Working populated map is observed. Named popups, custom overlays, saved configuration changes or routing outcomes require their own captured viewports; no generic map image proves those actions.",
+          "prior_status": "partial_working_map_baseline",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Controlled tracker ID",
+        "Academy Engine 1",
+        "Known test fix"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 5,
+      "number": 6,
+      "title": "New Unit",
+      "kind": "feature",
+      "narration": "New Unit. Add an apparatus, vehicle or team. List your apparatus or response teams with their types and home stations. Teams that respond only as individuals can mark this module not applicable.",
+      "narration_sha256": "831ee12095975323bea0a9f15f7e3c52084876524c1c0d66fb80acf3ca5bde90",
+      "course_timing_proposal_only": {
+        "start": 64.864,
+        "duration": 13.600499999999997
+      },
+      "actual_existing_cue_ids": [
+        21,
+        22,
+        23,
+        24
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "intent": "Enter fictional name, type, station and crew-role seats.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 314,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "current_file_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Unit",
+            "Name",
+            "Type",
+            "Station",
+            "Roles",
+            "Role Name",
+            "Required Personnel Role"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s06:a01",
+          "text": "New Unit.",
+          "text_sha256": "55e418e777dc9766d08abee9cc3cc708b615f966a8aea238169884e93a1392d2",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            21
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 64.919,
+          "enclosing_cue_end": 65.7,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s06:a02",
+          "text": "Add an apparatus, vehicle or team.",
+          "text_sha256": "5316bdd4d0a5be94653e1db9e0d8c408ba0a848d03cc541c41e44fa20e43a7b8",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            22
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 66.11,
+          "enclosing_cue_end": 68.55,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s06:a03",
+          "text": "List your apparatus or response teams with their types and home stations.",
+          "text_sha256": "d943c7f653e151886fdb288af2f6235c54b2af48fea06a4aacc741bb22dbb22e",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            23
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 69.029,
+          "enclosing_cue_end": 73.089,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s06:a04",
+          "text": "Teams that respond only as individuals can mark this module not applicable.",
+          "text_sha256": "0f9113a973688ccbbe49489876f223b61d220704d1a6b96b78ca3296290d07d9",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            24
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 73.41,
+          "enclosing_cue_end": 77.91,
+          "candidate_capture_refs": [],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine 1"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 6,
+      "number": 7,
+      "title": "Unit Staffing",
+      "kind": "feature",
+      "narration": "Unit Staffing. Assign crew members to units. List your apparatus or response teams with their types and home stations. Teams that respond only as individuals can mark this module not applicable.",
+      "narration_sha256": "0125fd2679b162168b597184fd677b8f3695889012e75d0df4d152b002f7c5ee",
+      "course_timing_proposal_only": {
+        "start": 78.4645,
+        "duration": 13.090000000000018
+      },
+      "actual_existing_cue_ids": [
+        25,
+        26,
+        27,
+        28
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "intent": "Show actual crew assignments to the selected training unit.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 161,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/UnitStaffing.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "current_file_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Unit Staffing",
+            "Save",
+            "Units",
+            "Not Occupied"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-037-unit-staffing:3396986a22d3"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s07:a01",
+          "text": "Unit Staffing.",
+          "text_sha256": "4bfa7e5d8be596fa471ed22a84cc4c5500a718c6ef38d3ccfe1d632d82878a6a",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            25
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 78.569,
+          "enclosing_cue_end": 79.51,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s07:a02",
+          "text": "Assign crew members to units.",
+          "text_sha256": "4679214988a7d0c04e6e41b09b3c149f902842a5522e6df8fee54065e227e5f8",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            26
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 79.919,
+          "enclosing_cue_end": 81.75,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s07:a03",
+          "text": "List your apparatus or response teams with their types and home stations.",
+          "text_sha256": "d943c7f653e151886fdb288af2f6235c54b2af48fea06a4aacc741bb22dbb22e",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            27
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 82.139,
+          "enclosing_cue_end": 86.23,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s07:a04",
+          "text": "Teams that respond only as individuals can mark this module not applicable.",
+          "text_sha256": "0f9113a973688ccbbe49489876f223b61d220704d1a6b96b78ca3296290d07d9",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            28
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 86.569,
+          "enclosing_cue_end": 91.029,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine 1",
+        "Alex Example",
+        "Officer/Engineer roles"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 7,
+      "number": 8,
+      "title": "Configure one useful workflow",
+      "kind": "workflow",
+      "narration": "For the training scenario, work in this order. Step 1. Create Engine and Rescue unit types. Step 2. Add Engine 1 with its type, Station 1, and crew roles. Step 3. Assign the crew and, when used, register a tracking device against the unit.",
+      "narration_sha256": "451055ba25b201ee1881f8dc43f1dce640896f39726c46dd13742fabeeede963",
+      "course_timing_proposal_only": {
+        "start": 91.55450000000002,
+        "duration": 19.14999999999999
+      },
+      "actual_existing_cue_ids": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Types/EditUnitType?unitTypeId=<id>",
+          "intent": "Show engine base class, map icon, status set and seats.",
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "existing_capture_count": 2,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/TypesController.cs",
+              "line": 210,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "09870ae55e8d1038b40b4ed6742c7c71ae1f75e05067574475d192dd1f57afb2",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Types/EditUnitType.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e55e651e4cff31ea3a7b3fc0b519ce68c48b37f8b95b1edd5097af4eebb1ceb1",
+              "current_file_sha256": "e55e651e4cff31ea3a7b3fc0b519ce68c48b37f8b95b1edd5097af4eebb1ceb1",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Edit Unit Type",
+            "Unit Type Name",
+            "Class",
+            "Actions (Custom Unit Statuses)",
+            "Map Icon",
+            "Status map icons",
+            "Update"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "intent": "Enter fictional name, type, station and crew-role seats.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 314,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "current_file_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Unit",
+            "Name",
+            "Type",
+            "Station",
+            "Roles",
+            "Role Name",
+            "Required Personnel Role"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/UnitTracking/Index",
+          "intent": "Show actual tracking device-to-unit assignment and last received test position.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitTrackingController.cs",
+              "line": 54,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "1caf533aed181369224e7a50e6fcb6ca714c9eb0cc1e0c81bd8a11fb80bb9941",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/UnitTracking/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "1102896d2050b1c55e298bc7d68b71677a9ee293fb32aec3949f15d73272f594",
+              "current_file_sha256": "1102896d2050b1c55e298bc7d68b71677a9ee293fb32aec3949f15d73272f594",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Hardware GPS tracking",
+            "Name",
+            "Tracking profile",
+            "Device identifier",
+            "Status",
+            "Last seen",
+            "Last valid fix"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s08:a01",
+          "text": "For the training scenario, work in this order.",
+          "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            29
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 91.63,
+          "enclosing_cue_end": 94.459,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s08:a02",
+          "text": "Step 1.",
+          "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            30
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 94.959,
+          "enclosing_cue_end": 95.56,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s08:a03",
+          "text": "Create Engine and Rescue unit types.",
+          "text_sha256": "e26f7303824d9855a92a2b2cc4d106e0904e908e4c60d8cbbbf1acbbde87515d",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            31
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 96.03,
+          "enclosing_cue_end": 98.34,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s08:a04",
+          "text": "Step 2.",
+          "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            32
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 98.749,
+          "enclosing_cue_end": 99.439,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s08:a05",
+          "text": "Add Engine 1 with its type, Station 1, and crew roles.",
+          "text_sha256": "5e3a754222c7edaae2bbdbd61c8444d4e4c343e2c6d382cb95d4075923dc78e6",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            33
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 99.89,
+          "enclosing_cue_end": 103.869,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s08:a06",
+          "text": "Step 3.",
+          "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            34
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 104.239,
+          "enclosing_cue_end": 105.01,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s08:a07",
+          "text": "Assign the crew and, when used, register a tracking device against the unit.",
+          "text_sha256": "70b7dd1d40a012fff97f9ece636409c0379f0c57163c96668fcbd4aa5f5339cc",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            35
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 105.4,
+          "enclosing_cue_end": 110.13,
+          "candidate_capture_refs": [
+            "Core:22-unit-type-status-assignment:4ef2ce324723",
+            "Core:core-config-057-engine-type-icon-baseline:58fff1a80cfb"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Types/EditUnitType?unitTypeId=<id>",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/UnitTracking/Index",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine type",
+        "Academy Engine 1",
+        "Controlled tracker ID"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 8,
+      "number": 9,
+      "title": "Verify the result",
+      "kind": "verify",
+      "narration": "Now verify the result. Confirm the unit type, home station, crew, and status. For hardware tracking, check a recent received position and the stale-position behavior. A common problem to watch for: An old GPS position is not a live position. Crew assignment, reported unit status, and physical readiness are distinct.",
+      "narration_sha256": "656db167d0d97ed7f15e6da090260c31cb6d9c06fa82eb0c129afeca6adc2fed",
+      "course_timing_proposal_only": {
+        "start": 110.7045,
+        "duration": 21.889999999999986
+      },
+      "actual_existing_cue_ids": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Units/EditUnit?unitId=<id>",
+          "intent": "Verify unit type, station, actual current crew/status.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+            "Core:core-nearest-engine-station-and-role-setup:a1794073ec43",
+            "Core:04-unit-configuration:68bbd90deb18"
+          ],
+          "existing_capture_count": 3,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 485,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/EditUnit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e1037a8a36c3b24f0a113815c5ddc465e6695513bda38f44b815ff3300d6e519",
+              "current_file_sha256": "e1037a8a36c3b24f0a113815c5ddc465e6695513bda38f44b815ff3300d6e519",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Edit Unit",
+            "Name",
+            "Type",
+            "Station",
+            "Roles",
+            "Role Name",
+            "Required Personnel Role"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Mapping/Index",
+          "intent": "Verify corresponding unit marker and stale/missing position context.",
+          "candidate_capture_refs": [
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4"
+          ],
+          "existing_capture_count": 6,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs",
+              "line": 120,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "19fb3acc765290e9d9f5bbedf2aab0445b9563d254f6ca218076ed0a7ea136bd",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Mapping/Index.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "6e851f93c32709bcb49fba7117f1d5b5c9a6cce1357078c75220a8a72156543b",
+              "current_file_sha256": "6e851f93c32709bcb49fba7117f1d5b5c9a6cce1357078c75220a8a72156543b",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "&times;",
+            "Map Options",
+            "Close",
+            "Save",
+            "Map Icon Legend",
+            "Heat maps and data overlays of your calls, responses and unit movement.",
+            "Map Visualizations"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "intent": "Show actual crew assignments to the selected training unit.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 161,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/UnitStaffing.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "current_file_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Unit Staffing",
+            "Save",
+            "Units",
+            "Not Occupied"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+        "Core:legacy-core-037-unit-staffing:3396986a22d3",
+        "Core:core-config-001-mapping-before-markers:1dcf9947e1f7"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s09:a01",
+          "text": "Now verify the result.",
+          "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            36
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 110.829,
+          "enclosing_cue_end": 112.309,
+          "candidate_capture_refs": [
+            "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-nearest-engine-station-and-role-setup:a1794073ec43",
+            "Core:04-unit-configuration:68bbd90deb18",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s09:a02",
+          "text": "Confirm the unit type, home station, crew, and status.",
+          "text_sha256": "e1cb8ed9e5f42fc1db1d5fbb0826028f8a4e7f6fa06f5a60298c71147b183366",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            37
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 112.64,
+          "enclosing_cue_end": 116.64,
+          "candidate_capture_refs": [
+            "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-nearest-engine-station-and-role-setup:a1794073ec43",
+            "Core:04-unit-configuration:68bbd90deb18",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s09:a03",
+          "text": "For hardware tracking, check a recent received position and the stale-position behavior.",
+          "text_sha256": "9bd3ccc1155bd4e993b3ed36d02bf9d686e65eb079621f76a03101ce27197f7e",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            38,
+            39
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 116.959,
+          "enclosing_cue_end": 121.81,
+          "candidate_capture_refs": [
+            "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-nearest-engine-station-and-role-setup:a1794073ec43",
+            "Core:04-unit-configuration:68bbd90deb18",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s09:a04",
+          "text": "A common problem to watch for: An old GPS position is not a live position.",
+          "text_sha256": "c21b9fa7a20e6b2193f8844d8feaa34d226bc24cf583bb481ab99cc67f1ff181",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            40
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 122.15,
+          "enclosing_cue_end": 127.3,
+          "candidate_capture_refs": [
+            "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-nearest-engine-station-and-role-setup:a1794073ec43",
+            "Core:04-unit-configuration:68bbd90deb18",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s09:a05",
+          "text": "Crew assignment, reported unit status, and physical readiness are distinct.",
+          "text_sha256": "837eb18d863ad127b95fa4e4c326b2c1552bfb32cc7e51fcc57daa49d13142df",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            41
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 127.709,
+          "enclosing_cue_end": 132.07,
+          "candidate_capture_refs": [
+            "Core:legacy-core-036-unit-engine-edit:4ddc0d13ded9",
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-config-001-mapping-before-markers:1dcf9947e1f7",
+            "Core:core-nearest-engine-station-and-role-setup:a1794073ec43",
+            "Core:04-unit-configuration:68bbd90deb18",
+            "Core:core-config-022-mapping-populated-current:89956b9c9dd8",
+            "Core:core-config-023-map-layer-chooser:aaa6105e5f9d",
+            "Core:core-config-024-map-filter-truck81:5af762c8a0c1",
+            "Core:core-config-025-map-units-hidden:b576c54da8c6",
+            "Core:core-mapping-populated:1e6bf8ad0cf4",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Units/EditUnit?unitId=<id>",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Mapping/Index",
+          "missing_operation_or_result": "Working populated map is observed. Named popups, custom overlays, saved configuration changes or routing outcomes require their own captured viewports; no generic map image proves those actions.",
+          "prior_status": "partial_working_map_baseline",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine 1",
+        "Known test fix",
+        "Alex Example",
+        "Officer/Engineer roles"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    },
+    {
+      "index": 9,
+      "number": 10,
+      "title": "Try it with your department",
+      "kind": "exercise",
+      "narration": "Your practice task is simple. Create Engine 1 in the demo department and verify the assigned crew from the dispatcher view. Measure incomplete unit records. Record the result, who owns the follow-up, and when it should be reviewed.",
+      "narration_sha256": "136df1a65c58cb9b5397da329adf4bd5a1d08c0beec2838a5cb07aeee0c544ea",
+      "course_timing_proposal_only": {
+        "start": 132.5945,
+        "duration": 14.079499999999996
+      },
+      "actual_existing_cue_ids": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "source_narration_matches_prior_plan": true,
+      "screen_targets": [
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "intent": "Enter fictional name, type, station and crew-role seats.",
+          "candidate_capture_refs": [],
+          "existing_capture_count": 0,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 314,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "current_file_sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Unit",
+            "Name",
+            "Type",
+            "Station",
+            "Roles",
+            "Role Name",
+            "Required Personnel Role"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "intent": "Show actual crew assignments to the selected training unit.",
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812"
+          ],
+          "existing_capture_count": 4,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+              "line": 161,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "ccfec42a2fab83d8ae2b933ef34c9c2e6fc9629f62e8dba0480ab399be5a181f",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Units/UnitStaffing.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "current_file_sha256": "82bdf7a3156084744db25ec1fbfe840b317522691bd558a0bd7d1147b275ffc6",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "Unit Staffing",
+            "Save",
+            "Units",
+            "Not Occupied"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Dispatch/NewCall",
+          "intent": "Inspect assigned crew in dispatcher recipient lists.",
+          "candidate_capture_refs": [
+            "Core:47-missing-call-location:5690ba4a3b60",
+            "Core:48-location-validation-limitation:5690ba4a3b60",
+            "Core:50-call-transition-input:6fcb19c17889",
+            "Core:core-new-call-run-card:09bf8063f1ff",
+            "Core:core-new-call-recommended-personnel:c318f811c92e",
+            "Core:core-new-call-recommended-unit:11334ee89a58",
+            "Core:core-new-call-stale-officer-shortfall:9d323cb69b08",
+            "Core:core-new-call-matching-fields:f170a24a800c",
+            "Core:core-new-call-training-nature:f8e8b519aea8",
+            "Core:core-new-call-location-and-pin:7202ed19e558",
+            "Core:core-new-call-incident-map:e204ce7cec21",
+            "Core:core-new-call-fresh-run-card-review:0d4a9ebafca6",
+            "Core:core-new-call-fresh-personnel-selected:741f5342b5dd",
+            "Core:core-new-call-fresh-unit-selected:8b67accc6db2",
+            "Core:core-nearest-unit-position-map:783837252e6f",
+            "Core:core-nearest-unit-turnout-near:efb261a69ee5",
+            "Core:core-nearest-engine-turnout-near:f523f1d37e77",
+            "Core:core-nearest-engine-selected-all-units:e5800aabc507"
+          ],
+          "existing_capture_count": 38,
+          "source_evidence": [
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Controllers/DispatchController.cs",
+              "line": 245,
+              "historical_citation_sha256": null,
+              "current_file_sha256": "97ae00384036fd8b379ea0521f23262097b19718b7eb11e72eefeb41b450a34b",
+              "historical_hash_matches_current": null
+            },
+            {
+              "path": "Core/Web/Resgrid.Web/Areas/User/Views/Dispatch/NewCall.cshtml",
+              "line": 1,
+              "historical_citation_sha256": "7c92e6d91af90e0c60ac1ae800e0c376ebbaf08a645c992f5e3210693f63a5d6",
+              "current_file_sha256": "7c92e6d91af90e0c60ac1ae800e0c376ebbaf08a645c992f5e3210693f63a5d6",
+              "historical_hash_matches_current": true
+            }
+          ],
+          "source_suggested_labels_unverified": [
+            "New Call",
+            "Name",
+            "Priority",
+            "Type",
+            "Reporter Name",
+            "Reporter Contact Info",
+            "Primary Contact"
+          ],
+          "source_label_warning": "Prior source labels may include hidden-modal text, HTML entities or unrelated nearby controls; these are NOT validated caption requirements."
+        }
+      ],
+      "prior_observed_capture_refs": [
+        "Core:legacy-core-037-unit-staffing:3396986a22d3"
+      ],
+      "spoken_requirements": [
+        {
+          "id": "03-units:s10:a01",
+          "text": "Your practice task is simple.",
+          "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            42
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 132.669,
+          "enclosing_cue_end": 134.21,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812",
+            "Core:47-missing-call-location:5690ba4a3b60",
+            "Core:48-location-validation-limitation:5690ba4a3b60",
+            "Core:50-call-transition-input:6fcb19c17889",
+            "Core:core-new-call-run-card:09bf8063f1ff",
+            "Core:core-new-call-recommended-personnel:c318f811c92e",
+            "Core:core-new-call-recommended-unit:11334ee89a58",
+            "Core:core-new-call-stale-officer-shortfall:9d323cb69b08",
+            "Core:core-new-call-matching-fields:f170a24a800c",
+            "Core:core-new-call-training-nature:f8e8b519aea8",
+            "Core:core-new-call-location-and-pin:7202ed19e558",
+            "Core:core-new-call-incident-map:e204ce7cec21",
+            "Core:core-new-call-fresh-run-card-review:0d4a9ebafca6",
+            "Core:core-new-call-fresh-personnel-selected:741f5342b5dd",
+            "Core:core-new-call-fresh-unit-selected:8b67accc6db2",
+            "Core:core-nearest-unit-position-map:783837252e6f",
+            "Core:core-nearest-unit-turnout-near:efb261a69ee5",
+            "Core:core-nearest-engine-turnout-near:f523f1d37e77",
+            "Core:core-nearest-engine-selected-all-units:e5800aabc507"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s10:a02",
+          "text": "Create Engine 1 in the demo department and verify the assigned crew from the dispatcher view.",
+          "text_sha256": "5f55f625c812206008d12fd727da5177f51eaa3bbfa577ee2d6d255b39b597d5",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            43,
+            44
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 134.689,
+          "enclosing_cue_end": 139.72,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812",
+            "Core:47-missing-call-location:5690ba4a3b60",
+            "Core:48-location-validation-limitation:5690ba4a3b60",
+            "Core:50-call-transition-input:6fcb19c17889",
+            "Core:core-new-call-run-card:09bf8063f1ff",
+            "Core:core-new-call-recommended-personnel:c318f811c92e",
+            "Core:core-new-call-recommended-unit:11334ee89a58",
+            "Core:core-new-call-stale-officer-shortfall:9d323cb69b08",
+            "Core:core-new-call-matching-fields:f170a24a800c",
+            "Core:core-new-call-training-nature:f8e8b519aea8",
+            "Core:core-new-call-location-and-pin:7202ed19e558",
+            "Core:core-new-call-incident-map:e204ce7cec21",
+            "Core:core-new-call-fresh-run-card-review:0d4a9ebafca6",
+            "Core:core-new-call-fresh-personnel-selected:741f5342b5dd",
+            "Core:core-new-call-fresh-unit-selected:8b67accc6db2",
+            "Core:core-nearest-unit-position-map:783837252e6f",
+            "Core:core-nearest-unit-turnout-near:efb261a69ee5",
+            "Core:core-nearest-engine-turnout-near:f523f1d37e77",
+            "Core:core-nearest-engine-selected-all-units:e5800aabc507"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s10:a03",
+          "text": "Measure incomplete unit records.",
+          "text_sha256": "b3d218be4275731eb385d1a580c65d83e46f0b3a2af4f04ba6521ed1925ac2ce",
+          "type": "spoken_claim_or_context",
+          "existing_cue_ids": [
+            45
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 140.22,
+          "enclosing_cue_end": 142.25,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812",
+            "Core:47-missing-call-location:5690ba4a3b60",
+            "Core:48-location-validation-limitation:5690ba4a3b60",
+            "Core:50-call-transition-input:6fcb19c17889",
+            "Core:core-new-call-run-card:09bf8063f1ff",
+            "Core:core-new-call-recommended-personnel:c318f811c92e",
+            "Core:core-new-call-recommended-unit:11334ee89a58",
+            "Core:core-new-call-stale-officer-shortfall:9d323cb69b08",
+            "Core:core-new-call-matching-fields:f170a24a800c",
+            "Core:core-new-call-training-nature:f8e8b519aea8",
+            "Core:core-new-call-location-and-pin:7202ed19e558",
+            "Core:core-new-call-incident-map:e204ce7cec21",
+            "Core:core-new-call-fresh-run-card-review:0d4a9ebafca6",
+            "Core:core-new-call-fresh-personnel-selected:741f5342b5dd",
+            "Core:core-new-call-fresh-unit-selected:8b67accc6db2",
+            "Core:core-nearest-unit-position-map:783837252e6f",
+            "Core:core-nearest-unit-turnout-near:efb261a69ee5",
+            "Core:core-nearest-engine-turnout-near:f523f1d37e77",
+            "Core:core-nearest-engine-selected-all-units:e5800aabc507"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        },
+        {
+          "id": "03-units:s10:a04",
+          "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+          "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+          "type": "instruction_or_action",
+          "existing_cue_ids": [
+            46
+          ],
+          "exact_caption_token_alignment": true,
+          "enclosing_cue_start": 142.61,
+          "enclosing_cue_end": 146.45,
+          "candidate_capture_refs": [
+            "Core:legacy-core-037-unit-staffing:3396986a22d3",
+            "Core:core-nearest-unit-staffing-empty-seats:2eb9f5cf1b46",
+            "Core:core-nearest-unit-staffing-officer-selected:cdd2bc72948e",
+            "Core:core-nearest-unit-staffing-saved-officer:d172624b0812",
+            "Core:47-missing-call-location:5690ba4a3b60",
+            "Core:48-location-validation-limitation:5690ba4a3b60",
+            "Core:50-call-transition-input:6fcb19c17889",
+            "Core:core-new-call-run-card:09bf8063f1ff",
+            "Core:core-new-call-recommended-personnel:c318f811c92e",
+            "Core:core-new-call-recommended-unit:11334ee89a58",
+            "Core:core-new-call-stale-officer-shortfall:9d323cb69b08",
+            "Core:core-new-call-matching-fields:f170a24a800c",
+            "Core:core-new-call-training-nature:f8e8b519aea8",
+            "Core:core-new-call-location-and-pin:7202ed19e558",
+            "Core:core-new-call-incident-map:e204ce7cec21",
+            "Core:core-new-call-fresh-run-card-review:0d4a9ebafca6",
+            "Core:core-new-call-fresh-personnel-selected:741f5342b5dd",
+            "Core:core-new-call-fresh-unit-selected:8b67accc6db2",
+            "Core:core-nearest-unit-position-map:783837252e6f",
+            "Core:core-nearest-unit-turnout-near:efb261a69ee5",
+            "Core:core-nearest-engine-turnout-near:f523f1d37e77",
+            "Core:core-nearest-engine-selected-all-units:e5800aabc507"
+          ],
+          "coverage_status": "requires_action_specific_image_and_result_review",
+          "gap": "Existing same-route or prior baseline screenshots are candidates only; verify the exact spoken setting/control/value and any saved result. No complete operational demonstration is inferred."
+        }
+      ],
+      "precise_prior_capture_gaps": [
+        {
+          "app": "Core",
+          "route": "/User/Units/NewUnit",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Units/UnitStaffing",
+          "missing_operation_or_result": "Capture the specified saved state, expansion, detail or result if the narration describes an action; this baseline does not prove the action was performed.",
+          "prior_status": "read_only_ui_baseline_captured",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        },
+        {
+          "app": "Core",
+          "route": "/User/Dispatch/NewCall",
+          "missing_operation_or_result": "Open this exact owning UI route after its fictional entities and permissions exist; no generic fallback image is assigned.",
+          "prior_status": "missing_actual_capture",
+          "scope": "Recheck against current candidates; prior baseline is not a result claim."
+        }
+      ],
+      "prior_narration_corrections": {
+        "correction_recommended": false,
+        "reasons": [],
+        "proposed_learner_focused_narration": null
+      },
+      "prerequisites": [
+        "Use the fictional Chicago Fire/Academy training department; no real incident, personal, financial or protected production data.",
+        "Actual target feature availability, current role permissions and working dependencies must be verified by capture owner.",
+        "Authenticated intended-role member; current department/module/feature access.",
+        "Use actual IDs from owning lists; replace every placeholder.",
+        "Capture saved values and operating result when narration describes a change."
+      ],
+      "needed_fictional_entities": [
+        "Academy Engine 1",
+        "Alex Example",
+        "Officer/Engineer roles"
+      ],
+      "unsupported_or_native_only_notes": [],
+      "strict_scene_coverage": "NOT demonstrated; source candidates require full action/label/result/timing review"
+    }
+  ],
+  "existing_actual_cues": [
+    {
+      "id": 1,
+      "start": 0.029,
+      "end": 1.7690000000000001,
+      "text": "Welcome to Resgrid Academy.",
+      "text_sha256": "902dffc1395dff53179eb249179eee3a6ff65c0c8a64e61ab5baac28d855f25f",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s01:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 2,
+      "start": 2.16,
+      "end": 7.13,
+      "text": "In this lesson, we will represent apparatus, crews, and gps devices.",
+      "text_sha256": "502854ba4d2dcd084d5c6ec19a82f099aee7cc1caa0f5a2eddc3e9adcc347eda",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s01:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 3,
+      "start": 7.619,
+      "end": 11.399000000000001,
+      "text": "A vehicle name alone does not tell a dispatcher its type, home",
+      "text_sha256": "84114287e5ad586898a845027be8ea86664cd278fece59a05acbff75850d7bd3",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 4,
+      "start": 11.399000000000001,
+      "end": 14.06,
+      "text": "station, crew, or location source.",
+      "text_sha256": "2c457e82a8529da6859188c144b634c30115a4b8f6fb50416d06f665337be47e",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s01:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 5,
+      "start": 14.5,
+      "end": 17.639,
+      "text": "We will explain the features, the setup decisions, and a",
+      "text_sha256": "e81ab5e8a7d3f89c3c2904902e3e1cba467afa49546505b3163c11c6525c28e1",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 6,
+      "start": 17.639,
+      "end": 19.579,
+      "text": "practical way to check the result.",
+      "text_sha256": "1ba25c999800aedfbbb5764d88a2d6c0551ab3478f936f377bf5e8914d613b73",
+      "source_scene_indices": [
+        0
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s01:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 7,
+      "start": 20.2,
+      "end": 24.849,
+      "text": "Engine 1 and Rescue 1 are added with their unit types and assigned to Station 1.",
+      "text_sha256": "2ca4293687f738df4cf6d325e76737716a649fb3b4fb537fbc45e8972507166e",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s02:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 8,
+      "start": 25.419,
+      "end": 28.94,
+      "text": "Units let dispatchers send the right resources and let everyone",
+      "text_sha256": "7778cb2c6681f1642bfa81c625f00b8c148d112490ca4e767b6bf49367000ff4",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 9,
+      "start": 28.94,
+      "end": 30.829,
+      "text": "see which apparatus is available.",
+      "text_sha256": "fa2d2ee85598177c0def1642bb9d502b2ade09c15478ae56462daa4205d15bfd",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s02:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 10,
+      "start": 31.239,
+      "end": 34.789,
+      "text": "The examples in this series use a fictional department and are teaching",
+      "text_sha256": "3059d3c51632c06ba8eb16a1a8b9f77c21fd6ae769066295627ad95e3acf1bca",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 11,
+      "start": 34.789,
+      "end": 37.05,
+      "text": "scenarios, not default settings.",
+      "text_sha256": "2316b9b48729ef8e05abd557d4876c25502aa2b281cb9dabcfa0721bcda2f886",
+      "source_scene_indices": [
+        1
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s02:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 12,
+      "start": 37.75,
+      "end": 38.329,
+      "text": "Units.",
+      "text_sha256": "d7123589814992df6764a3bd9ff7672d6c3c23ee753dabf3233537fcd8a77670",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s03:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 13,
+      "start": 38.719,
+      "end": 41.65,
+      "text": "Your apparatus, vehicles and response teams.",
+      "text_sha256": "1da33d0c47383db26fbfcd9ca8018ba118f4e6aaadc81b9ae4eed6423b227882",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s03:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 14,
+      "start": 42.189,
+      "end": 45.279,
+      "text": "Add each unit with its type and home station group.",
+      "text_sha256": "5e883a5b6d86764a4e25af35be687f58bef61b2e5fb4851cbcc7014d771c2033",
+      "source_scene_indices": [
+        2
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s03:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 15,
+      "start": 45.989,
+      "end": 46.76,
+      "text": "Unit types.",
+      "text_sha256": "df5654799c3409bd3f89aa37130dd0abee1606eb66f475a99df14bc6ad0f4f3e",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s04:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 16,
+      "start": 47.179,
+      "end": 50.46,
+      "text": "Categories such as Engine, Ladder or Ambulance.",
+      "text_sha256": "7577aa4efd0bc639962d89d47b3f0613e3c55d4d0c28b82126a88fb9bcf55343",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s04:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 17,
+      "start": 50.819,
+      "end": 55.099,
+      "text": "Create unit types before adding units so each unit can be classified.",
+      "text_sha256": "2b9b5e95db03bfd99513cd41c43593e9048d6ce47d44b78d33ec456955b196ac",
+      "source_scene_indices": [
+        3
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s04:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 18,
+      "start": 55.88,
+      "end": 57.5,
+      "text": "Hardware location tracking.",
+      "text_sha256": "eedbe03eeb370e57394711703b6b0c1e49d01abec0ace96ca7e8d9ded66bad88",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s05:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 19,
+      "start": 57.909,
+      "end": 60.749,
+      "text": "GPS devices that report unit locations.",
+      "text_sha256": "7873087c41c2ed88ffd8935257cb1e1913e3745730f8b2f6d954b8a514c50e9d",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s05:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 20,
+      "start": 61.169,
+      "end": 64.359,
+      "text": "Register each tracking device and link it to its unit.",
+      "text_sha256": "65163ad6f36ec0dbc7c88c3b61b2db334692fd87fb36c81d318fd9dd81b0936a",
+      "source_scene_indices": [
+        4
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s05:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 21,
+      "start": 64.919,
+      "end": 65.7,
+      "text": "New Unit.",
+      "text_sha256": "55e418e777dc9766d08abee9cc3cc708b615f966a8aea238169884e93a1392d2",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s06:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 22,
+      "start": 66.11,
+      "end": 68.55,
+      "text": "Add an apparatus, vehicle or team.",
+      "text_sha256": "5316bdd4d0a5be94653e1db9e0d8c408ba0a848d03cc541c41e44fa20e43a7b8",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s06:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 23,
+      "start": 69.029,
+      "end": 73.089,
+      "text": "List your apparatus or response teams with their types and home stations.",
+      "text_sha256": "d943c7f653e151886fdb288af2f6235c54b2af48fea06a4aacc741bb22dbb22e",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s06:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 24,
+      "start": 73.41,
+      "end": 77.91,
+      "text": "Teams that respond only as individuals can mark this module not applicable.",
+      "text_sha256": "0f9113a973688ccbbe49489876f223b61d220704d1a6b96b78ca3296290d07d9",
+      "source_scene_indices": [
+        5
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s06:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 25,
+      "start": 78.569,
+      "end": 79.51,
+      "text": "Unit Staffing.",
+      "text_sha256": "4bfa7e5d8be596fa471ed22a84cc4c5500a718c6ef38d3ccfe1d632d82878a6a",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s07:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 26,
+      "start": 79.919,
+      "end": 81.75,
+      "text": "Assign crew members to units.",
+      "text_sha256": "4679214988a7d0c04e6e41b09b3c149f902842a5522e6df8fee54065e227e5f8",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s07:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 27,
+      "start": 82.139,
+      "end": 86.23,
+      "text": "List your apparatus or response teams with their types and home stations.",
+      "text_sha256": "d943c7f653e151886fdb288af2f6235c54b2af48fea06a4aacc741bb22dbb22e",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s07:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 28,
+      "start": 86.569,
+      "end": 91.029,
+      "text": "Teams that respond only as individuals can mark this module not applicable.",
+      "text_sha256": "0f9113a973688ccbbe49489876f223b61d220704d1a6b96b78ca3296290d07d9",
+      "source_scene_indices": [
+        6
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s07:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 29,
+      "start": 91.63,
+      "end": 94.459,
+      "text": "For the training scenario, work in this order.",
+      "text_sha256": "69a80c0e636827d62d4b922cc7045912788281bb79129921b2c1f4626a97fa1d",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 30,
+      "start": 94.959,
+      "end": 95.56,
+      "text": "Step 1.",
+      "text_sha256": "c632009e0d6bd7e4b3827bf1ab3f0ab9c8649222254806016574758a06f21f9f",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 31,
+      "start": 96.03,
+      "end": 98.34,
+      "text": "Create Engine and Rescue unit types.",
+      "text_sha256": "e26f7303824d9855a92a2b2cc4d106e0904e908e4c60d8cbbbf1acbbde87515d",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 32,
+      "start": 98.749,
+      "end": 99.439,
+      "text": "Step 2.",
+      "text_sha256": "445d0145de00b044372aab448a5f156cb5962b7b1cb51f948b72ed37aa082736",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 33,
+      "start": 99.89,
+      "end": 103.869,
+      "text": "Add Engine 1 with its type, Station 1, and crew roles.",
+      "text_sha256": "5e3a754222c7edaae2bbdbd61c8444d4e4c343e2c6d382cb95d4075923dc78e6",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 34,
+      "start": 104.239,
+      "end": 105.01,
+      "text": "Step 3.",
+      "text_sha256": "55e05193398b7240f84761a1c93b14d18d5ea6eb9855146ca6db48aa409f0ca6",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a06"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 35,
+      "start": 105.4,
+      "end": 110.13,
+      "text": "Assign the crew and, when used, register a tracking device against the unit.",
+      "text_sha256": "70b7dd1d40a012fff97f9ece636409c0379f0c57163c96668fcbd4aa5f5339cc",
+      "source_scene_indices": [
+        7
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s08:a07"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 36,
+      "start": 110.829,
+      "end": 112.309,
+      "text": "Now verify the result.",
+      "text_sha256": "2b23326356b7d002c08a41f0eabdf89529e577028ca1e5d0329c960a750de85e",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s09:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 37,
+      "start": 112.64,
+      "end": 116.64,
+      "text": "Confirm the unit type, home station, crew, and status.",
+      "text_sha256": "e1cb8ed9e5f42fc1db1d5fbb0826028f8a4e7f6fa06f5a60298c71147b183366",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s09:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 38,
+      "start": 116.959,
+      "end": 120.31,
+      "text": "For hardware tracking, check a recent received position and",
+      "text_sha256": "bdda3867639f78ffc2a383523c162be0b4e75776ceb8858e51782fc879424ed9",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s09:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 39,
+      "start": 120.31,
+      "end": 121.81,
+      "text": "the stale-position behavior.",
+      "text_sha256": "6a7dd14bbbfe438decf0314cf0d71421bef4cb1ffcd779897682234ec2d5f935",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s09:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 40,
+      "start": 122.15,
+      "end": 127.3,
+      "text": "A common problem to watch for: An old GPS position is not a live position.",
+      "text_sha256": "c21b9fa7a20e6b2193f8844d8feaa34d226bc24cf583bb481ab99cc67f1ff181",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s09:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 41,
+      "start": 127.709,
+      "end": 132.07,
+      "text": "Crew assignment, reported unit status, and physical readiness are distinct.",
+      "text_sha256": "837eb18d863ad127b95fa4e4c326b2c1552bfb32cc7e51fcc57daa49d13142df",
+      "source_scene_indices": [
+        8
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s09:a05"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 42,
+      "start": 132.669,
+      "end": 134.21,
+      "text": "Your practice task is simple.",
+      "text_sha256": "c895aa1bf34671483b060867b5062c37c0e81de227ecd294bd035c83ac988dc6",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s10:a01"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 43,
+      "start": 134.689,
+      "end": 138.289,
+      "text": "Create Engine 1 in the demo department and verify the assigned",
+      "text_sha256": "be1780a076f70c4bd11695130e0efcf786d97f5f4863fe5ff6e0984054b27630",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s10:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 44,
+      "start": 138.289,
+      "end": 139.72,
+      "text": "crew from the dispatcher view.",
+      "text_sha256": "312e5333eb17ba2398824c83a3cafc57dcdcabce7e25a6be1318f4fe1f93c1f6",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s10:a02"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 45,
+      "start": 140.22,
+      "end": 142.25,
+      "text": "Measure incomplete unit records.",
+      "text_sha256": "b3d218be4275731eb385d1a580c65d83e46f0b3a2af4f04ba6521ed1925ac2ce",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s10:a03"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    },
+    {
+      "id": 46,
+      "start": 142.61,
+      "end": 146.45,
+      "text": "Record the result, who owns the follow-up, and when it should be reviewed.",
+      "text_sha256": "9ee3552196797b2dfae3edf64eb9671373f383df6fa6e55e985ead52340e90ed",
+      "source_scene_indices": [
+        9
+      ],
+      "spoken_requirement_ids": [
+        "03-units:s10:a04"
+      ],
+      "timing_provenance": "Existing sources/media SRT unchanged",
+      "screen_assignment": "pending exact per-control/state review; no artificial within-cue cuts"
+    }
+  ],
+  "capture_registry": "sources/expansion/plans/legacy-capture-inventory.json",
+  "readiness": {
+    "all_real_screens_matched": false,
+    "all_controls_and_saved_results_demonstrated": false,
+    "every_cue_screen_assignment_verified": false,
+    "speech_timing_authoritative": false,
+    "audio_timeline_binding_complete": false,
+    "strict_source_gate_passed": false,
+    "rendered_frame_review": "not run",
+    "genuine_browser_playback": "pending, separate proof required",
+    "publishable": false,
+    "retained_cue_timestamps_present": true,
+    "cue_timing_qualification": "Existing SRT timestamps are retained unchanged; audio timing/signal/listening binding still requires current-media QA. Normalized text equality alone does not verify speech timing."
+  },
+  "render_decision": "No master is prepared because real-screen/action coverage is incomplete; preserve exact missing-shot list.",
+  "not_changed": [
+    "Source lesson/narration/audio/captions",
+    "Frozen R1/R3",
+    "New site/catalog",
+    "Source screenshots and capture manifests",
+    "Original Academy repository"
+  ],
+  "existing_capture_scope": {
+    "apps_requested": [
+      "Core",
+      "Responder",
+      "Dispatch",
+      "IC"
+    ],
+    "app_counts": {
+      "Core": 480,
+      "IC": 42,
+      "Responder": 220
+    },
+    "dispatch_limitation": "No Dispatch application screenshot with a retained capture-manifest row was found in sources/captures. Unmanifested dispatch-login.jpg is not promoted; Core Dispatch MVC pages remain Core screenshots.",
+    "unit_excluded": true
+  }
+}

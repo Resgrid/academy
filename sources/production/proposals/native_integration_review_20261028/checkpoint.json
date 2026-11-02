@@ -1,0 +1,58 @@
+{
+  "kind": "unadopted_native_production_integration_checkpoint",
+  "publishable": false,
+  "active_files_changed": false,
+  "existing_legacy_contract_tests": {
+    "run": 131,
+    "passed": 129,
+    "optional_media_tests_skipped": 2
+  },
+  "new_focused_tests": {
+    "run": 16,
+    "passed": 14,
+    "failures": 1,
+    "errors": 1,
+    "status": "Incomplete synthetic fixture positive-path checks; not ready for adoption.",
+    "pending": [
+      "Synthetic full native contract positive path fails; inspect exact validator issues.",
+      "Synthetic public screenshot fixture path is rejected as missing/outside source; inspect fixture confinement."
+    ]
+  },
+  "inputs_unchanged_after_work": true,
+  "native_context_requirement": "Explicit trusted four-root object/CLI args; no self-approval/root selection in screenshot JSON.",
+  "native_provenance": "ios_simulator_screenshot without URL/DOM/icons; explicit Unit primary identity.",
+  "frame_gate": "Separate hash-bound actual native frame review required; renderer creates pending only.",
+  "exporter_change_required": true,
+  "native_adoption": "No real native evidence validated or qualified; build/export defaults reject native without explicit context.",
+  "patch": {
+    "file": "native-integration-review.patch",
+    "sha256": "bf04019b21c1b40cc4bc74b458b601aca5d98738c5618bac9853d513e2f98f10"
+  },
+  "source_files": [
+    {
+      "file": "proposed/scripts/render_walkthrough.py",
+      "sha256": "ebee54e04b58bb1db3a5f347d9ff4dc1cdb8f854740200343e0be281a2f7180e"
+    },
+    {
+      "file": "proposed/scripts/verify_capture_evidence.py",
+      "sha256": "a3128f29804fb9ddf95cda5ffb00744a24561c080ed3b0b154afd4716003bec3"
+    },
+    {
+      "file": "proposed/scripts/expansion_site.py",
+      "sha256": "acee03a61a21c9d8d1e3cc3d934446e5b4a89c72e10536ccbc5ad37d8c82b9fd"
+    },
+    {
+      "file": "proposed/scripts/native_capture_contract.py",
+      "sha256": "88c4aa6b82b88a75625d53c5a44e231731b254ac0f4f9dec62f95ef1b0e1551a"
+    },
+    {
+      "file": "proposed/scripts/native_capture_source.py",
+      "sha256": "85e9dcb83b74d90ae9006d41e562a0f04586d26769be0eb5cfe4b4c5da5e8e60"
+    },
+    {
+      "file": "proposed/scripts/tests/test_native_capture_integration.py",
+      "sha256": "71fe1ddca36a886ea0bbc3baa6ea461797461d00524e81a2c4872f04934d72a7"
+    }
+  ],
+  "pause_reason": "Parent prioritized approved Pending-call25interval/71cue render."
+}

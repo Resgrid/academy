@@ -1,0 +1,130 @@
+{
+  "app": "Dispatch",
+  "recorded_at": "2026-10-27T20:09:10.282640+00:00",
+  "tab_id": "393908645",
+  "handoff_url": "http://localhost:19101/scheduled-calls",
+  "tab_marked_handoff": true,
+  "source_git_revision": "044b1d88b2ce7fc851a7d0b60b94db072f51ebc9",
+  "raw_screenshot_count": 30,
+  "reviewed_sources": "captures/expansion/dispatch/reviewed-source-subset-20261027.json",
+  "reviewed_sources_sha256": "d189f942107c099978504eed17e12960761b27275c3847b04a05fa0cba1cf692",
+  "reviewed_accepted_count": 29,
+  "rejected_count": 1,
+  "rejected_footage": [
+    {
+      "id": "dispatch-24-own-pinned-preview-after-reload",
+      "sha256": "79ae73c80b39deaeeca847d20464c165fee67524ea1160def66d8936639ec97a",
+      "reason": "Red development LogBox overlay. No operational use."
+    }
+  ],
+  "actual_operations": [
+    {
+      "operation": "Unsent NewCall preparation",
+      "state": "TRAINING - Dispatch allocation review; Urgent / Structure Fire; near41.8721,-87.6523 and far41.0,-88.0, then restored near. Name, nature, coordinates and selected values read back from actual UI.",
+      "sources": [
+        "dispatch-03-new-call-matching-fields",
+        "dispatch-16-restored-near-call-location",
+        "dispatch-17-restored-near-complete-decision"
+      ]
+    },
+    {
+      "operation": "Conditional evaluation",
+      "state": "Near Yes with engine2:00 and initially stale officer shortfall; after declared simulated fixture refresh Engine51+Herrmann proposal. Far No/advice199:22; picker101.2km/~198min.",
+      "sources": [
+        "dispatch-05-conditional-yes-officer-shortfall",
+        "dispatch-06-stale-position-apply-controls",
+        "dispatch-07-complete-recommendation-resources",
+        "dispatch-13-far-condition-advice",
+        "dispatch-14-far-personnel-comparison",
+        "dispatch-15-far-unit-comparison"
+      ]
+    },
+    {
+      "operation": "Selection",
+      "state": "Apply recommendation→2selected. Checked only Herrmann user and Engine51 unit; groupEngine51 and Everyone remained unselected. Closest/Name and Available only14→12 verified.",
+      "sources": [
+        "dispatch-08-recommendation-applied-unsent",
+        "dispatch-09-closest-personnel-near",
+        "dispatch-10-name-sort-unavailable-location",
+        "dispatch-11-available-only-personnel",
+        "dispatch-12-closest-unit-station-crew"
+      ]
+    },
+    {
+      "operation": "Create one controlled training call",
+      "call_id": 51010,
+      "call_number": "FD51-2026-0002",
+      "name": "TRAINING ONLY - Dispatch allocation recording",
+      "recipients": [
+        "Christopher Herrmann (user)",
+        "Engine 51 (unit)"
+      ],
+      "state": "Created through ordinary NewCall UI after exact readback of all fields and rendered checked-recipient rows. Active count3→4. Normal application changed Engine51 toResponding. No invented creation notification flag.",
+      "sources": [
+        "dispatch-20-own-call-created-console",
+        "dispatch-21-own-saved-dispatched-controls"
+      ]
+    },
+    {
+      "operation": "Saved decision review",
+      "state": "Actual pinned dispatcher-preview banner and existing1of1Engine+1of1Incidentofficer shown. Re-evaluate returned currentNo/advice; no additional resource was selected or sent.",
+      "sources": [
+        "dispatch-22-own-saved-pinned-decision",
+        "dispatch-23-own-reevaluated-advice"
+      ]
+    },
+    {
+      "operation": "Reload observation",
+      "state": "Full browser reload/reopen DOM restored original saved Engine-available pin. Corresponding JPEG24 contains redLogBox and is excluded, so clean reload footage is not claimed.",
+      "footage_eligible": false
+    },
+    {
+      "operation": "Close ONLY own call",
+      "call_id": 51010,
+      "outcome": "Closed",
+      "close_note": "TRAINING ONLY - Dispatch allocation recording complete. No operational deployment.",
+      "notification_ui_label": "Notify everyone on the call",
+      "notification_checked_before_submit": false,
+      "field_readback_verified": true,
+      "state": "Ordinary Close Call submitted after selected Closed/note/notification false/ownURL checks. Returned original3active; normal app set EngineReleased, crewHerrmann1/1retained. Later own Activity showsResponding thenReleased and CloseCall action absent.",
+      "sources": [
+        "dispatch-25-own-close-notifications-off",
+        "dispatch-26-own-close-returned-original-three",
+        "dispatch-28-own-recorded-unit-activity"
+      ]
+    }
+  ],
+  "separate_fixture_preparation": "captures/expansion/dispatch/fixture-preparation-20261027.json",
+  "observed_limits": [
+    {
+      "surface": "Archived Calls",
+      "actual_state": "Request failed with status code404 after normal navigation. No operational image accepted.",
+      "source_reason": "Dispatch requests /Calls/GetCallYears, /Calls/GetArchivedCalls, /Calls/SaveArchivedCall. Current Core v4CallsController has none of these named endpoints; GetCalls(date range) is a different API and was not used as a UI workaround."
+    },
+    {
+      "surface": "Saved-call additional recipient ranking",
+      "actual_state": "Picker says Set the call location to see who is closest; location-based controls absent, despite the call detail map displaying genuine Geolocation.",
+      "source_reason": "CallDetails map falls back to call.Geolocation. callLocationOf helper accepts only Latitude/Longitude, and additional picker passes that helper. No source fix or fabricated ranking performed."
+    },
+    {
+      "surface": "Awaiting/Pending/Scheduled",
+      "actual_state": "Actual queues empty. No outstanding Dispatch/Dismiss, pending Dispatch, reschedule or DispatchNow outcome demonstrated.",
+      "sources": [
+        "dispatch-18-awaiting-resources-empty",
+        "dispatch-29-pending-empty",
+        "dispatch-30-scheduled-empty"
+      ]
+    },
+    {
+      "surface": "Radio/weather/activity widgets",
+      "actual_state": "Actual console UI displayed widgets and OFF/Disconnected radio. Widget text is not a provider/weather/physical transmission verification."
+    }
+  ],
+  "preserved": [
+    "Original three active calls including warehouse51001 remained active.",
+    "No original repository edits, commit, push, import, MFA/auth-configuration change, extra call creation or external send performed.",
+    "Unit GPS, location, crew and roles were not forced. Normal Create/Close did change Engine status as recorded.",
+    "All screenshot pixels are actual browser images; reviewed source metadata does not independently authenticate pixels."
+  ],
+  "media_status": "No Dispatch audio/render/playback approved. Allocation source only is frozen for natural narration."
+}

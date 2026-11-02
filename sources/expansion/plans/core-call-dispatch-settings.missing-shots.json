@@ -1,0 +1,74 @@
+{
+  "lesson_id": "core-call-dispatch-settings",
+  "lesson_sha256": "33c09d43e37180c77a93e81b20027e4bf8cec484fe9eceece0bb692b7d9df6d4",
+  "scope": "Explicit future follow-ups for optional execution demonstrations. Current narration explains conditional impacts without claiming these occurred. No browser action or authorization inferred.",
+  "items": [
+    {
+      "id": "custom-status-overrides",
+      "scene": "05",
+      "status": "outside_current_demonstration",
+      "route": "/User/Department/DispatchSettings",
+      "required_labels": [
+        "Unit Type",
+        "Unit Call Dispatch Status",
+        "Unit Call Release Status"
+      ],
+      "prerequisite": "A fictional unit type assigned a custom unit status set; current Engine/other types use StandardActions and produce no override rows.",
+      "needed_shots": "Actual table rows with Default and specific status choices, saved/reopened configuration and any real no-match/multiple-match warnings.",
+      "mutation_policy": "Do not change existing types/assignments solely for footage without coordinated authorization; preserve current calls."
+    },
+    {
+      "id": "group-status-and-audience-outcome",
+      "scenes": [
+        "03",
+        "05"
+      ],
+      "status": "conditional_policy_only",
+      "route": "/User/Dispatch/ViewCall?callId=<owned-training-call>",
+      "needed_shots": "If teaching execution later: controlled nonempty/empty on-duty roster routing and actual person/unit dispatch+release history before/after, explicitly distinguishing notification fallback from shift-status eligibility.",
+      "current_limit": "Current switches remainoff; existing26-4 shows direct person+unit stored assignments and manualclose, not groupstatus automation."
+    },
+    {
+      "id": "native-hold-and-linked-crew",
+      "scene": "06",
+      "status": "conditional_policy_only",
+      "routes": [
+        "/User/Department/DispatchSettings",
+        "supported Unit/Responder status screen"
+      ],
+      "needed_shots": "Actual supported app2second hold and submitted crewroles/link context after explicit enabling, including note/destination nextstep.",
+      "current_limit": "Current controls areoff. No native gesture or automaticlinkedstatus result claimed."
+    },
+    {
+      "id": "required-field-validation",
+      "scene": "09",
+      "status": "conditional_policy_only",
+      "routes": [
+        "/User/Department/DispatchSettings",
+        "/User/Dispatch/NewCall"
+      ],
+      "needed_shots": "If extending beyond currentpolicyreview: saved fictional Visible/Requiredchange, fresh unsentform requiredvalidation and corrected values; restore/preserve existingpolicy by coordination.",
+      "current_limit": "All optionalfields shownandnotrequired, PlusCoderequirementdisabled; no rejected submit or policychange performed."
+    },
+    {
+      "id": "automatic-close-and-command-guard",
+      "scene": "11",
+      "status": "conditional_policy_only",
+      "routes": [
+        "/User/Department/DispatchSettings",
+        "/User/Dispatch/ViewCall?callId=<owned-call>",
+        "/User/Dispatch/CloseCall?callId=51001"
+      ],
+      "needed_shots": "Optional future two-owned-unit firstclear/lastclear sequence with actualstatushistory and finalstate; read-only activeincidentcommand closeguard view. Do not close or change originalwarehousecall.",
+      "current_limit": "Close-last-unitoff. Policyguard explained onactualhelp; only existing26-4manualclosure demonstrated."
+    },
+    {
+      "id": "intake-pruning-and-provider-result",
+      "scene": "01",
+      "status": "conditional_policy_only",
+      "route": "/User/Department/CallSettings",
+      "needed_shots": "Only if separately authorized: localcontrolledintake and time-based importedcallcleanup with finalhistory; no realproviderorallcall send.",
+      "current_limit": "Addressblank, Genericparserselected, pruneoff0. Worker selectsEmailImport/AudioImport; do not generalize UIteaser to every SMSsource."
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "kind": "historical_pre_format_test_proof",
+  "raw_result_sha256": "59e71b2815ae66d196bffd2be9a0a43e32a0abc5d9f4f5f3f05f5972574fbcbc",
+  "source_case": "original",
+  "total": 55,
+  "passed": 52,
+  "failed": 3,
+  "assertions": [
+    {
+      "title": "renders nothing and fetches nothing while closed",
+      "status": "passed"
+    },
+    {
+      "title": "fetches the images for the call it was opened with",
+      "status": "passed"
+    },
+    {
+      "title": "refetches when it is pointed at a different call",
+      "status": "passed"
+    },
+    {
+      "title": "drops the loaded images from the store when it closes",
+      "status": "passed"
+    },
+    {
+      "title": "closes when the close button is pressed",
+      "status": "passed"
+    },
+    {
+      "title": "shows the first image with its name and timestamp",
+      "status": "passed"
+    },
+    {
+      "title": "builds a data URI from the stored payload using the image mime type",
+      "status": "passed"
+    },
+    {
+      "title": "falls back to the remote URL, trimmed, when there is no payload",
+      "status": "passed"
+    },
+    {
+      "title": "ignores images that carry neither a payload nor a URL",
+      "status": "passed"
+    },
+    {
+      "title": "pages forward and back through the images",
+      "status": "passed"
+    },
+    {
+      "title": "stops at the last image instead of paging off the end",
+      "status": "passed"
+    },
+    {
+      "title": "stops at the first image instead of paging before the start",
+      "status": "passed"
+    },
+    {
+      "title": "hides the pager when there is only one image",
+      "status": "passed"
+    },
+    {
+      "title": "swaps in a placeholder when an image fails to decode",
+      "status": "passed"
+    },
+    {
+      "title": "shows the zero state when the call has no images",
+      "status": "passed"
+    },
+    {
+      "title": "shows the zero state when every image is unusable",
+      "status": "passed"
+    },
+    {
+      "title": "shows a loading state instead of the gallery while images are being fetched",
+      "status": "passed"
+    },
+    {
+      "title": "surfaces the store error message",
+      "status": "passed"
+    },
+    {
+      "title": "opens the viewer with the resolved source and name of the tapped image",
+      "status": "passed"
+    },
+    {
+      "title": "keeps the viewer closed until an image is tapped",
+      "status": "passed"
+    },
+    {
+      "title": "closes the viewer again",
+      "status": "passed"
+    },
+    {
+      "title": "offers the gallery and camera options behind the add button",
+      "status": "passed"
+    },
+    {
+      "title": "offers no note or upload until an image has been chosen",
+      "status": "passed"
+    },
+    {
+      "title": "asks for media library permission on iOS and shows the preview once granted",
+      "status": "passed"
+    },
+    {
+      "title": "tells the user and opens no picker when library permission is denied",
+      "status": "passed"
+    },
+    {
+      "title": "stays on the chooser when the user cancels the picker",
+      "status": "passed"
+    },
+    {
+      "title": "reports a failing picker to the user and to the log",
+      "status": "passed"
+    },
+    {
+      "title": "asks for camera permission and opens the back camera",
+      "status": "passed"
+    },
+    {
+      "title": "tells the user and opens no camera when camera permission is denied",
+      "status": "passed"
+    },
+    {
+      "title": "reports a failing camera to the user and to the log",
+      "status": "passed"
+    },
+    {
+      "title": "abandons the picked image when the user cancels",
+      "status": "passed"
+    },
+    {
+      "title": "resizes to 1024px wide and compresses to PNG before uploading",
+      "status": "passed"
+    },
+    {
+      "title": "uploads the base64 of the resized file, not of the original",
+      "status": "passed"
+    },
+    {
+      "title": "sends the note, the file name, the user and the current position",
+      "status": "passed"
+    },
+    {
+      "title": "uploads with an empty note when the user typed none",
+      "status": "passed"
+    },
+    {
+      "title": "generates a name for a library image that has none",
+      "status": "passed"
+    },
+    {
+      "title": "names camera captures after the moment they were taken",
+      "status": "passed"
+    },
+    {
+      "title": "uploads without coordinates when the device has no fix",
+      "status": "passed"
+    },
+    {
+      "title": "returns to the gallery with a clean form after a successful upload",
+      "status": "passed"
+    },
+    {
+      "title": "tells the user when the upload fails, and keeps the form and the typed note",
+      "status": "passed"
+    },
+    {
+      "title": "refuses to upload with no signed in user, and says why",
+      "status": "passed"
+    },
+    {
+      "title": "re-enables the upload button after a failure so the user can retry",
+      "status": "passed"
+    },
+    {
+      "title": "never uploads when the resize step fails",
+      "status": "passed"
+    },
+    {
+      "title": "shows the uploading label while the upload is in flight",
+      "status": "passed"
+    },
+    {
+      "title": "reports the modal opening with what it is showing",
+      "status": "passed"
+    },
+    {
+      "title": "reports nothing while the modal is closed",
+      "status": "passed"
+    },
+    {
+      "title": "reports an empty gallery as such",
+      "status": "passed"
+    },
+    {
+      "title": "reports the error state",
+      "status": "passed"
+    },
+    {
+      "title": "reports once per opening, not once per render",
+      "status": "passed"
+    },
+    {
+      "title": "does not report again as the images finish loading",
+      "status": "passed"
+    },
+    {
+      "title": "reports again once the modal is closed and reopened",
+      "status": "passed"
+    },
+    {
+      "title": "reports again when it is pointed at a different call",
+      "status": "passed"
+    },
+    {
+      "title": "uploads the manipulator base64 with the unchanged note and filename, without a legacy file read",
+      "status": "failed"
+    },
+    {
+      "title": "keeps the selected preview and note when web base64 is absent, and never sends an empty upload",
+      "status": "failed"
+    },
+    {
+      "title": "keeps the selected preview and note after a rejected web upload",
+      "status": "failed"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+import { useFocusEffect } from 'expo-router';
+import { CheckCircle, Loader, Volume2, VolumeX } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
+import React, { useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView } from 'react-native';
+
+import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper } from '@/components/ui/actionsheet';
+import { Button, ButtonText } from '@/components/ui/button';
+import { HStack } from '@/components/ui/hstack';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { useToast } from '@/hooks/use-toast';
+import { useAudioStreamStore } from '@/stores/app/audio-stream-store';
+
+interface StreamOptionProps {
+  streamId: string;
+  label: string;
+  isSelected: boolean;
+  isDisabled: boolean;
+  onSelect: (streamId: string) => void;
+}
+
+const StreamOption: React.FC<StreamOptionProps> = React.memo(({ streamId, label, isSelected, isDisabled, onSelect }) => {
+  const handlePress = React.useCallback(() => {
+    onSelect(streamId);
+  }, [onSelect, streamId]);
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      disabled={isDisabled}
+      testID={`stream-option-${streamId}`}
+      className={`flex-row items-center justify-between rounded-lg border p-3 ${isSelected ? 'border-blue-600 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/30' : 'border-gray-200 dark:border-gray-700'} ${isDisabled ? 'opacity-50' : ''}`}
+    >
+      <Text className={`flex-1 ${isSelected ? 'font-medium text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>{label}</Text>
+      {isSelected ? <CheckCircle size={20} color="#2563eb" /> : null}
+    </Pressable>
+  );
+});
+
+StreamOption.displayName = 'StreamOption';
+
+export const AudioStreamBottomSheet = () => {
+  const { t } = useTranslation();
+  const { colorScheme } = useColorScheme();
+  const { trackEvent } = useAnalytics();
+  const toast = useToast();
+
+  const { isBottomSheetVisible, setIsBottomSheetVisible, availableStreams, currentStream, isLoadingStreams, isPlaying, isLoading, isBuffering, fetchAvailableStreams, playStream, stopStream } = useAudioStreamStore();
+
+  // Analytics: Track when the audio stream bottom sheet is viewed
+  useFocusEffect(
+    useCallback(() => {
+      if (isBottomSheetVisible) {
+        trackEvent('audio_stream_bottom_sheet_viewed', {
+          timestamp: new Date().toISOString(),
+          availableStreamsCount: availableStreams.length,
+          hasCurrentStream: !!currentStream,
+          currentStreamId: currentStream?.Id || '',
+          isPlaying,
+        });
+      }
+    }, [trackEvent, isBottomSheetVisible, availableStreams.length, currentStream, isPlaying])
+  );
+
+  useEffect(() => {
+    // Fetch available streams when bottom sheet opens
+    if (isBottomSheetVisible && availableStreams.length === 0) {
+      fetchAvailableStreams();
+    }
+  }, [isBottomSheetVisible, availableStreams.length, fetchAvailableStreams]);
+
+  const handleStreamSelection = React.useCallback(
+    async (streamId: string) => {
+      try {
+        if (streamId === 'none') {
+          // Analytics: Track stream stop
+          trackEvent('audio_stream_stopped', {
+            timestamp: new Date().toISOString(),
+            previousStreamId: currentStream?.Id || '',
+            previousStreamName: currentStream?.Name || '',
+            stopMethod: 'manual_selection',
+          });
+
+          // Stop current stream
+          await stopStream();
+        } else {
+          // Find and play the selected stream
+          const selectedStream = availableStreams.find((s) => s.Id === streamId);
+          if (selectedStream) {
+            // Analytics: Track stream start
+            trackEvent('audio_stream_started', {
+              timestamp: new Date().toISOString(),
+              streamId: selectedStream.Id,
+              streamName: selectedStream.Name,
+              streamType: selectedStream.Type || '',
+              previousStreamId: currentStream?.Id || '',
+              selectionMethod: 'dropdown',
+            });
+
+            await playStream(selectedStream);
+          }
+        }
+      } catch (error) {
+        // Analytics: Track stream selection error
+        trackEvent('audio_stream_selection_error', {
+          timestamp: new Date().toISOString(),
+          streamId: streamId === 'none' ? '' : streamId,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+          actionType: streamId === 'none' ? 'stop' : 'start',
+        });
+
+        console.error('Failed to handle stream selection:', error);
+
+        toast.error(t('audio_streams.error_loading_stream'));
+      }
+    },
+    [availableStreams, stopStream, playStream, trackEvent, currentStream, t, toast]
+  );
+
+  const getCurrentStreamValue = () => {
+    return currentStream ? currentStream.Id : 'none';
+  };
+
+  const renderStreamOption = (streamId: string, label: string) => {
+    return <StreamOption key={streamId} streamId={streamId} label={label} isSelected={getCurrentStreamValue() === streamId} isDisabled={isLoading || isBuffering} onSelect={handleStreamSelection} />;
+  };
+
+  const getDisplayText = () => {
+    if (isLoading) {
+      return t('audio_streams.loading_stream');
+    }
+    if (isBuffering) {
+      return t('audio_streams.buffering_stream');
+    }
+    if (currentStream) {
+      return isPlaying ? t('audio_streams.currently_playing', { streamName: currentStream.Name }) : t('audio_streams.stream_selected', { streamName: currentStream.Name });
+    }
+    return t('audio_streams.no_stream_playing');
+  };
+
+  return (
+    <Actionsheet isOpen={isBottomSheetVisible} onClose={() => setIsBottomSheetVisible(false)}>
+      <ActionsheetBackdrop />
+      <ActionsheetContent className={colorScheme === 'dark' ? 'bg-neutral-900' : 'bg-white'}>
+        <ActionsheetDragIndicatorWrapper>
+          <ActionsheetDragIndicator />
+        </ActionsheetDragIndicatorWrapper>
+
+        <VStack space="lg" className="w-full p-4">
+          {/* Header */}
+          <VStack space="sm" className="items-center">
+            {isLoading || isBuffering ? (
+              <Loader size={32} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+            ) : currentStream && isPlaying ? (
+              <Volume2 size={32} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+            ) : (
+              <VolumeX size={32} color={colorScheme === 'dark' ? '#6b7280' : '#9ca3af'} />
+            )}
+            <Text className="text-center text-lg font-semibold">{t('audio_streams.title')}</Text>
+            <Text className="text-center text-sm text-gray-500">{getDisplayText()}</Text>
+          </VStack>
+
+          {/* Stream Selection */}
+          <VStack space="md">
+            <Text className="font-medium">{t('audio_streams.select_stream')}</Text>
+
+            {isLoadingStreams ? (
+              <HStack space="sm" className="items-center justify-center p-4">
+                <Loader size={16} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+                <Text className="text-sm text-gray-500">{t('audio_streams.loading_streams')}</Text>
+              </HStack>
+            ) : (
+              <ScrollView className="max-h-[40vh]">
+                <VStack space="sm">
+                  {renderStreamOption('none', t('audio_streams.none'))}
+                  {availableStreams.map((stream) => renderStreamOption(stream.Id, stream.Name))}
+                </VStack>
+              </ScrollView>
+            )}
+          </VStack>
+
+          {/* Stream Info */}
+          {currentStream ? (
+            <VStack space="sm" className={`rounded-lg p-3 ${colorScheme === 'dark' ? 'bg-neutral-800' : 'bg-gray-50'}`}>
+              <Text className="font-medium">{t('audio_streams.stream_info')}</Text>
+              <VStack space="xs">
+                <HStack space="sm" className="items-center">
+                  <Text className="flex-1 text-sm text-gray-500">{t('audio_streams.name')}:</Text>
+                  <Text className="text-sm font-medium">{currentStream.Name}</Text>
+                </HStack>
+                <HStack space="sm" className="items-center">
+                  <Text className="flex-1 text-sm text-gray-500">{t('audio_streams.type')}:</Text>
+                  <Text className="text-sm font-medium">{currentStream.Type || t('common.unknown')}</Text>
+                </HStack>
+                <HStack space="sm" className="items-center">
+                  <Text className="flex-1 text-sm text-gray-500">{t('audio_streams.status')}:</Text>
+                  <HStack space="xs" className="items-center">
+                    {isLoading || isBuffering ? (
+                      <>
+                        <Loader size={14} color="#3b82f6" />
+                        <Text className="text-sm font-medium text-blue-600">{isLoading ? t('audio_streams.loading') : t('audio_streams.buffering')}</Text>
+                      </>
+                    ) : isPlaying ? (
+                      <>
+                        <Volume2 size={14} color="#22c55e" />
+                        <Text className="text-sm font-medium text-green-600">{t('audio_streams.playing')}</Text>
+                      </>
+                    ) : (
+                      <>
+                        <VolumeX size={14} color="#ef4444" />
+                        <Text className="text-sm font-medium text-red-600">{t('audio_streams.stopped')}</Text>
+                      </>
+                    )}
+                  </HStack>
+                </HStack>
+              </VStack>
+            </VStack>
+          ) : null}
+
+          {/* Action Buttons */}
+          <VStack space="sm">
+            {!isLoadingStreams && availableStreams.length === 0 ? (
+              <Button
+                onPress={() => {
+                  // Analytics: Track refresh streams action
+                  trackEvent('audio_stream_refresh_clicked', {
+                    timestamp: new Date().toISOString(),
+                    previousStreamsCount: availableStreams.length,
+                  });
+
+                  fetchAvailableStreams();
+                }}
+                variant="outline"
+              >
+                <ButtonText>{t('audio_streams.refresh_streams')}</ButtonText>
+              </Button>
+            ) : null}
+
+            <Button
+              onPress={() => {
+                // Analytics: Track bottom sheet close
+                trackEvent('audio_stream_bottom_sheet_closed', {
+                  timestamp: new Date().toISOString(),
+                  hasCurrentStream: !!currentStream,
+                  isPlaying,
+                  timeSpent: Date.now(), // This could be improved with actual time tracking
+                });
+
+                setIsBottomSheetVisible(false);
+              }}
+              variant="outline"
+            >
+              <ButtonText>{t('common.close')}</ButtonText>
+            </Button>
+          </VStack>
+        </VStack>
+      </ActionsheetContent>
+    </Actionsheet>
+  );
+};

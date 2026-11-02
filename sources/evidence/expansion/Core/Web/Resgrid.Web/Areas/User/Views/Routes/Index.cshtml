@@ -1,0 +1,95 @@
+@model Resgrid.Web.Areas.User.Models.Routes.RouteIndexView
+@using Resgrid.Model
+@inject IStringLocalizer<Resgrid.Localization.Areas.User.Routes.Routes> localizer
+@{
+    ViewBag.Title = "Resgrid | " + localizer["RoutesPageTitle"];
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@localizer["RoutesHeader"]</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="Dashboard" asp-route-area="User">@commonLocalizer["HomeModule"]</a>
+            </li>
+            <li class="active">
+                <strong>@localizer["RoutesHeader"]</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="btn-group top-page-buttons" style="float:right;padding-right:15px;">
+            <a class="btn btn-success" asp-controller="Routes" asp-action="New" asp-route-area="User">@localizer["NewRoute"]</a>
+            <a class="btn btn-info" asp-controller="Routes" asp-action="ActiveRoutes" asp-route-area="User">@localizer["ActiveRoutes"]</a>
+            <a class="btn btn-default" asp-controller="Routes" asp-action="ArchivedRoutes" asp-route-area="User">@localizer["ArchivedRoutes"]</a>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="routePlansTable">
+                            <thead>
+                            <tr>
+                                <th>@localizer["Name"]</th>
+                                <th>@localizer["Status"]</th>
+                                <th>@localizer["Stops"]</th>
+                                <th>@localizer["Profile"]</th>
+                                <th>@localizer["Created"]</th>
+                                <th style="width:200px;">@localizer["Actions"]</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var plan in Model.Plans)
+                            {
+                                <tr>
+                                    <td>@plan.Name</td>
+                                    <td>@((RouteStatus)plan.RouteStatus)</td>
+                                    <td>@(Model.StopCounts.TryGetValue(plan.RoutePlanId, out var sc) ? sc.ToString() : "0")</td>
+                                    <td>@(plan.MapboxRouteProfile ?? "driving")</td>
+                                    <td>@plan.AddedOn.ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        <a class="btn btn-xs btn-primary" asp-controller="Routes" asp-action="View" asp-route-id="@plan.RoutePlanId" asp-route-area="User">
+                                            <i class="fa fa-eye"></i> @localizer["View"]
+                                        </a>
+                                        <a class="btn btn-xs btn-warning" asp-controller="Routes" asp-action="Edit" asp-route-id="@plan.RoutePlanId" asp-route-area="User">
+                                            <i class="fa fa-pencil"></i> @localizer["Edit"]
+                                        </a>
+                                        @if (plan.RouteStatus == (int)RouteStatus.Active)
+                                        {
+                                            <a class="btn btn-xs btn-success" asp-controller="Routes" asp-action="StartRoute" asp-route-id="@plan.RoutePlanId" asp-route-area="User">
+                                                <i class="fa fa-play"></i> Start
+                                            </a>
+                                        }
+                                        <a class="btn btn-xs btn-default" asp-controller="Routes" asp-action="Directions" asp-route-id="@plan.RoutePlanId" asp-route-area="User">
+                                            <i class="fa fa-map-signs"></i> Directions
+                                        </a>
+                                        <a class="btn btn-xs btn-info" asp-controller="Routes" asp-action="Instances" asp-route-routePlanId="@plan.RoutePlanId" asp-route-area="User">
+                                            <i class="fa fa-history"></i> @localizer["History"]
+                                        </a>
+                                        <form asp-controller="Routes" asp-action="Delete" asp-route-area="User" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@plan.RoutePlanId" />
+                                            <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('@JsEncoder.Encode(localizer["DeleteRoutePlanConfirm"])');">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/app/internal/routes/resgrid.routes.index.js"></script>
+}

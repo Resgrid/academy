@@ -1,0 +1,771 @@
+{
+  "schema_version": 1,
+  "source_only": true,
+  "publication_approved": false,
+  "canonical_or_ready_or_lesson_changes": false,
+  "kind": "Bounded native-call source-retention prototype",
+  "scope": {
+    "native": 81,
+    "initial_native": 60,
+    "completion_native": 21,
+    "initial_Core": 3,
+    "completion_Core": 6,
+    "context_JSON": 183,
+    "CSS_snapshots": 3
+  },
+  "transformations": [
+    "File-keyed SHA256 fingerprint assignments become row lists containing file and sha256. Original hash values are preserved.",
+    "Simulator/device identifiers, host-local command lines, private source references and nonportable host paths are omitted. No private credential/env files are opened.",
+    "Selected known repository path prefixes become portable logical source paths. No screenshot pixels, AX values, operation outcomes or chronological history are invented."
+  ],
+  "omitted_fields": [
+    {
+      "field": "001-baseline-original-calls.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "001-baseline-original-calls.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "002-native-new-call-form.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "002-native-new-call-form.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "003-native-priority-options.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "003-native-priority-options.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "004-settled-native-priority-options.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "004-settled-native-priority-options.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "005-native-call-type-options.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "005-native-call-type-options.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "006-native-create-recipients-and-schedule.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "006-native-create-recipients-and-schedule.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "007-native-create-recipient-and-submit-controls.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "007-native-create-recipient-and-submit-controls.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "008-native-dispatch-recipient-selection-empty.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "008-native-dispatch-recipient-selection-empty.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "009-native-boden-selected-training-scope.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "009-native-boden-selected-training-scope.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "010-native-ambulance-selected-two-recipient-scope.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "010-native-ambulance-selected-two-recipient-scope.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "011-reset-unsubmitted-form-recipient-summary.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "011-reset-unsubmitted-form-recipient-summary.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "012-reset-zero-selected-everyone-off.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "012-reset-zero-selected-everyone-off.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "013-search-edit-menu-diagnostic.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "013-search-edit-menu-diagnostic.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "014-full-form-reset-recipient-state.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "014-full-form-reset-recipient-state.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "015-fresh-reopen-diagnostic.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "015-fresh-reopen-diagnostic.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "016-known-notification-logbox-diagnostic.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "016-known-notification-logbox-diagnostic.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "017-fresh-original-calls-baseline.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "017-fresh-original-calls-baseline.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "018-immutable-snapshot-empty-call-form.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "018-immutable-snapshot-empty-call-form.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "019-fresh-unfiltered-zero-recipients.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "019-fresh-unfiltered-zero-recipients.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "020-users-boden-selected.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "020-users-boden-selected.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "021-actual-units-ambulance-unchecked.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "021-actual-units-ambulance-unchecked.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "022-actual-unit-ambulance-selected.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "022-actual-unit-ambulance-selected.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "023-final-scope-users-boden-everyone-off.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "023-final-scope-users-boden-everyone-off.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "024-own-unsubmitted-recipient-cancel-reset.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "024-own-unsubmitted-recipient-cancel-reset.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "025-v5-fresh-empty-recipient-scope.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "025-v5-fresh-empty-recipient-scope.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "026-v5-users-boden-selected.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "026-v5-users-boden-selected.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "027-v5-native-units-before-selection.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "027-v5-native-units-before-selection.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "028-v5-actual-unit-ambulance-selected.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "028-v5-actual-unit-ambulance-selected.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "029-v5-final-scope-everyone-off-boden-two.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "029-v5-final-scope-everyone-off-boden-two.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "030-v5-fully-visible-final-scope.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "030-v5-fully-visible-final-scope.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "031-v5-confirmed-two-recipients-blank-schedule.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "031-v5-confirmed-two-recipients-blank-schedule.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "032-native-name-and-keyboard-state.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "032-native-name-and-keyboard-state.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "033-v6-fresh-empty-call-form.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "033-v6-fresh-empty-call-form.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "034-v6-fixed-name-nature-note-readback.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "034-v6-fixed-name-nature-note-readback.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "035-v6-native-priority-routine-option.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "035-v6-native-priority-routine-option.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "036-v6-native-type-investigation-option.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "036-v6-native-type-investigation-option.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "037-v6-prepared-text-routine-investigation.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "037-v6-prepared-text-routine-investigation.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "038-v6-blank-location-destination-fields.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "038-v6-blank-location-destination-fields.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "039-v6-blank-schedule-unselected-recipients.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "039-v6-blank-schedule-unselected-recipients.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "040-v6-empty-scope-everyone-off.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "040-v6-empty-scope-everyone-off.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "041-v6-users-boden-selected.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "041-v6-users-boden-selected.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "042-v6-units-section-unchecked.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "042-v6-units-section-unchecked.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "043-v6-unit-ambulance-selected-two.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "043-v6-unit-ambulance-selected-two.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "044-v6-final-everyone-off-users-boden-two.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "044-v6-final-everyone-off-users-boden-two.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "045-v6-prepared-two-recipients-unscheduled-create-held.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "045-v6-prepared-two-recipients-unscheduled-create-held.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "046-submit-guard-stopped-before-create-tap.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "046-submit-guard-stopped-before-create-tap.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "047-v7-recent-top-field-verification.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "047-v7-recent-top-field-verification.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "048-v7-middle-empty-location-verification.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "048-v7-middle-empty-location-verification.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "049-v7-final-bottom-two-unscheduled.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "049-v7-final-bottom-two-unscheduled.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "050-after-single-actual-native-create-tap.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "050-after-single-actual-native-create-tap.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "051-settled-created-training-call-list.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "051-settled-created-training-call-list.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "052-native-select-active-call-real-id-source.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "052-native-select-active-call-real-id-source.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "053-call-selector-open-settled-attempt.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "053-call-selector-open-settled-attempt.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "054-ordinary-own-numbered-card-detail-entry.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "054-ordinary-own-numbered-card-detail-entry.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "055-native-own-set-active-status-draft-state.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "055-native-own-set-active-status-draft-state.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "056-owned-development-menu-before-tools-off.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "056-owned-development-menu-before-tools-off.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "057-owned-development-tools-off-readback.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "057-owned-development-tools-off-readback.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "058-own-call-details-tools-overlay-cleared.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "058-own-call-details-tools-overlay-cleared.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "059-unobstructed-own-set-active-result.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "059-unobstructed-own-set-active-result.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "060-after-one-owned-app-recovery-observation.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "060-after-one-owned-app-recovery-observation.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "061-post-spinner-fresh-calls.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "061-post-spinner-fresh-calls.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "062-post-spinner-own-call-details.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "062-post-spinner-own-call-details.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "063-post-spinner-set-active-actual-sheet.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "063-post-spinner-set-active-actual-sheet.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "064-responding-selected-unsubmitted.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "064-responding-selected-unsubmitted.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "065-owned-responding-select-destination.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "065-owned-responding-select-destination.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "066-own-responding-add-note-empty.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "066-own-responding-add-note-empty.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "067-note-readback-guard-diagnostic.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "067-note-readback-guard-diagnostic.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "068-own-responding-note-exact-prepared.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "068-own-responding-note-exact-prepared.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "069-own-responding-status-submit-result.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "069-own-responding-status-submit-result.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "070-own-call-active-after-status-save.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "070-own-call-active-after-status-save.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "071-own-call-native-deselect-confirmation.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "071-own-call-native-deselect-confirmation.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "072-native-deselected-own-call-still-open.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "072-native-deselected-own-call-still-open.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "073-own-call-details-after-deselect.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "073-own-call-details-after-deselect.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "074-own-call-native-actions.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "074-own-call-native-actions.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "075-own-call-close-form-defaults.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "075-own-call-close-form-defaults.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "076-own-call-close-type-options.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "076-own-call-close-type-options.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "077-own-closed-type-notifications-off.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "077-own-closed-type-notifications-off.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "078-own-close-closed-note-notify-off-prepared.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "078-own-close-closed-note-notify-off-prepared.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "079-own-native-close-result.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "079-own-native-close-result.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "080-settled-original-three-own-closed-noactive.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "080-settled-original-three-own-closed-noactive.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "081-fresh-restart-released-noactive-original-three.native.json.provenance.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "081-fresh-restart-released-noactive-original-three.native.json.provenance.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v10-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v10-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v11-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v11-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v12-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v12-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v5-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v5-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v6-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v6-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v7-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v7-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v8-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v8-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v9-build-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-completion-20261029/instrumentation-events/call-context-v9-run-01.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-final-readback-20261029/call-context-v12-run-02.json.command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-final-readback-20261029/call-owned-app-normal-recovery-04-postclose.json.events[0].command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "call-response-final-readback-20261029/call-owned-app-normal-recovery-04-postclose.json.events[1].command",
+      "reason": "host-local command omitted; its nonsecret source receipt hash is retained"
+    },
+    {
+      "field": "fresh-installed-macho-confirmation.json.simulator_udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "own-device-creation.json.session_id",
+      "reason": "string containing host-sensitive simulator identifier omitted"
+    },
+    {
+      "field": "own-device-creation.json.udid",
+      "reason": "host/device identifier or private source reference omitted"
+    },
+    {
+      "field": "spinner-retest-20261029/scoped-privacy-preflight.json.credential_sources",
+      "reason": "host/device identifier or private source reference omitted"
+    }
+  ],
+  "fingerprint_rows": 1485,
+  "installation": "Prototype only; no target copy. A later reviewed install can include these projections plus exact public_asset_dependencies. Original metadata/context JSON with host-local identifiers is provenance input, not a public-copy dependency.",
+  "limitations": [
+    "No narrative candidate, accepted capture subset, freeze, canonical readiness, timing or media qualification.",
+    "Raw diagnostic states, failed attempts and prewritten claims remain source history; copied metadata is not independent pixel approval.",
+    "Source fingerprints describe recorded code/artifacts, not bundled binaries or a full application backup. Related source profiles/support patches remain separate dependencies.",
+    "All original raw files and dated audits/checkpoints remain unchanged."
+  ]
+}

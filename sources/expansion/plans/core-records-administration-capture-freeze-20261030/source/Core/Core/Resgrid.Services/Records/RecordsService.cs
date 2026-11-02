@@ -1,0 +1,1847 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Providers;
+using Resgrid.Model.Queue;
+using Resgrid.Model.Events;
+using Resgrid.Model.Repositories;
+using Resgrid.Model.Repositories.Queries;
+using Resgrid.Model.Services;
+
+namespace Resgrid.Services.Records
+{
+	/// <summary>
+	/// The Records (RMS) operational aggregate for the locked Logs-parity definitions (RMS plan sections
+	/// 4.1, 4.8, 5.3, 5.7). Every mutation runs in one unit of work: header, typed detail, participants,
+	/// units, group scope, search projection and the outbox row commit together, and the outbox rows are
+	/// dispatched in-process after commit. Draft rows always mirror the latest revision when no amendment
+	/// is open; finalize copies them under the new revision rather than moving them.
+	/// </summary>
+	public class RecordsService : IRecordsService
+	{
+		private const string AttestationStatementVersion = "1";
+		private const int NumberAllocationRetries = 3;
+
+		private readonly IRmsOperationalRecordsRepository _records;
+		private readonly IRmsRecordValueService _details;
+		private readonly IRmsRecordParticipantsRepository _participants;
+		private readonly IRmsRecordUnitResponsesRepository _units;
+		private readonly IRmsRecordAttachmentsRepository _attachments;
+		private readonly IRmsRevisionsRepository _revisions;
+		private readonly IRecordsEvidenceService _evidence;
+		private readonly IRmsRecordGroupScopesRepository _scopes;
+		private readonly IRmsRecordSharesRepository _shares;
+		private readonly IRmsRecordSearchProjectionsRepository _projections;
+		private readonly IRmsAccessAuditsRepository _audits;
+		private readonly IDomainEventOutboxService _outbox;
+		private readonly IRecordsCutoverService _cutover;
+		private readonly IDepartmentSettingsService _settings;
+		private readonly IDepartmentGroupsService _groups;
+		private readonly IUserProfileService _profiles;
+		private readonly IUnitsService _unitsService;
+		private readonly ICallsService _calls;
+		private readonly IDepartmentDataProtectionService _dataProtection;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly IOutboundQueueProvider _outboundQueue;
+		private readonly IRecordAttachmentScanner _attachmentScanner;
+		private readonly IRecordsAuthorizationService _authorization;
+		private readonly IRecordsUdfService _udf;
+		private readonly IRecordsProtectionService _protection;
+		private readonly IRecordDefinitionsService _definitions;
+		private readonly IRecordTypedValuesService _typedValues;
+		private readonly IPersonnelRolesService _roles;
+		private readonly IDepartmentsService _departments;
+
+		public RecordsService(IRmsOperationalRecordsRepository records, IRmsRecordValueService details,
+			IRmsRecordParticipantsRepository participants, IRmsRecordUnitResponsesRepository units, IRmsRecordAttachmentsRepository attachments,
+			IRmsRevisionsRepository revisions, IRecordsEvidenceService evidence, IRmsRecordGroupScopesRepository scopes, IRmsRecordSharesRepository shares,
+			IRmsRecordSearchProjectionsRepository projections, IRmsAccessAuditsRepository audits, IDomainEventOutboxService outbox,
+			IRecordsCutoverService cutover, IDepartmentSettingsService settings, IDepartmentGroupsService groups, IUserProfileService profiles,
+			IUnitsService unitsService, ICallsService calls, IDepartmentDataProtectionService dataProtection, IUnitOfWork unitOfWork,
+			IOutboundQueueProvider outboundQueue, IRecordAttachmentScanner attachmentScanner, IRecordsAuthorizationService authorization, IRecordsUdfService udf,
+			IRecordsProtectionService protection, IRecordDefinitionsService definitions, IRecordTypedValuesService typedValues, IPersonnelRolesService roles,
+			IDepartmentsService departments)
+		{
+			_departments = departments;
+			_protection = protection;
+			_definitions = definitions;
+			_typedValues = typedValues;
+			_roles = roles;
+			_records = records;
+			_details = details;
+			_participants = participants;
+			_units = units;
+			_attachments = attachments;
+			_revisions = revisions;
+			_evidence = evidence;
+			_scopes = scopes;
+			_shares = shares;
+			_projections = projections;
+			_audits = audits;
+			_outbox = outbox;
+			_cutover = cutover;
+			_settings = settings;
+			_groups = groups;
+			_profiles = profiles;
+			_unitsService = unitsService;
+			_calls = calls;
+			_dataProtection = dataProtection;
+			_unitOfWork = unitOfWork;
+			_outboundQueue = outboundQueue;
+			_attachmentScanner = attachmentScanner;
+			_authorization = authorization;
+			_udf = udf;
+		}
+
+		#region Create / save
+
+		public async Task<RecordAggregate> CreateRunCallAsync(int departmentId, string userId, string recordId, long expectedRowVersion, RecordNewCallInput input, CancellationToken cancellationToken = default)
+		{
+			if (input == null || string.IsNullOrWhiteSpace(input.Name) || input.Name.Length > 200 || input.Address?.Length > 500 || input.Nature?.Length > 16000 || input.OccurredOnUtc == default || input.OccurredOnUtc > DateTime.UtcNow.AddMinutes(5))
+				throw new ArgumentException("Enter a Call name and a valid past occurrence time; name, address and nature are limited to 200, 500 and 16,000 characters.");
+			await EnsureRecordsUsableAsync(departmentId);
+			await InTransactionAsync(async () =>
+			{
+				var record = await LoadRecordAsync(departmentId, recordId);
+				await RequireAttachmentWriteAsync(record, userId, false);
+				if (record.DefinitionKey != RmsDefinitionKeys.Run || record.CallId.HasValue) throw new ArgumentException("Create a Call from a Run draft that is not already linked to a Call.");
+				if (!await _authorization.CanCreateSourceCallAsync(userId, departmentId)) throw new UnauthorizedAccessException();
+				if (await _dataProtection.GetStateAsync(departmentId, true) != DepartmentDataProtectionState.Disabled) throw new InvalidOperationException("Creating a historical Call from RMS requires protected source capture support during Advanced Data Protection operation.");
+				await GuardVersionAsync(record, expectedRowVersion, cancellationToken);
+				var now = DateTime.UtcNow;
+				var call = await _calls.SaveCallAsync(new Call { DepartmentId = departmentId, ReportingUserId = userId, Name = input.Name.Trim(), Address = input.Address,
+					NatureOfCall = input.Nature, LoggedOn = DateTime.SpecifyKind(input.OccurredOnUtc, DateTimeKind.Utc), State = (int)CallStates.Closed, ClosedOn = now, ClosedByUserId = userId, Priority = (int)CallPriority.Low }, cancellationToken);
+				if (call == null || call.DepartmentId != departmentId || call.CallId <= 0) throw new InvalidOperationException("The Call could not be created.");
+				var details = await _details.GetDraftAsync(departmentId, recordId) ?? throw new InvalidOperationException("The Run draft is unavailable.");
+				await ApplyCallSnapshotAsync(departmentId, userId, details, call.CallId);
+				record.CallId = call.CallId; record.ModifiedByUserId = userId; record.ModifiedOn = now;
+				details.ModifiedOn = now; details.RowVersion++;
+				await _details.UpdateAsync(details, cancellationToken); await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Created and linked historical Call " + call.CallId, RmsOriginClient.Web, cancellationToken);
+			});
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		public async Task<RecordAggregate> CreateDraftAsync(int departmentId, string userId, RecordDraftInput input, CancellationToken cancellationToken = default)
+		{
+			if (input == null) throw new ArgumentNullException(nameof(input));
+			if (string.IsNullOrWhiteSpace(userId)) throw new ArgumentException("An acting user is required.", nameof(userId));
+			RmsRecordDefinitionVersion definitionVersion = null;
+			if (!RmsDefinitionKeys.LockedTypes.TryGetValue(input.DefinitionKey ?? string.Empty, out var recordType))
+			{
+				// Department definitions (RMS-1B): the current published version is pinned on the Record for life.
+				definitionVersion = await _definitions.GetCurrentPublishedAsync(departmentId, input.DefinitionKey ?? string.Empty);
+				if (definitionVersion == null)
+					throw new ArgumentException($"'{input.DefinitionKey}' is not a published definition.", nameof(input));
+			}
+
+			await EnsureRecordsUsableAsync(departmentId);
+			if (!await _authorization.HasPermissionAsync(userId, departmentId, PermissionTypes.CreateRecord))
+				throw new UnauthorizedAccessException("Record creation is not authorized.");
+
+			var scopedKey = string.IsNullOrWhiteSpace(input.IdempotencyKey) ? null
+				: RecordSnapshotSerializer.Checksum(JsonConvert.SerializeObject(new { departmentId, userId, operation = "CreateDraft", key = input.IdempotencyKey.Trim() }));
+			var request = Newtonsoft.Json.Linq.JObject.FromObject(input);
+			request.Remove(nameof(RecordDraftInput.IdempotencyKey));
+			var requestChecksum = RecordSnapshotSerializer.Checksum(request.ToString(Formatting.None));
+			if (scopedKey != null)
+			{
+				var existing = await _records.GetByIdempotencyKeyAsync(departmentId, scopedKey);
+				if (existing != null)
+					return await ReplayCreateAsync(departmentId, userId, existing, requestChecksum);
+			}
+
+			var now = DateTime.UtcNow;
+			var recordId = ResolveClientRecordId(input.ClientRecordId);
+			var authorGroup = await _groups.GetGroupForUserAsync(userId, departmentId);
+
+			var record = new RmsOperationalRecord
+			{
+				RmsOperationalRecordId = recordId,
+				DepartmentId = departmentId,
+				ProtectionId = Guid.NewGuid().ToString(),
+				DefinitionKey = input.DefinitionKey,
+				DefinitionVersion = definitionVersion?.Version ?? RmsDefinitionKeys.LockedDefinitionVersion,
+				RecordType = definitionVersion == null ? (int)recordType : (int?)null,
+				LifecyclePreset = definitionVersion?.LifecyclePreset ?? (int)RmsDefinitionKeys.LockedDefaultPreset,
+				State = (int)RmsRecordState.Draft,
+				DraftReference = NewDraftReference(),
+				StationGroupId = input.StationGroupId ?? authorGroup?.DepartmentGroupId,
+				CallId = input.CallId,
+				ExternalId = input.ExternalId,
+				AuthorUserId = userId,
+				AuthorGroupIdSnapshot = authorGroup?.DepartmentGroupId,
+				OwnerUserId = userId,
+				StartedOn = input.StartedOn,
+				EndedOn = input.EndedOn,
+				IdempotencyKey = scopedKey,
+				OriginalRequestChecksum = scopedKey == null ? null : requestChecksum,
+				OriginClient = (int)input.OriginClient,
+				CreatedOn = now,
+				CreatedByUserId = userId,
+				ModifiedOn = now,
+				ModifiedByUserId = userId,
+				RowVersion = 1
+			};
+
+			var details = new RmsOperationalRecordDetail
+			{
+				RmsOperationalRecordDetailId = Guid.NewGuid().ToString(),
+				DepartmentId = departmentId,
+				ProtectionId = Guid.NewGuid().ToString(),
+				RecordId = recordId,
+				CreatedOn = now,
+				ModifiedOn = now,
+				RowVersion = 1
+			};
+			await ApplyAuthorizedDetailsAsync(departmentId, userId, record.DefinitionKey, details, input.Details);
+			await ApplyCallSnapshotAsync(departmentId, userId, details, input.CallId);
+			if (definitionVersion == null) ValidateDefinitionRequirements(recordType, details);
+
+			var participants = await BuildParticipantsAsync(departmentId, recordId, input.Participants, now);
+			var units = await BuildUnitsAsync(departmentId, recordId, input.Units, now);
+			RecordValueSet values = null;
+			if (definitionVersion != null)
+			{
+				var validation = await _typedValues.ValidateAsync(departmentId, definitionVersion, input.Values, false);
+				if (!validation.IsValid) throw new ArgumentException(string.Join(" ", validation.Issues.Where(i => i.Severity == "error").Select(i => i.Message)));
+			}
+			record.DisplaySummary = definitionVersion == null ? BuildDisplaySummary(recordType, record, details, units) : definitionVersion.DefinitionKey;
+
+			record.CardinalityKey = BuildCardinalityKey(record, details, CardinalityFor(record, definitionVersion));
+			await GuardCardinalityAsync(record, definitionVersion);
+
+			var outboxIds = new List<long>();
+			// Concurrent creates can read the same maximum before either has inserted, and
+			// UX_RmsOperationalRecords_Department_RecordNumber then rejects the loser. Its number was never used, so
+			// the losing create takes a fresh one and tries again rather than failing the caller.
+			var allocatesOnCreate = definitionVersion != null && definitionVersion.Numbering.Assignment == RmsNumberAssignment.OnCreate;
+			for (var attempt = 0; ; attempt++)
+			{
+			outboxIds.Clear();
+			try
+			{
+			await InTransactionAsync(async () =>
+			{
+				// OnCreate numbering (plan 4.1): the number is reserved now; a cancelled draft records it as voided, never reused.
+				if (allocatesOnCreate)
+					record.RecordNumber = await AllocateRecordNumberAsync(record, cancellationToken);
+				await _records.InsertAsync(record, cancellationToken, true);
+				if (definitionVersion != null)
+				{
+					values = await _typedValues.SaveDraftValuesAsync(departmentId, userId, recordId, definitionVersion, input.Values, cancellationToken);
+					record.DisplaySummary = _typedValues.ToDisplaySummary(definitionVersion.Schema, values) ?? definitionVersion.DefinitionKey;
+				}
+				record.UdfDefinitionId = await _udf.SaveInTransactionAsync(departmentId, userId, recordId, record.DefinitionKey, record.DefinitionVersion, null, input.CustomFields, cancellationToken);
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await _details.InsertAsync(details, cancellationToken);
+				foreach (var participant in participants)
+					await _participants.InsertAsync(participant, cancellationToken, true);
+				foreach (var unit in units)
+					await _units.InsertAsync(unit, cancellationToken, true);
+
+				var aggregate = new RecordAggregate { Record = record, Details = details, Participants = participants, Units = units, Values = values, DefinitionVersionRow = definitionVersion };
+				await RecomputeGroupScopeAsync(aggregate, cancellationToken);
+				await UpsertProjectionAsync(aggregate, cancellationToken);
+
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, null, WorkflowTriggerEventType.RecordCreated, RmsRecordState.Draft, RmsRecordState.Draft, null, cancellationToken)).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Create draft", input.OriginClient, cancellationToken,
+					string.IsNullOrWhiteSpace(input.DuplicateContinueReason) ? null : new { duplicateContinueReason = input.DuplicateContinueReason });
+			});
+			}
+			// One catch for every reason an insert can be rejected: an exception filter cannot await, so the
+			// idempotency lookup happens here. A key that finds no winner falls through to the other causes rather
+			// than rethrowing — a number collision on an idempotent create is still a retryable collision.
+			catch (DbException) when (scopedKey != null || record.CardinalityKey != null || (allocatesOnCreate && attempt < NumberAllocationRetries))
+			{
+				if (scopedKey != null)
+				{
+					var winner = await _records.GetByIdempotencyKeyAsync(departmentId, scopedKey);
+					if (winner != null)
+						return await ReplayCreateAsync(departmentId, userId, winner, requestChecksum);
+				}
+				if (record.CardinalityKey != null)
+				{
+					// Two creates passed the read-side guard and the index rejected this one. Re-read: if the winner is
+					// there, the author gets the same answer they would have got a moment earlier.
+					await GuardCardinalityAsync(record, definitionVersion);
+					throw;
+				}
+				if (allocatesOnCreate && attempt < NumberAllocationRetries)
+				{
+					// The transaction rolled back, so nothing of this attempt survives; reallocate and go round again.
+					record.RecordNumber = null;
+					continue;
+				}
+				throw;
+			}
+			break;
+			}
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		private async Task<RecordAggregate> ReplayCreateAsync(int departmentId, string userId, RmsOperationalRecord existing, string requestChecksum)
+		{
+			if (existing.DeletedOn.HasValue || existing.PurgedOn.HasValue || existing.AuthorUserId != userId
+				|| !await _authorization.CanUserViewRecordAsync(userId, existing.RmsOperationalRecordId, departmentId))
+				throw new UnauthorizedAccessException("The original record is not accessible.");
+			if (!string.Equals(existing.OriginalRequestChecksum, requestChecksum, StringComparison.Ordinal))
+				throw new RecordIdempotencyException("This idempotency key was already used for a different create request.");
+			return await HydrateAsync(existing, false);
+		}
+
+		public async Task<RecordAggregate> SaveDraftAsync(int departmentId, string userId, string recordId, long expectedRowVersion, RecordDraftInput input, CancellationToken cancellationToken = default)
+		{
+			if (input == null) throw new ArgumentNullException(nameof(input));
+			var record = await LoadRecordAsync(departmentId, recordId);
+			if (!await _authorization.CanUserViewRecordAsync(userId, recordId, departmentId))
+				throw new UnauthorizedAccessException("Record access is not authorized.");
+			var state = (RmsRecordState)record.State;
+
+			if (!RmsLifecycle.IsEditable(state) && record.AmendsRevisionId == null)
+				throw new RecordTransitionException(recordId, state, state, "the Record is not editable in this state");
+
+			var recordType = (RmsOperationalRecordType)record.RecordType.GetValueOrDefault();
+			var definitionVersion = await DefinitionVersionForAsync(record);
+			if (definitionVersion != null)
+			{
+				var validation = await _typedValues.ValidateAsync(departmentId, definitionVersion, input.Values, false);
+				if (!validation.IsValid) throw new ArgumentException(string.Join(" ", validation.Issues.Where(i => i.Severity == "error").Select(i => i.Message)));
+			}
+			RecordValueSet values = null;
+			var now = DateTime.UtcNow;
+
+			await InTransactionAsync(async () =>
+			{
+				await RequireAttachmentWriteAsync(record, userId, false);
+				await GuardVersionAsync(record, expectedRowVersion, cancellationToken);
+
+				var details = await _details.GetDraftAsync(departmentId, recordId) ?? new RmsOperationalRecordDetail
+				{
+					RmsOperationalRecordDetailId = Guid.NewGuid().ToString(),
+					DepartmentId = departmentId,
+					ProtectionId = Guid.NewGuid().ToString(),
+					RecordId = recordId,
+					CreatedOn = now,
+					RowVersion = 0
+				};
+				await ApplyAuthorizedDetailsAsync(departmentId, userId, record.DefinitionKey, details, input.Details);
+				record.UdfDefinitionId = await _udf.SaveInTransactionAsync(departmentId, userId, recordId, record.DefinitionKey, record.DefinitionVersion, record.UdfDefinitionId, input.CustomFields, cancellationToken);
+				if (input.CallId != record.CallId)
+					await ApplyCallSnapshotAsync(departmentId, userId, details, input.CallId);
+				if (definitionVersion == null) ValidateDefinitionRequirements(recordType, details);
+				if (definitionVersion != null) values = await _typedValues.SaveDraftValuesAsync(departmentId, userId, recordId, definitionVersion, input.Values, cancellationToken);
+				details.ModifiedOn = now;
+				details.RowVersion += 1;
+				await _details.SaveOrUpdateAsync(details, cancellationToken);
+
+				var participants = await BuildParticipantsAsync(departmentId, recordId, input.Participants, now);
+				var units = await BuildUnitsAsync(departmentId, recordId, input.Units, now);
+				await _participants.DeleteDraftForRecordAsync(departmentId, recordId, cancellationToken);
+				await _units.DeleteDraftForRecordAsync(departmentId, recordId, cancellationToken);
+				foreach (var participant in participants)
+					await _participants.InsertAsync(participant, cancellationToken, true);
+				foreach (var unit in units)
+					await _units.InsertAsync(unit, cancellationToken, true);
+
+				record.CallId = input.CallId;
+				record.StationGroupId = input.StationGroupId ?? record.StationGroupId;
+				record.ExternalId = input.ExternalId;
+				record.StartedOn = input.StartedOn;
+				record.EndedOn = input.EndedOn;
+				record.DisplaySummary = definitionVersion == null ? BuildDisplaySummary(recordType, record, details, units) : _typedValues.ToDisplaySummary(definitionVersion.Schema, values) ?? definitionVersion.DefinitionKey;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				if (state == RmsRecordState.Returned)
+					record.State = (int)RmsRecordState.Draft;
+				await _records.UpdateAsync(record, cancellationToken, true);
+
+				var aggregate = new RecordAggregate { Record = record, Details = details, Participants = participants, Units = units, Values = values, DefinitionVersionRow = definitionVersion };
+				await RecomputeGroupScopeAsync(aggregate, cancellationToken);
+				await UpsertProjectionAsync(aggregate, cancellationToken);
+				// Draft autosaves emit no Workflow event (RMS plan section 5.6).
+			});
+
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		#endregion
+
+		#region Lifecycle transitions
+
+		public async Task<RecordAggregate> SubmitForReviewAsync(int departmentId, string userId, string recordId, long expectedRowVersion, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var from = (RmsRecordState)record.State;
+			RequireTransition(record, from, RmsRecordState.ReadyForReview);
+
+			var now = DateTime.UtcNow;
+			var outboxIds = new List<long>();
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, expectedRowVersion, cancellationToken);
+				record.State = (int)RmsRecordState.ReadyForReview;
+				record.SubmittedForReviewOn = now;
+				record.ReviewDueOn = now.AddHours((await DefinitionVersionForAsync(record))?.ReviewDueHours ?? await _settings.GetRecordsReviewDueHoursAsync(departmentId));
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, null, WorkflowTriggerEventType.RecordSubmittedForReview, from, RmsRecordState.ReadyForReview, null, cancellationToken)).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Submit for review", (RmsOriginClient)record.OriginClient, cancellationToken);
+			});
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		public async Task<RecordAggregate> ReturnForCorrectionAsync(int departmentId, string userId, string recordId, string reasonCode, string reasonText, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrWhiteSpace(reasonCode)) throw new ArgumentException("A reason code is required to return a Record.", nameof(reasonCode));
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var from = (RmsRecordState)record.State;
+			RequireTransition(record, from, RmsRecordState.Returned);
+			await RequireDefinitionRoleAsync(record, userId, from == RmsRecordState.Approved);
+
+			var now = DateTime.UtcNow;
+			var outboxIds = new List<long>();
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				record.State = (int)RmsRecordState.Returned;
+				record.ReturnedOn = now;
+				record.ReturnReasonCode = reasonCode;
+				record.ReturnReasonText = reasonText;
+				record.ReturnCount += 1;
+				record.ReviewerUserId = userId;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, null, WorkflowTriggerEventType.RecordReturnedForCorrection, from, RmsRecordState.Returned, reasonCode, cancellationToken)).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Return for correction", RmsOriginClient.Web, cancellationToken, new { reasonCode });
+			});
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+
+			// Notification EventTypes 31 (RecordReturnedForCorrection, RMS plan section 4.7): author-targeted, delivered by
+			// the notification worker through IRecordsNotificationService. Enqueued after commit and never blocking.
+			if (!await _outboundQueue.EnqueueNotification(new NotificationItem
+			{
+				DepartmentId = departmentId,
+				Type = (int)EventTypes.RecordReturnedForCorrection,
+				Value = recordId,
+				UserId = record.AuthorUserId
+			}))
+				Logging.LogError($"Unable to enqueue the return-for-correction notification for record {recordId}.");
+
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		public async Task<RecordAggregate> ApproveAsync(int departmentId, string userId, string recordId, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var from = (RmsRecordState)record.State;
+			RequireTransition(record, from, RmsRecordState.Approved);
+			if (string.Equals(record.AuthorUserId, userId, StringComparison.Ordinal))
+				throw new RecordTransitionException(recordId, from, RmsRecordState.Approved, "the approver may not be the author");
+			await RequireDefinitionRoleAsync(record, userId, true);
+
+			var now = DateTime.UtcNow;
+			var outboxIds = new List<long>();
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				record.State = (int)RmsRecordState.Approved;
+				record.ApprovedOn = now;
+				record.ApproverUserId = userId;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, null, WorkflowTriggerEventType.RecordApproved, from, RmsRecordState.Approved, null, cancellationToken, null,
+					new Dictionary<string, object> { ["review"] = new { reviewer_user_id = record.ReviewerUserId, approver_user_id = userId, approved_on = now, submitted_for_review_on = record.SubmittedForReviewOn, review_due_on = record.ReviewDueOn, return_count = record.ReturnCount } })).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Sign, "Approve", RmsOriginClient.Web, cancellationToken);
+			});
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		public async Task<RecordAggregate> FinalizeAsync(int departmentId, string userId, string recordId, long expectedRowVersion, string attestationStatementVersion, string reasonCode, string reasonText, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var from = (RmsRecordState)record.State;
+			var isAmendment = record.AmendsRevisionId != null;
+			var to = isAmendment ? RmsRecordState.Amended : RmsRecordState.Finalized;
+			RequireTransition(record, from, to);
+
+			if (isAmendment && string.IsNullOrWhiteSpace(reasonCode))
+				throw new ArgumentException("A reason code is required to finalize an amendment.", nameof(reasonCode));
+			if (from == RmsRecordState.ReadyForReview)
+				await RequireDefinitionRoleAsync(record, userId, false);
+			if (!await RecordsLifecycleAuthority.CanFinalizeAsync(_authorization, userId, departmentId, from, isAmendment, record.AuthorUserId, record.OwnerUserId, record.ReviewerUserId, record.ApproverUserId))
+				throw new UnauthorizedAccessException("Finalizing another member's Record needs ReviewRecords, AmendRecords for an amendment, or a department administrator.");
+
+			var now = DateTime.UtcNow;
+			var recordType = (RmsOperationalRecordType)record.RecordType.GetValueOrDefault();
+			var outboxIds = new List<long>();
+			RmsRevision revision = null;
+
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, expectedRowVersion, cancellationToken);
+
+				var draft = await HydrateDraftAsync(record);
+				draft.Protection.RequireRevealed(isAmendment ? "finalize amendment" : "finalize");
+				if (draft.DefinitionVersionRow == null)
+				{
+					ValidateDefinitionRequirements(recordType, draft.Details);
+					ValidateForFinalization(recordType, draft);
+				}
+				else
+				{
+					// Department definitions: requiredness and Show/Require rules apply now, never on autosave (plan 4.1).
+					var validation = await _typedValues.ValidateAsync(departmentId, draft.DefinitionVersionRow, draft.Values?.ToInputs() ?? new List<RecordValueInput>(), true);
+					if (!validation.IsValid) throw new ArgumentException(string.Join(" ", validation.Issues.Where(i => i.Severity == "error").Select(i => i.Message)));
+				}
+				_udf.ValidateForFinalization(draft.CustomFields);
+
+				if (string.IsNullOrWhiteSpace(record.RecordNumber))
+					record.RecordNumber = await AllocateRecordNumberAsync(record, cancellationToken);
+
+				revision = await WriteRevisionAsync(record, draft, isAmendment ? RmsRevisionTransition.Amended : RmsRevisionTransition.Finalized,
+					userId, reasonCode, reasonText, attestationStatementVersion ?? AttestationStatementVersion, now, cancellationToken);
+
+				var priorState = from;
+				record.State = (int)to;
+				if (!isAmendment)
+				{
+					record.FinalizedOn = now;
+					record.FinalizedByUserId = userId;
+				}
+				record.CurrentRevisionId = revision.RmsRevisionId;
+				record.RevisionCount = revision.RevisionNumber;
+				record.AmendsRevisionId = null;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+
+				draft.Record = record;
+				await RecomputeGroupScopeAsync(draft, cancellationToken);
+				await UpsertProjectionAsync(draft, cancellationToken);
+
+				var lifecycle = await EnqueueLifecycleEventAsync(record, revision, isAmendment ? WorkflowTriggerEventType.RecordAmended : WorkflowTriggerEventType.RecordFinalized, priorState, to, reasonCode, cancellationToken);
+				outboxIds.Add(lifecycle.DomainEventOutboxId);
+
+				// Legacy LogAdded compatibility (plan section 5.6): eligible Logs-parity records also project the exact
+				// log.* contract once, at finalize, through the same outbox. Unit Activity never emitted LogAdded and
+				// does not start now; amendments never re-fire it.
+				if (!isAmendment && LogAddedCompatibility.IsEligible(record))
+					outboxIds.Add((await EnqueueLogAddedCompatibilityAsync(record, revision, draft.Details, lifecycle.EventId, now, cancellationToken)).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, revision.RmsRevisionId, RmsAccessAuditAction.Sign, isAmendment ? "Finalize amendment" : "Finalize", (RmsOriginClient)record.OriginClient, cancellationToken, new { revision.RevisionNumber, revision.Checksum, reasonCode });
+			});
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+			return await GetAsync(departmentId, recordId, true);
+		}
+
+		public async Task<RecordAggregate> OpenAmendmentAsync(int departmentId, string userId, string recordId, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var state = (RmsRecordState)record.State;
+			if (!RmsLifecycle.CanTransition((RmsLifecyclePreset)record.LifecyclePreset, state, RmsRecordState.Amended))
+				throw new RecordTransitionException(recordId, state, RmsRecordState.Amended);
+			if (record.AmendsRevisionId != null)
+				throw new RecordTransitionException(recordId, state, RmsRecordState.Amended, "an amendment draft is already open");
+
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				record.AmendsRevisionId = record.CurrentRevisionId;
+				record.OwnerUserId = userId;
+				record.ModifiedOn = DateTime.UtcNow;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await AuditAsync(departmentId, userId, recordId, record.CurrentRevisionId, RmsAccessAuditAction.Change, "Open amendment", RmsOriginClient.Web, cancellationToken);
+			});
+
+			return await GetAsync(departmentId, recordId, true);
+		}
+
+		public async Task<RecordAggregate> AbandonAmendmentAsync(int departmentId, string userId, string recordId, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			if (record.AmendsRevisionId == null)
+				return await GetAsync(departmentId, recordId, true);
+
+			var revision = await _revisions.GetByIdForDepartmentAsync(departmentId, record.CurrentRevisionId);
+			if (revision != null)
+				(await _protection.RevealRevisionsAsync(departmentId, new[] { revision }, cancellationToken)).RequireRevealed("abandon amendment");
+			var snapshot = RecordSnapshotSerializer.Deserialize(revision?.SnapshotJson);
+			if (snapshot == null)
+				throw new InvalidOperationException($"Revision {record.CurrentRevisionId} has no snapshot to restore.");
+
+			var now = DateTime.UtcNow;
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				await RestoreDraftFromSnapshotAsync(record, snapshot, now, cancellationToken);
+				record.AmendsRevisionId = null;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				var aggregate = await HydrateDraftAsync(record);
+				await RecomputeGroupScopeAsync(aggregate, cancellationToken);
+				await UpsertProjectionAsync(aggregate, cancellationToken);
+				await AuditAsync(departmentId, userId, recordId, record.CurrentRevisionId, RmsAccessAuditAction.Change, "Abandon amendment", RmsOriginClient.Web, cancellationToken);
+			});
+
+			return await GetAsync(departmentId, recordId, true);
+		}
+
+		public async Task<RecordAggregate> VoidAsync(int departmentId, string userId, string recordId, string reasonCode, string reasonText, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrWhiteSpace(reasonCode)) throw new ArgumentException("A reason code is required to void a Record.", nameof(reasonCode));
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var from = (RmsRecordState)record.State;
+			RequireTransition(record, from, RmsRecordState.Voided);
+			if (record.AmendsRevisionId != null)
+				throw new RecordTransitionException(recordId, from, RmsRecordState.Voided, "abandon the open amendment first");
+			await RequireCloseOutAsync(record, userId);
+
+			var now = DateTime.UtcNow;
+			var outboxIds = new List<long>();
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				var draft = await HydrateDraftAsync(record);
+				draft.Protection.RequireRevealed("void");
+				var revision = await WriteRevisionAsync(record, draft, RmsRevisionTransition.Voided, userId, reasonCode, reasonText, AttestationStatementVersion, now, cancellationToken);
+
+				record.State = (int)RmsRecordState.Voided;
+				// A voided Record no longer holds its cardinality slot; the replacement must be creatable (plan 5.2.1).
+				record.CardinalityKey = null;
+				record.VoidedOn = now;
+				record.VoidedByUserId = userId;
+				record.VoidReasonCode = reasonCode;
+				record.VoidReasonText = reasonText;
+				record.CurrentRevisionId = revision.RmsRevisionId;
+				record.RevisionCount = revision.RevisionNumber;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+
+				draft.Record = record;
+				await UpsertProjectionAsync(draft, cancellationToken);
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, revision, WorkflowTriggerEventType.RecordVoided, from, RmsRecordState.Voided, reasonCode, cancellationToken)).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, revision.RmsRevisionId, RmsAccessAuditAction.Change, "Void", RmsOriginClient.Web, cancellationToken, new { reasonCode });
+			});
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+			return await GetAsync(departmentId, recordId, true);
+		}
+
+		public async Task<RecordAggregate> CancelAsync(int departmentId, string userId, string recordId, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var from = (RmsRecordState)record.State;
+			RequireTransition(record, from, RmsRecordState.Cancelled);
+			await RequireCloseOutAsync(record, userId);
+
+			var now = DateTime.UtcNow;
+			var outboxIds = new List<long>();
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				record.State = (int)RmsRecordState.Cancelled;
+				// Same as void: an abandoned draft must not block the Record that replaces it.
+				record.CardinalityKey = null;
+				record.CancelledOn = now;
+				record.CancelledByUserId = userId;
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				// Under OnFinalize numbering a cancelled draft holds no number, so the disposition is "none".
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, null, WorkflowTriggerEventType.RecordCancelled, from, RmsRecordState.Cancelled, null, cancellationToken,
+					new { number_disposition = record.RecordNumber == null ? "none" : "voided", record.RecordNumber })).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Cancel", RmsOriginClient.Web, cancellationToken);
+			});
+
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		public async Task<RecordAggregate> ReassignDraftAsync(int departmentId, string userId, string recordId, string newOwnerUserId, string reason, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrWhiteSpace(newOwnerUserId)) throw new ArgumentException("A new owner is required.", nameof(newOwnerUserId));
+			if (!await _authorization.IsAssignableMemberAsync(newOwnerUserId, departmentId))
+				throw new ArgumentException("The new owner must be an active member of the department.", nameof(newOwnerUserId));
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var state = (RmsRecordState)record.State;
+			if (RmsLifecycle.IsFinalizedFamily(state) && record.AmendsRevisionId == null || RmsLifecycle.IsTerminal(state))
+				throw new RecordTransitionException(recordId, state, state, "only an unfinalized Record or an open amendment can be reassigned");
+
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				var previousOwner = record.OwnerUserId;
+				record.OwnerUserId = newOwnerUserId;
+				record.ModifiedOn = DateTime.UtcNow;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Admin, "Reassign draft", RmsOriginClient.Web, cancellationToken, new { previousOwner, newOwnerUserId, reason });
+			});
+
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		public async Task<RecordAggregate> AssignReviewerAsync(int departmentId, string userId, string recordId, string reviewerUserId, string reason, CancellationToken cancellationToken = default)
+		{
+			if (string.IsNullOrWhiteSpace(reviewerUserId)) throw new ArgumentException("A reviewer is required.", nameof(reviewerUserId));
+			var record = await LoadRecordAsync(departmentId, recordId);
+			var state = (RmsRecordState)record.State;
+			if (state != RmsRecordState.ReadyForReview)
+				throw new RecordTransitionException(recordId, state, state, "only a Record awaiting review can be assigned a reviewer");
+			if (!await _authorization.HasPermissionAsync(userId, departmentId, PermissionTypes.ReviewRecords))
+				throw new UnauthorizedAccessException("Assigning a reviewer requires the ReviewRecords permission.");
+			if (!await _authorization.CanUserViewRecordAsync(userId, recordId, departmentId))
+				throw new UnauthorizedAccessException("Record access is not authorized.");
+			if (!await _authorization.HasPermissionAsync(reviewerUserId, departmentId, PermissionTypes.ReviewRecords))
+				throw new ArgumentException("The chosen reviewer does not hold the ReviewRecords permission.", nameof(reviewerUserId));
+
+			await InTransactionAsync(async () =>
+			{
+				await GuardVersionAsync(record, record.RowVersion, cancellationToken);
+				var previousReviewer = record.ReviewerUserId;
+				record.ReviewerUserId = reviewerUserId;
+				record.ModifiedOn = DateTime.UtcNow;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				await RefreshProjectionAsync(record, cancellationToken);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Admin, "Assign reviewer", RmsOriginClient.Web, cancellationToken, new { previousReviewer, reviewerUserId, reason });
+			});
+
+			return await GetAsync(departmentId, recordId, false);
+		}
+
+		#endregion
+
+		#region Reads
+
+		public async Task<RecordAggregate> GetAsync(int departmentId, string recordId, bool includeRevisions = false)
+		{
+			var record = await _records.GetByIdForDepartmentAsync(departmentId, recordId);
+			if (record == null || record.DeletedOn.HasValue)
+				return null;
+
+			return await HydrateAsync(record, includeRevisions);
+		}
+
+		public async Task<List<RmsOperationalRecord>> GetOutstandingForOwnerAsync(int departmentId, string userId)
+		{
+			if (string.IsNullOrWhiteSpace(userId))
+				return new List<RmsOperationalRecord>();
+
+			var open = new[] { (int)RmsRecordState.Draft, (int)RmsRecordState.ReadyForReview, (int)RmsRecordState.Returned, (int)RmsRecordState.Approved };
+			var records = await _records.GetByOwnerAndStatesAsync(departmentId, userId, open) ?? Enumerable.Empty<RmsOperationalRecord>();
+			return records.Where(r => r != null && !r.DeletedOn.HasValue).OrderBy(r => r.CreatedOn).ToList();
+		}
+
+		public async Task<List<RmsOperationalRecord>> GetDuplicateCandidatesAsync(int departmentId, string definitionKey, int callId)
+		{
+			var records = await _records.GetByCallAsync(departmentId, callId);
+			return (records ?? Enumerable.Empty<RmsOperationalRecord>())
+				.Where(r => string.Equals(r.DefinitionKey, definitionKey, StringComparison.Ordinal) && !RmsLifecycle.IsTerminal((RmsRecordState)r.State))
+				.ToList();
+		}
+
+		public async Task<List<RmsRecordSearchProjection>> QueryAsync(int departmentId, RmsRecordQuery query)
+		{
+			if (!string.IsNullOrEmpty(query?.ViewerUserId) && !await _authorization.IsActiveMemberAsync(query.ViewerUserId, departmentId)) return new List<RmsRecordSearchProjection>();
+			return (await _projections.QueryAsync(departmentId, await WithYearWindowAsync(departmentId, query ?? new RmsRecordQuery())))?.ToList() ?? new List<RmsRecordSearchProjection>();
+		}
+
+		public async Task<int> CountAsync(int departmentId, RmsRecordQuery query)
+		{
+			if (!string.IsNullOrEmpty(query?.ViewerUserId) && !await _authorization.IsActiveMemberAsync(query.ViewerUserId, departmentId)) return 0;
+			return await _projections.CountAsync(departmentId, await WithYearWindowAsync(departmentId, query ?? new RmsRecordQuery()));
+		}
+
+		/// <summary>The department's numbering years that hold a record (department-local, fiscal when it sets one), newest first.</summary>
+		public async Task<List<int>> GetYearsAsync(int departmentId)
+		{
+			var calendarYears = (await _projections.GetYearsAsync(departmentId))?.ToList() ?? new List<int>();
+			if (calendarYears.Count == 0)
+				return calendarYears;
+
+			var config = await _settings.GetRecordsNumberingConfigAsync(departmentId);
+			var timeZone = (await _departments.GetDepartmentByIdAsync(departmentId, false))?.TimeZone;
+			var windows = RecordsNumberingService.CandidateYearWindows(config, calendarYears, timeZone);
+			return (await _projections.GetNumberingYearsAsync(departmentId, windows))?.ToList() ?? new List<int>();
+		}
+
+		public async Task<NumberingYearWindow> GetYearWindowAsync(int departmentId, int year)
+		{
+			var config = await _settings.GetRecordsNumberingConfigAsync(departmentId);
+			var timeZone = (await _departments.GetDepartmentByIdAsync(departmentId, false))?.TimeZone;
+			return RecordsNumberingService.YearWindow(config, year, timeZone);
+		}
+
+		/// <summary>
+		/// A year filter is the department's numbering year, so "2027" lists the records numbered RUN-2027-* (or the department's
+		/// own pattern) even when its fiscal 2027 started in November 2026, and a record started on a US December 31 evening stays in its year.
+		/// </summary>
+		private async Task<RmsRecordQuery> WithYearWindowAsync(int departmentId, RmsRecordQuery query)
+		{
+			if (query.Year.HasValue && !query.OccurredFrom.HasValue && !query.OccurredBefore.HasValue)
+			{
+				var window = await GetYearWindowAsync(departmentId, query.Year.Value);
+				query.OccurredFrom = window.FromUtc;
+				query.OccurredBefore = window.BeforeUtc;
+			}
+			return query;
+		}
+
+		public async Task<List<RmsRecordSearchProjection>> GetChangesSinceAsync(int departmentId, DateTime? since, int take, string sinceId = null)
+		{
+			var bounded = Math.Max(1, Math.Min(500, take));
+			return (await _projections.GetModifiedSinceAsync(departmentId, since, bounded, sinceId))?.OrderBy(p => p.ModifiedOn).ThenBy(p => p.RmsRecordSearchProjectionId, StringComparer.Ordinal).ToList() ?? new List<RmsRecordSearchProjection>();
+		}
+
+		public async Task<List<RmsRevision>> GetRevisionsAsync(int departmentId, string recordId)
+		{
+			return (await _revisions.GetForRecordAsync(departmentId, recordId))?.ToList() ?? new List<RmsRevision>();
+		}
+
+		public async Task<RecordSnapshot> GetRevisionSnapshotAsync(int departmentId, string revisionId)
+		{
+			var revision = await _revisions.GetByIdForDepartmentAsync(departmentId, revisionId);
+			if (revision == null) return null;
+			var record = await _records.GetByIdForDepartmentAsync(departmentId, revision.RecordId);
+			if (record == null || record.PurgedOn.HasValue || record.DeletedOn.HasValue) return null;
+			(await _protection.RevealRevisionsAsync(departmentId, new[] { revision })).RequireRevealed("revision");
+			return RecordSnapshotSerializer.Deserialize(revision.SnapshotJson);
+		}
+
+		public async Task<List<RecordFieldDiff>> DiffRevisionsAsync(int departmentId, string fromRevisionId, string toRevisionId, bool canViewRestricted)
+		{
+			var from = await GetRevisionSnapshotAsync(departmentId, fromRevisionId);
+			var to = await GetRevisionSnapshotAsync(departmentId, toRevisionId);
+			if (from == null || to == null)
+				throw new KeyNotFoundException("One of the revisions does not exist in this department.");
+
+			return RecordSnapshotSerializer.Diff(from, to, canViewRestricted);
+		}
+
+		public Task RecordAccessAsync(int departmentId, string userId, string recordId, string revisionId, RmsAccessAuditAction action, string purpose = null, string ipAddress = null, RmsOriginClient originClient = RmsOriginClient.Web)
+		{
+			return _audits.InsertAsync(new RmsAccessAudit
+			{
+				DepartmentId = departmentId,
+				RecordId = recordId,
+				RevisionId = revisionId,
+				Action = (int)action,
+				ActorUserId = userId,
+				Purpose = purpose,
+				OriginClient = (int)originClient,
+				IpAddress = ipAddress,
+				Successful = true,
+				OccurredOn = DateTime.UtcNow
+			}, CancellationToken.None, true);
+		}
+
+		#endregion
+
+		public async Task<List<RmsRecordSearchProjection>> GetProjectionsByIdsAsync(int departmentId, IEnumerable<string> recordIds)
+		{
+			return (await _projections.GetByIdsAsync(departmentId, recordIds))?.ToList() ?? new List<RmsRecordSearchProjection>();
+		}
+
+		#region Attachments
+
+		public async Task<RmsRecordAttachment> AddAttachmentAsync(int departmentId, string userId, string recordId, string fileName, string contentType, byte[] data, string description, CancellationToken cancellationToken = default, int classification = 1)
+		{
+			if (data == null || data.Length == 0) throw new ArgumentException("Attachment content is required.", nameof(data));
+			var record = await LoadRecordAsync(departmentId, recordId);
+			if (!Enum.IsDefined(typeof(RmsEvidenceClassification), classification)) throw new ArgumentException("Choose an attachment classification.");
+			if (RmsDefinitionKeys.RestrictedClass.Contains(record.DefinitionKey)) classification = Math.Max(1, classification);
+			await RequireAttachmentWriteAsync(record, userId, classification != 0);
+			if (RmsLifecycle.IsFinalizedFamily((RmsRecordState)record.State) && record.AmendsRevisionId == null)
+				throw new InvalidOperationException("Add attachments through an amendment to preserve the finalized record.");
+			var expectedVersion = record.RowVersion;
+			if (RmsLifecycle.IsTerminal((RmsRecordState)record.State))
+				throw new RecordTransitionException(recordId, (RmsRecordState)record.State, (RmsRecordState)record.State, "attachments cannot be added to a voided or cancelled Record");
+
+			// Media hygiene (plan section 4.7 and RMS-1D): images are re-encoded so EXIF/XMP/IPTC never reach storage,
+			// active content is refused, and the bytes pass the configured scanner before they are stored. Location
+			// survives only for a definition whose profile needs the coordinates, and either way the decision is
+			// recorded on the attachment rather than left to be inferred from the definition later.
+			var hygiene = RecordAttachmentHygiene.Sanitize(fileName, contentType, data, await RetainsMediaLocationAsync(record));
+			var scan = await _attachmentScanner.ScanAsync(hygiene.FileName, hygiene.ContentType, hygiene.Data, cancellationToken) ?? new RecordAttachmentScanResult();
+			if (scan.State == RmsAttachmentScanState.Rejected)
+				throw new RecordAttachmentRejectedException($"Attachment '{hygiene.FileName}' was rejected by the scanner: {scan.Detail}");
+
+			var now = DateTime.UtcNow;
+			var attachment = new RmsRecordAttachment
+			{
+				RmsRecordAttachmentId = Guid.NewGuid().ToString(),
+				DepartmentId = departmentId,
+				ProtectionId = Guid.NewGuid().ToString(),
+				RecordId = recordId,
+				FileName = hygiene.FileName,
+				Classification = classification,
+				ContentType = hygiene.ContentType,
+				ByteSize = hygiene.Data.LongLength,
+				Checksum = RecordSnapshotSerializer.Checksum(hygiene.Data),
+				Data = hygiene.Data,
+				Description = description,
+				UploadedByUserId = userId,
+				UploadedOn = now,
+				ScanState = (int)scan.State,
+				MetadataStripped = hygiene.MetadataStripped,
+				MediaLocationRetained = hygiene.LocationRetained,
+				CreatedOn = now,
+				ModifiedOn = now,
+				RowVersion = 1
+			};
+
+			// The caller gets plaintext metadata back; the stored row may carry envelopes (ADP catalog v10).
+			var metadata = JsonConvert.DeserializeObject<RmsRecordAttachment>(JsonConvert.SerializeObject(attachment)); metadata.Data = null;
+			var outboxIds = new List<long>();
+			await InTransactionAsync(async () =>
+			{
+				record = await LoadRecordAsync(departmentId, recordId);
+				await RequireAttachmentWriteAsync(record, userId, classification != 0);
+				await GuardVersionAsync(record, expectedVersion, cancellationToken);
+				await _protection.ProtectAttachmentAsync(departmentId, attachment, null, userId, cancellationToken);
+				await _attachments.InsertAsync(attachment, cancellationToken, true);
+				record.ModifiedOn = now;
+				record.ModifiedByUserId = userId;
+				await _records.UpdateAsync(record, cancellationToken, true);
+				var state = (RmsRecordState)record.State;
+				outboxIds.Add((await EnqueueLifecycleEventAsync(record, null, WorkflowTriggerEventType.RecordAttachmentAdded, state, state, null, cancellationToken, null,
+					new Dictionary<string, object> { ["attachment"] = AttachmentBlock(attachment, (await _attachments.GetMetadataForRecordAsync(departmentId, recordId))?.Count() ?? 1) })).DomainEventOutboxId);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Add attachment", RmsOriginClient.Web, cancellationToken, new { attachment.RmsRecordAttachmentId, attachment.ByteSize, attachment.Checksum, attachment.MetadataStripped, attachment.MediaLocationRetained });
+			});
+			await _outbox.DispatchAfterCommitAsync(outboxIds, cancellationToken);
+
+			metadata.IsProtected = attachment.IsProtected;
+			metadata.ProtectedCatalogVersion = attachment.ProtectedCatalogVersion;
+			return metadata;
+		}
+
+		/// <summary>The attachment.* block (plan section 5.6, trigger 115): identity, type, size, checksum and scan state; never the file name, description or bytes.</summary>
+		public static object AttachmentBlock(RmsRecordAttachment attachment, int count)
+		{
+			return new
+			{
+				id = attachment.RmsRecordAttachmentId,
+				content_type = attachment.ContentType,
+				byte_size = attachment.ByteSize,
+				checksum = attachment.Checksum,
+				classification = ((RmsEvidenceClassification)attachment.Classification).ToString(),
+				scan_state = ((RmsAttachmentScanState)attachment.ScanState).ToString(),
+				metadata_stripped = attachment.MetadataStripped,
+				media_location_retained = attachment.MediaLocationRetained,
+				uploaded_by_user_id = attachment.UploadedByUserId,
+				uploaded_on = attachment.UploadedOn,
+				count
+			};
+		}
+
+		public async Task<RmsRecordAttachment> GetAttachmentAsync(int departmentId, string userId, string attachmentId)
+		{
+			var attachment = await _attachments.GetByIdForDepartmentAsync(departmentId, attachmentId);
+			if (attachment == null || attachment.DeletedOn.HasValue || !await _authorization.CanUserViewRecordAsync(userId, attachment.RecordId, departmentId)) return null;
+			if (attachment.RequiresRestrictedAccess && !await _authorization.HasPermissionAsync(userId, departmentId, PermissionTypes.ViewRestrictedRecords)) return null;
+			// ADP: the bytes and the file name are resolved for the caller's grant; without one the download fails closed.
+			(await _protection.RevealAttachmentsAsync(departmentId, new[] { attachment }, true)).RequireRevealed("attachment download");
+			if (attachment.ScanState != (int)RmsAttachmentScanState.Clean || attachment.Data == null || RecordSnapshotSerializer.Checksum(attachment.Data) != attachment.Checksum) return null;
+			return attachment;
+		}
+		private async Task RequireAttachmentWriteAsync(RmsOperationalRecord record, string userId, bool restricted)
+		{
+			if (!await _authorization.CanUserViewRecordAsync(userId, record.RmsOperationalRecordId, record.DepartmentId) || !await _authorization.HasPermissionAsync(userId, record.DepartmentId, PermissionTypes.CreateRecord)) throw new UnauthorizedAccessException();
+			if (restricted && !await _authorization.HasPermissionAsync(userId, record.DepartmentId, PermissionTypes.ViewRestrictedRecords)) throw new UnauthorizedAccessException();
+			if (record.AuthorUserId != userId && record.OwnerUserId != userId && !await _authorization.IsDepartmentAdminAsync(userId, record.DepartmentId)
+				&& !(record.AmendsRevisionId != null && await _authorization.HasPermissionAsync(userId, record.DepartmentId, PermissionTypes.AmendRecords))) throw new UnauthorizedAccessException();
+			if (!(RmsLifecycle.IsEditable((RmsRecordState)record.State) || record.AmendsRevisionId != null) || RmsLifecycle.IsTerminal((RmsRecordState)record.State)) throw new RecordTransitionException(record.RmsOperationalRecordId, (RmsRecordState)record.State, (RmsRecordState)record.State, "change attachments through an editable draft or amendment");
+		}
+
+		public async Task<bool> RemoveAttachmentAsync(int departmentId, string userId, string recordId, string attachmentId, CancellationToken cancellationToken = default)
+		{
+			var record = await LoadRecordAsync(departmentId, recordId);
+			if (RmsLifecycle.IsFinalizedFamily((RmsRecordState)record.State) && record.AmendsRevisionId == null)
+				throw new RecordTransitionException(recordId, (RmsRecordState)record.State, (RmsRecordState)record.State, "attachments on a finalized Record are removed through an amendment");
+
+			var attachment = await _attachments.GetByIdForDepartmentAsync(departmentId, attachmentId);
+			if (attachment == null || !string.Equals(attachment.RecordId, recordId, StringComparison.Ordinal))
+				return false;
+			await RequireAttachmentWriteAsync(record, userId, attachment.RequiresRestrictedAccess);
+			var expectedVersion = record.RowVersion;
+
+			await InTransactionAsync(async () =>
+			{
+				record = await LoadRecordAsync(departmentId, recordId);
+				await RequireAttachmentWriteAsync(record, userId, attachment.RequiresRestrictedAccess);
+				await GuardVersionAsync(record, expectedVersion, cancellationToken);
+				attachment.DeletedOn = DateTime.UtcNow;
+				attachment.ModifiedOn = attachment.DeletedOn.Value;
+				attachment.RowVersion += 1;
+				await _attachments.UpdateAsync(attachment, cancellationToken, true);
+				await AuditAsync(departmentId, userId, recordId, null, RmsAccessAuditAction.Change, "Remove attachment", RmsOriginClient.Web, cancellationToken, new { attachmentId });
+			});
+
+			return true;
+		}
+
+		#endregion
+
+		#region Internals
+
+		private async Task EnsureRecordsUsableAsync(int departmentId)
+		{
+			var state = await _cutover.GetModuleStateAsync(departmentId);
+			if (!state.RecordsUsable)
+				throw new InvalidOperationException("Records is not active for this department.");
+		}
+
+		private async Task<RmsOperationalRecord> LoadRecordAsync(int departmentId, string recordId)
+		{
+			var record = await _records.GetByIdForDepartmentAsync(departmentId, recordId);
+			if (record == null || record.DeletedOn.HasValue || record.PurgedOn.HasValue)
+				throw new KeyNotFoundException($"Record {recordId} does not exist in this department.");
+			return record;
+		}
+
+		private static void RequireTransition(RmsOperationalRecord record, RmsRecordState from, RmsRecordState to)
+		{
+			if (!RmsLifecycle.CanTransition((RmsLifecyclePreset)record.LifecyclePreset, from, to))
+				throw new RecordTransitionException(record.RmsOperationalRecordId, from, to);
+		}
+
+		/// <summary>Serializes writers on the row and rejects stale ETags; bumps the in-memory version to match.</summary>
+		private async Task GuardVersionAsync(RmsOperationalRecord record, long expectedRowVersion, CancellationToken cancellationToken)
+		{
+			if (!await _records.TryBumpRowVersionAsync(record.DepartmentId, record.RmsOperationalRecordId, expectedRowVersion, cancellationToken))
+			{
+				var current = await _records.GetByIdForDepartmentAsync(record.DepartmentId, record.RmsOperationalRecordId);
+				throw new RecordConcurrencyException(record.RmsOperationalRecordId, expectedRowVersion, current?.RowVersion ?? -1);
+			}
+
+			record.RowVersion = expectedRowVersion + 1;
+		}
+
+		/// <summary>The pinned definition version of a department-definition Record; null for locked system definitions.</summary>
+		private async Task<RmsRecordDefinitionVersion> DefinitionVersionForAsync(RmsOperationalRecord record)
+		{
+			if (record == null || record.RecordType != null || RmsDefinitionKeys.IsSystemKey(record.DefinitionKey)) return null;
+			return await _definitions.GetVersionAsync(record.DepartmentId, record.DefinitionKey, record.DefinitionVersion);
+		}
+
+		/// <summary>Roles assigned per definition narrow the underlying permission, never widen it (plan 4.1 presets table).</summary>
+		/// <summary>DeleteRecord voids or cancels only Records the caller wrote, owns, reviews or approves, unless they administer the department or the Record's group.</summary>
+		private async Task RequireCloseOutAsync(RmsOperationalRecord record, string userId)
+		{
+			if (!await RecordsLifecycleAuthority.CanVoidOrCancelAsync(_authorization, _groups, _scopes, userId, record.DepartmentId, record.RmsOperationalRecordId, record.StationGroupId,
+				record.AuthorUserId, record.OwnerUserId, record.ReviewerUserId, record.ApproverUserId))
+				throw new UnauthorizedAccessException("Voiding or cancelling another member's Record needs a department or group administrator.");
+		}
+
+		private async Task RequireDefinitionRoleAsync(RmsOperationalRecord record, string userId, bool approver)
+		{
+			var version = await DefinitionVersionForAsync(record);
+			var roleIds = RecordDefinitionsService.ParseIds(approver ? version?.ApproverRoleIds : version?.ReviewerRoleIds);
+			if (roleIds.Count == 0) return;
+			var roles = await _roles.GetRolesForUserAsync(userId, record.DepartmentId) ?? new List<PersonnelRole>();
+			if (!roles.Any(r => roleIds.Contains(r.PersonnelRoleId)))
+				throw new UnauthorizedAccessException(approver ? "This definition limits approval to selected roles." : "This definition limits review to selected roles.");
+		}
+
+		private async Task InTransactionAsync(Func<Task> work)
+		{
+			_unitOfWork.CreateOrGetConnection();
+			try
+			{
+				await work();
+				_unitOfWork.CommitChanges();
+			}
+			catch
+			{
+				_unitOfWork.DiscardChanges();
+				throw;
+			}
+		}
+
+		private async Task<RecordAggregate> HydrateAsync(RmsOperationalRecord record, bool includeRevisions)
+		{
+			var aggregate = await HydrateDraftAsync(record);
+			aggregate.GroupScope = (await _scopes.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId))?.ToList() ?? new List<RmsRecordGroupScope>();
+			if (includeRevisions)
+			{
+				aggregate.Revisions = (await _revisions.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId))?.ToList() ?? new List<RmsRevision>();
+				aggregate.Protection = aggregate.Protection.Merge(await _protection.RevealRevisionsAsync(record.DepartmentId, aggregate.Revisions));
+			}
+			return aggregate;
+		}
+
+		/// <summary>
+		/// The working draft, resolved for the ambient caller (ADP, RMS plan section 5.9): the details row and the
+		/// attachment metadata leave here as plaintext when the caller holds a grant and as the REDACTED sentinel
+		/// otherwise. Transitions that copy content into a revision require a fully revealed draft.
+		/// </summary>
+		private async Task<RecordAggregate> HydrateDraftAsync(RmsOperationalRecord record)
+		{
+			var aggregate = new RecordAggregate
+			{
+				CustomFields = await _udf.CaptureAsync(record.DepartmentId, record.RmsOperationalRecordId, record.DefinitionKey, record.DefinitionVersion, record.UdfDefinitionId),
+				Record = record,
+				Details = await _details.GetDraftAsync(record.DepartmentId, record.RmsOperationalRecordId),
+				Participants = (await _participants.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId, null))?.ToList() ?? new List<RmsRecordParticipant>(),
+				Units = (await _units.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId, null))?.ToList() ?? new List<RmsRecordUnitResponse>(),
+				Attachments = (await _attachments.GetMetadataForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId))?.ToList() ?? new List<RmsRecordAttachment>()
+			};
+			if (record.RecordType == null)
+			{
+				aggregate.DefinitionVersionRow = await DefinitionVersionForAsync(record);
+				aggregate.Values = await _typedValues.HydrateAsync(record.DepartmentId, record.RmsOperationalRecordId, null, aggregate.DefinitionVersionRow, true);
+			}
+			aggregate.Protection = await _protection.RevealAsync(record.DepartmentId, aggregate);
+			return aggregate;
+		}
+
+		private async Task<RmsRevision> WriteRevisionAsync(RmsOperationalRecord record, RecordAggregate draft, RmsRevisionTransition transition, string userId,
+			string reasonCode, string reasonText, string attestationVersion, DateTime now, CancellationToken cancellationToken)
+		{
+			var snapshot = RecordSnapshotSerializer.Build(draft);
+			snapshot.SnapshotVersion = 2;
+			snapshot.Evidence = (await _evidence.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId))?.ToList() ?? new List<RmsEvidenceArtifact>();
+			if (record.CurrentRevisionId != null)
+			{
+				var prior = await _revisions.GetByIdForDepartmentAsync(record.DepartmentId, record.CurrentRevisionId);
+				if (prior == null || prior.RecordId != record.RmsOperationalRecordId) throw new InvalidOperationException("The prior revision failed its integrity check.");
+				(await _protection.RevealRevisionsAsync(record.DepartmentId, new[] { prior }, cancellationToken)).RequireRevealed("finalize");
+				if (RecordSnapshotSerializer.Checksum(prior.SnapshotJson) != prior.Checksum) throw new InvalidOperationException("The prior revision failed its integrity check.");
+				var priorSnapshot = RecordSnapshotSerializer.Deserialize(prior.SnapshotJson);
+				var priorEvidence = priorSnapshot.SnapshotVersion >= 2 ? priorSnapshot.Evidence : await _evidence.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId, prior.RmsRevisionId, true);
+				snapshot.Evidence.AddRange((priorEvidence ?? new List<RmsEvidenceArtifact>()).Where(e => !snapshot.Evidence.Any(n => n.Kind == e.Kind && n.SourceEntityId == e.SourceEntityId)));
+			}
+			snapshot.Evidence = snapshot.Evidence.OrderBy(e => e.RmsEvidenceArtifactId, StringComparer.Ordinal).ToList();
+			if (transition != RmsRevisionTransition.Voided) await _evidence.RequireInventoryCoverageAsync(record.DepartmentId, record.RmsOperationalRecordId, snapshot.Evidence);
+			snapshot.RecordNumber = record.RecordNumber;
+			if (draft.DefinitionVersionRow != null && draft.Values != null)
+				snapshot.Values = _typedValues.ToSnapshot(draft.DefinitionVersionRow.Schema, draft.Values);
+			var json = RecordSnapshotSerializer.Serialize(snapshot);
+
+			var revision = new RmsRevision
+			{
+				RmsRevisionId = Guid.NewGuid().ToString(),
+				DepartmentId = record.DepartmentId,
+				ProtectionId = Guid.NewGuid().ToString(),
+				RecordId = record.RmsOperationalRecordId,
+				RecordKind = (int)RmsRecordKind.Operational,
+				RevisionNumber = record.RevisionCount + 1,
+				Transition = (int)transition,
+				PriorRevisionId = record.CurrentRevisionId,
+				DefinitionKey = record.DefinitionKey,
+				DefinitionVersion = record.DefinitionVersion,
+				SnapshotJson = json,
+				Checksum = RecordSnapshotSerializer.Checksum(json),
+				ActorUserId = userId,
+				ReasonCode = reasonCode,
+				ReasonText = reasonText,
+				AttestationStatementVersion = transition == RmsRevisionTransition.Voided ? null : attestationVersion,
+				AttestedOn = transition == RmsRevisionTransition.Voided ? (DateTime?)null : now,
+				OriginClient = record.OriginClient,
+				CreatedOn = now
+			};
+			// The checksum attests the plaintext snapshot; under ADP the stored column carries its envelope (plan 5.9).
+			await _protection.ProtectRevisionAsync(record.DepartmentId, revision, userId, cancellationToken);
+			await _revisions.InsertAsync(revision, cancellationToken, true);
+
+			// Evidence captured against the draft becomes evidence of this revision (RMS-3c). Binding rather than
+			// copying is deliberate: an artifact is immutable and belongs to exactly one attested revision.
+			await _evidence.BindToRevisionAsync(record.DepartmentId, record.RmsOperationalRecordId, revision.RmsRevisionId, cancellationToken);
+
+			// Revision-bound copies of the typed rows keep finalized data queryable without touching the draft rows.
+			if (draft.Details != null)
+			{
+				var copy = CloneDetails(draft.Details);
+				copy.RmsOperationalRecordDetailId = Guid.NewGuid().ToString();
+				copy.RevisionId = revision.RmsRevisionId;
+				copy.CreatedOn = now;
+				copy.ModifiedOn = now;
+				copy.RowVersion = 1;
+				await _details.InsertAsync(copy, cancellationToken);
+			}
+			if (record.RecordType == null)
+				await _typedValues.CopyDraftToRevisionAsync(record.DepartmentId, record.RmsOperationalRecordId, revision.RmsRevisionId, cancellationToken);
+
+			foreach (var participant in draft.Participants)
+			{
+				var copy = CloneParticipant(participant);
+				copy.RmsRecordParticipantId = Guid.NewGuid().ToString();
+				copy.RevisionId = revision.RmsRevisionId;
+				await _participants.InsertAsync(copy, cancellationToken, true);
+			}
+
+			foreach (var unit in draft.Units)
+			{
+				var copy = CloneUnit(unit);
+				copy.RmsRecordUnitResponseId = Guid.NewGuid().ToString();
+				copy.RevisionId = revision.RmsRevisionId;
+				await _units.InsertAsync(copy, cancellationToken, true);
+			}
+
+			return revision;
+		}
+
+		private async Task RestoreDraftFromSnapshotAsync(RmsOperationalRecord record, RecordSnapshot snapshot, DateTime now, CancellationToken cancellationToken)
+		{
+			if (record.RecordType == null)
+				await _typedValues.RestoreDraftFromRevisionAsync(record.DepartmentId, record.ModifiedByUserId, record.RmsOperationalRecordId, record.CurrentRevisionId, await DefinitionVersionForAsync(record), cancellationToken);
+			await _udf.RestoreInTransactionAsync(record.DepartmentId, record.RmsOperationalRecordId, record.DefinitionKey, record.DefinitionVersion, snapshot.CustomFields, record.ModifiedByUserId, cancellationToken);
+			record.UdfDefinitionId = snapshot.CustomFields?.DefinitionId;
+			var details = await _details.GetDraftAsync(record.DepartmentId, record.RmsOperationalRecordId);
+			if (details != null && snapshot.Details != null)
+			{
+				var restored = CloneDetails(snapshot.Details);
+				restored.RmsOperationalRecordDetailId = details.RmsOperationalRecordDetailId;
+				restored.ProtectionId = details.ProtectionId;
+				restored.RevisionId = null;
+				restored.CreatedOn = details.CreatedOn;
+				restored.ModifiedOn = now;
+				restored.RowVersion = details.RowVersion + 1;
+				await _details.UpdateAsync(restored, cancellationToken);
+			}
+
+			await _participants.DeleteDraftForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId, cancellationToken);
+			await _units.DeleteDraftForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId, cancellationToken);
+			foreach (var participant in snapshot.Participants ?? new List<RmsRecordParticipant>())
+			{
+				var copy = CloneParticipant(participant);
+				copy.RmsRecordParticipantId = Guid.NewGuid().ToString();
+				copy.RevisionId = null;
+				copy.ModifiedOn = now;
+				await _participants.InsertAsync(copy, cancellationToken, true);
+			}
+			foreach (var unit in snapshot.Units ?? new List<RmsRecordUnitResponse>())
+			{
+				var copy = CloneUnit(unit);
+				copy.RmsRecordUnitResponseId = Guid.NewGuid().ToString();
+				copy.RevisionId = null;
+				copy.ModifiedOn = now;
+				await _units.InsertAsync(copy, cancellationToken, true);
+			}
+
+			record.StationGroupId = snapshot.StationGroupId;
+			record.CallId = snapshot.CallId;
+			record.ExternalId = snapshot.ExternalId;
+			record.StartedOn = snapshot.StartedOn;
+			record.EndedOn = snapshot.EndedOn;
+		}
+
+		/// <summary>
+		/// The cardinality rule in force for a Record: the version's own value for a department definition, and the
+		/// locked table for a system definition, which is where NERIS and Unit Activity get theirs (plan 5.2.1).
+		/// </summary>
+		private static RmsRecordCardinality CardinalityFor(RmsOperationalRecord record, RmsRecordDefinitionVersion definitionVersion)
+			=> definitionVersion == null
+				? RmsDefinitionKeys.CardinalityFor(record.DefinitionKey)
+				: (RmsRecordCardinality)definitionVersion.Cardinality;
+
+		/// <summary>
+		/// The value a filtered unique index enforces, or null when nothing is to be enforced. Every rule is keyed on
+		/// the Call, so a Record without one is never constrained — the same fallback incident-scoped numbering takes.
+		/// </summary>
+		private static string BuildCardinalityKey(RmsOperationalRecord record, RmsOperationalRecordDetail details, RmsRecordCardinality cardinality)
+		{
+			if (cardinality == RmsRecordCardinality.MultiplePerCall || !record.CallId.HasValue)
+				return null;
+
+			if (cardinality == RmsRecordCardinality.SingleAuthoritative)
+				// The reporting entity is the department, and DepartmentId is already the first column of the index.
+				return $"single:{record.CallId.Value}:{record.DefinitionKey}";
+
+			// OnePerSubjectPerCall: the subject is the unit the Record is about when it names one — Unit Activity —
+			// and otherwise the author, which is what a per-person record (responder exposure) is keyed on.
+			var subject = details?.UnitId.HasValue == true
+				? "unit:" + details.UnitId.Value
+				: "person:" + record.AuthorUserId;
+			return $"subject:{record.CallId.Value}:{record.DefinitionKey}:{subject}";
+		}
+
+		/// <summary>
+		/// Reads before writing so the author is handed the Record that already exists instead of a database error.
+		/// The index is still the authority: two simultaneous creates both pass this check and the loser's insert is
+		/// rejected, which is why the caller sees <see cref="RecordCardinalityException"/> from either path.
+		/// </summary>
+		private async Task GuardCardinalityAsync(RmsOperationalRecord record, RmsRecordDefinitionVersion definitionVersion)
+		{
+			if (record.CardinalityKey == null)
+				return;
+
+			var existing = (await _records.GetByCallAsync(record.DepartmentId, record.CallId.Value))?
+				.FirstOrDefault(r => string.Equals(r.CardinalityKey, record.CardinalityKey, StringComparison.Ordinal)
+					&& !string.Equals(r.RmsOperationalRecordId, record.RmsOperationalRecordId, StringComparison.Ordinal));
+			if (existing == null)
+				return;
+
+			var cardinality = CardinalityFor(record, definitionVersion);
+			var name = definitionVersion?.DefinitionKey ?? record.DefinitionKey;
+			throw new RecordCardinalityException(existing.RmsOperationalRecordId, record.DefinitionKey, cardinality,
+				cardinality == RmsRecordCardinality.SingleAuthoritative
+					? $"This call already has its {name} record. Open the existing record instead of starting another."
+					: $"This call already has a {name} record for that subject. Open the existing record instead of starting another.");
+		}
+
+		private async Task<string> AllocateRecordNumberAsync(RmsOperationalRecord record, CancellationToken cancellationToken)
+		{
+			var config = await _settings.GetRecordsNumberingConfigAsync(record.DepartmentId);
+			var prefixBase = config.PrefixFor(record.DefinitionKey);
+			// The department-local numbering year it started in, so a record started on a US evening of December 31 (or of the day
+			// before a fiscal year starts) is not numbered into the next year.
+			var timeZone = (await _departments.GetDepartmentByIdAsync(record.DepartmentId, false))?.TimeZone;
+			var year = RecordsNumberingService.NumberingYear(config, record.StartedOn ?? DateTime.UtcNow, timeZone);
+			// Department definitions carry their own numbering policy (plan 4.1 "Numbering"); the department pattern is the fallback.
+			var numbering = record.RecordType == null ? (await DefinitionVersionForAsync(record))?.Numbering : null;
+			RecordNumberScope scope;
+			if (numbering != null)
+			{
+				var prefix = (string.IsNullOrWhiteSpace(numbering.Prefix) ? prefixBase : numbering.Prefix) + "-";
+				// Incident scope is the narrowest and comes first: ICS-style forms number per incident, and the sequence
+				// resets with the Call rather than with the year. A Record with no Call keeps the wider scope.
+				var incidentScoped = numbering.PerIncidentSequence && record.CallId.HasValue;
+				if (incidentScoped)
+					prefix += "C" + record.CallId.Value + "-";
+				if (numbering.PerGroupSequence && record.StationGroupId.HasValue)
+					prefix += "G" + record.StationGroupId.Value + "-";
+				if (numbering.ResetYearly && !incidentScoped)
+					prefix += year + "-";
+				scope = new RecordNumberScope(prefix, string.Empty, RecordNumberFormat.EffectiveWidth(numbering.SequenceWidth));
+			}
+			else
+			{
+				scope = RecordNumberFormat.Resolve(RecordNumberFormat.EffectivePattern(config), config.SequenceWidth, prefixBase, year, record.StationGroupId);
+			}
+
+			var highest = await _records.GetMaxRecordNumberSequenceAsync(record.DepartmentId, scope.Prefix, scope.Suffix);
+			return scope.Format(config.NextSequence(scope.Key, highest));
+		}
+
+		private async Task RecomputeGroupScopeAsync(RecordAggregate aggregate, CancellationToken cancellationToken)
+		{
+			var record = aggregate.Record;
+			var scopes = new List<RmsRecordGroupScope>();
+			var seen = new HashSet<string>(StringComparer.Ordinal);
+
+			void add(int? groupId, RmsGroupScopeAnchorType anchor)
+			{
+				if (!groupId.HasValue || !seen.Add(groupId.Value + ":" + (int)anchor))
+					return;
+				scopes.Add(new RmsRecordGroupScope { DepartmentId = record.DepartmentId, RecordId = record.RmsOperationalRecordId, DepartmentGroupId = groupId.Value, AnchorType = (int)anchor, CreatedOn = DateTime.UtcNow });
+			}
+
+			add(record.StationGroupId, RmsGroupScopeAnchorType.RecordGroup);
+			add(record.AuthorGroupIdSnapshot, RmsGroupScopeAnchorType.Author);
+			foreach (var participant in aggregate.Participants)
+				add(participant.GroupIdSnapshot, RmsGroupScopeAnchorType.Participant);
+			foreach (var unit in aggregate.Units)
+				add(unit.StationGroupIdSnapshot, RmsGroupScopeAnchorType.Unit);
+
+			var shares = await _shares.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId);
+			var now = DateTime.UtcNow;
+			foreach (var share in (shares ?? Enumerable.Empty<RmsRecordShare>()).Where(s => s.IsEffective(now)))
+				add(share.DepartmentGroupId, RmsGroupScopeAnchorType.Share);
+
+			await _scopes.ReplaceForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId, scopes, cancellationToken);
+			aggregate.GroupScope = scopes;
+		}
+
+		private async Task RefreshProjectionAsync(RmsOperationalRecord record, CancellationToken cancellationToken)
+		{
+			var aggregate = await HydrateDraftAsync(record);
+			aggregate.GroupScope = (await _scopes.GetForRecordAsync(record.DepartmentId, record.RmsOperationalRecordId))?.ToList() ?? new List<RmsRecordGroupScope>();
+			await UpsertProjectionAsync(aggregate, cancellationToken);
+		}
+
+		private async Task UpsertProjectionAsync(RecordAggregate aggregate, CancellationToken cancellationToken)
+		{
+			var record = aggregate.Record;
+			var details = aggregate.Details ?? new RmsOperationalRecordDetail();
+			var existing = await _projections.GetByRecordIdAsync(record.DepartmentId, record.RmsOperationalRecordId);
+			var projection = existing ?? new RmsRecordSearchProjection
+			{
+				RmsRecordSearchProjectionId = record.RmsOperationalRecordId,
+				DepartmentId = record.DepartmentId,
+				ProtectionId = Guid.NewGuid().ToString(),
+				CreatedOn = DateTime.UtcNow,
+				RowVersion = 0
+			};
+
+			projection.SourceType = (int)RmsSearchSourceType.Record;
+			projection.SourceId = record.RmsOperationalRecordId;
+			projection.RecordKind = (int)RmsRecordKind.Operational;
+			projection.RecordNumber = record.RecordNumber;
+			projection.DraftReference = record.DraftReference;
+			projection.DefinitionKey = record.DefinitionKey;
+			projection.DefinitionVersion = record.DefinitionVersion;
+			projection.RecordType = record.RecordType;
+			projection.State = record.State;
+			projection.OccurredOn = record.StartedOn ?? details.ActivityOn;
+			projection.RecordCreatedOn = record.CreatedOn;
+			projection.FinalizedOn = record.FinalizedOn;
+			projection.StationGroupId = record.StationGroupId;
+			projection.CallId = record.CallId;
+			projection.CallNumber = details.CallNumber;
+			projection.AuthorUserId = record.AuthorUserId;
+			projection.OwnerUserId = record.OwnerUserId;
+			projection.ReviewerUserId = record.ReviewerUserId;
+			projection.ParticipantUserIds = string.Join(",", aggregate.Participants.Select(p => p.UserId).Where(u => !string.IsNullOrEmpty(u)).Distinct());
+			projection.UnitIds = string.Join(",", aggregate.Units.Select(u => u.UnitId).Distinct());
+			projection.GroupScopeIds = string.Join(",", (aggregate.GroupScope ?? new List<RmsRecordGroupScope>()).Select(s => s.DepartmentGroupId).Distinct());
+			projection.DisplaySummary = record.DisplaySummary;
+			// Safe fields only: never narrative, address detail, contact or restricted sections (plan section 5.10).
+			projection.SearchText = string.Join(" ", new[] { record.RecordNumber, record.DraftReference, record.DisplaySummary, details.Course, details.CourseCode, details.CallNumber, details.CallName, details.Type, record.ExternalId,
+				aggregate.DefinitionVersionRow == null || aggregate.Values == null ? null : _typedValues.ToSearchText(aggregate.DefinitionVersionRow.Schema, aggregate.Values) }.Where(s => !string.IsNullOrWhiteSpace(s)));
+			projection.IsLegacy = false;
+			projection.ProjectionVersion = RmsRecordSearchProjection.CurrentProjectionVersion;
+			projection.ProtectedCatalogVersion = await SafeCatalogVersionAsync(record.DepartmentId);
+			projection.PolicyEpoch = await SafePolicyEpochAsync(record.DepartmentId);
+			projection.ModifiedOn = DateTime.UtcNow;
+			projection.RowVersion += 1;
+			projection.DeletedOn = record.DeletedOn;
+
+			if (existing == null)
+				await _projections.InsertAsync(projection, cancellationToken, true);
+			else
+				await _projections.UpdateAsync(projection, cancellationToken, true);
+		}
+
+		/// <summary>
+		/// The protection.* block (plan section 5.9.3) every Records event carries: a subscriber learns that the
+		/// department protects record content and which catalog it is pinned to, never a value. Payloads are
+		/// built from header facts only, so nothing in them is ever redacted.
+		/// </summary>
+		private async Task<object> ProtectionBlockAsync(int departmentId)
+		{
+			var version = await SafeCatalogVersionAsync(departmentId);
+			return new { is_protected = version > 0, is_redacted = false, redacted_fields = Array.Empty<string>(), protected_catalog_version = version };
+		}
+
+		private async Task<int> SafeCatalogVersionAsync(int departmentId)
+		{
+			try { return await _dataProtection.GetPinnedCatalogVersionAsync(departmentId); }
+			catch (Exception ex) { Logging.LogException(ex); return 0; }
+		}
+
+		private async Task<long> SafePolicyEpochAsync(int departmentId)
+		{
+			try { return (await _dataProtection.GetPolicyByDepartmentIdAsync(departmentId))?.PolicyEpoch ?? 0; }
+			catch (Exception ex) { Logging.LogException(ex); return 0; }
+		}
+
+		private async Task<DomainEventOutboxEntry> EnqueueLifecycleEventAsync(RmsOperationalRecord record, RmsRevision revision, WorkflowTriggerEventType trigger, RmsRecordState from, RmsRecordState to, string reasonCode, CancellationToken cancellationToken, object extra = null, IDictionary<string, object> blocks = null)
+		{
+			var payload = new Dictionary<string, object>
+			{
+				["record"] = RecordBlock(record, revision, to),
+				["protection"] = await ProtectionBlockAsync(record.DepartmentId),
+				["record_change"] = new
+				{
+					previous_state = from.ToString(),
+					current_state = to.ToString(),
+					prior_revision_id = revision?.PriorRevisionId,
+					current_revision_id = revision?.RmsRevisionId ?? record.CurrentRevisionId,
+					reason_code = reasonCode
+				}
+			};
+			if (extra != null)
+				payload["extra"] = extra;
+			if (record.RecordType == null)
+			{
+				// Department definitions (RMS-1B): stable definition identity plus the explicitly Workflow-exposed field values.
+				var definitionVersion = await DefinitionVersionForAsync(record);
+				if (definitionVersion != null)
+				{
+					var definition = await _definitions.GetAsync(record.DepartmentId, record.DefinitionKey);
+					payload["definition"] = RecordDefinitionsService.DefinitionBlock(definition?.Definition ?? new RmsRecordDefinition { DefinitionKey = record.DefinitionKey, DepartmentId = record.DepartmentId, Owner = (int)RmsDefinitionOwner.Department }, definitionVersion, null, null);
+					var values = await _typedValues.HydrateAsync(record.DepartmentId, record.RmsOperationalRecordId, revision?.RmsRevisionId, definitionVersion, true);
+					payload["fields"] = _typedValues.ToWorkflowBlock(definitionVersion.Schema, values);
+				}
+			}
+			if (blocks != null)
+				foreach (var block in blocks)
+					payload[block.Key] = block.Value;
+
+			// review.* (plan section 5.6): who reviewed, when it was due, how often it came back. Only the two
+			// review-path triggers carry it; the fields are review bookkeeping, never record content.
+			if (trigger == WorkflowTriggerEventType.RecordSubmittedForReview || trigger == WorkflowTriggerEventType.RecordReturnedForCorrection)
+			{
+				payload["review"] = new
+				{
+					reviewer_user_id = record.ReviewerUserId,
+					submitted_for_review_on = record.SubmittedForReviewOn,
+					review_due_on = record.ReviewDueOn,
+					returned_on = record.ReturnedOn,
+					return_count = record.ReturnCount,
+					reason_code = record.ReturnReasonCode,
+					reason_text = record.ReturnReasonText
+				};
+			}
+
+			var entry = await _outbox.EnqueueAsync(record.DepartmentId, DomainEventProducers.Records, new DomainEventEnvelope
+			{
+				EventName = trigger.ToString(),
+				SchemaVersion = 1,
+				AggregateType = DomainEventProducers.RecordsAggregate,
+				AggregateId = record.RmsOperationalRecordId,
+				AggregateVersion = revision?.RevisionNumber ?? record.RevisionCount,
+				Trigger = trigger,
+				Payload = payload,
+				CorrelationId = record.RmsOperationalRecordId,
+				OriginClient = (RmsOriginClient)record.OriginClient
+			}, cancellationToken);
+
+			return entry;
+		}
+
+		/// <summary>
+		/// The record.* block every Records event carries (plan section 5.6): header facts only, no details, no
+		/// participants and nothing restricted. Shared so the lifecycle events and the RMS-3 overdue event
+		/// (worker 42) describe a Record identically.
+		/// </summary>
+		/// <summary>Whether this Record's definition version asks for photo coordinates to survive upload.</summary>
+		private async Task<bool> RetainsMediaLocationAsync(RmsOperationalRecord record)
+		{
+			if (record?.RecordType != null || string.IsNullOrWhiteSpace(record?.DefinitionKey))
+				return false;
+			try
+			{
+				var version = await _definitions.GetVersionAsync(record.DepartmentId, record.DefinitionKey, record.DefinitionVersion);
+				return version?.ClientSurface?.RetainMediaLocation == true;
+			}
+			catch (Exception ex)
+			{
+				// A definition that cannot be read is not a licence to keep coordinates; strip and carry on.
+				Logging.LogException(ex, "Media location policy could not be read; stripping location.");
+				return false;
+			}
+		}
+
+		public static object RecordBlock(RmsOperationalRecord record, RmsRevision revision, RmsRecordState state)
+		{
+			return new
+			{
+				id = record.RmsOperationalRecordId,
+				record_number = record.RecordNumber,
+				draft_reference = record.DraftReference,
+				definition_key = record.DefinitionKey,
+				definition_version = record.DefinitionVersion,
+				type_key = record.RecordType.HasValue ? ((RmsOperationalRecordType)record.RecordType.Value).ToString() : null,
+				state = state.ToString(),
+				lifecycle_preset = ((RmsLifecyclePreset)record.LifecyclePreset).ToString(),
+				department_id = record.DepartmentId,
+				station_group_id = record.StationGroupId,
+				call_id = record.CallId,
+				external_id = record.ExternalId,
+				author_user_id = record.AuthorUserId,
+				owner_user_id = record.OwnerUserId,
+				started_on = record.StartedOn,
+				ended_on = record.EndedOn,
+				created_on = record.CreatedOn,
+				finalized_on = record.FinalizedOn,
+				revision_id = revision?.RmsRevisionId ?? record.CurrentRevisionId,
+				revision_number = revision?.RevisionNumber ?? record.RevisionCount,
+				checksum = revision?.Checksum,
+				summary = record.DisplaySummary
+			};
+		}
+
+		/// <summary>
+		/// Legacy LogAdded compatibility (plan section 5.6): the exact pre-existing log.* contract, projected once at
+		/// finalize for eligible Logs-parity records through the same outbox, caused by the RecordFinalized event.
+		/// </summary>
+		private Task<DomainEventOutboxEntry> EnqueueLogAddedCompatibilityAsync(RmsOperationalRecord record, RmsRevision revision, RmsOperationalRecordDetail details, string causationEventId, DateTime now, CancellationToken cancellationToken)
+		{
+			return _outbox.EnqueueAsync(record.DepartmentId, DomainEventProducers.Records, new DomainEventEnvelope
+			{
+				EventName = WorkflowTriggerEventType.LogAdded.ToString(),
+				SchemaVersion = 1,
+				AggregateType = DomainEventProducers.RecordsAggregate,
+				AggregateId = record.RmsOperationalRecordId,
+				AggregateVersion = revision?.RevisionNumber,
+				Trigger = WorkflowTriggerEventType.LogAdded,
+				Payload = LogAddedCompatibility.Build(record, details, now),
+				CorrelationId = record.RmsOperationalRecordId,
+				CausationId = causationEventId,
+				OriginClient = (RmsOriginClient)record.OriginClient
+			}, cancellationToken);
+		}
+
+		private Task AuditAsync(int departmentId, string userId, string recordId, string revisionId, RmsAccessAuditAction action, string purpose, RmsOriginClient origin, CancellationToken cancellationToken, object detail = null)
+		{
+			return _audits.InsertAsync(new RmsAccessAudit
+			{
+				DepartmentId = departmentId,
+				RecordId = recordId,
+				RevisionId = revisionId,
+				Action = (int)action,
+				ActorUserId = userId,
+				Purpose = purpose,
+				OriginClient = (int)origin,
+				Successful = true,
+				OccurredOn = DateTime.UtcNow,
+				DetailJson = detail == null ? null : JsonConvert.SerializeObject(detail)
+			}, cancellationToken, true);
+		}
+
+		private async Task<List<RmsRecordParticipant>> BuildParticipantsAsync(int departmentId, string recordId, IEnumerable<RecordParticipantInput> inputs, DateTime now)
+		{
+			var result = new List<RmsRecordParticipant>();
+			var existing = (await _participants.GetForRecordAsync(departmentId, recordId, null))?.ToList() ?? new List<RmsRecordParticipant>();
+			var ordinal = 0;
+			foreach (var input in (inputs ?? Enumerable.Empty<RecordParticipantInput>()).Where(i => !string.IsNullOrWhiteSpace(i.UserId)))
+			{
+				if (result.Any(p => p.UserId == input.UserId)) throw new ArgumentException("List each participant only once.");
+				var prior = existing.FirstOrDefault(p => p.UserId == input.UserId);
+				if (prior == null && !await _authorization.IsActiveMemberAsync(input.UserId, departmentId)) throw new ArgumentException("The participant is not an active member of this department.");
+				if (input.UnitId.HasValue && (prior == null || input.UnitId != prior.UnitId))
+				{
+					var assigned = await _unitsService.GetUnitByIdAsync(input.UnitId.Value);
+					if (assigned == null || assigned.DepartmentId != departmentId) throw new ArgumentException("The participant's assigned unit does not belong to this department.");
+				}
+				var profile = await _profiles.GetProfileByUserIdAsync(input.UserId);
+				var group = await _groups.GetGroupForUserAsync(input.UserId, departmentId);
+				result.Add(new RmsRecordParticipant
+				{
+					RmsRecordParticipantId = Guid.NewGuid().ToString(),
+					DepartmentId = departmentId,
+					ProtectionId = Guid.NewGuid().ToString(),
+					RecordId = recordId,
+					UserId = input.UserId,
+					DisplayNameSnapshot = profile == null ? null : $"{profile.FirstName} {profile.LastName}".Trim(),
+					GroupIdSnapshot = group?.DepartmentGroupId,
+					GroupNameSnapshot = group?.Name,
+					UnitId = input.UnitId,
+					Role = input.Role,
+					SourceKind = (int)RmsSourceKind.None,
+					Ordinal = ordinal++,
+					CreatedOn = now,
+					ModifiedOn = now,
+					RowVersion = 1
+				});
+			}
+			return result;
+		}
+
+		private async Task<List<RmsRecordUnitResponse>> BuildUnitsAsync(int departmentId, string recordId, IEnumerable<RecordUnitResponseInput> inputs, DateTime now)
+		{
+			var result = new List<RmsRecordUnitResponse>();
+			var ordinal = 0;
+			foreach (var input in (inputs ?? Enumerable.Empty<RecordUnitResponseInput>()).Where(i => i.UnitId > 0))
+			{
+				var unit = await _unitsService.GetUnitByIdAsync(input.UnitId);
+				if (unit == null || unit.DepartmentId != departmentId)
+					throw new ArgumentException($"Unit {input.UnitId} does not belong to this department.");
+
+				result.Add(new RmsRecordUnitResponse
+				{
+					RmsRecordUnitResponseId = Guid.NewGuid().ToString(),
+					DepartmentId = departmentId,
+					ProtectionId = Guid.NewGuid().ToString(),
+					RecordId = recordId,
+					UnitId = unit.UnitId,
+					UnitNameSnapshot = unit.Name,
+					UnitTypeSnapshot = unit.Type,
+					StationGroupIdSnapshot = unit.StationGroupId,
+					Dispatched = input.Dispatched,
+					Enroute = input.Enroute,
+					OnScene = input.OnScene,
+					Released = input.Released,
+					InQuarters = input.InQuarters,
+					TimesSourceKind = (int)RmsSourceKind.None,
+					Ordinal = ordinal++,
+					CreatedOn = now,
+					ModifiedOn = now,
+					RowVersion = 1
+				});
+			}
+			return result;
+		}
+
+		private async Task ApplyCallSnapshotAsync(int departmentId, string userId, RmsOperationalRecordDetail details, int? callId)
+		{
+			if (!callId.HasValue)
+			{
+				details.CallNumber = null;
+				details.CallName = null;
+				details.CallType = null;
+				details.CallPriority = null;
+				details.CallLoggedOn = null;
+				details.CallAddress = null;
+				details.CallNature = null;
+				return;
+			}
+
+			var call = await _calls.GetCallByIdAsync(callId.Value);
+			if (call == null || call.DepartmentId != departmentId)
+				throw new ArgumentException($"Call {callId} does not belong to this department.");
+			if (!await _authorization.CanReadSourceCallAsync(userId, departmentId, call))
+				throw new UnauthorizedAccessException("Source Call access is not authorized.");
+
+			details.CallNumber = call.Number;
+			details.CallName = call.Name;
+			details.CallType = call.Type;
+			details.CallPriority = call.Priority;
+			details.CallLoggedOn = call.LoggedOn;
+			details.CallAddress = call.Address;
+			details.CallNature = call.NatureOfCall;
+		}
+
+		private async Task ApplyAuthorizedDetailsAsync(int departmentId, string userId, string definitionKey, RmsOperationalRecordDetail target, RmsOperationalRecordDetail source)
+		{
+			if (source == null) return;
+			if (RmsDefinitionKeys.RestrictedClass.Contains(definitionKey) && !await _authorization.HasPermissionAsync(userId, departmentId, PermissionTypes.ViewRestrictedRecords))
+			{
+				var copy = JsonConvert.DeserializeObject<RmsOperationalRecordDetail>(JsonConvert.SerializeObject(source));
+				foreach (var name in RecordSnapshotSerializer.RestrictedDetailFields)
+				{
+					var property = typeof(RmsOperationalRecordDetail).GetProperty(name);
+					if (!string.IsNullOrEmpty(property.GetValue(source) as string))
+						throw new UnauthorizedAccessException("Restricted Record fields cannot be changed with your current permissions.");
+					property.SetValue(copy, property.GetValue(target));
+				}
+				source = copy;
+			}
+			ApplyDetails(target, source);
+		}
+
+		private static void ApplyDetails(RmsOperationalRecordDetail target, RmsOperationalRecordDetail source)
+		{
+			if (source == null)
+				return;
+
+			target.Narrative = Resgrid.Framework.RecordNarrativeFormatter.ForStorage(source.Narrative);
+			target.InitialReport = source.InitialReport;
+			target.Type = source.Type;
+			target.Course = source.Course;
+			target.CourseCode = source.CourseCode;
+			target.Instructors = source.Instructors;
+			target.Cause = source.Cause;
+			target.InvestigatedByUserId = source.InvestigatedByUserId;
+			target.ContactName = source.ContactName;
+			target.ContactNumber = source.ContactNumber;
+			target.OtherPersonnel = source.OtherPersonnel;
+			target.Location = source.Location;
+			target.OtherAgencies = source.OtherAgencies;
+			target.OtherUnits = source.OtherUnits;
+			target.BodyLocation = source.BodyLocation;
+			target.PronouncedDeceasedBy = source.PronouncedDeceasedBy;
+			target.CaseNumber = source.CaseNumber;
+			target.Destination = source.Destination;
+			target.Facilitator = source.Facilitator;
+			target.UnitId = source.UnitId;
+			target.ActivityOn = source.ActivityOn;
+		}
+
+		private static void ValidateDefinitionRequirements(RmsOperationalRecordType type, RmsOperationalRecordDetail details)
+		{
+			if (type == RmsOperationalRecordType.UnitActivity && (details?.UnitId).GetValueOrDefault() <= 0)
+				throw new ArgumentException("A Unit Activity record requires a unit.");
+		}
+
+		/// <summary>Logs parity: a narrative is required on every legacy type; Unit Activity requires its timestamp.</summary>
+		private static void ValidateForFinalization(RmsOperationalRecordType type, RecordAggregate draft)
+		{
+			if (draft.Details == null || !Resgrid.Framework.RecordNarrativeFormatter.HasText(draft.Details.Narrative))
+				throw new ArgumentException("A narrative is required before a Record can be finalized.");
+			if (type == RmsOperationalRecordType.UnitActivity && !draft.Details.ActivityOn.HasValue)
+				throw new ArgumentException("A Unit Activity record requires an activity time before it can be finalized.");
+		}
+
+		private static string BuildDisplaySummary(RmsOperationalRecordType type, RmsOperationalRecord record, RmsOperationalRecordDetail details, List<RmsRecordUnitResponse> units)
+		{
+			string summary;
+			switch (type)
+			{
+				case RmsOperationalRecordType.Training:
+					summary = string.Join(" ", new[] { details.Course, string.IsNullOrWhiteSpace(details.CourseCode) ? null : "(" + details.CourseCode + ")" }.Where(s => !string.IsNullOrWhiteSpace(s)));
+					break;
+				case RmsOperationalRecordType.Run:
+				case RmsOperationalRecordType.Callback:
+					summary = string.Join(" ", new[] { details.CallNumber, details.CallName }.Where(s => !string.IsNullOrWhiteSpace(s)));
+					break;
+				case RmsOperationalRecordType.Meeting:
+					summary = string.Join(" ", new[] { details.Type, details.Facilitator }.Where(s => !string.IsNullOrWhiteSpace(s)));
+					break;
+				case RmsOperationalRecordType.UnitActivity:
+					summary = units.FirstOrDefault()?.UnitNameSnapshot;
+					break;
+				case RmsOperationalRecordType.Coroner:
+					// Restricted section; the summary never carries case, location or person detail.
+					summary = null;
+					break;
+				default:
+					summary = details.Type;
+					break;
+			}
+
+			if (string.IsNullOrWhiteSpace(summary))
+				summary = type.ToString();
+
+			return summary.Length > 400 ? summary.Substring(0, 400) : summary;
+		}
+
+		private static string ResolveClientRecordId(string clientRecordId)
+		{
+			if (string.IsNullOrWhiteSpace(clientRecordId))
+				return Guid.NewGuid().ToString();
+			if (!Guid.TryParse(clientRecordId, out var parsed))
+				throw new ArgumentException("A client-supplied record id must be a GUID.", nameof(clientRecordId));
+			return parsed.ToString();
+		}
+
+		private static string NewDraftReference()
+		{
+			const string alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+			var bytes = new byte[5];
+			using (var rng = RandomNumberGenerator.Create())
+				rng.GetBytes(bytes);
+			var chars = new char[5];
+			for (var i = 0; i < 5; i++)
+				chars[i] = alphabet[bytes[i] % alphabet.Length];
+			return "D-" + new string(chars);
+		}
+
+		private static RmsOperationalRecordDetail CloneDetails(RmsOperationalRecordDetail source)
+		{
+			return JsonConvert.DeserializeObject<RmsOperationalRecordDetail>(JsonConvert.SerializeObject(source));
+		}
+
+		private static RmsRecordParticipant CloneParticipant(RmsRecordParticipant source)
+		{
+			return JsonConvert.DeserializeObject<RmsRecordParticipant>(JsonConvert.SerializeObject(source));
+		}
+
+		private static RmsRecordUnitResponse CloneUnit(RmsRecordUnitResponse source)
+		{
+			return JsonConvert.DeserializeObject<RmsRecordUnitResponse>(JsonConvert.SerializeObject(source));
+		}
+
+		#endregion
+	}
+}

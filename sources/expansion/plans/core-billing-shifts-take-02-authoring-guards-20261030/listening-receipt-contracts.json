@@ -1,0 +1,101 @@
+{
+  "kind": "Future actual User receipt schemas only; no receipts generated",
+  "lessons": [
+    {
+      "lesson_id": "core-customer-billing-review",
+      "default_receipt_file": "expansion/audio/core-customer-billing-review-take-02.listening-review.json",
+      "status": "Awaiting genuine full User listening; this is a schema, not an approval or receipt.",
+      "schema": {
+        "type": "object",
+        "required": [
+          "reviewer",
+          "reviewed_at",
+          "lesson_sha256",
+          "audio_sha256",
+          "complete_natural_narration",
+          "evidence"
+        ],
+        "properties": {
+          "reviewer": {
+            "const": "User"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lesson_sha256": {
+            "const": "ba6214c9fec32991c1a04e795045bbe9749289d86ffc63813bd231d92d47aec5"
+          },
+          "audio_sha256": {
+            "const": "6901b4714284e31cc1966502d0070955615c066a37bbb113283fe034ec2d2418"
+          },
+          "complete_natural_narration": {
+            "const": true
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Actual full-listening request and natural/complete User response. Must be URL-free."
+          },
+          "question_call_id": {
+            "type": "string"
+          }
+        },
+        "runtime_additional_guards": [
+          "Operator must supply exact lower-case SHA256 of the real retained receipt.",
+          "Review must be timezone-aware, after original full-audio QA and not future-dated.",
+          "All fields including optional metadata must be URL-free.",
+          "Receipt path must be source-relative, public, within sources, and not symlinked.",
+          "One lesson and exact audio/source identity per receipt."
+        ]
+      }
+    },
+    {
+      "lesson_id": "core-shifts-administration",
+      "default_receipt_file": "expansion/audio/core-shifts-administration-take-02.listening-review.json",
+      "status": "Awaiting genuine full User listening; this is a schema, not an approval or receipt.",
+      "schema": {
+        "type": "object",
+        "required": [
+          "reviewer",
+          "reviewed_at",
+          "lesson_sha256",
+          "audio_sha256",
+          "complete_natural_narration",
+          "evidence"
+        ],
+        "properties": {
+          "reviewer": {
+            "const": "User"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lesson_sha256": {
+            "const": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4"
+          },
+          "audio_sha256": {
+            "const": "92ab9cdb5bc11785df8ea0f88761d7660e87b3fe6f9095420d893fae106b930e"
+          },
+          "complete_natural_narration": {
+            "const": true
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Actual full-listening request and natural/complete User response. Must be URL-free."
+          },
+          "question_call_id": {
+            "type": "string"
+          }
+        },
+        "runtime_additional_guards": [
+          "Operator must supply exact lower-case SHA256 of the real retained receipt.",
+          "Review must be timezone-aware, after original full-audio QA and not future-dated.",
+          "All fields including optional metadata must be URL-free.",
+          "Receipt path must be source-relative, public, within sources, and not symlinked.",
+          "One lesson and exact audio/source identity per receipt."
+        ]
+      }
+    }
+  ]
+}

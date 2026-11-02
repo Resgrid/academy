@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "lesson_id": "core-workflows",
+  "lesson_sha256": "7ac82f3ede2d1091864e4a78b71cd334e23c60f385ab61683d543c1dc6a36944",
+  "reviewer": "Codex",
+  "reviewed_at": "2026-10-26T18:55:27.383548+00:00",
+  "publishable": false,
+  "capture_manifest": "expansion/plans/core-workflows.captures.json",
+  "capture_manifest_sha256": "dc24af71321602e68b9aec9d5a381ede851724248ec599de495ab085ecfe7172",
+  "reviewed_screenshots": 33,
+  "raw_image_hashes_and_dimensions_verified": true,
+  "audio_qa_owner": "Core configuration coverage agent; not duplicated here",
+  "narration_changed": false,
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose an event and outcome",
+      "capture_refs": [
+        "core-workflows-index",
+        "core-workflows-practice-disabled"
+      ],
+      "required_labels": [
+        "New Workflow",
+        "Credentials",
+        "Pending Runs"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "02",
+      "title": "Create the matching credential",
+      "capture_refs": [
+        "core-workflow-credential-stored",
+        "core-workflow-smtp-local-setup"
+      ],
+      "required_labels": [
+        "Credentials",
+        "Name",
+        "Type"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "03",
+      "title": "Create the first workflow safely",
+      "capture_refs": [
+        "core-workflow-create-disabled",
+        "core-workflow-settings-disabled",
+        "core-workflow-template-gallery"
+      ],
+      "required_labels": [
+        "Name",
+        "Trigger Event",
+        "Enabled",
+        "Max Retry Count",
+        "Retry Backoff Base (seconds)"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "04",
+      "title": "Add the first ordered action",
+      "capture_refs": [
+        "core-workflow-settings-disabled",
+        "core-workflow-first-email-action-form",
+        "core-workflow-two-ordered-step-cards",
+        "core-workflow-syntax-check",
+        "core-workflow-first-email-output-template"
+      ],
+      "required_labels": [
+        "Add Step",
+        "Action Type",
+        "Send Email",
+        "Order",
+        "Output Template",
+        "Credential"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "05",
+      "title": "Add and check a condition",
+      "capture_refs": [
+        "core-workflow-two-ordered-step-cards",
+        "core-workflow-syntax-check"
+      ],
+      "required_labels": [
+        "Add Step",
+        "Condition Expression",
+        "Visual Builder",
+        "Raw Expression",
+        "Test Condition"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "06",
+      "title": "Use separate workflows for separate events",
+      "capture_refs": [
+        "core-workflows-index",
+        "core-workflows-practice-disabled",
+        "core-workflow-close-disabled-backoff-thirty",
+        "core-workflow-close-own-action",
+        "core-workflow-event-unit-status",
+        "core-workflow-event-checklist-completed",
+        "core-workflow-event-record-finalized"
+      ],
+      "required_labels": [
+        "New Workflow",
+        "Trigger Event"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "07",
+      "title": "Enable and trigger a training event",
+      "capture_refs": [
+        "core-workflow-two-ordered-step-cards",
+        "core-workflows-two-events-enabled",
+        "core-workflow-created-call-identity"
+      ],
+      "required_labels": [
+        "Enabled",
+        "Order"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "08",
+      "title": "Inspect run and step details",
+      "capture_refs": [
+        "core-workflows-two-events-enabled",
+        "core-workflow-call-added-run-history",
+        "core-workflow-two-step-completed",
+        "core-workflow-rendered-output",
+        "core-workflow-local-receiver-inbox",
+        "core-workflow-receiver-message",
+        "core-workflow-calladded-rendered-output"
+      ],
+      "required_labels": [
+        "Runs",
+        "Status",
+        "Attempt",
+        "Step Logs",
+        "Rendered Output"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "09",
+      "title": "Monitor pending work and health",
+      "capture_refs": [
+        "core-workflows-two-events-enabled",
+        "core-workflow-health-success",
+        "core-workflow-pending-running-controls"
+      ],
+      "required_labels": [
+        "Health",
+        "Last 24 Hours",
+        "Pending Runs"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    },
+    {
+      "id": "10",
+      "title": "Observe retries and finish practice",
+      "capture_refs": [
+        "core-workflow-training-close-event",
+        "core-workflow-pending-running-controls",
+        "core-workflow-retrying-attempt-two",
+        "core-workflow-retry-limit-failed",
+        "core-workflow-recovery-new-run",
+        "core-workflow-recovery-receiver-receipt",
+        "core-workflows-practice-disabled",
+        "core-workflow-close-disabled-backoff-thirty",
+        "core-workflow-close-own-action",
+        "core-workflow-all-three-retry-timestamps"
+      ],
+      "required_labels": [
+        "Attempt",
+        "Status",
+        "Step Logs"
+      ],
+      "missing_required_labels": [],
+      "substantive_capture_gaps": []
+    }
+  ],
+  "missing_evidence": [],
+  "resolved_evidence": [
+    {
+      "id": "credential-form",
+      "scenes": [
+        "02"
+      ],
+      "need": "Actual SMTP Email credential form: safe local host, port, demonstration sender, unused password masked, and Save. Existing stored-list shot shows only name/type/masked secret data.",
+      "capture_refs": [
+        "core-workflow-smtp-local-setup",
+        "core-workflow-credential-stored"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "first-step-form",
+      "scenes": [
+        "04"
+      ],
+      "need": "First Send Email step lower form: complete Output Template body and Save Changes. Actual upper action/order/recipient/subject/credential/variables are now captured.",
+      "capture_refs": [
+        "core-workflow-first-email-action-form",
+        "core-workflow-first-email-output-template"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "saved-two-step-editor",
+      "scenes": [
+        "04",
+        "05",
+        "07"
+      ],
+      "need": "Saved editor with both step cards, their enabled states and ordered actions; workflow Enabled and Save Changes. Existing settings shot clips cards.",
+      "capture_refs": [
+        "core-workflow-two-ordered-step-cards",
+        "core-workflow-first-email-action-form",
+        "core-workflows-two-events-enabled"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "disabled-close-configuration",
+      "scenes": [
+        "06",
+        "10"
+      ],
+      "need": "Separate Academy call closed workflow configuration with Trigger Event CallClosed, disabled state, own closeout action and saved thirty-second backoff.",
+      "capture_refs": [
+        "core-workflow-close-disabled-backoff-thirty",
+        "core-workflow-close-own-action"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "event-options-and-gallery",
+      "scenes": [
+        "03",
+        "06"
+      ],
+      "need": "Actual workflow template gallery and Trigger Event choices for unit status/checklist/finalized record. Existing create shot only shows gallery bottom edges.",
+      "capture_refs": [
+        "core-workflow-template-gallery",
+        "core-workflow-event-unit-status",
+        "core-workflow-event-checklist-completed",
+        "core-workflow-event-record-finalized"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "training-created-call",
+      "scenes": [
+        "07"
+      ],
+      "need": "Actual created TRAINING ONLY — Workflow and run-card review call identity, or its existing form with Create/Save action; retain linkage to successful b244fbe9 run. No new event necessary.",
+      "capture_refs": [
+        "core-workflow-created-call-identity",
+        "core-workflow-call-added-run-history"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "matching-calladded-rendered-output",
+      "scenes": [
+        "08"
+      ],
+      "need": "Expanded Rendered Output on completed CallAdded two-step run b244fbe9…, matching the department/call template and actual training-supervisor receipt. Current expanded output belongs to different closeout run.",
+      "capture_refs": [
+        "core-workflow-calladded-rendered-output"
+      ],
+      "status": "actual_screens_reviewed"
+    },
+    {
+      "id": "all-retry-attempt-timestamps",
+      "scenes": [
+        "10"
+      ],
+      "need": "Lower failed-run step logs with all three readable actual attempt start timestamps; current failed screenshot clips later logs and cannot illustrate observed five/ten-second gaps.",
+      "capture_refs": [
+        "core-workflow-all-three-retry-timestamps"
+      ],
+      "status": "actual_screens_reviewed"
+    }
+  ],
+  "important_correspondence": [
+    "Instructional workflow failure is intentional actual evidence; preserve SMTP errors and actual exhausted-run state.",
+    "Clear Pending is natural speech for literal Clear All Pending; use an explicit reviewed spoken reference without changing frozen narration.",
+    "Use the newly captured CallAdded rendered output for the template/receipt correspondence. The older closeout output remains an unused historical reference.",
+    "The run-history recovery uses a different run ID on attempt one. Restoring the receiver did not retry the exhausted failed run.",
+    "Keep all secrets/passwords masked and all screenshots from the isolated fictional training department.",
+    "Screenshots demonstrate local Mailpit receipt only; no external provider or native notification result is established.",
+    "The new credential form is an unsaved demonstration with accurate safe local settings; stored credential and actual delivery evidence remain separate."
+  ],
+  "source_capture_status": "complete_and_visually_reviewed"
+}

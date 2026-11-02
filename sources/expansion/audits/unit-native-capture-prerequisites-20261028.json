@@ -1,0 +1,215 @@
+{
+  "kind": "read_only_native_capture_prerequisite_assessment",
+  "checked_at": "2026-10-28T20:34:24.483437+00:00",
+  "operations_performed": [
+    "Read xcodebuild -version and simulator SDK version.",
+    "Read simctl list devices available, already booted simulator installed app metadata, and installed Unit application-bundle Info.plist only.",
+    "Read existing Unit source, native workspace/Pods/SDK metadata and tool availability."
+  ],
+  "operations_not_performed": [
+    "No simulator boot/shutdown, application launch/switch, build/install, native UI input, permission grant, login, private data-container read, server start/stop, browser, DB or original source change."
+  ],
+  "host": {
+    "xcode": "27.1 (27A9275)",
+    "iphonesimulator_sdk": "27.1",
+    "read_only_simctl": "Sandbox could not connect to CoreSimulatorService; the explicitly authorized read-only elevated metadata check succeeded.",
+    "existing_runtime": "iOS27.0",
+    "already_booted_simulator": "iPhone18Pro",
+    "other_available_simulators": [
+      "iPhone18ProMax",
+      "iPhone17e",
+      "iPhoneAir",
+      "iPhone17",
+      "iPadPro13inchM5",
+      "iPadPro11inchM5",
+      "iPadminiA17Pro",
+      "iPadAir13inchM4",
+      "iPadAir11inchM4",
+      "iPadA16"
+    ],
+    "physical_device_state": "Not examined; no physical device or hardware capability is claimed."
+  },
+  "already_installed_development_apps": [
+    {
+      "bundle": "com.resgrid.unit.development",
+      "name": "Resgrid Unit"
+    },
+    {
+      "bundle": "com.wavetech.Resgrid.development",
+      "name": "Resgrid Responder"
+    }
+  ],
+  "installed_unit_bundle_metadata": {
+    "bundle": "com.resgrid.unit.development",
+    "version": "0.0.1",
+    "build": "0.0.1",
+    "minimum_ios": "18.1",
+    "sdk": "iphonesimulator27.0",
+    "xcode_build": "27A266a",
+    "embedded_main_jsbundle_present": false,
+    "url_schemes": [
+      "ResgridUnit",
+      "com.resgrid.unit.development",
+      "exp+resgrid-unit"
+    ],
+    "app_transport_security": {
+      "NSAllowsArbitraryLoads": false,
+      "NSAllowsLocalNetworking": true
+    },
+    "Info_plist_sha256": "cb44eac7f997a2ffbd7242447c49dbacae9402ea7d9eb281fe064182663d4b38",
+    "limits": "Installed version/native metadata is not proof of current source/patch/native-module correspondence. Current foreground app, session, credentials, selected unit, runtime behavior and service connection were not inspected."
+  },
+  "source_native_prerequisites": {
+    "expo": "~57.0.25",
+    "react_native": "0.86.3",
+    "expo_dev_client": "~57.0.19",
+    "rnmapbox_maps": "10.3.5; configured native Mapbox11.23.1",
+    "ios_workspace": "ios/ResgridUnit.xcworkspace",
+    "pods_present": true,
+    "Podfile_lock_matches_Pods_Manifest_lock": true,
+    "deployment_target": "18.1",
+    "scene_manifest_present_in_native_Info_plist": true,
+    "tools_present": [
+      "node",
+      "ruby",
+      "pod"
+    ],
+    "tools_absent": [
+      "watchman",
+      "maestro",
+      "appium",
+      "idb",
+      "applesimutils"
+    ],
+    "dedicated_local_native_ui_tests_present": false,
+    "limits": [
+      "Existing workspace and matching installed Pods are prerequisites, not evidence that a fresh native build succeeds.",
+      "Native Mapbox, secure storage, LiveKit/WebRTC, CallKeep and custom plugins require the proper development client; ordinary Expo Go is not a substitute.",
+      "Do not run prebuild or pod install in the original Unit repo merely to probe readiness. Use a separately reviewed managed recording copy if the installed native client is incompatible."
+    ]
+  },
+  "local_service_and_session_requirements": [
+    "Use only the dedicated local training API/gateway; env.js otherwise defaults to a QA service. Never start with its default remote origin.",
+    "The client resolves a normally saved base URL before the environment fallback. Because no native private storage was inspected, current native service selection is unknown; confirm through supported visible settings/login before any sign-in.",
+    "Respect current native shared-device/member/MFA guards. Never inject or copy browser storage/tokens, disable checks, or alter account settings.",
+    "Keep Mapbox execution values inherited only; do not print, save or capture them. Preserve analytics-off local settings from the existing recording recipe.",
+    "Use a separate Metro port if needed, with explicit --clear under CI; do not stop the existing web19103 listener implicitly.",
+    "Preserve the existing booted simulator/app sessions. A different simulator or app launch is a later intentional operation, not part of this assessment."
+  ],
+  "prospective_capture_path_not_executed": [
+    {
+      "step": 1,
+      "action": "Parent reviews installed native/source compatibility and chooses whether the existing development client can consume the exact managed recording source. Preserve existing sessions."
+    },
+    {
+      "step": 2,
+      "action": "If needed, explicitly start a dedicated local development Metro using installed CLI and local-only environment; no install/build/clone occurs implicitly.",
+      "command_template": "node node_modules/expo/bin/cli start --dev-client --localhost --port 19113 --clear",
+      "environment_names_only": [
+        "APP_ENV=development",
+        "EXPO_NO_DOTENV=1",
+        "EXPO_NO_TELEMETRY=1",
+        "CI=1",
+        "UNIT_BASE_API_URL=local training gateway",
+        "UNIT_API_VERSION=v4",
+        "UNIT_MAPBOX_PUBKEY=inherited execution-only value",
+        "local analytics-off variables from existing recorder recipe"
+      ]
+    },
+    {
+      "step": 3,
+      "action": "Open the approved local Metro project through the installed development client using its normal UI/deep link, then visibly verify service and perform normal fictional sign-in only if needed. No execution yet."
+    },
+    {
+      "step": 4,
+      "action": "Select only an authorized inventory-bearing unit through Active Unit, inspect actual stock/recent count, save/reopen a training Draft, then show actual native Complete/Cancel confirmation and the chosen bounded outcome."
+    },
+    {
+      "step": 5,
+      "action": "Capture each full native screen with screenshot hash/dimensions/time, bundle/platform/runtime and genuine action/readback provenance. Use human UI interaction or a separately authorized native UI driver; simctl alone is not an ordinary tap driver.",
+      "capture_command_templates": [
+        "xcrun simctl io <approved-simulator> screenshot <new-raw-file.png>",
+        "xcrun simctl io <approved-simulator> recordVideo <new-raw-file.mp4>"
+      ]
+    },
+    {
+      "step": 6,
+      "action": "Retain native captures as native source evidence until a reviewed native provenance validation contract exists; keep existing browser capture provenance intact."
+    }
+  ],
+  "functions_native_can_potentially_show": [
+    "React Native Alert.alert reaches iOS Alert.prompt/native alert manager; genuine confirmation controls for count Complete/Cancel and route End Route may be recordable once the normal app is actually exercised.",
+    "iOS photo-library permission/picker controls and resulting selected public software fixture may be inspectable. These are distinct from physical camera acquisition."
+  ],
+  "limits_and_remaining_gaps": [
+    "No native confirmation, count mutation, camera/library operation or native provider result was actually exercised in this assessment.",
+    "Simulator screens cannot establish real physical camera/GPS arrival/Bluetooth/PTT/push delivery. Never accept actual user GPS or claim native hardware testing from simulator UI.",
+    "Camera permission/source availability is still an actual runtime boundary. Current expo-image-picker code requests/uses native camera; do not assume successful acquisition from simulator availability.",
+    "Maestro/Appium/idb/applesimutils and a Unit native UI-test harness are absent. Human interaction or separately approved driver setup is required for automated ordinary native taps.",
+    "Current strict verify_capture_evidence.py requires browser_screenshot and URL for application screenshots; native screenshots need a separate reviewed contract with actual simulator/bundle/route/source identity. Do not relabel them browser screenshots or invent DOM/URL metadata.",
+    "Any future native provenance extension must keep raw assets/hash identity, full visible controls, source binding, exact speech/timing/frame and genuine playback gates; no validator change is made here."
+  ],
+  "source_files": [
+    {
+      "source": "Unit/package.json",
+      "sha256": "31431c61d50287e204a6d093576520c460a34598964ac905b38a5a7e5cd5c9cd"
+    },
+    {
+      "source": "Unit/app.config.ts",
+      "sha256": "855d5eebad86036ce3383edecb7505367f241a219590ac125980271470775695"
+    },
+    {
+      "source": "Unit/env.js",
+      "sha256": "8b3f1e8d714adbcc239341c503c1964812d117bab705ec91f9de0ba84cd097b0"
+    },
+    {
+      "source": "Unit/eas.json",
+      "sha256": "3e4d4746c42a2bf9129747c0d734ea2b1271b8d9eb93e20d8e18f7ba968ee701"
+    },
+    {
+      "source": "Unit/ios/Podfile",
+      "sha256": "9747aa838abed62ac6a691ef6983d8277729c0013e8633780721c6f687bb9b20"
+    },
+    {
+      "source": "Unit/ios/Podfile.lock",
+      "sha256": "55b5da0aa078705f10d4d6c4574e74bedc1ed860118e17ff9810055353b47f7e"
+    },
+    {
+      "source": "Unit/ios/Podfile.properties.json",
+      "sha256": "426d914d12db65c017062b201b89a04c96563b27cb163f78b1e68c6db1c5cfdc"
+    },
+    {
+      "source": "Unit/ios/ResgridUnit/Info.plist",
+      "sha256": "266772097af9fe5388efea803ce2b6f58b74308f378e49c18c2bac2d9dac5a84"
+    },
+    {
+      "source": "Unit/src/lib/storage/app.tsx",
+      "sha256": "42c44fa79b1efa9b06330e1b07757f1af7a015f501eb0ad31f7e82f1996706f3"
+    },
+    {
+      "source": "Unit/src/app/(app)/inventory/count/[id].tsx",
+      "sha256": "3f242c728bcdb2f054580cc46a2bf817623b33ecf60846fa400acea5f49d5a98"
+    },
+    {
+      "source": "Unit/src/components/calls/call-images-modal.tsx",
+      "sha256": "2c26aea273f0abfcd0bd76ecdee8c87e3c6e77edbffe4486e2007deb4d9ed430"
+    },
+    {
+      "source": "Unit/node_modules/react-native/Libraries/Alert/Alert.js",
+      "sha256": "0caa008099e2c2c477868a16b58b9f23b00b8302f5362deb3246e4e4e696907a"
+    },
+    {
+      "source": "Unit/node_modules/react-native-web/dist/exports/Alert/index.js",
+      "sha256": "2538de6c07ef508dde31685cbeec067f022da93ab5e7b69260bb05031c6ead8b"
+    },
+    {
+      "source": "Unit/node_modules/expo-image-picker/ios/ImagePickerModule.swift",
+      "sha256": "b69f90bb4aee994562e447bfb30349fd699d11da3b0e8950c1f96336e74bb2fd"
+    },
+    {
+      "source": "Academy/scripts/verify_capture_evidence.py",
+      "sha256": "81ab689d050f59eb23fc6b126b6233b6afc9f661ce6e302fa15d55c2434027d7"
+    }
+  ],
+  "qualification": "Read-only feasibility assessment only; no app, source candidate, native scene, video, site or publication is qualified."
+}

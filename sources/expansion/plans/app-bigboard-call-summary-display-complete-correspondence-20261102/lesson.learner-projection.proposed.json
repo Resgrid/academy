@@ -1,0 +1,223 @@
+{
+  "id": "app-bigboard-call-summary-display",
+  "title": "Big Board: configure call totals, priority counts and recent-call display",
+  "app": "BigBoard",
+  "summary": "Add Calls Summary, compare active and priority totals, change the visible sections and priority-row limit, improve readability, and verify saved preferences.",
+  "audience": [
+    "Coordination supervisors",
+    "Dispatch supervisors",
+    "Administrators configuring shared operational displays"
+  ],
+  "prerequisites": [
+    "An authenticated Big Board session connected to an isolated fictional department.",
+    "Existing fictional calls and configured department priorities."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Add Calls Summary to the training board",
+      "route": "/home",
+      "capture_refs": [
+        "001-add-calls-summary",
+        "003-summary-total-four-all-priorities",
+        "004-detailed-call-priorities"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Add Widget",
+        "Calls Summary"
+      ],
+      "narration": "Calls Summary gives a supervisor a compact view of the department's active-call workload. In the open Add Widget panel, choose Calls Summary. This example uses four fictional calls and the department's Routine, Urgent and Emergency priorities. A shared display can help the coordination team notice workload, then turn to the detailed calls list for the incident names and assignments. Use a training department when practicing changes to the board.",
+      "practice": "Add Calls Summary to the training board using an isolated fictional department and training board."
+    },
+    {
+      "id": "02",
+      "title": "Configure a readable complete summary",
+      "route": "/configure",
+      "capture_refs": [
+        "003-summary-total-four-all-priorities",
+        "002-all-call-summary-options"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Settings",
+        "Calls Summary Widget",
+        "Show Recent Call",
+        "Show Priority Counts",
+        "Max Priorities to Show: All",
+        "Font Size: 14pt",
+        "Width (grid units): 4",
+        "Height (grid units): 3",
+        "Save"
+      ],
+      "narration": "Use the gear icon at the upper right to open configuration, then select Calls Summary Widget. Keep Show Recent Call and Show Priority Counts on. Set Max Priorities to Show to All. This first view uses Font Size at fourteen points, width four and height three grid units. Select Save and scroll to the summary. Giving the panel enough room keeps the recent-call card and priority rows readable together.",
+      "practice": "Configure a readable complete summary using an isolated fictional department and training board."
+    },
+    {
+      "id": "03",
+      "title": "Compare the summary with the detailed calls",
+      "route": "/home",
+      "capture_refs": [
+        "003-summary-total-four-all-priorities",
+        "004-detailed-call-priorities"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Calls",
+        "Active",
+        "4",
+        "Routine",
+        "3",
+        "Urgent",
+        "1",
+        "Emergency",
+        "0",
+        "ID",
+        "Priority"
+      ],
+      "narration": "The summary shows Active four, Routine three, Urgent one and Emergency zero. Its recent-call card displays the fictional scheduled community standby that was already dispatched during an earlier exercise. The date in its name is a historical training label. Scroll to the detailed Calls table and compare the Priority column: three rows are Routine, and the warehouse alarm is Urgent. A priority count summarizes calls; it does not identify which people or units are available to respond.",
+      "practice": "Compare the summary with the detailed calls using an isolated fictional department and training board."
+    },
+    {
+      "id": "04",
+      "title": "Limit visible priority rows without filtering active calls",
+      "route": "/configure",
+      "capture_refs": [
+        "007-keyboard-priority-limit-one",
+        "008-single-priority-result"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Calls Summary Widget",
+        "Max Priorities to Show: 1",
+        "Save",
+        "Calls",
+        "Active",
+        "4",
+        "Routine",
+        "3"
+      ],
+      "narration": "Return to Calls Summary Widget and change Max Priorities to Show to one. Select Save and inspect the board again. Only the Routine row, with three calls, remains in the priority section. Active still shows four. This option limits how many priority rows the panel displays; it does not close, remove or filter the underlying calls. A restricted display can therefore omit an urgent category even while its call still contributes to the total.",
+      "practice": "Limit visible priority rows without filtering active calls using an isolated fictional department and training board."
+    },
+    {
+      "id": "05",
+      "title": "Show counts without the recent-call card",
+      "route": "/configure",
+      "capture_refs": [
+        "011-reopened-recent-off-sixteen",
+        "010-priorities-without-recent-card",
+        "004-detailed-call-priorities"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Calls Summary Widget",
+        "Show Recent Call",
+        "Show Priority Counts",
+        "Max Priorities to Show: All",
+        "Font Size: 16pt",
+        "Save",
+        "Active",
+        "4",
+        "Routine",
+        "Urgent",
+        "Emergency"
+      ],
+      "narration": "For a count-focused display, return Max Priorities to Show to All, turn Show Recent Call off and keep Show Priority Counts on. Increase Font Size to sixteen points, then select Save. The board now shows Active four and all three priority rows without the recent-call name and address card. This changes the summary presentation. The detailed calls remain available elsewhere on the board. Choose a text size that people can read from the actual viewing distance.",
+      "practice": "Show counts without the recent-call card using an isolated fictional department and training board."
+    },
+    {
+      "id": "06",
+      "title": "Use a minimal total and understand its limits",
+      "route": "/configure",
+      "capture_refs": [
+        "012-hide-priority-counts",
+        "013-active-total-only",
+        "004-detailed-call-priorities"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Calls Summary Widget",
+        "Show Priority Counts",
+        "Save",
+        "Calls",
+        "Active",
+        "4"
+      ],
+      "narration": "Turn Show Priority Counts off as well and select Save. With both optional sections hidden, the Calls panel contains just Active four. The compact total may suit a secondary display, but viewers can no longer see the workload's priority distribution in that panel. Hiding information does not make its underlying incidents disappear. Decide what your coordination team needs to see before adopting this minimal view.",
+      "practice": "Use a minimal total and understand its limits using an isolated fictional department and training board."
+    },
+    {
+      "id": "07",
+      "title": "Restore the full view and check saved preferences",
+      "route": "/configure",
+      "capture_refs": [
+        "014-restore-complete-summary",
+        "017-restored-readable-summary",
+        "016-fresh-reopened-complete-settings"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Calls Summary Widget",
+        "Show Recent Call",
+        "Show Priority Counts",
+        "Max Priorities to Show: All",
+        "Font Size: 16pt",
+        "Width (grid units): 4",
+        "Height (grid units): 3",
+        "Save",
+        "Active",
+        "4",
+        "Routine",
+        "3",
+        "Urgent",
+        "1",
+        "Emergency",
+        "0"
+      ],
+      "narration": "Restore Show Recent Call and Show Priority Counts, leave Max Priorities to Show at All, and select Save. Reload the board and inspect the complete summary again. Active remains four, with Routine three, Urgent one and Emergency zero. Reopen Calls Summary Widget to read back both enabled switches, All, Font Size sixteen and the four-by-three dimensions. Checking the saved controls as well as the visible result confirms the configuration the display is actually using.",
+      "practice": "Restore the full view and check saved preferences using an isolated fictional department and training board."
+    },
+    {
+      "id": "08",
+      "title": "Apply the same display choices across organizations",
+      "route": "/home",
+      "capture_refs": [
+        "017-restored-readable-summary",
+        "004-detailed-call-priorities"
+      ],
+      "capture_intent": "Show the actual Calls Summary choices, configuration controls, saved display or detailed priority rows being discussed.",
+      "required_labels": [
+        "Calls",
+        "Active",
+        "Routine",
+        "Urgent",
+        "Emergency",
+        "Priority"
+      ],
+      "narration": "These display choices also fit departments beyond fire and E M S. Security teams can summarize service calls and patrol incidents. Search-and-rescue coordinators can monitor their mission workload. Community paramedicine and mental health response teams, wildland contractors and industrial emergency response teams can use their own call priorities in the same way. Keep the full category view when every priority matters, and consult the detailed Calls table when a count needs investigation.",
+      "practice": "Apply the same display choices across organizations using an isolated fictional department and training board."
+    }
+  ],
+  "sector_examples": {
+    "Fire / EMS": "Compare incident counts with the detailed calls and assignments.",
+    "Community response": "Summarize paramedicine and mental health response workload using department priorities.",
+    "Search and rescue": "Review mission totals and priority categories.",
+    "Security": "Monitor service-call and patrol-incident workload.",
+    "Wildland": "Review contractor incidents without confusing calls with available resources.",
+    "Industrial": "Use shared workload summaries alongside incident details."
+  },
+  "source_files": [
+    "BigBoard/src/components/widgets/CallsSummaryWidget.tsx",
+    "BigBoard/src/app/(app)/configure.tsx"
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "scope_limits": [
+    "Fictional local training calls; no new call, dispatch or notification action performed.",
+    "No live event arrival, closure or offline recovery is claimed.",
+    "Priority limit changes displayed rows, not the underlying call collection.",
+    "Earlier raw005/006 reflect an accessibility-set value that did not commit; raw009 contains switch animation; raw015 contains a development notification. These are excluded from lesson evidence."
+  ]
+}

@@ -1,0 +1,696 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Resgrid.Framework;
+using Resgrid.Model;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using Resgrid.Web.Areas.User.Models.Training;
+using Resgrid.Web.Helpers;
+
+namespace Resgrid.Web.Areas.User.Controllers
+{
+	[Area("User")]
+	[Authorize]
+	public class TrainingsController : SecureBaseController
+	{
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly IDepartmentsService _departmentsService;
+		private readonly ITrainingService _trainingService;
+		private readonly IPersonnelRolesService _personnelRolesService;
+
+		public TrainingsController(IDepartmentGroupsService departmentGroupsService, IDepartmentsService departmentService, ITrainingService trainingService, IPersonnelRolesService personnelRolesService)
+		{
+			_departmentGroupsService = departmentGroupsService;
+			_departmentsService = departmentService;
+			_trainingService = trainingService;
+			_personnelRolesService = personnelRolesService;
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Training_View)]
+		public async Task<IActionResult> Index()
+		{
+			var model = new TrainingIndexModel();
+			model.Trainings = await _trainingService.GetAllTrainingsForDepartmentAsync(DepartmentId);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Training_Create)]
+		public async Task<IActionResult> New()
+		{
+			var model = new NewTrainingModel();
+			model.Training = new Training();
+			model.Training.MinimumScore = 0;
+			model.Training.CreatedByUserId = UserId;
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Training_Create)]
+		public async Task<IActionResult> New(NewTrainingModel model, IFormCollection form, ICollection<IFormFile> attachments)
+		{
+			// A new training is always a new row with new children: posted ids would make the save update other rows by key.
+			// The form never posts the child collections; they are rebuilt from the question fields and the files below.
+			model.Training.TrainingId = 0;
+			model.Training.Questions = null;
+			model.Training.Attachments = null;
+
+			model.Training.CreatedByUserId = UserId;
+
+			if (attachments != null)
+			{
+				model.Training.Attachments = new Collection<TrainingAttachment>();
+				foreach (var file in attachments)
+				{
+					if (file != null && file.Length > 0)
+					{
+						var extenion = FileHelper.GetFileExtensionWithoutDot(file.FileName);
+
+						if (extenion != "jpg" && extenion != "jpeg" && extenion != "png" && extenion != "gif" && extenion != "gif" &&
+						    extenion != "pdf" && extenion != "doc"
+						    && extenion != "docx" && extenion != "ppt" && extenion != "pptx" && extenion != "pps" && extenion != "ppsx" &&
+						    extenion != "odt"
+						    && extenion != "xls" && extenion != "xlsx" && extenion != "txt" && extenion != "mpg" && extenion != "avi" &&
+						    extenion != "mpeg")
+							ModelState.AddModelError("fileToUpload", string.Format("File type ({0}) is not importable.", extenion));
+
+						if (file.Length > 30000000)
+							ModelState.AddModelError("fileToUpload", "Attachment is too large, must be smaller then 30MB.");
+
+						var attachment = new TrainingAttachment();
+						attachment.FileType = file.ContentType;
+						attachment.FileName = file.FileName;
+						attachment.Data = await ReadUploadedFileAsync(file);
+
+						model.Training.Attachments.Add(attachment);
+					}
+				}
+			}
+
+			var roles = new List<string>();
+			var groups = new List<string>();
+			var users = new List<string>();
+
+			if (form.ContainsKey("rolesToAdd"))
+				roles.AddRange(form["rolesToAdd"].ToString().Split(char.Parse(",")));
+
+			if (form.ContainsKey("groupsToAdd"))
+				groups.AddRange(form["groupsToAdd"].ToString().Split(char.Parse(",")));
+
+			if (form.ContainsKey("usersToAdd"))
+				users.AddRange(form["usersToAdd"].ToString().Split(char.Parse(",")));
+
+			model.Training.Users = new List<TrainingUser>();
+
+			if (model.SendToAll)
+			{
+				var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+				foreach (var user in allUsers)
+				{
+					var trainingUser = new TrainingUser();
+					trainingUser.UserId = user.UserId;
+
+					model.Training.Users.Add(trainingUser);
+				}
+			}
+			else
+			{
+				foreach (var user in users)
+				{
+					var trainingUser = new TrainingUser();
+					trainingUser.UserId = user;
+
+					model.Training.Users.Add(trainingUser);
+				}
+
+				foreach (var group in groups)
+				{
+					// Group and role ids are global keys: only this department's groups and roles expand into assignees.
+					if (!int.TryParse(group, out var groupId) || (await _departmentGroupsService.GetGroupByIdAsync(groupId))?.DepartmentId != DepartmentId)
+						continue;
+
+					var members = await _departmentGroupsService.GetAllMembersForGroupAsync(groupId);
+
+					foreach (var member in members)
+					{
+						var trainingUser = new TrainingUser();
+						trainingUser.UserId = member.UserId;
+
+						if (model.Training.Users.All(x => x.UserId != member.UserId))
+							model.Training.Users.Add(trainingUser);
+					}
+				}
+
+				foreach (var role in roles)
+				{
+					if (!int.TryParse(role, out var roleId) || (await _personnelRolesService.GetRoleByIdAsync(roleId))?.DepartmentId != DepartmentId)
+						continue;
+
+					var roleMembers = await _personnelRolesService.GetAllMembersOfRoleAsync(roleId);
+
+					foreach (var member in roleMembers)
+					{
+						var trainingUser = new TrainingUser();
+						trainingUser.UserId = member.UserId;
+
+						if (model.Training.Users.All(x => x.UserId != member.UserId))
+							model.Training.Users.Add(trainingUser);
+					}
+				}
+			}
+
+			// Only this department's members can be assigned (and notified); a posted id from another department is dropped.
+			var departmentUserIds = (await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId))
+				.Select(u => u.UserId).ToHashSet(StringComparer.OrdinalIgnoreCase);
+			model.Training.Users = model.Training.Users.Where(u => !String.IsNullOrWhiteSpace(u.UserId) && departmentUserIds.Contains(u.UserId)).ToList();
+
+			if (!model.Training.Users.Any())
+				ModelState.AddModelError("", "You have not selected any personnel, roles or groups to assign this training to.");
+
+			if (ModelState.IsValid)
+			{
+				List<int> questions = form.Keys
+						.Where(k => k.StartsWith("question_"))
+						.Select(k => { var s = k.Replace("question_", ""); return int.TryParse(s, out var v) ? (int?)v : null; })
+						.Where(v => v.HasValue).Select(v => v.Value).ToList();
+
+				if (questions.Count > 0)
+					model.Training.Questions = new Collection<TrainingQuestion>();
+
+				model.Training.DepartmentId = DepartmentId;
+				model.Training.CreatedOn = DateTime.UtcNow;
+				model.Training.CreatedByUserId = UserId;
+				model.Training.GroupsToAdd = form["groupsToAdd"];
+				model.Training.RolesToAdd = form["rolesToAdd"];
+				model.Training.UsersToAdd = form["usersToAdd"];
+				// Description/TrainingText are posted as the editor's HTML and sanitized by the service. They must not be
+				// HTML-decoded first: that turned escaped text such as "NORA &lt;nora@example.org&gt;" into a tag the
+				// sanitizer then removed along with the text (#181).
+
+				foreach (var i in questions)
+				{
+					if (form.ContainsKey("question_" + i))
+					{
+						var questionText = form["question_" + i];
+						var question = new TrainingQuestion();
+						question.Question = questionText;
+						
+						var answerPrefix1 = "answerForQuestion_" + i + "_";
+						List<int> answers = form.Keys
+							.Where(k => k.StartsWith(answerPrefix1))
+							.Select(k => { var s = k.Replace(answerPrefix1, ""); return int.TryParse(s, out var v) ? (int?)v : null; })
+							.Where(v => v.HasValue).Select(v => v.Value).ToList();
+
+						if (answers.Count > 0)
+							question.Answers = new Collection<TrainingQuestionAnswer>();
+
+						foreach (var answer in answers)
+						{
+							var trainingQuestionAnswer = new TrainingQuestionAnswer();
+							var answerForQuestion = form["answerForQuestion_" + i + "_" + answer];
+
+							var possibleAnswer = form["answer_" + i];
+							trainingQuestionAnswer.Answer = answerForQuestion;
+
+							if (!string.IsNullOrWhiteSpace(possibleAnswer))
+							{
+								if ("answerForQuestion_" + i + "_" + answer == possibleAnswer)
+									trainingQuestionAnswer.Correct = true;
+							}
+
+							question.Answers.Add(trainingQuestionAnswer);
+						}
+
+						model.Training.Questions.Add(question);
+					}
+				}
+
+				await _trainingService.SaveAsync(model.Training);
+
+				return RedirectToAction("Index");
+			}
+
+			// The editors are re-filled with Html.Raw, so never echo the posted HTML back unsanitized.
+			model.Training.Description = StringHelpers.SanitizeHtmlInString(model.Training.Description);
+			model.Training.TrainingText = StringHelpers.SanitizeHtmlInString(model.Training.TrainingText);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> View(int trainingId)
+		{
+			var model = new ViewTrainingModel();
+			model.Training = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (model.Training == null)
+				return NotFound();
+
+			model.CreatorUserName = await UserHelper.GetFullNameForUser(model.Training.CreatedByUserId);
+
+			if (model.Training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			await _trainingService.SetTrainingAsViewedAsync(trainingId, UserId);
+
+			return View(model);
+		}
+
+		[HttpGet]
+		[Authorize(Policy = ResgridResources.Training_Update)]
+		public async Task<IActionResult> Edit(int trainingId)
+		{
+			var training = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (training == null)
+				return NotFound();
+
+			if (training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			var model = new EditTrainingModel();
+			model.Training = training;
+			model.ExistingUserIds = new List<string>();
+
+			if (training.Users != null)
+			{
+				foreach (var user in training.Users)
+				{
+					model.ExistingUserIds.Add(user.UserId);
+				}
+			}
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Training_Update)]
+		public async Task<IActionResult> Edit(int trainingId, EditTrainingModel model, IFormCollection form, ICollection<IFormFile> attachments)
+		{
+			var existingTraining = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (existingTraining == null)
+				return NotFound();
+
+			if (existingTraining.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			if (attachments != null && attachments.Count > 0)
+			{
+				if (existingTraining.Attachments == null)
+					existingTraining.Attachments = new Collection<TrainingAttachment>();
+
+				foreach (var file in attachments)
+				{
+					if (file != null && file.Length > 0)
+					{
+var extension = System.IO.Path.GetExtension(file.FileName)?.TrimStart('.') ?? string.Empty;
+
+						if (!String.IsNullOrWhiteSpace(extension))
+							extension = extension.ToLower();
+
+						if (extension != "jpg" && extension != "jpeg" && extension != "png" && extension != "gif" &&
+							extension != "pdf" && extension != "doc"
+							&& extension != "docx" && extension != "ppt" && extension != "pptx" && extension != "pps" && extension != "ppsx" &&
+							extension != "odt"
+							&& extension != "xls" && extension != "xlsx" && extension != "txt" && extension != "mpg" && extension != "avi" &&
+							extension != "mpeg")
+							ModelState.AddModelError("fileToUpload", string.Format("File type ({0}) is not importable.", extension));
+
+						if (file.Length > 30000000)
+							ModelState.AddModelError("fileToUpload", "Attachment is too large, must be smaller then 30MB.");
+
+						var attachment = new TrainingAttachment();
+						attachment.FileType = file.ContentType;
+						attachment.FileName = file.FileName;
+						attachment.TrainingId = trainingId;
+						attachment.Data = await ReadUploadedFileAsync(file);
+
+						existingTraining.Attachments.Add(attachment);
+					}
+				}
+			}
+
+			// Handle adding new users (in addition to existing ones)
+			var roles = new List<string>();
+			var groups = new List<string>();
+			var users = new List<string>();
+
+			if (form.ContainsKey("rolesToAdd"))
+				roles.AddRange(form["rolesToAdd"].ToString().Split(char.Parse(",")));
+
+			if (form.ContainsKey("groupsToAdd"))
+				groups.AddRange(form["groupsToAdd"].ToString().Split(char.Parse(",")));
+
+			if (form.ContainsKey("usersToAdd"))
+				users.AddRange(form["usersToAdd"].ToString().Split(char.Parse(",")));
+
+			// Same rule as New: only this department's members can be added (and notified); a posted id from another
+			// department is dropped, and group and role ids (global keys) expand only when they are this department's.
+			var allUsers = await _departmentsService.GetAllUsersForDepartmentAsync(DepartmentId);
+			var departmentUserIds = allUsers.Select(u => u.UserId).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+			if (model.SendToAll)
+			{
+				foreach (var user in allUsers)
+				{
+					if (existingTraining.Users == null)
+						existingTraining.Users = new List<TrainingUser>();
+
+					if (existingTraining.Users.All(x => x.UserId != user.UserId))
+					{
+						var trainingUser = new TrainingUser();
+						trainingUser.UserId = user.UserId;
+						existingTraining.Users.Add(trainingUser);
+					}
+				}
+			}
+			else
+			{
+				foreach (var user in users)
+				{
+					if (!string.IsNullOrWhiteSpace(user) && departmentUserIds.Contains(user))
+					{
+						if (existingTraining.Users == null)
+							existingTraining.Users = new List<TrainingUser>();
+
+						if (existingTraining.Users.All(x => x.UserId != user))
+						{
+							var trainingUser = new TrainingUser();
+							trainingUser.UserId = user;
+							existingTraining.Users.Add(trainingUser);
+						}
+					}
+				}
+
+				foreach (var group in groups)
+				{
+					if (!string.IsNullOrWhiteSpace(group) && int.TryParse(group, out var groupId)
+						&& (await _departmentGroupsService.GetGroupByIdAsync(groupId))?.DepartmentId == DepartmentId)
+					{
+						var members = await _departmentGroupsService.GetAllMembersForGroupAsync(groupId);
+
+						foreach (var member in members.Where(m => departmentUserIds.Contains(m.UserId)))
+						{
+							if (existingTraining.Users == null)
+								existingTraining.Users = new List<TrainingUser>();
+
+							if (existingTraining.Users.All(x => x.UserId != member.UserId))
+							{
+								var trainingUser = new TrainingUser();
+								trainingUser.UserId = member.UserId;
+								existingTraining.Users.Add(trainingUser);
+							}
+						}
+					}
+				}
+
+				foreach (var role in roles)
+				{
+					if (!string.IsNullOrWhiteSpace(role) && int.TryParse(role, out var roleId)
+						&& (await _personnelRolesService.GetRoleByIdAsync(roleId))?.DepartmentId == DepartmentId)
+					{
+						var roleMembers = await _personnelRolesService.GetAllMembersOfRoleAsync(roleId);
+
+						foreach (var member in roleMembers.Where(m => departmentUserIds.Contains(m.UserId)))
+						{
+							if (existingTraining.Users == null)
+								existingTraining.Users = new List<TrainingUser>();
+
+							if (existingTraining.Users.All(x => x.UserId != member.UserId))
+							{
+								var trainingUser = new TrainingUser();
+								trainingUser.UserId = member.UserId;
+								existingTraining.Users.Add(trainingUser);
+							}
+						}
+					}
+				}
+			}
+
+			if (ModelState.IsValid)
+			{
+				// Update basic properties. Description/TrainingText are the editor's HTML and are sanitized by the service;
+				// they must not be HTML-decoded first (that turned escaped "<text>" into tags the sanitizer removed, #181).
+				existingTraining.Name = model.Training.Name;
+				existingTraining.Description = model.Training.Description;
+				existingTraining.TrainingText = model.Training.TrainingText;
+				existingTraining.MinimumScore = model.Training.MinimumScore;
+				existingTraining.ToBeCompletedBy = model.Training.ToBeCompletedBy;
+				existingTraining.GroupsToAdd = form["groupsToAdd"];
+				existingTraining.RolesToAdd = form["rolesToAdd"];
+				existingTraining.UsersToAdd = form["usersToAdd"];
+
+				// Handle questions - rows for existing questions/answers post their ids (questionId_N / answerId_N_M) so the
+				// service updates them in place and deletes the ones that were removed, instead of adding a duplicate set.
+				existingTraining.Questions = new Collection<TrainingQuestion>();
+
+				List<int> questions = form.Keys
+						.Where(k => k.StartsWith("question_"))
+						.Select(k => { var s = k.Replace("question_", ""); return int.TryParse(s, out var v) ? (int?)v : null; })
+						.Where(v => v.HasValue).Select(v => v.Value).ToList();
+
+				foreach (var i in questions)
+				{
+					if (form.ContainsKey("question_" + i))
+					{
+						var questionText = form["question_" + i];
+						var question = new TrainingQuestion();
+						question.Question = questionText;
+						question.TrainingId = trainingId;
+
+						if (int.TryParse(form["questionId_" + i].ToString(), out var questionId) && questionId > 0)
+							question.TrainingQuestionId = questionId;
+
+						var answerPrefix = "answerForQuestion_" + i + "_";
+						List<int> answers = form.Keys
+							.Where(k => k.StartsWith(answerPrefix))
+							.Select(k => { var s = k.Replace(answerPrefix, ""); return int.TryParse(s, out var v) ? (int?)v : null; })
+							.Where(v => v.HasValue).Select(v => v.Value).ToList();
+
+						if (answers.Count > 0)
+							question.Answers = new Collection<TrainingQuestionAnswer>();
+
+						foreach (var answer in answers)
+						{
+							var trainingQuestionAnswer = new TrainingQuestionAnswer();
+							var answerForQuestion = form["answerForQuestion_" + i + "_" + answer];
+
+							var possibleAnswer = form["answer_" + i];
+							trainingQuestionAnswer.Answer = answerForQuestion;
+							trainingQuestionAnswer.TrainingQuestionId = question.TrainingQuestionId;
+
+							if (int.TryParse(form["answerId_" + i + "_" + answer].ToString(), out var answerId) && answerId > 0)
+								trainingQuestionAnswer.TrainingQuestionAnswerId = answerId;
+
+							if (!string.IsNullOrWhiteSpace(possibleAnswer))
+							{
+								if ("answerForQuestion_" + i + "_" + answer == possibleAnswer)
+									trainingQuestionAnswer.Correct = true;
+							}
+
+							question.Answers.Add(trainingQuestionAnswer);
+						}
+
+						existingTraining.Questions.Add(question);
+					}
+				}
+
+				var addedUsers = existingTraining.Users?.Where(x => x.TrainingUserId == 0).ToList() ?? new List<TrainingUser>();
+
+				await _trainingService.SaveAsync(existingTraining);
+
+				// The notifier worker announces a training only once (while Notified is empty), so people added after that
+				// would never be told about it. Before the first notice goes out the worker includes them anyway.
+				if (existingTraining.Notified.HasValue && addedUsers.Any())
+				{
+					try
+					{
+						await _trainingService.SendInitialTrainingNoticeAsync(new Training
+						{
+							TrainingId = existingTraining.TrainingId,
+							DepartmentId = existingTraining.DepartmentId,
+							Name = existingTraining.Name,
+							ToBeCompletedBy = existingTraining.ToBeCompletedBy,
+							Users = addedUsers
+						});
+					}
+					catch (Exception ex)
+					{
+						// The training is already saved; a failed notice must not turn the save into an error page.
+						Logging.LogException(ex);
+					}
+				}
+
+				return RedirectToAction("Index");
+			}
+
+			model.Training = existingTraining;
+			return View(model);
+		}
+
+		[HttpGet]
+		public async Task<FileResult> GetTrainingAttachment(int trainingAttachmentId)
+		{
+			var attachment = await _trainingService.GetTrainingAttachmentByIdAsync(trainingAttachmentId);
+
+			if (attachment == null)
+				return null;
+
+			var training = await _trainingService.GetTrainingByIdAsync(attachment.TrainingId);
+
+			if (training == null || training.DepartmentId != DepartmentId)
+				return null;
+
+			return new FileContentResult(attachment.Data, attachment.FileType)
+			{
+				FileDownloadName = attachment.FileName
+			};
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Quiz(int trainingId, CancellationToken cancellationToken)
+		{
+			var model = new ViewTrainingModel();
+			model.Training = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (model.Training == null)
+				return NotFound();
+
+			if (model.Training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			await _trainingService.SetTrainingAsViewedAsync(trainingId, UserId, cancellationToken);
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Quiz(ViewTrainingModel model, IFormCollection form)
+		{
+			int correctAnswers = 0;
+			var training = await _trainingService.GetTrainingByIdAsync(model.Training.TrainingId);
+
+			if (training == null)
+				return NotFound();
+
+			if (training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			List<int> questions = form.Keys
+						.Where(k => k.StartsWith("question_"))
+						.Select(k => { var s = k.Replace("question_", ""); return int.TryParse(s, out var v) ? (int?)v : null; })
+						.Where(v => v.HasValue).Select(v => v.Value).ToList();
+
+			foreach (var questionId in questions)
+			{
+				var answerForQuestion = form["question_" + questionId].ToString();
+
+				if (answerForQuestion != null)
+				{
+					var question = training.Questions.FirstOrDefault(x => x.TrainingQuestionId == questionId);
+					if (question != null)
+					{
+						var answer = question.Answers.FirstOrDefault(x => x.TrainingQuestionAnswerId == int.Parse(answerForQuestion));
+						if (answer != null && answer.Correct)
+							correctAnswers++;
+					}
+				}
+			}
+
+			await _trainingService.RecordTrainingQuizResultAsync(training.TrainingId, UserId, correctAnswers);
+
+			return RedirectToAction("Index");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Training_Delete)]
+		public async Task<IActionResult> DeleteTraining(int trainingId)
+		{
+			var model = new ViewTrainingModel();
+			model.Training = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (model.Training == null)
+				return NotFound();
+
+			if (model.Training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			await _trainingService.DeleteTrainingAsync(trainingId);
+
+			return RedirectToAction("Index");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Policy = ResgridResources.Training_Update)]
+		public async Task<IActionResult> ResetUserTraining(int trainingId, string userId)
+		{
+			var model = new ViewTrainingModel();
+			model.Training = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (model.Training == null)
+				return NotFound();
+
+			if (model.Training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			await _trainingService.ResetUserAsync(trainingId, userId);
+
+			return RedirectToAction("Report", new { trainingId = model.Training.TrainingId});
+		}
+
+		[HttpGet]
+		// Every member holds Training_View; the report lists everyone's progress and scores and its only actions (reset)
+		// need Training_Update, so it is limited to the people who can manage trainings - the same set the Index shows it to.
+		[Authorize(Policy = ResgridResources.Training_Update)]
+		public async Task<IActionResult> Report(int trainingId)
+		{
+			var model = new TrainingReportView();
+			model.Training = await _trainingService.GetTrainingByIdAsync(trainingId);
+
+			if (model.Training == null)
+				return NotFound();
+
+			model.UserGroups = new Dictionary<string, string>();
+			model.Department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+
+			if (model.Training.DepartmentId != DepartmentId)
+				return Unauthorized();
+
+			foreach (var user in model.Training.Users)
+			{
+				var group = await _departmentGroupsService.GetGroupForUserAsync(user.UserId, DepartmentId);
+
+				if (group != null)
+					model.UserGroups.Add(user.UserId, group.Name);
+			}
+
+			return View(model);
+		}
+
+		private static async Task<byte[]> ReadUploadedFileAsync(IFormFile file)
+		{
+			// Read the whole upload: a single Stream.Read is not guaranteed to fill the buffer.
+			using var stream = file.OpenReadStream();
+			using var memoryStream = new System.IO.MemoryStream();
+			await stream.CopyToAsync(memoryStream);
+
+			return memoryStream.ToArray();
+		}
+	}
+}

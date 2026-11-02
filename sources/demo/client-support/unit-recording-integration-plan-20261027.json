@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "planned_at": "2026-10-27T21:53:45.571301+00:00",
+  "state": "reviewable_opt_in_plan_only; not implemented or wired",
+  "app": "Unit",
+  "recording_support_version": "unit-web-recording-20261027",
+  "reason": "Global expansion source-profiles.json definition changes invalidate existing ignored source-profile/client pins. Preserve the active fictional stack and all other clients; do not silently migrate them.",
+  "current_integration": {
+    "prepare_apps": "scripts/prepare_apps.py",
+    "profile_loader": "sources/demo/source_profiles.py",
+    "profile": "sources/demo/source-profiles.json",
+    "profile_sha256_unchanged": "33f47db954c7ddcf2c4c2c73017d329ec5168ddb812bb47902ca7088acf49c97",
+    "current_compatibility_apps": [
+      "Responder",
+      "IC"
+    ],
+    "Unit_default": "Clean pinned source launches directly; no Unit recording support is currently declared or applied by normal prepare_apps.",
+    "existing_global_profile_unchanged": true,
+    "private_profile_pin_unchanged": true
+  },
+  "retained_baseline": {
+    "file": "demo/client-support/unit-recording-source-baseline-20261027.json",
+    "sha256": "34019db05b8c57bf95f12cc3b0d5b1b4654055215da6358d3aec1448146b91c9",
+    "source_HEAD": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+    "original_files": {
+      "src/components/maps/map-view.web.tsx": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a",
+      "src/components/calls/call-images-modal.tsx": "7749da50f6632262f48a78ab7f63e9bce581af87e100c97947e502ba64d120fd",
+      "src/components/calls/__tests__/call-images-modal.test.tsx": "355186bff02e7ebc09449b01b41487d5d4aa5d8c40c80c367f9dd6b791d72720"
+    },
+    "must_be_absent": [
+      "src/components/maps/__tests__/camera.web.test.tsx"
+    ],
+    "result_files": {
+      "src/components/maps/map-view.web.tsx": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+      "src/components/maps/__tests__/camera.web.test.tsx": "0d12a7d0e22c0b6bbb84525987a60895e15effc3ba9bf3e6f1ad822318c95e14",
+      "src/components/calls/call-images-modal.tsx": "2c26aea273f0abfcd0bd76ecdee8c87e3c6e77edbffe4486e2007deb4d9ed430",
+      "src/components/calls/__tests__/call-images-modal.test.tsx": "e8700bfe936e8d5e3c99edb5021104b1e8414527f2317c0db91ae3434dec7b9d"
+    },
+    "dependency_files": {
+      "package.json": "31431c61d50287e204a6d093576520c460a34598964ac905b38a5a7e5cd5c9cd",
+      "yarn.lock": "dabc6b25d8761ecb2532c841e0efb115053c1c5acb5ed022d71a4208a6bf73d1"
+    },
+    "dependency_source_files": {
+      "mapbox-gl/package.json": "97bf991d8635b1177c1fa401193430d817288124e176eeb7ffc258319624a0fa",
+      "mapbox-gl/dist/mapbox-gl.js": "4d4b4217fe592a21fd1c7f022aa12bfcd1c08ae7c4cf9f3588a8d45990e18c8f",
+      "mapbox-gl/dist/mapbox-gl-unminified.js": "34183be70de7d8c5d7025a81622f44387d5c09e9973844621a0d25dfe5e856f2",
+      "expo-file-system/package.json": "db1d8ced7ce04e7daf4e55c3fd543bfbe42e32aa5e192bbb8ae4bda98de50069",
+      "expo-file-system/src/legacy/ExponentFileSystem.web.ts": "9486b1a41d74cc2f4c19e49a8a40a9517d2edba4a3867d1da1f2b1571e83017a",
+      "expo-file-system/src/legacy/ExponentFileSystemShim.ts": "4adb18be27fc58e0e4f68f8569abe6e778c7001c627d610c53bdd3799e67eb08",
+      "expo-file-system/src/legacy/FileSystem.ts": "46b2c457480345d91b2c7bab27fa83ca2b3b13351798c3759c38c5da3b94bb7f",
+      "expo-image-manipulator/package.json": "4c90a6c4044b440fac99327ab529539c8ac94bd1e20c61173e9f28883a904eeb",
+      "expo-image-manipulator/src/web/ImageManipulatorImageRef.web.ts": "af2249a040490ea4892f3cc0f606766743d37affb93604aa196a329a585b18b5",
+      "expo-image-manipulator/src/web/utils.web.ts": "1b818d3c8c64f4036456a4ab02b6df6cd19226c0f73b6761cad1ba30bf5a896d"
+    },
+    "formatted_patches": [
+      {
+        "file": "demo/client-support/unit-camera/unit-camera-options.patch",
+        "sha256": "9c9fe32bc1cf220ce6d8627d74035371f64c2dbaf62921daa892d261e728a3d0"
+      },
+      {
+        "file": "demo/client-support/unit-images/unit-images-web-read.patch",
+        "sha256": "687d448bc7601042e13c3d000539f6423f46c234c88980d881e393121cca1f07"
+      }
+    ]
+  },
+  "proposed_entrypoints": {
+    "preparer": "sources/demo/client-support/unit-recording-prepare.py (new, independent opt-in)",
+    "launcher": "sources/demo/client-support/unit-recording-launch.py (new, independent opt-in)",
+    "normal_prepare_apps_default": "Unchanged. A later explicit --recording-support unit-web-recording-20261027 could delegate to the independent helper without editing global profile definition or pin.",
+    "implementation_status": "Plan only pending parent review; no such helper/flag is claimed installed."
+  },
+  "preparer_contract": [
+    "Require a verified clean managed Unit checkout at sources/demo/checkout-expansion/Unit and the pinned0753b6baafbaec74617a412cd9c87fa9de899d47 HEAD. Refuse the recorded original checkout, original parent workspaces, unknown modifications/untracked app source and symlinked source roots.",
+    "Verify the three exact original source/test hashes, absence of the new Camera test, existing package.json/yarn.lock hashes and all10 installed SDK source hashes before any write. Refuse mixed/already-patched input.",
+    "Require an explicitly fresh versioned destination such as sources/demo/capture-apps/Unit-recording-20261027; reject existing/nonempty/overlapping/original paths. Never overwrite the source or an earlier capture copy.",
+    "Verify both formatted unified patch hashes and declared target set. Copy application source excluding .git, node_modules, all .env files, private data, caches/build output. Apply both patches only to the fresh destination with exact context, never using fuzzy or offset acceptance.",
+    "Verify all four resulting file hashes and rehash unchanged dependencies. Link only the verified managed source node_modules, following existing isolated-client dependency-reuse convention; do not install/update locks or copy credentials.",
+    "Write a versioned public-safe preparation provenance recording baseHEAD/source hashes/patches/output hashes and existing dependency lock metadata; never environment values, credentials or public Mapbox key value.",
+    "If preparation fails, report exact condition and leave source/original/existing copies intact; remove only a just-created incomplete destination when safe or retain it explicitly rejected.",
+    "Test meaningful fail-closed cases: unknown source hash, unexpected Camera test, altered patch/hash/path, dependency tamper, dirty/wrong-HEAD source, original/overlapping/existing destination, private/env copying and partially applied output. Tests use synthetic/temp fixtures, not the live stack."
+  ],
+  "launcher_contract": [
+    "Explicit opt-in only. Verify the versioned copy/provenance, current expected four output hashes and linked SDK/dependency hashes before launching. Do not modify global source-profile.json, client-paths.json or existing running app processes.",
+    "Require inherited UNIT_MAPBOX_PUBKEY without printing/saving it; retain normal source ENV validation, existing auth/permissions and local API/analytics-off configuration. No credential/session injection or native permission acceptance.",
+    "Keep the existing CI mode. It disables Metro watch/reloads; source changes require an explicit normal stop/restart of only the chosen local Unit server with --clear. Browser navigation alone is insufficient.",
+    "Use a reviewed local port/localhost recipe. No implicit reseed, clone/install, provider operation or server termination. Parent owns actual restart/browser verification."
+  ],
+  "pin_impact": "Separate versioned helper/manifests avoid global definition SHA changes. If generic profile integration is later chosen, parent must separately review a pin migration; never rewrite a live ignored private pin to bypass a mismatch.",
+  "proofs": {
+    "actual_formatted_camera_tests": {
+      "file": "demo/client-support/unit-camera/installed-tests-formatted.json",
+      "sha256": "5700fc0ee5e5e16462436469f9ca2c4da0e7210996dec9ff3d79ca2f0f9d48b7",
+      "passed": 10
+    },
+    "actual_formatted_images_tests": {
+      "file": "demo/client-support/unit-images/installed-tests-formatted.json",
+      "sha256": "843e363bea81b788e8a0b0f2a187d918221203cdfbbb881fe5b7e3ce464a271c",
+      "passed": 55
+    },
+    "SDK_numeric_cases": 16,
+    "real_Camera_Transform_matrix_cases": 20,
+    "real_UI": "Pending human extension dismissal, explicit CI restart and new actual map/stored-image captures."
+  },
+  "preserved": "No global profile/normal preparer/launcher/pin, app further edit, server/browser, target, database, narration/media or Git action by this task."
+}

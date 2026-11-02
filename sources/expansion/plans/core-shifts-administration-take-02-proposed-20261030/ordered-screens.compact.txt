@@ -1,0 +1,117 @@
+PROPOSED source mapping; human listening/timing review pending. No final assembly.
+
+01 | schedules | 0.0 -> 34.61 | 001-shifts-baseline
+Labels: ["Recurring Group Shifts", "Add Static Shift", "Your Shifts", "On Duty Now", "Approvals", "Shift Staffing"]
+Shifts brings two kinds of scheduling into one place. Recurring Group Shifts organizes people and required roles across dated shift days. Add Static Shift creates a separate fixed window for resources. Start by identifying the work you need to coordinate. In our fictional Chicago Fire department, we will create an assigned personnel schedule, then a separate signup schedule. Your Shifts, On Duty Now, Approvals and Shift Staffing are separate views. A scheduled roster gives you recorded coverage; check current operational information separately.
+
+02 | assigned-start | 34.61 -> 37 | 001-shifts-baseline
+Labels: ["Add Recurring Group Shift"]
+Choose Add Recurring Group Shift to
+
+03 | assigned-start | 37 -> 64.96 | 002-assigned-start-prepared
+Labels: ["New Shift", "Name", "Code", "TRN28A", "Assignment Type", "Assigned", "Color", "Signups and trades need supervisor approval", "Next"]
+open New Shift. Enter a distinctive practice name and the short code T R N twenty-eight A. Assignment Type is Assigned, so the administrator chooses the people for this schedule. Use a light background color because the calendar text is black. The supervisor approval checkbox is clear in this example. That control governs signups and trades; it is not the list of assigned personnel. Review these choices before using Next to open Schedule.
+
+04 | manual-days | 64.96 -> 94.029 | 004-assigned-schedule-corrected
+Labels: ["Schedule >", "Start Time", "09:00", "End Time", "11:00", "NOVEMBER 2026", "4", "Slots >"]
+Schedule gives you a multi-month date picker and separate Start Time and End Time fields. Our example selects November fourth, twenty twenty-six, from nine to eleven in the morning. Check both displayed times after leaving the fields and confirm the intended date is highlighted. This is a manually selected schedule, even though it appears under Recurring Group Shifts. The wizard shown here does not offer a rotation preset. Once the date and times are correct, continue to the Slots stage.
+
+05 | minimums | 94.029 -> 124.8 | 005-assigned-group-role-prepared
+Labels: ["Add Group to Shift", "Shift Group", "Firehouse 51", "Add Role to Group", "Shift Role", "Officer", "Roles Count", "1", "Next"]
+In Slots, Add Group to Shift adds a group row. Firehouse fifty-one is selected here. Add Role to Group creates a required-role row for that group. Choose Officer and leave Roles Count at one. These values define what coverage the schedule should compare against its roster. Adding a role minimum does not assign a person. Review the group, role and count together, then continue to Personnel. Use the department’s published role conventions when configuring your own coverage requirements.
+
+06 | assigned-person | 124.8 -> 157.679 | 006-assigned-personnel-prepared
+Labels: ["Personnel >", "Non-Group Personnel", "Firehouse 51", "Matthew Casey", "Next"]
+Personnel separates Non-Group Personnel from the individual group pickers. Non-group entries are described as floaters or standbys. In the Firehouse fifty-one picker, choose Matthew Casey. His selected name is visible as a chip. Leave the other group pickers empty for this small exercise. The text explains that assigned people fill role slots according to their group and roles. Verify the selected member under the intended group; selecting a name elsewhere is a different assignment. Use Next when that review is complete.
+
+07 | finish | 157.679 -> 167 | 007-assigned-finish-review
+Labels: ["Finish", "Click the finish button below to create your new shift."]
+The Finish stage contains an instruction and a separate Finish control at the lower right. That lower control creates the schedule. Submit once and read the
+
+08 | finish | 167 -> 188.55 | 008-assigned-created-list
+Labels: ["Recurring Group Shifts", "TRAINING ONLY - Coverage authoring 20261028", "Assigned", "Manual", "Groups", "Personnel", "1", "View Calendar", "Edit Details", "Edit Calendar", "Edit Groups"]
+returned row in Recurring Group Shifts. Our new row says Assigned and Manual, with one group and one person. It offers View Calendar, Edit Details, Edit Calendar and Edit Groups. Those actions inspect different parts of the saved schedule. Confirm the new row before opening an editor or assuming that a prepared wizard has already been stored.
+
+09 | verify | 188.55 -> 190 | 008-assigned-created-list
+Labels: ["Edit Details"]
+Reopen Edit Details
+
+10 | verify | 190 -> 195.409 | 009-assigned-details-reopened
+Labels: ["Edit Shift Details", "Name", "Code", "TRN28A", "Color", "#93c5fd", "Start Time", "09:00", "End Time", "11:00"]
+to check the stored name, code, light blue color and nine-to-eleven time window.
+
+11 | verify | 195.409 -> 198.82 | 010-assigned-member-reopened
+Labels: ["Firehouse 51", "Matthew Casey"]
+Casey remains selected under Firehouse fifty-one.
+
+12 | verify | 198.82 -> 202.219 | 013-assigned-calendar-date-context
+Labels: ["Calendar", "November 2026", "04"]
+In the shared calendar, open the November fourth entry.
+
+13 | verify | 202.219 -> 209.91 | 014-assigned-day-saved
+Labels: ["4 Nov 2026", "Upcoming", "11/04/2026 0900", "11/04/2026 1100", "Required", "Needed", "Officer", "1", "0"]
+Its day detail is Upcoming and shows the same times. The Officer row says Required one and Needed zero; the
+
+14 | verify | 209.91 -> 224.399 | 015-assigned-roster-saved
+Labels: ["Roster", "Matthew Casey", "Assigned", "Fully staffed", "Required", "Needed", "Officer", "1", "0"]
+roster lists Casey as Assigned. Fully staffed means this configured one-role requirement is filled. It does not establish arrival, qualifications or an apparatus crew assignment. Read the actual role counts behind the summary.
+
+15 | signup | 224.399 -> 242.85 | 017-signup-approval-start
+Labels: ["Code", "TRN28S", "Assignment Type", "Signup", "Signups and trades need supervisor approval"]
+For a signup schedule, create a separate practice entry with code T R N twenty-eight S and Assignment Type Signup. Check Signups and trades need supervisor approval. The help says that a signup or trade does not put anyone on duty until a group supervisor approves it.
+
+16 | signup | 242.85 -> 247 | 018-signup-dates-prepared
+Labels: ["NOVEMBER 2026", "5", "6", "Start Time", "09:00", "End Time", "11:00"]
+Select November fifth and sixth, using the same morning time window
+
+17 | signup | 247 -> 250.16 | 019-signup-group-role-prepared
+Labels: ["Firehouse 51", "Shift Role", "Officer", "Roles Count", "1"]
+and one required Officer for Firehouse fifty-one.
+
+18 | signup | 250.16 -> 255.279 | 020-signup-no-preassigned-members
+Labels: ["Personnel >", "Non-Group Personnel", "Firehouse 51"]
+Leave every Personnel picker empty. Members can request their own dates separately.
+
+19 | signup | 255.279 -> 258.379 | 021-signup-finish-before-save
+Labels: ["Finish", "Click the finish button below to create your new shift."]
+Review Finish and submit this new schedule once.
+
+20 | signup-result | 258.379 -> 261.679 | 022-signup-created-approval-row
+Labels: ["Approval required", "Edit Details", "Edit Calendar"]
+The saved row now carries Approval required.
+
+21 | signup-result | 261.679 -> 266 | 023-signup-details-reopened
+Labels: ["Edit Shift Details", "TRN28S", "Signups and trades need supervisor approval", "Start Time", "09:00", "End Time", "11:00"]
+Reopen its details and calendar to verify the setting, times and two
+
+22 | signup-result | 266 -> 269 | 024-signup-dates-reopened
+Labels: ["Edit Shift Calendar", "NOVEMBER 2026", "5", "6"]
+selected dates. On November fifth, the
+
+23 | signup-result | 269 -> 291.949 | 026-signup-day-stable-empty
+Labels: ["Shift Day Detail", "Signup", "Upcoming", "Open slots: 1", "Officer", "Required", "Needed", "1", "Roster", "Nobody is on this day yet.", "Your Status", "You are not on this shift day.", "Signup for Shift with Firehouse 51"]
+day detail is Signup and Upcoming. It shows Open slots one, an Officer requirement of one, and Nobody is on this day yet. Your Status says that the current user is not on this day, and a group signup button is available. An empty roster remains unfilled even though the schedule has been created. A member request and its supervisor review are separate operations.
+
+24 | policy | 291.949 -> 306.909 | 016-multiple-group-policy-readonly
+Labels: ["Shift Signup Settings", "Allow Signups For Multiple Groups", "Allow a member to sign up for multiple shift groups. Review overlaps and local coverage rules separately."]
+Department Shift Settings has a separate Allow Signups For Multiple Groups option. It is off here and remains unchanged. The help asks you to review overlaps and local coverage rules separately. This department policy is different from the approval
+
+25 | policy | 306.909 -> 311 | 001-shifts-baseline
+Labels: ["Approvals"]
+checkbox on an individual shift. Open Approvals to review
+
+26 | policy | 311 -> 325.04 | 039-approvals-current-empty
+Labels: ["Shift Approvals", "No sign-ups are waiting for approval.", "No trades are waiting for approval.", "Sign-ups and trades waiting for approval in the groups you supervise. Nobody is on duty for a pending request until it is approved."]
+waiting signups and trades in groups you supervise. Both queues are empty in this example. The page states that a pending request does not put anyone on duty until it is approved. An empty queue is not a completed approval.
+
+27 | current-duty | 325.04 -> 356.88 | 040-current-on-duty-readonly
+Labels: ["On Duty Now", "A Shift — Firehouse 51", "Wallace Boden", "Christopher Herrmann", "Refresh", "On duty as of 10/28/2026 1653. This page refreshes every minute."]
+On Duty Now shows a timestamp and the currently active shift, grouped by assignment. Here the existing A Shift is active, with its recorded members and roles. Our new November dates are future schedules. Keep those two questions separate: who is scheduled on a selected day, and which schedule is active now. The page says it refreshes every minute and also offers Refresh. These are recorded roster views; use the appropriate operational workflow to verify current availability and other information your team needs.
+
+28 | adapt | 356.88 -> 378.23 | 001-shifts-baseline
+Labels: ["Recurring Group Shifts"]
+Chicago Fire can use this pattern to coordinate station coverage. Community care and mental health teams can schedule operational team coverage without patient detail. Search and rescue can organize standby roles; security teams can coordinate site coverage; wildland crews can plan relief rosters; and industrial response teams can schedule drill support.
+
+29 | adapt | 378.23 -> 392.16183333333333 | 014-assigned-day-saved
+Labels: ["Required", "Needed", "Roster"]
+In every setting, choose the right assignment type, state the group and role requirements clearly, and verify the saved dated roster. Handle member requests, approvals, attendance and trades through their own reviewed steps.

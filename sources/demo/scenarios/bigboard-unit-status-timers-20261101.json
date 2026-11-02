@@ -1,0 +1,49 @@
+{
+  "scenario": "Core unit status timers and Big Board acknowledgement/mute exercise",
+  "training_only": true,
+  "recorded_at": "2026-11-02T08:51:13.598615+00:00",
+  "department_id": 51,
+  "unit_name": "Squad 3",
+  "unit_state": "Responding",
+  "initial_timer_values": "All rows0/0; Reason when acknowledging Optional",
+  "configured_thresholds": [
+    {
+      "base_meaning": "Responding",
+      "warn_minutes": 2,
+      "alert_minutes": 4
+    }
+  ],
+  "other_thresholds_unchanged": true,
+  "note_requirement": "Required for warnings and alerts",
+  "acknowledgement_note": "TRAINING ONLY - Timer review practice; verify the unit state with the exercise coordinator.",
+  "mute_note": "TRAINING ONLY - Practice a fifteen-minute mute; no operational response is being suppressed.",
+  "mute_minutes": 15,
+  "observed_saved_muted_until_local": "12:56 AM",
+  "recording_timezone": "America/Los_Angeles",
+  "final_acknowledgement_state": "cleared; unit returned to active red alert",
+  "final_unit_status": "Responding",
+  "alert_widget_dimensions": {
+    "width": 4,
+    "height": 3
+  },
+  "replay_steps": [
+    "Start with an isolated fictional department, authorized Core settings access and Big Board session.",
+    "Add Unit Alerts using the board Add Widget strip and inspect No status timers configured before setting timers.",
+    "In Department Settings, Operations, Mapping and BigBoard Settings, set only Responding Warn2/Alert4 and required reasons for warnings and alerts; Save.",
+    "Reload Core and read back both the timer row and required-reason policy.",
+    "Reload Big Board and inspect a fictional unit already beyond the alert threshold.",
+    "Open the unit alert; inspect the empty-reason requirement, enter a training note and acknowledge. Reopen and verify reviewer and note.",
+    "In Big Board Settings, Unit Alerts, set widget size4x3 and Save. Inspect full note and later reopen retained dimensions.",
+    "Open the same alert, select15 min, enter the separate mute reason and Mute. Expand Muted(1).",
+    "Reload Big Board, expand Muted(1), reopen the alert and verify reviewer, reason and Muted until.",
+    "Clear acknowledgement; verify the unchanged overdue Responding unit returns to the active alert list."
+  ],
+  "limits": [
+    "Demonstration minute values are not response-time recommendations.",
+    "No live warning-to-alert crossing, automatic mute expiry or status-change escalation reset was executed.",
+    "The unit status and dispatch assignment were not changed.",
+    "The Core timer/policy configuration remains saved; only the fictional acknowledgement/mute was cleared.",
+    "Use current generated IDs and fresh local times on replay; do not overwrite unrelated records."
+  ],
+  "source_proposal": "expansion/plans/app-bigboard-unit-status-timers-source-proposal-20261101-v2"
+}

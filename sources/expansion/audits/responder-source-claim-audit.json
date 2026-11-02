@@ -1,0 +1,985 @@
+{
+  "audited_at": "2026-10-26T19:25:20.535298+00:00",
+  "app": "Responder",
+  "source_root": "Responder",
+  "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+  "method": "Read-only source/translation/control reachability plus existing actual-capture metadata audit. No browser calls, screenshots, narration spending or media rendering during this audit. Existing scene04 capture refs and all frozen source bytes preserved.",
+  "critical_findings": [
+    {
+      "source": "src/app/(app)/home/calls.tsx",
+      "line": 169,
+      "source_sha256": "911e2486210c8ba70e29dc7291f24c5c518b7cafb0ecd363a1c887f47dca35ad",
+      "finding": "New Call and Clear search are accessible icon controls, not guaranteed literal labels. New Call needs canUserCreateCalls; Clear search appears only after text entry. Capture DOM control boxes and review the actual image."
+    },
+    {
+      "source": "src/app/call/new/index.tsx",
+      "line": 941,
+      "source_sha256": "edb46acefd9d9b371e149368d53a9ab085ffe47b943ebdbe0e72c19044cd60d2",
+      "finding": "Address, geolocation, what3words, Plus Code and recipient/schedule fields follow the loaded department field policy. A location field existing in source does not prove the active policy offers it."
+    },
+    {
+      "source": "src/app/call/[id]/index.tsx",
+      "line": 179,
+      "source_sha256": "ab628df6a8d389b65cce80bb142291e78d20e22c695b9964766dd7f45560412e",
+      "finding": "Set as Active Call selects this call locally. This action does not send personal responding status. Home has a separate View Call Details and Clear Active Call."
+    },
+    {
+      "source": "src/app/call/[id]/index.tsx",
+      "line": 328,
+      "source_sha256": "ab628df6a8d389b65cce80bb142291e78d20e22c695b9964766dd7f45560412e",
+      "finding": "Route to Destination is conditional on a destination with coordinates. Routing invokes an external mapping application; do not open it in this fixture or claim navigation or physical travel."
+    },
+    {
+      "source": "src/components/calls/call-files-modal.tsx",
+      "line": 106,
+      "source_sha256": "759b30f8629fd9f4f4d8c91ad4cea395fce70e73b66360262dcc98807d5f0504",
+      "finding": "Call Files lists and downloads/shares existing attachments. It contains no file upload control. Call Images separately offers photo/library selection and upload; camera and native sharing are unexercised."
+    },
+    {
+      "source": "src/app/call/[id]/index.tsx",
+      "line": 513,
+      "source_sha256": "ab628df6a8d389b65cce80bb142291e78d20e22c695b9964766dd7f45560412e",
+      "finding": "The Check-In tab only renders on a timer-enabled call. Current CheckInTabPanel offers eligible checks and history; ToggleCallTimers is API-only, not a rendered timer-management screen."
+    },
+    {
+      "source": "src/components/check-in/check-in-tab-panel.tsx",
+      "line": 91,
+      "source_sha256": "b9da05cd84cc98ea259c06494d6243ea0f2b0c6fbab2edf11081e302501211e9",
+      "finding": "Personnel/unit/PAR/hazmat/rotation/rehab choices depend on resolved eligible targets and current unit type. Do not force a target by changing crew or role assignments."
+    },
+    {
+      "source": "src/components/records/records-quick-create.tsx",
+      "line": 38,
+      "source_sha256": "4ed599ddd9cee669a60992be1e64a6d24a54b23bcced3c1d73770c69f6fe02c3",
+      "finding": "Contextual New Record is hidden unless Records.Field is enabled and the server catalog offers a definition for the current verified context."
+    },
+    {
+      "source": "src/app/records/new.tsx",
+      "line": 71,
+      "source_sha256": "ea4c9f258469f4c9e891d6ae61e10921bff981698d4f7ffd67b984675be29a29",
+      "finding": "Prefill only runs for a definition advertising SupportsPrefill. Keep on this device remains rendered but disabled when offline authoring is unavailable; source presence does not prove durable browser storage."
+    },
+    {
+      "source": "src/app/records/[id].tsx",
+      "line": 87,
+      "source_sha256": "a7e383fa04adaa4fac93d9a06c29511c2f76a037cedeea916b30f1aaf5b6a4a5",
+      "finding": "Draft/Returned records with supported schema render Save, Submit for review, attestation and Finalize. Finalize remains disabled until attestation; the server enforces authority. DraftReference is a legitimate draft identifier; it is not a failed final number."
+    },
+    {
+      "source": "src/app/records/[id].tsx",
+      "line": 232,
+      "source_sha256": "a7e383fa04adaa4fac93d9a06c29511c2f76a037cedeea916b30f1aaf5b6a4a5",
+      "finding": "Attachments are record-specific after a server record exists, editable only in Draft/Returned and hidden when AllowAttachments is false. Amend, void and approve remain web-first, with no action here."
+    },
+    {
+      "source": "src/app/records/connectors/[id].tsx",
+      "line": 146,
+      "source_sha256": "f6a0f7b042aeb1b77e1b2b9f99bf06bf6d6ee47e07770c608cc7b87adb48b4b0",
+      "finding": "Read feed now is readiness-gated and can contact an external system. View existing status only; credentials, reconciliation decisions and provider reads are outside this capture scope."
+    },
+    {
+      "source": "src/components/shifts/shift-trade-card.tsx",
+      "line": 113,
+      "source_sha256": "3abb6805e7295f9d7f05b7ce075c370093386ec1fdfe24314ffdddd2a703645b",
+      "finding": "Trade Accept/Decline require incoming + Open + MyState Open; outgoing offer selection, cancellation and supervisory review have distinct gates. These are real rendered actions but remain unexercised in the captured unsent form."
+    },
+    {
+      "source": "src/app/(app)/work-orders/[id].tsx",
+      "line": 148,
+      "source_sha256": "6709364ce1dc43f0548a75c0eb6e58152e58c3c5964892c57996fc5ac087c78b",
+      "finding": "Work-order Steps are read-only Text rows, not interactive completion checkboxes. Assignment acceptance requires CanWrite and CanAccept; transition inputs follow the server transitions/requirements."
+    },
+    {
+      "source": "src/components/calendar/calendar-item-details-sheet.tsx",
+      "line": 139,
+      "source_sha256": "8f1cf8de90a6f76b1c7e0300e6468a3ecb9025939c5358f47b60504dd11b09e6",
+      "finding": "Cancel Attendance uses native Alert with no browser confirmation fallback in this source. The saved signup is real; the cancel button was viewed without a demonstrated cancellation."
+    },
+    {
+      "source": "src/lib/checklists/vault.ts",
+      "line": 9,
+      "source_sha256": "7bc6277fa5b37587bafd2b12d537dd16a54a46b755ed3bc44c566cf531b18bdb",
+      "finding": "Native checklist storage uses encrypted envelopes and device-only SecureStore keys; the browser uses memory only. Same-session resume does not prove reload/crash/offline persistence."
+    },
+    {
+      "source": "src/app/(app)/operations/[id].tsx",
+      "line": 85,
+      "source_sha256": "b253db793bc1a805c7c40f1a7aa3bee694c260cb10bcdb8dbb39d5fb2cca3557",
+      "finding": "Responder supports time approval only when access.CanApprove and a submitted report exist. Unit disables approval in its app capabilities. This captured report is unsigned Draft, so no approval is demonstrated."
+    },
+    {
+      "source": "src/components/operations/mars-panel.tsx",
+      "line": 19,
+      "source_sha256": "71e0420b7cdeaf8a21a1a903cc7041b7d45ea569482f737cc481e69857a9f603",
+      "finding": "F-42 panel drafts from deployment time reports and validates through the API. The displayed Not ready for the portal is a real validation failure, not successful portal submission. Submission remains a separate audited manual web handoff."
+    }
+  ],
+  "lessons": [
+    {
+      "id": "app-responder-02-calls-and-records",
+      "lesson_file": "sources/expansion/lessons/app-responder-02-calls-and-records.json",
+      "before_sha256": "6974f7aa569560ed809d72345551efeab05a6149a863c9b025adfbfb9eec758a",
+      "after_sha256": "44c35ed25f7f492dd6c28623fb0237db30b558733a459f5786990b0811a7386b",
+      "words": 943,
+      "scenes": [
+        {
+          "id": "01-find-the-incident-you-mean",
+          "route": "/home/calls",
+          "required_labels": [
+            "New Call",
+            "Clear search"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "016-calls-styled"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Source-backed icon controls; existing list partially captured.",
+          "remaining_capture_operations": [
+            "After human clears Chrome, authenticate Boden normally with no credential screenshot; confirm the Calls view.",
+            "Type the fictional medical call name; capture its card and the Only Calls I'm On toggle, then Clear search before reviewing the complete list.",
+            "Capture New Call/Clear search accessible names and fully visible DOM boxes; bind an image-reviewed visible_controls attestation rather than inventing painted labels."
+          ],
+          "runtime_gates": [
+            "Browser remains explicitly blocked until human extension dismissal.",
+            "New Call needs create permission; search reset only exists when search text is nonempty."
+          ],
+          "icon_only_controls": [
+            "New Call",
+            "Clear search",
+            "Only Calls I'm On"
+          ]
+        },
+        {
+          "id": "02-read-the-detail-tabs-before-acting",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Info",
+            "Contact",
+            "Protocols",
+            "Dispatched",
+            "Activity"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "032-call-info-repaired",
+            "034-call-protocols-empty",
+            "035-call-dispatched",
+            "036-call-activity"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Actual detail tabs partially captured; Contact overlay excluded.",
+          "remaining_capture_operations": [
+            "Reopen call 51002 without closing it; capture clean Contact, full Info rich text, and active tab contents.",
+            "Reuse only reviewed 032/034/035/036 captures if they still match the lesson; empty Protocols must retain its actual no-protocols message."
+          ],
+          "runtime_gates": [
+            "Contact033 has an obscuring development notice and is excluded.",
+            "This incident currently has no attached protocol; do not narrate an attached protocol as present."
+          ]
+        },
+        {
+          "id": "03-create-only-the-call-you-intend",
+          "route": "/call/new",
+          "required_labels": [
+            "Create New Call",
+            "Name",
+            "Nature",
+            "Priority",
+            "Type"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "New-call form source supported, no actual creation capture.",
+          "remaining_capture_operations": [
+            "Open New Call after coordinator confirms a disposable training-call window; capture actual loaded field-policy fields and any harmless validation message.",
+            "Prepare a clearly TRAINING ONLY industrial alarm without saving, dispatching or altering the reserved calls."
+          ],
+          "runtime_gates": [
+            "No Create action until the Core numbering/run-card coordinator authorizes a disposable scenario.",
+            "Existing call 51002 stays open; parent-reserved 51006 is untouched."
+          ]
+        },
+        {
+          "id": "04-resolve-and-confirm-the-location",
+          "route": "/call/new",
+          "required_labels": [
+            "Address",
+            "GPS Coordinates",
+            "what3words",
+            "Plus Code"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "045-call-location-controls"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Only Edit Call location fields observed; no lookup or saved location.",
+          "remaining_capture_operations": [
+            "Show Address/GPS Coordinates/what3words/Plus Code only when the current policy offers them; record the actual route as Edit Call for existing screenshot045.",
+            "If safely supported, demonstrate a non-provider invalid coordinate message. Do not request/accept actual GPS, open an automatic-location picker, or invoke external geocoding.",
+            "After map adapter verification is authorized and browser unblocks, accept a map image only when actual cartography and the app-supplied incident point appear."
+          ],
+          "runtime_gates": [
+            "Map adapter is source/compile verified; standalone cartography is still pending actual browser validation.",
+            "Provider searches and physical-device location are not authorized evidence."
+          ]
+        },
+        {
+          "id": "05-choose-recipients-and-scheduling",
+          "route": "/call/new",
+          "required_labels": [
+            "Dispatch To",
+            "Select Dispatch Recipients",
+            "Scheduled Dispatch Time",
+            "Confirm"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "046-call-dispatch-recipients",
+            "047-dispatch-recipients-clean"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Recipient modal observed in Edit Call; create/schedule result absent.",
+          "remaining_capture_operations": [
+            "Capture allowed Groups/Units and scroll actual Users/Roles if offered; preserve existing assignments and recipients.",
+            "Capture permitted schedule input and its actual validation without sending a notification or creating a scheduled incident."
+          ],
+          "runtime_gates": [
+            "Current screenshots046/047 are Edit Call; they are not evidence of Create New Call or a dispatched schedule.",
+            "Everyone and hidden policy fields are not universally available."
+          ]
+        },
+        {
+          "id": "06-correct-details-without-losing-context",
+          "route": "/call/[id]/edit",
+          "required_labels": [
+            "Edit Call",
+            "Save"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "042-call-menu-repaired",
+            "044-edit-call-form",
+            "045-call-location-controls",
+            "047-dispatch-recipients-clean"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Edit form observed and canceled; no saved correction.",
+          "remaining_capture_operations": [
+            "Show menu Edit Call, current values and Save. If a coordinator-approved independent incident exists, change one fictional description only and verify it after reopening.",
+            "Until a saved before/after is captured, narrate the form and verification procedure rather than claiming a saved correction."
+          ],
+          "runtime_gates": [
+            "Do not modify parent-reserved 51006, global dispatch policies or unit staffing."
+          ]
+        },
+        {
+          "id": "07-make-the-call-active-and-navigate",
+          "route": "/call/[id] -> /home",
+          "required_labels": [
+            "Set as Active Call",
+            "View Call Details",
+            "Clear Active Call",
+            "Route"
+          ],
+          "conditional_required_labels": {
+            "Route to Destination": "Only if the selected call actually has destination coordinates and the action is visible."
+          },
+          "capture_refs": [
+            "042-call-menu-repaired"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Set-active action selected; Home/destination evidence incomplete.",
+          "remaining_capture_operations": [
+            "Capture Home active Call, View Call Details and Clear Active Call with call 51002 context; distinguish selection from a personal status submission.",
+            "Capture Route and Route to Destination only if the call has a destination with coordinates. Stop before external navigation."
+          ],
+          "runtime_gates": [
+            "No external maps navigation, real GPS or turn-by-turn driving proof.",
+            "Destination action is conditional; do not require it on the current standby if absent."
+          ]
+        },
+        {
+          "id": "08-add-useful-notes-and-supporting-evidence",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Notes",
+            "Call Notes",
+            "Add Note",
+            "Images",
+            "Files"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "032-call-info-repaired",
+            "048-call-note-compose"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Actual note composer observed; previous save failed401.",
+          "remaining_capture_operations": [
+            "After fresh canonical-issuer login, submit one fictional Call Note and reopen Notes to verify the persisted text; otherwise retain it as prepared/failed only.",
+            "Open Images and existing Files, recording actual empty states; file upload is not available in this Call Files screen.",
+            "If a permitted synthetic source image is later uploaded through actual Images UI, inspect the server-returned item separately; no camera access or unrelated private files."
+          ],
+          "runtime_gates": [
+            "Capture049 is an authentication failure and excluded; it does not prove the note saved.",
+            "Call Files download/share depends on native file-system/sharing behavior and remains unexercised."
+          ]
+        },
+        {
+          "id": "09-use-site-history-and-incident-coordination",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Site Info",
+            "History",
+            "Command",
+            "Video"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "037-call-site-info",
+            "038-call-location-history",
+            "039-call-command",
+            "040-call-video"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Actual site/history/command/video empty states captured.",
+          "remaining_capture_operations": [
+            "Show No site information, No related calls, No incident command and No video feeds as actual dataset states.",
+            "Only expand to populated preplan/history/command after an independently guarded fictional fixture is available; never open external feeds or paint replacements."
+          ],
+          "runtime_gates": [
+            "The current four screenshots contain no warehouse preplan, active command operation or video stream."
+          ]
+        },
+        {
+          "id": "10-check-in-against-the-correct-target",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Check-In"
+          ],
+          "conditional_required_labels": {
+            "Check-In": "Only on a timer-enabled call; current standby does not render this tab."
+          },
+          "capture_refs": [],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Check-In is conditionally absent in current incident.",
+          "remaining_capture_operations": [
+            "Use a separate coordinator-approved timer-enabled training call and eligible personnel target; do not change current role/unit assignments.",
+            "Capture Check-In, eligible timer target, note/Confirm check-in and server history only if actually offered. Distinguish a saved check-in from an offline-queued outcome.",
+            "Capture the no-tab/no-timers case honestly when timer setup is unavailable; do not add an imaginary timer-management control."
+          ],
+          "runtime_gates": [
+            "No timer-enabled call or eligible-target screen is captured yet.",
+            "A check-in is a software record, not GPS arrival, push delivery or a safety assurance."
+          ]
+        },
+        {
+          "id": "11-start-a-call-linked-field-record",
+          "route": "/call/[id] -> /records/new",
+          "required_labels": [
+            "New Record",
+            "Save and send",
+            "Keep on this device"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Records catalog/form source supported; no actual Responder field record capture.",
+          "remaining_capture_operations": [
+            "Open call-context New Record only if server catalog offers it; show definition/version and actual form labels.",
+            "Use a fictional incident record draft: distinguish SupportsPrefill context, ordinary required fields and finalize-only requirements.",
+            "Use Save and send only through normal UI, then capture returned Draft/DraftReference. Show Keep on this device enabled or disabled according to the definition without claiming durable browser offline behavior."
+          ],
+          "runtime_gates": [
+            "Records.Field/catalog/access/schema/definition compatibility must be verified in actual browser first.",
+            "An incident record legitimately remains Draft; never fabricate final number or finalization."
+          ]
+        },
+        {
+          "id": "12-review-drafts-attachments-and-final-states",
+          "route": "/records -> /records/[id]",
+          "required_labels": [
+            "Drafts",
+            "Returned to you",
+            "Submit for review",
+            "Finalize"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Record lifecycle and attachment source supported; actual screen pending.",
+          "remaining_capture_operations": [
+            "Open a genuinely server-saved fictional Draft record, capture Drafts/Returned to you list and actual detail identifier/state.",
+            "Show Save, allowed attachment controls and conditional Submit for review/Finalize with unchecked attestation. Do not attest, finalize or claim a review outcome.",
+            "If an actual permitted upload is performed later, verify attachment server state and metadata; do not infer it from a picker or progress label."
+          ],
+          "runtime_gates": [
+            "Draft/Returned plus supported schema render editing controls; final states are read-only.",
+            "Attachment policy and server authority govern each action; approval/amend/void remain web workflows."
+          ]
+        },
+        {
+          "id": "13-distinguish-external-orders-and-feeds",
+          "route": "/records/deployments -> /records/connectors",
+          "required_labels": [
+            "Deployments",
+            "External connectors",
+            "Read feed now"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "External-orders/connectors source supported; actual list/detail pending.",
+          "remaining_capture_operations": [
+            "Open Records Deployments and External connectors read-only, capture actual empty/readiness/authority/run-history messages.",
+            "If a fictional order exists, inspect its fills/reconciliation values only; do not press Read feed now or change credentials/reconciliation."
+          ],
+          "runtime_gates": [
+            "No external feed read, provider dispatch or write authority is claimed.",
+            "Operational time-report deployments are a separate data model and route."
+          ]
+        },
+        {
+          "id": "14-close-the-incident-deliberately",
+          "route": "/call/[id]",
+          "required_labels": [
+            "Close Call",
+            "Close Type",
+            "Close Note (Optional):",
+            "Notify everyone on the call",
+            "Cancel"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "042-call-menu-repaired",
+            "043-close-call-preparation"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "Actual close form only; incident intentionally left open.",
+          "remaining_capture_operations": [
+            "Reuse reviewed close preparation043 with exact Close Note (Optional): label; show Close Type, notification explanation and Cancel.",
+            "Keep51002 open and51006 untouched. Capture a closed result only on a separately coordinated disposable fictional call if later authorized."
+          ],
+          "runtime_gates": [
+            "No actual call close occurred in this Responder sequence.",
+            "Closing a call, clearing active selection and finalizing a record are independent operations."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app-responder-04-readiness-and-operations",
+      "lesson_file": "sources/expansion/lessons/app-responder-04-readiness-and-operations.json",
+      "before_sha256": "db8a4f548ec38e876fe1fc65436b40649c3e9f7e57c51e1a49a918f852d37aab",
+      "after_sha256": "585cfb74356f574869383f2d0164a68cf77c68839eb621a0c5e1e9fe59469f98",
+      "words": 956,
+      "scenes": [
+        {
+          "id": "01-understand-the-shift-views",
+          "route": "/shifts",
+          "required_labels": [
+            "Today",
+            "My Shifts",
+            "Calendar",
+            "Trades",
+            "On Duty",
+            "Approvals"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "093-shifts-today-overview",
+            "097-my-shifts-overview",
+            "105-shift-on-duty-roster"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Review existing Today/My Shifts/On Duty screenshots and the visible tabs; no new roster mutation is needed."
+          ],
+          "runtime_gates": [
+            "Giant browser tab layout is a known source limitation; never substitute an illustrated roster."
+          ]
+        },
+        {
+          "id": "02-sign-up-and-review-the-roster",
+          "route": "/shifts",
+          "required_labels": [
+            "Sign Up",
+            "Choose your team",
+            "Confirm sign-up",
+            "You are on",
+            "Withdraw",
+            "Add person",
+            "Approve",
+            "Deny"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "099-signup-practice-open-day",
+            "100-signup-team-confirmation",
+            "101-signup-result",
+            "102-signup-withdraw-confirmation",
+            "103-signup-withdrawn-result",
+            "106-shift-supervisor-approvals"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse actual independent day51003/51108 signup, capacity 2-to1 and withdrawal-to2 proof; keep the final unenrolled state.",
+            "Use existing supervisory approval screenshot view-only; do not approve/deny another member."
+          ],
+          "runtime_gates": [
+            "Existing signup/withdraw results are real; Add person and supervisory actions remain permission-gated and unperformed."
+          ]
+        },
+        {
+          "id": "03-trade-a-shift-with-a-clear-agreement",
+          "route": "/shifts",
+          "required_labels": [
+            "Request trade",
+            "Request a trade",
+            "Send request",
+            "No shift trades"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "094-shift-day-roster",
+            "096-shift-trade-prepared",
+            "104-shift-trades-empty"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "After human clears Chrome, sign in as Boden normally and use only independent future practice shift 51003/day 51108.",
+            "Inspect actual candidate eligibility. If Casey is not offered/eligible for the Chief day, capture the refusal or unavailable choice; never change roles or qualifications.",
+            "For an eligible training-only request, capture sending, separate Casey response if offered, outgoing offer selection/confirmation and actual resulting status. Preserve seeded staffing, trades and approvals."
+          ],
+          "runtime_gates": [
+            "Current screenshot096 is prepared/unsent and104 has no trades.",
+            "Accept/Decline require incoming Open and MyState Open; give/swap, cancel and supervisor review have separate source gates.",
+            "No completed trade or approval has been captured."
+          ]
+        },
+        {
+          "id": "04-attend-an-event-and-connect-the-learning",
+          "route": "/calendar",
+          "required_labels": [
+            "Today",
+            "Upcoming",
+            "Calendar",
+            "Signed Up",
+            "Event Sign-up",
+            "Cancel Attendance",
+            "Attendees (1)"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "107-event-calendar-today",
+            "111-calendar-signup-result-repaired",
+            "113-event-attendance-visible-controls"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse actual briefing signup Signed Up/attendee proof and the Cancel Attendance button.",
+            "Leave cancellation unclaimed unless an authorized retained compatibility change or a genuine native capture supplies the missing confirmation and result."
+          ],
+          "runtime_gates": [
+            "Current native Alert cancellation has no browser confirmation; do not retry the same no-op or claim canceled attendance."
+          ]
+        },
+        {
+          "id": "05-maintain-a-certification-record",
+          "route": "/certifications -> /certifications/edit",
+          "required_labels": [
+            "My certifications",
+            "Add",
+            "Certification",
+            "Name",
+            "Number",
+            "Issued by",
+            "Area or level",
+            "Issued on",
+            "Expires on",
+            "Photo of card",
+            "Choose photo",
+            "Save"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "114-certification-list",
+            "117-certification-add-input-labels"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse actual My certifications/Add form fields without Save, photographs or qualification changes."
+          ],
+          "runtime_gates": [
+            "Photo and credential verification controls are view-only; no actual card/camera or new qualification."
+          ]
+        },
+        {
+          "id": "06-renew-and-document-continuing-education",
+          "route": "/certifications/[id]",
+          "required_labels": [
+            "Renew",
+            "New expiry date",
+            "Save renewal",
+            "Hours",
+            "Add hours",
+            "Add hours with a photo",
+            "Renewal saved.",
+            "Awaiting verification"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "118-certification-renewal-ce-controls",
+            "119-certification-ce-prepared",
+            "120-certification-ce-result",
+            "122-certification-renewal-prepared",
+            "123-certification-renewal-result"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse actual quarter-hour software-practice CE result and renewal Awaiting verification.",
+            "Show supporting-photo control only; do not turn a software practice entry into accredited credit or approved professional renewal."
+          ],
+          "runtime_gates": [
+            "Department verification remains outstanding."
+          ]
+        },
+        {
+          "id": "07-prepare-due-checks-before-leaving-coverage",
+          "route": "/checklists",
+          "required_labels": [
+            "Due checks",
+            "Calendar",
+            "Prepare for offline",
+            "Start checklist",
+            "Equipment ready for the exercise (Required)",
+            "Critical",
+            "Save progress",
+            "Submit checklist",
+            "Submitted · Score: 66.67",
+            "History"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "124-checklists-start-overview",
+            "125-checklist-required-critical-item",
+            "127-checklist-local-draft-list",
+            "128-checklist-resumed-draft",
+            "140-checklist-submitted-score",
+            "170-checklist-history-visible"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse selected checklist/target/version, actual simulated failure, draft/resume, Submitted · Score: 66.67 and History.",
+            "Retain exact literal Required question and combined Submitted/Score label; confirm the source image is legible at rendered size."
+          ],
+          "runtime_gates": [
+            "The score is a fictional software exercise, not equipment certification; no new physical inspection."
+          ]
+        },
+        {
+          "id": "08-answer-the-checklist-with-evidence",
+          "route": "/checklists",
+          "required_labels": [
+            "Pass",
+            "Fail",
+            "Note",
+            "Not applicable",
+            "Yes",
+            "No",
+            "Checked",
+            "Unchecked",
+            "fictional units",
+            "Training option A",
+            "Training option B",
+            "Photo",
+            "Take photo",
+            "Signature",
+            "Clear signature",
+            "Save draft"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "126-checklist-simulated-failure-note",
+            "159-checklist-not-applicable",
+            "160-checklist-yes-no",
+            "161-checklist-checkbox",
+            "162-checklist-numeric",
+            "163-checklist-quantity",
+            "164-checklist-free-text",
+            "165-checklist-select-list",
+            "166-checklist-date",
+            "167-checklist-photo-controls",
+            "168-checklist-signature-pad"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse all ten actual answer type views and N/A reason; show blank Photo and Signature tools without opening a camera or signing."
+          ],
+          "runtime_gates": [
+            "Capture controls are not photographic evidence or an attestation; optional items were not invented as completed."
+          ]
+        },
+        {
+          "id": "09-handle-witnesses-and-offline-conflicts",
+          "route": "/checklists",
+          "required_labels": [
+            "Awaiting witness · Score: —",
+            "Attest and complete",
+            "Retry sync",
+            "Edit local draft",
+            "Use server version"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "172-checklist-persisted-awaiting-witness",
+            "176-witness-account-context",
+            "177-casey-independent-witness-form",
+            "173-checklist-queued-recovery"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse distinct Casey identity and the actual independent witness form, with blank statement and disabled Attest and complete.",
+            "Reuse genuine queue recovery controls; no server-version replacement or induced outage occurred."
+          ],
+          "runtime_gates": [
+            "Casey authorization is view-only for witness; do not submit attestation.",
+            "Browser vault is memory-only and native Alert replacement is not demonstrated; native persistence/recovery requires separate device evidence."
+          ]
+        },
+        {
+          "id": "10-report-a-maintenance-problem-clearly",
+          "route": "/work-orders -> /work-orders/new",
+          "required_labels": [
+            "Work orders",
+            "Assigned to me",
+            "All I can see",
+            "Report a problem",
+            "Title",
+            "Details",
+            "Kind of work",
+            "Priority",
+            "Apparatus",
+            "Station",
+            "Location",
+            "Safety-critical",
+            "Submit report"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "142-work-orders-assigned",
+            "143-work-order-report-prepared",
+            "144-work-order-report-heading",
+            "145-work-order-created"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse the saved fictional facility report with no apparatus/safety-critical designation and its actual Requested number."
+          ],
+          "runtime_gates": [
+            "Do not reclassify the practice request as an apparatus defect or change unit availability."
+          ]
+        },
+        {
+          "id": "11-work-an-assigned-order-with-a-useful-trail",
+          "route": "/work-orders/[id]",
+          "required_labels": [
+            "Change status",
+            "Update status",
+            "Log hours",
+            "Save hours",
+            "Add comment",
+            "Activity",
+            "Take photo",
+            "Choose photo"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "145-work-order-created",
+            "146-work-order-saved-activity",
+            "147-work-order-accepted"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "After human clears Chrome, open independent assigned-order e6158298-a817-4d92-b075-a7d7ed331b5e as Boden.",
+            "Show Accept assignment only if server CanWrite/CanAccept; capture a permitted acceptance result without altering any other order.",
+            "Inspect Steps as read-only text. Select only a safe offered transition to expose required reason/resolution/cause/verification/duplicate/all-steps fields; do not certify physical work or complete steps via nonexistent buttons.",
+            "Retain the already saved Requested-to-Accepted,0.1 h practice labor and comment trail from the separate original report."
+          ],
+          "runtime_gates": [
+            "Assigned fixture acceptance and transition-specific input screenshots are still missing.",
+            "Steps are read-only content, not interactive completion checkboxes; server transitions/revision govern every mutation."
+          ]
+        },
+        {
+          "id": "12-use-maps-and-settings-for-field-awareness",
+          "route": "/map -> /weather-alerts -> /settings",
+          "required_labels": [
+            "Map",
+            "POIs",
+            "0 POIs",
+            "No POIs found",
+            "All",
+            "Extreme",
+            "Severe",
+            "Moderate",
+            "Minor",
+            "Background Geolocation",
+            "Realtime Geolocation",
+            "Keep Alive"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "157-map-poi-list",
+            "158-weather-alerts-filters",
+            "057-settings-native-capability-controls"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse actual zero-POI and empty-weather severity views and native settings, retaining their limitations.",
+            "After human clears Chrome, verify the declared web Mapbox adapter with real cartography/app-supplied coordinates. Only a visible valid map may replace the excluded gray156; no provider bypass, painted map, mock or actual GPS request."
+          ],
+          "runtime_gates": [
+            "Support source/compile checks passed, but the new adapter has no actual successful browser cartography capture.",
+            "POI search overlaps on this browser; native permissions/background/Keep Alive cannot be validated from switches."
+          ]
+        },
+        {
+          "id": "13-record-daily-deployment-time-accurately",
+          "route": "/operations -> /operations/[id]",
+          "required_labels": [
+            "Deployments",
+            "Time",
+            "My time",
+            "Whole deployment",
+            "Start crew time report",
+            "From",
+            "To",
+            "Unpaid break (min)",
+            "Apply to crew",
+            "Add entry",
+            "Save entries",
+            "Submit report",
+            "Sign as crew boss",
+            "Record agency signature"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "148-deployment-list",
+            "149-deployment-scope",
+            "150-time-report-entry-fields",
+            "151-time-report-save-submit-signature"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse actual unsigned daily crew report, default sample subjects/hours, saved entries and break warnings.",
+            "Inspect submit/signature controls without signing, claiming worked hours or approval.",
+            "A later approval demonstration would need a separate authorized submitted practice report and CanApprove reviewer; it is not current evidence."
+          ],
+          "runtime_gates": [
+            "Actual report remains Draft/unsigned. Approval is supported by Responder but absent without Submitted+CanApprove; no signature/attestation/payment operation is performed."
+          ]
+        },
+        {
+          "id": "14-keep-costs-usage-and-recovery-distinct",
+          "route": "/operations/[id]",
+          "required_labels": [
+            "Expenses",
+            "New expense",
+            "Add expense",
+            "Usage",
+            "Start odometer",
+            "End odometer",
+            "Engine hours",
+            "Fuel",
+            "mi",
+            "gal",
+            "Add reading",
+            "F-42",
+            "Draft F-42 from time reports",
+            "Validate",
+            "Not ready for the portal"
+          ],
+          "conditional_required_labels": {},
+          "capture_refs": [
+            "152-deployment-expense-form",
+            "153-deployment-usage-form",
+            "154-deployment-f42-boundary",
+            "155-deployment-f42-validation"
+          ],
+          "audited_at": "2026-10-26T19:25:20.535298+00:00",
+          "source_head": "0760a098e78871a6ce193a328f28926fad123e3b",
+          "status": "observed_with_explicit_remaining_limits",
+          "remaining_capture_operations": [
+            "Reuse expense/usage forms view-only and the actual F-42 Not ready validation with missing prerequisites.",
+            "Do not treat the work-item summary counts as a ready result or request any government/financial/provider submission."
+          ],
+          "runtime_gates": [
+            "No expense or usage reading was saved. F-42 validation failure is intentional actual evidence; portal handoff remains manual web."
+          ]
+        }
+      ]
+    }
+  ],
+  "frozen_lessons_preserved": {
+    "app-responder-01-orientation.json": "8addc5ee4d2b673291d3150d53ff1f44d0b77824afe8e5095cf70af967435a15",
+    "app-responder-03-communications.json": "8397d342a9aaa20d6c9b9b7e4f99873833c804b9133224547f97249470bad947"
+  },
+  "browser_block": "Explicit Chrome extension UI blocker requires human dismissal. No retry/alternate interface.",
+  "source_provenance": "sources/demo/source-profiles.json plus sources/demo/client-support/responder-recording-provenance.json",
+  "native_provider_limits": [
+    "No actual GPS/camera/audio/push/Bluetooth/background permission or field behavior demonstrated.",
+    "No witness/crew/agency/record attestation, credential change, portal/payment/provider read or dispatch claimed.",
+    "Native-only Alert branches and memory-only browser checklist storage remain explicit limitations."
+  ],
+  "media_status": {
+    "narration02_04_frozen": false,
+    "new_audio_generated": false,
+    "new_video_rendered": false,
+    "browser_playback": "pending",
+    "publishable": false
+  }
+}

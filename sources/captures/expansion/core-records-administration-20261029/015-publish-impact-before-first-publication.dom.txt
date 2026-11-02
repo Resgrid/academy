@@ -1,0 +1,236 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records" [expanded]:
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - list:
+      - link " Dashboard":
+        - /url: /User/Records/Dashboard
+        - generic: 
+        - text: Dashboard
+      - link " All records":
+        - /url: /User/Records
+        - generic: 
+        - text: All records
+      - link " Deployment reports":
+        - /url: /User/RecordDeployments
+        - generic: 
+        - text: Deployment reports
+      - link " Legal holds":
+        - /url: /User/RecordLegalHolds
+        - generic: 
+        - text: Legal holds
+      - link " Occupancies":
+        - /url: /User/RecordOccupancies
+        - generic: 
+        - text: Occupancies
+      - link " Inspections":
+        - /url: /User/RecordInspections
+        - generic: 
+        - text: Inspections
+      - link " Hydrants":
+        - /url: /User/RecordHydrants
+        - generic: 
+        - text: Hydrants
+      - link " Permits":
+        - /url: /User/RecordPermits
+        - generic: 
+        - text: Permits
+      - link " Community risk":
+        - /url: /User/RecordCrr
+        - generic: 
+        - text: Community risk
+      - link " Alarm requests":
+        - /url: /User/RecordAlarmRequests
+        - generic: 
+        - text: Alarm requests
+      - link " Investigations":
+        - /url: /User/RecordInvestigations
+        - generic: 
+        - text: Investigations
+      - link " Analytics":
+        - /url: /User/RecordsAnalytics
+        - generic: 
+        - text: Analytics
+      - link " Existing logs":
+        - /url: /User/Logs
+        - generic: 
+        - text: Existing logs
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- 'heading "Publish impact: TRAINING ONLY - Community software exercise v1" [level=2]'
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Definitions":
+    - /url: /User/RecordDefinitions
+  - text: /
+  - link "trn-community-software-20261029":
+    - /url: /User/RecordDefinitions/Edit?key=trn-community-software-20261029&version=1
+  - text: /
+  - strong: Publish impact
+- paragraph: Publishing freezes this version. Existing drafts keep their version until migrated; finalized records never change.
+- term: Client capability
+- definition:
+  - code: records.v1b
+- term: Field type
+- definition: LongText, ShortText
+- term: Published version
+- definition: "-"
+- term: Open drafts on current version
+- definition: "0"
+- term: Finalized records on earlier versions
+- definition: "0"
+- term: Breaking change
+- definition: "No"
+- heading "Client readiness" [level=4]
+- table:
+  - rowgroup:
+    - row "App Enabled Client surfaces Client capability":
+      - columnheader "App"
+      - columnheader "Enabled"
+      - columnheader "Client surfaces"
+      - columnheader "Client capability"
+      - columnheader
+  - rowgroup:
+    - row "Responder Yes Yes records.v1b Clients at records.v1b or later can author this version.":
+      - cell "Responder"
+      - cell "Yes"
+      - cell "Yes"
+      - cell "records.v1b":
+        - code: records.v1b
+      - cell "Clients at records.v1b or later can author this version."
+    - row "Unit Yes No records.v1b This version is not offered to this app.":
+      - cell "Unit"
+      - cell "Yes"
+      - cell "No"
+      - cell "records.v1b":
+        - code: records.v1b
+      - cell "This version is not offered to this app."
+    - row "IncidentCommand Yes No records.v1b This version is not offered to this app.":
+      - cell "IncidentCommand"
+      - cell "Yes"
+      - cell "No"
+      - cell "records.v1b":
+        - code: records.v1b
+      - cell "This version is not offered to this app."
+    - row "Dispatch Yes No records.v1b This version is not offered to this app.":
+      - cell "Dispatch"
+      - cell "Yes"
+      - cell "No"
+      - cell "records.v1b":
+        - code: records.v1b
+      - cell "This version is not offered to this app."
+- button " Publish":
+  - generic: 
+  - text: Publish
+- link "Cancel":
+  - /url: /User/RecordDefinitions/Edit?key=trn-community-software-20261029&version=1
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

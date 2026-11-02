@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "id": "core-configuration-training",
+  "scope": "Opt-in configuration replay only; no events, sends, call changes, run records, counters or data reset.",
+  "captured_configuration_date": "2026-10-26",
+  "guard": {
+    "database": "resgrid_academy",
+    "department_id": 51,
+    "department_name": "Firehouse 51 — Training Department",
+    "required_units": [
+      "Engine 51",
+      "Truck 81",
+      "Squad 3",
+      "Ambulance 61",
+      "Battalion 25",
+      "Reserve Engine 51"
+    ],
+    "required_unit_type": "Engine",
+    "required_personnel_role": "Officer",
+    "required_call_type": "Structure Fire",
+    "required_priority": "Urgent"
+  },
+  "identity_policy": "Resolve catalog references and existing definitions by exact department-scoped names. UI-generated IDs and graph keys may differ; never force identity counters or reuse observed IDs in another department.",
+  "credential": {
+    "logical_key": "local-mailpit",
+    "fields": {
+      "Name": "Academy local captured mail",
+      "CredentialType": "SMTP (Email)",
+      "SmtpHost": "mail",
+      "SmtpPort": 1025,
+      "SmtpFromAddress": "training@firehouse51.example",
+      "SmtpUsername": "",
+      "SmtpUseSsl": false
+    },
+    "generated_runtime_field": "SmtpPassword",
+    "local_settings_file": "sources/demo/private/scenarios/core-workflow-smtp.json",
+    "delivery_policy": "Username stays empty, so the SMTP executor does not authenticate. A fresh local value satisfies form validation only; it is generated into ignored local settings. No stored credential is extracted or retained.",
+    "route": "/User/Workflows/CredentialNew",
+    "configuration_origin": "Public local replay profile: internal Mailpit host/port and blank authentication. Sender matches retained receiver evidence. Saved credential contents were never read or exported."
+  },
+  "response_packages": [
+    {
+      "logical_key": "initial-response",
+      "observed_id": 1,
+      "name": "Academy Initial Response",
+      "description": "Fictional training package: one engine and one officer.",
+      "retired": false,
+      "rows": [
+        {
+          "logical_key": "engine",
+          "label": "",
+          "fill_mode": "Count",
+          "ui_fill_label": "Pick",
+          "required_count": 1,
+          "status_filter": "AnyAvailable",
+          "status_base_types": [],
+          "response_code": null,
+          "substitute_package": null,
+          "keep_outstanding": false,
+          "sort_order": 0,
+          "targets": [
+            {
+              "kind": "UnitType",
+              "name": "Engine"
+            }
+          ]
+        },
+        {
+          "logical_key": "officer",
+          "label": "Incident officer",
+          "fill_mode": "Count",
+          "ui_fill_label": "Pick",
+          "required_count": 1,
+          "status_filter": "AnyAvailable",
+          "status_base_types": [],
+          "response_code": null,
+          "substitute_package": null,
+          "keep_outstanding": false,
+          "sort_order": 1,
+          "targets": [
+            {
+              "kind": "PersonnelRole",
+              "name": "Officer"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "run_cards": [
+    {
+      "logical_key": "training-alarm",
+      "observed_id": 1,
+      "name": "Academy Training Alarm",
+      "description": "Fictional training plan: nearest engine and rescue capability for the warehouse exercise.",
+      "disabled": false,
+      "build_disabled_first": true,
+      "dispatch_mode_override": "ClosestUnit",
+      "auto_dispatch_override": "PrepopulateOnly",
+      "minimum_staffing_override": null,
+      "home_station": null,
+      "relax_unfilled_rows": false,
+      "waiting_auto_dispatch_override": null,
+      "triggers": [
+        {
+          "kind": "CallPriorityAndType",
+          "priority": "Urgent",
+          "call_type": "Structure Fire",
+          "starts_on": null,
+          "ends_on": null
+        }
+      ],
+      "availability_selections": [],
+      "availability_policy": "No explicit selection rows are stored. The default availability matrix applies; this does not mean no resource is dispatchable.",
+      "alarm_levels": [
+        {
+          "level": 1,
+          "name": "Initial Response",
+          "fixed_response_package": null,
+          "fixed_unit_requirements": [],
+          "fixed_role_requirements": [],
+          "decision_nodes": [
+            {
+              "key": "engine-within-eight-minutes",
+              "root": true,
+              "kind": "Condition",
+              "label": "Engine within eight minutes",
+              "condition_type": "AvailableWithin",
+              "subject_status_filter": "AnyAvailable",
+              "subject_status_base_types": [],
+              "subject_targets": [
+                {
+                  "kind": "UnitType",
+                  "name": "Engine"
+                }
+              ],
+              "reference_status_filter": "AnyAvailable",
+              "reference_status_base_types": [],
+              "reference_targets": [],
+              "threshold_seconds": 480,
+              "required_count": 1,
+              "parameters": null,
+              "yes": "engine-available",
+              "no": "review-alternatives",
+              "sort_order": 0
+            },
+            {
+              "key": "engine-available",
+              "root": false,
+              "kind": "Outcome",
+              "label": "Engine available",
+              "response_package": "initial-response",
+              "advice": "Send the initial response after review.",
+              "sort_order": 1
+            },
+            {
+              "key": "review-alternatives",
+              "root": false,
+              "kind": "Outcome",
+              "label": "Review alternatives",
+              "response_package": null,
+              "advice": "Review alternatives or mutual aid. Training exercise only.",
+              "sort_order": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "logical_key": "call-opened",
+      "name": "Academy call opened — captured mail",
+      "description": "Fictional training automation: two ordered steps to the isolated Mailpit inbox. No external delivery.",
+      "trigger": "CallAdded",
+      "enabled": false,
+      "max_retry_count": 3,
+      "retry_backoff_base_seconds": 5,
+      "steps": [
+        {
+          "order": 1,
+          "action": "SendEmail",
+          "enabled": true,
+          "credential": "local-mailpit",
+          "condition_expression": null,
+          "action_config": {
+            "to": "training-supervisor@firehouse51.example",
+            "subject": "Academy call received — {{ call.name }}"
+          },
+          "output_template": "Training only: {{ department.name }} received {{ call.name }}. No emergency."
+        },
+        {
+          "order": 2,
+          "action": "SendEmail",
+          "enabled": true,
+          "credential": "local-mailpit",
+          "condition_expression": "{{ call.name | string.contains \"TRAINING\" }}",
+          "action_config": {
+            "to": "training-audit@firehouse51.example",
+            "subject": "Academy review copy — {{ call.name }}"
+          },
+          "output_template": "Training review copy for {{ call.name }}. Priority: {{ call.priority_text }}."
+        }
+      ]
+    },
+    {
+      "logical_key": "call-closed",
+      "name": "Academy call closed — captured mail",
+      "description": "Fictional closeout event. Captured only inside local Mailpit.",
+      "trigger": "CallClosed",
+      "enabled": false,
+      "max_retry_count": 3,
+      "retry_backoff_base_seconds": 30,
+      "steps": [
+        {
+          "order": 1,
+          "action": "SendEmail",
+          "enabled": true,
+          "credential": "local-mailpit",
+          "condition_expression": null,
+          "action_config": {
+            "to": "training-closeout@firehouse51.example",
+            "subject": "Academy training call closed"
+          },
+          "output_template": "Training closeout: {{ call.name }} is {{ call.state_text }}. No emergency."
+        }
+      ]
+    }
+  ],
+  "dispatch_settings": {
+    "route": "/User/Department/DispatchSettings",
+    "automatic_resource_selection_mode": "ClosestUnit",
+    "automatically_dispatch_recommended_resources": false,
+    "group_scoped_dispatch": false,
+    "department_wide_dispatch_roles": [],
+    "closest_unit_tuning": {
+      "maximum_unit_location_age_seconds": 1800,
+      "maximum_personnel_location_age_seconds": 1800,
+      "maximum_response_radius_meters": 0,
+      "include_stale_locations": false,
+      "order_by_driving_eta": false,
+      "eta_shortlist_size": 5,
+      "in_quarters_turnout_seconds": 120,
+      "mobile_turnout_seconds": 0,
+      "personnel_turnout_seconds": 0
+    },
+    "rest_period_minutes": 0,
+    "minimum_unit_staffing": "Off",
+    "move_up_recommendations": false,
+    "dispatch_freed_units_to_waiting_calls": false,
+    "automatic_waiting_dispatch_limit_seconds": 0,
+    "leave_unlisted_settings_unchanged": true
+  },
+  "replay_order": [
+    "Verify fictional department and baseline catalogs",
+    "Prepare ignored local SMTP form values without sending",
+    "Create or verify local SMTP credential through normal UI",
+    "Create or verify response package",
+    "Build run card disabled; save graph and verify branches",
+    "Apply only listed dispatch settings, preserving all other settings",
+    "Assign only Herrmann to the existing Engine 51 Officer / Team Lead seat through Unit Staffing; preserve every other assignment",
+    "Enable only the reviewed prepopulate-only run card",
+    "Create or verify both workflows with Enabled unchecked; add ordered enabled steps",
+    "Reopen all definitions and compare fields; leave both workflows disabled"
+  ],
+  "verification_limits": [
+    "Configuration replay does not recreate a completed or failed run, a delivered message, or a historical call.",
+    "Template/condition preview is not a send and is not execution evidence.",
+    "Per-workflow retry settings are retained exactly; this source version worker uses global WorkflowConfig retry count/backoff, so a stored 30-second field does not guarantee observed 30-second gaps.",
+    "Source profiles pin application code/support patches; they do not automatically install these UI-authored operational definitions.",
+    "The card description is retained verbatim; the actual current package targets Engine and Officer."
+  ],
+  "excluded_state": [
+    "Credential contents and identifiers, authentication/password hashes, encryption data and keys",
+    "Workflow run/step-run, queues, outbox, audit, disclosure and delivery history",
+    "Calls, dispatch selections, unit/personnel status or location history, counters and sequence resets",
+    "Automatic workflow activation, provider connection tests, sends or event generation"
+  ],
+  "source_evidence": [
+    "Core/Resgrid.Model/RunCard.cs",
+    "Core/Resgrid.Model/RunCardConditionalTypes.cs",
+    "Core/Resgrid.Model/RunCardSelectionTypes.cs",
+    "Core/Resgrid.Model/DispatchRecommendationConfig.cs",
+    "Core/Resgrid.Model/Workflow.cs",
+    "Core/Resgrid.Model/WorkflowStep.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/RunCardsController.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/WorkflowsController.cs",
+    "Web/Resgrid.Web/Models/WorkflowCredentialViewModel.cs",
+    "Providers/Resgrid.Providers.Workflow/Executors/SmtpEmailExecutor.cs",
+    "Workers/Resgrid.Workers.Framework/Logic/WorkflowQueueLogic.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Units/UnitStaffing.cshtml",
+    "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+    "Core/Resgrid.Services/NearestUnitService.cs",
+    "Core/Resgrid.Model/UnitResponseOrigin.cs"
+  ],
+  "unit_staffing": {
+    "route": "/User/Units/UnitStaffing",
+    "unit": "Engine 51",
+    "configured_seats": [
+      {
+        "key": "officer-team-lead",
+        "observed_id": 51001,
+        "name": "Officer / Team Lead",
+        "required_personnel_role": null,
+        "personnel_role_required": false
+      }
+    ],
+    "assignments": [
+      {
+        "seat": "officer-team-lead",
+        "member_name": "Christopher Herrmann",
+        "member_username": "herrmann"
+      }
+    ],
+    "all_other_unit_assignments": "Leave untouched. The retained baseline and observed replay had the other five seats empty. Never clear other assignments to force that appearance.",
+    "expected_saved_badge": "Fully Staffed",
+    "badge_meaning": "All configured seats occupied: one of one in this training configuration. This does not establish an operational crew minimum or a required Officer qualification.",
+    "expected_new_call_context": [
+      "1/1 crew on shift",
+      "A Shift — Firehouse 51",
+      "Christopher Herrmann",
+      "Officer ×1"
+    ],
+    "source_provenance": "sources/demo/scenario-reports/nearest-turnout.json: crew_assignment"
+  },
+  "nearest_preview": {
+    "route": "/User/Dispatch/NewCall",
+    "save_call": false,
+    "points": [
+      {
+        "name": "near station",
+        "latitude": 41.8725,
+        "longitude": -87.6524,
+        "recording_observation": {
+          "unit": "Engine 51",
+          "status": "Released",
+          "origin": "Station location",
+          "eta": "2 min (est.)",
+          "turnout_annotation": "incl. 120 s turnout",
+          "distance": "0.0 km"
+        }
+      },
+      {
+        "name": "far training point",
+        "latitude": 42.5,
+        "longitude": -88.5,
+        "recording_observation": {
+          "unit": "Engine 51",
+          "eta": "195 min (est.)",
+          "turnout_annotation": "incl. 120 s turnout",
+          "distance": "98.8 km"
+        }
+      }
+    ],
+    "selection_check": "Optionally tick Engine 51, move the pin, and inspect selection retention without submitting. The selection is form state, not a dispatch record.",
+    "limits": "Recorded values describe the observed fixture, not a newly executed run. Current statuses, positions, scope and provider availability can change results."
+  }
+}

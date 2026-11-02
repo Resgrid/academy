@@ -1,0 +1,69 @@
+{
+  "kind": "unadopted_native_capture_contract_proposal_preflight",
+  "checked_at": "2026-10-28T20:47:36.848816+00:00",
+  "files": [
+    {
+      "file": "production/proposals/native_capture_contract_v1.py",
+      "sha256": "d44bd21e747e6ec583db7c8eb82cba92b1ecb2c8a449d286a3965b4dab7b87ad",
+      "bytes": 20380
+    },
+    {
+      "file": "production/proposals/tests/test_native_capture_contract_v1.py",
+      "sha256": "bf7f00aa12c5046f594969eb31b45aaf59498cecfecb758374f98bca37352059",
+      "bytes": 14368
+    },
+    {
+      "file": "production/proposals/README.native-capture-contract-v1.md",
+      "sha256": "184b5db0ec7bcfb1a8108b3997434a63162c4753036565cd327ee0643a6217bc",
+      "bytes": 8144
+    }
+  ],
+  "test_result": {
+    "command": "python -B -m unittest discover -s sources/production/proposals/tests -p test_native_capture_contract_v1.py -v",
+    "tests": 32,
+    "passed": 32,
+    "synthetic_only": true,
+    "native_capture_or_execution_performed": false
+  },
+  "syntax": "Both Python modules parsed successfully.",
+  "privacy": {
+    "unchanged_scan_stream": true,
+    "available_known_private_values": 14,
+    "findings": []
+  },
+  "existing_pipeline_files_read_only": [
+    {
+      "file": "scripts/verify_capture_evidence.py",
+      "sha256": "81ab689d050f59eb23fc6b126b6233b6afc9f661ce6e302fa15d55c2434027d7"
+    },
+    {
+      "file": "scripts/render_walkthrough.py",
+      "sha256": "1c219e8ea8b664e97ecd0a1d66721b982f6cdbefafafa5afbac8711db1fde4a5"
+    },
+    {
+      "file": "scripts/export_site.py",
+      "sha256": "3a7df567b54899647fc281c598a5e2762868555e3844786f40e1a8380be10002"
+    },
+    {
+      "file": "scripts/expansion_site.py",
+      "sha256": "bc7b16571a6941e0405f0b14758b3cde83891634544b359f56d361f987c55fb6"
+    }
+  ],
+  "integration": "No import or change to existing browser validator/render/export/site/canonical behavior; all valid prototype results remain proposal_only and publishable:false.",
+  "next_adoption_requirements": [
+    "Parent contract/code review.",
+    "New dedicated simulator/app/native UI setup expressly authorized as a separate operation.",
+    "Actual raw native capture/session/build/runtime/normal-UI evidence, independently reviewed.",
+    "Separately reviewed integration preserving raw native provenance and unchanged media/cue/frame/playback requirements."
+  ],
+  "official_driver_sources": [
+    "https://developer.apple.com/documentation/xcuiautomation/xcuiapplication",
+    "https://developer.apple.com/documentation/xcuiautomation/xcuiscreenshot",
+    "https://github.com/appium/appium-xcuitest-driver/blob/master/docs/getting-started/installation.md",
+    "https://github.com/appium/appium-xcuitest-driver/blob/master/docs/getting-started/system-requirements.md",
+    "https://appium.github.io/appium-xcuitest-driver/latest/reference/capabilities/",
+    "https://docs.maestro.dev/maestro-cli/how-to-install-maestro-cli",
+    "https://docs.maestro.dev/maestro-flows/flow-control-and-logic/specify-and-start-devices",
+    "https://docs.maestro.dev/reference/commands-available/launchapp"
+  ]
+}

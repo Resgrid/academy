@@ -1,0 +1,330 @@
+{
+  "id": "core-customer-billing-review",
+  "title": "Review customer invoicing settings and department billing",
+  "app": "Core",
+  "audience": [
+    "department administrators",
+    "authorized billing coordinators"
+  ],
+  "summary": "Inspect billing identity, rate-card and customer defaults, read the empty aging/account views, and distinguish customer invoicing from the department’s subscription without creating or changing financial records.",
+  "prerequisites": [
+    "Use a fictional practice department and an account already authorized for the available invoicing and subscription views.",
+    "Use an existing fictional company contact and preserve all settings, customer profiles, rates, invoices, payment connections and subscription choices.",
+    "Treat organization registrations, addresses and financial preferences as information that must be verified before a later authorized save."
+  ],
+  "sector_examples": {
+    "Chicago Fire": "Review a fictional training-service customer separately from the department subscription; identify identity and rate decisions without issuing an invoice.",
+    "Community care and mental health": "Inspect an operational partner’s billing setup without placing client histories in billing notes or treating software fields as a clinical or legal determination.",
+    "Search and rescue": "Identify the correct fictional exercise customer and billing-profile state before any later authorized invoicing work.",
+    "Security": "Compare the department-default rate concept with a customer-pinned rate card while keeping the account and all amounts unchanged.",
+    "Wildland": "Review an agreed customer account and aging scope without creating financial records or inferring payment from an empty list.",
+    "Industrial response": "Inspect department invoice identity and customer account categories, preserving subscription and provider connections."
+  },
+  "source_files": [
+    "Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+    "Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+    "Core/Resgrid.Services/Invoicing/InvoicingService.Delivery.cs",
+    "Core/Resgrid.Services/Invoicing/InvoicePaymentsService.cs",
+    "Core/Resgrid.Services/AuthorizationService.cs",
+    "Core/Resgrid.Services/BusinessOperationsAccessService.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/_Tabs.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/Settings.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/RateCards.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/EditRateCard.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/BillingProfile.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Invoicing/Aging.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Contacts/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Contacts/View.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Subscription/Index.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Shared/_TopNavbar.cshtml",
+    "Core/Resgrid.Localization/Areas/User/Invoicing/Invoicing.en.resx",
+    "Core/Resgrid.Localization/Areas/User/Subscription/Subscription.en.resx"
+  ],
+  "scenes": [
+    {
+      "id": "invoicing",
+      "title": "Orient to customer invoicing",
+      "route": "/User/Invoicing/Index",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "001-invoicing-catalog-no-invoices"
+      ],
+      "required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Rate Cards",
+        "Aging",
+        "Billing settings",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "narration": "Customer invoicing tracks what your department bills to its customers. In our fictional Chicago Fire practice department, the Invoicing page shows Invoices, Rate Cards, Aging and Billing settings. The list is empty, and the balance tiles show zero. Read these as the current account contents, not proof that payments were collected. This walkthrough inspects configuration and account views; we leave New invoice unused and keep all financial data unchanged.",
+      "practice": "Identify invoice count, outstanding balance and the Billing settings tab without choosing New invoice.",
+      "source_limits": [
+        "Actual empty fictional customer-invoice list. Zero invoices/balances do not prove a payment or settlement. New invoice is visible but unused; no draft or number consumed."
+      ]
+    },
+    {
+      "id": "identity",
+      "title": "Inspect the department’s billing identity",
+      "route": "/User/Invoicing/Index",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "001-invoicing-catalog-no-invoices",
+        "002-billing-identity-empty-defaults"
+      ],
+      "required_labels": [
+        "Billing settings",
+        "Billing identity",
+        "Legal business name",
+        "Remit-to address",
+        "City",
+        "State / province",
+        "Postal code",
+        "Country"
+      ],
+      "narration": "Choose Billing settings to inspect what invoices say about the department. Billing identity contains Legal business name and the remit-to address, with city, state or province, postal code and country. These fields supply the identity used on invoice documents. They are blank in this exercise. An empty form may be showing initial defaults; it is not evidence that a complete billing identity has been saved. Identify the needed organizational information before planning any later change.",
+      "practice": "Find the legal name and remit-to fields and distinguish them from a customer billing profile.",
+      "source_limits": [
+        "Actual empty fictional customer-invoice list. Zero invoices/balances do not prove a payment or settlement. New invoice is visible but unused; no draft or number consumed.",
+        "Identity form fields are blank. GET may construct unsaved defaults; this is not saved billing-identity proof. Only Billing identity tab is offered; no provider configuration/result is shown."
+      ]
+    },
+    {
+      "id": "registrations",
+      "title": "Read registrations and document-link preferences",
+      "route": "/User/Invoicing/Settings",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "003-billing-registrations-readonly",
+        "004-footer-pay-link-display-preferences"
+      ],
+      "required_labels": [
+        "Registrations",
+        "Tax registration number",
+        "Secondary tax registration",
+        "SAM UEI",
+        "CAGE code",
+        "Workers' comp account",
+        "Invoice footer",
+        "Pay link expiry (days)",
+        "Show a \"Pay online\" link on invoices",
+        "Save"
+      ],
+      "narration": "The Registrations section separates tax registrations, SAM UEI, CAGE code and workers’ compensation account information. Each field is empty here. These are distinct organization identifiers, not interchangeable account names. Invoice footer supplies text printed under totals. Below it, Pay link expiry is thirty days and the Show a Pay online link preference is checked. That display preference alone does not establish a usable payment connection or generate a link. We inspect the controls without using Save.",
+      "practice": "Read the displayed link expiry and footer controls, leaving every identifier and Save unchanged.",
+      "source_limits": [
+        "All registration fields pictured are empty. Do not infer registrations or legal/tax coverage. Invoice footer field is blank.",
+        "Actual displayed link-expiry30 and checked display preference are form values, not successful link generation, payment connection, invoice document or provider collection. Save untouched."
+      ]
+    },
+    {
+      "id": "rate-cards",
+      "title": "Distinguish rate definitions from saved charges",
+      "route": "/User/Invoicing/RateCards",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "005-rate-card-catalog-empty",
+        "006-new-rate-card-unsaved-preview"
+      ],
+      "required_labels": [
+        "Rate Cards",
+        "No rate cards yet.",
+        "New rate card",
+        "Name",
+        "Description",
+        "Department default (used when a customer has no pinned rate card)",
+        "Active",
+        "Save the rate card before adding items."
+      ],
+      "narration": "Rate Cards describes the charge schedule: unit or personnel time, flat fees, mileage and materials. A customer can pin a card instead of using the department default. The catalog currently says No rate cards yet. New rate card opens the definition form. Name and Description are blank; Department default is unchecked and Active is checked. The items panel says to save the card before adding items. This is an unsaved form, with no charge items or default card created.",
+      "practice": "Open the blank New rate card form, identify the default choice and leave it unsaved.",
+      "source_limits": [
+        "Actual catalog is empty. Help describes department default versus customer-pinned card; no card/rate saved.",
+        "New unsaved card form; blank Name/Description, department default unchecked, Active checked. Rate card items panel says save first. Cancel/Save controls are pictured; neither any Save nor rate item operation is claimed."
+      ]
+    },
+    {
+      "id": "customer",
+      "title": "Inspect the existing customer’s Billing section",
+      "route": "/User/Contacts",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "008-existing-fictional-customer-contact",
+        "009-customer-billing-no-profile"
+      ],
+      "required_labels": [
+        "Contacts",
+        "Academy Logistics Desk (fictional)",
+        "View",
+        "Billing",
+        "Billing profile",
+        "No billing profile yet. Save one to start invoicing this contact.",
+        "Set up billing profile",
+        "No invoices."
+      ],
+      "narration": "For customer-specific settings, open Contacts and use View on Academy Logistics Desk, our existing fictional company. Its Billing section says No billing profile yet and No invoices. A directory contact and a billing profile are separate records. Set up billing profile opens a form for that contact; it does not itself save a profile or issue an invoice. Keep that distinction when assessing whether a customer is actually ready for invoicing.",
+      "practice": "View Academy Logistics Desk and identify whether it already has a billing profile.",
+      "source_limits": [
+        "Existing company contact and its View control visible; no new contact or directory edit in this lesson. Company row is bottom of viewport but full name/View are readable.",
+        "Settled contact Billing section states no profile yet and no invoices. Directory category is numeric; do not narrate it as the named category. Fictional display email is not a billing-address readback; no email value is used by the candidate."
+      ]
+    },
+    {
+      "id": "terms",
+      "title": "Read customer terms and rate preferences",
+      "route": "/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8#TermsNetDays",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "010-unsaved-customer-terms-discount-rate-defaults"
+      ],
+      "required_labels": [
+        "Terms (net days)",
+        "Default discount %",
+        "Rate card",
+        "Default rate schedule",
+        "Use the department default",
+        "Purchase order number required on invoices",
+        "Active (new invoices may be created)"
+      ],
+      "narration": "The new customer form shows thirty net days, a blank Default discount, and department-default choices for Rate card and Default rate schedule. Customer terms help set an unset invoice due date when it moves to Sent; contract terms can take precedence. The discount is a default for a new draft. The schedule help concerns contractor bids and deployments when no contract names a schedule. Purchase order required is unchecked and Active is checked. These are unsaved preferences, not completed invoice transactions.",
+      "practice": "Identify the thirty-day terms, blank discount and two department-default selections without saving.",
+      "source_limits": [
+        "Unsaved customer-profile defaults, not stored profile proof. Terms30 and blank discount; default card and schedule; PO unchecked; Active checked. Top Terms input reaches viewport boundary; only reading labels/value is taught, no fill interaction. BillingEmail input stays outside the viewport; its value is not inspected or retained in reviewed metadata."
+      ]
+    },
+    {
+      "id": "address-tax",
+      "title": "Review address source and tax fields deliberately",
+      "route": "/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8#Notes",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "011-unsaved-address-tax-components-save-controls"
+      ],
+      "required_labels": [
+        "Billing address",
+        "Use the contact's mailing address",
+        "Tax exempt",
+        "Tax rate %",
+        "Tax components",
+        "Name",
+        "Rate %",
+        "Registration number",
+        "Notes",
+        "Cancel",
+        "Save"
+      ],
+      "narration": "Use the contact’s mailing address is checked. That selects an address source; it does not verify that the directory address is complete. Tax exempt is unchecked, with a blank Tax rate and empty component rows for Name, Rate and Registration number. The form supports up to three named components. Notes, Cancel and Save appear below. Use only organization-approved values in a real billing setup. For this inspection, leave all fields unchanged and do not save a customer profile.",
+      "practice": "Identify the address-source checkbox and tax component columns, then leave the profile unsaved.",
+      "source_limits": [
+        "Lower unsaved profile form only; no persisted address/tax profile, tax determination, invoice or Send result. BillingEmail remains outside viewport and is not read. PO label at top is clipped; use010 for it. Save/Cancel fully visible."
+      ]
+    },
+    {
+      "id": "aging",
+      "title": "Interpret the aging view’s actual scope",
+      "route": "/User/Invoicing/Aging",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "007-aging-no-outstanding-invoices"
+      ],
+      "required_labels": [
+        "Accounts receivable aging",
+        "Current",
+        "1-30 days past due",
+        "31-60 days past due",
+        "61-90 days past due",
+        "90+ days past due",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "narration": "Aging groups positive outstanding balances by how far they are past due. Read Current, one to thirty, thirty-one to sixty, sixty-one to ninety, and ninety-plus days with Total and the displayed as-of time. Here every bucket is zero and the page says No outstanding invoices. That is consistent with the empty invoice account. It does not demonstrate receipt of a payment, a collection action or a customer settlement. Review the underlying invoice before acting on a populated aging result.",
+      "practice": "Read the aging buckets and as-of context without interpreting an empty account as a payment result.",
+      "source_limits": [
+        "All actual aging buckets zero, with an As of timestamp. Empty No outstanding invoices is not proof customers paid or a collection was performed. Populated per-currency detail is not demonstrated."
+      ]
+    },
+    {
+      "id": "subscription",
+      "title": "Separate the Resgrid subscription from customer invoices",
+      "route": "/User/Invoicing",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "012-department-menu-subscription-entry",
+        "013-local-subscription-distinct-from-customer-invoicing",
+        "014-entities-tab-legacy-plan-readonly"
+      ],
+      "required_labels": [
+        "Subscription & Billing",
+        "Subscription Plan & Billing",
+        "Legacy Plan",
+        "Entities",
+        "Active Legacy Subscription"
+      ],
+      "narration": "The department menu has a separate Subscription and Billing entry. Use that to review the department’s Resgrid service plan. Subscription Plan and Billing concerns the department’s subscription, not invoices to Academy Logistics Desk. This department displays a Legacy Plan notice. Selecting Entities shows Active Legacy Subscription rather than an entity-selection form. Read the notices that apply to your own department. The example’s displayed legacy amounts and counters should not be used to price another plan or infer its limits. No purchase, cancellation or payment-detail change is part of this review.",
+      "practice": "Follow Subscription & Billing and identify the legacy notice without changing plans or billing details.",
+      "source_limits": [
+        "Actual department menu Subscription & Billing launcher is pictured. No security/settings item selected and no provider/account change.",
+        "Legacy local training-plan screen; values and add-on snippets are not current commercial pricing/capacity recommendations. No purchase/cancel/renewal/billing-info operation performed.",
+        "Entities tab shows Active Legacy Subscription notice, not a modern entity-capacity selection form. Legacy14/Unlimited is not taught as the actual all-plan capacity rule. No provider/plan operation."
+      ]
+    },
+    {
+      "id": "review-result",
+      "title": "Finish at the unchanged invoice list",
+      "route": "/User/Invoicing",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "016-fresh-invoicing-no-invoices"
+      ],
+      "required_labels": [
+        "Invoicing",
+        "Invoices",
+        "Outstanding balance",
+        "Overdue balance",
+        "No invoices."
+      ],
+      "narration": "The final Invoicing view still shows no invoices, zero outstanding balance and zero overdue balance. Reviewing an unsaved rate card or customer form has not created an invoice. Keep your review notes specific: which identity fields need confirmation, which customer defaults need a decision, and which subscription notice applies. A form inspected is different from a configuration saved or a financial action completed.",
+      "practice": "Return to Invoices and confirm the account is still empty after the configuration review.",
+      "source_limits": [
+        "Fresh invoice list still0invoices/0outstanding/0overdue. It establishes no invoice was created in this read-only exercise, not a stored customer-profile success. The separate015contact fade is excluded."
+      ]
+    },
+    {
+      "id": "sector-examples",
+      "title": "Apply a bounded billing review across sectors",
+      "route": "/User/Contacts/View?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8",
+      "capture_intent": "Inspect the exact actual billing controls without saving or performing a financial operation.",
+      "capture_refs": [
+        "009-customer-billing-no-profile",
+        "005-rate-card-catalog-empty",
+        "007-aging-no-outstanding-invoices"
+      ],
+      "required_labels": [
+        "Academy Logistics Desk (fictional)",
+        "Billing profile",
+        "Rate Cards",
+        "New rate card",
+        "Accounts receivable aging",
+        "Total",
+        "No outstanding invoices."
+      ],
+      "narration": "Chicago Fire can distinguish a training-service customer from its department subscription. Community care and mental-health teams can review an operational partner’s billing setup without putting client histories into Notes. Search-and-rescue coordinators can identify the intended customer for an exercise; security teams can separate a customer-specific rate card from the department default. Wildland teams can review a bounded customer account, and industrial teams can inspect outstanding-balance categories. In all six settings, confirm the organization, customer and account scope before any authorized financial change.",
+      "practice": "Choose one sector and identify its customer, invoice identity and account-review question without creating a transaction.",
+      "source_limits": [
+        "Settled contact Billing section states no profile yet and no invoices. Directory category is numeric; do not narrate it as the named category. Fictional display email is not a billing-address readback; no email value is used by the candidate.",
+        "Actual catalog is empty. Help describes department default versus customer-pinned card; no card/rate saved.",
+        "All actual aging buckets zero, with an As of timestamp. Empty No outstanding invoices is not proof customers paid or a collection was performed. Populated per-currency detail is not demonstrated."
+      ]
+    }
+  ],
+  "candidate_only": true,
+  "status": "source_only_for_parent_full_script_review_not_frozen",
+  "export_ready": false,
+  "publication_approved": false,
+  "parent_full_script_review_pending": true,
+  "full_billing_module_operations_demonstrated": false
+}

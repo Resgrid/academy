@@ -1,0 +1,1554 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+/* eslint-disable import/order */
+import { SHA256 } from 'crypto-js';
+import { useFocusEffect } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { ChevronDownIcon, PlusIcon, SearchIcon } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, View } from 'react-native';
+import * as z from 'zod';
+
+import { getNewCallData } from '@/api/dispatch';
+import { DispatchSelectionModal } from '@/components/calls/dispatch-selection-modal';
+import { DateTimeField } from '@/components/common/date-time-field';
+import { HeaderBackButton } from '@/components/common/header-back-button';
+import { Loading } from '@/components/common/loading';
+import FullScreenLocationPicker from '@/components/maps/full-screen-location-picker';
+import LocationPicker from '@/components/maps/location-picker';
+import { CustomBottomSheet } from '@/components/ui/bottom-sheet';
+import { Box } from '@/components/ui/box';
+import { Button, ButtonSpinner, ButtonText } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { FormControl, FormControlError, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
+import { Input, InputField } from '@/components/ui/input';
+import { Select, SelectBackdrop, SelectContent, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from '@/components/ui/select';
+import { Text } from '@/components/ui/text';
+import { Textarea, TextareaInput } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/toast';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { useNewCallFieldPolicy } from '@/hooks/use-new-call-field-policy';
+import {
+  CALL_FORM_UNCOLLECTED_FIELD_KEYS,
+  findCallType,
+  formatCallFieldLabels,
+  formatCallGeolocation,
+  getMissingCallFieldsFromError,
+  getScheduledDispatchPrefill,
+  isPendingCallState,
+  isScheduledDispatchTooSoon,
+  MIN_SCHEDULED_DISPATCH_LEAD_MINUTES,
+  toDispatchOnUtc,
+} from '@/lib/call-field-policy';
+import { logger } from '@/lib/logging';
+import { getDestinationPoiIdFromValue, getDestinationPoiSelectOptions, NO_DESTINATION_POI_VALUE } from '@/lib/poi';
+import { NewCallFieldKeys } from '@/models/v4/calls/newCallFieldPolicyResultData';
+import { type PoiResultData } from '@/models/v4/mapping/poiResultData';
+import { type PoiTypeResultData } from '@/models/v4/mapping/poiTypeResultData';
+import { useCoreStore } from '@/stores/app/core-store';
+import { useCallDetailStore } from '@/stores/calls/detail-store';
+import { useCallsStore } from '@/stores/calls/store';
+import { type DispatchSelection } from '@/stores/dispatch/store';
+
+// Form validation schema (same as New Call)
+const formSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  nature: z.string().min(1, 'Nature is required'),
+  note: z.string().optional(),
+  address: z.string().optional(),
+  coordinates: z.string().optional(),
+  what3words: z.string().optional(),
+  plusCode: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  priority: z.string().optional(),
+  type: z.string().optional(),
+  destinationPoiId: z.string().optional(),
+  contactName: z.string().optional(),
+  contactInfo: z.string().optional(),
+  externalId: z.string().optional(),
+  incidentId: z.string().optional(),
+  referenceId: z.string().optional(),
+  // Scheduled dispatch time as an ISO 8601 UTC string; '' for "dispatch now" / "leave the schedule alone".
+  dispatchOn: z.string().optional(),
+  dispatchSelection: z.object({
+    everyone: z.boolean(),
+    users: z.array(z.string()),
+    groups: z.array(z.string()),
+    roles: z.array(z.string()),
+    units: z.array(z.string()),
+  }),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+// Helper function to strip HTML tags from rich text content
+const stripHtml = (html: string | undefined | null): string => {
+  if (!html) return '';
+  // Remove HTML tags
+  let text = html.replace(/<[^>]*>/g, '');
+  // Decode common HTML entities
+  text = text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'");
+  // Trim whitespace
+  return text.trim();
+};
+
+interface GeocodingResult {
+  place_id: string;
+  formatted_address: string;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
+interface GeocodingResponse {
+  results: GeocodingResult[];
+  status: string;
+}
+
+// The fields of a what3words convert-to-coordinates answer this screen reads.
+interface What3WordsResponse {
+  coordinates?: {
+    lng: number;
+    lat: number;
+  };
+  nearestPlace?: string;
+}
+
+export default function EditCall() {
+  const { t } = useTranslation();
+  const { colorScheme } = useColorScheme();
+  const { id } = useLocalSearchParams();
+  const callId = Array.isArray(id) ? id[0] : id;
+  // Per-field selectors: subscribing to whole stores re-rendered this form on every unrelated
+  // store write (background list refreshes, SignalR updates) while it was being edited.
+  const callPriorities = useCallsStore((state) => state.callPriorities);
+  const callTypes = useCallsStore((state) => state.callTypes);
+  const callDataLoading = useCallsStore((state) => state.isLoading);
+  const callDataError = useCallsStore((state) => state.error);
+  const fetchCallPriorities = useCallsStore((state) => state.fetchCallPriorities);
+  const fetchCallTypes = useCallsStore((state) => state.fetchCallTypes);
+  const call = useCallDetailStore((state) => state.call);
+  const callExtraData = useCallDetailStore((state) => state.callExtraData);
+  const callDetailLoading = useCallDetailStore((state) => state.isLoading);
+  const callDetailError = useCallDetailStore((state) => state.error);
+  const fetchCallDetail = useCallDetailStore((state) => state.fetchCallDetail);
+  const config = useCoreStore((state) => state.config);
+  const { trackEvent } = useAnalytics();
+  // Safe wrapper for analytics that catches errors and promise rejections
+  const safeTrack = React.useCallback(
+    (eventName: string, properties?: Record<string, string | number | boolean>) => {
+      try {
+        const res = trackEvent(eventName, properties);
+        // Handle promise rejections if trackEvent returns a promise
+        Promise.resolve(res).catch((error) => {
+          logger.error({ message: 'Error tracking analytics event', context: { eventName, error } });
+        });
+      } catch (error) {
+        logger.error({ message: 'Error tracking analytics event', context: { eventName, error } });
+      }
+    },
+    [trackEvent]
+  );
+  const toast = useToast();
+  const toastRef = useRef(toast);
+  toastRef.current = toast;
+  // A toast in the style this screen already uses, for the messages that only carry text.
+  const showToast = useCallback((tone: 'success' | 'error' | 'warning' | 'info', message: string) => {
+    const background = tone === 'success' ? 'bg-green-500' : tone === 'error' ? 'bg-red-500' : tone === 'warning' ? 'bg-orange-500' : 'bg-blue-500';
+
+    toastRef.current.show({
+      placement: 'top',
+      render: () => {
+        return (
+          <Box className={`rounded-lg ${background} p-4 shadow-lg`}>
+            <Text className="text-white">{message}</Text>
+          </Box>
+        );
+      },
+    });
+  }, []);
+  // The department's call field policy applies to edits too: the fields it hides stay hidden, and the
+  // ones it requires must still be filled in when the call is saved. The server checks the same rules
+  // against the call as it will be after the edit.
+  const fieldPolicy = useNewCallFieldPolicy();
+  // The stored dispatch time while the call is still waiting to go out, as the form was pre-filled with it.
+  // Saving it back unchanged is not a new schedule: it is left out, and is not held to the lead-time rule.
+  const [storedDispatchOn, setStoredDispatchOn] = useState('');
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [showDispatchModal, setShowDispatchModal] = useState(false);
+  const [showAddressSelection, setShowAddressSelection] = useState(false);
+  const [isGeocodingAddress, setIsGeocodingAddress] = useState(false);
+  const [isGeocodingPlusCode, setIsGeocodingPlusCode] = useState(false);
+  const [isGeocodingCoordinates, setIsGeocodingCoordinates] = useState(false);
+  const [isGeocodingWhat3Words, setIsGeocodingWhat3Words] = useState(false);
+  const [isDestinationPoisLoading, setIsDestinationPoisLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Mirrors isSubmitting so a second tap is rejected synchronously, before React has re-rendered
+  // the disabled button. Without it a double-tap sends the update -- and its re-dispatch -- twice.
+  const isSubmittingRef = useRef(false);
+  // Tracks which call the form has already been populated from. The populate effect depends on
+  // array identities that change on any refetch, so without this a background refresh (or
+  // priorities/types resolving late) re-ran reset() and silently discarded the user's edits.
+  const populatedCallIdRef = useRef<string | null>(null);
+  const [addressResults, setAddressResults] = useState<GeocodingResult[]>([]);
+  const [destinationPois, setDestinationPois] = useState<PoiResultData[]>([]);
+  const [destinationPoiTypes, setDestinationPoiTypes] = useState<PoiTypeResultData[]>([]);
+  const [dispatchSelection, setDispatchSelection] = useState<DispatchSelection>({
+    everyone: false,
+    users: [],
+    groups: [],
+    roles: [],
+    units: [],
+  });
+  const [selectedLocation, setSelectedLocation] = useState<{
+    latitude: number;
+    longitude: number;
+    address?: string;
+  } | null>(null);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+    getValues,
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      nature: '',
+      note: '',
+      address: '',
+      coordinates: '',
+      what3words: '',
+      plusCode: '',
+      latitude: undefined,
+      longitude: undefined,
+      priority: '',
+      type: '',
+      destinationPoiId: NO_DESTINATION_POI_VALUE,
+      contactName: '',
+      contactInfo: '',
+      externalId: '',
+      incidentId: '',
+      referenceId: '',
+      dispatchOn: '',
+      dispatchSelection: {
+        everyone: false,
+        users: [],
+        groups: [],
+        roles: [],
+        units: [],
+      },
+    },
+  });
+
+  const destinationPoiOptions = useMemo(() => getDestinationPoiSelectOptions(destinationPois, destinationPoiTypes), [destinationPois, destinationPoiTypes]);
+
+  useEffect(() => {
+    fetchCallPriorities();
+    fetchCallTypes();
+    if (callId) {
+      fetchCallDetail(callId);
+    }
+  }, [fetchCallPriorities, fetchCallTypes, fetchCallDetail, callId]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    const loadDestinationPois = async () => {
+      setIsDestinationPoisLoading(true);
+
+      try {
+        const response = await getNewCallData(abortController.signal);
+
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        setDestinationPois(response.Data?.DestinationPois || []);
+        setDestinationPoiTypes(response.Data?.PoiTypes || []);
+      } catch (error) {
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        logger.error({ message: 'Error loading call destination POIs', context: { error } });
+        toastRef.current.show({
+          placement: 'top',
+          render: () => {
+            return (
+              <Box className="rounded-lg bg-red-500 p-4 shadow-lg">
+                <Text className="text-white">{t('calls.destination_load_error')}</Text>
+              </Box>
+            );
+          },
+        });
+      } finally {
+        if (!abortController.signal.aborted) {
+          setIsDestinationPoisLoading(false);
+        }
+      }
+    };
+
+    void loadDestinationPois();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [t]);
+
+  // Analytics: Track when edit call page is viewed
+  useFocusEffect(
+    useCallback(() => {
+      if (!callDataLoading && !callDetailLoading && call && callPriorities.length > 0 && callTypes.length > 0) {
+        safeTrack('call_edit_viewed', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          priority: callPriorities.find((p) => p.Id === call.Priority)?.Name || 'Unknown',
+          type: findCallType(callTypes, call)?.Name || 'Unknown',
+          priorityCount: callPriorities.length,
+          typeCount: callTypes.length,
+          hasGoogleMapsKey: !!config?.GoogleMapsKey,
+          hasWhat3WordsKey: !!config?.W3WKey,
+          hasAddress: !!call.Address,
+          hasCoordinates: !!(call.Latitude && call.Longitude),
+          hasContactInfo: !!(call.ContactName || call.ContactInfo),
+        });
+      }
+    }, [safeTrack, callDataLoading, callDetailLoading, call, callPriorities, callTypes, callId, config?.GoogleMapsKey, config?.W3WKey])
+  );
+
+  // Pre-populate form when call data is loaded -- once per call, never again
+  useEffect(() => {
+    if (call) {
+      // Populate exactly once per call: re-running reset() after the user has started typing
+      // wipes their edits. The picker lists are read here if they have already landed, and
+      // filled in by the effect below if they land later.
+      if (populatedCallIdRef.current === call.CallId) {
+        return;
+      }
+
+      populatedCallIdRef.current = call.CallId;
+
+      logger.debug({
+        message: 'Populating call edit form',
+        context: { callId: call.CallId, priority: call.Priority, type: call.Type },
+      });
+
+      const priority = useCallsStore.getState().callPriorities.find((p) => p.Id === call.Priority);
+      // Call.Type is the type's text, not its id -- matching it on Id left the picker blank on every edit; TypeId is the id.
+      const type = findCallType(useCallsStore.getState().callTypes, call);
+
+      // Parse dispatched items from callExtraData
+      const dispatchedUsers: string[] = [];
+      const dispatchedGroups: string[] = [];
+      const dispatchedRoles: string[] = [];
+      const dispatchedUnits: string[] = [];
+
+      if (callExtraData?.Dispatches) {
+        callExtraData.Dispatches.forEach((dispatch) => {
+          // Type indicates what kind of entity was dispatched
+          // Common types: "User", "Unit", "Group", "Role"
+          const dispatchType = dispatch.Type?.toLowerCase() || '';
+          const dispatchId = dispatch.Id;
+
+          if (dispatchId) {
+            if (dispatchType === 'user' || dispatchType === 'personnel') {
+              dispatchedUsers.push(dispatchId);
+            } else if (dispatchType === 'unit') {
+              dispatchedUnits.push(dispatchId);
+            } else if (dispatchType === 'group' || dispatchType === 'station') {
+              dispatchedGroups.push(dispatchId);
+            } else if (dispatchType === 'role') {
+              dispatchedRoles.push(dispatchId);
+            }
+          }
+        });
+      }
+
+      const initialDispatchSelection: DispatchSelection = {
+        everyone: false,
+        users: dispatchedUsers,
+        groups: dispatchedGroups,
+        roles: dispatchedRoles,
+        units: dispatchedUnits,
+      };
+
+      // Update local state for dispatch selection
+      setDispatchSelection(initialDispatchSelection);
+
+      // Only a call that is scheduled and not sent yet has a dispatch time worth showing; the dispatch time
+      // of a call already sent is history, not a schedule.
+      const scheduledDispatchOn = getScheduledDispatchPrefill(call.DispatchedOnUtc);
+      setStoredDispatchOn(scheduledDispatchOn);
+
+      reset({
+        name: call.Name || '',
+        nature: stripHtml(call.Nature),
+        note: stripHtml(call.Note),
+        address: call.Address || '',
+        coordinates: call.Geolocation || '',
+        what3words: call.What3Words || '',
+        // A plus code is only a way to look a location up; calls do not store one.
+        plusCode: '',
+        latitude: call.Latitude ? parseFloat(call.Latitude) : undefined,
+        longitude: call.Longitude ? parseFloat(call.Longitude) : undefined,
+        priority: priority?.Name || '',
+        type: type?.Name || '',
+        destinationPoiId: call.DestinationPoiId ? call.DestinationPoiId.toString() : NO_DESTINATION_POI_VALUE,
+        contactName: call.ContactName || '',
+        contactInfo: call.ContactInfo || '',
+        externalId: call.ExternalId || '',
+        incidentId: call.IncidentId || '',
+        referenceId: call.ReferenceId || '',
+        dispatchOn: scheduledDispatchOn,
+        dispatchSelection: initialDispatchSelection,
+      });
+
+      // Set selected location if coordinates exist
+      if (call.Latitude !== undefined && call.Longitude !== undefined) {
+        const latitude = parseFloat(call.Latitude);
+        const longitude = parseFloat(call.Longitude);
+
+        if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+          setSelectedLocation({
+            latitude,
+            longitude,
+            ...(call.Address && { address: call.Address }),
+          });
+        }
+      }
+    }
+  }, [call, callExtraData, reset]);
+
+  // Priorities and types can resolve after the form was populated. setValue touches only the two
+  // picker fields -- and only while they are still blank -- so a late arrival fills the pickers
+  // without discarding anything the user has typed.
+  useEffect(() => {
+    if (!call || populatedCallIdRef.current !== call.CallId) {
+      return;
+    }
+
+    const priority = callPriorities.find((p) => p.Id === call.Priority);
+    if (priority && !getValues('priority')) {
+      setValue('priority', priority.Name);
+    }
+
+    const type = findCallType(callTypes, call);
+    if (type && !getValues('type')) {
+      setValue('type', type.Name);
+    }
+  }, [call, callPriorities, callTypes, getValues, setValue]);
+
+  const onSubmit = useCallback(
+    async (data: FormValues) => {
+      // Saving re-dispatches the call, so a duplicate reaches everyone assigned to it. Reject
+      // re-entry outright rather than relying on the disabled button.
+      if (isSubmittingRef.current) {
+        return;
+      }
+
+      isSubmittingRef.current = true;
+      setIsSubmitting(true);
+
+      try {
+        // Until the policy lands it reads as "nothing hidden, nothing required", so a save in that
+        // window would both skip the department's rules and send fields it hides. Hold it back, as the
+        // new-call screen does.
+        if (!fieldPolicy.isLoaded) {
+          showToast('error', t('calls.field_policy_loading'));
+          return;
+        }
+
+        const destinationPoiId = getDestinationPoiIdFromValue(data.destinationPoiId);
+
+        // If we have latitude and longitude, add them to the data
+        if (selectedLocation?.latitude != null && selectedLocation?.longitude != null) {
+          data.latitude = selectedLocation.latitude;
+          data.longitude = selectedLocation.longitude;
+        }
+
+        const dispatchSelectionValue = data.dispatchSelection;
+        const hasDispatchList =
+          !!dispatchSelectionValue &&
+          (dispatchSelectionValue.everyone || dispatchSelectionValue.users.length > 0 || dispatchSelectionValue.groups.length > 0 || dispatchSelectionValue.roles.length > 0 || dispatchSelectionValue.units.length > 0);
+
+        // The same required check as a new call, run against what this save will send (the form starts
+        // out holding the stored call). Skipped, as the server skips them on an edit:
+        // - fields this app has no input for (see CALL_FORM_UNCOLLECTED_FIELD_KEYS);
+        // - the dispatch time, which is never required of an edit;
+        // - the plus code, which only looks a location up and is never stored on a call;
+        // - the dispatch list of a pending call, which nobody has been sent yet.
+        const isPending = isPendingCallState(call?.State);
+        const missingFields = fieldPolicy
+          .missingRequired({
+            [NewCallFieldKeys.Address]: data.address,
+            [NewCallFieldKeys.Geolocation]: formatCallGeolocation(data.latitude, data.longitude),
+            [NewCallFieldKeys.What3Words]: data.what3words,
+            [NewCallFieldKeys.Note]: data.note,
+            [NewCallFieldKeys.ContactName]: data.contactName,
+            [NewCallFieldKeys.ContactInfo]: data.contactInfo,
+            [NewCallFieldKeys.ExternalId]: data.externalId,
+            [NewCallFieldKeys.IncidentId]: data.incidentId,
+            [NewCallFieldKeys.ReferenceId]: data.referenceId,
+            [NewCallFieldKeys.DestinationPoi]: destinationPoiId != null ? String(destinationPoiId) : '',
+            [NewCallFieldKeys.DispatchList]: hasDispatchList,
+          })
+          .filter((key) => !CALL_FORM_UNCOLLECTED_FIELD_KEYS.has(key) && key !== NewCallFieldKeys.DispatchOn && key !== NewCallFieldKeys.PlusCode && !(isPending && key === NewCallFieldKeys.DispatchList));
+
+        if (missingFields.length > 0) {
+          showToast('error', t('calls.required_fields_missing', { fields: formatCallFieldLabels(missingFields, t) }));
+          return;
+        }
+
+        // A new dispatch time reschedules the call, so it has to leave time to change the call before it goes
+        // out (the web form's rule). An empty or untouched input sends nothing and keeps the stored schedule;
+        // the API has no way to clear one.
+        const reschedule = fieldPolicy.isVisible(NewCallFieldKeys.DispatchOn) && !!data.dispatchOn && data.dispatchOn !== storedDispatchOn;
+
+        if (reschedule && isScheduledDispatchTooSoon(data.dispatchOn ?? '')) {
+          showToast('error', t('calls.dispatch_on_too_soon', { minutes: MIN_SCHEDULED_DISPATCH_LEAD_MINUTES }));
+          return;
+        }
+
+        const dispatchOnUtc = reschedule ? toDispatchOnUtc(data.dispatchOn) : undefined;
+
+        const priority = data.priority ? callPriorities.find((p) => p.Name === data.priority) : null;
+        const type = data.type ? callTypes.find((t) => t.Name === data.type) : null;
+
+        logger.debug({
+          message: 'Submitting call update',
+          context: { callId, hasLocation: data.latitude != null, priorityId: priority?.Id, typeId: type?.Id },
+        });
+
+        if (data.priority && !priority) {
+          throw new Error(`Priority "${data.priority}" not found in available priorities`);
+        }
+
+        if (data.type && !type) {
+          throw new Error(`Type "${data.type}" not found in available types`);
+        }
+
+        // Analytics: Track call update attempt
+        safeTrack('call_update_attempted', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          priority: data.priority || '',
+          type: data.type || '',
+          hasNote: !!data.note,
+          hasAddress: !!data.address,
+          hasCoordinates: data.latitude != null && data.longitude != null,
+          hasWhat3Words: !!data.what3words,
+          hasPlusCode: !!data.plusCode,
+          hasContactName: !!data.contactName,
+          hasContactInfo: !!data.contactInfo,
+          hasDestinationPoi: destinationPoiId != null,
+          dispatchEveryone: data.dispatchSelection?.everyone || false,
+          dispatchCount: (data.dispatchSelection?.users.length || 0) + (data.dispatchSelection?.groups.length || 0) + (data.dispatchSelection?.roles.length || 0) + (data.dispatchSelection?.units.length || 0),
+        });
+
+        // A field the policy hides must come through the save untouched. For EditCall's text fields a
+        // blank value means "keep what is stored", and a blank geolocation keeps the stored point; the
+        // destination is always overwritten, so a hidden one is sent back as stored. (Newer servers
+        // also ignore whatever is posted for a hidden field.) The dispatch list is sent as loaded: a
+        // hidden list cannot be changed here, and a blank one would mean "everyone" to older servers.
+        const isShown = fieldPolicy.isVisible;
+        const sendLocation = isShown(NewCallFieldKeys.Geolocation);
+
+        // Update the call using the store
+        const updatePayload = {
+          callId: callId!,
+          name: data.name,
+          nature: data.nature,
+          priority: priority?.Id || 0,
+          // The API matches the call type by its text, not its id.
+          type: type?.Name || '',
+          note: isShown(NewCallFieldKeys.Note) ? data.note || '' : '',
+          address: isShown(NewCallFieldKeys.Address) ? data.address || '' : '',
+          destinationPoiId: isShown(NewCallFieldKeys.DestinationPoi) ? destinationPoiId : (call?.DestinationPoiId ?? null),
+          ...(sendLocation && data.latitude != null && { latitude: data.latitude }),
+          ...(sendLocation && data.longitude != null && { longitude: data.longitude }),
+          what3words: isShown(NewCallFieldKeys.What3Words) ? data.what3words || '' : '',
+          plusCode: data.plusCode || '',
+          contactName: isShown(NewCallFieldKeys.ContactName) ? data.contactName || '' : '',
+          contactInfo: isShown(NewCallFieldKeys.ContactInfo) ? data.contactInfo || '' : '',
+          externalId: isShown(NewCallFieldKeys.ExternalId) ? data.externalId || '' : '',
+          incidentId: isShown(NewCallFieldKeys.IncidentId) ? data.incidentId || '' : '',
+          referenceId: isShown(NewCallFieldKeys.ReferenceId) ? data.referenceId || '' : '',
+          ...(dispatchOnUtc ? { dispatchOnUtc } : {}),
+          dispatchUsers: data.dispatchSelection?.users || [],
+          dispatchGroups: data.dispatchSelection?.groups || [],
+          dispatchRoles: data.dispatchSelection?.roles || [],
+          dispatchUnits: data.dispatchSelection?.units || [],
+          dispatchEveryone: data.dispatchSelection?.everyone || false,
+        };
+
+        await useCallDetailStore.getState().updateCall(updatePayload);
+
+        // Analytics: Track successful call update
+        safeTrack('call_update_success', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          priority: data.priority || '',
+          type: data.type || '',
+          hasLocation: !!(data.latitude && data.longitude),
+          hasDestinationPoi: destinationPoiId != null,
+          dispatchMethod: data.dispatchSelection?.everyone ? 'everyone' : 'selective',
+        });
+
+        // Show success toast
+        toast.show({
+          placement: 'top',
+          render: () => {
+            return (
+              <Box className="rounded-lg bg-green-500 p-4 shadow-lg">
+                <Text className="text-white">{t('call_detail.update_call_success')}</Text>
+              </Box>
+            );
+          },
+        });
+
+        // Navigate back to call detail
+        router.back();
+      } catch (error) {
+        logger.error({ message: 'Error updating call', context: { callId, error } });
+
+        // Analytics: Track failed call update
+        safeTrack('call_update_failed', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          priority: data.priority || '',
+          type: data.type || '',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+
+        // The server enforces the department's field policy against the call as it will be after the
+        // edit, including fields this screen has no input for. Name them rather than showing a generic
+        // failure.
+        const rejectedFields = getMissingCallFieldsFromError(error);
+
+        // Show error toast
+        showToast('error', rejectedFields ? t('calls.required_fields_missing', { fields: formatCallFieldLabels(rejectedFields, t) }) : t('call_detail.update_call_error'));
+      } finally {
+        isSubmittingRef.current = false;
+        setIsSubmitting(false);
+      }
+    },
+    [selectedLocation, callPriorities, callTypes, callId, call, fieldPolicy, storedDispatchOn, safeTrack, showToast, toast, t]
+  );
+
+  const handleSavePress = useCallback(async () => {
+    try {
+      await handleSubmit(onSubmit, (validationErrors) => {
+        logger.debug({ message: 'Call edit validation failed', context: { callId, errorCount: Object.keys(validationErrors).length } });
+      })();
+    } catch (error) {
+      logger.error({ message: 'Error submitting call edit form', context: { callId, error } });
+    }
+  }, [handleSubmit, onSubmit, callId]);
+
+  const handleLocationSelected = (location: { latitude: number; longitude: number; address?: string }) => {
+    setSelectedLocation(location);
+    setValue('latitude', location.latitude);
+    setValue('longitude', location.longitude);
+    if (location.address) {
+      setValue('address', location.address);
+    }
+
+    // Keep the coordinates input in step with the map, as the new-call screen does.
+    setValue('coordinates', `${location.latitude.toFixed(6)}, ${location.longitude.toFixed(6)}`);
+
+    // Analytics: Track location selection
+    safeTrack('call_edit_location_selected', {
+      timestamp: new Date().toISOString(),
+      callId: callId || '',
+      hasAddress: !!location.address,
+      latitude: location.latitude,
+      longitude: location.longitude,
+    });
+
+    setShowLocationPicker(false);
+  };
+
+  const handleDispatchSelection = (selection: DispatchSelection) => {
+    setDispatchSelection(selection);
+    setValue('dispatchSelection', selection);
+
+    // Analytics: Track dispatch selection
+    safeTrack('call_edit_dispatch_selection_updated', {
+      timestamp: new Date().toISOString(),
+      callId: callId || '',
+      everyone: selection.everyone,
+      userCount: selection.users.length,
+      groupCount: selection.groups.length,
+      roleCount: selection.roles.length,
+      unitCount: selection.units.length,
+      totalSelected: selection.users.length + selection.groups.length + selection.roles.length + selection.units.length,
+    });
+
+    setShowDispatchModal(false);
+  };
+
+  const getDispatchSummary = () => {
+    if (dispatchSelection.everyone) {
+      return t('calls.everyone');
+    }
+
+    const totalSelected = dispatchSelection.users.length + dispatchSelection.groups.length + dispatchSelection.roles.length + dispatchSelection.units.length;
+
+    if (totalSelected === 0) {
+      return t('calls.select_recipients');
+    }
+
+    return `${totalSelected} ${t('calls.selected')}`;
+  };
+
+  // Address search functionality (same as New Call)
+  const handleAddressSearch = async (address: string) => {
+    if (!address.trim()) {
+      toast.show({
+        placement: 'top',
+        render: () => {
+          return (
+            <Box className="rounded-lg bg-orange-500 p-4 shadow-lg">
+              <Text className="text-white">{t('calls.address_required')}</Text>
+            </Box>
+          );
+        },
+      });
+      return;
+    }
+
+    // Analytics: Track address search attempt
+    safeTrack('call_edit_address_search_attempted', {
+      timestamp: new Date().toISOString(),
+      callId: callId || '',
+      hasGoogleMapsKey: !!config?.GoogleMapsKey,
+    });
+
+    setIsGeocodingAddress(true);
+    try {
+      const apiKey = config?.GoogleMapsKey;
+
+      if (!apiKey) {
+        // Analytics: Track missing API key
+        safeTrack('call_edit_address_search_failed', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          reason: 'missing_api_key',
+        });
+        throw new Error('Google Maps API key not configured');
+      }
+
+      const response = await axios.get<GeocodingResponse>(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`);
+
+      if (response.data.status === 'OK' && response.data.results.length > 0) {
+        const results = response.data.results;
+
+        // Analytics: Track successful address search
+        safeTrack('call_edit_address_search_success', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          resultCount: results.length,
+          hasMultipleResults: results.length > 1,
+        });
+
+        if (results.length === 1) {
+          const result = results[0];
+          if (result) {
+            const newLocation = {
+              latitude: result.geometry.location.lat,
+              longitude: result.geometry.location.lng,
+              address: result.formatted_address,
+            };
+
+            handleLocationSelected(newLocation);
+          }
+
+          toast.show({
+            placement: 'top',
+            render: () => {
+              return (
+                <Box className="rounded-lg bg-green-500 p-4 shadow-lg">
+                  <Text className="text-white">{t('calls.address_found')}</Text>
+                </Box>
+              );
+            },
+          });
+        } else {
+          setAddressResults(results);
+          setShowAddressSelection(true);
+        }
+      } else {
+        // Analytics: Track failed address search
+        safeTrack('call_edit_address_search_failed', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          reason: 'no_results',
+          status: response.data.status,
+        });
+
+        toast.show({
+          placement: 'top',
+          render: () => {
+            return (
+              <Box className="rounded-lg bg-red-500 p-4 shadow-lg">
+                <Text className="text-white">{t('calls.address_not_found')}</Text>
+              </Box>
+            );
+          },
+        });
+      }
+    } catch (error) {
+      logger.error({ message: 'Error geocoding address', context: { callId, error } });
+
+      // Analytics: Track geocoding error (if not already tracked above)
+      if (!(error instanceof Error && error.message.includes('Google Maps API key'))) {
+        safeTrack('call_edit_address_search_failed', {
+          timestamp: new Date().toISOString(),
+          callId: callId || '',
+          reason: 'network_error',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+
+      toast.show({
+        placement: 'top',
+        render: () => {
+          return (
+            <Box className="rounded-lg bg-red-500 p-4 shadow-lg">
+              <Text className="text-white">{t('calls.geocoding_error')}</Text>
+            </Box>
+          );
+        },
+      });
+    } finally {
+      setIsGeocodingAddress(false);
+    }
+  };
+
+  const handleAddressSelected = (result: GeocodingResult) => {
+    const newLocation = {
+      latitude: result.geometry.location.lat,
+      longitude: result.geometry.location.lng,
+      address: result.formatted_address,
+    };
+
+    handleLocationSelected(newLocation);
+    setShowAddressSelection(false);
+
+    // Analytics: Track address selection from multiple results privately
+    const hashedAddress = SHA256(result.formatted_address).toString();
+    safeTrack('call_edit_address_selected', {
+      timestamp: new Date().toISOString(),
+      callId: callId || '',
+      place_id: result.place_id,
+      hashedAddress,
+    });
+
+    toast.show({
+      placement: 'top',
+      render: () => {
+        return (
+          <Box className="rounded-lg bg-green-500 p-4 shadow-lg">
+            <Text className="text-white">{t('calls.address_found')}</Text>
+          </Box>
+        );
+      },
+    });
+  };
+
+  // Coordinates, what3words and plus code lookups (same behaviour as New Call), so an edit offers every
+  // location field a new call does.
+  const handleCoordinatesSearch = async (coordinates: string) => {
+    if (!coordinates.trim()) {
+      showToast('warning', t('calls.coordinates_required'));
+      return;
+    }
+
+    // Expect "40.7128, -74.0060" or "40.7128,-74.0060"
+    const match = coordinates.trim().match(/^(-?\d+\.?\d*),?\s*(-?\d+\.?\d*)$/);
+
+    if (!match) {
+      showToast('warning', t('calls.coordinates_invalid_format'));
+      return;
+    }
+
+    const latitude = parseFloat(match[1] || '0');
+    const longitude = parseFloat(match[2] || '0');
+
+    if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+      showToast('warning', t('calls.coordinates_out_of_range'));
+      return;
+    }
+
+    safeTrack('call_edit_coordinates_search_attempted', { timestamp: new Date().toISOString(), callId: callId || '' });
+
+    setIsGeocodingCoordinates(true);
+    try {
+      const apiKey = config?.GoogleMapsKey;
+
+      if (!apiKey) {
+        throw new Error('Google Maps API key not configured');
+      }
+
+      const response = await axios.get<GeocodingResponse>(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`);
+      const result = response.data.status === 'OK' ? response.data.results[0] : undefined;
+
+      // The point is what was asked for; a reverse-geocoded address is a bonus.
+      handleLocationSelected(result ? { latitude, longitude, address: result.formatted_address } : { latitude, longitude });
+      showToast(result ? 'success' : 'info', t(result ? 'calls.coordinates_found' : 'calls.coordinates_no_address'));
+    } catch (error) {
+      logger.error({ message: 'Error reverse geocoding coordinates', context: { callId, error } });
+
+      // Even if geocoding fails, still set the location on the map
+      handleLocationSelected({ latitude, longitude });
+      showToast('warning', t('calls.coordinates_geocoding_error'));
+    } finally {
+      setIsGeocodingCoordinates(false);
+    }
+  };
+
+  const handleWhat3WordsSearch = async (what3words: string) => {
+    if (!what3words.trim()) {
+      showToast('warning', t('calls.what3words_required'));
+      return;
+    }
+
+    // Three words separated by dots
+    if (!/^[a-z]+\.[a-z]+\.[a-z]+$/.test(what3words.trim().toLowerCase())) {
+      showToast('warning', t('calls.what3words_invalid_format'));
+      return;
+    }
+
+    safeTrack('call_edit_what3words_search_attempted', { timestamp: new Date().toISOString(), callId: callId || '' });
+
+    setIsGeocodingWhat3Words(true);
+    try {
+      const apiKey = config?.W3WKey;
+
+      if (!apiKey) {
+        throw new Error('what3words API key not configured');
+      }
+
+      const response = await axios.get<What3WordsResponse>(`https://api.what3words.com/v3/convert-to-coordinates?words=${encodeURIComponent(what3words)}&key=${apiKey}`);
+
+      if (response.data.coordinates) {
+        handleLocationSelected({
+          latitude: response.data.coordinates.lat,
+          longitude: response.data.coordinates.lng,
+          ...(response.data.nearestPlace ? { address: response.data.nearestPlace } : {}),
+        });
+        showToast('success', t('calls.what3words_found'));
+      } else {
+        showToast('error', t('calls.what3words_not_found'));
+      }
+    } catch (error) {
+      logger.error({ message: 'Error geocoding what3words', context: { callId, error } });
+      showToast('error', t('calls.what3words_geocoding_error'));
+    } finally {
+      setIsGeocodingWhat3Words(false);
+    }
+  };
+
+  const handlePlusCodeSearch = async (plusCode: string) => {
+    if (!plusCode.trim()) {
+      showToast('warning', t('calls.plus_code_required'));
+      return;
+    }
+
+    safeTrack('call_edit_plus_code_search_attempted', { timestamp: new Date().toISOString(), callId: callId || '' });
+
+    setIsGeocodingPlusCode(true);
+    try {
+      const apiKey = config?.GoogleMapsKey;
+
+      if (!apiKey) {
+        throw new Error('Google Maps API key not configured');
+      }
+
+      const response = await axios.get<GeocodingResponse>(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(plusCode)}&key=${apiKey}`);
+      const result = response.data.status === 'OK' ? response.data.results[0] : undefined;
+
+      if (result) {
+        handleLocationSelected({
+          latitude: result.geometry.location.lat,
+          longitude: result.geometry.location.lng,
+          address: result.formatted_address,
+        });
+        showToast('success', t('calls.plus_code_found'));
+      } else {
+        showToast('error', t('calls.plus_code_not_found'));
+      }
+    } catch (error) {
+      logger.error({ message: 'Error geocoding plus code', context: { callId, error } });
+      showToast('error', t('calls.plus_code_geocoding_error'));
+    } finally {
+      setIsGeocodingPlusCode(false);
+    }
+  };
+
+  // The calls store's isLoading/error are shared with the background call-list fetches that run on
+  // app resume and active-call selection. Gate only on what this form actually needs -- the call
+  // itself -- so a background refetch (or a failure in one) can never replace a half-edited form.
+  const isMissingFormData = !call;
+
+  if (isMissingFormData && (callDetailLoading || callDataLoading)) {
+    return (
+      <>
+        <Stack.Screen
+          options={{
+            title: t('calls.edit_call'),
+            headerShown: true,
+            headerLeft: () => <HeaderBackButton onPress={() => router.back()} />,
+          }}
+        />
+        <Loading />
+      </>
+    );
+  }
+
+  if (isMissingFormData) {
+    return (
+      <>
+        <Stack.Screen
+          options={{
+            title: t('calls.edit_call'),
+            headerShown: true,
+            headerLeft: () => <HeaderBackButton onPress={() => router.back()} />,
+          }}
+        />
+        <View className="size-full flex-1">
+          <Box className="m-3 mt-5 min-h-[200px] w-full max-w-[600px] gap-5 self-center rounded-lg bg-background-50 p-5 lg:min-w-[700px]">
+            <Text className="error text-center">{callDetailError || callDataError || t('call_detail.not_found')}</Text>
+          </Box>
+        </View>
+      </>
+    );
+  }
+
+  // Same field set and rules as the new-call screen. The location card groups four of them, so it only
+  // disappears once the policy has hidden all four; the map fills in the geolocation, so it follows that
+  // rule.
+  const showAddress = fieldPolicy.isVisible(NewCallFieldKeys.Address);
+  const showGeolocation = fieldPolicy.isVisible(NewCallFieldKeys.Geolocation);
+  const showWhat3Words = fieldPolicy.isVisible(NewCallFieldKeys.What3Words);
+  const showPlusCode = fieldPolicy.isVisible(NewCallFieldKeys.PlusCode);
+  const showLocationCard = showAddress || showGeolocation || showWhat3Words || showPlusCode;
+
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          title: t('calls.edit_call'),
+          headerShown: true,
+          headerLeft: () => <HeaderBackButton onPress={() => router.back()} />,
+        }}
+      />
+      <View className="size-full flex-1">
+        <Box className="size-full w-full flex-1 bg-gray-50 dark:bg-gray-900">
+          <ScrollView className="flex-1 px-4 py-6">
+            <Text className="mb-6 text-2xl font-bold">{t('calls.edit_call_description')}</Text>
+
+            <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+              <FormControl isInvalid={!!errors.name}>
+                <FormControlLabel>
+                  <FormControlLabelText>{t('calls.name')}</FormControlLabelText>
+                </FormControlLabel>
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input>
+                      <InputField placeholder={t('calls.name_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                    </Input>
+                  )}
+                />
+                {errors.name ? (
+                  <FormControlError>
+                    <Text className="text-red-500">{errors.name.message}</Text>
+                  </FormControlError>
+                ) : null}
+              </FormControl>
+            </Card>
+
+            <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+              <FormControl isInvalid={!!errors.nature}>
+                <FormControlLabel>
+                  <FormControlLabelText>{t('calls.nature')}</FormControlLabelText>
+                </FormControlLabel>
+                <Controller
+                  control={control}
+                  name="nature"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Textarea>
+                      <TextareaInput value={value} onChangeText={onChange} onBlur={onBlur} numberOfLines={4} placeholder={t('calls.nature_placeholder')} />
+                    </Textarea>
+                  )}
+                />
+                {errors.nature ? (
+                  <FormControlError>
+                    <Text className="text-red-500">{errors.nature.message}</Text>
+                  </FormControlError>
+                ) : null}
+              </FormControl>
+            </Card>
+
+            <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+              <FormControl>
+                <FormControlLabel>
+                  <FormControlLabelText>{t('calls.priority')}</FormControlLabelText>
+                </FormControlLabel>
+                <Controller
+                  control={control}
+                  name="priority"
+                  render={({ field: { onChange, value } }) => (
+                    <Select selectedValue={value} onValueChange={onChange}>
+                      <SelectTrigger>
+                        <SelectInput placeholder={t('calls.priority_placeholder')} />
+                        <SelectIcon as={ChevronDownIcon} />
+                      </SelectTrigger>
+                      <SelectPortal>
+                        <SelectBackdrop />
+                        <SelectContent className="max-h-[60vh] pb-20">
+                          {callPriorities.map((priority) => (
+                            <SelectItem key={priority.Id} label={priority.Name} value={priority.Name} />
+                          ))}
+                        </SelectContent>
+                      </SelectPortal>
+                    </Select>
+                  )}
+                />
+              </FormControl>
+            </Card>
+
+            <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+              <FormControl>
+                <FormControlLabel>
+                  <FormControlLabelText>{t('calls.type')}</FormControlLabelText>
+                </FormControlLabel>
+                <Controller
+                  control={control}
+                  name="type"
+                  render={({ field: { onChange, value } }) => (
+                    <Select selectedValue={value} onValueChange={onChange}>
+                      <SelectTrigger>
+                        <SelectInput placeholder={t('calls.select_type')} />
+                        <SelectIcon as={ChevronDownIcon} />
+                      </SelectTrigger>
+                      <SelectPortal>
+                        <SelectBackdrop />
+                        <SelectContent className="max-h-[60vh] pb-20">
+                          {callTypes.map((type) => (
+                            <SelectItem key={type.Id} label={type.Name} value={type.Name} />
+                          ))}
+                        </SelectContent>
+                      </SelectPortal>
+                    </Select>
+                  )}
+                />
+              </FormControl>
+            </Card>
+
+            {fieldPolicy.isVisible(NewCallFieldKeys.DestinationPoi) ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <FormControl testID="destination-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.DestinationPoi)}>
+                  <FormControlLabel>
+                    <FormControlLabelText>{t('calls.destination')}</FormControlLabelText>
+                  </FormControlLabel>
+                  <Controller
+                    control={control}
+                    name="destinationPoiId"
+                    render={({ field: { onChange, value } }) => {
+                      const selectedDestinationLabel = value === NO_DESTINATION_POI_VALUE ? t('common.none') : destinationPoiOptions.find((option) => option.value === value)?.label;
+
+                      return (
+                        <Select isDisabled={isDestinationPoisLoading} onValueChange={onChange} selectedValue={value}>
+                          <SelectTrigger>
+                            <SelectInput placeholder={isDestinationPoisLoading ? t('common.loading') : t('calls.destination_placeholder')} value={selectedDestinationLabel} className="w-5/6" />
+                            <SelectIcon as={ChevronDownIcon} className="mr-3" />
+                          </SelectTrigger>
+                          <SelectPortal>
+                            <SelectBackdrop />
+                            <SelectContent className="max-h-[60vh] pb-20">
+                              <SelectItem label={t('common.none')} value={NO_DESTINATION_POI_VALUE} />
+                              {destinationPoiOptions.map((option) => (
+                                <SelectItem key={option.value} label={option.label} value={option.value} />
+                              ))}
+                            </SelectContent>
+                          </SelectPortal>
+                        </Select>
+                      );
+                    }}
+                  />
+                </FormControl>
+              </Card>
+            ) : null}
+
+            {fieldPolicy.isVisible(NewCallFieldKeys.Note) ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <FormControl testID="note-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.Note)}>
+                  <FormControlLabel>
+                    <FormControlLabelText>{t('calls.note')}</FormControlLabelText>
+                  </FormControlLabel>
+                  <Controller
+                    control={control}
+                    name="note"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Textarea>
+                        <TextareaInput value={value} onChangeText={onChange} onBlur={onBlur} numberOfLines={4} placeholder={t('calls.note_placeholder')} />
+                      </Textarea>
+                    )}
+                  />
+                </FormControl>
+              </Card>
+            ) : null}
+
+            {showLocationCard ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <Text className="mb-4 text-lg font-semibold">{t('calls.call_location')}</Text>
+
+                {/* Address Field */}
+                {showAddress ? (
+                  <FormControl className="mb-4" testID="address-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.Address)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.address')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="address"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Box className="flex-row items-center space-x-2">
+                          <Box className="flex-1">
+                            <Input>
+                              <InputField testID="address-input" placeholder={t('calls.address_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                            </Input>
+                          </Box>
+                          <Button
+                            testID="address-search-button"
+                            accessibilityRole="button"
+                            accessibilityLabel={t('calls.search_address')}
+                            size="sm"
+                            variant="outline"
+                            className="ml-2"
+                            onPress={() => handleAddressSearch(value || '')}
+                            disabled={isGeocodingAddress || !value?.trim()}
+                          >
+                            {isGeocodingAddress ? <Text>...</Text> : <SearchIcon size={16} color={colorScheme === 'dark' ? '#ffffff' : '#000000'} />}
+                          </Button>
+                        </Box>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+
+                {/* GPS Coordinates Field */}
+                {showGeolocation ? (
+                  <FormControl className="mb-4" testID="coordinates-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.Geolocation)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.coordinates')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="coordinates"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Box className="flex-row items-center space-x-2">
+                          <Box className="flex-1">
+                            <Input>
+                              <InputField testID="coordinates-input" placeholder={t('calls.coordinates_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                            </Input>
+                          </Box>
+                          <Button
+                            testID="coordinates-search-button"
+                            accessibilityRole="button"
+                            accessibilityLabel={t('calls.search_coordinates')}
+                            size="sm"
+                            variant="outline"
+                            className="ml-2"
+                            onPress={() => handleCoordinatesSearch(value || '')}
+                            disabled={isGeocodingCoordinates || !value?.trim()}
+                          >
+                            {isGeocodingCoordinates ? <Text>...</Text> : <SearchIcon size={16} color={colorScheme === 'dark' ? '#ffffff' : '#000000'} />}
+                          </Button>
+                        </Box>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+
+                {/* what3words Field */}
+                {showWhat3Words ? (
+                  <FormControl className="mb-4" testID="what3words-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.What3Words)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.what3words')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="what3words"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Box className="flex-row items-center space-x-2">
+                          <Box className="flex-1">
+                            <Input>
+                              <InputField testID="what3words-input" placeholder={t('calls.what3words_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                            </Input>
+                          </Box>
+                          <Button
+                            testID="what3words-search-button"
+                            accessibilityRole="button"
+                            accessibilityLabel={t('calls.search_what3words')}
+                            size="sm"
+                            variant="outline"
+                            className="ml-2"
+                            onPress={() => handleWhat3WordsSearch(value || '')}
+                            disabled={isGeocodingWhat3Words || !value?.trim()}
+                          >
+                            {isGeocodingWhat3Words ? <Text>...</Text> : <SearchIcon size={16} color={colorScheme === 'dark' ? '#ffffff' : '#000000'} />}
+                          </Button>
+                        </Box>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+
+                {/* Plus Code Field */}
+                {showPlusCode ? (
+                  <FormControl className="mb-4" testID="plus-code-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.PlusCode)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.plus_code')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="plusCode"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Box className="flex-row items-center space-x-2">
+                          <Box className="flex-1">
+                            <Input>
+                              <InputField testID="plus-code-input" placeholder={t('calls.plus_code_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                            </Input>
+                          </Box>
+                          <Button
+                            testID="plus-code-search-button"
+                            accessibilityRole="button"
+                            accessibilityLabel={t('calls.search_plus_code')}
+                            size="sm"
+                            variant="outline"
+                            className="ml-2"
+                            onPress={() => handlePlusCodeSearch(value || '')}
+                            disabled={isGeocodingPlusCode || !value?.trim()}
+                          >
+                            {isGeocodingPlusCode ? <Text>...</Text> : <SearchIcon size={16} color={colorScheme === 'dark' ? '#ffffff' : '#000000'} />}
+                          </Button>
+                        </Box>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+
+                {/* Map Preview: the map is how the geolocation gets filled in, so it follows that rule. */}
+                {showGeolocation ? (
+                  <Box className="mb-4">
+                    {selectedLocation ? (
+                      <LocationPicker initialLocation={selectedLocation} onLocationSelected={handleLocationSelected} height={200} />
+                    ) : (
+                      <Button testID="open-location-picker-button" onPress={() => setShowLocationPicker(true)} className="w-full">
+                        <ButtonText>{t('calls.select_location')}</ButtonText>
+                      </Button>
+                    )}
+                  </Box>
+                ) : null}
+              </Card>
+            ) : null}
+
+            {fieldPolicy.isVisible(NewCallFieldKeys.ContactName) ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <FormControl testID="contact-name-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.ContactName)}>
+                  <FormControlLabel>
+                    <FormControlLabelText>{t('calls.contact_name')}</FormControlLabelText>
+                  </FormControlLabel>
+                  <Controller
+                    control={control}
+                    name="contactName"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input>
+                        <InputField placeholder={t('calls.contact_name_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                      </Input>
+                    )}
+                  />
+                </FormControl>
+              </Card>
+            ) : null}
+
+            {fieldPolicy.isVisible(NewCallFieldKeys.ContactInfo) ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <FormControl testID="contact-info-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.ContactInfo)}>
+                  <FormControlLabel>
+                    <FormControlLabelText>{t('calls.contact_info')}</FormControlLabelText>
+                  </FormControlLabel>
+                  <Controller
+                    control={control}
+                    name="contactInfo"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input>
+                        <InputField placeholder={t('calls.contact_info_placeholder')} value={value} onChangeText={onChange} onBlur={onBlur} />
+                      </Input>
+                    )}
+                  />
+                </FormControl>
+              </Card>
+            ) : null}
+
+            {/* Call identifiers: one card for the three, shown while any of them is. */}
+            {fieldPolicy.isVisible(NewCallFieldKeys.ExternalId) || fieldPolicy.isVisible(NewCallFieldKeys.IncidentId) || fieldPolicy.isVisible(NewCallFieldKeys.ReferenceId) ? (
+              <Card testID="call-identifiers-card" className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                {fieldPolicy.isVisible(NewCallFieldKeys.ExternalId) ? (
+                  <FormControl className="mb-4" testID="external-id-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.ExternalId)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.external_id')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="externalId"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input>
+                          <InputField testID="external-id-input" value={value} onChangeText={onChange} onBlur={onBlur} />
+                        </Input>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+                {fieldPolicy.isVisible(NewCallFieldKeys.IncidentId) ? (
+                  <FormControl className="mb-4" testID="incident-id-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.IncidentId)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.incident_id')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="incidentId"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input>
+                          <InputField testID="incident-id-input" value={value} onChangeText={onChange} onBlur={onBlur} />
+                        </Input>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+                {fieldPolicy.isVisible(NewCallFieldKeys.ReferenceId) ? (
+                  <FormControl testID="reference-id-field" isRequired={fieldPolicy.isRequired(NewCallFieldKeys.ReferenceId)}>
+                    <FormControlLabel>
+                      <FormControlLabelText>{t('calls.reference_id')}</FormControlLabelText>
+                    </FormControlLabel>
+                    <Controller
+                      control={control}
+                      name="referenceId"
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Input>
+                          <InputField testID="reference-id-input" value={value} onChangeText={onChange} onBlur={onBlur} />
+                        </Input>
+                      )}
+                    />
+                  </FormControl>
+                ) : null}
+              </Card>
+            ) : null}
+
+            {fieldPolicy.isVisible(NewCallFieldKeys.DispatchOn) ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <FormControl testID="dispatch-on-field">
+                  <FormControlLabel>
+                    <FormControlLabelText>{t('calls.dispatch_on')}</FormControlLabelText>
+                  </FormControlLabel>
+                  <Controller
+                    control={control}
+                    name="dispatchOn"
+                    render={({ field: { onChange, value } }) => (
+                      <DateTimeField mode="datetime" value={value ?? ''} onChange={onChange} label={t('calls.dispatch_on')} clearable={!storedDispatchOn} testID="dispatch-on-input" />
+                    )}
+                  />
+                </FormControl>
+              </Card>
+            ) : null}
+
+            {fieldPolicy.isVisible(NewCallFieldKeys.DispatchList) ? (
+              <Card className="mb-4 rounded-xl bg-white p-4 shadow-xs dark:bg-gray-800">
+                <Text testID="dispatch-to-label" className="mb-4 text-lg font-semibold">
+                  {t('calls.dispatch_to')}
+                  {fieldPolicy.isRequired(NewCallFieldKeys.DispatchList) ? ' *' : null}
+                </Text>
+                <Button testID="open-dispatch-modal-button" onPress={() => setShowDispatchModal(true)} className="w-full">
+                  <ButtonText>{getDispatchSummary()}</ButtonText>
+                </Button>
+              </Card>
+            ) : null}
+
+            <Box className="mb-6 flex-row space-x-4">
+              <Button className="mr-10 flex-1" variant="outline" onPress={() => router.back()}>
+                <ButtonText>{t('common.cancel')}</ButtonText>
+              </Button>
+              <Button testID="save-call-button" className="ml-10 flex-1" variant="solid" action="primary" isDisabled={!fieldPolicy.isLoaded || isSubmitting} onPress={handleSavePress}>
+                {isSubmitting ? <ButtonSpinner className="mr-2" /> : null}
+                <ButtonText>{isSubmitting ? t('common.submitting') : t('common.save')}</ButtonText>
+              </Button>
+            </Box>
+          </ScrollView>
+        </Box>
+        <Box className="h-8" />
+      </View>
+
+      {/* Full-screen location picker overlay */}
+      {showLocationPicker ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1000,
+          }}
+        >
+          <FullScreenLocationPicker
+            key={showLocationPicker ? 'location-picker-open' : 'location-picker-closed'}
+            initialLocation={selectedLocation ?? undefined}
+            onLocationSelected={handleLocationSelected}
+            onClose={() => setShowLocationPicker(false)}
+          />
+        </View>
+      ) : null}
+
+      {/* Dispatch selection modal */}
+      <DispatchSelectionModal isVisible={showDispatchModal} onClose={() => setShowDispatchModal(false)} onConfirm={handleDispatchSelection} initialSelection={dispatchSelection} />
+
+      {/* Address selection bottom sheet */}
+      <CustomBottomSheet isOpen={showAddressSelection} onClose={() => setShowAddressSelection(false)} isLoading={false}>
+        <Box className="p-4">
+          <Text className="mb-4 text-center text-lg font-semibold">{t('calls.select_address')}</Text>
+          <ScrollView className="max-h-96">
+            {addressResults.map((result, index) => (
+              <Button key={result.place_id || index} variant="outline" className="mb-2 w-full" onPress={() => handleAddressSelected(result)}>
+                <ButtonText className="flex-1 text-left" numberOfLines={2}>
+                  {result.formatted_address}
+                </ButtonText>
+              </Button>
+            ))}
+          </ScrollView>
+        </Box>
+      </CustomBottomSheet>
+    </>
+  );
+}

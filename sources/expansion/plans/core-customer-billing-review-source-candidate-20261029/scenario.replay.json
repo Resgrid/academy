@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "kind": "guarded_manual_readonly_review_no_automatic_execution",
+  "department_id": 51,
+  "actor": "Existing authorized department account; no credential or protected billing-address values retained.",
+  "existing_contact": {
+    "id": "f2f8a679-745f-48b1-9002-e721e205c6b8",
+    "name": "Academy Logistics Desk (fictional)",
+    "baseline_has_saved_billing_profile": false,
+    "baseline_invoice_count": 0
+  },
+  "safe_UI_steps": [
+    {
+      "route": "/User/Invoicing/Index",
+      "actions": [
+        "Read empty invoice list/balance tiles",
+        "Use Billing settings"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Invoicing/Settings",
+      "actions": [
+        "Inspect blank identity/registrations/footer and displayed link preferences",
+        "Navigate away without Save"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Invoicing/RateCards",
+      "actions": [
+        "Read empty catalog",
+        "Open New rate card and inspect initial fields only",
+        "Navigate away without Save"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Contacts",
+      "actions": [
+        "View existing fictional company",
+        "Read Billing no-profile section",
+        "Open Set up billing profile"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Invoicing/BillingProfile?contactId=f2f8a679-745f-48b1-9002-e721e205c6b8",
+      "actions": [
+        "Keep BillingEmail input outside captured viewport; never read its value",
+        "Read Terms/defaults/address/tax only",
+        "Leave without Save"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Invoicing/Aging",
+      "actions": [
+        "Read empty buckets and as-of context"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Subscription",
+      "actions": [
+        "Use only existing Index and Entities/Legacy Plan presentation tabs",
+        "Read legacy notice; do not follow billing, checkout, cancel or purchase actions"
+      ],
+      "write": false
+    },
+    {
+      "route": "/User/Invoicing",
+      "actions": [
+        "Read final empty invoice account"
+      ],
+      "write": false
+    }
+  ],
+  "actual_mutations": [],
+  "non_goals": [
+    "Do not Save identity/customer profile/rate card",
+    "Do not create/Mark Sent/send/download PDF/settle/pay an invoice",
+    "Do not connect providers or edit plan/payment/subscription information",
+    "Do not change flags, modules, security or permissions",
+    "Do not inspect BillingEmail input value or replace redacted data",
+    "Do not copy current demo-price/counter values as commercial recommendations"
+  ],
+  "six_sector_examples": {
+    "Chicago Fire": "Review a fictional training-service customer separately from the department subscription; identify identity and rate decisions without issuing an invoice.",
+    "Community care and mental health": "Inspect an operational partner’s billing setup without placing client histories in billing notes or treating software fields as a clinical or legal determination.",
+    "Search and rescue": "Identify the correct fictional exercise customer and billing-profile state before any later authorized invoicing work.",
+    "Security": "Compare the department-default rate concept with a customer-pinned rate card while keeping the account and all amounts unchanged.",
+    "Wildland": "Review an agreed customer account and aging scope without creating financial records or inferring payment from an empty list.",
+    "Industrial response": "Inspect department invoice identity and customer account categories, preserving subscription and provider connections."
+  }
+}

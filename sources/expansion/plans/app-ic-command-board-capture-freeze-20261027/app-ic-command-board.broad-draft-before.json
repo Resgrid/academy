@@ -1,0 +1,350 @@
+{
+  "id": "app-ic-command-board",
+  "title": "IC: command boards, resources and accountability",
+  "app": "IC",
+  "audience": [
+    "Incident commanders",
+    "Section chiefs",
+    "Division and group leads",
+    "Safety and accountability officers"
+  ],
+  "summary": "Build and maintain a command board, assign people and units, track objectives and needs, and preserve the command history.",
+  "prerequisites": [
+    "Prepared active calls, command templates, authorized roles and a previous ended command.",
+    "Department units, personnel and crews plus fictional external resources; lane rules and short demonstration timers.",
+    "Configured check-in timers and matching assigned unit types for accountability.",
+    "Use disposable boards for irreversible objective completion, lane deletion and command close; use second clients for notifications and shared-state verification."
+  ],
+  "scenes": [
+    {
+      "title": "Establish or reopen command",
+      "route": "/calls",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Start Command Board",
+        "Blank Board"
+      ],
+      "narration": "From Calls or call details, start command and choose Blank Board for this training department. A configured department template can represent a fire structure, search organization, security detail or event staffing plan. Review the lanes it creates before adding resources. If the call has a previous ended command, the app can offer Reopen Command with a reason, or Start New Command. Reopening continues the prior history; starting new establishes a separate command context. Choose deliberately and inspect the resulting board. A queued offline start must remain described as pending until the server accepts it.",
+      "practice": "Start a blank security board, then compare the choice with a prepared event template.",
+      "id": "app-ic-command-board-scene-01",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-07-calls",
+          "file": "captures/expansion/ic/ic-07-calls.jpg"
+        },
+        {
+          "screenshot_id": "ic-08-command-start",
+          "file": "captures/expansion/ic/ic-08-command-start.jpg"
+        },
+        {
+          "screenshot_id": "ic-09-command-board",
+          "file": "captures/expansion/ic/ic-09-command-board.jpg"
+        }
+      ],
+      "capture_observations": [
+        "The actual picker offered Blank Board. Department templates and prior-command reopen were not available in this capture."
+      ]
+    },
+    {
+      "title": "Switch boards and inspect ended history",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Command Board",
+        "View Call"
+      ],
+      "narration": "Use the board selector to move between active incidents and check the incident name each time. View Call returns you to the underlying call context, and Refresh requests current board information. The Incidents view supports searching and filtering active incidents or Include Ended. An ended entry opens that specific command’s history in a read-only view. This is different from the reopen action on the call. During a multi-incident exercise, move slowly enough to confirm the commander and call before changing anything. Similar lane names on two boards are not enough to identify which incident you are editing.",
+      "practice": "Switch between an EMS incident and a wildland incident, then inspect a prepared ended command.",
+      "id": "app-ic-command-board-scene-02",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-09-command-board",
+          "file": "captures/expansion/ic/ic-09-command-board.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Warehouse board captured. Multi-board switching and ended-history views still need actual examples."
+      ]
+    },
+    {
+      "title": "Set command information and key locations",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Details",
+        "Incident Name",
+        "ICP / HQ",
+        "Staging",
+        "Rehab"
+      ],
+      "narration": "Open Details to name the incident and correct its start time using the available controls. Set the estimated end where useful, then review ICP or headquarters, staging and rehab. Each location can carry descriptive text and a map pin. If you provide text without a pin, the configured service may geocode it when saving; check the resulting location rather than assume it found the intended site. Important Information holds shared hazards, access instructions or staging notes. Save, then inspect the board and map. Incident weather uses the ICP location where available and otherwise falls back to the call.",
+      "practice": "Set a wildland exercise’s ICP, staging and rehab and add one clear access instruction.",
+      "id": "app-ic-command-board-scene-03",
+      "capture_refs": [],
+      "capture_observations": [
+        "Command-information preview captured and dismissed without saving, geocoding or changing incident locations.",
+        "No accepted readable screenshot sequence yet; current scene remains incomplete and cannot be frozen for narration or exported."
+      ]
+    },
+    {
+      "title": "Build lanes, leads and requirements",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Add Lane",
+        "Lane Limits (optional)",
+        "Primary Lead",
+        "Secondary Lead"
+      ],
+      "narration": "Add Lane creates a named structural area such as a division, group, branch, staging area or task force. Choose the type and identification color, then open Lane Limits when requirements are needed. Unit counts, riding personnel and time-in-role settings describe staffing and rotation expectations; amber and red work-time thresholds provide further cues. Enforcement depends on the configured rules, so inspect warnings and blocked assignments rather than assuming the form exposes every administrative setting. Edit a lane to assign internal or external leads and link objectives, a need or a tactical map. Lane deletion offers choices for existing resources; use it only in the prepared exercise.",
+      "practice": "Create a fire-search lane with a lead, a minimum unit target and a short rotation demonstration.",
+      "id": "app-ic-command-board-scene-04",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-15-assigned-lanes",
+          "file": "captures/expansion/ic/ic-15-assigned-lanes.jpg"
+        }
+      ],
+      "capture_observations": []
+    },
+    {
+      "title": "Assign, move and release resources",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Resources",
+        "Add Resource",
+        "Assign Resource",
+        "View Details"
+      ],
+      "narration": "Add Resource lets you choose department units or personnel, or enter an external unit, crew or person with its agency and role or note. Use Unassigned, Assigned and All to review the pool. Choose the eye-shaped View Details control to inspect status, staffing, crew, roles and recent position. Assign a resource to a lane, then use the supported tap-to-move or structure drag interaction to change lanes. Confirm an already-assigned move and read any requirement or early-rotation warning. Remove from Lane returns the resource to the pool; Release from Incident ends that assignment. Work-time indicators and Rotate badges support review but do not move resources automatically.",
+      "practice": "Add a mutual-aid crew and external medic, assign them to lanes, and rehearse a resource move.",
+      "id": "app-ic-command-board-scene-05",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-15-assigned-lanes",
+          "file": "captures/expansion/ic/ic-15-assigned-lanes.jpg"
+        },
+        {
+          "screenshot_id": "ic-21-resource-pool",
+          "file": "captures/expansion/ic/ic-21-resource-pool.jpg"
+        },
+        {
+          "screenshot_id": "ic-50-persisted-resources-accountability",
+          "file": "captures/expansion/ic/ic-50-persisted-resources-accountability.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Full browser reload retained Squad 3 in Search Division, Engine 51 unassigned with Christopher Herrmann crew, and fictional Exercise Gate Marshal. Current source images do not prove a resource move or release.",
+        "Earlier unreadable forms and the red LogBox rotation image were removed from intended lesson footage; raw sources and rejection audit remain intact."
+      ]
+    },
+    {
+      "title": "Functional roles and tactical objectives",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "ICS Role Assignments",
+        "Tactical Objectives",
+        "Add"
+      ],
+      "narration": "Use ICS Role Assignments to choose an authorized person and functional role. A role assignment, a lane lead and a resource assignment describe different responsibilities, even when one person fills more than one. The role holder’s Message action opens direct communication where chat is available. Under Tactical Objectives, add a general, benchmark or safety objective, then track progress. Open its details to complete it with an outcome and close-out note when the exercise reaches that point. Completion records who acted and when, and it is not offered as a reversible checkbox. Link objectives to lanes so teams can see what their assignment supports.",
+      "practice": "Assign a safety officer and create a benchmark for completing the primary search.",
+      "id": "app-ic-command-board-scene-06",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-48-persisted-timer-objective-need",
+          "file": "captures/expansion/ic/ic-48-persisted-timer-objective-need.jpg"
+        },
+        {
+          "screenshot_id": "ic-49-persisted-note-role-files",
+          "file": "captures/expansion/ic/ic-49-persisted-note-role-files.jpg"
+        },
+        {
+          "screenshot_id": "ic-29-objective-prepared",
+          "file": "captures/expansion/ic/ic-29-objective-prepared.jpg"
+        },
+        {
+          "screenshot_id": "ic-30-objective-progress-details",
+          "file": "captures/expansion/ic/ic-30-objective-progress-details.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Reviewed actual Add Objective form, Benchmark 50% progress, Outcome options and Complete Objective control. No completion/outcome saved. Full-reload source also shows existing Casey Safety Officer. Role form still needs readable recapture."
+      ]
+    },
+    {
+      "title": "Request and track incident needs",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Needs",
+        "Add Need",
+        "Save Fill",
+        "Mark Filled"
+      ],
+      "narration": "Open Needs and add the category, name, details and quantity that describe the gap. An entity need can select units, users, roles or groups from the prepared roster. Review the intended recipients before requesting them. In the need’s detail view, inspect response information and history, update the fill quantity with an explanatory note, and use Mark Filled when appropriate. Reopen Need supports a changed situation. Close Need removes it from the working board while retaining history, with a confirmation when the requested amount remains unfilled. A request is not a confirmed resource arrival; capture the actual response from the second training participant.",
+      "practice": "Request two medical resources for a public event, record a partial fill and explain the remaining gap.",
+      "id": "app-ic-command-board-scene-07",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-48-persisted-timer-objective-need",
+          "file": "captures/expansion/ic/ic-48-persisted-timer-objective-need.jpg"
+        },
+        {
+          "screenshot_id": "ic-31-need-prepared",
+          "file": "captures/expansion/ic/ic-31-need-prepared.jpg"
+        },
+        {
+          "screenshot_id": "ic-32-need-partial-fill",
+          "file": "captures/expansion/ic/ic-32-need-partial-fill.jpg"
+        },
+        {
+          "screenshot_id": "ic-34-need-saved-history",
+          "file": "captures/expansion/ic/ic-34-need-saved-history.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Reviewed actual Add Need, quantified Fill/Save Fill/Close Need form and saved partial-fill History. Full reload retains 1/2 Partial Fill. Nonquantified Mark Filled/Reopen branch and entity-request response still need captures. No closure, actual arrival or external response established."
+      ]
+    },
+    {
+      "title": "Accountability, PAR and incident timers",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Accountability",
+        "Activate Check-In Timers",
+        "Timers & PAR",
+        "Add Timer"
+      ],
+      "narration": "In Accountability, activate the call’s check-in timers if they are configured and your role permits it. This training call reported that no check-in definitions were configured, so it could not demonstrate PAR color results. Where definitions exist, inspect the returned last-check-in and OK, Warning or Critical states for the relevant people or unit types. Have a training participant perform a real check-in to demonstrate the update. Timers and PAR also offers named incident reminders: add a timer, choose its duration and start it. Watch the countdown or an intentionally short overdue example, then Acknowledge when the exercise requires it. Compare these reminders with lane work-time and rotation cues. All of them support accountability decisions; none confirms a person’s physical condition or position.",
+      "practice": "Run a short rehab reminder and review the recorded check-in state of the assigned training crew.",
+      "id": "app-ic-command-board-scene-08",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-16-timer-form",
+          "file": "captures/expansion/ic/ic-16-timer-form.jpg"
+        },
+        {
+          "screenshot_id": "ic-17-running-timer",
+          "file": "captures/expansion/ic/ic-17-running-timer.jpg"
+        },
+        {
+          "screenshot_id": "ic-21-resource-pool",
+          "file": "captures/expansion/ic/ic-21-resource-pool.jpg"
+        },
+        {
+          "screenshot_id": "ic-48-persisted-timer-objective-need",
+          "file": "captures/expansion/ic/ic-48-persisted-timer-objective-need.jpg"
+        },
+        {
+          "screenshot_id": "ic-50-persisted-resources-accountability",
+          "file": "captures/expansion/ic/ic-50-persisted-resources-accountability.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Actual full reload shows the existing overdue TRAINING PAR reminder with Acknowledge visible. Accountability explicitly says no check-in timers are configured for this call. No new acknowledge, successful check-in or PAR result was performed."
+      ]
+    },
+    {
+      "title": "Notes, files, command log and handover",
+      "route": "/command",
+      "capture_intent": "Record the named screen and the described controls with prepared training data; verify the actual visible permissions and returned state before describing the action.",
+      "required_labels": [
+        "Notes",
+        "Incident Files",
+        "Incident Log",
+        "Transfer",
+        "End Command"
+      ],
+      "narration": "Add an operational note with the intended visibility. Public note text enters the incident log, while internal notes keep their body restricted and leave an attributed log marker. Upload and open a training incident file, and use the board shortcuts for underlying call notes, images, files or video. Open View Log to search the timestamped command history. For handover, choose Transfer and the intended new commander. End Command closes the command context; an authorized operator may also choose to close the call with its own outcome and notification options. Read each returned state. A queued or failed close is not a completed close, and command closure and call closure remain separate outcomes.",
+      "practice": "Document a SAR handover, inspect its command-log context and end a disposable exercise board.",
+      "id": "app-ic-command-board-scene-09",
+      "capture_refs": [
+        {
+          "screenshot_id": "ic-49-persisted-note-role-files",
+          "file": "captures/expansion/ic/ic-49-persisted-note-role-files.jpg"
+        },
+        {
+          "screenshot_id": "ic-51-persisted-command-log",
+          "file": "captures/expansion/ic/ic-51-persisted-command-log.jpg"
+        },
+        {
+          "screenshot_id": "ic-37-command-note-visibility",
+          "file": "captures/expansion/ic/ic-37-command-note-visibility.jpg"
+        }
+      ],
+      "capture_observations": [
+        "Actual full reload retained the internal training note, empty Incident Files, Casey role and attributed incident log. Save View added the actual Incident map created log entry. No upload, transfer, End Command or call closure was performed."
+      ]
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Attack, search and rehab lanes connect resources, a safety role and a search benchmark."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "An event board requests medical cover and tracks a partial fulfillment."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A shared command log records task assignment and a commander handover."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A blank board organizes perimeter and gate teams with external contractors."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Multiple boards, ICP locations and rotation cues support a staged branch response."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "A plant incident combines utilities, medical and hazard-control objectives with outside specialists."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/calls.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/start-command-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/reopen-command-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/command.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/(app)/incidents.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/incident/[id].tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/command-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/incident-weather-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/add-lane-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/lane-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/structure-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/landscape-structure-board.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/add-resource-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/assign-resource-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/resource-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/resource-cards.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/add-assignment-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/objectives-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/objective-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/needs-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/need-details-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/need-entity-picker.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/need-entity-status-list.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/accountability-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/timers-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/check-in-timers/check-in-bottom-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/check-in-timers/check-in-history-list.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/check-in-timers/check-in-tab-content.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/check-in-timers/check-in-timer-card.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/notes-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/incident-files-section.tsx",
+    "/Users/shawn/Documents/dev/IC/src/app/command-log/[callId].tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/transfer-command-sheet.tsx",
+    "/Users/shawn/Documents/dev/IC/src/components/command/end-command-dialog.tsx",
+    "/Users/shawn/Documents/dev/IC/src/translations/en.json"
+  ],
+  "capture_manifest": "captures/expansion/ic/manifest.json",
+  "capture_provenance": "captures/expansion/ic/provenance.json",
+  "capture_action_ledger": "captures/expansion/ic/actions.json",
+  "export_ready": false
+}

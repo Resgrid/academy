@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "unit-selection-and-response",
+  "mode": "Manual normal-UI replay recipe; not a seed of historical execution events",
+  "purpose": "Create a fictional Unit call, select it, submit response statuses and verify closure separately from device selection.",
+  "fixture_dependencies": [
+    "demo/fixtures.json",
+    "demo/scenarios/core-configuration.json"
+  ],
+  "app": "Unit",
+  "unit": "Engine 51",
+  "theme_used": "Light",
+  "preserve": [
+    "The original three active training calls",
+    "Christopher Herrmann's existing one-seat crew assignment"
+  ],
+  "call_inputs": {
+    "Name": "TRAINING ONLY - Unit selection and response",
+    "Nature": "Fictional Academy site-inspection exercise for Department 51. No emergency, patient, or external notification delivery claim.",
+    "Priority": "Routine",
+    "Type": "Investigation",
+    "Note": "Software training only. Use this incident to practice selecting a call and recording response updates.",
+    "Address": "Fictional Academy exercise site, Chicago, IL",
+    "GPS Coordinates": "41.8721,-87.6523",
+    "Destination POI": null,
+    "Contact Name": "Fictional exercise coordinator",
+    "Contact Info": "Training coordination point: west exercise entrance.",
+    "External ID": "ACADEMY-UNIT-SELECTION-20261028",
+    "Dispatch Time": null,
+    "recipient_usernames": [
+      "boden"
+    ],
+    "Everyone": false
+  },
+  "replay_steps": [
+    "Sign in normally and select the intended unit using Settings > Active Unit. Verify the current unit and crew before proceeding.",
+    "In Calls use the lower-right plus control. Review Name, Nature, Priority and Type.",
+    "Enter the supplied training location manually. This recipe does not perform lookup, geocoding, route or live-GPS verification.",
+    "Select only the agreed training recipient, Confirm the picker, review the final form and Create.",
+    "Locate the returned incident in the active list and verify its generated number and title. The recorded title search returned no results; do not teach that search as successful.",
+    "Open the new incident and use Set Active. In Select Status choose Responding, verify the new call under Calls, review an optional note and Submit.",
+    "Return to Calls and verify the unit identity, saved Responding state and selected incident together.",
+    "Use the On Scene status action for this software exercise, verify the same call destination, add the simulation note and Submit.",
+    "Open the incident Activity view and verify both saved entries and notes. A readable tab-entry screenshot is still needed.",
+    "Use incident actions > Close Call. Review Closed, the completion note and notification choice before saving.",
+    "Verify the exercise has left the active main list. Check the sidebar separately; the recording still shows the selected call there after closure.",
+    "Use Deselect only for the intended exercise and review the normal confirmation. The native confirmation was observed through browser accessibility, but the tool cannot capture its pixels. Final selection/status verification remains pending."
+  ],
+  "status_notes": {
+    "Responding": "TRAINING ONLY: Engine 51 response selected in software for the fictional site-inspection exercise. No vehicle movement claimed.",
+    "On Scene": "TRAINING ONLY: On Scene is a simulated software status selection at the fictional exercise site."
+  },
+  "close_inputs": {
+    "Close Type": "Closed",
+    "Close Note": "TRAINING ONLY: Unit selection and response exercise complete. Simulated software status updates reviewed; no physical response claimed.",
+    "Notify everyone on the call": false
+  },
+  "historical_observation": {
+    "call_id": 51014,
+    "issued_number": "FD51-2026-0006",
+    "closed": true,
+    "final_selection_and_status_verified": true,
+    "response_activity_utc": [
+      "2026-10-28T05:32:49Z",
+      "2026-10-28T05:33:52Z"
+    ],
+    "capture_folder": "captures/expansion/unit-response-recapture-20261028",
+    "final_unit_status": "Available",
+    "final_no_active_call": true,
+    "final_readback_folder": "captures/expansion/unit-response-final-readback-20261028",
+    "final_readback_note": "Fresh normal sign-in cleared selection but Engine51 still showed On Scene. A separate normal Available > No Destination > note > Submit update was recorded and verified. Closing the self-recipient-only call did not automatically reset this selected unit status.",
+    "native_deselect_confirmation_screenshot": false
+  },
+  "replay_note": "Create a new exercise and use its returned identity. Do not reseed historical call IDs or status/check-in events as proof of a new run."
+}

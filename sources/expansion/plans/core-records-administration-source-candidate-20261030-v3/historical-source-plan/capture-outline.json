@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "status": "source_only_proposed_no_capture_or_qualification",
+  "lesson_id": "core-records-administration",
+  "screens": [
+    {
+      "id": "01-records-entry",
+      "app": "Core",
+      "route": "/User/Records/Index",
+      "capture_intent": "Show real queue and normal Manage launcher.",
+      "required_visible_labels": [
+        "Records",
+        "Manage",
+        "Definitions"
+      ],
+      "normal_UI_actions_proposed": [
+        "Open the existing sidebar Records/All records",
+        "Open Manage without selecting security/activation"
+      ],
+      "fresh_result_to_capture": "",
+      "limits": [
+        "If Records is unavailable or inactive, retain the actual gate and stop writes; do not activate or change permissions."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "02-definition-catalog",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Index",
+      "capture_intent": "Show existing catalog, blank-definition launcher and published/draft distinction.",
+      "required_visible_labels": [
+        "Definitions",
+        "New definition",
+        "Browse templates",
+        "Published version",
+        "Draft version"
+      ],
+      "normal_UI_actions_proposed": [
+        "Choose New definition"
+      ],
+      "fresh_result_to_capture": "",
+      "limits": [],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "03-new-blank-definition",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Create",
+      "capture_intent": "Prepare own new blank key/name/category with no template/clone.",
+      "required_visible_labels": [
+        "Create definition",
+        "Start from template",
+        "Blank definition",
+        "Clone existing definition",
+        "Definition",
+        "Name",
+        "Category"
+      ],
+      "normal_UI_actions_proposed": [
+        "Enter scenario values",
+        "Capture normal Create definition before one submission"
+      ],
+      "fresh_result_to_capture": "New Edit page v1; record the actual key/version route.",
+      "limits": [],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "04-designer-policy",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Edit?key=trn-community-software-20261029&version=1",
+      "capture_intent": "Show own draft policy, numbering, Standard classification and unchanged subjects/role selections.",
+      "required_visible_labels": [
+        "Lifecycle preset",
+        "Number prefix",
+        "Assign number",
+        "Sequence width",
+        "Classification",
+        "QuickEntry",
+        "OnFinalize",
+        "Standard"
+      ],
+      "normal_UI_actions_proposed": [
+        "Use only proposed own definition values; do not alter other definitions"
+      ],
+      "fresh_result_to_capture": "Fresh readback after save must show the same values.",
+      "limits": [
+        "A definition is configuration, not an operational Draft record."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "05-designer-surface-schema",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Edit?key=trn-community-software-20261029&version=1",
+      "capture_intent": "Show client/attachment/privacy controls and the real starter Summary/Notes schema.",
+      "required_visible_labels": [
+        "Client surfaces",
+        "Allow offline",
+        "Allow attachments",
+        "Keep photo coordinates on attachments",
+        "Schema (JSON)",
+        "Responder",
+        "Summary",
+        "Notes"
+      ],
+      "normal_UI_actions_proposed": [
+        "Keep default starter schema intact",
+        "Enable only proposed Responder surface; offline off; attachments on; photo coordinates off"
+      ],
+      "fresh_result_to_capture": "",
+      "limits": [
+        "Only current form controls are taught; no call/unit LaunchContexts selector exists here."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "06-validate-save",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Edit?key=trn-community-software-20261029&version=1",
+      "capture_intent": "Capture real Validate and Save draft controls before separate actions.",
+      "required_visible_labels": [
+        "Validate",
+        "Save draft",
+        "Review impact & publish"
+      ],
+      "normal_UI_actions_proposed": [
+        "Validate once; capture actual issues/result",
+        "Save draft once if validation passes",
+        "Leave/reopen actual Edit route"
+      ],
+      "fresh_result_to_capture": "Fresh persisted values and field table.",
+      "limits": [
+        "Validation is not a save. If save fails, retain actual errors and do not assert persistence."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "07-impact-publish",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Impact?key=trn-community-software-20261029&version=1",
+      "capture_intent": "Show compatibility impact and Publish before normal confirmation.",
+      "required_visible_labels": [
+        "Publish impact",
+        "Client readiness",
+        "Client capability",
+        "Publish"
+      ],
+      "normal_UI_actions_proposed": [
+        "Read errors/warnings",
+        "Only if valid/authorized, Publish this own new version using ordinary confirmation"
+      ],
+      "fresh_result_to_capture": "Published read-only Edit plus catalog published v1 and row New Record link.",
+      "limits": [
+        "Native browser confirmation is not an HTML modal; do not invent its pixels. Compatibility table is not field-app runtime proof."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "08-published-launcher",
+      "app": "Core",
+      "route": "/User/RecordDefinitions/Index",
+      "capture_intent": "Show actual published own definition row with its New Record control.",
+      "required_visible_labels": [
+        "Definitions",
+        "Published version",
+        "New Record",
+        "TRAINING ONLY - Community software exercise"
+      ],
+      "normal_UI_actions_proposed": [
+        "Choose New Record on that exact own published row"
+      ],
+      "fresh_result_to_capture": "Definition-driven form titled with own name.",
+      "limits": [
+        "Generic New Record defaults to locked Training. Unknown/unpublished custom key can also fall back; verify actual header."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "09-own-record-prepare-save",
+      "app": "Core",
+      "route": "/User/Records/New?definitionKey=trn-community-software-20261029",
+      "capture_intent": "Prepare explicit software Summary and Notes; show Save draft before saving without attachments.",
+      "required_visible_labels": [
+        "New Record",
+        "Save draft",
+        "Summary",
+        "Notes"
+      ],
+      "normal_UI_actions_proposed": [
+        "Enter fictional summary/notes",
+        "Keep Call/Station/external ID empty",
+        "Do not select any files",
+        "Save draft once"
+      ],
+      "fresh_result_to_capture": "Actual Details ID and Draft/reference, then reopen.",
+      "limits": [
+        "Honor any normal protection/reveal gate. No hidden submit or API workaround."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "10-own-draft-edit-readback",
+      "app": "Core",
+      "route": "/User/Records/Details?id=<actual-own-id>",
+      "capture_intent": "Show stored Draft contents and Edit launcher, then normal edit/save and fresh result.",
+      "required_visible_labels": [
+        "Edit",
+        "Save draft",
+        "Summary",
+        "Notes"
+      ],
+      "normal_UI_actions_proposed": [
+        "Reopen own Details",
+        "Use Edit, change only own Notes as scenario",
+        "Save draft once and reopen Details"
+      ],
+      "fresh_result_to_capture": "Saved amended Notes on the same ID; no duplicate creation.",
+      "limits": [
+        "If failure occurs after Create, inspect actual existing Draft ID before retrying to avoid duplicates."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "11-own-attachment",
+      "app": "Core",
+      "route": "/User/Records/Details?id=<actual-own-id>",
+      "capture_intent": "Show actual Add attachment classification/chooser, then fresh stored software filename.",
+      "required_visible_labels": [
+        "Attachments",
+        "File classification",
+        "Unrestricted operational content",
+        "Add attachment"
+      ],
+      "normal_UI_actions_proposed": [
+        "Choose public academy-record-exercise.txt",
+        "Select visible Unrestricted operational content",
+        "Capture prepared form",
+        "Add attachment once",
+        "Leave/reopen Details"
+      ],
+      "fresh_result_to_capture": "Actual filename/attachment list readback.",
+      "limits": [
+        "Chosen filename alone is not stored proof. Do not use Create/EditDefinition classification select due the retained discrepancy. No incident-photo/GPS claim."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "12-finalize-own-quick-entry",
+      "app": "Core",
+      "route": "/User/Records/Details?id=<actual-own-id>",
+      "capture_intent": "Show actual attestation and Finalize before normal own-record finalization.",
+      "required_visible_labels": [
+        "Finalize",
+        "I attest that this record is accurate and complete to the best of my knowledge."
+      ],
+      "normal_UI_actions_proposed": [
+        "Read own software content",
+        "Only if accurate and Finalize offered, tick normal attestation and submit once"
+      ],
+      "fresh_result_to_capture": "Fresh Finalized state, actual issued number, revision/history and retained attachment.",
+      "limits": [
+        "No fabricated number; actual returned value authoritative. Required-field/permission/protection errors remain gaps. This is no review/approve workflow."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "13-final-queue-readback",
+      "app": "Core",
+      "route": "/User/Records/Index?definitionKey=trn-community-software-20261029",
+      "capture_intent": "Filter the queue to own definition and reopen exact record.",
+      "required_visible_labels": [
+        "Records",
+        "Definition",
+        "TRAINING ONLY - Community software exercise"
+      ],
+      "normal_UI_actions_proposed": [
+        "Use actual visible definition filter then own row Details"
+      ],
+      "fresh_result_to_capture": "Same ID/state/number; earlier baseline records preserved.",
+      "limits": [
+        "Do not claim text query worked when search is degraded; no PDF/export/import operation."
+      ],
+      "status": "proposed_not_captured"
+    },
+    {
+      "id": "14-optional-responder-catalog",
+      "app": "Core",
+      "route": "/records",
+      "capture_intent": "Later independent companion capture only: normal global/no-active-call Records catalog after flags/version/context pass.",
+      "required_visible_labels": [
+        "Records",
+        "New Record",
+        "TRAINING ONLY - Community software exercise"
+      ],
+      "normal_UI_actions_proposed": [
+        "Verify actually no active call through ordinary UI",
+        "Open Records and Refresh if offered",
+        "Capture own catalog item and actual New Record control only if visible"
+      ],
+      "fresh_result_to_capture": "",
+      "limits": [
+        "Source-only proposed route for Responder; no captured success by this agent. Pending/offline local drafts are not server-persisted success. Never change Unit crew or forge context for catalog eligibility."
+      ],
+      "status": "proposed_not_captured"
+    }
+  ],
+  "originals_and_existing_lessons_unchanged": true
+}

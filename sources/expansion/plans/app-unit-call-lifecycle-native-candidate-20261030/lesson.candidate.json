@@ -1,0 +1,247 @@
+{
+  "id": "app-unit-call-lifecycle-native",
+  "title": "Unit: create, select, respond to and close a call",
+  "app": "Unit",
+  "audience": [
+    "Unit operators",
+    "Field supervisors",
+    "Department trainers"
+  ],
+  "summary": "Use the native Unit call workflow, distinguish unit status from active-call selection, and verify closeout through fresh readback.",
+  "prerequisites": [
+    "A permitted Unit sign-in and selected training unit",
+    "A fictional local call and reviewed audience",
+    "Department authority for call creation, status changes and closeout"
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Confirm the unit and open a new call",
+      "narration": "The Unit app keeps a vehicle or operational team in view while you work its calls. Here, the Calls screen shows Ambulance Sixty-one and No Active Call. The roles card reads zero of one, so this recording does not establish a staffed crew. Use the circular plus button at the lower right to open a new call when your department permits you to create one.",
+      "required_labels": [
+        "Calls",
+        "Ambulance 61",
+        "No Active Call",
+        "0 of 1 Roles"
+      ]
+    },
+    {
+      "id": "02",
+      "title": "Give the call a useful identity",
+      "narration": "In New Call, enter a clear Name and a useful Nature description. Our example is explicitly labeled training only and describes a software exercise. Review Priority and Type; this practice call uses Routine and Investigation. Use Note for additional context that belongs with the call. Choose names and classifications that make sense to your own operation rather than copying a firehouse example into live work.",
+      "required_labels": [
+        "New Call",
+        "Create New Call",
+        "Routine",
+        "Investigation",
+        "Note"
+      ]
+    },
+    {
+      "id": "03",
+      "title": "Review location inputs",
+      "narration": "Call Location provides Address, GPS Coordinates, what3words and Plus Code fields, along with Select Location on Map. Destination POI is a separate choice and currently reads No destination selected. This software-only exercise leaves the location and contact inputs empty; a real assignment needs the location information required by your operating procedure. A visible location field does not establish that a device has supplied GPS coordinates or that an address lookup has succeeded.",
+      "required_labels": [
+        "Call Location",
+        "Address",
+        "GPS Coordinates",
+        "what3words",
+        "Plus Code",
+        "Select Location on Map",
+        "Destination POI",
+        "No destination selected",
+        "Contact Name",
+        "Contact Info"
+      ]
+    },
+    {
+      "id": "04",
+      "title": "Check the actual dispatch audience",
+      "narration": "In Select Dispatch Recipients, review individual users as well as the broad Everyone option. Wallace Boden is checked here, while Everyone remains unchecked. In the Units section, Ambulance Sixty-one is also selected, bringing this exercise to two selected recipients. Confirm retains that reviewed audience; it does not demonstrate that a recipient has received a notification.",
+      "required_labels": [
+        "Select Dispatch Recipients",
+        "Everyone",
+        "Wallace Boden",
+        "Units (8)",
+        "Ambulance 61",
+        "2 selected",
+        "Confirm"
+      ]
+    },
+    {
+      "id": "05",
+      "title": "Create once and inspect the returned call",
+      "narration": "Back on New Call, verify Dispatch To and its two selected recipients. Dispatch Time is blank in this exercise; no future schedule is entered. After reviewing the form, use Create once. The Calls list now contains the new training exercise with Boden and Ambulance Sixty-one shown on its card.",
+      "required_labels": [
+        "New Call",
+        "Dispatch To",
+        "2 selected",
+        "Dispatch Time",
+        "Create",
+        "Calls",
+        "Wallace Boden",
+        "Ambulance 61"
+      ]
+    },
+    {
+      "id": "06",
+      "title": "Read details before selecting the call",
+      "narration": "Open the training call and check its identity in Call Details. This saved exercise has a department call number ending in eight, and its Info view retains Routine, Investigation and the original note. Choose Set Active for the incident you intend to work. The app reports Call set as active and opens Select Status.",
+      "required_labels": [
+        "Call Details",
+        "Info",
+        "Routine",
+        "Investigation",
+        "Note",
+        "Set Active",
+        "Call set as active",
+        "Select Status"
+      ]
+    },
+    {
+      "id": "07",
+      "title": "Choose the intended response status",
+      "narration": "Select Status is the first of three steps. The configured choices include Responding, Available, Committed, On Scene, Staging, Returning and Out of Service. Here, Responding is selected; use Next to review its destination.",
+      "required_labels": [
+        "Select Status",
+        "Step 1 of 3",
+        "Responding",
+        "Available",
+        "Committed",
+        "On Scene",
+        "Staging",
+        "Returning",
+        "Out of Service",
+        "Next"
+      ]
+    },
+    {
+      "id": "08",
+      "title": "Associate the update with the right destination",
+      "narration": "Select Destination for Responding distinguishes Calls, Stations and POIs from No Destination. The selected row is our new training incident, ending in eight. Check that identity before using Next, so the status update is associated with the intended call.",
+      "required_labels": [
+        "Select Destination for Responding",
+        "Calls",
+        "Stations",
+        "POIs",
+        "No Destination",
+        "FD51-2026-0008 - TRAINING ONLY - Native Unit response and deselection",
+        "Next"
+      ]
+    },
+    {
+      "id": "09",
+      "title": "Review the note and submit the status",
+      "narration": "Add Note shows the selected Responding status and the training call together. The optional note makes clear that this is a software exercise. Review the summary, then use Submit to save the update. Status saved successfully is the returned result from that submission.",
+      "required_labels": [
+        "Add Note",
+        "Note (optional):",
+        "Submit",
+        "Status saved successfully!"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Read unit status and active selection separately",
+      "narration": "Back in Calls, the sidebar now shows Responding and the selected training call. Keep the unit identity, its status and the active call in view when changing tasks. The circle with an X below the active-call card is the Deselect control.",
+      "required_labels": [
+        "Calls",
+        "Responding",
+        "#FD51-2026-0008",
+        "Ambulance 61"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Confirm deselection",
+      "narration": "Deselect Active Call asks whether to deselect the current active call. Use Cancel to keep the selection or Confirm to clear it. After Confirm, the sidebar reads No Active Call, while the incident remains in Calls and the unit still reads Responding. Clearing your active selection and closing the department incident are separate operations.",
+      "required_labels": [
+        "Deselect Active Call",
+        "Are you sure you want to deselect the current active call?",
+        "Cancel",
+        "Confirm",
+        "No Active Call",
+        "Calls",
+        "Responding",
+        "#FD51-2026-0008"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Open the incident closeout action",
+      "narration": "Reopen the same training incident from Calls and confirm its title in Call Details. The three-dot menu at the upper right opens the available incident actions. Edit Call and Close Call are separate choices. Choose Close Call only when you have the authority and the incident is ready for closeout.",
+      "required_labels": [
+        "Call Details",
+        "Edit Call",
+        "Close Call"
+      ]
+    },
+    {
+      "id": "13",
+      "title": "Read closeout defaults before submitting",
+      "narration": "The Close Call sheet requires a Close Type and provides a Close Note. Notify everyone on the call is enabled in this recorded starting state. Review that setting explicitly because the sheet describes alerting the dispatched personnel, groups, roles, units and command team. Close Type offers Closed, Cancelled, Unfounded, Founded, Minor, Transferred and False Alarm.",
+      "required_labels": [
+        "Close Call",
+        "Close Type",
+        "Close Note",
+        "Notify everyone on the call",
+        "Closed",
+        "Cancelled",
+        "Unfounded",
+        "Founded",
+        "Minor",
+        "Transferred",
+        "False Alarm"
+      ]
+    },
+    {
+      "id": "14",
+      "title": "Finish the practice call deliberately",
+      "narration": "Our example selects Closed and enters a Close Note explaining that the software workflow is complete. Notify everyone on the call is off for this local exercise. Check the call identity and closeout information, then use the green Close Call button once. The app returns Call closed successfully and shows No Active Call. The three earlier training calls remain listed, and this immediate view still shows the cached Responding status.",
+      "required_labels": [
+        "Closed",
+        "Close Note",
+        "Notify everyone on the call",
+        "Close Call",
+        "Call closed successfully",
+        "No Active Call",
+        "Responding",
+        "#DEMO-0003",
+        "#DEMO-0002",
+        "#DEMO-0001"
+      ]
+    },
+    {
+      "id": "15",
+      "title": "Verify the final state and apply the workflow",
+      "narration": "A fresh app readback shows Released, No Active Call and the original three training incidents. Released is the observed final status here; it should not be described as an Available selection or evidence of physical readiness. Use these same identity, selection and closeout checks for a community paramedicine car, a mental health response team, a search and rescue vehicle, a security patrol, a wildland crew or an industrial response unit. The names in this example are fictional training data; choose the statuses, audience and incident details that fit your department.",
+      "required_labels": [
+        "Released",
+        "No Active Call",
+        "#DEMO-0003",
+        "#DEMO-0002",
+        "#DEMO-0001",
+        "Calls"
+      ]
+    }
+  ],
+  "export_ready": false,
+  "authoring_status": "bounded_native_actual_source_candidate_frozen_parent_review_and_narration_pending",
+  "sector_examples": {
+    "community_paramedicine": "A community-care vehicle uses the same unit/call identity checks.",
+    "mental_health": "A response team keeps the selected assignment and its status distinct.",
+    "search_and_rescue": "A search vehicle checks the call and destination before a status update.",
+    "security": "A patrol distinguishes its own active assignment from department incident closeout.",
+    "wildland": "A crew vehicle verifies its status and a separate incident selection.",
+    "industrial": "A site response vehicle reviews its audience and closeout setting."
+  },
+  "capture_limitations": [
+    "This is the native iPad training app, not a web/native parity claim.",
+    "Creation images precede an isolated spinner-effect repair; response and closeout use the repaired recording copy. Native public context retains the exact source-profile history.",
+    "The chosen unit has0of1roles throughout; no seat, other unit, live incident or qualification was changed by this source preparation.",
+    "Status saved and close success are observed software results, without physical response, GPS, delivery, provider or hardware claims.",
+    "Immediate post-close native header remains cachedResponding; fresh native readback showsReleased. Do not replace either with Available.",
+    "Locations/schedule remain empty; no route/geocoder/location permission is exercised.",
+    "No narration, final timed plan, encoded video, playback proof or publication approval is created by this candidate."
+  ]
+}

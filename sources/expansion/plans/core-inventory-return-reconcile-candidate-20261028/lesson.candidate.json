@@ -1,0 +1,240 @@
+{
+  "id": "core-inventory-return-reconcile",
+  "title": "Return issued stock and reconcile the balance",
+  "app": "Core",
+  "audience": [
+    "Inventory coordinators",
+    "Authorized stock and equipment managers"
+  ],
+  "summary": "Review a remaining issuance, prepare its return amount, destination and condition, post once, and reconcile the returned record, ledger and holdings.",
+  "prerequisites": [
+    "Authorized Inventory access with permission to return the chosen practice issuance.",
+    "A clearly identified noncontrolled practice item and a positive outstanding quantity on the chosen issuance.",
+    "The captured example is already Returned with zero outstanding. Do not repeat its return or reset stock; use another authorized practice record if rehearsing.",
+    "Choose the actual permitted destination and condition for your record; this software exercise establishes no physical movement, inspection or repair."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Read the stock context",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "002-partially-returned-issuance",
+        "001-current-filtered-balances"
+      ],
+      "required_labels": [
+        "Inventory",
+        "On hand",
+        "Items",
+        "Academy training batteries",
+        "Filter",
+        "Station",
+        "13.000000",
+        "Unit",
+        "5.000000",
+        "Personnel",
+        "1.000000"
+      ],
+      "narration": "In Core Inventory, this recorded exercise returns the remaining issued stock and checks where the balance went. Open On hand to review the current item and location. Use Items to select Academy training batteries and choose Filter. The starting snapshot shows thirteen at Station, five at Unit and one at Personnel: nineteen altogether. These figures follow earlier usage, so they are later than the separate twenty-pack receipt example.",
+      "practice": "Identify the item and current holders before considering a return; use the quantities in your own permitted record."
+    },
+    {
+      "id": "02",
+      "title": "Open the outstanding issuance",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "002-partially-returned-issuance",
+        "004-return-form-settled"
+      ],
+      "required_labels": [
+        "Issuances",
+        "Outstanding",
+        "Partially returned",
+        "Return",
+        "Return · Academy training batteries",
+        "Amount",
+        "Destination location",
+        "Status",
+        "Note"
+      ],
+      "narration": "Choose Issuances. Find the training batteries row and compare Location, Outstanding and Status. This row says Personnel, one outstanding, and Partially returned. Personnel identifies the holder category here; it does not print a person’s name. Choose the row’s Return action. The Return window names the batteries and asks for Amount, Destination location, Status and Note. Opening this form has not recorded a return.",
+      "practice": "Open only an authorized practice issuance with a positive outstanding amount and a visible Return action."
+    },
+    {
+      "id": "03",
+      "title": "Prepare the amount and destination",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "005-return-prepared-station"
+      ],
+      "required_labels": [
+        "Amount",
+        "1",
+        "Destination location",
+        "Station",
+        "Note",
+        "TRAINING ONLY - Return the remaining one fictional training battery pack to Station. Software exercise; no physical movement."
+      ],
+      "narration": "For this example, Amount is one and Destination location is Station. Read both before continuing: the quantity is coming back from the issuance holder to that destination. Add a useful Note explaining the return. Ours clearly marks a fictional software exercise with no physical movement. Check the complete note rather than relying on a shortened description elsewhere.",
+      "practice": "Compare the permitted amount, destination and complete note; never use the example quantities as instructions for unrelated stock."
+    },
+    {
+      "id": "04",
+      "title": "Review the condition without posting alternatives",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "006-return-condition-repair-unsaved",
+        "007-return-condition-damaged-unsaved",
+        "008-final-return-review"
+      ],
+      "required_labels": [
+        "Status",
+        "Out for repair",
+        "Damaged",
+        "In service"
+      ],
+      "narration": "Status describes the condition the equipment came back in. Out for repair is one available choice, shown here without submitting it. Damaged is another choice, also left unsaved in this exercise. We restore In service for the final training return. Select the condition that matches your authorized record; choosing a software label does not establish a physical inspection or repair.",
+      "practice": "Inspect the choices without posting alternative conditions. The captured return used In service; no repair or damaged return was recorded."
+    },
+    {
+      "id": "05",
+      "title": "Submit once and read the result",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "008-final-return-review",
+        "009-returned-zero-outstanding"
+      ],
+      "required_labels": [
+        "Return",
+        "Amount",
+        "Station",
+        "In service",
+        "Note",
+        "Issuances",
+        "Returned",
+        "0.000000"
+      ],
+      "narration": "Review Amount, Station, In service and the full Note together. When the intended return is correct, select the Return button at the bottom once. Read the resulting Issuances row. It now says Returned with zero outstanding, and its Return action is gone. That readback establishes the stored result; the prepared form alone did not. Avoid submitting again while waiting for a result.",
+      "practice": "Compare the result with the intended return and stop when the issuance is Returned with zero outstanding."
+    },
+    {
+      "id": "06",
+      "title": "Check the new ledger entry",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "009-returned-zero-outstanding",
+        "010-new-return-ledger-readback"
+      ],
+      "required_labels": [
+        "History",
+        "Items",
+        "Filter",
+        "Academy training batteries",
+        "Return",
+        "Personnel",
+        "Station",
+        "1.000000",
+        "TRAINING ONLY - Return the remaining one fictional training battery pack to Station. Software exercise; no physical movement.",
+        "Consume",
+        "Issue",
+        "2.000000",
+        "Fictional training issue to Matthew Casey; software exercise."
+      ],
+      "narration": "Choose History to check the recorded movement. Filter Items to the same training batteries. The new top Return row shows one moving from Personnel to Station, with our complete training note. Earlier rows remain separate: Consume records one used pack, and the older Issue row records two, with Matthew Casey named in its note. Read the movement, quantity, direction and note together so an older return is not mistaken for the new one.",
+      "practice": "Find the new Return by its direction, amount and note; distinguish it from the earlier partial return and usage."
+    },
+    {
+      "id": "07",
+      "title": "Reconcile the holdings",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "009-returned-zero-outstanding",
+        "011-balances-after-return"
+      ],
+      "required_labels": [
+        "On hand",
+        "Academy training batteries",
+        "Station",
+        "14.000000",
+        "Unit",
+        "5.000000",
+        "Personnel",
+        "0.000000"
+      ],
+      "narration": "Return to On hand for the balance check. The fresh filtered table now shows fourteen at Station, five at Unit and zero at Personnel. The total is still nineteen. Returning the issued pack moves its recorded holding; it does not restore the pack consumed earlier or create an extra receipt. Compare this result with the starting balances and the new ledger entry.",
+      "practice": "Reconcile the holder changes without changing the overall total or resetting the recorded usage."
+    },
+    {
+      "id": "08",
+      "title": "Leave the completed example intact",
+      "route": "/User/Inventory",
+      "capture_intent": "Use ordered actual reviewed originals; no invented clicks, result, timing or continuous recording claim.",
+      "capture_refs": [
+        "009-returned-zero-outstanding",
+        "011-balances-after-return"
+      ],
+      "required_labels": [
+        "Returned",
+        "0.000000",
+        "Academy training batteries",
+        "Station",
+        "Quantity"
+      ],
+      "narration": "The example issuance is now Returned with zero outstanding. Do not submit another return against it. For practice, use a different approved issuance that still has stock outstanding and read its current balances. The same return and reconciliation pattern serves fire and EMS, community paramedicine and mental health teams, search and rescue, security departments and companies, wildland contractors, and industrial emergency response teams.",
+      "practice": "If the issuance is Returned, outstanding is zero, or Return is absent, stop. Use a separate approved practice record to rehearse a future return."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Return remaining issued training supplies to the intended station stock.",
+      "practice": "Confirm the outstanding amount, return destination and ledger before a new restock."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Account for unused community care or mental health response supplies.",
+      "practice": "Use an operational supply note without patient details and reconcile the recorded holder."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Reconcile supplies issued for a search exercise.",
+      "practice": "Distinguish unused returned stock from quantities already consumed."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Return stock signed out for a security patrol assignment.",
+      "practice": "Read the actual holder and remaining amount; do not infer a person from the Personnel label."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Reconcile unused supplies from a contractor crew assignment.",
+      "practice": "Select the appropriate permitted destination and condition, then verify the saved return."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "Return unused exercise supplies to facility stock.",
+      "practice": "Keep the software condition selection separate from any physical inspection or repair process."
+    }
+  ],
+  "candidate_only": true,
+  "source_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "narration_approved": false,
+  "scope_limits": [
+    "This candidate covers one actual final return and readback; it does not recreate the earlier receipt/issue/partial return.",
+    "Unsaved Out for repair and Damaged selections were restored to In service before the one actual return.",
+    "Current total19 follows earlier Consume1; the separate movement lesson20pack snapshot remains unchanged.",
+    "History button is pictured in009; clipped History heading in010 is not a visible label.",
+    "No witness, rebuild, controlled-substance, kit, physical inspection, repair or provider operation is demonstrated.",
+    "Report, PDF and stock-count workflows are outside this Return lesson.",
+    "Browser captures establish these software records; native hardware, GPS and offline operation are unverified."
+  ]
+}

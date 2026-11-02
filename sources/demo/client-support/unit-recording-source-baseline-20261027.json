@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "app": "Unit",
+  "source_git_revision": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+  "source_files": {
+    "src/components/maps/map-view.web.tsx": "22e7bf01916d7fabc5b3a44cc8010eb57c3f90ed74484481896dd01ce7359b7a",
+    "src/components/calls/call-images-modal.tsx": "7749da50f6632262f48a78ab7f63e9bce581af87e100c97947e502ba64d120fd",
+    "src/components/calls/__tests__/call-images-modal.test.tsx": "355186bff02e7ebc09449b01b41487d5d4aa5d8c40c80c367f9dd6b791d72720"
+  },
+  "must_be_absent": [
+    "src/components/maps/__tests__/camera.web.test.tsx"
+  ],
+  "patched_files": {
+    "src/components/maps/map-view.web.tsx": "44a844c3afb90a46af5e5e56ab78871277b5c4fb27901f680f06bdf426c711fc",
+    "src/components/maps/__tests__/camera.web.test.tsx": "0d12a7d0e22c0b6bbb84525987a60895e15effc3ba9bf3e6f1ad822318c95e14",
+    "src/components/calls/call-images-modal.tsx": "2c26aea273f0abfcd0bd76ecdee8c87e3c6e77edbffe4486e2007deb4d9ed430",
+    "src/components/calls/__tests__/call-images-modal.test.tsx": "e8700bfe936e8d5e3c99edb5021104b1e8414527f2317c0db91ae3434dec7b9d"
+  },
+  "patches": [
+    {
+      "file": "demo/client-support/unit-camera/unit-camera-options.patch",
+      "sha256": "9c9fe32bc1cf220ce6d8627d74035371f64c2dbaf62921daa892d261e728a3d0"
+    },
+    {
+      "file": "demo/client-support/unit-images/unit-images-web-read.patch",
+      "sha256": "687d448bc7601042e13c3d000539f6423f46c234c88980d881e393121cca1f07"
+    }
+  ],
+  "policy": "Verify exact clean managed source first; apply both only to a fresh isolated copy; fail closed on unknown edits or existing destination; never edit original or dependency manifests/locks.",
+  "dependency_files": {
+    "package.json": "31431c61d50287e204a6d093576520c460a34598964ac905b38a5a7e5cd5c9cd",
+    "yarn.lock": "dabc6b25d8761ecb2532c841e0efb115053c1c5acb5ed022d71a4208a6bf73d1"
+  },
+  "dependency_source_files": {
+    "mapbox-gl/package.json": "97bf991d8635b1177c1fa401193430d817288124e176eeb7ffc258319624a0fa",
+    "mapbox-gl/dist/mapbox-gl.js": "4d4b4217fe592a21fd1c7f022aa12bfcd1c08ae7c4cf9f3588a8d45990e18c8f",
+    "mapbox-gl/dist/mapbox-gl-unminified.js": "34183be70de7d8c5d7025a81622f44387d5c09e9973844621a0d25dfe5e856f2",
+    "expo-file-system/package.json": "db1d8ced7ce04e7daf4e55c3fd543bfbe42e32aa5e192bbb8ae4bda98de50069",
+    "expo-file-system/src/legacy/ExponentFileSystem.web.ts": "9486b1a41d74cc2f4c19e49a8a40a9517d2edba4a3867d1da1f2b1571e83017a",
+    "expo-file-system/src/legacy/ExponentFileSystemShim.ts": "4adb18be27fc58e0e4f68f8569abe6e778c7001c627d610c53bdd3799e67eb08",
+    "expo-file-system/src/legacy/FileSystem.ts": "46b2c457480345d91b2c7bab27fa83ca2b3b13351798c3759c38c5da3b94bb7f",
+    "expo-image-manipulator/package.json": "4c90a6c4044b440fac99327ab529539c8ac94bd1e20c61173e9f28883a904eeb",
+    "expo-image-manipulator/src/web/ImageManipulatorImageRef.web.ts": "af2249a040490ea4892f3cc0f606766743d37affb93604aa196a329a585b18b5",
+    "expo-image-manipulator/src/web/utils.web.ts": "1b818d3c8c64f4036456a4ab02b6df6cd19226c0f73b6761cad1ba30bf5a896d"
+  }
+}

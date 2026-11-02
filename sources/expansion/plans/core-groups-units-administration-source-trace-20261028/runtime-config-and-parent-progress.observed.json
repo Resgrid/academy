@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_runtime_config_observation_and_parent_progress",
+  "observed_at": "2026-10-28T23:51:30Z",
+  "runtime_check": {
+    "method": "Read-only docker inspect metadata plus docker exec cat of the owned web /config/ResgridConfig.json, parsed internally. Only presence/empty classifications were emitted; no config contents, credentials or private-file hashes retained.",
+    "owned_container": "resgrid-academy-oct25-web-1",
+    "config_path_matches_AppOptions_ConfigPath": true,
+    "NovuBackendUrl_entry_present": false,
+    "NovuSecretKey_entry_present": false,
+    "NovuSocketUrl_entry_present": false,
+    "Novu_environment_override_count": 0,
+    "pinned_ChatConfig_defaults_for_these_fields": "empty",
+    "source_implication": "NewUnit calls CreateUnitSubscriber unconditionally. With the observed missing fields/default-empty backend and no NovuENV override, CreateSubscriber constructs relative /v2/subscribers on a fresh HttpClient with no BaseAddress; the call fails locally before an external transport target can be used. Its catch logs and returnsfalse; Unit controller does not depend on that return value.",
+    "not_attested": "No in-memory reflection, packet capture, provider receipt or actual Unit-save subscriber trace performed. No claim of a separate integration-enabled flag; the observed backend is simply unconfigured.",
+    "no_HTTP_API_or_provider_request_by_reviewer": true,
+    "no_settings_or_container_mutation": true
+  },
+  "additional_source_pins": [
+    {
+      "repo": "Core",
+      "path": "Core/Resgrid.Config/ChatConfig.cs",
+      "sha256": "fd8466f9ba904cf168c2fe66cedaf7aecfb86cdc8af272dc528a80d9cd9bcff7",
+      "matches_pinned_Core_head": true
+    },
+    {
+      "repo": "Core",
+      "path": "Core/Resgrid.Config/ConfigProcessor.cs",
+      "sha256": "44ad5d95578e892756f539bf0d52195edf2d7954b3ddf9f14ec72f6eaebf25c7",
+      "matches_pinned_Core_head": true
+    },
+    {
+      "repo": "Core",
+      "path": "Providers/Resgrid.Providers.Messaging/NovuRequestRetry.cs",
+      "sha256": "04f47f222a12fde5fe315c4f5ec275a6947f7b7dba6a53ce83c490362c678ad4",
+      "matches_pinned_Core_head": true
+    }
+  ],
+  "related_source_evidence": "source-evidence.json",
+  "parent_reported_actual_progress": {
+    "basis": "Parent message, no new capture inspection while raw folder is active.",
+    "own_organizational_group_id": 51007,
+    "organizational_name_parent_description": "Community coordination",
+    "reported_name_length": 44,
+    "own_station_group_id": 51008,
+    "station_name_parent_description": "Community base",
+    "station_parent_id": 51007,
+    "station_illustrative_coordinates": [
+      "41.8500",
+      "-87.6500"
+    ],
+    "station_saved_and_fresh_read_back_parent_reported": true,
+    "people_printer_W3W_address_changes": false,
+    "own_type_id": 51006,
+    "type_name": "TRAINING ONLY - Community response vehicle",
+    "class": "Support",
+    "actions": "Standard Actions",
+    "map_icon": "Van",
+    "custom_file": null,
+    "type_saved_and_fresh_read_back_parent_reported": true,
+    "new_unit_form_parent_description": "Community van",
+    "unit_saved_as_of_parent_message": false,
+    "prepared_seats": [
+      {
+        "name": "Coordination seat",
+        "required_personnel_role_id": 51007,
+        "required": true
+      },
+      {
+        "name": "Optional support seat",
+        "required_personnel_role": null,
+        "required": false
+      }
+    ],
+    "role_template_preview": "Security preview only, no apply",
+    "existing_memberships_and_crew_preserved_parent_reported": true
+  },
+  "history_boundary": "Earlier proposed None/Default type and41.8721,-87.6523 example remain untouched as a proposal. The parent chose different normal UI values, recorded here separately. No success is inferred for the as-yet-unsaved unit.",
+  "source_only": true,
+  "no_canonical_audio_timing_freeze_site_target_Git_change": true
+}

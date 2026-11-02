@@ -1,0 +1,525 @@
+{
+  "id": "app-unit-03-routes-and-inventory",
+  "title": "Unit: execute routes and count apparatus inventory",
+  "app": "Unit",
+  "audience": "Patrol, community-response, logistics, and apparatus crews responsible for routes or inventory counts.",
+  "summary": "Follow a route’s planned stops with a traceable execution history, then count what is actually present on the selected unit.",
+  "prerequisites": [
+    "A selected demo unit and a route assigned to it or available to start, with stops, contact details, schedule, and history.",
+    "A prepared deviation example; native location for a separately observed geofence branch.",
+    "Migrated inventory assigned to the unit, adjustment permission at that location, and sample bulk, serialized, and controlled items."
+  ],
+  "scenes": [
+    {
+      "id": "01-browse-the-routes-and-poi-context",
+      "title": "Browse the routes and POI context",
+      "route": "/routes",
+      "capture_intent": "Capture Routes/My Unit/All Routes and POIs, search/filter/sort using prepared actual data. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Routes"
+      ],
+      "narration": "Open Routes with the intended unit selected. Use the available route and POI search, filters, and sorting to inspect the assignment. A plan and a particular execution answer different questions. This pattern suits community welfare rounds, security patrols, or industrial inspections. Choose the route for this crew and shift before starting; an empty list describes available data, not completed field work.",
+      "practice": "Find the fictional campus patrol plan assigned to the training vehicle and distinguish it from a completed route instance.",
+      "source_workflow_reference": {
+        "title": "Browse the routes and POI context",
+        "narration": "Open Routes with the intended active unit selected. Browse the available route information and POI views, using the offered search, filters, and sorting to find the assignment. A plan describes what should happen; an active instance describes a particular execution. Choose the route that belongs to this crew and shift, and inspect its details before assuming the first item in the list is the correct one.",
+        "required_labels": [
+          "Routes"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Find the fictional campus patrol plan assigned to the training vehicle and distinguish it from a completed route instance."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Capture Routes/My Unit/All Routes and POIs, search/filter/sort using prepared actual data."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 61
+    },
+    {
+      "id": "02-review-the-plan-before-starting",
+      "title": "Review the plan before starting",
+      "route": "/routes/start",
+      "capture_intent": "Open a route assigned to Engine51; show ordered stops, schedule and Start Route; no reassignment to bypass eligibility. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Planned Arrival",
+        "Planned Departure",
+        "Dwell Time",
+        "Start Route"
+      ],
+      "narration": "The start view shows stops and the plan’s distance, duration, Planned Arrival, Planned Departure, and Dwell Time where configured. Review the sequence and contact context before Start Route. A route assigned to another unit cannot simply be taken from this one. Resolve the assignment with the coordinator instead of switching apparatus merely to bypass the restriction. The plan should match the route the crew intends to perform.",
+      "practice": "Inspect a fictional community welfare route, verify its assigned unit, and compare the first stop’s planned arrival with the crew’s start time.",
+      "source_workflow_reference": {
+        "title": "Review the plan before starting",
+        "narration": "The start view shows stops and the plan’s distance, duration, Planned Arrival, Planned Departure, and Dwell Time where configured. Review the sequence and contact context before Start Route. A route assigned to another unit cannot simply be taken from this one. Resolve the assignment with the coordinator instead of switching apparatus merely to bypass the restriction. The plan should match the route the crew intends to perform.",
+        "required_labels": [
+          "Planned Arrival",
+          "Planned Departure",
+          "Dwell Time",
+          "Start Route"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Inspect a fictional community welfare route, verify its assigned unit, and compare the first stop’s planned arrival with the crew’s start time."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open a route assigned to Engine51; show ordered stops, schedule and Start Route; no reassignment to bypass eligibility."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 67
+    },
+    {
+      "id": "03-read-the-active-route-s-progress",
+      "title": "Read the active route’s progress",
+      "route": "/routes/active",
+      "capture_intent": "Show actual active instance, progress/next-stop and direction availability; do not claim a provider journey. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Current Step",
+        "Stops Completed",
+        "Directions"
+      ],
+      "narration": "On the active route, compare Current Step, Stops Completed, and any available estimate to the next stop. Inspect Directions and the next destination before moving. Guidance depends on the route data and provider configuration; viewing its control does not prove a navigation handoff worked. The progress and map are software context, and neither confirms that the crew physically travelled to the displayed place.",
+      "practice": "Identify the next training patrol stop and compare the progress indicator with the stop list before opening directions.",
+      "source_workflow_reference": {
+        "title": "Read the active route’s progress",
+        "narration": "On the active route, compare Current Step, Stops Completed, and the estimated time to the next stop. Directions opens the route guidance available for the selected instance. Read the next stop before moving, especially when an earlier stop was changed or skipped. The active route overlay and progress display support the work, but they do not replace checking the actual destination and local access conditions.",
+        "required_labels": [
+          "Current Step",
+          "Stops Completed",
+          "Directions"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Identify the next training patrol stop and compare the progress indicator with the stop list before opening directions."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Show actual active instance, progress/next-stop and direction availability; do not claim a provider journey."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "04-check-in-at-the-intended-stop",
+      "title": "Check in at the intended stop",
+      "route": "/routes/stop/[id]",
+      "capture_intent": "Open a pending training stop, capture manual Check In and resulting state; explicitly disclose no location fix and0,0 fallback if applicable. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Stop Detail",
+        "Check In",
+        "Schedule"
+      ],
+      "narration": "Open Stop Detail and review Schedule before Check In. This is a manual software event for the selected stop. The current client sends zero coordinates when it has no location fix, so a successful check-in cannot prove physical arrival. Automatic geofence behavior requires separate native-device and route-configuration checks. Keep this fictional exercise distinct from an actual visit, and inspect the resulting stop state.",
+      "practice": "Open a fictional industrial inspection stop, compare its location with the intended checkpoint, and record a permitted manual check-in.",
+      "source_workflow_reference": {
+        "title": "Check in at the intended stop",
+        "narration": "Open Stop Detail for the place you have reached. Review Schedule and the location context, then use Check In for the correct stop when the workflow allows it. A configured geofence may support automatic behavior, but it depends on real device location and the route setup. Practice the manual control here and inspect its resulting state; test any automatic arrival behavior separately on the intended device.",
+        "required_labels": [
+          "Stop Detail",
+          "Check In",
+          "Schedule"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Open a fictional industrial inspection stop, compare its location with the intended checkpoint, and record a permitted manual check-in."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open a pending training stop, capture manual Check In and resulting state; explicitly disclose no location fix and0,0 fallback if applicable."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "05-keep-stop-notes-and-contacts-useful",
+      "title": "Keep stop notes and contacts useful",
+      "route": "/routes/stop/[id] -> /routes/stop/contact",
+      "capture_intent": "Open stop contact and save a clearly fictional visit note; verify persisted note. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Contact Details",
+        "Notes",
+        "Save"
+      ],
+      "narration": "Contact Details provides the stop’s available contact context. Use Notes to record concise information about this visit, then Save. Write what the next crew or coordinator needs to understand, such as a fictional access restriction or an agreed follow-up, and avoid unnecessary personal information. A stop note belongs to this route execution; broader contact history and preplans remain available through their separate reference surfaces.",
+      "practice": "Add a training note about a temporarily unavailable entrance and inspect the associated fictional contact information.",
+      "source_workflow_reference": {
+        "title": "Keep stop notes and contacts useful",
+        "narration": "Contact Details provides the stop’s available contact context. Use Notes to record concise information about this visit, then Save. Write what the next crew or coordinator needs to understand, such as a fictional access restriction or an agreed follow-up, and avoid unnecessary personal information. A stop note belongs to this route execution; broader contact history and preplans remain available through their separate reference surfaces.",
+        "required_labels": [
+          "Contact Details",
+          "Notes",
+          "Save"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Add a training note about a temporarily unavailable entrance and inspect the associated fictional contact information."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open stop contact and save a clearly fictional visit note; verify persisted note."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "06-check-out-after-the-work-is-complete",
+      "title": "Check out after the work is complete",
+      "route": "/routes/stop/[id]",
+      "capture_intent": "Check Out an InProgress fictional stop and verify Completed/progress. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Check Out",
+        "Completed"
+      ],
+      "narration": "Use Check Out when the work at that stop is complete, then inspect the displayed Completed state and the route’s progress. Arrival and departure are different events, and the time spent can matter to the visit record. Check the next step after returning to the active route. Do not check out merely to make the progress count look correct while a required task is still unfinished.",
+      "practice": "Complete a fictional welfare visit, check out, and compare the stop history with the updated completed-stop count.",
+      "source_workflow_reference": {
+        "title": "Check out after the work is complete",
+        "narration": "Use Check Out when the work at that stop is complete, then inspect the displayed Completed state and the route’s progress. Arrival and departure are different events, and the time spent can matter to the visit record. Check the next step after returning to the active route. Do not check out merely to make the progress count look correct while a required task is still unfinished.",
+        "required_labels": [
+          "Check Out",
+          "Completed"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Complete a fictional welfare visit, check out, and compare the stop history with the updated completed-stop count."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Check Out an InProgress fictional stop and verify Completed/progress."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 66
+    },
+    {
+      "id": "07-skip-with-a-reason-instead-of-hiding-a-visit",
+      "title": "Skip with a reason instead of hiding a visit",
+      "route": "/routes/active -> /routes/stop/[id]",
+      "capture_intent": "Open Skip reason modal on a separate pending stop; submit a clear training reason and verify Skipped. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Skip",
+        "Skip Reason"
+      ],
+      "narration": "When a stop cannot be performed, use Skip and enter a specific Skip Reason. Explain the operational cause rather than writing a vague completion claim. A skipped stop is different from a completed visit and should remain understandable in history. Confirm the affected stop before applying the action, then inspect the remaining route so the crew knows where it is expected to go next.",
+      "practice": "Skip a fictional locked-gate inspection with a clear reason, then verify the stop is represented as skipped rather than completed.",
+      "source_workflow_reference": {
+        "title": "Skip with a reason instead of hiding a visit",
+        "narration": "When a stop cannot be performed, use Skip and enter a specific Skip Reason. Explain the operational cause rather than writing a vague completion claim. A skipped stop is different from a completed visit and should remain understandable in history. Confirm the affected stop before applying the action, then inspect the remaining route so the crew knows where it is expected to go next.",
+        "required_labels": [
+          "Skip",
+          "Skip Reason"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Skip a fictional locked-gate inspection with a clear reason, then verify the stop is represented as skipped rather than completed."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Skip reason modal on a separate pending stop; submit a clear training reason and verify Skipped."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "08-review-deviations-before-acknowledging-them",
+      "title": "Review deviations and their recorded state",
+      "route": "/routes/history/instance/[id]",
+      "capture_intent": "Open actual instance Deviations and any already-recorded acknowledgement badge. No acknowledgement/Pause/Resume/Cancel action is rendered. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Deviations",
+        "Stops"
+      ],
+      "narration": "Review Deviations in the route instance history alongside the stops and timestamps. The current detail renders an Acknowledge badge only for a deviation already marked acknowledged; it does not provide an acknowledgement action. The API and store contain that operation, but no current screen calls it. Read the recorded context without claiming a review action changed the deviation or corrected the underlying condition.",
+      "practice": "Inspect a real training deviation and any existing acknowledgement badge without invoking an action absent from this UI.",
+      "source_workflow_reference": {
+        "title": "Review deviations before acknowledging them",
+        "narration": "A Route Deviation records an available exception associated with the execution. Open the relevant detail and read what happened before Acknowledge. Acknowledgement marks that the information was reviewed; it does not rewrite the route or prove the underlying condition was corrected. Use a prepared deviation example for the lesson and keep its source context visible so the supervisor can understand why it mattered.",
+        "required_labels": [
+          "Route Deviation",
+          "Acknowledge"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Inspect a demonstration late-stop deviation, explain its impact, and acknowledge it only after reviewing the associated route instance."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open actual instance Deviations and any already-recorded acknowledgement badge. No acknowledgement/Pause/Resume/Cancel action is rendered."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 63
+    },
+    {
+      "id": "09-end-the-route-and-inspect-its-history",
+      "title": "End the route and inspect its history",
+      "route": "/routes/active -> /routes/history/[planId] -> /routes/history/instance/[id]",
+      "capture_intent": "Inspect End Route and its actual confirmation behavior; claim ended only after real result. Open an existing legitimate historical instance for summary/stops/deviations. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "End Route",
+        "Route Summary",
+        "Stops",
+        "Deviations"
+      ],
+      "narration": "End Route uses a confirmation because it changes the execution. Review unfinished stops and confirm only a permitted fictional instance. Its confirmation uses a native Alert, so browser completion needs an actually working dialog and visible result. Existing history provides Route Summary, Stops, and Deviations for review. The current screens do not expose Pause, Resume, or Cancel Route action buttons; do not invent those operations.",
+      "practice": "Inspect the genuine End Route confirmation path and an existing historical instance; do not claim an API-only cancellation or an unobserved completion.",
+      "source_workflow_reference": {
+        "title": "End the route and inspect its history",
+        "narration": "End Route asks for confirmation because it changes the execution state. Review unfinished stops first, then end only the intended training instance. Open its history to compare Route Summary, Stops, and Deviations with the visit sequence you recorded. Distance and duration help describe the execution; they should be interpreted alongside skipped or incomplete work. Use the available Cancel Route control only for the separate authorized cancellation scenario.",
+        "required_labels": [
+          "End Route",
+          "Route Summary",
+          "Stops",
+          "Deviations"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "End a disposable practice route and reconcile its stop history with the completed, skipped, and acknowledged examples."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Inspect End Route and its actual confirmation behavior; claim ended only after real result. Open an existing legitimate historical instance for summary/stops/deviations."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 65
+    },
+    {
+      "id": "10-inspect-what-the-selected-apparatus-carries",
+      "title": "Inspect what the selected apparatus carries",
+      "route": "/inventory",
+      "capture_intent": "Open Inventory for Engine51 and populated compartments/serial/bulk items plus Recent counts; distinguish setup/access empty states from physical absence. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Inventory",
+        "Count the inventory",
+        "Recent counts"
+      ],
+      "narration": "Open Inventory after confirming the active unit. Inspect the compartments, items, serial information, and quantities assigned to that apparatus. Recent counts helps you understand earlier checks. Count the inventory begins a new count when the account has the required adjustment permission. An empty or unavailable screen may indicate setup or access work is needed; it is not evidence that the physical apparatus contains nothing.",
+      "practice": "Inspect a fictional rescue vehicle’s compartments and compare a serialized radio with a bulk supply item before starting a count.",
+      "source_workflow_reference": {
+        "title": "Inspect what the selected apparatus carries",
+        "narration": "Open Inventory after confirming the active unit. Inspect the compartments, items, serial information, and quantities assigned to that apparatus. Recent counts helps you understand earlier checks. Count the inventory begins a new count when the account has the required adjustment permission. An empty or unavailable screen may indicate setup or access work is needed; it is not evidence that the physical apparatus contains nothing.",
+        "required_labels": [
+          "Inventory",
+          "Count the inventory",
+          "Recent counts"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Inspect a fictional rescue vehicle’s compartments and compare a serialized radio with a bulk supply item before starting a count."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Open Inventory for Engine51 and populated compartments/serial/bulk items plus Recent counts; distinguish setup/access empty states from physical absence."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "11-count-actual-quantities-and-save-progress",
+      "title": "Count actual quantities and save progress",
+      "route": "/inventory/count/[id]",
+      "capture_intent": "Start an independent fictional count with Adjust Inventory permission; capture serialized Present/Missing, bulk quantities, difference count and actual Save progress result. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Expected",
+        "Present",
+        "Missing",
+        "Save progress"
+      ],
+      "narration": "During the count, compare Expected quantities with what is actually present. Serialized items use Present or Missing, while bulk items can use the quantity or increment controls. Work systematically through the selected compartment or whole unit and inspect the difference count. Save progress supports a deliberate pause. Do not change an answer simply to eliminate a discrepancy that should be investigated by the department.",
+      "practice": "Record a missing demonstration radio and a bulk-item shortage, save progress, then reopen the count without posting the differences.",
+      "source_workflow_reference": {
+        "title": "Count actual quantities and save progress",
+        "narration": "During the count, compare Expected quantities with what is actually present. Serialized items use Present or Missing, while bulk items can use the quantity or increment controls. Work systematically through the selected compartment or whole unit and inspect the difference count. Save progress supports a deliberate pause. Do not change an answer simply to eliminate a discrepancy that should be investigated by the department.",
+        "required_labels": [
+          "Expected",
+          "Present",
+          "Missing",
+          "Save progress"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Record a missing demonstration radio and a bulk-item shortage, save progress, then reopen the count without posting the differences."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Start an independent fictional count with Adjust Inventory permission; capture serialized Present/Missing, bulk quantities, difference count and actual Save progress result."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    },
+    {
+      "id": "12-complete-cancel-or-obtain-the-required-witness",
+      "title": "Complete, cancel, or obtain the required witness",
+      "route": "/inventory/count/[id]",
+      "capture_intent": "Inspect Complete/Cancel count and real confirmation behavior on separate disposable counts; controlled-item change needs existing approved fixture and actual Awaiting witness, no web witness action claimed. Use actual application screenshots and observed controls; source support alone is not capture proof.",
+      "required_labels": [
+        "Complete",
+        "Cancel count"
+      ],
+      "narration": "Complete reviews differences before posting count adjustments. Cancel count abandons the count without posting its observations. Both confirmation paths use a native Alert, so a browser button press alone is insufficient proof of completion or cancellation. A changed controlled item can produce Awaiting witness and require a second person on the web. Unit shows that boundary; it does not provide the independent witness action.",
+      "practice": "Review a fictional controlled-item discrepancy, identify the web witness requirement, and cancel a separate disposable count to compare the outcomes.",
+      "source_workflow_reference": {
+        "title": "Complete, cancel, or obtain the required witness",
+        "narration": "Complete reviews the count’s differences before posting the resulting adjustments. Cancel count abandons the count without posting the work captured so far. Choose the action that matches the exercise and read its confirmation. When a controlled item changes, the screen can require a second person to witness the count on the web. Unit’s count screen does not replace that independent, authorized witness step.",
+        "required_labels": [
+          "Complete",
+          "Cancel count"
+        ],
+        "capture_intent": "Capture the actual application screen and each named control in this scene; keep required labels legible and record changed states separately.",
+        "practice": "Review a fictional controlled-item discrepancy, identify the web witness requirement, and cancel a separate disposable count to compare the outcomes."
+      },
+      "capture_evidence": {
+        "status": "awaiting_actual_capture_and_review",
+        "capture_refs": [],
+        "observations": []
+      },
+      "source_audit": {
+        "checked_at": "2026-10-26T19:08:15.698056+00:00",
+        "source_head": "0753b6baafbaec74617a412cd9c87fa9de899d47",
+        "status": "source_reconciled_not_capture_verified",
+        "remaining_capture_operations": [
+          "Inspect Complete/Cancel count and real confirmation behavior on separate disposable counts; controlled-item change needs existing approved fixture and actual Awaiting witness, no web witness action claimed."
+        ],
+        "conditional_controls": "Retain only controls actually offered by the account, feature flags, policy and lifecycle state. Populate final scene mapping after actual image review."
+      },
+      "narration_word_count": 64
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Security",
+      "scenario": "A patrol round includes an inaccessible checkpoint and a late arrival.",
+      "practice": "Use Skip Reason, inspect the deviation, and review the final route history."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A welfare route needs accurate visit notes and arrival/departure records.",
+      "practice": "Check in, record a concise note, and check out after the practice visit."
+    },
+    {
+      "sector": "Industrial response",
+      "scenario": "A plant inspection vehicle carries controlled and serialized equipment.",
+      "practice": "Save a count with a discrepancy and hand the controlled-item witness step to the authorized web user."
+    }
+  ],
+  "source_files": [
+    "/Users/shawn/Documents/dev/Unit/src/components/routes/routes-home.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/routes/start.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/routes/active.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/routes/stop/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/routes/stop/contact.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/routes/history/[planId].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/routes/history/instance/[id].tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/inventory/index.tsx",
+    "/Users/shawn/Documents/dev/Unit/src/app/(app)/inventory/count/[id].tsx"
+  ],
+  "authoring_status": "source_reconciled_awaiting_actual_captures",
+  "source_audited_at": "2026-10-26T19:08:15.698056+00:00",
+  "narration_word_count": 768,
+  "capture_limitations": [
+    "No actual Unit scene-to-screen proof is established by this source audit.",
+    "No credential/factor/device-security changes or GPS/audio/native permissions are exercised.",
+    "Unrendered API/store operations are not app-screen walkthrough actions.",
+    "No external ordering/AI/voice provider, notification delivery, physical arrival, durable native offline operation, or financial submission success is claimed."
+  ],
+  "media_status": {
+    "natural_audio": "not_frozen",
+    "speech_timed_captions": "pending",
+    "rendered_video": "pending",
+    "browser_playback": "pending",
+    "publishable": false
+  },
+  "spoken_sector_examples": [
+    "community welfare rounds",
+    "security patrol",
+    "industrial inspections"
+  ]
+}

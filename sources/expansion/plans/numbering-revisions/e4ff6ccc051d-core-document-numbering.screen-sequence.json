@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "kind": "untimed_source_photo_correspondence",
+  "lesson_id": "core-document-numbering",
+  "lesson_sha256": "e4ff6ccc051de4324931a8f6888a2ee577747a4add3ae4271c10003ea905ca9d",
+  "prepared_at": "2026-10-26T20:34:55.297505+00:00",
+  "reviewer": "Codex",
+  "capture_manifest": "expansion/plans/core-document-numbering.captures.json",
+  "capture_manifest_sha256": "4bd8d4ab10e983b6146250b6269fe449796d3676b5de2924afec7d59568d3db9",
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the three numbering areas",
+      "narration_sha256": "bdc31fb63d064f501575defdbcb026a5c1f6071688e54a9912cee6dda932e75c",
+      "capture_refs": [
+        "core-config-055-department-calls-dispatch-navigation",
+        "core-config-056-department-document-numbering-navigation",
+        "core-config-071-records-settings-navigation"
+      ],
+      "required_labels": [
+        "Calls & Dispatch",
+        "Call Settings",
+        "Customization",
+        "Document Numbering",
+        "Manage",
+        "Settings"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show Department Settings Calls & Dispatch menu, Customization menu, then Records Manage menu.",
+      "practice": "List which settings page controls each item you plan to number."
+    },
+    {
+      "id": "02",
+      "title": "Set a call pattern",
+      "narration_sha256": "619bcfdc882e75e165fb0420f27c7d05f65a820423bb7f65143a3d624a7e1396",
+      "capture_refs": [
+        "core-config-004-call-numbering-format-preview",
+        "core-config-005-call-numbering-saved-new-scope",
+        "core-config-038-call-number-format-preserved"
+      ],
+      "required_labels": [
+        "Call Numbering",
+        "Call number pattern",
+        "Sequence digits",
+        "Example:"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Enter FD51-{YYYY}-{SEQ}, width 4 and inspect inline example.",
+      "practice": "Choose a clear training call prefix and confirm the preview before saving."
+    },
+    {
+      "id": "03",
+      "title": "Choose the reset period",
+      "narration_sha256": "37ce5bac88d01f072f6e54df8a5942dc305aa417331fc22bd018d5edf599e26e",
+      "capture_refs": [
+        "core-config-038-call-number-format-preserved",
+        "core-config-039-call-number-next-after-responder"
+      ],
+      "required_labels": [
+        "Call number pattern",
+        "Next call number"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Read actual date-token guidance and saved yearly reset description without changing the current scope.",
+      "practice": "Explain whether your call sequence resets yearly, monthly, daily or never."
+    },
+    {
+      "id": "04",
+      "title": "Review fiscal-year naming",
+      "narration_sha256": "e36ec3c782924a8fdf6d730c39a1f6b26dcb5e927f8760fde86e32827ea93f0d",
+      "capture_refs": [
+        "core-config-039-call-number-next-after-responder"
+      ],
+      "required_labels": [
+        "Numbering year starts",
+        "January"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Inspect actual month/day controls and fixed fiscal-year naming guidance.",
+      "practice": "Confirm the intended year label for a date just before and just after the fiscal-year boundary."
+    },
+    {
+      "id": "05",
+      "title": "Review the next number and carry-forward control",
+      "narration_sha256": "b2df72023b99168dd849acc18de4c0b098a4c0b956f5a0f3ed7dea519be6122a",
+      "capture_refs": [
+        "core-config-005-call-numbering-saved-new-scope",
+        "core-config-006-call-numbering-reopened-next",
+        "core-config-039-call-number-next-after-responder"
+      ],
+      "required_labels": [
+        "Next call number",
+        "Raise next sequence to"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Compare saved new-scope0001 with next0002 after actual issuance; leave forward-only Raise field blank.",
+      "practice": "Reopen the saved pattern and identify the current next value without lowering or guessing it."
+    },
+    {
+      "id": "06",
+      "title": "Verify an issued call number",
+      "narration_sha256": "5d2230c7717710b7332aec775dfecea3a911be437310dd20bf72d6d52ccb9304",
+      "capture_refs": [
+        "core-responder-eligible-boden-timer",
+        "core-nearest-training-call-closed-history"
+      ],
+      "required_labels": [
+        "Number:",
+        "FD51-2026-0001",
+        "26-4"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Compare actual Core saved call51009 FD51-2026-0001 with pre-format call51008 number26-4 using existing owner captures; no further call creation.",
+      "practice": "Compare a newly issued training call number with one that existed before the change."
+    },
+    {
+      "id": "07",
+      "title": "Review record pattern and type prefixes",
+      "narration_sha256": "1ab21a38cf4dbf29280a961f2144bc01f0d49e6c5b3ea292b1ede0522c5d590a",
+      "capture_refs": [
+        "core-config-016-record-numbering-preserved",
+        "core-config-019-record-year-and-digit-settings",
+        "core-config-017-record-next-numbers-preserved"
+      ],
+      "required_labels": [
+        "Record numbering",
+        "Number pattern",
+        "Sequence digits",
+        "Record type prefixes",
+        "Next numbers for 2026"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show Records numbering pattern, prefix table and next rows.",
+      "practice": "Identify the preserved Training prefix, four-digit sequence and next value without saving or raising it."
+    },
+    {
+      "id": "08",
+      "title": "Verify a record and its scope",
+      "narration_sha256": "604cea406dfdaa528eef25de78764086b6388fdd630f1b5c6c84f947b82f100f",
+      "capture_refs": [
+        "core-config-052-record-register-existing-final-number",
+        "core-config-053-training-record-existing-issued-number",
+        "core-config-054-training-record-existing-history"
+      ],
+      "required_labels": [
+        "TRN-2026-0001",
+        "Training",
+        "Finalized",
+        "Draft"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Inspect existing Finalized Training record and separate Workdraft; no new lifecycle action.",
+      "practice": "Create or inspect one training record and identify its definition, group, number and lifecycle state."
+    },
+    {
+      "id": "09",
+      "title": "Configure other document numbers",
+      "narration_sha256": "0806b9a2b6dd16a5e61e4e6ae1b12840b6ddee1e4bc45db251e83fb3ec6030a7",
+      "capture_refs": [
+        "core-config-002-document-numbering-before",
+        "core-config-009-work-order-numbering-preview",
+        "core-config-010-work-order-numbering-saved",
+        "core-config-021-work-order-next-after-issuance",
+        "core-config-070-document-numbering-page-heading"
+      ],
+      "required_labels": [
+        "Document Numbering",
+        "Number pattern",
+        "Sequence digits",
+        "Next number",
+        "Raise next to"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show work-order preview, saved MNTpattern and actual next0002; other rows remain builtin.",
+      "practice": "Configure one document kind and confirm the saved pattern and next number."
+    },
+    {
+      "id": "10",
+      "title": "Check the owning document",
+      "narration_sha256": "2638e305bf3d10eff330baad1a8a4af991cb72fa05c8d15c29984f0c7ad3971f",
+      "capture_refs": [
+        "core-config-011-training-work-order-description",
+        "core-config-012-training-work-order-review",
+        "core-config-015-work-order-reopened-detail",
+        "core-config-020-work-order-register-number-scopes",
+        "core-config-018-other-record-number-families"
+      ],
+      "required_labels": [
+        "New work order",
+        "Review",
+        "MNT-26-0001",
+        "Requested",
+        "Other record numbers"
+      ],
+      "missing_required_labels": [],
+      "ordered_control_actions": "Show harmless five-step work request review, saved Requested MNT-26-0001, preserved olderWOrows and separate Records other-number controls. Keep actual numbered work-request and Records-number-family footage during the cross-sector application paragraph.",
+      "practice": "Record one real training result for each numbering family you changed."
+    }
+  ],
+  "state_rules": [
+    "004 is unsaved formatting preview with fixed sample153. 005/006 are reopened saved new FD51 scope0001 before issuance. 039 shows laternext0002 after actual call51009. No forward raise persisted.",
+    "FD51 saved setting and later issuedcall51009 are distinct actual UI records. Earlier26-4 retains its historicalformat; no new call needed.",
+    "Records stays {PREFIX}-{YYYY}-{SEQ}, fourdigits, January1. Blank Training prefix means defaultTRN, existing final0001/next0002; WorkD-reference is a separate draft.",
+    "Work-order preview009 is distinct from saved010 and real RequestedMNT-26-0001/next0002. OldWO numbers remain. No repair completion or safety clearance claimed.",
+    "Cross-sector application paragraph stays over actual numberedworkrequest and Records-other-number settings; hypothetical use across sectors is not a new operational/clinical/compliance result."
+  ],
+  "declared_limits": [
+    "No audio/voice/timing/render/playback/publication approval.",
+    "Fiscalyear form offers month/day only; ending-year naming is explained by help, no selector invented.",
+    "Dates/counts are dated fictional observations, never counters to force or reset.",
+    "Preview examples use153. Blank Raise fields show current-next placeholders; placeholders are not newly saved carry-forward values.",
+    "No invoice/bid/time-report issuance or sending occurred. Those controls are shown as preserved builtin rows.",
+    "All scene footage comes from retained actual screenshots, not newly recreated browser actions during the explicit extension block."
+  ]
+}

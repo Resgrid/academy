@@ -1,0 +1,325 @@
+{
+  "id": "core-call-dispatch-settings",
+  "title": "Configure call intake, dispatch behavior and closeout",
+  "app": "Core",
+  "audience": "Department administrators and dispatch supervisors",
+  "summary": "Review call intake, recipient scope, status automation, recommendation tuning, timer rules and form policy, then interpret an actual training closeout.",
+  "prerequisites": [
+    "Use the fictional Chicago Fire training department with department-settings access.",
+    "Run-card and conditional-response controls must be available for the recommendation sections.",
+    "Know the configured unit status sets, roster and crew assignments before changing automation.",
+    "Preserve existing calls, counters, provider configuration and access controls; this walkthrough reviews captured settings and one existing training closeout."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review call intake and pruning",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Dispatch Import Email",
+        "Prune (Auto Close) Calls",
+        "Minutes to keep call open",
+        "Email Type"
+      ],
+      "narration": "Open Call Settings in our fictional Chicago Fire department. Dispatch Import Email would show its all-call intake address; this example is blank. Email Type is set to Generic. Match the parser to the incoming format before using that channel. Prune (Auto Close) Calls is off and Minutes to keep call open is zero. The cleanup setting concerns eligible imported calls. We are reviewing the controls without sending an import or demonstrating an automatic close.",
+      "practice": "Identify the current parser, blank intake address and disabled cleanup values without sending or saving.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-037-call-settings-import-prune-readonly"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "02",
+      "title": "Keep numbering and intake separate",
+      "route": "/User/Department/CallSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Call Numbering",
+        "Call number pattern",
+        "Sequence digits",
+        "Next call number"
+      ],
+      "narration": "Scroll to Call Numbering. The saved pattern is FD51-{YYYY}-{SEQ}, with four sequence digits. Next call number advanced after a separate training call. Existing calls keep their original numbers. The numbering lesson explains patterns and carry-forward values. An email-parser choice does not configure every phone or message channel; verify each supported intake route and recipient receipt separately.",
+      "practice": "Read the saved pattern and next number while preserving the existing sequence.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-038-call-number-format-preserved",
+          "core-config-039-call-number-next-after-responder"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "03",
+      "title": "Understand group and shift behavior",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Group Dispatch Settings",
+        "Use Shift for Group Dispatch",
+        "Set Status for Shift Personnel On Dispatch",
+        "Person Call Dispatch Status",
+        "Person Call Release Status"
+      ],
+      "narration": "Open Call & Dispatch Settings. Use Shift for Group Dispatch selects the resolved on-duty roster; an empty roster falls back to group members for notification routing. Set Status for Shift Personnel On Dispatch is a separate switch. Automatic personnel dispatch and release statuses require both switches and use the resolved shift personnel. The two Person Call status controls choose those statuses. Both switches remain off here. Review the actual roster before changing them; an empty notification fallback does not create a shift or establish a status change.",
+      "practice": "Explain notification roster fallback separately from automatic personnel status eligibility.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-040-dispatch-group-settings-readonly"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "04",
+      "title": "Review group scope and exceptions",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Group-Scoped Dispatch",
+        "Scope Dispatch to Group Areas",
+        "Department-Wide Dispatch Roles",
+        "Group Boundary"
+      ],
+      "narration": "Group-Scoped Dispatch separates area scope from recipient selection. When Scope Dispatch to Group Areas is enabled, supported views and nearest comparisons follow the member’s group subtree and applicable calls. Department administrators and selected Department-Wide Dispatch Roles retain a wider view. Our scope switch and role exceptions remain off; the operator is a department administrator. Group Boundary defines response areas separately. A unit can remain listed without a nearest comparison, so review scope, status and position together.",
+      "practice": "Identify the current administrator scope and explain why a missing estimate is not a deletion.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-048-group-scope-roles-readonly",
+          "core-nearest-group-boundary-editor"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "title": "Review unit recipients and status targets",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Unit Dispatch Settings",
+        "Also Dispatch To Assigned Personnel",
+        "Also Dispatch To Entire Group",
+        "Unit Call Dispatch Status",
+        "Unit Call Release Status",
+        "Actions (Custom Unit Statuses)"
+      ],
+      "narration": "Also Dispatch To Assigned Personnel and Also Dispatch To Entire Group can expand a unit’s notification audience. Both are off here. Unit Call Dispatch Status and Unit Call Release Status are separate meaning-based choices. Defaults resolve within each unit’s own status set; built-in units use Responding on dispatch and Released on release. A missing matching custom status leaves the unit unchanged. Custom-status types can provide type-specific override rows. This Engine type uses Standard Actions, so this example has no such rows. Review crew assignments and status meanings before broadening recipients or changing targets.",
+      "practice": "Trace the two audience switches and dispatch/release targets; identify why no custom-type override table appears.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-041-dispatch-unit-settings-readonly",
+          "core-config-049-unit-release-status-rules",
+          "core-config-057-engine-type-icon-baseline"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "title": "Review linked status and confirmation",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Personnel on Unit Set Unit Status",
+        "Hold to set status"
+      ],
+      "narration": "Personnel on Unit Set Unit Status controls linked crew context: a supported unit-status submission can place its submitted crew roles into On Unit. It remains off here. Hold to set status also remains off. When enabled in supported Unit and Responder apps, crews hold a status for two seconds; statuses requiring a note or destination still open that step. Verify that behavior in the app version crews use. These switches do not create crew assignments or establish anyone’s qualification.",
+      "practice": "Explain each switch without assuming a native gesture or linked status was exercised.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-049-unit-release-status-rules",
+          "core-config-042-dispatch-close-timer-run-card-settings"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "07",
+      "title": "Review recommendations and waiting resources",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Run Cards & Automatic Dispatch",
+        "Closest Unit Response Tuning",
+        "Response codes"
+      ],
+      "narration": "Run Cards & Automatic Dispatch shows Closest Unit Response with automatic dispatch off. Rest period deprioritizes recently dispatched resources; minimum staffing checks configured seats, and move-up checks station minimums. Our rest period is zero, staffing gate off and move-up off. Closest Unit Response Tuning has 1800-second location ages, a zero radius limit, meaning no maximum, stale locations excluded and routed ETA off. The shortlist is five. Station turnout is 120 seconds; mobile and personnel turnout are zero. Freed-unit automatic dispatch remains off; its limit bounds automatic sends while alerts still occur. Response codes is empty; its name, colour, retirement and crew-display controls apply when codes exist. Review New Call recommendations before sending.",
+      "practice": "Read the saved120/0/0 turnout and compare it with the actual2-minute training unit estimate; keep automatic dispatch off.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-042-dispatch-close-timer-run-card-settings",
+          "core-config-043-dispatch-closest-tuning-readonly",
+          "core-config-050-turnout-waiting-call-readonly",
+          "core-config-051-response-code-options-empty",
+          "core-nearest-near-turnout-with-officer-crew"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "08",
+      "title": "Review separate timer and coverage forms",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Check-In Timer Settings",
+        "Auto-Enable Check-In Timers for New Calls",
+        "Default Timer Configurations",
+        "Call Type / Priority Overrides",
+        "Investigation",
+        "60",
+        "5",
+        "Station Coverage Minimums",
+        "Check-In Timers"
+      ],
+      "narration": "Auto-Enable Check-In Timers for New Calls is off. Default Timer Configurations is empty. The saved Investigation Personnel override is 60 minutes, warning five, enabled for all states and any priority. Matching overrides take precedence over defaults; the call’s own timer flag also matters. Our separately enabled training call shows Boden’s timer. No check-in receipt is established here. Timer forms use their own Add controls, and station coverage has a separate Save. Station Coverage Minimums currently has no saved requirements; its station, target, count and radius fields are a preparation form.",
+      "practice": "Distinguish the saved60-minute override from unsaved30-minute new-default form values and the call-level enable flag.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-042-dispatch-close-timer-run-card-settings",
+          "core-config-047-default-timers-empty-preserved",
+          "core-config-069-investigation-personnel-timer-override",
+          "core-responder-eligible-boden-timer",
+          "core-config-046-station-coverage-empty-baseline"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "09",
+      "title": "Review call-creation field rules",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "New Call Form Fields",
+        "Visible",
+        "Required",
+        "GPS Coordinates",
+        "Plus Code"
+      ],
+      "narration": "New Call Form Fields has separate Visible and Required columns. Here the optional fields are visible and their required boxes are clear. Name, nature, priority and type always remain required. A missing required value can block a new call, archived-call entry or saved edit; hidden fields cannot remain mandatory. Plus Code is a location-finding aid and cannot be required; require GPS Coordinates when a saved point is necessary. Review both halves of the table, then the corresponding call form. This example preserves the current field policy.",
+      "practice": "Explain the current Visible/Required policy and identify the disabled Plus Code requirement.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-044-new-call-visible-required-fields",
+          "core-config-045-new-call-lower-field-rules",
+          "core-nearest-training-near-pin-fields"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Inspect a real training closeout",
+      "route": "/User/Dispatch/CloseCall?callId=51008",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Dispatched",
+        "Engine 51",
+        "Christopher Herrmann",
+        "Completed Type",
+        "Send Notification",
+        "Completed Notes",
+        "Close Call",
+        "Closed"
+      ],
+      "narration": "Use the existing training example 26-4. Its Dispatched tab stores Engine 51 and Christopher Herrmann. Stored assignment alone does not confirm device receipt. On its Close Call form, Completed Type is Closed, training notes are entered and Send Notification is off. The saved call then shows Closed with closing details and notes. Release policy moves only units still working that call. Units already back in service, unavailable, under maintenance, on break or working another open call can keep their status. Review status history separately when validating release behavior.",
+      "practice": "Compare stored recipients, the notification-off close form and the saved Closed record; keep release-status verification separate.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-nearest-saved-call-dispatched-resources",
+          "core-nearest-training-close-without-notification",
+          "core-nearest-training-call-closed-history",
+          "core-config-049-unit-release-status-rules"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "title": "Review automatic closure and apply the policy",
+      "route": "/User/Department/DispatchSettings",
+      "capture_intent": "Show the ordered actual views and exact controls in capture_evidence. Preserve disabled/current policy; do not invent an enabled test or saved row.",
+      "required_labels": [
+        "Close call when last unit clears",
+        "Closed"
+      ],
+      "narration": "Close call when last unit clears is off in this example. If enabled, every dispatched unit must report finished after dispatch; returning or transporting still keeps work open. Calls without dispatched units, future undispatched calls and active incident command retain their closeout guards. This training example uses manual closure. Chicago Fire can review station crews and notification audiences. Community care or mental health teams can review rosters; search and rescue teams availability and qualifications; security teams patrol coverage. Wildland contractors and industrial teams can check crew capability and access. Verify call state, status history and recipient receipt separately.",
+      "practice": "Explain the automatic-close guards and choose a controlled verification plan suited to your sector.",
+      "capture_evidence": {
+        "status": "captured_current_controls_and_declared_limits",
+        "capture_refs": [
+          "core-config-042-dispatch-close-timer-run-card-settings",
+          "core-nearest-training-call-closed-history"
+        ],
+        "observations": [
+          "Actual settings and training-result images retained. Conditional policy is explained without claiming that a disabled or unavailable branch was executed."
+        ]
+      }
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire: compare station crews, explicit recipients and unit status meanings before changing dispatch automation.",
+    "Community paramedicine and mental health response": "Community care and mental health teams: review available rosters, intended recipients and accurate call locations; keep clinical judgments separate.",
+    "Search and rescue": "Search and rescue: review qualified available members, response areas and location freshness.",
+    "Security companies and departments": "Security teams: review patrol coverage, group scope and notification audiences.",
+    "Wildland contractors": "Wildland contractors: compare crew capability, access and coverage before enabling automatic selection.",
+    "Industrial emergency response teams": "Industrial teams: review facility resources, crew capability, incident access and guarded closeout."
+  },
+  "source_files": [
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Department/CallSettings.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Views/Department/DispatchSettings.cshtml",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/DepartmentController.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web/Areas/User/Controllers/DispatchController.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/CallDispatchStatusService.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/CallAutoCloseService.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Model/NewCallFieldPolicy.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/CallClosureService.cs",
+    "/Users/shawn/Documents/dev/Core/Workers/Resgrid.Workers.Framework/Logic/CallPruneLogic.cs",
+    "/Users/shawn/Documents/dev/Core/Workers/Resgrid.Workers.Framework/Logic/CallBroadcast.cs",
+    "/Users/shawn/Documents/dev/Core/Web/Resgrid.Web.Services/Controllers/v4/UnitStatusController.cs",
+    "/Users/shawn/Documents/dev/Core/Core/Resgrid.Services/DispatchRecommendationService.cs"
+  ],
+  "recording_limits": [
+    "No intake import, parser send or cleanup execution is demonstrated.",
+    "Group shift/status controls, audience expansion, role scope, hold-to-set and automatic-close switches stayoff.",
+    "No unit-type override rows are available because current training types use standard statuses; no unseen row editing claimed.",
+    "The field policy is unchanged; no required-field rejection, restricted-user comparison or two-unit automatic-close exercise is claimed.",
+    "The timer override and call-level panel are real; check-in receipt is not shown here.",
+    "The closed26-4 example predates FD51 numbering. It remains a historical training call with its issued number."
+  ]
+}

@@ -1,0 +1,1277 @@
+{
+  "kind": "Billing and Shifts take02 source-only proposals, guarded default-read-only authoring and actual derived-cue PCM preflight",
+  "checked_at": "2026-10-30T06:07:33.458509Z",
+  "helper_file": "production/prepare_core_billing_shifts_take_02_20261030.py",
+  "helper_sha256": "35ee2481bf1ce17e8276a8eb346c7fec270e700dc096127c73fe5fffd82274b9",
+  "test_file": "production/tests/test_core_billing_shifts_take_02_proposals.py",
+  "test_sha256": "487e76a37b22ca0f128f57e96445432fbdbc2114ef66f466dd7117ada70e3744",
+  "guard_tests": {
+    "passed": 11,
+    "failed": 0,
+    "stdlib_only": true
+  },
+  "privacy": {
+    "files_checked": 177,
+    "bytes_checked": 20226661,
+    "known_private_values_checked": 17,
+    "pattern_scanner": "scripts/audit_public_repo.py:scan_stream",
+    "findings": 0
+  },
+  "new_files": 22,
+  "files": [
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.dom.txt",
+      "sha256": "ff65c2550a6781736ab700e72a99dde46dc485104384d149925aa4605f4a73bb",
+      "bytes": 4775,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/001-invoicing-catalog-no-invoices.jpg",
+      "sha256": "e63175e351e0e3aa3e56ff6394352ff7a0a4cb61f62ce675639ac9bac76a1309",
+      "bytes": 56431,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.dom.txt",
+      "sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "bytes": 5390,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/002-billing-identity-empty-defaults.jpg",
+      "sha256": "0524296ecca3b1d17ada2ad2591d121410ead5f4cafc5fda8990b84d5d4d81e1",
+      "bytes": 53842,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.dom.txt",
+      "sha256": "a9708c9c1aa4ad5b95524b80d9370d88c8447f2dbd86e50a8c334db25022c935",
+      "bytes": 5390,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/003-billing-registrations-readonly.jpg",
+      "sha256": "58fd7123de6ec2f2677eab5a0671708747ca3fef074caba93c8cd195eb8082c0",
+      "bytes": 48603,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.dom.txt",
+      "sha256": "8fe91e124329fcf7688a6621c46aec917deecbebc5f3910021099237cfd2964f",
+      "bytes": 5399,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/004-footer-pay-link-display-preferences.jpg",
+      "sha256": "8f9d0b7d2a9ca4e9c0ed77f29920591f5f95ab203daa5cc53974cf94da2dea7a",
+      "bytes": 50283,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.dom.txt",
+      "sha256": "830812e7fed17327acb0418beb00c882391c0b0c8a9bebff414e82eda5f40367",
+      "bytes": 4590,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/005-rate-card-catalog-empty.jpg",
+      "sha256": "0734f513705f2d4a268e8b454e71f8b3df6eccba9d72a76ea994afaf5d54d742",
+      "bytes": 55812,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.dom.txt",
+      "sha256": "4f41b71b2f4fd09b0c0731ad7adeb776f0bf490f19e9c7ee04063097fcc82104",
+      "bytes": 4703,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/006-new-rate-card-unsaved-preview.jpg",
+      "sha256": "d5db3f12c9a138d327fe96de2c5f5d0edc3a29f25617ec7bbeb22ab92e8f6081",
+      "bytes": 51373,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.dom.txt",
+      "sha256": "73de2f599f4d72b3b3470a050fdbb4ecd479eb5b7ee4c02da322c5b7fee5b725",
+      "bytes": 5376,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/007-aging-no-outstanding-invoices.jpg",
+      "sha256": "5f128a5e8fc7a530e488458921f87ec2bf51dccbd58581c715bbc1e7c0c667e8",
+      "bytes": 58734,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.dom.txt",
+      "sha256": "973b2f31541ff4a13d4401682da7b7007289b09eb7fc3c1ff56cda09dd9037ab",
+      "bytes": 7071,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-20261029/008-existing-fictional-customer-contact.jpg",
+      "sha256": "8f0fc2595968ba7639a64f2c465dcf826bca3e9069fe8a96a2e602af0db35d84",
+      "bytes": 73343,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.dom.txt",
+      "sha256": "5edde24b110ffb112ae7bcc841f9555ad9680832b333645da43bf8b741dfebac",
+      "bytes": 4408,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/009-customer-billing-no-profile.jpg",
+      "sha256": "7ba626e40159935056765928764d386be7a8959d12796327242b1aa1000587f2",
+      "bytes": 67109,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.dom.txt",
+      "sha256": "a284dd6b0eaf62e1df62c95f4697ec15fb9e69c5378b36aac5518ddbde976d0b",
+      "bytes": 6649,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/010-unsaved-customer-terms-discount-rate-defaults.jpg",
+      "sha256": "7e6b921cb756277bd57fa1bbdf89a96a75f18c4df3aadc6f1d32d9d4a8e2f9db",
+      "bytes": 64974,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.dom.txt",
+      "sha256": "0ba758149921b442a95d5ad5b49e0250c6b3a0abfc4165fabb8e5d8892839441",
+      "bytes": 6649,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/011-unsaved-address-tax-components-save-controls.jpg",
+      "sha256": "1f22ccb635dbd1cb69d08ad4f72d6d4ff69e1bd25185e5a5d1f6de7963afa314",
+      "bytes": 58613,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.dom.txt",
+      "sha256": "15733db9df50d48cf545380606bcd7a1c6ab57e06b94bbb717a7b7fe38a7ac81",
+      "bytes": 6350,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/012-department-menu-subscription-entry.jpg",
+      "sha256": "c2dba9d00551401da3de7f5bc9aa60bb8a807d35407ae078b6a416e9ad3fa29f",
+      "bytes": 84142,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.dom.txt",
+      "sha256": "009f6fe9af0cae0eb50f795f36c0feecb0510fc21c4927e2cc881633e97a8e25",
+      "bytes": 6515,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/013-local-subscription-distinct-from-customer-invoicing.jpg",
+      "sha256": "5c4f27bdf9648e9192d39c80ff3a813efc57afd22e44f94facc23594825124c5",
+      "bytes": 82988,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.dom.txt",
+      "sha256": "c40ab4be1e7a4e054fe8111c5f02958efc1dbdb97aec707208e0cc9432fc2331",
+      "bytes": 6305,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/014-entities-tab-legacy-plan-readonly.jpg",
+      "sha256": "a6b08ecbcc2137b052a6205f867249497e30338f52daabeeb396049e8e00d6b3",
+      "bytes": 78071,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.dom.txt",
+      "sha256": "a4579333f40829cab202f5482fb0f633d3d44ffe4edfde8fcca7dafb90e19df9",
+      "bytes": 4660,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-customer-billing-review-chrome-20261029/016-fresh-invoicing-no-invoices.jpg",
+      "sha256": "26152be556d7e838dcd60bc6814c0d092c0446483aa2d00abfdf9139329b5d4a",
+      "bytes": 61304,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/001-shifts-baseline.dom.txt",
+      "sha256": "4c161ba606fded51118849033ffa499a88ddf3f78e60dc00ae1f6af588dc3038",
+      "bytes": 8804,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/001-shifts-baseline.jpg",
+      "sha256": "92664a09496babda2df8b8c2ab8226bc59c43b83e1e1f042ba8521759b956a98",
+      "bytes": 85063,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/002-assigned-start-prepared.dom.txt",
+      "sha256": "6cef27f1615e0e77cd49f9a60eeafff57bf85b3d6979059eaf18b72aa0b290b2",
+      "bytes": 4389,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/002-assigned-start-prepared.jpg",
+      "sha256": "b290207f3df61eb8690e31e647a399ae05ffd5062870a873b4a8bebc5a3a8ef1",
+      "bytes": 85356,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/004-assigned-schedule-corrected.dom.txt",
+      "sha256": "7d511ed927acaacfb537e6a23a572aebf935d85e88db74b9c509512933b19d25",
+      "bytes": 34960,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/004-assigned-schedule-corrected.jpg",
+      "sha256": "3187d0ed672f72dc0cb942c87a923a159f8c671b64fd385d360b3b77880dfd27",
+      "bytes": 101476,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/005-assigned-group-role-prepared.dom.txt",
+      "sha256": "2a612ec6a1bfdb823270598b5cc36f43b69666c25b3f3efb3a0e02e3b63427a5",
+      "bytes": 5206,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/005-assigned-group-role-prepared.jpg",
+      "sha256": "84152cf078e5b514c96a4d24ae3963d3e9452539f091fc58f1fa3f57fc1dd883",
+      "bytes": 72450,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/006-assigned-personnel-prepared.dom.txt",
+      "sha256": "9548271a79ebb0fa502edf8aeb3c4c68d8508c615bc3f11554ca71a842a73ebb",
+      "bytes": 4512,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/006-assigned-personnel-prepared.jpg",
+      "sha256": "179bad38f4fc984e5c6ea91c61aa17d47676a70110b6262f96d5f168e610c9fd",
+      "bytes": 78001,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/007-assigned-finish-review.dom.txt",
+      "sha256": "6445e05b4860151326280f9ba584befb824338c256d9753aaa5a92cc8e6d53f7",
+      "bytes": 3457,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/007-assigned-finish-review.jpg",
+      "sha256": "b2019432d118db68cf6da6ee74b6d153d07eee8be09036abe8d60055aa3a0db0",
+      "bytes": 49128,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/008-assigned-created-list.dom.txt",
+      "sha256": "e625d9f6f69196c4dbbb501a25a567829a25f890413b641ae643735585c932f0",
+      "bytes": 9548,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/008-assigned-created-list.jpg",
+      "sha256": "eb6fc7b500a2ebe6068eb247fc142d919342142aa9afa1a9e198c70cdc96a79d",
+      "bytes": 89069,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/009-assigned-details-reopened.dom.txt",
+      "sha256": "4a945d5073158f50d5742993db9afab5c80ad231ff023467beed397d90e3e41b",
+      "bytes": 4853,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/009-assigned-details-reopened.jpg",
+      "sha256": "81927a07de18320a72c4c67ad9fae84242b14f4075134f241d881ade31b731f7",
+      "bytes": 84405,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/010-assigned-member-reopened.dom.txt",
+      "sha256": "4a945d5073158f50d5742993db9afab5c80ad231ff023467beed397d90e3e41b",
+      "bytes": 4853,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/010-assigned-member-reopened.jpg",
+      "sha256": "5f7a96ff9b72caa88f0b04990fbfdd6991b027d2aeb6c9f9c848c6c1655143df",
+      "bytes": 77779,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/013-assigned-calendar-date-context.dom.txt",
+      "sha256": "f91dd873272a6a9ec4ed54e2d1500665b0ad2288ea462c714475d879a42aab4c",
+      "bytes": 8688,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/013-assigned-calendar-date-context.jpg",
+      "sha256": "0290f058f3c154086bca9164bdd8c02527c2f438296d52619f065df007979f69",
+      "bytes": 80193,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/014-assigned-day-saved.dom.txt",
+      "sha256": "48137e26e04fb86e41ae24ea471803e118ea5710762ccba8464cfdf678621c71",
+      "bytes": 4720,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/014-assigned-day-saved.jpg",
+      "sha256": "0750ec62b83c2d5eb52b01cf49f47f2b6b22aaa0aeda066b218ddde559f6448c",
+      "bytes": 84978,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/015-assigned-roster-saved.dom.txt",
+      "sha256": "48137e26e04fb86e41ae24ea471803e118ea5710762ccba8464cfdf678621c71",
+      "bytes": 4720,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/015-assigned-roster-saved.jpg",
+      "sha256": "b06f14b160015235ac8f5e1c7c01505856da8aac45da495d0b6128da977d5508",
+      "bytes": 85203,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/016-multiple-group-policy-readonly.dom.txt",
+      "sha256": "9c7b415df829b105b54487503af593751ba7aa7b075a229ef756390fd46ba396",
+      "bytes": 3265,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/016-multiple-group-policy-readonly.jpg",
+      "sha256": "84445e1c4c460b7fb4182f178a4fd829ae37fe2a96c3df7c6d8dcc7da21700a8",
+      "bytes": 46862,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/017-signup-approval-start.dom.txt",
+      "sha256": "203156432f5cde6a53a5d5b96e4d9e0d1a6951cea8392b5c02a2d471ec81bb8f",
+      "bytes": 4399,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/017-signup-approval-start.jpg",
+      "sha256": "7004a264f602be507c338eea92d9943fe955c579b6c59a7fd3b5f75b1a3bab3c",
+      "bytes": 85139,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/018-signup-dates-prepared.dom.txt",
+      "sha256": "7bd7a7156dced8464d6b143c3d8168845a7d9bb654ff47cedb4d417760e39b12",
+      "bytes": 34951,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/018-signup-dates-prepared.jpg",
+      "sha256": "70210451d9962ab17902ff52d44dfb92e0408e1dec49faba33c3c33633fee1c2",
+      "bytes": 119744,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/019-signup-group-role-prepared.dom.txt",
+      "sha256": "2a612ec6a1bfdb823270598b5cc36f43b69666c25b3f3efb3a0e02e3b63427a5",
+      "bytes": 5206,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/019-signup-group-role-prepared.jpg",
+      "sha256": "84152cf078e5b514c96a4d24ae3963d3e9452539f091fc58f1fa3f57fc1dd883",
+      "bytes": 72450,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/020-signup-no-preassigned-members.dom.txt",
+      "sha256": "59e06f27394811d57f98058b4a6554df48ecce84642ca7fc745b8a82bf4a3513",
+      "bytes": 4414,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/020-signup-no-preassigned-members.jpg",
+      "sha256": "38eda3fa2398588435eb9f30ea1879932450699e8f83af450602bc9528f29730",
+      "bytes": 75133,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/021-signup-finish-before-save.dom.txt",
+      "sha256": "6445e05b4860151326280f9ba584befb824338c256d9753aaa5a92cc8e6d53f7",
+      "bytes": 3457,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/021-signup-finish-before-save.jpg",
+      "sha256": "b2019432d118db68cf6da6ee74b6d153d07eee8be09036abe8d60055aa3a0db0",
+      "bytes": 49128,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/022-signup-created-approval-row.dom.txt",
+      "sha256": "6d77ab1b4ef6ec3ae7a3de1a641f34b468971f97d7482e5a394ce58bdaa53806",
+      "bytes": 10209,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/022-signup-created-approval-row.jpg",
+      "sha256": "984278a2b6c5971f0286f6bb1d0686151dfa5aebca07536a64c40e481c247bef",
+      "bytes": 93885,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/023-signup-details-reopened.dom.txt",
+      "sha256": "bb043a6c54ef09f19c00411de4e9f87b2cb92b3921efaa32c907769fa228f4ba",
+      "bytes": 3920,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/023-signup-details-reopened.jpg",
+      "sha256": "85cefbcee2e0c1f26b0330e92ae50f9c13b42c3aa63f5149574210115690bb3b",
+      "bytes": 76227,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/024-signup-dates-reopened.dom.txt",
+      "sha256": "3e7e7ec579965e3a274aca170d4cd1c12be4af886e361e1cbccd10965bb489aa",
+      "bytes": 34267,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/024-signup-dates-reopened.jpg",
+      "sha256": "c2289f616303f6d0f2ae614dc343582bb9526a7b844df6a0a0f1e8f68e40de4f",
+      "bytes": 128502,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/026-signup-day-stable-empty.dom.txt",
+      "sha256": "dd616aaba221464de58532c8ddcffeffb1a54bb3fd499e56bc71233b6b8e3d69",
+      "bytes": 4430,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/026-signup-day-stable-empty.jpg",
+      "sha256": "a6448d1b8ebe18a44f87be60b076f735a84390283197ee0c6e260bec8914e0fa",
+      "bytes": 78221,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/039-approvals-current-empty.dom.txt",
+      "sha256": "314335ebc3ae0cd31ad64543ed0fe32b9d457e43f4b7953a2f061cf4e1af0955",
+      "bytes": 3394,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/039-approvals-current-empty.jpg",
+      "sha256": "af2ff7dcdf15bb41778f261a576f273ddbb79ca51411657667ee5ab711db5a25",
+      "bytes": 53651,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/040-current-on-duty-readonly.dom.txt",
+      "sha256": "32cce6b3dcdd562b840eedc65bc0e176cbaf323288552f6841c1acb7a4e9e154",
+      "bytes": 4307,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/040-current-on-duty-readonly.jpg",
+      "sha256": "38bceb72531c1225515cc3aafb7b1d3495e7c7bde571bc56012d7df85f99c03e",
+      "bytes": 61310,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028/manifest.json",
+      "sha256": "b5ee334f8af8575525ec5141c4c63095c5741372ab60c9222058c6ec988bb502",
+      "bytes": 174407,
+      "new_this_task": false
+    },
+    {
+      "file": "captures/expansion/core-shifts-administration-20261028-reviewed/manifest.json",
+      "sha256": "97d1415642f327a05648b4bab5bacec9b4405c59b2d5da1b00bc6c121f46200c",
+      "bytes": 121305,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-customer-billing-review-take-02-generated-20261029.raw.srt",
+      "sha256": "b3b9af3442fcfbeb78ac5515d3cd6203569b1bc11a5fda80905381aaff389c37",
+      "bytes": 9004,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-customer-billing-review-take-02-generated-20261029.txt",
+      "sha256": "301a6e0f95d20436414254bedafd3fb06280a1f1be771dc8df56004dfb3133ca",
+      "bytes": 5553,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-customer-billing-review-take-02.actual.corrected.srt",
+      "sha256": "fa3ddf836a2c008e2eda4e5fc631864be27b836c54c9b102a709e3e4dff44666",
+      "bytes": 9004,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-customer-billing-review-take-02.actual.qa.json",
+      "sha256": "c40c5235e2315449b41b0adaf6eadf2d367e9d3428a987898ccabbdd11907269",
+      "bytes": 43728,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-customer-billing-review-take-02.m4a",
+      "sha256": "6901b4714284e31cc1966502d0070955615c066a37bbb113283fe034ec2d2418",
+      "bytes": 7044637,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-shifts-administration-take-02-generated-20261029.raw.srt",
+      "sha256": "7556d218b61b0370381c1039468718f4d7b17d7072aa2917bef0469fd13eaf55",
+      "bytes": 10207,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-shifts-administration-take-02-generated-20261029.txt",
+      "sha256": "20cac49c0ecff528074356c3b6ca321d689bf1cb3ec6c5bd9fc1662d531c9e0c",
+      "bytes": 6267,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-shifts-administration-take-02-generated-20261030.one-second.txt",
+      "sha256": "c2bcf12070799d0e2b01b60840fd4985566cf0613629704cc6e56aacf072054f",
+      "bytes": 10592,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-shifts-administration-take-02.actual.corrected.srt",
+      "sha256": "2c9ddfa4d270020d046f24292bb0e74ff58b4dd8d2c59a81903546144071adf1",
+      "bytes": 10207,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-shifts-administration-take-02.actual.qa.json",
+      "sha256": "8d6138ae7b5ef061c41b120dab31feb671bd0276544b519fe4e7c1c8054157d9",
+      "bytes": 49309,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/audio/core-shifts-administration-take-02.m4a",
+      "sha256": "92ab9cdb5bc11785df8ea0f88761d7660e87b3fe6f9095420d893fae106b930e",
+      "bytes": 7912633,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/accepted-script-review.json",
+      "sha256": "3c8f9e942f5bcf2b81a65d4e890565dfda0976246d637d6d91f2956bffaae95e",
+      "bytes": 1580,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/compact-correspondence.json",
+      "sha256": "c27da251dff7e964acfc8ff5643242d504e2b6bef2eee2cc162c313d41670a2e",
+      "bytes": 13444,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/core-customer-billing-review.captures.reviewed.json",
+      "sha256": "bac6713c2ff2c68405633128b7747916cfaf7cd07c0f3e6caf25fcacb9c08272",
+      "bytes": 34508,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/core-customer-billing-review.narrated-source.json",
+      "sha256": "ba6214c9fec32991c1a04e795045bbe9749289d86ffc63813bd231d92d47aec5",
+      "bytes": 21965,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/core-customer-billing-review.screen-sequence.json",
+      "sha256": "8a712f69894c819bc55be102398354cf33f86a24a3283267991151dee6e17671",
+      "bytes": 27913,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/narration.txt",
+      "sha256": "61750a55fb747edbc8cd327f934cb0fdc502ac37659e2073c9acc812625872d5",
+      "bytes": 5552,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/source-evidence.json",
+      "sha256": "6cce63c92aa8d34084d78f24197c5bfc9fb5de4f9fff237b98a0d578fb4aeaf0",
+      "bytes": 10207,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-capture-freeze-20261029/source-hashes.json",
+      "sha256": "156a39f694333d6cbd55b648bd6a63af89595f3a4f94a7a4514afbc5fa42ed39",
+      "bytes": 3589,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-script-handoff-20261029/accepted-script-review.json",
+      "sha256": "3c8f9e942f5bcf2b81a65d4e890565dfda0976246d637d6d91f2956bffaae95e",
+      "bytes": 1580,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-source-candidate-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/Index.cshtml",
+      "sha256": "c70abc02d673d5fb4d7bbad3b22ce4374af3cb20224141c3f0c755c1d45cf5cc",
+      "bytes": 11448,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-source-candidate-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/EditRateCard.cshtml",
+      "sha256": "9994050e60b08fe50ee326d8e326e51da92d514cea4e6d752a26f68e16f62fa7",
+      "bytes": 15362,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/actual-derived-QA-followup.json",
+      "sha256": "3dabb18a81d1bd1801b10baf916e62291158c4cd60ce148de87e6255ba2a8437",
+      "bytes": 3269,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/caption-derivation.json",
+      "sha256": "0f785272731e1aa1d455f7e2bc82ed5473e11e8acce1ee7199a49741cbfaec41",
+      "bytes": 718,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/captions.proposed.checked.srt",
+      "sha256": "32a7381e3817f62223dfe702a2b4fde3147cb3671dc18786935dd10cc0e29d2e",
+      "bytes": 8969,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/captions.proposed.srt",
+      "sha256": "c95cd0b871fc016a719330b12685fbe7ce4ef4b9c011e584dc1be6d66b851186",
+      "bytes": 8969,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/correspondence.proposed.json",
+      "sha256": "3b91251550e0813cc332576ea72bef2a8891422037398cda53d28bcb72917925",
+      "bytes": 91981,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/cue-screen.compact.txt",
+      "sha256": "3804817e76594f3f6b958aae40debfad91ef1634af5483ba2325bcea36cc7289",
+      "bytes": 12226,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/derived-captions.actual.qa.json",
+      "sha256": "eb24f6e0d2bf75cbe2656078b76fef01e3fb58d210f75786123926065a93a6fc",
+      "bytes": 43370,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/input-pins.json",
+      "sha256": "27f85bfc15ab9bb9b737f991322af843476c3fcf0e9aa71984f2404b1619b69c",
+      "bytes": 14656,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/ordered-screens.compact.txt",
+      "sha256": "b5ca8d092f832a0a4da61b9fcf421c5d0306a69dd0108230c593106a531690e4",
+      "bytes": 9089,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/readiness.proposed.json",
+      "sha256": "d46307689ff9455a22bc56e0980265a6c980a6c6cefe90b87059ee977e56b1e6",
+      "bytes": 1347,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Localization/Areas/User/Invoicing/Invoicing.en.resx",
+      "sha256": "2d532220eb9996872890f271cc2b558f983f4206d322229263fa3f9f813d2395",
+      "bytes": 39579,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Localization/Areas/User/Subscription/Subscription.en.resx",
+      "sha256": "4bcc98ddd81decc1effba96cb4fe4a2645d78ad50aec7e3dc87414c2f8485032",
+      "bytes": 21006,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Services/AuthorizationService.cs",
+      "sha256": "ded92e6f1a862241cd6066fa61378cc850d612e64b57ba54491e66e12a225cf0",
+      "bytes": 73576,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Services/BusinessOperationsAccessService.cs",
+      "sha256": "0b0a529eea5a6438a9e4cc199fd14177b1c49b74a8f0ed25759877fe04424953",
+      "bytes": 5095,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Services/Invoicing/InvoicePaymentsService.cs",
+      "sha256": "35be3100562588ddcf2afad519f5ee4fbf1216f348f6bcdb9abdf8acfc5579a8",
+      "bytes": 59015,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Services/Invoicing/InvoicingService.Delivery.cs",
+      "sha256": "bc030e75fd7a340e85af2524d07c2e2170c838b5a5668dfe359a1202739aea3f",
+      "bytes": 16071,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Core/Resgrid.Services/Invoicing/InvoicingService.cs",
+      "sha256": "d3ac47c58d277aa80dcb870dbbab4c3941190b58f63480f5f500a7832f236961",
+      "bytes": 55876,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Controllers/InvoicingController.cs",
+      "sha256": "1e0b3e2d5a3dcd4338af3d045a8782670b0c055b36ff85be74ac0d0482bbaa29",
+      "bytes": 44530,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Controllers/SubscriptionController.cs",
+      "sha256": "917519e156997413e481112b424dbf49cc4b6c1292748a7d60c6450923230e91",
+      "bytes": 51148,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Contacts/View.cshtml",
+      "sha256": "a3d1a445e1df82fbffa5ece0875ebbbe2a807d0a091946af75a20afabd0cfa04",
+      "bytes": 62188,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/Aging.cshtml",
+      "sha256": "267472ebbb89c24661a847065e07a3945989864e8166c59d6274be2ff3cd2124",
+      "bytes": 3856,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/BillingProfile.cshtml",
+      "sha256": "6844df7a29b49a9a25c0ba42a0254152e4bd2899ac32e7221ab7c0a871d019ee",
+      "bytes": 15445,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/Index.cshtml",
+      "sha256": "8240b3d23ba9fdc7a287078ffd623f058a8c9653f443dce614ad64a2886922be",
+      "bytes": 8249,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/RateCards.cshtml",
+      "sha256": "506dfea07a7b33a9df2ca2c47d3f3ec7f60cd1c52c5b9ebefbc1db9ba29bce19",
+      "bytes": 3819,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/Settings.cshtml",
+      "sha256": "01ce6a13eb429a08ac6c2528f5a4f58a4ba96b1debde8c3b1c8cee91c404f72c",
+      "bytes": 16338,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Invoicing/_Tabs.cshtml",
+      "sha256": "f735be62dd9a8ad21fe5f2d6f7857f3b01328a2e5bb17b5423059d9169282ce6",
+      "bytes": 1165,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Shared/_TopNavbar.cshtml",
+      "sha256": "d1ff4350e09c825c7edfdc34572e3bdd4e548dbdc08470cb02dc2d3235e867bb",
+      "bytes": 16760,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-reporting-billing-source-plan-20261029/source/Core/Web/Resgrid.Web/Areas/User/Views/Subscription/Index.cshtml",
+      "sha256": "4f65ad7e2df8f5e1e499f0f77a8fe0e3defeff785eb0229f5c5a2662f6352c02",
+      "bytes": 51486,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/candidate.json",
+      "sha256": "44ce9754ff576afbef1322e01018bb6a24aab261e8bd394b5920be1f3891465b",
+      "bytes": 23761,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f",
+      "bytes": 6266,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/screen-sequence.json",
+      "sha256": "5c15bfc0ab92438f181e8a5deba267a14cc2a0885c3309e8912ff54813c02b4c",
+      "bytes": 13033,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-evidence.json",
+      "sha256": "830eb757b05b5cc29a050eff25fc2edf4299b68cf92e96c6e2d7957744b5f7ed",
+      "bytes": 8658,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Model/Helpers/TimeConverterHelper.cs",
+      "sha256": "b391a7b34dd896efda98e5ea16dcae6c08437c1815775dc1a82d235f4f9dbf89",
+      "bytes": 4500,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Services/ShiftsService.Scheduling.cs",
+      "sha256": "dc67370321d0292aa7e8d9c01508f41dabe94f660b15a0320a3d0eefdb42b420",
+      "bytes": 37111,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Core/Resgrid.Services/WorkShiftsService.cs",
+      "sha256": "5dc33e31dcb10530f3cfe264a4ce9f30529ba6ca0def388dea0fba9953084e3a",
+      "bytes": 7408,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Controllers/ShiftsController.cs",
+      "sha256": "12e11a33e7814940ba2c5883286f810b209496ec1c8638d1a7cc070b655195f7",
+      "bytes": 83098,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs",
+      "sha256": "3ee6c1ca45f9046ec3797666519ac7f1e985b140500b3c08e1dc7db71fa282bb",
+      "bytes": 6759,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Models/Workshifts/NewWorkshiftView.cs",
+      "sha256": "08317fdef06ac4962c7675c23dcb2832fc8bb26ad9537665f62eeb40a7de497a",
+      "bytes": 343,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Department/ShiftSettings.cshtml",
+      "sha256": "1702129fb50595a7c02c8a3fb64ac93812130a98720c624ec4fd33af421b8967",
+      "bytes": 3030,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/Approvals.cshtml",
+      "sha256": "7c3f82a1d05eb8a857526a25571e61c9ba0768803e76979344c9a0f40cc2dc05",
+      "bytes": 6340,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/EditShiftDays.cshtml",
+      "sha256": "034200190197d6433e2435f61b086dc571361dcb8ffd0b38c4cfd8019495bc10",
+      "bytes": 3788,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/EditShiftDetails.cshtml",
+      "sha256": "9b80c84c7d822bd7ef201310374e38733f8ae2ff7ce7b2f36bc0f07ff6b9e457",
+      "bytes": 5352,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/Index.cshtml",
+      "sha256": "a1ab31ab34eef3690186f704f6e40f2b7ded5a155f17f812ecd9a344df264340",
+      "bytes": 7604,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/NewShift.cshtml",
+      "sha256": "90aab7561ddd3493ef214f25a32e9df6c75b3ce77c7a74423ad6fe16930fa321",
+      "bytes": 19380,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/OnDuty.cshtml",
+      "sha256": "785c7ed6819cd4f5166e184d4a114157f243a91cfb760a076a799aabde087072",
+      "bytes": 4093,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/ShiftCalendar.cshtml",
+      "sha256": "5df6ddb532921107957333806aeb8bbd2c515852e499d5c56d3f4a877838cf9b",
+      "bytes": 1730,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Shifts/ViewShift.cshtml",
+      "sha256": "f821f6dfdeea42315e1bae9d099e6254fd46b4bd32d1c297bafcf375ed0f3135",
+      "bytes": 11723,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Units/EditUnit.cshtml",
+      "sha256": "e1037a8a36c3b24f0a113815c5ddc465e6695513bda38f44b815ff3300d6e519",
+      "bytes": 11382,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml",
+      "sha256": "e6ff0d3e1e5f78343413491be1ffb1668d906d36ba5a79f397851b7edc1d5cdc",
+      "bytes": 4529,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Workshifts/Edit.cshtml",
+      "sha256": "d6ae1555c0ac94ca5c39f3c6c8cc330dd3922f5c8f0136a5cca1540e3ff5bec5",
+      "bytes": 6197,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Workshifts/New.cshtml",
+      "sha256": "89c015482e5f9aff805c096371270b927429084b80be1683edb50f6c6c5033fb",
+      "bytes": 5910,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/Areas/User/Views/Workshifts/ViewDay.cshtml",
+      "sha256": "cd336e7628a69a2675aa787397df7f18e8735c52f28940b331a393fa3715f75d",
+      "bytes": 7510,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/libman.json",
+      "sha256": "1ae574d54c9be1cc2d80a30f093dc8bae1d903213ffb0185c0829f32872e8e8a",
+      "bytes": 7848,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/wwwroot/js/app/internal/shifts/resgrid.shifts.calendar.js",
+      "sha256": "0b958f963d54052e0ecba04966229632a3ad094a6d9a21e8a8c10caca0524a83",
+      "bytes": 2871,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-candidate-20261028/source-snapshots/Core/Web/Resgrid.Web/wwwroot/js/app/internal/workshifts/resgrid.workshifts.new.js",
+      "sha256": "5320ee52dc1aede437362eb50499970b00d2cf6ddc279438208e36d361a9f4d2",
+      "bytes": 2098,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/core-shifts-administration.captures.reviewed.json",
+      "sha256": "bc0f4791680591af2eaceb92e56072b026b41f9566a67e16444740fd7908d3bb",
+      "bytes": 84229,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/core-shifts-administration.narrated-source.json",
+      "sha256": "0ef135425762b54c1f772c932d5d89d5f21ea561d4d7a8ad50bd97d31f0772a4",
+      "bytes": 24735,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/core-shifts-administration.screen-sequence.json",
+      "sha256": "3235f8f614d206f509a63e000e0165fa2d80e9bd7555bf10a95053c94402d099",
+      "bytes": 19125,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/narration.txt",
+      "sha256": "452ef598618505fec7af0ff0bf447457b8855df554fa3067c5dad6d42aeb5d1f",
+      "bytes": 6266,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-capture-freeze-20261028-v2/source-hashes.json",
+      "sha256": "78587e801bdbb4fe6816511ab7ae6efad635e06926ef2ea72463582831f1105e",
+      "bytes": 5602,
+      "new_this_task": false
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/actual-derived-QA-followup.json",
+      "sha256": "984c27ce9dc277c68fa24a1c697ac3e87207fc857b1b999e72ee589486a7e0c2",
+      "bytes": 4442,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/caption-derivation.json",
+      "sha256": "e4a67ab029bf8872beb30d4d4d89bceeb1f9b04f51e135a6198d7c4912b7a606",
+      "bytes": 3113,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/captions.proposed.checked.srt",
+      "sha256": "c49aa118b02d31491f5199885ce87dbb34288c66833d983d2191b9d997ea7b9b",
+      "bytes": 10382,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/captions.proposed.srt",
+      "sha256": "93ca1f08e1e692eb69030defaa32a7f785f073281ba50cd50d2b42120d791fbe",
+      "bytes": 10382,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/correspondence.proposed.json",
+      "sha256": "32368cf459b495a12c441adcda8970404a46c5c6807cd27cf52ed716be49cbdf",
+      "bytes": 118010,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/cue-screen.compact.txt",
+      "sha256": "7e05bb4310571aea0ce288c17a91997a39cd557fb840844e3bb88c04f80cfb51",
+      "bytes": 13059,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/derived-captions.actual.qa.json",
+      "sha256": "e6cbf52d483e5b4d9c7c4d474c368f70162edb148f890c86288f5598bf261886",
+      "bytes": 51331,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/input-pins.json",
+      "sha256": "92d0a95c1d62b8d91ef367cd4e24e0845d94f4fbb13c415ceb65e6a177e5bff7",
+      "bytes": 19119,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/ordered-screens.compact.txt",
+      "sha256": "6c1c43e88711c743f5d8890d1f4365a3a6a032337b52a3dac02a5dd171d81b87",
+      "bytes": 11097,
+      "new_this_task": true
+    },
+    {
+      "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/readiness.proposed.json",
+      "sha256": "932e238734f90e50aeb7624acaa2c38ef139ea84639a04d0c0c544ffbba3e4b5",
+      "bytes": 2668,
+      "new_this_task": true
+    },
+    {
+      "file": "production/author_core_shifts_candidates_20261028.py",
+      "sha256": "78bf5f273ac8c4dbae5c0ad237c9664728b0bca50abbed374d34be42d1d3dc89",
+      "bytes": 34498,
+      "new_this_task": false
+    },
+    {
+      "file": "production/freeze_core_certification_administration_20261028.py",
+      "sha256": "3383b1bfa075c00a43c2a7925b0e10e3cfde5ec65f82b7efc3937bb842feb7e2",
+      "bytes": 11993,
+      "new_this_task": false
+    },
+    {
+      "file": "production/prepare_core_billing_shifts_take_02_20261030.py",
+      "sha256": "35ee2481bf1ce17e8276a8eb346c7fec270e700dc096127c73fe5fffd82274b9",
+      "bytes": 29742,
+      "new_this_task": true
+    },
+    {
+      "file": "production/tests/test_core_billing_shifts_take_02_proposals.py",
+      "sha256": "487e76a37b22ca0f128f57e96445432fbdbc2114ef66f466dd7117ada70e3744",
+      "bytes": 5546,
+      "new_this_task": true
+    },
+    {
+      "file": "production/verify_core_customer_billing_review_source_20261029.py",
+      "sha256": "a2555afa7b6dc9c04c93be40679b8f75bc17794db2ca451d34310dc2edcc856f",
+      "bytes": 7069,
+      "new_this_task": false
+    }
+  ],
+  "lessons": [
+    {
+      "lesson_id": "core-customer-billing-review",
+      "folder": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030",
+      "raw_cue_count": 102,
+      "proposed_derived_cue_count": 101,
+      "actual_source_images": 15,
+      "source_span_count": 19,
+      "genuine_service_cut_seconds": [],
+      "same_image_caption_merges": [
+        [
+          5,
+          6
+        ]
+      ],
+      "missing_anchors": [],
+      "caption_layout_flags": [],
+      "actual_PCM_full_decode": "passed",
+      "silent_derived_cues": 0,
+      "minimum_derived_cue_rms": 0.046601966,
+      "short_repeated_source_subspans": [],
+      "human_listening_and_Root_proposed_timing_review": "pending",
+      "final_plan_or_assembly_or_render_created": false,
+      "pins": [
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/actual-derived-QA-followup.json",
+          "sha256": "3dabb18a81d1bd1801b10baf916e62291158c4cd60ce148de87e6255ba2a8437",
+          "bytes": 3269
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/caption-derivation.json",
+          "sha256": "0f785272731e1aa1d455f7e2bc82ed5473e11e8acce1ee7199a49741cbfaec41",
+          "bytes": 718
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/captions.proposed.checked.srt",
+          "sha256": "32a7381e3817f62223dfe702a2b4fde3147cb3671dc18786935dd10cc0e29d2e",
+          "bytes": 8969
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/captions.proposed.srt",
+          "sha256": "c95cd0b871fc016a719330b12685fbe7ce4ef4b9c011e584dc1be6d66b851186",
+          "bytes": 8969
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/correspondence.proposed.json",
+          "sha256": "3b91251550e0813cc332576ea72bef2a8891422037398cda53d28bcb72917925",
+          "bytes": 91981
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/cue-screen.compact.txt",
+          "sha256": "3804817e76594f3f6b958aae40debfad91ef1634af5483ba2325bcea36cc7289",
+          "bytes": 12226
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/derived-captions.actual.qa.json",
+          "sha256": "eb24f6e0d2bf75cbe2656078b76fef01e3fb58d210f75786123926065a93a6fc",
+          "bytes": 43370
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/input-pins.json",
+          "sha256": "27f85bfc15ab9bb9b737f991322af843476c3fcf0e9aa71984f2404b1619b69c",
+          "bytes": 14656
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/ordered-screens.compact.txt",
+          "sha256": "b5ca8d092f832a0a4da61b9fcf421c5d0306a69dd0108230c593106a531690e4",
+          "bytes": 9089
+        },
+        {
+          "file": "expansion/plans/core-customer-billing-review-take-02-proposed-20261030/readiness.proposed.json",
+          "sha256": "d46307689ff9455a22bc56e0980265a6c980a6c6cefe90b87059ee977e56b1e6",
+          "bytes": 1347
+        }
+      ]
+    },
+    {
+      "lesson_id": "core-shifts-administration",
+      "folder": "expansion/plans/core-shifts-administration-take-02-proposed-20261030",
+      "raw_cue_count": 116,
+      "proposed_derived_cue_count": 121,
+      "actual_source_images": 24,
+      "source_span_count": 29,
+      "genuine_service_cut_seconds": [
+        37,
+        167,
+        190,
+        247,
+        266,
+        269,
+        311
+      ],
+      "same_image_caption_merges": [
+        [
+          11,
+          12
+        ],
+        [
+          74,
+          75
+        ]
+      ],
+      "missing_anchors": [],
+      "caption_layout_flags": [],
+      "actual_PCM_full_decode": "passed",
+      "silent_derived_cues": 0,
+      "minimum_derived_cue_rms": 0.051331448,
+      "short_repeated_source_subspans": [
+        {
+          "span": 2,
+          "capture_id": "001-shifts-baseline",
+          "seconds": 2.39,
+          "repeated_previous_source": true
+        },
+        {
+          "span": 9,
+          "capture_id": "008-assigned-created-list",
+          "seconds": 1.45,
+          "repeated_previous_source": true
+        }
+      ],
+      "human_listening_and_Root_proposed_timing_review": "pending",
+      "final_plan_or_assembly_or_render_created": false,
+      "pins": [
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/actual-derived-QA-followup.json",
+          "sha256": "984c27ce9dc277c68fa24a1c697ac3e87207fc857b1b999e72ee589486a7e0c2",
+          "bytes": 4442
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/caption-derivation.json",
+          "sha256": "e4a67ab029bf8872beb30d4d4d89bceeb1f9b04f51e135a6198d7c4912b7a606",
+          "bytes": 3113
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/captions.proposed.checked.srt",
+          "sha256": "c49aa118b02d31491f5199885ce87dbb34288c66833d983d2191b9d997ea7b9b",
+          "bytes": 10382
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/captions.proposed.srt",
+          "sha256": "93ca1f08e1e692eb69030defaa32a7f785f073281ba50cd50d2b42120d791fbe",
+          "bytes": 10382
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/correspondence.proposed.json",
+          "sha256": "32368cf459b495a12c441adcda8970404a46c5c6807cd27cf52ed716be49cbdf",
+          "bytes": 118010
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/cue-screen.compact.txt",
+          "sha256": "7e05bb4310571aea0ce288c17a91997a39cd557fb840844e3bb88c04f80cfb51",
+          "bytes": 13059
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/derived-captions.actual.qa.json",
+          "sha256": "e6cbf52d483e5b4d9c7c4d474c368f70162edb148f890c86288f5598bf261886",
+          "bytes": 51331
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/input-pins.json",
+          "sha256": "92d0a95c1d62b8d91ef367cd4e24e0845d94f4fbb13c415ceb65e6a177e5bff7",
+          "bytes": 19119
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/ordered-screens.compact.txt",
+          "sha256": "6c1c43e88711c743f5d8890d1f4365a3a6a032337b52a3dac02a5dd171d81b87",
+          "bytes": 11097
+        },
+        {
+          "file": "expansion/plans/core-shifts-administration-take-02-proposed-20261030/readiness.proposed.json",
+          "sha256": "932e238734f90e50aeb7624acaa2c38ef139ea84639a04d0c0c544ffbba3e4b5",
+          "bytes": 2668
+        }
+      ]
+    }
+  ],
+  "canonical_baseline_verified_unchanged": 42,
+  "canonical_baseline_basis": "Held41 pre-Reporting hashes plus Root-adopted exact Reporting candidateecb18617. No automatic baseline refresh.",
+  "raw_frozen_audio_and_source_assets_unchanged": true,
+  "listening_receipts_created": false,
+  "final_renderer_plans_or_assembly_or_render_or_canonical_or_site_or_target_or_browser_or_Descript_or_DB_or_Git_mutation": false,
+  "commands": {
+    "read_only": "python3 -B sources/production/prepare_core_billing_shifts_take_02_20261030.py",
+    "source_guard_tests": "python3 -B -m unittest discover -s sources/production/tests -p 'test_core_billing_shifts_take_02_proposals.py' -v"
+  },
+  "limits": [
+    "Proposed source/caption correspondence only. Existing original-image review retained; only Shifts023/024 were newly re-viewed in this pass. No encoded-frame review exists because no master was rendered.",
+    "Whole-second service word-group markers are genuine coarse anchors. No interpolated or millisecond word timing is claimed.",
+    "New actual PCM checks establish signal/text correspondence, not human listening or final timing approval.",
+    "Dense Shifts details/calendar transition and prior-image launcher continuations remain explicit editorial choices for Root complete correspondence review."
+  ]
+}

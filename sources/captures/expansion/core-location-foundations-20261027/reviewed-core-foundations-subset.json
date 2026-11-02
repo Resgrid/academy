@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "app": "Core",
+  "scope": "Read-only department default-center and station-location fields only; separate narrow reviewed copy. The raw original capture manifest, images and DOM observations are unmodified.",
+  "reviewed_at": "2026-10-27T20:17:20.909334+00:00",
+  "source_manifest": "captures/expansion/core-location-foundations-20261027/manifest.json",
+  "source_manifest_sha256": "128a65d3b955227553d270b38cae12bde0ea7e8f73be8597471a4320fd18323b",
+  "source_pins": [
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Department/Settings.cshtml",
+      "sha256": "504b7ae47c51c6c5bf077edddc6ece3802afd758d3fccfce98108ba9e49c1cd5"
+    },
+    {
+      "repository": "Core",
+      "file": "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml",
+      "sha256": "dd2591d787650d2bbdfbd97f98da6eb7f71fa1d6729af5264ae18a5aef72565d"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Localization/Areas/User/Department/Department.en.resx",
+      "sha256": "f4dbc6a75026e9ad218b4b88385cc53ead88d40b86f251238bcc232ca2d55be9"
+    },
+    {
+      "repository": "Core",
+      "file": "Core/Resgrid.Localization/Areas/User/Groups/Groups.en.resx",
+      "sha256": "724c19c84dd6aa8f845ff2c88b346597985927f29bff5d058a7a2e1ea29680e5"
+    }
+  ],
+  "screenshots": [
+    {
+      "id": "001-department-address-and-map-center",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-location-foundations-20261027/001-department-address-and-map-center.jpg",
+      "sha256": "bdc0d6b3acd9bf951a823a3de1860a6c5284ad7cfa112320d30bfdfd340abd2f",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Department/Settings",
+      "captured_at": "2026-10-27T20:12:26.766Z",
+      "visible_labels": [
+        "Address",
+        "Street",
+        "City",
+        "State/Province",
+        "Zip/Postal Code",
+        "Country",
+        "Default Map Center GPS Coordinates",
+        "Latitude (Decimal Notation: i.e. 39.1517)",
+        "Longitude (Decimal Notation: i.e. -119.4571)",
+        "1000 Training Avenue (fictional)",
+        "Chicago",
+        "IL",
+        "60607",
+        "United States",
+        "41.8721",
+        "-87.6523",
+        "Cancel",
+        "Save"
+      ],
+      "visible_field_text": [],
+      "visible_controls": [],
+      "dom_file": "captures/expansion/core-location-foundations-20261027/001-department-address-and-map-center.dom.txt",
+      "dom_sha256": "359128e9219e8380ea9890a82b713640927fea79a166483bcea314d08eea3a5c",
+      "state": {
+        "read_only": true,
+        "no_save_or_edit": true,
+        "preserve_existing_fictional_locations": true
+      },
+      "required_labels": [
+        "Address",
+        "Default Map Center GPS Coordinates",
+        "Street",
+        "City",
+        "State/Province",
+        "Zip/Postal Code",
+        "Country",
+        "41.8721",
+        "-87.6523",
+        "Cancel",
+        "Save"
+      ],
+      "visual_review": "passed bounded offline original-JPEG review of location fields only; credential values absent, no opaque control obstruction or error overlay; no click or write claimed",
+      "eligible_for_lesson": true,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Department/Settings",
+        "captured_at": "2026-10-27T20:12:26.766Z"
+      },
+      "label_observation_method": "Narrow manual literal review of the exact original screenshot, corroborated by retained DOM snapshot and pinned view/localization source. Raw recorder observations remain untouched in manifest.json; no automatic visibility claim or inaccessible name is inserted as literal text.",
+      "missing_required_labels": [],
+      "reviewed_field_values": {
+        "Street": "1000 Training Avenue (fictional)",
+        "City": "Chicago",
+        "State/Province": "IL",
+        "Zip/Postal Code": "60607",
+        "Country": "United States",
+        "Map-center latitude": "41.8721",
+        "Map-center longitude": "-87.6523"
+      },
+      "label_correspondence": [
+        {
+          "literal": "Default Map Center GPS Coordinates",
+          "dom": "- generic: Default Map Center GPS Coordinates",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Department/Settings.cshtml:264"
+        },
+        {
+          "literal": "41.8721",
+          "dom": "- textbox \"Mapping Center Latitude\": \"41.8721\"",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Department/Settings.cshtml:271",
+          "limit": "Mapping Center Latitude is the DOM accessible name/placeholder; with the value filled, it is not painted as a literal label."
+        },
+        {
+          "literal": "-87.6523",
+          "dom": "- textbox \"Mapping Center Longitude\": \"-87.6523\"",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Department/Settings.cshtml:275",
+          "limit": "Mapping Center Longitude is the DOM accessible name/placeholder, not additional painted text."
+        },
+        {
+          "literal": "Save",
+          "dom": "- button \"Save\"",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Department/Settings.cshtml:291",
+          "limit": "Visible existing submit button only; no click/save occurred."
+        }
+      ],
+      "raw_observation_mismatch": {
+        "raw_visible_label_count": 0,
+        "raw_missing_required_labels": true,
+        "cause": "Recording-session diagnosis from parent: document-scrolled BODY/HTML bounds were above the viewport and treated as clipping ancestors even while the location fields painted in the viewport. This is a false negative for this source image.",
+        "parent_reported_diagnostics": {
+          "body_top": -1453,
+          "body_bottom": -680,
+          "overflow": "auto",
+          "painted_field_vertical_range": [
+            186,
+            485
+          ]
+        },
+        "offline_confirmation": "Original JPEG visibly paints the named fields/values and actual Save/Cancel; retained DOM snapshot names the same inputs/button and source declares them. Bounds were not reacquired offline.",
+        "boundary": "No recorder/ancestor/privacy check is changed. Only this hash-bound original image receives manual narrow literal observations. No hidden option/accessibility-only label is promoted to pixels."
+      },
+      "raw_source_record": {
+        "manifest": "captures/expansion/core-location-foundations-20261027/manifest.json",
+        "manifest_sha256": "128a65d3b955227553d270b38cae12bde0ea7e8f73be8597471a4320fd18323b",
+        "record_sha256": "c4a0f15936a7618999bd308f42b5e83a7431004c6345dc768b4a2d750631d4cc",
+        "raw_visible_labels": [],
+        "raw_missing_required_labels": [
+          "Address",
+          "Street",
+          "City",
+          "State",
+          "Postal Code",
+          "Default Map Center",
+          "Latitude",
+          "Longitude"
+        ]
+      },
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex offline original JPEG + retained DOM + pinned source correspondence review",
+        "reviewed_at": "2026-10-27T20:17:20.909334+00:00",
+        "sha256": "bdc0d6b3acd9bf951a823a3de1860a6c5284ad7cfa112320d30bfdfd340abd2f",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "application_visible": true,
+        "no_errors": true,
+        "controls_reviewed": true,
+        "controls_fully_visible": true,
+        "controls_unobstructed": true
+      }
+    },
+    {
+      "id": "002-station-address-and-coordinates",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-location-foundations-20261027/002-station-address-and-coordinates.jpg",
+      "sha256": "f76ad031068a1d7c9290d5ff7e2d74d443d4d74460ac6b050f99623ef55ce396",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Groups/EditGroup?departmentGroupId=51001",
+      "captured_at": "2026-10-27T20:13:23.320Z",
+      "visible_labels": [
+        "Edit Group",
+        "Group type",
+        "Organizational Group",
+        "Station Group",
+        "Group Name",
+        "Parent Group",
+        "Station Address",
+        "Street",
+        "City",
+        "State/Province",
+        "Zip/Postal Code",
+        "Country",
+        "Firehouse 51",
+        "1000 Training Avenue (fictional)",
+        "Chicago",
+        "IL",
+        "60607",
+        "United States",
+        "Gps Coordinates",
+        "41.8721",
+        "-87.6523"
+      ],
+      "visible_field_text": [],
+      "visible_controls": [],
+      "dom_file": "captures/expansion/core-location-foundations-20261027/002-station-address-and-coordinates.dom.txt",
+      "dom_sha256": "6c29ce310986b5942ace11ea4dd996b44037c62e6c46b1d6b6e4ecfe2c16f97a",
+      "state": {
+        "read_only": true,
+        "no_save_or_edit": true,
+        "preserve_existing_fictional_locations": true
+      },
+      "required_labels": [
+        "Edit Group",
+        "Station Group",
+        "Group Name",
+        "Firehouse 51",
+        "Station Address",
+        "Gps Coordinates",
+        "41.8721",
+        "-87.6523"
+      ],
+      "visual_review": "passed bounded offline original-JPEG review of location fields only; credential values absent, no opaque control obstruction or error overlay; no click or write claimed",
+      "eligible_for_lesson": true,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Groups/EditGroup?departmentGroupId=51001",
+        "captured_at": "2026-10-27T20:13:23.320Z"
+      },
+      "label_observation_method": "Narrow manual literal review of the exact original screenshot, corroborated by retained DOM snapshot and pinned view/localization source. Raw recorder observations remain untouched in manifest.json; no automatic visibility claim or inaccessible name is inserted as literal text.",
+      "missing_required_labels": [],
+      "reviewed_field_values": {
+        "Group type": "Station Group selected",
+        "Group Name": "Firehouse 51",
+        "Street": "1000 Training Avenue (fictional)",
+        "City": "Chicago",
+        "State/Province": "IL",
+        "Zip/Postal Code": "60607",
+        "Country": "United States",
+        "Station latitude": "41.8721",
+        "Station longitude": "-87.6523"
+      },
+      "label_correspondence": [
+        {
+          "literal": "Station Address",
+          "dom": "- generic: Station Address",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml:85"
+        },
+        {
+          "literal": "Gps Coordinates",
+          "dom": "- generic: Gps Coordinates",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml:137"
+        }
+      ],
+      "raw_observation_mismatch": {
+        "cause": "Raw labels broadly cover the form, but this reviewed subset prunes global navigation/icons and the coordinate hints at the bottom edge.003 supplies fully visible coordinate hints.",
+        "boundary": "No new icon semantics or clipped hint text are used."
+      },
+      "raw_source_record": {
+        "manifest": "captures/expansion/core-location-foundations-20261027/manifest.json",
+        "manifest_sha256": "128a65d3b955227553d270b38cae12bde0ea7e8f73be8597471a4320fd18323b",
+        "record_sha256": "6307abed435c00535318e78fd7a03393a746fa9889ca46b4df58d53c091baf8d",
+        "raw_visible_labels": [
+          "Wallace Boden",
+          "Home",
+          "Calls",
+          "Personnel",
+          "Units",
+          "Contacts",
+          "Mapping",
+          "Shifts",
+          "Records",
+          "Reports",
+          "Documents",
+          "Calendar",
+          "Notes",
+          "Trainings",
+          "Inventory",
+          "0",
+          "3",
+          "Firehouse 51 — Training Department",
+          "Help",
+          "Edit Group",
+          "Home",
+          "Groups",
+          "Edit Group",
+          "Group type",
+          "Organizational Group",
+          "Station Group",
+          "Group Name",
+          "Parent Group",
+          "Station Address",
+          "Station groups require a physical location (as personnel and units can respond to them). Please enter an Address or GPS Coordinates or a what3words address.",
+          "what3words address.",
+          "Street",
+          "City",
+          "State/Province",
+          "Zip/Postal Code",
+          "Country",
+          "Or",
+          "Gps Coordinates",
+          "Latitude (Decimal Notation: i.e. 39.1517)",
+          "Longitude (Decimal Notation: i.e. -119.4571)",
+          "Or",
+          "Assistant",
+          "Chat",
+          "Resgrid, LLC © 2026 All Rights Reserved.",
+          "Copyright",
+          "Version 3.0.0.0",
+          "Search calls, call notes, people, units and more",
+          "Firehouse 51",
+          "1000 Training Avenue (fictional)",
+          "Chicago",
+          "IL",
+          "60607",
+          "41.8721",
+          "-87.6523"
+        ],
+        "raw_missing_required_labels": []
+      },
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex offline original JPEG + retained DOM + pinned source correspondence review",
+        "reviewed_at": "2026-10-27T20:17:20.909334+00:00",
+        "sha256": "f76ad031068a1d7c9290d5ff7e2d74d443d4d74460ac6b050f99623ef55ce396",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "application_visible": true,
+        "no_errors": true,
+        "controls_reviewed": true,
+        "controls_fully_visible": true,
+        "controls_unobstructed": true
+      }
+    },
+    {
+      "id": "003-station-coordinate-and-what3words-fields",
+      "app": "Core",
+      "kind": "application_screenshot",
+      "file": "captures/expansion/core-location-foundations-20261027/003-station-coordinate-and-what3words-fields.jpg",
+      "sha256": "a99ace0894a0207e2db5f3a70ba0cba71dd22fbd7655c40d45e53ff650c19c45",
+      "width": 1434,
+      "height": 773,
+      "url": "http://127.0.0.1:18967/User/Groups/EditGroup?departmentGroupId=51001",
+      "captured_at": "2026-10-27T20:13:28.513Z",
+      "visible_labels": [
+        "Street",
+        "City",
+        "State/Province",
+        "Zip/Postal Code",
+        "Country",
+        "1000 Training Avenue (fictional)",
+        "Chicago",
+        "IL",
+        "60607",
+        "United States",
+        "Gps Coordinates",
+        "41.8721",
+        "-87.6523",
+        "Latitude (Decimal Notation: i.e. 39.1517)",
+        "Longitude (Decimal Notation: i.e. -119.4571)",
+        "what3words Address",
+        "what.three.words",
+        "w3w Address (i.e. humble.echo.sticky)"
+      ],
+      "visible_field_text": [],
+      "visible_controls": [],
+      "dom_file": "captures/expansion/core-location-foundations-20261027/003-station-coordinate-and-what3words-fields.dom.txt",
+      "dom_sha256": "6c29ce310986b5942ace11ea4dd996b44037c62e6c46b1d6b6e4ecfe2c16f97a",
+      "state": {
+        "read_only": true,
+        "no_save_or_edit": true,
+        "preserve_existing_fictional_locations": true
+      },
+      "required_labels": [
+        "Gps Coordinates",
+        "41.8721",
+        "-87.6523",
+        "Latitude (Decimal Notation: i.e. 39.1517)",
+        "Longitude (Decimal Notation: i.e. -119.4571)",
+        "what3words Address",
+        "what.three.words"
+      ],
+      "visual_review": "passed bounded offline original-JPEG review of location fields only; credential values absent, no opaque control obstruction or error overlay; no click or write claimed",
+      "eligible_for_lesson": true,
+      "provenance": {
+        "method": "browser_screenshot",
+        "url": "http://127.0.0.1:18967/User/Groups/EditGroup?departmentGroupId=51001",
+        "captured_at": "2026-10-27T20:13:28.513Z"
+      },
+      "label_observation_method": "Narrow manual literal review of the exact original screenshot, corroborated by retained DOM snapshot and pinned view/localization source. Raw recorder observations remain untouched in manifest.json; no automatic visibility claim or inaccessible name is inserted as literal text.",
+      "missing_required_labels": [],
+      "reviewed_field_values": {
+        "Station latitude": "41.8721",
+        "Station longitude": "-87.6523",
+        "what3words input": "empty; painted placeholder what.three.words"
+      },
+      "label_correspondence": [
+        {
+          "literal": "what3words Address",
+          "dom": "- generic: what3words Address",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml:155"
+        },
+        {
+          "literal": "what.three.words",
+          "dom": "- textbox \"what.three.words\"",
+          "source": "Web/Resgrid.Web/Areas/User/Views/Groups/EditGroup.cshtml:159",
+          "limit": "Only the empty placeholder is shown; no address lookup, provider request or saved change."
+        }
+      ],
+      "raw_observation_mismatch": {
+        "raw_missing_required_labels": [
+          "what3words Address"
+        ],
+        "cause": "Recorder’s strict viewport/ancestor observation omitted the what3words section despite the original screenshot painting it fully. Its actual literal label and empty placeholder also occur in retained DOM and declared source. Exact low-level bounds are not reacquired offline.",
+        "boundary": "Only the reviewed painted section is restored. Printer/provider fields below it remain excluded from this location subset."
+      },
+      "raw_source_record": {
+        "manifest": "captures/expansion/core-location-foundations-20261027/manifest.json",
+        "manifest_sha256": "128a65d3b955227553d270b38cae12bde0ea7e8f73be8597471a4320fd18323b",
+        "record_sha256": "15e043e775c45eae4cf33c1d215dc24fa3ce1bd25a2a9a6e66e8ff3851d8f12b",
+        "raw_visible_labels": [
+          "Wallace Boden",
+          "Home",
+          "Calls",
+          "Personnel",
+          "Units",
+          "Contacts",
+          "Street",
+          "City",
+          "State/Province",
+          "Zip/Postal Code",
+          "Country",
+          "Or",
+          "Gps Coordinates",
+          "Latitude (Decimal Notation: i.e. 39.1517)",
+          "Longitude (Decimal Notation: i.e. -119.4571)",
+          "Or",
+          "1000 Training Avenue (fictional)",
+          "Chicago",
+          "IL",
+          "60607",
+          "41.8721",
+          "-87.6523"
+        ],
+        "raw_missing_required_labels": [
+          "what3words Address"
+        ]
+      },
+      "capture_review": {
+        "passed": true,
+        "reviewer": "Codex offline original JPEG + retained DOM + pinned source correspondence review",
+        "reviewed_at": "2026-10-27T20:17:20.909334+00:00",
+        "sha256": "a99ace0894a0207e2db5f3a70ba0cba71dd22fbd7655c40d45e53ff650c19c45",
+        "controls_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "application_visible": true,
+        "no_errors": true,
+        "controls_reviewed": true,
+        "controls_fully_visible": true,
+        "controls_unobstructed": true
+      }
+    }
+  ],
+  "raw_mismatch_policy": "Specific false-negative metadata is resolved only by reviewing these exact existing pixels plus DOM/source correspondence. No broad visibility/privacy exception, no helper/gate edit, no new DOM or browser access.",
+  "actions_performed_in_capture_session": "Read-only existing values; root reports no edit, Save, coordinate update, provider lookup or permission acceptance.",
+  "publishable": false,
+  "media_and_playback": "Not provided by a screenshot subset."
+}

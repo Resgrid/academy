@@ -1,0 +1,69 @@
+{
+  "checked_at": "2026-10-28T20:54:33.600184+00:00",
+  "files": [
+    {
+      "source": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryController.cs",
+      "sha256": "f77b3e69c1c0499dafc5ce9d401bd87bca8e9517d8ce2f54ccb4781bb06a9107"
+    },
+    {
+      "source": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Workspace.cshtml",
+      "sha256": "e91d91df5e6682c7bb5154cbdcabe35bf68b48b6f6bc308e2f48f1214b86c053"
+    },
+    {
+      "source": "Core/Web/Resgrid.Web/Areas/User/Views/Inventory/Operations.cshtml",
+      "sha256": "5f86914e12f1d6898fd8070ca5402fd87138b0872c11c12b1c896ccc267e3770"
+    },
+    {
+      "source": "Core/Web/Resgrid.Web/wwwroot/js/app/internal/inventory/inventory-modern.js",
+      "sha256": "90fe8afe142c9e4b257067c8300023a7b656a2bfeccf6b6aca3122cab9286ea2"
+    },
+    {
+      "source": "Core/Web/Resgrid.Web/wwwroot/js/app/internal/inventory/inventory-operations.js",
+      "sha256": "33b0d60718a27678cbebcbd7d0f99a4d8741c223b198100bfa4b09fa48d0d99f"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryCatalog.cs",
+      "sha256": "0a8b9e7bdd6348f7a6fc12f2823645ae46376cd39c4963f27c59aa862e05293a"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryIssuance.cs",
+      "sha256": "e43b0815fa502444452e37f252362023efd8663436f4d299228d8d0ce956b485"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryAlerts.cs",
+      "sha256": "c3509695b148a211d39e1494284dbcb517e69f32d229ba2a4ea0b8833d71c781"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryReports.cs",
+      "sha256": "1ec4321a1464c9ebed5c919374760b99144b7683427dd6b3f88a2312e6a0c873"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryLegacyMigration.cs",
+      "sha256": "a4d02283809c20d6e25cedae5ab49ec669aaac97b9d7fd634b051fb00d85791e"
+    },
+    {
+      "source": "Core/Core/Resgrid.Model/Inventories/InventoryModels.cs",
+      "sha256": "c8765d2f92faaef118eeb764e0a003c5478f56a311e721b55fc80c9eb572b8d1"
+    },
+    {
+      "source": "Core/Web/Resgrid.Web/Areas/User/Controllers/InventoryOperationsController.cs",
+      "sha256": "2b37063f2fdacf00e09de59847464ad8e25efc7d7dbb20bffeeff129a68ce64e"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryPosting.cs",
+      "sha256": "d601381d9895a1aa81527f8b6366a982334eda26253dfd21cccd09dfa44fe959"
+    },
+    {
+      "source": "Core/Core/Resgrid.Services/InventoryReportDocuments.cs",
+      "sha256": "1af1db6dee0576ec4a907df00e41439f22a15f1dd09d81ee64e05c51b6b96209"
+    }
+  ],
+  "semantics": [
+    "Catalogue save does not post stock; expiry-required bulk items require lot tracking, and tracking changes lock after stock/open purchase lines.",
+    "Inventory commands check permissions/protected-data authority and anti-forgery; never bypass an unavailable action.",
+    "Receive/transfer/issue/return post ledger stock changes; existing issue/return states and quantities are saved data.",
+    "Transfer history displays a single visible row with both holders; no claim of a pictured debit/credit pair.",
+    "Lot expiry and alert state are separate. Alerts refresh can change stored alert state; it is not performed in this candidate.",
+    "Report chooser is not generated PDF evidence."
+  ]
+}

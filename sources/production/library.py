@@ -127,7 +127,7 @@ def main():
         text=p.read_text();routes=re.findall(r'\[(?:Route|HttpGet|HttpPost|HttpPut|HttpPatch|HttpDelete)\(([^\n]*)\)',text)
         api.append({'source':source_ref(p),'controller_file':p.name,'declared_routes':routes,'verification':'source inventory; no runtime endpoint requests made'})
     (OUT/'production'/'api-inventory.json').write_text(json.dumps(api,indent=2)+'\n')
-    (OUT/'production'/'requirements.txt').write_text('Pillow\n# FFmpeg encoder required; provide its path with --ffmpeg.\n# Warm Lulu audio sources and caption exports are included.\n# New narration can be generated in the private Descript project.\n')
+    (OUT/'production'/'requirements.txt').write_text('Pillow\nnumpy\n# FFmpeg encoder required; provide its path with --ffmpeg.\n# Warm Lulu audio sources and caption exports are included.\n# New narration can be generated in the private Descript project.\n')
     print('Library ready:',len(data['lessons']),'lessons;',len(api),'v4 API controller files indexed')
 
 if __name__=='__main__':main()

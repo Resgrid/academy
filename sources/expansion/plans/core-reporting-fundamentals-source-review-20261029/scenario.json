@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "kind": "guarded_manual_read_only_reporting_replay",
+  "department_id": 51,
+  "actor": "Existing authorized Wallace Boden reporting account; no credential values retained.",
+  "preconditions": [
+    "Fictional existing department and its actual report permissions",
+    "Existing staffing and training call history; no automatic seed or history fabrication",
+    "Normal browser calendar/time controls and actual report Download CSV only"
+  ],
+  "steps": [
+    {
+      "report": "StaffingReport",
+      "route": "/User/Reports/StaffingReport",
+      "mutation": false,
+      "checks": [
+        "Group/category counts and chart",
+        "Name/group/roles/latest staffing timestamp",
+        "No empty next-change inference"
+      ]
+    },
+    {
+      "report": "CallSummaryReport",
+      "parameters": {
+        "start": "2026-10-25T00:00:00",
+        "end": "2026-10-29T23:30:00",
+        "groupId": 0
+      },
+      "actual_observed": {
+        "calls": 15,
+        "open": 4,
+        "closed": 11,
+        "unit_responses": 9,
+        "personnel_responses": 4
+      },
+      "mutation": false
+    },
+    {
+      "report": "CallUnitTimesReport",
+      "parameters": {
+        "start": "2026-10-24T23:30:00",
+        "end": "2026-10-29T23:30:00"
+      },
+      "actual_csv": {
+        "file": "expansion/plans/core-reporting-actual-exports-20261029/call-unit-times.csv",
+        "sha256": "c978b3ad5fa32c5b264486eb06a0a385dc4e1aa9db71bb861843aab8ca3792c6",
+        "data_rows": 13,
+        "distinct_calls": 12
+      },
+      "mutation": false
+    },
+    {
+      "report": "CallSummaryReport",
+      "parameters": {
+        "start": "2025-12-31T18:00:01",
+        "end": "2026-12-31T17:59:59",
+        "groupId": 51002,
+        "group": "Command"
+      },
+      "actual_observed": {
+        "calls": 5,
+        "open": 0,
+        "closed": 5
+      },
+      "mutation": false
+    },
+    {
+      "report": "CallSummaryReport",
+      "parameters": {
+        "start": "2025-12-31T18:00:01",
+        "end": "2026-12-31T17:59:59",
+        "groupId": 0,
+        "group": "All Groups"
+      },
+      "actual_observed": {
+        "calls": 16,
+        "open": 4,
+        "closed": 12,
+        "unit_responses": 10,
+        "personnel_responses": 6
+      },
+      "mutation": false
+    }
+  ],
+  "history_limits": [
+    "Counts are observations at capture/download time, not guaranteed results after later training operations.",
+    "Broad-window DOM contains the earlier closed DEMO-0004 logged2026-10-24T07:19:29/closed08:19:29, outside the week summary. This row is not visible in027 and is not taught as a pictured row.",
+    "Use actual current report windows; the shown default begins the prior December and must not be silently called a January1 calendar-year range."
+  ],
+  "prohibited_replay_actions": [
+    "Do not create/edit/close calls or change staffing to reproduce counts.",
+    "No module/permission/security changes, hidden worker endpoint, scheduled report Save, external send or PDF action.",
+    "No fabricated history, modified CSV data or hidden state injection."
+  ],
+  "six_sector_examples": {
+    "Chicago Fire": "Run a station-scoped call summary for a fixed exercise period, then inspect the matching unit times before describing response totals.",
+    "Community care and mental health": "Review operational call workload in an agreed period without adding client histories or treating software timestamps as an assessment.",
+    "Search and rescue": "Compare mission-period call groups using the same boundaries and distinguish missing unit times from recorded zero-duration activity.",
+    "Security": "Review current recorded staffing and a bounded patrol call period; do not equate the staffing chart with attendance.",
+    "Wildland": "Compare a defined seasonal window and its group scope; treat partial-period and future zero rows explicitly.",
+    "Industrial response": "Inspect a training call’s unit-status chronology and preserve missing fields in a CSV used for an internal software exercise."
+  }
+}

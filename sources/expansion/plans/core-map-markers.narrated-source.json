@@ -1,0 +1,388 @@
+{
+  "id": "core-map-markers",
+  "title": "Customize map markers and verify real priority and status changes",
+  "app": "Core",
+  "audience": "Department administrators and mapping coordinators",
+  "summary": "Save call, Engine and Officer icons; verify Urgent, Available and Standing By replacements; restore the reserve unit and inspect actual map/legend fallbacks.",
+  "prerequisites": [
+    "Use an isolated fictional training department and permission to edit its call/unit types, personnel roles and marker overrides.",
+    "Use disposable training images in a supported format under one megabyte; keep bold shapes readable at small map/list sizes.",
+    "Know the named entities, existing role membership and actual priority/status meanings before changing icons.",
+    "A permitted location is required to inspect an operating marker. The reserve unit point in this recording is separately declared simulated station-fixture data; neither status dialog collected GPS.",
+    "The walkthrough shows actual Core desktop browser screens. Native-device rendering, provider delivery and physical apparatus movement are not demonstrated."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Identify the three marker families",
+      "route": "/User/Mapping/Legend",
+      "capture_intent": "Actual reviewed screenshot sequence: Actual Mapping page with the Map Icon Legend entry control.; Read the exact legend hierarchy and family definitions.; Introduce three genuinely named operating-map subjects; one clear filtered view per entity.",
+      "required_labels": [
+        "Map Icon Legend",
+        "How an icon is picked",
+        "TRAINING — Warehouse alarm",
+        "Reserve Engine 51",
+        "Matthew Casey"
+      ],
+      "narration": "Open Mapping and choose Map Icon Legend. A call's marker follows its type and priority. A unit's marker follows its type and current status. A person's marker follows an applicable role and status. Staffing levels do not change the icon. Our fictional examples are the Warehouse alarm, Reserve Engine 51 and Matthew Casey. Keep their names visible while comparing symbols. The colors and artwork identify different things, so match a marker to its named entity before drawing an operational conclusion.",
+      "practice": "Locate a named call, unit and person; explain whether type/priority, type/status or role/status controls its icon.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "008-call-urgent-override-map-result",
+          "024-legend-icon-selection-rules",
+          "013-reserve-engine-base-fallback-map",
+          "023-officer-standing-by-map-result"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "02",
+      "title": "Save and reopen a call type base icon",
+      "route": "/User/Types/EditCallType?callTypeId=51001",
+      "capture_intent": "Actual reviewed screenshot sequence: Actual reopened call type, name, selectors and stored preview.; Chosen base file, format/size guidance, preview variants and visible Update.; Current saved icon,128×128 storage, Update and Priority map icons.",
+      "required_labels": [
+        "Department Types",
+        "Structure Fire",
+        "Map Icon",
+        "Custom icon",
+        "Choose File",
+        "Preview",
+        "Light map",
+        "Dark map",
+        "In a list",
+        "Icon guidelines",
+        "Update",
+        "Showing the current custom icon."
+      ],
+      "narration": "From Department Types, edit Structure Fire. The Map Icon selector supplies a built-in choice; Custom icon supplies the uploaded alternative. Choose File and select the training fire image. Read the Icon guidelines: supported formats are PNG, JPEG, GIF and WebP, up to one megabyte. SVG is not supported. Compare Preview on Light map, Dark map and In a list. A bold transparent square stays readable when small. Choose Update, then reopen the form. Showing the current custom icon confirms the stored result, rather than just a selected file.",
+      "practice": "In an authorized training type, select one supported image, inspect all three previews, save and reopen before treating the result as stored.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "002-call-base-reopened-loaded",
+          "001-call-base-selected",
+          "003-call-base-saved-current-preview"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "03",
+      "title": "Save the actual Urgent priority override",
+      "route": "/User/Mapping/StatusIcons?kind=2&typeId=51001",
+      "capture_intent": "Actual reviewed screenshot sequence: Priority map icons entry is visible on the saved call type.; Urgent/High row and actual selected call-emergency.png; no filename/priority confusion.; Saved Urgent override with banner and Remove.; Actual specific operating-map icon, then three-column family comparison.",
+      "required_labels": [
+        "Priority map icons",
+        "Map icons for Structure Fire",
+        "Priority",
+        "Map color",
+        "Default",
+        "Uploaded icon",
+        "Urgent",
+        "High",
+        "call-emergency.png",
+        "Upload",
+        "Icon saved.",
+        "Remove",
+        "TRAINING — Warehouse alarm",
+        "Routine",
+        "Emergency"
+      ],
+      "narration": "Choose Priority map icons. Find the Urgent row. Priority and Map color describe the actual setting; Default shows its fallback. The file selected here happens to be named call-emergency, but it is being uploaded for Urgent. A filename does not change the call's priority. Use that row's Upload button. Icon saved and the image under Uploaded icon show the stored replacement; Remove is now available. The named Warehouse alarm now shows that replacement on Mapping. In the legend, Routine and Emergency still use the type's base image with their priority badges.",
+      "practice": "Find the actual intended priority row, upload a disposable icon there, and compare its saved row, named map marker and legend. Do not infer priority from a filename.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "003-call-base-saved-current-preview",
+          "006-call-urgent-override-selected",
+          "007-call-urgent-override-saved",
+          "008-call-urgent-override-map-result",
+          "025-legend-call-priority-custom-family"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "04",
+      "title": "Set the Engine base and verify the named reserve unit",
+      "route": "/User/Types/EditUnitType?unitTypeId=51001",
+      "capture_intent": "Actual reviewed screenshot sequence: Full readable unit names/type/status; distinguish Reserve from Engine51.; Selected unit-engine-base.png, Standard Actions, previews and Update.; Saved Engine base and initial Reserve map fallback; status comes from separate Units row.",
+      "required_labels": [
+        "Units",
+        "Reserve Engine 51",
+        "Engine 51",
+        "Type",
+        "Engine",
+        "Status",
+        "Out of Service",
+        "Released",
+        "Actions (Custom Unit Statuses)",
+        "Standard Actions",
+        "Custom icon",
+        "Preview",
+        "Update",
+        "Showing the current custom icon."
+      ],
+      "narration": "Open Units and check Reserve Engine 51. Its Type is Engine and its starting Status is Out of Service. Engine 51 is a different unit and remains Released in this recording. Edit the Engine unit type. Review Actions, which is set to Standard Actions, then choose the training image under Custom icon. Compare the light, dark and list previews before choosing Update. Reopen the definition to confirm the current saved icon. The reserve unit's map initially shows that blue base image with an unavailable badge. Changing an icon definition does not change the unit's status.",
+      "practice": "Confirm the named unit really uses Engine and read its current status before comparing the saved Engine base with the map.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "014-unit-type-and-current-statuses",
+          "009-engine-base-icon-selected",
+          "010-engine-base-icon-reopened",
+          "013-reserve-engine-base-fallback-map"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "05",
+      "title": "Save Available and compare a real status change",
+      "route": "/User/Mapping/StatusIcons?kind=1&typeId=51001",
+      "capture_intent": "Actual reviewed screenshot sequence: Status map icons entry is visible on the saved Engine type.; Actual selected unit-available.png on Available; label/meaning swatches differ.; Saved Available row and distinct Uploaded icon.; Foreground normal status dialog; no clipped note suffix or modal background counted.; Saved normal status and real map after separately recorded simulated status-location append51020→51021.",
+      "required_labels": [
+        "Status map icons",
+        "Map icons for Engine",
+        "Available",
+        "Map color",
+        "Uploaded icon",
+        "Upload",
+        "Icon saved.",
+        "Set Unit Status",
+        "Destination",
+        "None",
+        "Note",
+        "Save",
+        "Reserve Engine 51"
+      ],
+      "narration": "Open Status map icons for Engine. Choose the Available row and select the green training image. Notice that Map color follows the operational meaning, while the status label has its own display color. Choose Upload and confirm Icon saved. This replacement applies to Engine units while Available. For the disposable reserve example, open Set Status, choose Available, keep Destination at None, add a clear training Note and choose Save. The Units grid confirms Available. The map then shows the green replacement. Its station point was supplied separately as declared simulated fixture setup. This dialog did not collect GPS or inherit station coordinates; an entity without a permitted location may have no marker.",
+      "practice": "In a disposable unit example, distinguish saved Available status from separately prepared simulated location. Verify its named marker without claiming GPS collection.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "010-engine-base-icon-reopened",
+          "011-engine-available-override-selected",
+          "012-engine-available-override-saved",
+          "015-reserve-unit-status-example-prepared",
+          "016-reserve-unit-now-available",
+          "032-reserve-unit-available-override-map-result"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass.",
+          "Both unit location appends are separate declared simulated setup, not product GPS operations."
+        ]
+      }
+    },
+    {
+      "id": "06",
+      "title": "Save Officer and inspect existing membership and order",
+      "route": "/User/Personnel/Roles",
+      "capture_intent": "Actual reviewed screenshot sequence: Actual Officer row with View control.; Read-only actual role membership; no assignment mutation.; Selected role-officer-base.png and actual Save.; Actual stored Officer icon confirmation.; Existing ordered roles, rule text and Save order control; no ordering result claimed.",
+      "required_labels": [
+        "Personnel Roles",
+        "Officer",
+        "Matthew Casey",
+        "Stella Kidd",
+        "Christopher Herrmann",
+        "Custom icon",
+        "Choose File",
+        "Preview",
+        "Save",
+        "Showing the current custom icon.",
+        "Role order:",
+        "Save order"
+      ],
+      "narration": "Open Personnel Roles and view Officer. Matthew Casey, Stella Kidd and Christopher Herrmann are already members in this fictional department. Edit the role, choose the training image under Custom icon, inspect Preview and choose Save. Reopen it to confirm Showing the current custom icon. Back on Personnel Roles, read Role order. A person uses the first role they hold, in this order, that has an icon. Officer is fourth here. If you deliberately change the order, use Save order. No role order or membership is changed in this example.",
+      "practice": "Verify existing role membership, saved icon and department ordering. Explain which first applicable role would win without changing real personnel assignments.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "018-personnel-role-order-after-icon-save",
+          "020-officer-role-existing-members",
+          "017-officer-base-icon-selected",
+          "019-officer-base-icon-reopened"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "07",
+      "title": "Save Standing By and find Matthew Casey",
+      "route": "/User/Mapping/StatusIcons?kind=4&typeId=51002",
+      "capture_intent": "Actual reviewed screenshot sequence: Status map icons entry is visible on the saved Officer role.; Actual selected role-standing-by.png on Standing By row.; Actual saved Standing By override.; Actual named Casey marker matches replacement; clipped top controls excluded.",
+      "required_labels": [
+        "Status map icons",
+        "Map icons for Officer",
+        "Standing By",
+        "Uploaded icon",
+        "Upload",
+        "Icon saved.",
+        "Remove",
+        "Matthew Casey"
+      ],
+      "narration": "From Officer, choose Status map icons. Find Standing By and select its training replacement. This combination belongs to that role and that personnel status; it does not apply to every member regardless of role. Choose Upload and check Icon saved, Uploaded icon and Remove on the same row. Return to the map and filter to Matthew Casey. The named marker shows the gray replacement from the Standing By row. Keep the visible name with the symbol so a nearby person's marker cannot be mistaken for Casey's.",
+      "practice": "Save one role/status replacement, then filter the map to the exact fictional member and compare the name and symbol.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "019-officer-base-icon-reopened",
+          "021-officer-standing-by-override-selected",
+          "022-officer-standing-by-override-saved",
+          "023-officer-standing-by-map-result"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "08",
+      "title": "Read the complete legend and fallback order",
+      "route": "/User/Mapping/Legend",
+      "capture_intent": "Actual reviewed screenshot sequence: Readable actual hierarchy and status/priority meaning examples.; Specific Urgent replacement beside Routine/Emergency base+badges.; Actual whole Engine family with state labels.; Actual role family and On Unit explanation, without claiming unperformed assignment.",
+      "required_labels": [
+        "Map Icon Legend",
+        "How an icon is picked",
+        "Structure Fire",
+        "Urgent",
+        "Routine",
+        "Emergency",
+        "Engine",
+        "Available",
+        "Out of Service",
+        "Officer",
+        "Standing By",
+        "On Unit"
+      ],
+      "narration": "Use Map Icon Legend to explain how a symbol is chosen. An upload for the exact priority or status wins. Otherwise the type's or role's own upload can carry a meaning-colored badge. Otherwise a built-in pin uses that style. Compare the Structure Fire row across priorities. Then compare Engine across statuses: Available has its specific replacement while the other states use the base and badge. Finally compare Officer across personnel statuses. The legend also explains that a member On Unit can take the color of their unit's status. That is a reference example here, not a newly performed crew assignment.",
+      "practice": "Predict a current entity marker from its legend cell and explain the two fallback levels; treat unexercised On Unit cases as reference.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "024-legend-icon-selection-rules",
+          "025-legend-call-priority-custom-family",
+          "026-legend-engine-custom-status-family",
+          "027-legend-officer-custom-status-family"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    },
+    {
+      "id": "09",
+      "title": "Restore the reserve unit and verify its unavailable marker",
+      "route": "/User/Units",
+      "capture_intent": "Actual reviewed screenshot sequence: Actual Reserve row with Set Status entry control.; Actual foreground restoration dialog; clipped note tail not transcribed.; Actual saved restoration and unchanged separate Engine state.; Actual final restored map after separate append51022→51023, then corresponding Engine legend.",
+      "required_labels": [
+        "Set Unit Status",
+        "Status",
+        "Out of Service",
+        "Destination",
+        "None",
+        "Note",
+        "Save",
+        "Units",
+        "Reserve Engine 51",
+        "Engine 51",
+        "Released"
+      ],
+      "narration": "Restore the disposable reserve unit through Set Status. Choose Out of Service, wait for Destination to settle at None, add the training restoration Note and choose Save. The Units grid confirms Out of Service, while Engine 51 remains Released. For this recording, the original fictional station point is restored again as separate simulated setup data. The actual map now shows the blue Engine base with its black unavailable badge, matching the legend. The status changes used the normal application controls; neither setup step demonstrates device GPS or an operational response.",
+      "practice": "Restore only the disposable unit through the normal status form; verify the saved Out of Service row and map separately. Preserve demonstration history and explicitly identify simulated setup.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "016-reserve-unit-now-available",
+          "033-reserve-unit-out-of-service-restoration-prepared",
+          "034-reserve-unit-out-of-service-restored",
+          "035-reserve-unit-out-of-service-map-restored",
+          "026-legend-engine-custom-status-family"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass.",
+          "Both unit location appends are separate declared simulated setup, not product GPS operations."
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "title": "Remove the disposable Urgent override and verify fallback",
+      "route": "/User/Mapping/StatusIcons?kind=2&typeId=51001",
+      "capture_intent": "Actual reviewed screenshot sequence: Actual saved Urgent override immediately before normal Remove.; Actual removed banner and empty Urgent upload.; Actual legend/map fallback after removal; no call mutation or native/client result claim.",
+      "required_labels": [
+        "Map icons for Structure Fire",
+        "Urgent",
+        "Remove",
+        "Icon removed.",
+        "Uploaded icon",
+        "None",
+        "Structure Fire",
+        "TRAINING — Warehouse alarm",
+        "High"
+      ],
+      "narration": "Test a reversible fallback by returning to Structure Fire's Urgent row and choosing Remove for this disposable override. Icon removed appears, and Uploaded icon returns to None. The call's priority has not changed. Revisit the legend and the named Warehouse alarm. Both now show the base fire image with the high-priority badge. The original training calls remain open and unchanged. Finish by recording a small, consistent set of symbols and meanings, and retain labels where an icon could be ambiguous. These are actual Core browser views; native-device appearance is not demonstrated here.",
+      "practice": "Remove only a disposable priority override, verify None and the real legend/map fallback, and document the symbols your team will recognize.",
+      "capture_evidence": {
+        "status": "actual_screens_reviewed",
+        "capture_refs": [
+          "028-call-urgent-before-reversible-override-removal",
+          "029-call-urgent-override-removed",
+          "030-legend-call-priority-fallback-after-removal",
+          "031-call-urgent-live-fallback-after-removal"
+        ],
+        "observations": [
+          "Original-resolution screenshots and literal foreground labels reviewed; image/hash/observation checks pass."
+        ]
+      }
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Practice with a training Structure Fire priority and disposable reserve Engine; compare the real Urgent/Available examples, then restore the unit and verify its unavailable badge without implying deployment.",
+    "Community paramedicine and mental health response": "As a practice variation, use distinct clinician and peer-responder role images, check existing role membership/order and compare status replacements with labels. These role names are scenario suggestions, not additional configured or captured roles.",
+    "Search and rescue": "As a practice variation, distinguish a Rescue unit and a search-leader role. Predict map appearances from the actual type/status and role/status legend; an icon does not establish a qualification or physical location.",
+    "Security companies and departments": "As a practice variation, compare patrol-unit and supervisor-role symbols across their actual current statuses. Use the saved-row, named-map and legend checks demonstrated here before adopting a convention.",
+    "Wildland contractors": "As a practice variation, distinguish crew and supply apparatus while keeping staging and returning meanings recognizable. Review the corresponding legend cells; no new wildland status change or field tracking is claimed.",
+    "Industrial emergency response teams": "As a practice variation, use consistent ERT role and plant-apparatus images. Rehearse a disposable Available-to-Out of Service comparison and restoration with explicitly simulated setup; preserve maintenance and response distinctions."
+  },
+  "source_files": [
+    "Core/Resgrid.Model/MapIconResolver.cs",
+    "Core/Resgrid.Model/MapIconStyles.cs",
+    "Core/Resgrid.Model/TypeIcon.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs",
+    "Web/Resgrid.Web/Areas/User/Views/Mapping/StatusIcons.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Mapping/Legend.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Shared/_TypeIconPicker.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Types/EditCallType.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Types/EditUnitType.cshtml",
+    "Web/Resgrid.Web/Areas/User/Views/Personnel/EditRole.cshtml",
+    "Core/Resgrid.Model/MappingMarkerSource.cs",
+    "Core/Resgrid.Model/UnitState.cs",
+    "Web/Resgrid.Web/Areas/User/Controllers/UnitsController.cs",
+    "Web/Resgrid.Web.Services/Controllers/v4/MappingController.cs",
+    "sources/demo/scenarios/refresh_training_unit_position.py",
+    "sources/demo/seed.py"
+  ],
+  "export_ready": false,
+  "authoring_status": "frozen_for_natural_narration_with_declared_capture_limits",
+  "capture_manifest": "captures/expansion/core-marker-recovery-20261027/reviewed-map-marker-lesson-subset-20261027.json",
+  "capture_limits": [
+    "Both Reserve unit coordinates are declared simulated station status-location fixtures; normal status forms do not collect GPS or inherit station position.",
+    "The Uploaded icon filename call-emergency.png was deliberately saved on the actual Urgent row; Emergency priority was not changed.",
+    "Role membership and order were inspected, not changed. On Unit is a legend/reference case, not a performed crew assignment.",
+    "Original three active calls were preserved. Urgent override was removed; base icons and Available/Standing By overrides remain.",
+    "No audio, encoded frames, native-device rendering or browser video playback is approved by this source freeze."
+  ]
+}

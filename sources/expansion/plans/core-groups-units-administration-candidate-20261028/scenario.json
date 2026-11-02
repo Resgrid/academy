@@ -1,0 +1,94 @@
+{
+  "id": "core-groups-units-administration-actual-ui-20261028",
+  "mode": "Manual normal-UI replay, no automatic writes",
+  "executed_by_helper": false,
+  "department_id": 51,
+  "actual_ids": {
+    "organizational_group": 51007,
+    "station_group": 51008,
+    "unit_type": 51006,
+    "unit": 51008
+  },
+  "organizational_group": {
+    "name": "TRAINING ONLY - Community coordination 20261028",
+    "type": "Organizational",
+    "parent": null,
+    "members": [],
+    "admins": []
+  },
+  "station_group": {
+    "name": "TRAINING ONLY - Community base 20261028",
+    "type": "Station",
+    "parent_name": "TRAINING ONLY - Community coordination 20261028",
+    "coordinates": [
+      "41.8500",
+      "-87.6500"
+    ],
+    "address_route_used": false,
+    "what3words": null,
+    "printer": null,
+    "members": [],
+    "admins": []
+  },
+  "unit_type": {
+    "name": "TRAINING ONLY - Community response vehicle",
+    "class": "Support",
+    "actions": "Standard Actions",
+    "map_icon": "Van",
+    "custom_file": null
+  },
+  "unit": {
+    "name": "TRAINING ONLY - Community van 20261028",
+    "type_name": "TRAINING ONLY - Community response vehicle",
+    "station_name": "TRAINING ONLY - Community base 20261028",
+    "positions": [
+      {
+        "name": "Coordination seat",
+        "personnel_role": "TRAINING ONLY - Community response navigator",
+        "personnel_role_id": 51007,
+        "required": true
+      },
+      {
+        "name": "Optional support seat",
+        "personnel_role": null,
+        "required": false
+      }
+    ],
+    "people_assigned": []
+  },
+  "read_only_staffing": {
+    "audit": "expansion/audits/core-groups-units-staffing-readonly-observation-20261028.json",
+    "sha256": "46f85b7ae20bfb4aecc74bf006cc38120aef6001babf84728d50cbcde2406181",
+    "eight_selections_unchanged": true,
+    "global_save_clicked": false,
+    "Engine51_ChristopherHerrmann_retained": true
+  },
+  "guards": [
+    "Read exact names first. If present, reopen/compare rather than duplicate or overwrite. Resolve actual IDs by normalUI; never fabricate returnedIDs.",
+    "Preserve existing groups/members/admins, all existing units/types/crew/calls/statuses. No group-member moves, administrator grants or globalstaffingSave.",
+    "Use the complete illustrative pair; no GPSpermission, real address, W3W/printer/provider/key setup.",
+    "NewUnit configures seats only. Do not treat Available, timestamps, picker options or template suggestions as staffed/qualified/physical-readiness proof.",
+    "No timestamp invariance claim: default displayed timestamps may use a clock fallback.",
+    "No templateApply, existing-type/unitUpdate, delete, status/staffing or account/security change."
+  ],
+  "normal_replay": [
+    "Department menu→Stations&Groups→AddNewGroup→ownOrganizational/ParentNone/emptypeople→SaveGroup→freshEdit.",
+    "AddNewGroup→Station/ownparent→completeillustrativepair→emptyW3W/printer/people→SaveGroup→catalogandfreshEditname,parent,pair.",
+    "Units→NewUnit→typehere→UnitTypes/NewUnitType→ownSupport/StandardActions/Van/nofile→Save→catalog/freshEdit.",
+    "NewUnit→ownname/type/station→AddRole twice→CoordinationrequiredownPersonnelRole;OptionalSupportNone→BrowseTemplates/Closewithoutapply→Save.",
+    "List→ownEdit→readstored2seats;openStationdropdownfullnamewithoutchangingselection;noUpdate.",
+    "UnitStaffing→readEngineHerrmannandown2NotOccupied→open/closepickerwithoutselection→noSave.",
+    "Units→clearSearch→selectorganizationalparentandchildStation→sameownunit; no reassignment."
+  ],
+  "source_history": "Earlier proposed None/Default/othercoordinates replay and pre-save runtime note remain historical; this package binds actual final choices and stored readbacks.",
+  "boundaries": [
+    "No existing membership/admin assignment, printing/W3W/geocoding/provider-delivery test, deviceGPS or geofence operation.",
+    "No validation-error capture was made; blank Station help is not a failed-save demonstration.",
+    "005newrow clipped,024transientbackdrop,031staleCasey lookup are excluded.030does not prove qualification filtering, Casey visibility or selection.",
+    "Type/Station closed values truncate in022/025/027. FullType is shown018/020/021/026 and fullStation in028; no hiddenDOM literal promoted.",
+    "No unit staffing change or globalSave. Parent audit records all8selector values unchanged; no hypothetical qualified/blocked assignment outcome.",
+    "Available and Timestamp displays are not evidence of stored active-state readiness, unchanged stored timestamps, actual dispatch or physical presence.",
+    "Van preview is actually visible018/019; no custom-icon upload or live map appearance.",
+    "No template application, type/unit update, existing object deletion, whole-department hierarchy-depth guarantee or professional qualification claim."
+  ]
+}

@@ -1,0 +1,624 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records" [expanded]:
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - list:
+      - link " Dashboard":
+        - /url: /User/Records/Dashboard
+        - generic: 
+        - text: Dashboard
+      - link " All records":
+        - /url: /User/Records
+        - generic: 
+        - text: All records
+      - link " Deployment reports":
+        - /url: /User/RecordDeployments
+        - generic: 
+        - text: Deployment reports
+      - link " Legal holds":
+        - /url: /User/RecordLegalHolds
+        - generic: 
+        - text: Legal holds
+      - link " Occupancies":
+        - /url: /User/RecordOccupancies
+        - generic: 
+        - text: Occupancies
+      - link " Inspections":
+        - /url: /User/RecordInspections
+        - generic: 
+        - text: Inspections
+      - link " Hydrants":
+        - /url: /User/RecordHydrants
+        - generic: 
+        - text: Hydrants
+      - link " Permits":
+        - /url: /User/RecordPermits
+        - generic: 
+        - text: Permits
+      - link " Community risk":
+        - /url: /User/RecordCrr
+        - generic: 
+        - text: Community risk
+      - link " Alarm requests":
+        - /url: /User/RecordAlarmRequests
+        - generic: 
+        - text: Alarm requests
+      - link " Investigations":
+        - /url: /User/RecordInvestigations
+        - generic: 
+        - text: Investigations
+      - link " Analytics":
+        - /url: /User/RecordsAnalytics
+        - generic: 
+        - text: Analytics
+      - link " Existing logs":
+        - /url: /User/Logs
+        - generic: 
+        - text: Existing logs
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 4":
+      - /url: "#"
+      - generic: 
+      - generic: "4"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Records Settings" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - link "Records":
+    - /url: /User/Records
+  - text: /
+  - strong: Records Settings
+- heading "Records" [level=5]
+- generic: Records activated on
+- paragraph: 10/25/2026 14:05:10 (Active)
+- generic: Default lifecycle preset for department definitions
+- combobox:
+  - option "QuickEntry" [selected]
+  - option "ReviewRequired"
+  - option "ApprovalAcknowledgement"
+- generic: Default lifecycle for new department-owned definitions. Locked definitions retain their own lifecycle.
+- generic: Review due (hours)
+- spinbutton: "72"
+- generic: Default administrative review deadline; a definition-level override takes precedence. This is not a statutory deadline inference.
+- heading "NERIS reporting" [level=5]
+- paragraph: When on, incident reports are checked against the NERIS rules before they can be finalized, and finalized reports can be submitted to NERIS. Turn it off if your department does not report to NERIS.
+- checkbox "Use NERIS workflows" [checked]
+- text: Use NERIS workflows
+- generic: Turns this department's NERIS validation, submission and NERIS setup screens on or off. Other Records settings, records and history are unchanged; the NERIS profile and queued submissions are kept for re-enabling.
+- paragraph: Turning NERIS off stops NERIS validation, submission and status checks, and hides the NERIS setup screens and figures. Incident reports and every other Records setting keep working. Your NERIS profile, code mappings and submission history are kept, and queued submissions wait until NERIS is turned back on.
+- paragraph: NERIS submission is switched off system-wide; reports can be authored and finalized but not delivered.
+- paragraph:
+  - link " NERIS profile and code mappings":
+    - /url: /User/IncidentReports/Settings
+    - generic: 
+    - text: NERIS profile and code mappings
+- heading "Record numbering" [level=5]
+- generic: Number pattern
+- textbox: "{PREFIX}-{YYYY}-{SEQ}"
+- paragraph:
+  - text: "Example:"
+  - code: INC-2026-0153
+- generic: "How record numbers are written for the built-in record types and incident reports, for example RUN-0153: fixed text plus the PREFIX, YYYY or YY, GROUP and SEQ tokens. PREFIX writes each record type's prefix: its default or the department's own, from \"Record type prefixes\". Changing the pattern never renumbers records already numbered. Until a pattern is saved, the screen shows the one the department has always used."
+- generic: "Use {PREFIX} for the record type (RUN, TRN, INC and so on), {YYYY} or {YY} for the year, {GROUP} for the station or group (G followed by its ID, which must be followed by -, _ or .), and {SEQ} for the sequence, which is required. Letters, digits, -, _ and . are kept as written. The sequence restarts whenever the text around {SEQ} changes: including the year restarts it every year, and leaving out {PREFIX} gives every record type one shared sequence."
+- generic: Sequence digits
+- spinbutton: "4"
+- generic: "Digits in the SEQ part of the number pattern, zero-padded: 4 writes 0184. 3 to 8 digits; changing it keeps each sequence's next number. Department definitions with their own numbering keep their own width."
+- generic: Numbering year starts
+- combobox "Numbering year starts":
+  - option "January" [selected]
+  - option "February"
+  - option "March"
+  - option "April"
+  - option "May"
+  - option "June"
+  - option "July"
+  - option "August"
+  - option "September"
+  - option "October"
+  - option "November"
+  - option "December"
+- generic: Month the numbering year starts, for records numbered by a fiscal year such as a county's or state's. Sequences that include the year start again at 1 on that month and day, and YYYY and YY write the fiscal year's name. Unset is January, the calendar year. Separate from call numbering's year start. Records request numbers and the numbers of inspections, permits, occupancies, investigations and evidence follow the same year.
+- spinbutton "Day of the month": "1"
+- generic: "For records numbered by a fiscal year, your own or a county's or state's you report to, pick the day it starts. Numbers that include the year start again at 1 that day, and {YYYY} and {YY} write the fiscal year's name. Most fiscal years are named by the year they end in, so one starting November 1, 2026 is 2027. January 1 is the calendar year. Call numbers have their own year start on the Call Settings page. Records request numbers and the numbers of inspections, permits, occupancies, investigations and evidence follow the same year."
+- heading "Record type prefixes" [level=5]
+- paragraph:
+  - link " Terminology":
+    - /url: /User/Department/Terminology
+    - generic: 
+    - text: Terminology
+- paragraph: "Set the prefix {PREFIX} writes for each record type, for example FIRE for Run and IR for incident reports. Leave a box blank to keep the default. A new prefix starts its own sequence, and records already numbered keep their numbers. Types given the same prefix share one sequence. Prefixes are used only when the pattern includes {PREFIX}."
+- table:
+  - rowgroup:
+    - row "Record type Default Number prefix":
+      - columnheader "Record type"
+      - columnheader "Default"
+      - columnheader "Number prefix"
+  - rowgroup:
+    - row "Run RUN":
+      - cell "Run"
+      - cell "RUN":
+        - code: RUN
+      - cell:
+        - textbox "Number prefix Run":
+          - /placeholder: RUN
+    - row "Training TRN":
+      - cell "Training"
+      - cell "TRN":
+        - code: TRN
+      - cell:
+        - textbox "Number prefix Training":
+          - /placeholder: TRN
+    - row "Work WRK":
+      - cell "Work"
+      - cell "WRK":
+        - code: WRK
+      - cell:
+        - textbox "Number prefix Work":
+          - /placeholder: WRK
+    - row "Meeting MTG":
+      - cell "Meeting"
+      - cell "MTG":
+        - code: MTG
+      - cell:
+        - textbox "Number prefix Meeting":
+          - /placeholder: MTG
+    - row "Coroner COR":
+      - cell "Coroner"
+      - cell "COR":
+        - code: COR
+      - cell:
+        - textbox "Number prefix Coroner":
+          - /placeholder: COR
+    - row "Callback CBK":
+      - cell "Callback"
+      - cell "CBK":
+        - code: CBK
+      - cell:
+        - textbox "Number prefix Callback":
+          - /placeholder: CBK
+    - row "Unit activity UNT":
+      - cell "Unit activity"
+      - cell "UNT":
+        - code: UNT
+      - cell:
+        - textbox "Number prefix Unit activity":
+          - /placeholder: UNT
+    - row "Incident reports INC":
+      - cell "Incident reports"
+      - cell "INC":
+        - code: INC
+      - cell:
+        - textbox "Number prefix Incident reports":
+          - /placeholder: INC
+- heading "Next numbers for 2026" [level=5]
+- paragraph: "Raise a sequence's next number to carry on from numbers issued before Resgrid: after 2026-0001 through 2026-0152, enter 153. Leave a box blank to keep the sequence as it is. A next number can only be raised, never lowered, so no number is issued twice."
+- table:
+  - rowgroup:
+    - row "Sequence Next number Raise next to":
+      - columnheader "Sequence"
+      - columnheader "Next number"
+      - columnheader "Raise next to"
+  - rowgroup:
+    - row "Run RUN-2026-0001":
+      - cell "Run"
+      - cell "RUN-2026-0001":
+        - code: RUN-2026-0001
+      - cell:
+        - spinbutton "Raise next to Run"
+    - row "Training TRN-2026-0003":
+      - cell "Training"
+      - cell "TRN-2026-0003":
+        - code: TRN-2026-0003
+      - cell:
+        - spinbutton "Raise next to Training" [active]
+    - row "Work WRK-2026-0001":
+      - cell "Work"
+      - cell "WRK-2026-0001":
+        - code: WRK-2026-0001
+      - cell:
+        - spinbutton "Raise next to Work"
+    - row "Meeting MTG-2026-0001":
+      - cell "Meeting"
+      - cell "MTG-2026-0001":
+        - code: MTG-2026-0001
+      - cell:
+        - spinbutton "Raise next to Meeting"
+    - row "Coroner COR-2026-0001":
+      - cell "Coroner"
+      - cell "COR-2026-0001":
+        - code: COR-2026-0001
+      - cell:
+        - spinbutton "Raise next to Coroner"
+    - row "Callback CBK-2026-0001":
+      - cell "Callback"
+      - cell "CBK-2026-0001":
+        - code: CBK-2026-0001
+      - cell:
+        - spinbutton "Raise next to Callback"
+    - row "Unit activity UNT-2026-0001":
+      - cell "Unit activity"
+      - cell "UNT-2026-0001":
+        - code: UNT-2026-0001
+      - cell:
+        - spinbutton "Raise next to Unit activity"
+    - row "Incident reports INC-2026-0001":
+      - cell "Incident reports"
+      - cell "INC-2026-0001":
+        - code: INC-2026-0001
+      - cell:
+        - spinbutton "Raise next to Incident reports"
+- heading "Other record numbers" [level=5]
+- paragraph: "Records request, occupancy, inspection, permit, investigation and evidence numbers. Leave a pattern blank to keep the built-in numbers shown. Patterns use {YYYY} or {YY}, {MM}, {DD} and {SEQ} as call numbers do, follow the numbering year start above, and fit 32 characters (50 for records requests)."
+- table:
+  - rowgroup:
+    - row "Record type Number pattern Sequence digits Next number Raise next to":
+      - columnheader "Record type"
+      - columnheader "Number pattern"
+      - columnheader "Sequence digits"
+      - columnheader "Next number"
+      - columnheader "Raise next to"
+  - rowgroup:
+    - 'row "Records requests Example: PRR-2026-0153 4 Built-in, e.g. PRR-2026-0153"':
+      - cell "Records requests"
+      - 'cell "Example: PRR-2026-0153"':
+        - textbox "Number pattern Records requests":
+          - /placeholder: "PRR-{YYYY}-{SEQ}"
+        - text: "Example:"
+        - code: PRR-2026-0153
+      - cell "4":
+        - spinbutton "Sequence digits Records requests": "4"
+      - cell "Built-in, e.g. PRR-2026-0153":
+        - text: Built-in, e.g.
+        - code: PRR-2026-0153
+      - cell
+    - 'row "Occupancies Example: OCC-2026-0153 4 Built-in, e.g. OCC-2026-0153"':
+      - cell "Occupancies"
+      - 'cell "Example: OCC-2026-0153"':
+        - textbox "Number pattern Occupancies":
+          - /placeholder: "OCC-{YYYY}-{SEQ}"
+        - text: "Example:"
+        - code: OCC-2026-0153
+      - cell "4":
+        - spinbutton "Sequence digits Occupancies": "4"
+      - cell "Built-in, e.g. OCC-2026-0153":
+        - text: Built-in, e.g.
+        - code: OCC-2026-0153
+      - cell
+    - 'row "Inspections Example: INSP-2026-0153 4 Built-in, e.g. INSP-2026-0153"':
+      - cell "Inspections"
+      - 'cell "Example: INSP-2026-0153"':
+        - textbox "Number pattern Inspections":
+          - /placeholder: "INSP-{YYYY}-{SEQ}"
+        - text: "Example:"
+        - code: INSP-2026-0153
+      - cell "4":
+        - spinbutton "Sequence digits Inspections": "4"
+      - cell "Built-in, e.g. INSP-2026-0153":
+        - text: Built-in, e.g.
+        - code: INSP-2026-0153
+      - cell
+    - 'row "Permits Example: PRM-2026-0153 4 Built-in, e.g. PRM-2026-0153"':
+      - cell "Permits"
+      - 'cell "Example: PRM-2026-0153"':
+        - textbox "Number pattern Permits":
+          - /placeholder: "PRM-{YYYY}-{SEQ}"
+        - text: "Example:"
+        - code: PRM-2026-0153
+      - cell "4":
+        - spinbutton "Sequence digits Permits": "4"
+      - cell "Built-in, e.g. PRM-2026-0153":
+        - text: Built-in, e.g.
+        - code: PRM-2026-0153
+      - cell
+    - 'row "Investigations Example: INV-2026-0153 4 Built-in, e.g. INV-2026-0153"':
+      - cell "Investigations"
+      - 'cell "Example: INV-2026-0153"':
+        - textbox "Number pattern Investigations":
+          - /placeholder: "INV-{YYYY}-{SEQ}"
+        - text: "Example:"
+        - code: INV-2026-0153
+      - cell "4":
+        - spinbutton "Sequence digits Investigations": "4"
+      - cell "Built-in, e.g. INV-2026-0153":
+        - text: Built-in, e.g.
+        - code: INV-2026-0153
+      - cell
+    - 'row "Evidence Example: EV-2026-0153 4 Built-in, e.g. EV-2026-0153"':
+      - cell "Evidence"
+      - 'cell "Example: EV-2026-0153"':
+        - textbox "Number pattern Evidence":
+          - /placeholder: "EV-{YYYY}-{SEQ}"
+        - text: "Example:"
+        - code: EV-2026-0153
+      - cell "4":
+        - spinbutton "Sequence digits Evidence": "4"
+      - cell "Built-in, e.g. EV-2026-0153":
+        - text: Built-in, e.g.
+        - code: EV-2026-0153
+      - cell
+- heading "Retention" [level=5]
+- paragraph: "Shipped defaults: 7 years for standard records; permanent for Coroner and other restricted classes. Retention configuration is this department's responsibility under its own jurisdiction's rules. Changes apply prospectively and are audited."
+- generic: Department default (years, blank = system default)
+- spinbutton
+- generic: Department retention for standard record classes. Zero means permanent; protected classes, prior policy and holds can retain records longer.
+- heading "Per-definition overrides (0 = permanent)" [level=5]
+- table:
+  - rowgroup:
+    - row "Run":
+      - cell "Run"
+      - cell:
+        - spinbutton
+      - cell
+    - row "Training":
+      - cell "Training"
+      - cell:
+        - spinbutton
+      - cell
+    - row "Work":
+      - cell "Work"
+      - cell:
+        - spinbutton
+      - cell
+    - row "Meeting":
+      - cell "Meeting"
+      - cell:
+        - spinbutton
+      - cell
+    - row "Coroner  This is a restricted class. Setting a period enables automatic purge of these records. Confirm to apply.":
+      - cell "Coroner ":
+        - text: Coroner
+        - generic "Restricted section": 
+      - cell:
+        - spinbutton
+      - cell "This is a restricted class. Setting a period enables automatic purge of these records. Confirm to apply.":
+        - checkbox "This is a restricted class. Setting a period enables automatic purge of these records. Confirm to apply."
+        - text: This is a restricted class. Setting a period enables automatic purge of these records. Confirm to apply.
+    - row "Callback":
+      - cell "Callback"
+      - cell:
+        - spinbutton
+      - cell
+    - row "Unit activity":
+      - cell "Unit activity"
+      - cell:
+        - spinbutton
+      - cell
+- heading "Cross-group visibility" [level=5]
+- generic: Cross-group visibility
+- combobox:
+  - option "Department-wide (default)" [selected]
+  - option "Group-scoped"
+- generic: Whether record visibility is department-wide or group scoped. Group scope narrows existing permission and never grants access.
+- paragraph: Group scoping also requires the "See other groups' Records" permission to be locked to group. Authors, reviewers, named participants, responding unit crews and department administrators always see a record.
+- heading "Impact preview" [level=4]
+- paragraph: What group scoping would hide, before you confirm it. Members always keep the Records they authored, own, review, participate in or respond to with their unit, and department administrators see everything.
+- term: Records in the department
+- definition: "5"
+- term: Records hidden from members of no group
+- definition: "5"
+- term: Records with no group anchor (stay department-wide)
+- definition: "0"
+- term: Members in no group
+- definition: 0 / 14
+- term: Legacy log rows with no group (stay department-wide)
+- definition: "6"
+- table:
+  - rowgroup:
+    - row "Group Members Records":
+      - columnheader "Group"
+      - columnheader "Members"
+      - columnheader "Records"
+  - rowgroup:
+    - row "Firehouse 51 0 2":
+      - cell "Firehouse 51"
+      - cell "0"
+      - cell "2"
+    - row "Command 1 5":
+      - cell "Command"
+      - cell "1"
+      - cell "5"
+    - row "Engine 51 2 0":
+      - cell "Engine 51"
+      - cell "2"
+      - cell "0"
+    - row "Truck 81 5 1":
+      - cell "Truck 81"
+      - cell "5"
+      - cell "1"
+    - row "Squad 3 2 0":
+      - cell "Squad 3"
+      - cell "2"
+      - cell "0"
+    - row "Ambulance 61 4 0":
+      - cell "Ambulance 61"
+      - cell "4"
+      - cell "0"
+    - row "TRAINING ONLY - Community coordination 20261028 0 0":
+      - cell "TRAINING ONLY - Community coordination 20261028"
+      - cell "0"
+      - cell "0"
+    - row "TRAINING ONLY - Community base 20261028 0 0":
+      - cell "TRAINING ONLY - Community base 20261028"
+      - cell "0"
+      - cell "0"
+- checkbox "I understand what group scoping hides and want to turn it on."
+- text: I understand what group scoping hides and want to turn it on.
+- heading "Print layout" [level=5]
+- paragraph:
+  - text: How the letterhead renders on record prints. Identity and logo come from the Department Profile; the record content itself always prints from the pinned revision.
+  - link "Manage the Department Profile":
+    - /url: /User/Department/Profile
+- paragraph: No logo has been uploaded yet; prints show the department name only.
+- checkbox "Show logo" [checked]
+- text: Show logo
+- checkbox "Use the short name"
+- text: Use the short name
+- checkbox "Show address" [checked]
+- text: Show address
+- checkbox "Show phone number" [checked]
+- text: Show phone number
+- checkbox "Show website" [checked]
+- text: Show website
+- generic: Letterhead line 1
+- textbox
+- generic: Letterhead line 2
+- textbox
+- generic: Footer text
+- textbox
+- generic: Watermark label
+- textbox
+- generic: Page size
+- combobox:
+  - option "Letter" [selected]
+  - option "A4"
+- generic: Date and time format
+- textbox
+- generic: Optional .NET format string, for example yyyy-MM-dd HH:mm; leave empty for the department default.
+- paragraph: "Layout version: system-default/1"
+- heading "Public-records disclosure" [level=5]
+- paragraph: "Defaults for the disclosure workflow: the statutory response clock, the redaction profile a new request starts with, and who releases a produced packet."
+- generic: Statutory response clock (days)
+- spinbutton: "10"
+- generic: Days a new request is due in, counted from the received date. 1 to 365.
+- generic: Configured disclosure review clock. Verify local obligations with the responsible owner; the default does not establish a legal deadline.
+- generic: Default redaction profile
+- combobox:
+  - option "Standard - withhold restricted content" [selected]
+  - option "No personal identifiers - also withhold participant identities"
+  - option "Full disclosure - release everything held"
+- generic: Applied to a new request unless the officer chooses another.
+- generic: Default redaction profile in the owning disclosure workflow. Review the actual proposed release before approval.
+- generic: Release approver
+- combobox:
+  - option "Any department administrator" [selected]
+  - option "Blake Gallo"
+  - option "Brian Zvonecek"
+  - option "Christopher Herrmann"
+  - option "Darren Ritter"
+  - option "Gabriela Dawson"
+  - option "Joe Cruz"
+  - option "Kelly Severide"
+  - option "Leslie Shay"
+  - option "Matthew Casey"
+  - option "Randy McHolland"
+  - option "Stella Kidd"
+  - option "Sylvie Brett"
+  - option "Violet Mikami"
+  - option "Wallace Boden"
+- generic: The member who releases produced packets. Leave unset for any department administrator.
+- generic: Authorized member responsible for disclosure release approval. Selecting an approver does not grant missing permissions or protected-data access.
+- heading "Search index" [level=5]
+- term: Search index
+- definition: Disabled
+- term: Narrative
+- definition: Narrative text is not indexed for this department; search covers record numbers, summaries and other safe fields.
+- paragraph: The worker rebuilds the search index automatically whenever the department's protection policy or catalog version changes. Narrative search is withdrawn when Advanced Data Protection is enrolled.
+- button "Save"
+- link "Cancel":
+  - /url: /User/Records
+- button "Assistant":
+  - generic: ✨
+  - generic: Assistant
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

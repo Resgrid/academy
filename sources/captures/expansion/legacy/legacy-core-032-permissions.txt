@@ -1,0 +1,991 @@
+- navigation:
+  - link "Wallace Boden":
+    - /url: "#"
+    - strong
+    - generic: Wallace Boden
+  - text: 
+  - list:
+    - link " Home":
+      - /url: /User/Home/Dashboard
+      - generic: 
+      - text: Home
+    - link " Calls":
+      - /url: /User/Dispatch/Dashboard
+      - generic: 
+      - text: Calls
+    - link " Personnel":
+      - /url: /User/Personnel
+      - generic: 
+      - text: Personnel
+    - link " Units":
+      - /url: /User/Units
+      - generic: 
+      - text: Units
+    - link " Contacts":
+      - /url: /User/Contacts
+      - generic: 
+      - text: Contacts
+    - link " Mapping":
+      - /url: /User/Mapping
+      - generic: 
+      - text: Mapping
+    - link " Shifts":
+      - /url: /User/Shifts
+      - generic: 
+      - text: Shifts
+    - link "Records":
+      - /url: "#"
+      - generic: 
+      - generic: Records
+      - generic: 
+    - text:            
+    - link " Logs":
+      - /url: /User/Logs
+      - generic: 
+      - text: Logs
+    - link " Reports":
+      - /url: /User/Reports
+      - generic: 
+      - text: Reports
+    - link " Documents":
+      - /url: /User/Documents
+      - generic: 
+      - text: Documents
+    - link " Calendar":
+      - /url: /User/Calendar
+      - generic: 
+      - text: Calendar
+    - link " Notes":
+      - /url: /User/Notes
+      - generic: 
+      - text: Notes
+    - link " Trainings":
+      - /url: /User/Trainings
+      - generic: 
+      - text: Trainings
+    - link " Inventory":
+      - /url: /User/Inventory
+      - generic: 
+      - text: Inventory
+    - link "Readiness":
+      - /url: "#"
+      - generic: 
+      - generic: Readiness
+      - generic: 
+    - text:  
+    - link "Workforce & Business Ops":
+      - /url: "#"
+      - generic: 
+      - generic: Workforce & Business Ops
+      - generic: 
+    - text:       
+- navigation:
+  - list:
+    - link " 0":
+      - /url: "#"
+      - generic: 
+      - generic: "0"
+    - text: 
+    - link " 3":
+      - /url: "#"
+      - generic: 
+      - generic: "3"
+    - text: 
+  - combobox "Search":
+    - search:
+      - generic "Search":
+        - button "Search":
+      - searchbox "Search"
+  - list:
+    - text:  
+    - link "Firehouse 51 — Training Department":
+      - /url: "#"
+      - text: Firehouse 51 — Training Department
+    - link "Help":
+      - /url: "#"
+      - text: Help
+    - link "Language":
+      - /url: "#"
+      - img "Language"
+    - button "Log out":
+      - generic: 
+- heading "Security and Permissions" [level=2]
+- list:
+  - link "Home":
+    - /url: /User/Home/Dashboard
+  - text: /
+  - strong: Security and Permissions
+- link " Data Protection":
+  - /url: /User/DataProtection
+  - generic: 
+  - text: Data Protection
+- link " SSO & SCIM":
+  - /url: /User/Security/Sso
+  - generic: 
+  - text: SSO & SCIM
+- link " Security Policy":
+  - /url: /User/Security/SecurityPolicy
+  - generic: 
+  - text: Security Policy
+- link " API Keys":
+  - /url: /User/Security/ApiKeys
+  - generic: 
+  - text: API Keys
+- link "Audit Logs":
+  - /url: /User/Security/Audits
+- paragraph: Here you can set the permissions for your department, for example which users or roles can create calls, or who is authorized to create and remove users. Changes to the permissions will take effect on the next login to the Resgrid web application.
+- table:
+  - rowgroup:
+    - row "Permission Note Selection Group Only Roles":
+      - columnheader "Permission"
+      - columnheader "Note"
+      - columnheader "Selection"
+      - columnheader "Group Only"
+      - columnheader "Roles"
+  - rowgroup:
+    - row "Who can Add Users This option determines who can add users/personnel to the department. By default only Department Administrators (and the managing member) can add users. But Group Admins can also be allowed to add users (limited only to the group they are an admin of). Department Admins N/A No Roles":
+      - cell "Who can Add Users"
+      - cell "This option determines who can add users/personnel to the department. By default only Department Administrators (and the managing member) can add users. But Group Admins can also be allowed to add users (limited only to the group they are an admin of)."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Remove Users This option determines who can remove users/personnel from the department. By default only Department Administrators (and the managing member) can remove users. But Group Admins can also be allowed to remove users (limited only to the users in the group they are an admin of). Department Admins N/A No Roles":
+      - cell "Who can Remove Users"
+      - cell "This option determines who can remove users/personnel from the department. By default only Department Administrators (and the managing member) can remove users. But Group Admins can also be allowed to remove users (limited only to the users in the group they are an admin of)."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Create Calls This option determines who can manually create calls from the Resgrid system. By default Everyone can create calls. Everyone N/A No Roles":
+      - cell "Who can Create Calls"
+      - cell "This option determines who can manually create calls from the Resgrid system. By default Everyone can create calls."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Delete Calls This option determines who can delete calls from the Resgrid system. By default Everyone can delete calls. Everyone No Roles":
+      - cell "Who can Delete Calls"
+      - cell "This option determines who can delete calls from the Resgrid system. By default Everyone can delete calls."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can Close Calls This option determines who can close calls from the Resgrid system. By default Everyone can close calls. Everyone No Roles":
+      - cell "Who can Close Calls"
+      - cell "This option determines who can close calls from the Resgrid system. By default Everyone can close calls."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can Add Data To Calls This option determines who can add data; like images, notes and files, to calls from the Resgrid system. By default Everyone can add data to calls. Everyone No Roles":
+      - cell "Who can Add Data To Calls"
+      - cell "This option determines who can add data; like images, notes and files, to calls from the Resgrid system. By default Everyone can add data to calls."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can Create Trainings This option determines who can create trainings. By default only Department Admins can create trainings. Department Admins N/A No Roles":
+      - cell "Who can Create Trainings"
+      - cell "This option determines who can create trainings. By default only Department Admins can create trainings."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Add Documents This option determines who can add documents. By default Everyone can add documents. Everyone N/A No Roles":
+      - cell "Who can Add Documents"
+      - cell "This option determines who can add documents. By default Everyone can add documents."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Create Calendar Entries This option determines who can create calendar entries. By default Everyone can create calendar entries. Everyone N/A No Roles":
+      - cell "Who can Create Calendar Entries"
+      - cell "This option determines who can create calendar entries. By default Everyone can create calendar entries."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Create Notes This option determines who can create notes. By default Everyone can create notes. Everyone N/A No Roles":
+      - cell "Who can Create Notes"
+      - cell "This option determines who can create notes. By default Everyone can create notes."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Add Log Entries This option determines who can add log entries. By default Everyone can add log entries. Everyone N/A No Roles":
+      - cell "Who can Add Log Entries"
+      - cell "This option determines who can add log entries. By default Everyone can add log entries."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Delete Log Entries Who in your department is allowed to delete log entries Everyone N/A No Roles":
+      - cell "Delete Log Entries"
+      - cell "Who in your department is allowed to delete log entries"
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Create Shifts This option determines who can create and edit shifts. By default only Department Admins can create and edit shifts. Department Admins N/A No Roles":
+      - cell "Who can Create Shifts"
+      - cell "This option determines who can create and edit shifts. By default only Department Admins can create and edit shifts."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - 'row "Who can View Personal Info This option determines who can view personal information (PII) about personnel in the system. For example: Email Address, Phone Numbers, etc. By default Everyone can view this information. Everyone N/A No Roles"':
+      - cell "Who can View Personal Info"
+      - 'cell "This option determines who can view personal information (PII) about personnel in the system. For example: Email Address, Phone Numbers, etc. By default Everyone can view this information."'
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can Adjust Inventory This option determines who can adjust inventory levels in the system. Until a value is saved, only Department Admins can adjust inventory. Department Admins N/A No Roles":
+      - cell "Who can Adjust Inventory"
+      - cell "This option determines who can adjust inventory levels in the system. Until a value is saved, only Department Admins can adjust inventory."
+      - cell "Department Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can see the Location of Personnel This option determines who can see the location of personnel on the maps. To lock the option to just group admins and roles within a group you need to check the Group Only option. Everyone No Roles":
+      - cell "Who can see the Location of Personnel"
+      - cell "This option determines who can see the location of personnel on the maps. To lock the option to just group admins and roles within a group you need to check the Group Only option."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can see the Location of Units This option determines who can see the location of units on the maps. To lock the option to just group admins and roles within a group you need to check the Group Only option. Everyone No Roles":
+      - cell "Who can see the Location of Units"
+      - cell "This option determines who can see the location of units on the maps. To lock the option to just group admins and roles within a group you need to check the Group Only option."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can send messages This option determines who can create and send messages (in-system mail). By default everyone can create and send messages. Everyone N/A No Roles":
+      - cell "Who can send messages"
+      - cell "This option determines who can create and send messages (in-system mail). By default everyone can create and send messages."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Who can view users By default all users can see all other users in the system. This option allows you to limit who can see users in the system. Everyone No Roles":
+      - cell "Who can view users"
+      - cell "By default all users can see all other users in the system. This option allows you to limit who can see users in the system."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can view units By default all users can see all units in the system. This option allows you to limit who can view units in the system. Everyone No Roles":
+      - cell "Who can view units"
+      - cell "By default all users can see all units in the system. This option allows you to limit who can view units in the system."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Who can view Contacts By default all users can see all contacts in the system. This option allows you to limit who can view contacts in the system. If a user cannot view Contacts they also won't be able to add them to a call. Everyone No Roles":
+      - cell "Who can view Contacts"
+      - cell "By default all users can see all contacts in the system. This option allows you to limit who can view contacts in the system. If a user cannot view Contacts they also won't be able to add them to a call."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell
+      - cell "No Roles"
+    - row "Who can edit or create Contacts By default all users can create and edit contacts in the system. This option allows you to limit who can create or edit contacts in the system. Everyone No Roles":
+      - cell "Who can edit or create Contacts"
+      - cell "By default all users can create and edit contacts in the system. This option allows you to limit who can create or edit contacts in the system."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell
+      - cell "No Roles"
+    - row "Who can delete Contacts By default all users can delete contacts in the system. This option allows you to limit who can delete contacts in the system. Everyone No Roles":
+      - cell "Who can delete Contacts"
+      - cell "By default all users can delete contacts in the system. This option allows you to limit who can delete contacts in the system."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell
+      - cell "No Roles"
+    - 'row "Who can Create/Edit Workflows This option determines who can create, edit, and delete workflows and workflow steps. Until a value is saved, only Department Admins can manage workflows and every member can view them; saving any value also limits who can view them. Not saved: Department Admins edit, everyone can view No Roles"':
+      - cell "Who can Create/Edit Workflows"
+      - cell "This option determines who can create, edit, and delete workflows and workflow steps. Until a value is saved, only Department Admins can manage workflows and every member can view them; saving any value also limits who can view them."
+      - 'cell "Not saved: Department Admins edit, everyone can view"':
+        - combobox:
+          - 'option "Not saved: Department Admins edit, everyone can view" [disabled] [selected]'
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell
+      - cell "No Roles"
+    - 'row "Who can Manage Workflow Credentials This option determines who can create, edit, and delete encrypted credentials used by workflow actions (e.g., SMTP passwords, API keys). Until a value is saved, only Department Admins can manage credentials and every member can see their names; saving any value also limits who can see them. Not saved: Department Admins edit, everyone can see names No Roles"':
+      - cell "Who can Manage Workflow Credentials"
+      - cell "This option determines who can create, edit, and delete encrypted credentials used by workflow actions (e.g., SMTP passwords, API keys). Until a value is saved, only Department Admins can manage credentials and every member can see their names; saving any value also limits who can see them."
+      - 'cell "Not saved: Department Admins edit, everyone can see names"':
+        - combobox:
+          - 'option "Not saved: Department Admins edit, everyone can see names" [disabled] [selected]'
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell
+      - cell "No Roles"
+    - 'row "Who can View Workflow Runs This option determines who can view workflow execution history, run logs, and health dashboards. Until a value is saved, every member can view workflow runs and only Department Admins can cancel or clear them; saving another value limits who can view them, and saving Everyone lets every member cancel and clear runs too. Not saved: everyone can view, Department Admins cancel No Roles"':
+      - cell "Who can View Workflow Runs"
+      - cell "This option determines who can view workflow execution history, run logs, and health dashboards. Until a value is saved, every member can view workflow runs and only Department Admins can cancel or clear them; saving another value limits who can view them, and saving Everyone lets every member cancel and clear runs too."
+      - 'cell "Not saved: everyone can view, Department Admins cancel"':
+        - combobox:
+          - 'option "Not saved: everyone can view, Department Admins cancel" [disabled] [selected]'
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Everyone"
+      - cell
+      - cell "No Roles"
+    - row "Use Calendar Sync Controls who can activate and use calendar subscription URLs to sync Resgrid calendar events to external calendar applications. Everyone N/A No Roles":
+      - cell "Use Calendar Sync"
+      - cell "Controls who can activate and use calendar subscription URLs to sync Resgrid calendar events to external calendar applications."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Dispatch App Login Controls who can sign in to the Dispatch app. Dispatch shows private command, unit and responder communications for every incident, so restrict this if your members are not all dispatchers. Everyone N/A No Roles":
+      - cell "Dispatch App Login"
+      - cell "Controls who can sign in to the Dispatch app. Dispatch shows private command, unit and responder communications for every incident, so restrict this if your members are not all dispatchers."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - 'row "Command App Login Controls who can act as a commander: sign in to the IC app, establish incident command on a call, and view command boards. Narrowing this beyond Everyone also lets the people you pick help work any command board (assign and move resources, run timers and accountability) without holding an ICS position on it — useful for giving dispatchers a hand in the Dispatch app. While set to Everyone, board actions stay limited to the incident commander and assigned ICS roles. Everyone N/A No Roles"':
+      - cell "Command App Login"
+      - 'cell "Controls who can act as a commander: sign in to the IC app, establish incident command on a call, and view command boards. Narrowing this beyond Everyone also lets the people you pick help work any command board (assign and move resources, run timers and accountability) without holding an ICS position on it — useful for giving dispatchers a hand in the Dispatch app. While set to Everyone, board actions stay limited to the incident commander and assigned ICS roles."'
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Advanced Data Protection When the Advanced Data Protection add-on is active, these two permissions decide who may receive protected call details by SMS or voice after entering their PIN, and who may change how protected content leaves Resgrid. Revealing or editing protected data on screen follows each page's own access rules plus a recent two-factor verification. Unlike most Resgrid permissions, unset values default to the selection shown.":
+      - cell "Advanced Data Protection When the Advanced Data Protection add-on is active, these two permissions decide who may receive protected call details by SMS or voice after entering their PIN, and who may change how protected content leaves Resgrid. Revealing or editing protected data on screen follows each page's own access rules plus a recent two-factor verification. Unlike most Resgrid permissions, unset values default to the selection shown.":
+        - strong: Advanced Data Protection
+        - text: When the Advanced Data Protection add-on is active, these two permissions decide who may receive protected call details by SMS or voice after entering their PIN, and who may change how protected content leaves Resgrid. Revealing or editing protected data on screen follows each page's own access rules plus a recent two-factor verification. Unlike most Resgrid permissions, unset values default to the selection shown.
+    - row "View Protected Call Data Who may receive protected call details (nature, address, contact info, notes) by SMS or voice after entering their PIN, when PIN release is turned on. On-screen and app reveal follows call access plus two-factor verification. Defaults to Everyone because responding personnel must be able to read a dispatch. Everyone N/A No Roles":
+      - cell "View Protected Call Data"
+      - cell "Who may receive protected call details (nature, address, contact info, notes) by SMS or voice after entering their PIN, when PIN release is turned on. On-screen and app reveal follows call access plus two-factor verification. Defaults to Everyone because responding personnel must be able to read a dispatch."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Configure Protected Data Delivery Who can change how protected content leaves Resgrid over push, SMS, email and voice. Defaults to Department Admins; Everyone is deliberately not offered. Department Admins N/A No Roles":
+      - cell "Configure Protected Data Delivery"
+      - cell "Who can change how protected content leaves Resgrid over push, SMS, email and voice. Defaults to Department Admins; Everyone is deliberately not offered."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Records These permissions control the Records module, the successor to Logs. As with most Resgrid permissions, an unset row falls through to the default shown, which matches how Logs behave today. Activating Records for your department also copies your Create Log and Delete Log settings onto the matching rows unless you have already set them here. Records is not active for this department yet. You can prepare these settings now; they take effect once Records is activated.":
+      - cell "Records These permissions control the Records module, the successor to Logs. As with most Resgrid permissions, an unset row falls through to the default shown, which matches how Logs behave today. Activating Records for your department also copies your Create Log and Delete Log settings onto the matching rows unless you have already set them here. Records is not active for this department yet. You can prepare these settings now; they take effect once Records is activated.":
+        - strong: Records
+        - text: These permissions control the Records module, the successor to Logs. As with most Resgrid permissions, an unset row falls through to the default shown, which matches how Logs behave today. Activating Records for your department also copies your Create Log and Delete Log settings onto the matching rows unless you have already set them here.
+        - text: Records is not active for this department yet. You can prepare these settings now; they take effect once Records is activated.
+    - row "Create Records Who can author new records and edit their own drafts. Matches Create Log until you change it. Everyone N/A No Roles":
+      - cell "Create Records"
+      - cell "Who can author new records and edit their own drafts. Matches Create Log until you change it."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Void or Cancel Records Who can cancel a draft or void a finalized record. Voiding keeps the record and its history; nothing is deleted. Matches Delete Log until you change it. Everyone N/A No Roles":
+      - cell "Void or Cancel Records"
+      - cell "Who can cancel a draft or void a finalized record. Voiding keeps the record and its history; nothing is deleted. Matches Delete Log until you change it."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Review Records Who can review records submitted for review and return them for correction. Group Only limits group admins to records from their own group. Department and Group Admins N/A No Roles":
+      - cell "Review Records"
+      - cell "Who can review records submitted for review and return them for correction. Group Only limits group admins to records from their own group."
+      - cell "Department and Group Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins"
+          - option "Department and Group Admins" [selected]
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Approve Records Who can approve a reviewed record before it is finalized, for record types that use the approval lifecycle. Department Admins N/A No Roles":
+      - cell "Approve Records"
+      - cell "Who can approve a reviewed record before it is finalized, for record types that use the approval lifecycle."
+      - cell "Department Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Finalize Records Who can finalize a record, which assigns its record number and locks its content. Quick Entry record types finalize on save, so this matches Create Log until you change it. Everyone N/A No Roles":
+      - cell "Finalize Records"
+      - cell "Who can finalize a record, which assigns its record number and locks its content. Quick Entry record types finalize on save, so this matches Create Log until you change it."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Amend Finalized Records Who can open an amendment on a finalized record. An amendment creates a new revision; the original revision stays intact. Department and Group Admins N/A No Roles":
+      - cell "Amend Finalized Records"
+      - cell "Who can open an amendment on a finalized record. An amendment creates a new revision; the original revision stays intact."
+      - cell "Department and Group Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins"
+          - option "Department and Group Admins" [selected]
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Submit Records Externally Who can submit a finalized record to an external reporting destination such as a state or national system. Department Admins N/A No Roles":
+      - cell "Submit Records Externally"
+      - cell "Who can submit a finalized record to an external reporting destination such as a state or national system."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Print and Export Records Who can print a record or export a list of records. Everyone N/A No Roles":
+      - cell "Print and Export Records"
+      - cell "Who can print a record or export a list of records."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View Restricted Sections Who can read the restricted sections of a record, such as the details on a coroner record. Everyone else sees that the section exists but not its contents. Department Admins N/A No Roles":
+      - cell "View Restricted Sections"
+      - cell "Who can read the restricted sections of a record, such as the details on a coroner record. Everyone else sees that the section exists but not its contents."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View Records From Other Groups Whether personnel can see records that belong to other groups. Tick Group Only and set Records Settings to group-scoped visibility to limit people to their own group's records. Leave it unrestricted to keep the department-wide view Logs has today. Everyone No Roles":
+      - cell "View Records From Other Groups"
+      - cell "Whether personnel can see records that belong to other groups. Tick Group Only and set Records Settings to group-scoped visibility to limit people to their own group's records. Leave it unrestricted to keep the department-wide view Logs has today."
+      - cell "Everyone":
+        - combobox:
+          - option "Everyone" [selected]
+          - option "Department Admins"
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Manage Record Definitions Who can create and edit record definitions, the forms that records are built from. Department Admins N/A No Roles":
+      - cell "Manage Record Definitions"
+      - cell "Who can create and edit record definitions, the forms that records are built from."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Publish Record Definitions Who can publish a record definition version so it can be used for new records. Department Admins N/A No Roles":
+      - cell "Publish Record Definitions"
+      - cell "Who can publish a record definition version so it can be used for new records."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage Record Reports Who can create and edit saved record reports and their schedules. Department Admins N/A No Roles":
+      - cell "Manage Record Reports"
+      - cell "Who can create and edit saved record reports and their schedules."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage Record Disclosures Who can prepare and release public-records disclosure packages. Department Admins N/A No Roles":
+      - cell "Manage Record Disclosures"
+      - cell "Who can prepare and release public-records disclosure packages."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage Legal Holds Who can place and release legal holds, which suspend retention and prevent a record from being voided. Department Admins N/A No Roles":
+      - cell "Manage Legal Holds"
+      - cell "Who can place and release legal holds, which suspend retention and prevent a record from being voided."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Reassign Draft Records Who can move a draft record to a different author, for example when the original author is unavailable. Department and Group Admins N/A No Roles":
+      - cell "Reassign Draft Records"
+      - cell "Who can move a draft record to a different author, for example when the original author is unavailable."
+      - cell "Department and Group Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins"
+          - option "Department and Group Admins" [selected]
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage Prevention Data Who can create and change occupancies, inspection programs and code sets, hydrants, permits and community risk reduction activities. Reading prevention data needs only Records access; investigations are governed by the restricted-records permission plus case membership. Department Admins N/A No Roles":
+      - cell "Manage Prevention Data"
+      - cell "Who can create and change occupancies, inspection programs and code sets, hydrants, permits and community risk reduction activities. Reading prevention data needs only Records access; investigations are governed by the restricted-records permission plus case membership."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Checklists":
+      - cell "Checklists":
+        - strong: Checklists
+    - row "Manage checklists Create, edit, publish and retire free checklists. Department Admins N/A No Roles":
+      - cell "Manage checklists"
+      - cell "Create, edit, publish and retire free checklists."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View checklist results View results from other members. Members retain their own history. Department and Group Admins No Roles":
+      - cell "View checklist results"
+      - cell "View results from other members. Members retain their own history."
+      - cell "Department and Group Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins"
+          - option "Department and Group Admins" [selected]
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell:
+        - checkbox [checked]
+      - cell "No Roles"
+    - row "Manage work orders Triage, assign and verify work orders within the permitted scope. Department Admins N/A No Roles":
+      - cell "Manage work orders"
+      - cell "Triage, assign and verify work orders within the permitted scope."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View other members' work orders View work orders in the permitted group or department. Requesters retain their own history. Department and Group Admins No Roles":
+      - cell "View other members' work orders"
+      - cell "View work orders in the permitted group or department. Requesters retain their own history."
+      - cell "Department and Group Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins"
+          - option "Department and Group Admins" [selected]
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell:
+        - checkbox [checked]
+      - cell "No Roles"
+    - row "Transfer inventory Controls who can transfer inventory between locations. Defaults to department administrators. Department Admins No Roles":
+      - cell "Transfer inventory"
+      - cell "Controls who can transfer inventory between locations. Defaults to department administrators."
+      - cell "Department Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Issue and return inventory Controls who can issue and return inventory. Defaults to department administrators. Department Admins No Roles":
+      - cell "Issue and return inventory"
+      - cell "Controls who can issue and return inventory. Defaults to department administrators."
+      - cell "Department Admins":
+        - combobox:
+          - option "Everyone"
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell:
+        - checkbox
+      - cell "No Roles"
+    - row "Manage controlled substances Controls who can record and witness controlled-substance transactions. Defaults to department administrators. A different authorized person must witness each transaction. Department Admins N/A No Roles":
+      - cell "Manage controlled substances"
+      - cell "Controls who can record and witness controlled-substance transactions. Defaults to department administrators. A different authorized person must witness each transaction."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Invoicing":
+      - cell "Invoicing":
+        - strong: Invoicing
+    - row "Manage invoicing Create, edit, send and void invoices, record payments, and manage rate cards and billing profiles. Department Admins N/A No Roles":
+      - cell "Manage invoicing"
+      - cell "Create, edit, send and void invoices, record payments, and manage rate cards and billing profiles."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View invoicing View invoices, accounts-receivable aging and invoice PDFs. Department Admins N/A No Roles":
+      - cell "View invoicing"
+      - cell "View invoices, accounts-receivable aging and invoice PDFs."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Certifications":
+      - cell "Certifications":
+        - strong: Certifications
+    - row "Manage certifications Create, edit, suspend, verify and delete other members' certification records and credits, and unit certification records. Department Admins N/A No Roles":
+      - cell "Manage certifications"
+      - cell "Create, edit, suspend, verify and delete other members' certification records and credits, and unit certification records."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View certifications View other members' certification records, unit certifications and the expiry dashboard. Members always see their own records. Department Admins N/A No Roles":
+      - cell "View certifications"
+      - cell "View other members' certification records, unit certifications and the expiry dashboard. Members always see their own records."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage certification setup Manage certification types, role requirements and the department certification settings. Department Admins N/A No Roles":
+      - cell "Manage certification setup"
+      - cell "Manage certification types, role requirements and the department certification settings."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Deployments":
+      - cell "Deployments":
+        - strong: Deployments
+    - row "Manage deployments Create and edit deployments, rosters, equipment, expenses, files and status changes, and see every deployment. Rostered members always see their own deployments and file time without this. Department Admins N/A No Roles":
+      - cell "Manage deployments"
+      - cell "Create and edit deployments, rosters, equipment, expenses, files and status changes, and see every deployment. Rostered members always see their own deployments and file time without this."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Approve time reports Approve and void submitted daily time reports. Approved reports feed billing. Nobody can approve a report they submitted or that carries their own hours; another approver must. Department Admins N/A No Roles":
+      - cell "Approve time reports"
+      - cell "Approve and void submitted daily time reports. Approved reports feed billing. Nobody can approve a report they submitted or that carries their own hours; another approver must."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Contractor Billing":
+      - cell "Contractor Billing":
+        - strong: Contractor Billing
+    - row "Manage bids Create, edit, send, accept and convert bids. Department administrators always can. Department Admins N/A No Roles":
+      - cell "Manage bids"
+      - cell "Create, edit, send, accept and convert bids. Department administrators always can."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage contracts Create and edit service contracts, document requirements and compliance documents. Department administrators always can. Department Admins N/A No Roles":
+      - cell "Manage contracts"
+      - cell "Create and edit service contracts, document requirements and compliance documents. Department administrators always can."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Cal OES MARS":
+      - cell "Cal OES MARS":
+        - strong: Cal OES MARS
+    - row "Manage Cal OES MARS reimbursement Agency, F-5 resource, annual rate and agreement records, the portal handoff, observed MARS statuses and invoice approval/payment reconciliation. Rostered members prepare their own F-42 and expense drafts without it. Department Admins N/A No Roles":
+      - cell "Manage Cal OES MARS reimbursement"
+      - cell "Agency, F-5 resource, annual rate and agreement records, the portal handoff, observed MARS statuses and invoice approval/payment reconciliation. Rostered members prepare their own F-42 and expense drafts without it."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Workforce":
+      - cell "Workforce":
+        - strong: Workforce
+    - row "View internal costs Aggregate field-cost summaries and margins for bids, calls and deployments — categories and totals, never a line, rate or person — plus resource cost profiles and usage readings. Department Admins N/A No Roles":
+      - cell "View internal costs"
+      - cell "Aggregate field-cost summaries and margins for bids, calls and deployments — categories and totals, never a line, rate or person — plus resource cost profiles and usage readings."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Manage workforce and compensation Employer identity, establishments, workers, employment periods, job assignments, compensation profiles and components, work entries and annual pay fact imports. Values still need a current Protected Data Grant. Department Admins N/A No Roles":
+      - cell "Manage workforce and compensation"
+      - cell "Employer identity, establishments, workers, employment periods, job assignments, compensation profiles and components, work entries and annual pay fact imports. Values still need a current Protected Data Grant."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "View workforce compensation Read compensation profiles, work entries, annual pay facts and cost-run lines. Values still need a current Protected Data Grant. Department Admins N/A No Roles":
+      - cell "View workforce compensation"
+      - cell "Read compensation profiles, work entries, annual pay facts and cost-run lines. Values still need a current Protected Data Grant."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - 'row "Manage California pay data reporting The CRD report wizard: runs, employee snapshots, overrides, aggregation, validation, remarks, certification observation, corrections and the compliance officer''s demographic records. Every member always answers their own response without it. Department Admins N/A No Roles"':
+      - cell "Manage California pay data reporting"
+      - 'cell "The CRD report wizard: runs, employee snapshots, overrides, aggregation, validation, remarks, certification observation, corrections and the compliance officer''s demographic records. Every member always answers their own response without it."'
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+    - row "Export California pay data reports Freeze a validated run and download its CSV / XLSX files and the portal worksheet (no-store, audited). Department Admins N/A No Roles":
+      - cell "Export California pay data reports"
+      - cell "Freeze a validated run and download its CSV / XLSX files and the portal worksheet (no-store, audited)."
+      - cell "Department Admins":
+        - combobox:
+          - option "Department Admins" [selected]
+          - option "Department and Group Admins"
+          - option "Department Admins and Select Roles"
+          - option "Department, Group Admins and Select Roles"
+      - cell "N/A"
+      - cell "No Roles"
+- heading "Two-Factor Authentication (2FA) Enforcement" [level=5]
+- paragraph: Require authenticator-app 2FA for admin users. When enabled, admins who have not set up 2FA will be redirected to enroll before accessing administrative features.
+- generic: 
+- text: "Cannot enable 2FA enforcement: neither you nor the managing user have two-factor authentication enabled. Both must enable 2FA before this setting can be turned on."
+- text: This setting is locked until the above conditions are met.
+- link "Enable Authenticator App":
+  - /url: /User/TwoFactor
+- table:
+  - rowgroup:
+    - row "Permission Note Value":
+      - columnheader "Permission"
+      - columnheader "Note"
+      - columnheader "Value"
+  - rowgroup:
+    - row "Require 2FA for Admins Controls which admin-level users must enroll in authenticator-app 2FA (Google Authenticator, Microsoft Authenticator, Authy, etc.). Disabled (no requirement)":
+      - cell "Require 2FA for Admins"
+      - cell "Controls which admin-level users must enroll in authenticator-app 2FA (Google Authenticator, Microsoft Authenticator, Authy, etc.)."
+      - cell "Disabled (no requirement)":
+        - combobox [disabled]:
+          - option "Disabled (no requirement)" [selected]
+          - option "Department Admins + Managing User"
+          - option "Department Admins + Managing User + Group Admins"
+- button "Chat":
+  - generic: 💬
+  - generic: Chat
+- strong: Copyright
+- text: Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

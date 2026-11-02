@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "required": [
+    "reviewer",
+    "reviewed_at",
+    "lesson_sha256",
+    "audio_sha256",
+    "complete_natural_narration",
+    "evidence"
+  ],
+  "properties": {
+    "reviewer": {
+      "const": "User"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lesson_sha256": {
+      "const": "b7753f1893ecc9881af038a7ac3b01380841583318df9dd46e0b906b7744837e"
+    },
+    "audio_sha256": {
+      "const": "a4ba3129ee15b9d62d055a3119e368a078e7111d0a1e52a6cd463ea3101e92db"
+    },
+    "complete_natural_narration": {
+      "const": true
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "question_call_id": {
+      "type": "string"
+    }
+  },
+  "description": "Schema only, not an approval example. Runtime requires exact operator-supplied hash, URL-free real full natural/complete response and chronology after original full-audio QA."
+}

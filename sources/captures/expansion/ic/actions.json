@@ -1,0 +1,172 @@
+{
+  "app": "IC",
+  "actions": [
+    {
+      "action": "Establish command",
+      "target": "Existing TRAINING \u2014 Warehouse alarm, call 51001",
+      "observed_ui": "Blank Board selected; active warehouse board displayed.",
+      "capture_refs": [
+        "ic-08-command-start",
+        "ic-09-command-board"
+      ],
+      "persistence": "Verified after fresh sign-in and reopening existing warehouse call on 2026-10-26; source screenshots ic-27/ic-28/ic-35/ic-36 and actual UI observed."
+    },
+    {
+      "action": "Create two command lanes",
+      "target": "Warehouse command only",
+      "details": {
+        "search_lane": "Search Division \u2014 TRAINING",
+        "staging_lane": "Staging \u2014 TRAINING",
+        "search_limits": {
+          "min_units": 1,
+          "max_units": 3,
+          "min_riding": 1,
+          "rotate_after_minutes": 5,
+          "amber_minutes": 1,
+          "red_minutes": 2
+        }
+      },
+      "observed_ui": "Two lanes displayed.",
+      "capture_refs": [
+        "ic-12-lane-form",
+        "ic-13-lane-limits",
+        "ic-15-assigned-lanes"
+      ],
+      "persistence": "Verified after fresh sign-in and reopening existing warehouse call on 2026-10-26; source screenshots ic-27/ic-28/ic-35/ic-36 and actual UI observed."
+    },
+    {
+      "action": "Assign Squad 3 to search lane",
+      "target": "Warehouse command only",
+      "observed_ui": "Squad 3 appeared in Search Division; requirements advisory reported zero riding personnel against minimum one; later ROTATE badge appeared.",
+      "capture_refs": [
+        "ic-14-resource-picker",
+        "ic-15-assigned-lanes",
+        "ic-23-worktime-rotation"
+      ],
+      "persistence": "Verified after fresh sign-in and reopening existing warehouse call on 2026-10-26; source screenshots ic-27/ic-28/ic-35/ic-36 and actual UI observed."
+    },
+    {
+      "action": "Start named incident timer",
+      "target": "Warehouse command only",
+      "details": "TRAINING PAR reminder; no duration preset clicked; default used.",
+      "observed_ui": "Running countdown and Acknowledge control displayed.",
+      "capture_refs": [
+        "ic-16-timer-form",
+        "ic-17-running-timer"
+      ],
+      "persistence": "Verified after fresh sign-in and reopening existing warehouse call on 2026-10-26; source screenshots ic-27/ic-28/ic-35/ic-36 and actual UI observed."
+    },
+    {
+      "action": "Assign ICS role",
+      "target": "Warehouse command only",
+      "details": "Safety Officer: fictional Matthew Casey",
+      "observed_ui": "Role assignment displayed in resource section.",
+      "capture_refs": [
+        "ic-18-role-assignment"
+      ],
+      "persistence": "Verified after fresh sign-in and reopening existing warehouse call on 2026-10-26; source screenshots ic-27/ic-28/ic-35/ic-36 and actual UI observed."
+    },
+    {
+      "action": "Add resource-pool entries",
+      "target": "Warehouse command only",
+      "details": [
+        "Engine 51, unassigned",
+        "Exercise Gate Marshal; Gate Control \u2014 TRAINING; Academy Volunteer Team"
+      ],
+      "observed_ui": "Resource count three including Squad 3; unit detail sheet opened.",
+      "capture_refs": [
+        "ic-19-add-resource",
+        "ic-20-external-person",
+        "ic-21-resource-pool",
+        "ic-22-unit-details"
+      ],
+      "persistence": "Verified after fresh sign-in and reopening existing warehouse call on 2026-10-26; source screenshots ic-27/ic-28/ic-35/ic-36 and actual UI observed."
+    },
+    {
+      "action": "Activate configured check-in tracking",
+      "target": "Existing warehouse call",
+      "observed_ui": "Check-in timers active, but no timers configured for this call.",
+      "capture_refs": [],
+      "persistence": "Fresh-session verification pending; no successful check-in or PAR color state claimed."
+    },
+    {
+      "action": "Change local theme",
+      "target": "Isolated IC browser app preference",
+      "observed_ui": "Light selected through Settings; board typography became readable.",
+      "capture_refs": [
+        "ic-11-settings-preferences"
+      ],
+      "persistence": "Local app preference only; later automatic sign-out can reset it."
+    },
+    {
+      "action": "Preview command information",
+      "target": "Warehouse command",
+      "observed_ui": "Incident Name, Start Time, ICP/HQ, Staging and Rehab fields displayed; dismissed without saving or geocoding.",
+      "capture_refs": [
+        "ic-24-command-information"
+      ],
+      "persistence": "Read-only preview; no update submitted."
+    },
+    {
+      "action": "Map interactions",
+      "target": "Resource-map and incident-map screens",
+      "observed_ui": "Original fallback geography rejected; later map interaction lost board context during old-session reset.",
+      "capture_refs": [],
+      "persistence": "No map view or annotation saved."
+    },
+    {
+      "action": "Fresh sign-in",
+      "target": "Dedicated localhost IC tab",
+      "observed_ui": "Blank login captured; credential entry submitted, then Chrome extension UI blocked automation.",
+      "capture_refs": [
+        "ic-25-login-styled"
+      ],
+      "persistence": "Authentication result not inspected; no populated credentials captured."
+    }
+  ],
+  "not_performed": [
+    "Create/close/delete calls",
+    "Close/delete command",
+    "Move/release resources",
+    "Send app chat",
+    "Create objectives/needs/notes",
+    "Upload files",
+    "Submit records/time/expenses",
+    "Provider tests",
+    "MFA/password changes",
+    "Real GPS/location permission"
+  ],
+  "resumed_attempts": [
+    {
+      "attempted_at": "2026-10-26T16:59:44.540663+00:00",
+      "action": "Fresh sign-in after human reported extension dismissed",
+      "target": "New dedicated IC localhost tab; original dedicated tab absent after browser restart",
+      "observed_ui": "Username entry completed. Password fill timed out. Next read-only state inspection returned Chrome extension UI blocking automation.",
+      "authentication_result": "not verified; sign-in control not clicked in this attempt",
+      "app_mutations": [],
+      "capture_refs": [],
+      "follow_up": "Await human dismissal and explicit resumption; never bypass browser block."
+    },
+    {
+      "attempted_at": "2026-10-26T19:52:40.143301+00:00",
+      "action": "Fresh login, saved command verification, and fictional board exercises",
+      "target": "Existing warehouse call 51001, DEMO-0001",
+      "observed_ui": "Fresh sign-in and reopening showed original two lanes, Squad 3 assignment, three resources, Casey Safety Officer, original timer, and original log. Added TRAINING benchmark and set 50%, added TRAINING medical need quantity 2 and saved partial fill 1, added internal training staging note. After actual page reload, board and log retained these changes.",
+      "capture_refs": [
+        "ic-27-persisted-command-structure",
+        "ic-28-persisted-timer-and-sections",
+        "ic-29-objective-prepared",
+        "ic-30-objective-progress-details",
+        "ic-31-need-prepared",
+        "ic-32-need-partial-fill",
+        "ic-33-saved-objective-and-partial-need",
+        "ic-34-need-saved-history",
+        "ic-35-persisted-resource-pool",
+        "ic-36-persisted-command-log",
+        "ic-37-command-note-visibility",
+        "ic-38-saved-internal-note-role"
+      ],
+      "limits": "No objective completion, full need closure, resource move/release, command/call close, media upload, voice provider, or real location permission. The wide default incident-map camera was rejected and not captured; no map save or annotation performed."
+    }
+  ]
+}

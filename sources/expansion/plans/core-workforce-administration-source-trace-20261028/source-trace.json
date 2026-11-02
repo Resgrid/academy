@@ -1,0 +1,1025 @@
+{
+  "schema_version": 1,
+  "status": "Source-grounded plan only; no actual UI readback attested by this agent",
+  "facts": [
+    {
+      "id": "access",
+      "kind": "source_fact",
+      "statement": "Workforce access is a separate capability from pay-data reporting. Controller checks WorkforceInternalCosting entitlement and family-specific view/manage claims; department admin satisfies these claim predicates. Pay-data reporting separately needs its capability and Enabled ADP. This plan never changes those settings.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 71,
+          "anchor": "private static bool CanManage =>"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 92,
+          "anchor": "public override async Task OnActionExecutionAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/BusinessOperationsAccessService.cs",
+          "line": 47,
+          "anchor": "public Task<bool> CanUseWorkforceAsync"
+        }
+      ]
+    },
+    {
+      "id": "navigation",
+      "kind": "source_fact",
+      "statement": "Normal sidebar Workforce entry opens /User/Workforce; shared tabs expose Employer, Establishments, Workers, Compensation, Work entries, Resource costs and Cost runs according to access. A visible tab does not prove manage permission.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Shared/_Navigation.cshtml",
+          "line": 276,
+          "anchor": "asp-controller=\"Workforce\" asp-action=\"Index\""
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Shared/_WorkforceShell.cshtml",
+          "line": 45,
+          "anchor": "asp-action=\"Workers\""
+        }
+      ]
+    },
+    {
+      "id": "employer_whole_save",
+      "kind": "source_fact",
+      "statement": "Employer Save updates the one active department profile, including all posted coverage/headcount/contact/address values; it is not an append-only demonstration. Legal name required; nonblank NAICS must be six digits. Retain existing declared Unknown/Not declared and blank sensitive values.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 73,
+          "anchor": "public async Task<WorkforceEmployerProfile> SaveEmployerProfileAsync"
+        }
+      ]
+    },
+    {
+      "id": "establishment",
+      "kind": "source_fact",
+      "statement": "Establishments require Code and Name, a unique case-insensitive Code and non-reversed active dates; optional NAICS must be six digits. Time zone, State and activity are stored operational fields; no geocoding/provider call occurs in this save method.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 146,
+          "anchor": "public async Task<WorkforceEstablishment> SaveEstablishmentAsync"
+        }
+      ]
+    },
+    {
+      "id": "protection",
+      "kind": "source_fact",
+      "statement": "Employer tax identifiers and filing contact, compensation values/components and approved payroll cost are protected accessor fields. Current Establishment and Worker accessor maps are empty. Operational employer addresses are plaintext in this source. New rows with all protected accessor values empty save without an envelope write; this is not a grant or security bypass. Nonempty protected input must use normal authorized product behavior; stop on refusal/redaction.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Model/Workforce/WorkforceProtectedFields.cs",
+          "line": 43,
+          "anchor": "public static readonly IReadOnlyDictionary<string, (Func<WorkforceEstablishment"
+        },
+        {
+          "file": "Core/Resgrid.Model/Workforce/WorkforceProtectedFields.cs",
+          "line": 51,
+          "anchor": "public static readonly IReadOnlyDictionary<string, (Func<EmployeeCompensationProfile"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceProtectionSeam.cs",
+          "line": 67,
+          "anchor": "if (held.Values.All(string.IsNullOrEmpty))"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 91,
+          "anchor": "// The EDD and headquarters addresses"
+        }
+      ]
+    },
+    {
+      "id": "worker",
+      "kind": "source_fact",
+      "statement": "Add worker offers active not-yet-linked members. Selecting a member uses GetOrCreateWorkerForUserAsync and ignores optional external-key/display-label inputs on that branch. It creates only a Workforce worker link, not a new account, department member, personnel role or crew assignment. Without a member, external worker identity requires a nonblank external key.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 306,
+          "anchor": "public async Task<IActionResult> Workers()"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 321,
+          "anchor": "public Task<IActionResult> AddWorker("
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 228,
+          "anchor": "public async Task<WorkforceWorker> GetOrCreateWorkerForUserAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 249,
+          "anchor": "public async Task<WorkforceWorker> SaveWorkerAsync"
+        }
+      ]
+    },
+    {
+      "id": "employment",
+      "kind": "source_fact",
+      "statement": "An employment period belongs to a worker. End equal to Start is accepted; reversed dates and inclusive overlapping sibling periods are refused. Labor contractor employee requires a contractor. Default establishment must belong to the department. Personnel role here resolves compensation defaults; saving it does not edit actual personnel membership or active staffing.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 301,
+          "anchor": "public async Task<WorkforceEmployment> SaveEmploymentAsync"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/Worker.cshtml",
+          "line": 128,
+          "anchor": "PersonnelRoleHelp"
+        },
+        {
+          "file": "Core/Resgrid.Model/Workforce/WorkforceEntities.cs",
+          "line": 241,
+          "anchor": "public bool Overlaps(WorkforceEmployment"
+        }
+      ]
+    },
+    {
+      "id": "assignment",
+      "kind": "source_fact",
+      "statement": "Add assignment is entered from the employment panel. It initially copies employment Start and default establishment but independently defaults WorkCountry US and WorkSubdivision CA. Set the intended State explicitly. Save rejects reversed dates and inclusive overlapping sibling assignments, checks establishment ownership, validates nonblank CRD job-category code and enum Work mode. It does not enforce containment within the parent employment dates; use matching one-day bounds in this exercise.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 343,
+          "anchor": "if (!string.IsNullOrWhiteSpace(assignment))"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 359,
+          "anchor": "public async Task<WorkforceJobAssignment> SaveJobAssignmentAsync"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/Worker.cshtml",
+          "line": 71,
+          "anchor": "asp-route-assignment=\"@(e.WorkforceEmploymentId + \":new\")\""
+        }
+      ]
+    },
+    {
+      "id": "assignment_classification",
+      "kind": "source_fact",
+      "statement": "CRD job category, SOC and Cal OES MARS mapping fields serve separate reporting/mapping purposes. Leave them blank for this fictional IL exercise; a job title is not a certification or coverage finding. Mapping provenance can identify a software demonstration only.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/Worker.cshtml",
+          "line": 150,
+          "anchor": "name=\"JobCategoryCode\""
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/Worker.cshtml",
+          "line": 156,
+          "anchor": "name=\"CalOesMarsClassificationCode\""
+        }
+      ]
+    },
+    {
+      "id": "compensation_scope",
+      "kind": "source_fact",
+      "statement": "Compensation has Employee, Role default and Department default profiles. Employee Add profile binds only this employment. A same-subject scope cannot have overlapping profile dates. Employee form clears role; Role default clears employment. Avoid department/role defaults for an isolated member exercise.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 415,
+          "anchor": "public async Task<IActionResult> CompensationProfile("
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+          "line": 139,
+          "anchor": "var scope = (CompensationScopes)profile.Scope;"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/Compensation.cshtml",
+          "line": 44,
+          "anchor": "AddDepartmentDefault"
+        }
+      ]
+    },
+    {
+      "id": "compensation_save",
+      "kind": "source_fact",
+      "statement": "Profile and component lists save in one transaction. Full submitted pay/cost component lists replace prior desired sets: omitted existing components are soft-deleted. Every component save unapproves the profile, even an unchanged/empty set. Saved blank-rate profiles cannot establish a complete loaded cost.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+          "line": 118,
+          "anchor": "public async Task<EmployeeCompensationProfile> SaveProfileWithComponentsAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+          "line": 182,
+          "anchor": "private async Task<EmployeeCompensationProfile> WriteComponentsAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostCalculator.cs",
+          "line": 58,
+          "anchor": "if (!baseRate.HasValue)"
+        }
+      ]
+    },
+    {
+      "id": "compensation_approval",
+      "kind": "source_fact",
+      "statement": "Approve profile is a separate normal HTML form POST, not a native confirm. Service refuses the creator/last editor and refuses a worker approving their own employee profile. Boden cannot approve a profile Boden just created for Casey. Do not alter roles/accounts or attempt alternate identity to manufacture a success.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/CompensationProfile.cshtml",
+          "line": 113,
+          "anchor": "asp-action=\"ApproveCompensationProfile\""
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+          "line": 229,
+          "anchor": "public async Task<EmployeeCompensationProfile> ApproveProfileAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+          "line": 245,
+          "anchor": "private async Task<bool> IsOwnCompensationAsync"
+        }
+      ]
+    },
+    {
+      "id": "cost_resolution",
+      "kind": "source_fact",
+      "statement": "For a dated workload, an employee profile is chosen first, then the role default, then department default. Unapproved profiles can price with review reasons; inaccessible protected values are blanked and flag NoRate rather than bypassing protection. The optional approved payroll-cost number overrides estimated labor cost when available; do not fill it in this software example.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/CompensationCostService.cs",
+          "line": 274,
+          "anchor": "public async Task<(EmployeeCompensationProfile Profile, bool IsFallback)> ResolveProfileAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostCalculator.cs",
+          "line": 33,
+          "anchor": "if (work.ApprovedPayrollCost.HasValue)"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostCalculator.cs",
+          "line": 50,
+          "anchor": "if (!profile.IsApproved)"
+        }
+      ]
+    },
+    {
+      "id": "workentry",
+      "kind": "source_fact",
+      "statement": "Work entries are saved per worker/date and allow 0–24 hours. Blank employment is auto-resolved to a nondeleted period covering that date. US/CA defaults apply here too. The page has no general note field; a fictional External source/id can label a software-only row. A matched nonblank External source+id may update an existing row. Approved checkbox and approved payroll cost are distinct; leave both unset. Work-entry approval is not a payroll payment.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 530,
+          "anchor": "public async Task<IActionResult> WorkEntries("
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/WorkforceService.cs",
+          "line": 406,
+          "anchor": "public async Task<WorkforceWorkEntry> SaveWorkEntryAsync"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/WorkEntries.cshtml",
+          "line": 79,
+          "anchor": "name=\"approvedPayrollCost\""
+        }
+      ]
+    },
+    {
+      "id": "resourceprofile",
+      "kind": "source_fact",
+      "statement": "Resource cost profiles are plain numeric internal-cost configuration, distinct from personnel compensation and inventory quantities. Unit subject requires a department unit. Other subjects require an asset id or external resource key. Same subject cannot have overlapping dated profiles. Nonnegative values are required; saved depreciation is straight line. A new profile may set Approved via checkbox; keep it OFF.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 119,
+          "anchor": "public async Task<ResourceCostProfile> SaveResourceProfileAsync"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/ResourceCosts.cshtml",
+          "line": 103,
+          "anchor": "name=\"IsApproved\""
+        }
+      ]
+    },
+    {
+      "id": "resource_whole_components",
+      "kind": "source_fact",
+      "statement": "Resource-cost component save uses the submitted list as the complete desired set; omitted old rows are soft-deleted. Controller saves the profile first, then component list in separate calls; there is no all-or-nothing controller transaction here. Use new-only clean data and verify reopened profile/list, not just a toast.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 571,
+          "anchor": "public Task<IActionResult> SaveResourceCost("
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 161,
+          "anchor": "public async Task<ResourceCostProfile> SaveResourceComponentsAsync"
+        }
+      ]
+    },
+    {
+      "id": "usage",
+      "kind": "source_fact",
+      "statement": "Resource usage requires a call or deployment context and unit subject needs a unit. Source/phase/subject enums and nonnegative readings are validated; distance is canonicalized to miles, engine hours may derive from meters. Conflicting manual/automatic distances can flag both rows. Context-only or unsaved unit toggles prove no reading was saved. Avoid original active-call contexts.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 590,
+          "anchor": "public async Task<IActionResult> Usage("
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 214,
+          "anchor": "public async Task<ResourceUsageEntry> SaveUsageEntryAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 260,
+          "anchor": "public static void Canonicalize("
+        }
+      ]
+    },
+    {
+      "id": "run_write",
+      "kind": "source_fact",
+      "statement": "Calculate/Estimate creates saved cost-run data, not a read-only preview. Call calculation refuses an empty input context, then consumes work entries/usage. Deployment calculation uses approved/billed daily reports, usage/expenses through the date, not a draft report as proven actual labor. Bid estimation uses bid lines and resource/compensation fallbacks. Missing inputs produce Needs review, otherwise Draft.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 349,
+          "anchor": "public async Task<FieldCostRun> CalculateCallCostAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 370,
+          "anchor": "public async Task<FieldCostRun> CalculateDeploymentCostAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 299,
+          "anchor": "public async Task<FieldCostRun> EstimateBidCostAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 705,
+          "anchor": "run.Status = Missing > 0"
+        }
+      ]
+    },
+    {
+      "id": "run_replacement",
+      "kind": "source_fact",
+      "statement": "Recalculation soft-deletes prior unfrozen runs and deletes their lines for the same context/run type. Frozen prior runs remain referenced. Freeze is a native JavaScript confirm then POST; it may supersede an earlier frozen run and cannot be deleted through normal Delete. Do not calculate/freeze merely to inspect existing runs.",
+      "evidence": [
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 560,
+          "anchor": "private async Task<FieldCostRun> PersistRunAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 587,
+          "anchor": "public async Task<FieldCostRun> FreezeCostRunAsync"
+        },
+        {
+          "file": "Core/Resgrid.Services/Workforce/FieldCostingService.cs",
+          "line": 631,
+          "anchor": "if (run.IsFrozen) throw"
+        },
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Views/Workforce/CostRun.cshtml",
+          "line": 41,
+          "anchor": "onclick=\"return confirm"
+        }
+      ]
+    },
+    {
+      "id": "no_payment",
+      "kind": "bounded_interpretation",
+      "statement": "The traced employer/worker/employment/assignment/profile/work-entry/resource/run actions call repository saves and audit publication. They are separate from invoice, payroll delivery and statutory export/report actions. This bounded plan claims only saved software configuration/readback, not employment status correctness, money paid, physical work, legal coverage or compliance.",
+      "evidence": [
+        {
+          "file": "Web/Resgrid.Web/Areas/User/Controllers/WorkforceController.cs",
+          "line": 728,
+          "anchor": "public async Task<IActionResult> PayData("
+        }
+      ]
+    }
+  ],
+  "localized_view_controls": [
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Index.cshtml",
+      "localized_literal_labels": {
+        "Workforce": "Workforce",
+        "DashboardIntro": "Protected workforce pay data, internal field costing and California pay data reporting.",
+        "ProtectedNotice": "Identifiers, addresses, pay rates, earnings, demographic responses and export files are Advanced Data Protection fields (catalog 28). They render REDACTED without a current Protected Data Grant and are never cached or logged.",
+        "Employer": "Employer",
+        "EmployerMissing": "No employer profile yet.",
+        "CoverageStatus": "Coverage status",
+        "Establishments": "Establishments",
+        "Workers": "Workers",
+        "Employments": "Employments",
+        "TabEmployer": "Employer",
+        "TabWorkers": "Workers",
+        "FieldCosting": "Field costing",
+        "ResourceProfiles": "Resource profiles",
+        "CostRuns": "Cost runs",
+        "FieldCostingIntro": "Internal loaded cost and margin for bids, calls and deployments — aggregate categories only.",
+        "TabCostRuns": "Cost runs",
+        "TabResourceCosts": "Resource costs",
+        "PayDataReporting": "Pay data reporting",
+        "DueDate": "Due date",
+        "ProfileUnavailable": "no reviewed schema profile",
+        "OpenRuns": "Open runs",
+        "UnresolvedExceptions": "Unresolved exceptions",
+        "DemographicsMissing": "Demographic responses missing",
+        "AnnualFactsMissing": "Annual pay facts missing",
+        "StatusCertifiedExternally": "Certified externally",
+        "StatusExported": "Exported",
+        "TabPayData": "Pay data reporting",
+        "MyDemographicsIntro": "Answer or update your voluntary self-identification for California pay data reporting.",
+        "MyDemographics": "My demographics"
+      },
+      "posted_field_names": [],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Employer.cshtml",
+      "localized_literal_labels": {
+        "Employer": "Employer",
+        "EmployerIntro": "The employer identity the CRD report is filed under, with its affiliated entities.",
+        "EmployerProfile": "Employer profile",
+        "HelpEmployer": "Coverage is declared by you, never determined by Resgrid. FEIN, SEIN and SOS numbers, the filing contact and affiliate addresses are protected fields; a REDACTED value left unchanged keeps what is stored.",
+        "LegalName": "Legal name",
+        "Fein": "FEIN",
+        "Sein": "SEIN (EDD)",
+        "SosNumber": "CA Secretary of State number",
+        "Naics": "NAICS",
+        "EddAddress": "EDD address",
+        "HeadquartersAddress": "Headquarters address",
+        "FilingContactName": "Filing contact name",
+        "FilingContactEmail": "Filing contact e-mail",
+        "FilingContactPhone": "Filing contact phone",
+        "CoverageStatus": "Coverage status",
+        "CoverageHelp": "Declared by the employer after reading the CRD guidance; Resgrid never decides whether you must file.",
+        "UsEmployeeCount": "US employees",
+        "CaliforniaEmployeeCount": "California employees",
+        "IsIntegratedEnterprise": "Part of an integrated enterprise",
+        "Save": "Save",
+        "Cancel": "Cancel",
+        "Affiliates": "Affiliated entities",
+        "AffiliatesHelp": "Only for an integrated enterprise: the other entities the report covers.",
+        "ConfirmDelete": "Delete this record?",
+        "None": "None",
+        "AddAffiliate": "Add affiliate"
+      },
+      "posted_field_names": [
+        "LegalName",
+        "Fein",
+        "Sein",
+        "SosNumber",
+        "Naics",
+        "EddAddress",
+        "HeadquartersAddress",
+        "FilingContactName",
+        "FilingContactEmail",
+        "FilingContactPhone",
+        "CoverageStatus",
+        "UsEmployeeCount",
+        "CaliforniaEmployeeCount",
+        "IsIntegratedEnterprise",
+        "id",
+        "WorkforceAffiliatedEntityId"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Establishments.cshtml",
+      "localized_literal_labels": {
+        "Establishments": "Establishments",
+        "EstablishmentsIntro": "Every physical location employees are assigned to; the CRD report is filed per establishment.",
+        "AddEstablishment": "Add establishment",
+        "Code": "Code",
+        "Name": "Name",
+        "City": "City",
+        "State": "State",
+        "Naics": "NAICS",
+        "Headquarters": "Headquarters",
+        "Active": "Active",
+        "Yes": "Yes",
+        "No": "No",
+        "ConfirmDelete": "Delete this record?",
+        "NoEstablishments": "No establishments yet.",
+        "EditEstablishment": "Edit establishment",
+        "PhysicalAddress": "Street address",
+        "PostalCode": "ZIP",
+        "MajorActivity": "Major activity",
+        "Affiliate": "Affiliate",
+        "ActiveFrom": "Active from",
+        "ActiveTo": "Active to",
+        "TimeZone": "Time zone",
+        "WasFiledPriorYear": "Reported in the prior year",
+        "Save": "Save",
+        "Cancel": "Cancel"
+      },
+      "posted_field_names": [
+        "id",
+        "WorkforceEstablishmentId",
+        "Code",
+        "Name",
+        "PhysicalAddress",
+        "City",
+        "StateCode",
+        "PostalCode",
+        "Naics",
+        "MajorActivity",
+        "WorkforceAffiliatedEntityId",
+        "ActiveFrom",
+        "ActiveTo",
+        "TimeZoneId",
+        "IsHeadquarters",
+        "WasFiledPriorYear"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Workers.cshtml",
+      "localized_literal_labels": {
+        "Workers": "Workers",
+        "WorkersIntro": "Every person the department pays or reports on — members and external workers — with their employment periods.",
+        "Name": "Name",
+        "Member": "Member",
+        "ExternalWorkerKey": "External worker key",
+        "Employments": "Employments",
+        "Active": "Active",
+        "No": "No",
+        "Yes": "Yes",
+        "NoWorkers": "No workers yet.",
+        "AddWorker": "Add worker",
+        "AddWorkerMemberHelp": "Pick a department member to create their worker row.",
+        "DisplayLabel": "Display label",
+        "AddWorkerExternalHelp": "Or add an external worker by payroll key and label."
+      },
+      "posted_field_names": [
+        "userId",
+        "externalWorkerKey",
+        "displayLabel"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Worker.cshtml",
+      "localized_literal_labels": {
+        "Worker": "Worker",
+        "WorkerIntro": "Employment periods never overlap; each period carries its job assignments over time.",
+        "Member": "Member",
+        "No": "No",
+        "ExternalWorkerKey": "External worker key",
+        "DisplayLabel": "Display label",
+        "Active": "Active",
+        "Save": "Save",
+        "DemographicRecord": "Demographic record",
+        "Employments": "Employments",
+        "AddEmployment": "Add employment",
+        "TabCompensation": "Compensation",
+        "AddAssignment": "Add assignment",
+        "ConfirmDelete": "Delete this record?",
+        "EffectiveOn": "Effective",
+        "ExpiresOn": "Expires",
+        "JobTitle": "Job title",
+        "JobCategory": "CRD job category",
+        "Establishment": "Establishment",
+        "WorkMode": "Work mode",
+        "MarsClassification": "Cal OES MARS classification",
+        "NoAssignments": "No job assignments.",
+        "NoEmployments": "No employment periods yet.",
+        "EditEmployment": "Edit employment",
+        "WorkerKind": "Worker kind",
+        "StartOn": "Start",
+        "EndOn": "End",
+        "EmploymentType": "Employment type",
+        "Exemption": "Exemption",
+        "CaliforniaBasis": "California basis",
+        "DefaultEstablishment": "Default establishment",
+        "PersonnelRole": "Personnel role",
+        "PersonnelRoleHelp": "Used to pick a role-default compensation profile when the employee has none.",
+        "LaborContractor": "Labor contractor",
+        "Affiliate": "Affiliate",
+        "Cancel": "Cancel",
+        "EditAssignment": "Edit assignment",
+        "JobCategoryHelp": "One of the ten CRD job categories of the reviewed schema profile.",
+        "SocCode": "SOC code",
+        "SocVersion": "SOC version",
+        "WorkLocation": "Work location",
+        "MarsAuthorityProfile": "MARS authority profile",
+        "MappingProvenance": "Mapping provenance"
+      },
+      "posted_field_names": [
+        "WorkforceWorkerId",
+        "UserId",
+        "ExternalWorkerKey",
+        "DisplayLabel",
+        "IsActive",
+        "id",
+        "workerId",
+        "WorkforceEmploymentId",
+        "WorkerKind",
+        "StartOn",
+        "EndOn",
+        "EmploymentType",
+        "ExemptionStatus",
+        "CaliforniaEmployeeBasis",
+        "DefaultEstablishmentId",
+        "PersonnelRoleId",
+        "WorkforceLaborContractorId",
+        "WorkforceAffiliatedEntityId",
+        "WorkforceJobAssignmentId",
+        "CaPayDataProfileCode",
+        "EffectiveOn",
+        "ExpiresOn",
+        "JobTitle",
+        "JobCategoryCode",
+        "SocCode",
+        "SocVersion",
+        "WorkforceEstablishmentId",
+        "WorkMode",
+        "WorkCountry",
+        "WorkSubdivision",
+        "CalOesMarsClassificationCode",
+        "CalOesMarsAuthorityProfileCode",
+        "MappingProvenance"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Compensation.cshtml",
+      "localized_literal_labels": {
+        "Compensation": "Compensation",
+        "CompensationIntro": "Employee, role-default and department-default compensation profiles with pay and employer-cost components.",
+        "HelpCompensation": "Every amount and multiplier is a protected field. Estimates use the employee profile, then the role default, then the department default; the payroll system's approved cost always wins.",
+        "EmployeeProfiles": "Employee profiles",
+        "AddProfile": "Add profile",
+        "DefaultProfiles": "Default profiles",
+        "AddRoleDefault": "Add role default",
+        "AddDepartmentDefault": "Add department default",
+        "DefaultProfilesHelp": "Role and department defaults price bid estimates and members without an employee profile."
+      },
+      "posted_field_names": [],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/CompensationProfile.cshtml",
+      "localized_literal_labels": {
+        "CompensationProfile": "Compensation profile",
+        "Unapproved": "not approved",
+        "PersonnelRole": "Personnel role",
+        "EffectiveOn": "Effective",
+        "ExpiresOn": "Expires",
+        "PayBasis": "Pay basis",
+        "Currency": "Currency",
+        "BaseAmount": "Base amount",
+        "BaseAmountHelp": "Per hour, year, day or shift according to the pay basis.",
+        "RegularHourlyEquivalent": "Regular hourly equivalent",
+        "RegularHourlyEquivalentHelp": "Optional override; otherwise derived from the base amount and standard hours.",
+        "HoursPerDay": "Hours / day",
+        "HoursPerWeek": "Hours / week",
+        "HoursPerYear": "Hours / year",
+        "RateMultipliers": "Rate multipliers",
+        "RateMultipliersHelp": "JSON by pay code; missing codes use 1.5 (overtime), 2 (double time) and 1.",
+        "Source": "Source",
+        "Save": "Save",
+        "Cancel": "Cancel",
+        "Approval": "Approval",
+        "Approved": "Approved",
+        "ApprovalHelp": "Unapproved profiles still price estimates but flag every line for review. Any rate change removes the approval.",
+        "PreviewEightHours": "Loaded cost of a regular 8-hour day",
+        "Pay": "pay",
+        "PayComponents": "Pay components",
+        "EmployerCosts": "employer costs",
+        "PayComponentsHelp": "Differentials, incentives and specialty pay on top of the base. Fixed-period components are not paid on overtime unless flagged per overtime hour.",
+        "Category": "Category",
+        "Name": "Name",
+        "Basis": "Basis",
+        "Amount": "Amount",
+        "EligiblePayCodes": "Eligible pay codes",
+        "PerOvertimeHour": "Per OT hour",
+        "EmployerCostComponents": "Employer cost components",
+        "CostComponentsHelp": "Payroll taxes, benefits, pension and allocated overhead — percent of eligible pay, per hour, per shift or fixed annual, with an optional cap.",
+        "Rate": "Rate",
+        "Cap": "Cap",
+        "ApproveProfile": "Approve profile"
+      },
+      "posted_field_names": [
+        "EmployeeCompensationProfileId",
+        "WorkforceEmploymentId",
+        "Scope",
+        "payComponentsJson",
+        "costComponentsJson",
+        "PersonnelRoleId",
+        "EffectiveOn",
+        "ExpiresOn",
+        "PayBasis",
+        "Currency",
+        "BaseAmount",
+        "RegularHourlyEquivalent",
+        "StandardHoursPerDay",
+        "StandardHoursPerWeek",
+        "StandardHoursPerYear",
+        "RateMultipliersJson",
+        "Source",
+        "id"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/WorkEntries.cshtml",
+      "localized_literal_labels": {
+        "WorkEntries": "Work entries",
+        "WorkEntriesIntro": "Hours per worker and day from payroll, deployments and calls; the payroll-approved cost, when present, replaces any estimate.",
+        "Filter": "Filter",
+        "AddWorkEntry": "Add work entry",
+        "Date": "Date",
+        "Worker": "Worker",
+        "Hours": "Hours",
+        "HoursType": "Hours type",
+        "Establishment": "Establishment",
+        "Context": "Context",
+        "ApprovedPayrollCost": "Approved payroll cost",
+        "Approved": "Approved",
+        "Deployment": "Deployment",
+        "Yes": "Yes",
+        "No": "No",
+        "NoWorkEntries": "No work entries in this window.",
+        "EditWorkEntry": "Edit work entry",
+        "WorkMode": "Work mode",
+        "WorkCountry": "Country",
+        "WorkSubdivision": "State / province",
+        "CallId": "Call #",
+        "DeploymentId": "Deployment id",
+        "ApprovedPayrollCostHelp": "The actual from the payroll system; when present it replaces the estimate for this day.",
+        "ExternalSource": "External source",
+        "ExternalId": "External id",
+        "Save": "Save",
+        "Cancel": "Cancel"
+      },
+      "posted_field_names": [
+        "from",
+        "to",
+        "WorkforceWorkEntryId",
+        "WorkforceWorkerId",
+        "WorkDate",
+        "Hours",
+        "HoursType",
+        "WorkforceEstablishmentId",
+        "WorkMode",
+        "WorkCountry",
+        "WorkSubdivision",
+        "CallId",
+        "DeploymentId",
+        "approvedPayrollCost",
+        "ExternalSource",
+        "ExternalId",
+        "IsApproved"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/ResourceCosts.cshtml",
+      "localized_literal_labels": {
+        "ResourceCosts": "Resource costs",
+        "ResourceCostsIntro": "Depreciation, fuel, maintenance and fixed costs per unit, asset or external resource class.",
+        "AddResourceProfile": "Add resource profile",
+        "ResourceProfiles": "Resource profiles",
+        "ResourceProfilesHelp": "Plain numeric data gated by View internal costs — no person is priced here.",
+        "Subject": "Subject",
+        "Name": "Name",
+        "EffectiveOn": "Effective",
+        "AllocationBasis": "Allocation basis",
+        "DepreciationRate": "Depreciation / unit",
+        "Components": "Components",
+        "Approved": "Approved",
+        "Yes": "Yes",
+        "No": "No",
+        "ConfirmDelete": "Delete this record?",
+        "NoResourceProfiles": "No resource cost profiles.",
+        "EditResourceProfile": "Edit resource profile",
+        "SubjectType": "Subject type",
+        "Unit": "Unit",
+        "InventoryAsset": "Inventory asset",
+        "ExternalResourceKey": "External resource key",
+        "ExternalResourceKeyHelp": "A rate schedule entry id here lets bid estimates price vehicle and equipment lines by class.",
+        "ExpiresOn": "Expires",
+        "Currency": "Currency",
+        "Depreciation": "Depreciation",
+        "AcquisitionCost": "Acquisition cost",
+        "SalvageValue": "Salvage value",
+        "AcquisitionDate": "Acquisition date",
+        "UsefulLifeQuantity": "Useful life (units)",
+        "UsefulLifeQuantityHelp": "Miles, hours or days over the life; straight-line = (cost − salvage) ÷ life.",
+        "UsefulLifeMonths": "Useful life (months)",
+        "ExpectedAnnualUtilization": "Expected annual utilization",
+        "ExpectedAnnualUtilizationHelp": "In allocation units per year; spreads fixed annual components and time-based depreciation.",
+        "CostComponents": "Cost components",
+        "ResourceComponentsHelp": "Fuel (rate, or consumption × unit price), maintenance (manual or rolling work-order actual with a meter window), tires, insurance, lease, storage, fixed overhead and consumables.",
+        "Category": "Category",
+        "Basis": "Basis",
+        "Rate": "Rate",
+        "Consumption": "Consumption",
+        "UnitPrice": "Unit price",
+        "Source": "Source",
+        "Save": "Save",
+        "Cancel": "Cancel"
+      },
+      "posted_field_names": [
+        "id",
+        "ResourceCostProfileId",
+        "componentsJson",
+        "SubjectType",
+        "UnitId",
+        "InventoryAssetId",
+        "ExternalResourceKey",
+        "Name",
+        "EffectiveOn",
+        "ExpiresOn",
+        "Currency",
+        "AcquisitionCost",
+        "SalvageValue",
+        "AcquisitionDate",
+        "AllocationBasis",
+        "UsefulLifeQuantity",
+        "UsefulLifeMonths",
+        "ExpectedAnnualUtilization",
+        "InServiceDate",
+        "IsApproved"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/Usage.cshtml",
+      "localized_literal_labels": {
+        "ResourceUsage": "Resource usage",
+        "UsageIntro": "Odometer, engine meter, hours and fuel readings per unit and day; distance is stored in miles and conflicting readings are queued for review.",
+        "AddUsage": "Add reading",
+        "TabCostRuns": "Cost runs",
+        "UsageEntries": "Usage entries",
+        "Date": "Date",
+        "Unit": "Unit",
+        "Phase": "Phase",
+        "Miles": "Miles",
+        "EngineHours": "Engine hours",
+        "OperatingHours": "Operating hours",
+        "Days": "Days",
+        "Fuel": "Fuel",
+        "Source": "Source",
+        "Review": "Review",
+        "ConfirmDelete": "Delete this record?",
+        "NoUsage": "No usage readings.",
+        "EditUsage": "Edit reading",
+        "Distance": "Distance",
+        "StartOdometer": "Start odometer",
+        "EndOdometer": "End odometer",
+        "DistanceUnit": "Distance unit",
+        "OriginalDistance": "Distance (as read)",
+        "DistanceHelp": "Enter odometer readings or a distance; kilometres are stored as miles.",
+        "Hours": "Hours",
+        "StartEngineMeter": "Engine meter start",
+        "EndEngineMeter": "Engine meter end",
+        "IdleHours": "Idle hours",
+        "DeployedDays": "Deployed days",
+        "FuelQuantity": "Fuel quantity",
+        "FuelUnit": "Fuel unit",
+        "FuelActualCost": "Actual fuel cost",
+        "Approved": "Approved",
+        "Save": "Save",
+        "Cancel": "Cancel"
+      },
+      "posted_field_names": [
+        "id",
+        "deploymentId",
+        "callId",
+        "ResourceUsageEntryId",
+        "DeploymentId",
+        "CallId",
+        "SubjectType",
+        "UnitId",
+        "UsageDate",
+        "Phase",
+        "Source",
+        "StartOdometer",
+        "EndOdometer",
+        "DistanceUnit",
+        "OriginalDistance",
+        "StartEngineMeter",
+        "EndEngineMeter",
+        "EngineHours",
+        "OperatingHours",
+        "IdleHours",
+        "DeployedDays",
+        "FuelQuantity",
+        "FuelUnit",
+        "FuelActualCost",
+        "StandbyDays",
+        "IsApproved"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/CostRuns.cshtml",
+      "localized_literal_labels": {
+        "CostRuns": "Cost runs",
+        "CostRunsIntro": "Internal loaded cost and margin for bids (estimate), calls and deployments (actual). Revenue is only ever an observed number.",
+        "Created": "Created",
+        "Context": "Context",
+        "RunType": "Run type",
+        "Status": "Status",
+        "TotalLoadedCost": "Total loaded cost",
+        "Revenue": "Revenue",
+        "Margin": "Contribution margin",
+        "MissingInputs": "Missing inputs",
+        "NoRuns": "No runs yet.",
+        "NewRun": "New run",
+        "Deployment": "Deployment",
+        "ThroughDate": "Through date",
+        "RevenueSource": "Revenue source",
+        "RunDeploymentCost": "Calculate deployment cost",
+        "RunDeploymentCostHelp": "Approved daily time reports, usage readings and expenses through the date.",
+        "Bid": "Bid",
+        "RunBidEstimate": "Estimate bid cost",
+        "RunBidEstimateHelp": "Bid lines × department-default compensation and class resource profiles; revenue = the bid's estimated total.",
+        "CallId": "Call #",
+        "RunCallCost": "Calculate call cost",
+        "RunCallCostHelp": "Work entries and usage readings recorded against the call; no revenue."
+      },
+      "posted_field_names": [
+        "deploymentId",
+        "throughDate",
+        "revenueSource",
+        "bidId",
+        "callId"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    },
+    {
+      "view": "Web/Resgrid.Web/Areas/User/Views/Workforce/CostRun.cshtml",
+      "localized_literal_labels": {
+        "CostRun": "Cost run",
+        "Summary": "Summary",
+        "Personnel": "Personnel",
+        "Resources": "Resources",
+        "Consumables": "Consumables",
+        "Expenses": "Expenses",
+        "Overhead": "Overhead",
+        "TotalLoadedCost": "Total loaded cost",
+        "Revenue": "Revenue",
+        "Margin": "Contribution margin",
+        "BreakEven": "Break-even revenue",
+        "MissingInputs": "Missing inputs",
+        "ThroughDate": "Through date",
+        "Frozen": "Frozen",
+        "ConfirmFreeze": "Freeze this run? A frozen run is immutable; a later recalculation supersedes it.",
+        "Freeze": "Freeze",
+        "ConfirmDelete": "Delete this record?",
+        "Delete": "Delete",
+        "ResourceUsage": "Resource usage",
+        "EstimateVsActual": "Estimate vs. actual",
+        "Estimate": "Estimate",
+        "Actual": "Actual",
+        "Variance": "Variance",
+        "Total": "Total",
+        "Lines": "Lines",
+        "LinesRequireCompensationView": "Lines are visible with View workforce compensation; the summary above is the aggregate view.",
+        "LinesHelp": "Personnel lines carry no rate in the clear; the priced detail is a protected field shown only with a current grant.",
+        "Date": "Date",
+        "Category": "Category",
+        "Subject": "Subject",
+        "Component": "Component",
+        "Quantity": "Quantity",
+        "Unit": "Unit",
+        "Rate": "Rate",
+        "Amount": "Amount",
+        "Flags": "Flags",
+        "Estimated": "estimated",
+        "Fallback": "fallback profile",
+        "NoLines": "No lines."
+      },
+      "posted_field_names": [
+        "id"
+      ],
+      "note": "Source labels, not an attestation that each was visible in any screenshot. Dynamic enum labels need the actual selected/open control in footage."
+    }
+  ],
+  "source_locator_root": "/Users/shawn/Documents/dev/Core",
+  "coverage_limits": [
+    "No screenshots or runtime/DB checked by this agent for Workforce.",
+    "Descriptions of controls are source-supported proposed shots until actual pixels reviewed.",
+    "No blanket protected-data or reporting-readiness assertion; current source accessor catalog governs.",
+    "No legal/clinical/payroll/financial classification advice."
+  ]
+}

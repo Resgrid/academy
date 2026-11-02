@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-28T15:40:28+00:00",
+  "canonical_lesson": "core-mapping",
+  "canonical_publication_changed": false,
+  "raw_manifest": "captures/expansion/core-mapping-20261028/manifest.json",
+  "raw_manifest_sha256": "85d6c828e73e5255426c9c0c8e416ee144d900eb0148909e2f406d626eecf936",
+  "raw_capture_count": 26,
+  "focused_candidate": {
+    "id": "core-mapping-points-and-filters",
+    "source": "expansion/plans/core-mapping-points-and-filters-capture-freeze-20261028-v2/core-mapping-points-and-filters.narrated-source.json",
+    "source_sha256": "dfc21fa121d4727b55fb6b28e8aae9b438da403619b660768eae32833d49b2f6",
+    "scenes": 16,
+    "reviewed_screenshots": 16,
+    "words": 870,
+    "generated_audio": false,
+    "estimated_timing_used": false,
+    "rendered": false,
+    "publication_approved": false
+  },
+  "verified_ui_sequence": [
+    "Read saved department center without editing it.",
+    "Filter named engines and observe two markers.",
+    "Hide labels; separately hide units and observe three original calls.",
+    "Create Academy Staging destination category through normal UI.",
+    "Create Academy Staging Point through normal UI.",
+    "Read back saved list and reopened Edit form.",
+    "Inspect saved point on main map and in its formatted popup.",
+    "Hide and restore the point with Show POIs.",
+    "Read saved category in the icon legend."
+  ],
+  "excluded_or_limited_captures": {
+    "002-operating-map-controls": "Valid controls; clustered Chicago labels overlap at continental scale. Do not teach individual call names from this frame.",
+    "006-layers-panel-existing-hydrants": "Actual Layers control and Hydrants checkbox only; no custom overlay or hydrant data proof.",
+    "008-layer-settings-prepared": "Valid unsaved form; not evidence of saved settings.",
+    "009-layer-rectangle-drawn": "Actual drawn rectangle before save only.",
+    "010-layer-save-control": "Actual save control; map zoomed out after wheel gesture. Geometry is not legible here.",
+    "011-layer-save-rejected": "Server error; excluded from successful configuration narration.",
+    "012-layers-list-restored": "Restored zero-row list; not a saved-overlay success.",
+    "018-poi-type-map-popup": "Type-specific popup renders escaped HTML in this checkout. Excluded; operating-map popup works."
+  },
+  "postgres_layer_observation": {
+    "date": "2026-10-28",
+    "category": "Bug Root Cause",
+    "title": "Map layer insert can persist despite UI save failure, then break list hydration",
+    "observed": "Normal Add Layer returned the generic save failure. The subsequent normal Layers page threw InvalidCastException converting System.String to Resgrid.Model.MapLayerData while Dapper read the stored JSON data column.",
+    "source_findings": [
+      "MappingService.SaveMapLayerAsync uses the PostgreSQL document repository and sets PgId on insert.",
+      "MappingController.NewLayer checks mapLayer.Id.Timestamp, which remains the Mongo-style zero value on this PostgreSQL insert.",
+      "MapLayersDocRepository.GetAllMapLayersByDepartmentIdAsync selects the whole data JSON column into QueryAsync<MapLayer> without explicitly deserializing that document."
+    ],
+    "affected_files": [
+      "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Controllers/MappingController.cs",
+      "evidence/expansion/Core/Core/Resgrid.Services/MappingService.cs",
+      "evidence/expansion/Core/Repositories/Resgrid.Repositories.NoSqlRepository/MapLayersDocRepository.cs"
+    ],
+    "restoration": "Verified the isolated database, department, six units and three active calls. Backed up only the new exercise-layer row to ignored local storage, then removed that exact name/timestamp/ID match. Normal Layers page loads with zero rows again.",
+    "other_records_changed_by_restoration": 0,
+    "product_source_modified": false,
+    "saved_overlay_claimed": false,
+    "next_step": "Resolve the PostgreSQL save/read path in a separately reviewed product change before rerecording a successful layer creation sequence."
+  },
+  "remaining_broad_mapping_gaps": [
+    "Saved and rendered custom map layer with on/off verification.",
+    "Geospatial import with actual persisted and rendered result.",
+    "Indoor building, floor and zone selection.",
+    "Route stop creation and actual provider path.",
+    "Live routing destination and actual provider response.",
+    "Weather zone saved scope and controlled provider/notification behavior.",
+    "Device location freshness distinct from page refresh time."
+  ],
+  "source_revision": {
+    "superseded_candidate": "expansion/plans/core-mapping-points-and-filters-capture-freeze-20261028/",
+    "reason": "In the filled Engine field, the placeholder Filter marker text is no longer visually painted. V2 lists the actual entered Engine text instead. Narration is unchanged; no audio or render used V1.",
+    "use_for_generation": "v2 only"
+  }
+}

@@ -1,0 +1,80 @@
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import Mapbox from '@/components/maps/mapbox';
+import { type MAP_ICONS } from '@/constants/map-icons';
+import { type CommandMarkerInfo } from '@/hooks/use-command-map-overlay';
+import { isPoiMarker } from '@/lib/poi-marker-utils';
+import { type MapMakerInfoData } from '@/models/v4/mapping/getMapDataAndMarkersData';
+
+import PinMarker from './pin-marker';
+import PoiMarker from './poi-marker';
+
+type MapIconKey = keyof typeof MAP_ICONS;
+
+interface MapPinsProps {
+  pins: MapMakerInfoData[];
+  /** Active command board context by marker id — lane label + color enrichment. */
+  commandOverlay?: Record<string, CommandMarkerInfo>;
+  onPinPress?: (pin: MapMakerInfoData) => void;
+}
+
+/**
+ * Individual pin wrapper that renders the appropriate marker component
+ * based on whether the marker is a POI or a legacy (call/unit/station/personnel) marker.
+ *
+ * POI markers use the SVG shape + icon rendering (per the "POI Map Icon Renderer"
+ * reference document). Non-POI markers use PNG images from the MAP_ICONS lookup.
+ */
+const MapPin = React.memo(({ pin, commandInfo, onPinPress }: { pin: MapMakerInfoData; commandInfo?: CommandMarkerInfo; onPinPress?: (pin: MapMakerInfoData) => void }) => {
+  const { t } = useTranslation();
+  const handlePress = useCallback(() => {
+    onPinPress?.(pin);
+  }, [onPinPress, pin]);
+
+  const poi = isPoiMarker(pin);
+  const laneLabel = commandInfo ? commandInfo.laneName || t('command.unassigned') : undefined;
+
+  return (
+    <Mapbox.MarkerView
+      key={`pin-${pin.Id}`}
+      id={`pin-${pin.Id}`}
+      coordinate={[pin.Longitude, pin.Latitude]}
+      // POI markers: anchor at bottom-center (tip of pin shape)
+      // Non-POI markers: anchor at center
+      anchor={poi ? { x: 0.5, y: 1.0 } : { x: 0.5, y: 0.5 }}
+      allowOverlap={true}
+    >
+      {poi ? (
+        <PoiMarker poiImage={pin.PoiImage} imagePath={pin.ImagePath} iconUrl={pin.IconUrl} color={pin.Color} marker={pin.Marker} title={pin.Title} size={36} onPress={handlePress} />
+      ) : (
+        <PinMarker
+          imagePath={pin.ImagePath as MapIconKey}
+          poiImage={pin.PoiImage as MapIconKey}
+          // Uploaded icon wins over the bundled icon: call and unit pins carry their type's upload, personnel pins
+          // the icon of the person's first role (in department role order) that has one.
+          iconUrl={pin.IconUrl}
+          title={pin.Title}
+          laneLabel={laneLabel}
+          accentColor={commandInfo?.laneColor}
+          size={32}
+          onPress={handlePress}
+        />
+      )}
+    </Mapbox.MarkerView>
+  );
+});
+
+MapPin.displayName = 'MapPin';
+
+const MapPins: React.FC<MapPinsProps> = ({ pins, commandOverlay, onPinPress }) => {
+  return (
+    <>
+      {pins.map((pin) => (
+        <MapPin key={`pin-${pin.Id}`} pin={pin} commandInfo={commandOverlay?.[pin.Id]} onPinPress={onPinPress} />
+      ))}
+    </>
+  );
+};
+
+export default React.memo(MapPins);

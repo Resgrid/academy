@@ -1,0 +1,183 @@
+{
+  "id": "core-record-definition-client-surfaces",
+  "title": "Offer a department record form in IC",
+  "app": "Core",
+  "summary": "Review per-form app availability, prepare IC-only client surfaces, validate and save a draft, then inspect publication impact and the published version.",
+  "audience": [
+    "Department administrators",
+    "Records administrators",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "An authorized Core administrator session with Record Definitions available.",
+    "A separate fictional department-owned draft form. The definition-creation lesson covers creating and cloning forms."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review which apps receive a form",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "001-existing-definition-responder-only"
+      ],
+      "required_labels": [
+        "Client surfaces",
+        "Responder",
+        "IC"
+      ],
+      "narration": "A department record form needs the right app availability before field staff can use it. On its definition page, scroll to Client surfaces. This existing training form has Responder selected and IC clear. Unit and Dispatch are also clear. Read this group of choices for the particular form you intend to offer. A form being available in one application does not tell you which other applications are selected here.",
+      "practice": "Locate Client surfaces on a department definition and read the pictured Responder and IC choices."
+    },
+    {
+      "id": "02",
+      "title": "Work in a separate definition draft",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "003-new-cloned-definition-draft"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - IC coordination note v1 · Draft",
+        "QuickEntry"
+      ],
+      "narration": "For the practice change, we use a separate department-owned form called Training Only, IC coordination note. The heading identifies version one as Draft, and the creation notice says to edit the schema, validate, then publish. Lifecycle preset currently shows Quick Entry. Confirm the form name and version state before preparing its app choices. This keeps the availability decision tied to the intended definition version.",
+      "practice": "Confirm the fictional form name, Draft version and displayed lifecycle before changing its app choices."
+    },
+    {
+      "id": "03",
+      "title": "Prepare IC-only availability",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "004-ic-only-surface-prepared"
+      ],
+      "required_labels": [
+        "Client surfaces",
+        "Responder",
+        "Unit",
+        "IC",
+        "Dispatch",
+        "Allow offline"
+      ],
+      "narration": "In Client surfaces, clear Responder and select IC for this separate practice form. Unit and Dispatch remain clear. The pictured choices now target IC when this version is published. Allow offline is also clear for this exercise. Review the entire group before saving, rather than assuming that selecting one app automatically selects the others. These are prepared draft settings at this stage.",
+      "practice": "Prepare IC selected and the other three app choices clear on a fictional draft. Read Allow offline without enabling it."
+    },
+    {
+      "id": "04",
+      "title": "Validate and read the result",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "007-definition-save-and-validate-controls",
+        "005-definition-validation-result"
+      ],
+      "required_labels": [
+        "Validate",
+        "The definition is valid."
+      ],
+      "narration": "At the bottom of the definition editor, choose Validate. The returned page displays The definition is valid. Read that result before moving toward publication. Validation is a useful checkpoint for the form definition you are preparing; it does not tell an operator which app choices you intended. Compare the configuration with the requested departmental use as well as checking that validation succeeds.",
+      "practice": "Find Validate and read its returned validation notice."
+    },
+    {
+      "id": "05",
+      "title": "Save the intended draft configuration",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "007-definition-save-and-validate-controls",
+        "008-definition-draft-saved"
+      ],
+      "required_labels": [
+        "Save draft",
+        "Draft saved."
+      ],
+      "narration": "Use Save draft to retain the prepared configuration. The returned page displays Draft saved, while the heading still identifies the version as Draft. Read that state before proceeding. Review impact and publish is the next action for deciding whether this version is ready to be offered. Keeping validation, saving and publication as explicit checkpoints makes it easier to explain where a form is in the setup process.",
+      "practice": "Use Save draft and confirm the saved notice and Draft heading before opening the impact review."
+    },
+    {
+      "id": "06",
+      "title": "Compare app enablement with the form surface",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "009-impact-client-readiness-and-publish",
+        "008-definition-draft-saved"
+      ],
+      "required_labels": [
+        "Client readiness",
+        "Enabled",
+        "Client surfaces",
+        "IncidentCommand",
+        "records.v1b"
+      ],
+      "narration": "Open Review impact and publish, then inspect Client readiness. The Enabled column and Client surfaces column answer different questions. Here every app is enabled, but only the Incident Command row has Yes under Client surfaces. Responder, Unit and Dispatch say this version is not offered to that app. The IC row says clients at records version one B or later can author this version. Read the complete row, including its capability requirement, before publishing.",
+      "practice": "Compare Enabled and Client surfaces for IC and one other app, then read the capability message."
+    },
+    {
+      "id": "07",
+      "title": "Publish the reviewed version",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "009-impact-client-readiness-and-publish",
+        "013-published-definition-landscape"
+      ],
+      "required_labels": [
+        "Publish",
+        "TRAINING ONLY - IC coordination note v1 · Published",
+        "This version is published and read-only. Open a new draft to make changes."
+      ],
+      "narration": "The impact page explains that publishing freezes the version. After reviewing the intended form and its app readiness, choose Publish. The resulting definition page identifies version one as Published and displays the published, read-only notice. Verify that returned state before telling staff the setup is complete. The separate IC record walkthrough shows this published form being selected and used in the app.",
+      "practice": "Read the publication consequence and verify the Published heading and read-only notice in a training environment."
+    },
+    {
+      "id": "08",
+      "title": "Plan future changes and departmental use",
+      "route": "/User/RecordDefinitions",
+      "capture_intent": "Use only the ordered corresponding actual application views. Cut to each page or control when its instruction is spoken.",
+      "capture_refs": [
+        "013-published-definition-landscape"
+      ],
+      "required_labels": [
+        "Open new draft"
+      ],
+      "narration": "Open new draft is available for the next definition change. Use the version heading to keep published forms and future work clear during administration. The same availability review can support a security handover form, a search-and-rescue coordination note, community paramedicine or mental health team documentation, wildland contractor records, industrial exercise forms, and fire or E M S department records. Choose app availability deliberately for the people who will actually fill out each form.",
+      "practice": "Locate Open new draft and discuss which authorized app users should receive a fictional form for your department."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire/EMS",
+      "scenario": "A command aide practices an authorized department coordination record."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "A community paramedicine or mental health team practices a coordination handover form."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "A search coordinator practices a mission-support handover record."
+    },
+    {
+      "sector": "Security",
+      "scenario": "A supervisor practices a shift or event handover form."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "A contractor practices crew coordination documentation."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "An industrial response team practices exercise documentation."
+    }
+  ],
+  "source_files": [],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "scope_limits": [
+    "Fictional software training data; no real operational or clinical event is represented.",
+    "No attachment upload, device permission, offline authoring, external delivery or PDF result is demonstrated."
+  ]
+}

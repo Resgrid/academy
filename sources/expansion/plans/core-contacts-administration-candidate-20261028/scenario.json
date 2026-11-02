@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "core-contacts-administration-20261028",
+  "environment": "Isolated fictional Department51 Firehouse51 only",
+  "mode": "Manual UI replay definition; no executable seed or automatic changes",
+  "executed_by_helper": false,
+  "actual_parent_capture_manifest": "captures/expansion/core-contacts-20261028/manifest.json",
+  "actual_parent_capture_manifest_sha256": "413fb809c1d9f6e14f1b92ff90029865720770e08e75b5bbfa11c845f3a839f7",
+  "category": {
+    "name": "Academy Partner Directory",
+    "description": "Fictional training partners and logistics contacts.",
+    "color": "#0080ff",
+    "display_on_map": false,
+    "map_icon": "Default"
+  },
+  "person": {
+    "type": "Person",
+    "first_name": "Sylvie",
+    "last_name": "Brett",
+    "company_name": "Academy Community Partners (fictional)",
+    "category": "Academy Partner Directory",
+    "email": "liaison@example.invalid",
+    "cell_phone": "+13125550142",
+    "description": "TRAINING ONLY - Fictional community partner liaison. Verify current contact details before operational use."
+  },
+  "organization": {
+    "type": "Location or Company",
+    "name": "Academy Logistics Desk (fictional)",
+    "category": "Academy Partner Directory",
+    "email": "logistics@example.invalid",
+    "initial_office_phone": "+13125550143",
+    "final_office_phone": "+13125550144",
+    "description": "TRAINING ONLY - Fictional supply and mutual-aid coordination contact.",
+    "location_pair": [
+      "41.8722",
+      "-87.6524"
+    ],
+    "entrance_pair": null,
+    "exit_pair": null,
+    "physical_address": {
+      "street": "1000 Training Avenue (fictional)",
+      "city": "Chicago",
+      "state": "IL",
+      "postal_code": "60607",
+      "country": "United States"
+    },
+    "same_as_physical_on_create": true
+  },
+  "guards": [
+    "Confirm fictional Department51 and required existing Contacts permissions.",
+    "Search for exact names/category first; if present reopen and compare instead of creating duplicates or overwriting an unknown row.",
+    "Resolve actual returned IDs through normal UI; no fixed IDs, direct endpoint calls or database writes.",
+    "Reserved channels are directory values only; never dial/send a message, test delivery or perform geocoding/GPS lookup.",
+    "Preserve the three uncategorized baseline contacts, original calls and all unrelated settings.",
+    "Initial rich-text description create/readback is demonstrated. Failed022replacement is excluded; do not replay it as success."
+  ],
+  "normal_replay": [
+    "Contacts→Categories→Add Category→Name/Color/description; keep Display On Map OFF/Map Icon Default→Save→verify count0.",
+    "Contacts→New Contact→Person/category/name/training channels/initial Description→Save→Search Brett→View identity and Description.",
+    "New Contact→Location or Company/category/name/email/office0143/initial Description→paired GPS fields→physical address→Same as Physical→Save.",
+    "Category tree→verify two entries→Search Logistics→View name/location/physical address/Description.",
+    "Edit same organization→verify named category/office0143/copied mailing fields; Same as Physical appears clear on reopen.",
+    "Change only own Office Phone0143→0144→ordinary Save→leave/reopen→read0144.",
+    "Categories→verify contact count2. No delete, notification, real partner contact or protected-data permission operation."
+  ],
+  "result_boundaries": {
+    "View_category": "Displays ContactType numeric0/1; verify category name in list/Edit.",
+    "View_mailing": "Blank when linked to same physical address; copied values verified only on Edit020.",
+    "rich_text_edit": "Attempted replacement022failed and did not persist; original Description retained023.",
+    "map": "Stored reference coordinates only; no map or route/GPS/device-location proof."
+  }
+}

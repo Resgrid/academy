@@ -1,0 +1,319 @@
+{
+  "id": "core-static-workshifts",
+  "title": "Create a fixed resource window and verify its readback",
+  "app": "Core",
+  "audience": [
+    "department administrators",
+    "shift supervisors"
+  ],
+  "summary": "Create small fictional schedules and verify their actual stored values and coverage counts.",
+  "prerequisites": [
+    "Use a fictional practice department and existing shift create/view/update permissions.",
+    "Use existing groups, roles and members; prepare future dates and identifiable practice entries."
+  ],
+  "scenes": [
+    {
+      "id": "entry",
+      "title": "Open the fixed resource window",
+      "required_labels": [
+        "Calendar",
+        "Add Static Shift"
+      ],
+      "narration": "Use Add Static Shift from the shared Shifts calendar when you need a fixed resource window. This is separate from the recurring group schedule used for people and role minimums. Our practice entry will cover November fourth to fifth and use a separate training unit. Start with a clear purpose and an explicit start and end. Keep the entry easy to identify so another administrator can review the resource, date and context before relying on it.",
+      "practice": "Find Add Static Shift and define a fictional resource window before opening the form.",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "001-shifts-baseline",
+        "013-assigned-calendar-date-context"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Calendar tile title is truncated. The separate own row above supplies full name;014provides actual dated detail."
+      ],
+      "renderable": true
+    },
+    {
+      "id": "resource",
+      "title": "Prepare a separate practice resource",
+      "required_labels": [
+        "New Unit",
+        "Name",
+        "TRAINING ONLY - Static demo unit 20261028",
+        "Engine",
+        "No Station",
+        "Roles",
+        "Save"
+      ],
+      "narration": "Prepare an identifiable practice unit through New Unit. Here its name says Training Only, Static demo unit, followed by the exercise date. Choose the existing Engine type, leave Station at No Station and keep Roles empty. Save the new entry once, then find and reopen it to verify those choices. The returned unit has the default Available status. This separate software resource lets us demonstrate scheduling without changing another apparatus or its crew. No device position or hardware tracking setup is part of this example.",
+      "practice": "Create and reopen a uniquely named disposable practice unit without adding crew or location data.",
+      "route": "/User/Units/NewUnit",
+      "capture_refs": [
+        "027-static-disposable-unit-prepared",
+        "028-static-unit-created",
+        "029-static-unit-reopened"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Full resource name wraps in result row; Searchinput text is clipped and is not used as a full-name observation.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "renderable": true
+    },
+    {
+      "id": "identity",
+      "title": "Use a readable name and calendar color",
+      "required_labels": [
+        "New Static Shift",
+        "Name",
+        "TRAINING ONLY - Static Nov4",
+        "Color",
+        "#fde68a"
+      ],
+      "narration": "On New Static Shift, enter Training Only, Static November fourth as the name. The short name stays readable in this form. Choose a light yellow background color. The help reminds you that calendar text is black, so review contrast along with the color itself. A distinctive name and color make the entry easier to recognize when it appears alongside personnel shifts. They are labels for the schedule; they do not change the unit’s operational status.",
+      "practice": "Enter a short practice name and a light calendar background that keeps black text readable.",
+      "route": "/User/Workshifts/New",
+      "capture_refs": [
+        "034-static-readable-name-prepared"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Native color picker overlays part of Description. Only unobscured heading/name/color are retained; use030/036for complete Description."
+      ],
+      "renderable": true
+    },
+    {
+      "id": "purpose",
+      "title": "Give the resource window explicit context",
+      "required_labels": [
+        "Description",
+        "TRAINING ONLY. Fictional scheduling and equipment-window software exercise. No deployment, travel, work, expense, payment or live apparatus-availability claim."
+      ],
+      "narration": "Description is a separate rich-text editor. Explain why the resource window exists and what another reader should verify. This example identifies a fictional scheduling exercise and makes clear that it does not record deployment, travel, work, expense or payment. Keep that context attached to the schedule itself. A useful description tells the next administrator what the entry represents without requiring them to infer its purpose from a color or short name. Review the complete text before creating the entry.",
+      "practice": "Write a software-only description that explains the purpose and limits of your practice window.",
+      "route": "/User/Workshifts/New",
+      "capture_refs": [
+        "030-static-shift-prepared-upper"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Name/header offscreen; Units blank at this earlier preparation. Description and corrected dates are valid bounded observations only."
+      ],
+      "renderable": true
+    },
+    {
+      "id": "window",
+      "title": "Verify both dates and the selected resource",
+      "required_labels": [
+        "Start Date/Time",
+        "2026/11/04 09:00",
+        "End Date/Time",
+        "2026/11/05 09:00",
+        "Units",
+        "TRAINING ONLY - Static demo unit 20261028",
+        "Create Static Shift"
+      ],
+      "narration": "Set Start Date and Time to November fourth, twenty twenty-six, at nine in the morning, and End Date and Time to November fifth at nine. Check the displayed values after leaving each field; this picker displays a year, month, day and twenty-four-hour time. Under Units, select only the new training unit and verify its visible chip. Read both endpoints and the resource name together before using Create Static Shift. The form’s travel and availability help describes its intended scheduling meaning; verify operational effects separately.",
+      "practice": "Verify the future start and end after leaving the fields, then confirm the one selected practice unit.",
+      "route": "/User/Workshifts/New",
+      "capture_refs": [
+        "032-static-own-unit-selected",
+        "035-static-final-window-before-create"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Actual EndDate/Unit chip/Create all fully visible despite raw generic DOM false-negatives. Existing long unsaved name is offscreen.",
+        "Native color popup occludes upper Description only. Future dates, own Unit chip and Create are fully readable; Description omitted from this row."
+      ],
+      "renderable": true
+    },
+    {
+      "id": "saved",
+      "title": "Inspect the newly saved day",
+      "required_labels": [
+        "Create Static Shift",
+        "View Static Shift Day",
+        "Shift Day Detail",
+        "TRAINING ONLY - Static Nov4",
+        "Units",
+        "TRAINING ONLY - Static demo unit 20261028",
+        "Unit Role"
+      ],
+      "narration": "Choose Create Static Shift once. In the shared calendar, open the new entry. View Static Shift Day shows the name, description, November fourth at nine, and the selected training unit. The Unit Role table is empty because this unit has no configured roles or filled positions in the exercise. Read the saved identity and association before making another change. This view demonstrates the created scheduling entry; it does not demonstrate a real deployment or an automatic change to another unit’s availability.",
+      "practice": "Open the saved day and verify its name, description and resource association.",
+      "route": "/User/Workshifts/New",
+      "capture_refs": [
+        "035-static-final-window-before-create",
+        "036-static-day-saved"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Native color popup occludes upper Description only. Future dates, own Unit chip and Create are fully readable; Description omitted from this row.",
+        "Saved day shows09:00and unit association, but later Edit disagrees. Does not prove live automatic unit commit/release, filled unit role or successful update."
+      ],
+      "renderable": true
+    },
+    {
+      "id": "readback-stop",
+      "title": "Stop when the reopened editor disagrees",
+      "required_labels": [
+        "Edit Static Shift",
+        "Start Date/Time",
+        "11/4/2026 3:00:00 AM",
+        "End Date/Time",
+        "11/5/2026 3:00:00 AM",
+        "Units",
+        "Update"
+      ],
+      "narration": "Reopen Edit Static Shift and compare its values before submitting an update. In this example, the editor shows three in the morning instead of the nine shown on the saved day, and its Units selection is blank. Stop here. Do not submit an editor whose values disagree with the entry you intended to maintain. The visible warning also says that editing clears existing assignments or signups and reapplies the settings. Resolve the discrepancy and review the intended result before attempting an update.",
+      "practice": "Compare saved day and editor values; stop before Update if either the time window or resource selection differs.",
+      "route": "/User/Workshifts/Edit?shiftId=129680c8-881c-43d3-b615-73220c5dd46c",
+      "capture_refs": [
+        "037-static-edit-readback-upper",
+        "038-static-edit-discrepancy-warning"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred.",
+        "Only the readable controls and stated prepared or stored phase are supported; no additional operation or provider delivery inferred."
+      ],
+      "renderable": false
+    },
+    {
+      "id": "adapt",
+      "title": "Adapt the fixed-window review to your work",
+      "required_labels": [
+        "Shift Day Detail",
+        "TRAINING ONLY - Static Nov4",
+        "Units",
+        "TRAINING ONLY - Static demo unit 20261028"
+      ],
+      "narration": "Chicago Fire can use a reviewed resource window for a software equipment exercise. Community care and mental health teams can coordinate operational vehicle support without patient information. Search and rescue can schedule support equipment; security teams can identify equipment windows; wildland crews can plan support resources; and industrial response teams can coordinate facility drill equipment. Keep the resource identity, dates and purpose clear. Confirm the saved result and resolve conflicting readbacks before further edits. The surrounding operational decisions still need their own appropriate review.",
+      "practice": "Describe one sector-specific resource window and the saved-value checks required before its next edit.",
+      "route": "/User/Workshifts/ViewDay?dayId=d974f9f8-e8a9-4527-9425-7684821163b8",
+      "capture_refs": [
+        "036-static-day-saved"
+      ],
+      "capture_intent": "Use these actual prepared controls before the separately observed stored result; preserve each source boundary.",
+      "source_limits": [
+        "Saved day shows09:00and unit association, but later Edit disagrees. Does not prove live automatic unit commit/release, filled unit role or successful update."
+      ],
+      "renderable": true
+    }
+  ],
+  "sector_examples": {
+    "Chicago Fire": "A fictional station coverage schedule and a separate software equipment window.",
+    "Community care and mental health": "Operational team coverage and a service-vehicle support window; no patient detail or clinical conclusions.",
+    "Search and rescue": "A fictional standby roster and support-equipment schedule; no staging arrival claim.",
+    "Security": "A fictional site-coverage roster and separate equipment window.",
+    "Wildland": "A fictional relief schedule and support-resource window; no rest-rule or qualification certification.",
+    "Industrial response": "A fictional drill-support roster and facility-response equipment schedule; no readiness/work/payment certification."
+  },
+  "source_files": [
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Controllers/ShiftsController.cs"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/Index.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/NewShift.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/EditShiftDetails.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/EditShiftDays.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/ViewShift.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/Approvals.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/OnDuty.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Department/ShiftSettings.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Core/Resgrid.Services/ShiftsService.Scheduling.cs"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Shifts/ShiftCalendar.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/wwwroot/js/app/internal/shifts/resgrid.shifts.calendar.js"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/libman.json"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs"
+    },
+    {
+      "repo": "Core",
+      "path": "Core/Resgrid.Services/WorkShiftsService.cs"
+    },
+    {
+      "repo": "Core",
+      "path": "Core/Resgrid.Model/Helpers/TimeConverterHelper.cs"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Models/Workshifts/NewWorkshiftView.cs"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Workshifts/New.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Workshifts/Edit.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Workshifts/ViewDay.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/wwwroot/js/app/internal/workshifts/resgrid.workshifts.new.js"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Units/NewUnit.cshtml"
+    },
+    {
+      "repo": "Core",
+      "path": "Web/Resgrid.Web/Areas/User/Views/Units/EditUnit.cshtml"
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_complete": false,
+  "bounded_scope_only": true,
+  "whole_module_operations_complete": false,
+  "capture_limitations": [
+    "Edit readback time disagrees09:00saveddayversus03:00editor; no successful Update can be taught.",
+    "Edit Units selector is blank while saveddayhasownunit; no Update/delete performed.",
+    "Diagnostic scenes037/038are not eligible renderer input.",
+    "No demonstrated automatic live unit commit/release, role fill or operational readiness."
+  ]
+}

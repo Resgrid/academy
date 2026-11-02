@@ -1,0 +1,317 @@
+{
+  "id": "app-bigboard-operational-display",
+  "title": "Big Board: build and verify an operational display",
+  "app": "BigBoard",
+  "summary": "Add operational widgets, choose readable dimensions, reorder call, unit and personnel columns, move and remove a temporary panel, and verify the saved board after reload.",
+  "audience": [
+    "Department administrators",
+    "Duty supervisors",
+    "Dispatch and coordination teams",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "An authorized signed-in BigBoard session in a fictional training department.",
+    "Existing calls, personnel, units and a training note for a reversible display exercise."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose what a shared display should answer",
+      "route": "/home",
+      "capture_refs": [
+        "029-reloaded-personnel-clock-clean"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Resgrid BigBoard",
+        "Personnel",
+        "Status",
+        "Staffing",
+        "Time"
+      ],
+      "narration": "Resgrid Big Board brings department information into configurable widgets. Here, the Personnel table shows operational status beside staffing, with a clock below it. A duty supervisor can use this display to review readiness during a handover. The same approach can support a security control room, search-and-rescue coordination desk, community paramedicine or mental health response team, wildland contractor, industrial response team, or fire and E M S department. This walkthrough builds a readable board using fictional training data.",
+      "practice": "Decide which readiness and incident questions your display must answer."
+    },
+    {
+      "id": "02",
+      "title": "Start with the actual widget chooser",
+      "route": "/home",
+      "capture_refs": [
+        "006-empty-dashboard",
+        "007-add-widget-choices"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Welcome to Your Dashboard",
+        "Add Widget",
+        "Calls",
+        "Units",
+        "Personnel",
+        "Time"
+      ],
+      "narration": "Start on the empty dashboard. The message directs you to the plus button in the upper right. Select it to open Add Widget. The chooser includes Calls, Units, Personnel and Time. Add those four widgets for this exercise, choosing each from the menu. The chooser also offers other widget types. Add information for a specific audience and purpose; a coordination desk and a shared briefing display may need different amounts of detail.",
+      "practice": "Use the plus control to add Calls, Units, Personnel and Time to a training board."
+    },
+    {
+      "id": "03",
+      "title": "Give the Calls widget enough room",
+      "route": "/configure",
+      "capture_refs": [
+        "011-calls-options-and-size",
+        "016-calls-readable-saved-priority"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Calls",
+        "Widget Size",
+        "Width (grid units): 10",
+        "Height (grid units): 4",
+        "Save"
+      ],
+      "narration": "Open the settings gear in the header and select Calls. Scroll to Widget Size. In this recorded desktop example, Width is ten grid units and Height is four. Adjust the width and height sliders to give the incident table enough room, then use Save to return to the board. Choose sizes for your actual display. A wider widget gives long incident names and addresses more horizontal space, while additional height makes more rows visible.",
+      "practice": "Adjust the Calls width and height, save, and check the resulting table."
+    },
+    {
+      "id": "04",
+      "title": "Bring Priority beside the call identifier",
+      "route": "/configure",
+      "capture_refs": [
+        "012-calls-priority-column-order"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Calls Widget",
+        "Column Order",
+        "ID",
+        "Priority",
+        "Name",
+        "Save"
+      ],
+      "narration": "In Calls settings, find Column Order and the instruction to use the arrows. Move Priority upward until the first three columns are I D, Priority and Name. Use the up arrow on the Priority row, then Save. This changes where the column appears. It helps a supervisor read an incident identifier and its priority together. We will check the table itself next, because the returned display is the useful confirmation of this setting.",
+      "practice": "Move Priority after ID and verify that order on the board."
+    },
+    {
+      "id": "05",
+      "title": "Read the actual incident table",
+      "route": "/home",
+      "capture_refs": [
+        "016-calls-readable-saved-priority"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Calls",
+        "ID",
+        "Priority",
+        "Name",
+        "Address",
+        "Timestamp",
+        "Dispatched",
+        "DEMO-0001",
+        "Urgent"
+      ],
+      "narration": "The Calls table now begins with I D, Priority and Name. The warehouse-alarm exercise shows Urgent, while the community medical standby and vehicle-rescue exercise show Routine. Address, Timestamp and Dispatched provide more context across each row. Read these values together when comparing work. The Dispatched column lists dispatched recipients; this screen does not by itself verify that every recipient accepted the assignment or arrived at the incident. Use the relevant response and operational views for those checks.",
+      "practice": "Find one training incident and read its identifier, priority, address and dispatched recipients."
+    },
+    {
+      "id": "06",
+      "title": "Set the Units table order and dimensions",
+      "route": "/configure",
+      "capture_refs": [
+        "022-unit-layout-final-settings"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Units Widget",
+        "Name",
+        "State",
+        "Station",
+        "Type",
+        "Timestamp",
+        "Widget Size",
+        "Save"
+      ],
+      "narration": "Open the gear again and select Units Widget. In the column-order controls, move State immediately after Name. Keep Station, Type and Timestamp after those columns for this example. The Widget Size controls below give this table a width of ten and a height of three grid units. Save and inspect the result. Putting the resource name beside its state makes it easier to scan which vehicle or team needs attention during a briefing.",
+      "practice": "Place State after Name, choose readable dimensions, and save."
+    },
+    {
+      "id": "07",
+      "title": "Compare resource states and update age",
+      "route": "/home",
+      "capture_refs": [
+        "017-units-readable-saved-state"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Units",
+        "State",
+        "Updated",
+        "Available",
+        "Responding",
+        "Out of Service",
+        "TRAINING ONLY - Community response vehicle"
+      ],
+      "narration": "On the resulting Units table, Engine fifty-one is Available, Squad three is Responding, and Reserve Engine fifty-one is Out of Service. The community-response vehicle demonstrates that the table can include resources beyond fire apparatus. A security patrol vehicle or industrial response resource can be organized using the same fields. Read Updated as well as State. Several fictional exercise entries are days old, so a displayed state alone is not evidence of a fresh readiness report.",
+      "practice": "Compare three unit states and check their displayed update age."
+    },
+    {
+      "id": "08",
+      "title": "Choose a personnel column order",
+      "route": "/configure",
+      "capture_refs": [
+        "023-personnel-status-column-order"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Personnel",
+        "Column Order",
+        "Name",
+        "Status",
+        "Group",
+        "Staffing",
+        "Timestamp",
+        "Roles",
+        "Save"
+      ],
+      "narration": "Select Personnel in the configuration tabs and find Column Order. For this example, place Status immediately after Name, followed by Group and Staffing, then Timestamp and Roles. Use the arrows on each row to move the columns, then Save. This arrangement brings an individual and their operational status together while keeping team assignment, staffing and qualifications visible elsewhere in the same row. Choose a sequence that your supervisors can read consistently during handover.",
+      "practice": "Set the personnel column sequence and compare it with the displayed table."
+    },
+    {
+      "id": "09",
+      "title": "Distinguish personnel status from staffing",
+      "route": "/home",
+      "capture_refs": [
+        "029-reloaded-personnel-clock-clean"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Personnel",
+        "Status",
+        "Staffing",
+        "Updated",
+        "Roles",
+        "Darren Ritter",
+        "Delayed",
+        "Blake Gallo",
+        "Unavailable",
+        "Time"
+      ],
+      "narration": "The Personnel table shows Status and Staffing as separate columns. In this exercise, Darren Ritter has Standing By under Status and Delayed under Staffing. Blake Gallo has Standing By and Unavailable. These are different pieces of information, so read both before deciding that someone is ready for work. Roles and Group add organizational context, and Updated provides the displayed age of the entry. The Time widget below supplies a visible clock alongside the readiness information.",
+      "practice": "Read one person’s Status and Staffing separately and check the update age."
+    },
+    {
+      "id": "10",
+      "title": "Enter edit mode and find the widget controls",
+      "route": "/home",
+      "capture_refs": [
+        "024-edit-mode-notes-remove",
+        "029-reloaded-personnel-clock-clean"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Done",
+        "Time",
+        "Notes"
+      ],
+      "narration": "Return to the dashboard and select Edit in the header. The button changes to Done, and widget headings show a grip and a red removal control. A temporary Notes widget has been added beside Time for this layout exercise. The grip is the place to begin moving the widget. Check the heading before using a removal control, so you change the intended panel rather than another widget on a crowded display.",
+      "practice": "Enter Edit and identify the grip and removal control on the temporary Notes widget."
+    },
+    {
+      "id": "11",
+      "title": "Move the temporary widget",
+      "route": "/home",
+      "capture_refs": [
+        "025-temporary-widget-moved",
+        "024-edit-mode-notes-remove"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Done",
+        "Time",
+        "Notes"
+      ],
+      "narration": "Drag the temporary Notes widget by its heading grip to the right. The resulting view shows Notes farther across the board, with Time remaining on the left. This is a layout change. It does not change the department note itself. Use the same placement check when arranging a shared display: confirm the final location of the panel and make sure important information is still visible at the distance from which people will read it.",
+      "practice": "Move a temporary widget and inspect its resulting position."
+    },
+    {
+      "id": "12",
+      "title": "Remove the temporary panel and finish editing",
+      "route": "/home",
+      "capture_refs": [
+        "026-clock-moved-notes-removed",
+        "025-temporary-widget-moved"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Done",
+        "Personnel",
+        "Time"
+      ],
+      "narration": "Select the red removal control on the temporary Notes widget. That panel disappears, and the board returns to four widgets: Calls, Units, Personnel and Time. The pictured lower part of the board shows Personnel and Time remaining. Select Done to leave edit mode. Removing this display widget does not delete the underlying department note. Keep only the panels needed for this particular display, then check that its important tables remain readable.",
+      "practice": "Remove only the temporary Notes widget and select Done."
+    },
+    {
+      "id": "13",
+      "title": "Reload and verify the saved display",
+      "route": "/home",
+      "capture_refs": [
+        "030-reloaded-calls-clean",
+        "029-reloaded-personnel-clock-clean"
+      ],
+      "capture_intent": "Show the actual setting, chooser, widget, edit control or reloaded result at the spoken instruction.",
+      "required_labels": [
+        "Calls",
+        "ID",
+        "Priority",
+        "Name",
+        "Personnel",
+        "Status",
+        "Staffing",
+        "Time"
+      ],
+      "narration": "Reload Big Board to check the saved result. Calls still begins with I D, Priority and Name. Scroll down to confirm that Personnel keeps its chosen sequence and that Time remains on the board. In this example, the larger tables require scrolling. For a wall display, choose a smaller set of panels that fits the screen and verify it on the actual monitor. For an interactive coordination desk, decide which tables staff will scroll through during routine work.",
+      "practice": "Reload, compare the returned columns and widgets, and verify readability on the intended screen."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Security",
+      "scenario": "Review patrol resources and personnel readiness on a control-room display."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Read team and resource readiness together during coordination."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Review community paramedicine or mental health team staffing alongside active work."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Use consistent resource and personnel columns during contractor handovers."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Review resource availability and update age during a response-team briefing."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Compare apparatus states, incident priority and personnel readiness."
+    }
+  ],
+  "source_files": [],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "scope_limits": [
+    "Source proposal only; generated speech, complete listening review, cue correspondence, encoded-frame review and actual browser playback remain required.",
+    "No call dispatch, response acceptance, current device GPS, timed unit alert, weather result or cross-device preference synchronization is demonstrated.",
+    "Clock-format, personnel-filter and generic font controls are not presented as working display effects in this build.",
+    "This desktop example uses scrolling tables; it is not a demonstration of four full tables fitting on a wall monitor."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-bigboard-operational-display-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/app-bigboard-operational-display-source-proposal-20261101/lesson.candidate.json",
+    "sha256": "884b8cf7c577e898c604f097df5551d899ace214764d7db8f1d594537fc36428"
+  }
+}

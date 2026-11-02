@@ -1,0 +1,290 @@
+{
+  "id": "app-bigboard-unit-status-timers",
+  "title": "Big Board: configure unit timers, acknowledge and mute alerts",
+  "app": "BigBoard",
+  "summary": "Configure Core unit status timers and required reasons, inspect an overdue unit in Big Board, acknowledge and mute it, improve note visibility, and verify the persisted results.",
+  "audience": [
+    "Department administrators configuring unit timers",
+    "Authorized dispatch and coordination staff",
+    "Duty supervisors"
+  ],
+  "prerequisites": [
+    "An isolated fictional department with authorized Core settings access and a signed-in Big Board session.",
+    "A fictional unit with an existing timed status; acknowledgement controls require the supported call-creation permission."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Add Unit Alerts and understand the empty state",
+      "route": "/home",
+      "capture_refs": [
+        "001-add-unit-alerts-widget",
+        "003-no-status-timers-configured"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Resgrid BigBoard",
+        "Add Widget",
+        "Unit Alerts",
+        "No status timers configured"
+      ],
+      "narration": "Unit Alerts helps a coordination team find units that have remained in a timed status longer than the department expects. In Big Board, use the plus icon and choose Unit Alerts from Add Widget. Scroll to the new panel. This department initially shows No status timers configured. That message describes the missing timer configuration; it does not establish that every unit has reported promptly. The thresholds are department settings managed in the Core website.",
+      "practice": "Add Unit Alerts and understand the empty state in an isolated fictional training department."
+    },
+    {
+      "id": "02",
+      "title": "Find the department timer table",
+      "route": "/User/Department/MappingSettings",
+      "capture_refs": [
+        "002-core-operations-settings-menu",
+        "004-unit-status-timers-zero-baseline"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Department Settings",
+        "Operations",
+        "Mapping and BigBoard Settings",
+        "Unit Status Timers",
+        "Status",
+        "Warn after (minutes)",
+        "Alert after (minutes)",
+        "Dispatched",
+        "Responding",
+        "En Route",
+        "On Scene",
+        "Returning",
+        "0"
+      ],
+      "narration": "In Core, open Department Settings, choose Operations, then Mapping and BigBoard Settings. Scroll to Unit Status Timers. The table separates Status, Warn after in minutes, and Alert after in minutes. Each displayed status has its own row, including Dispatched, Responding, En Route and On Scene. Initially, both columns are zero throughout this training table. The helper text explains that leaving both at zero times nothing. Choose values that fit your department's reporting process.",
+      "practice": "Find the department timer table in an isolated fictional training department."
+    },
+    {
+      "id": "03",
+      "title": "Set the fictional Responding thresholds",
+      "route": "/User/Department/MappingSettings",
+      "capture_refs": [
+        "005-responding-warning-two-alert-four"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit Status Timers",
+        "Warn after (minutes)",
+        "Alert after (minutes)",
+        "Responding",
+        "2",
+        "4"
+      ],
+      "narration": "For this software exercise, enter two under Warn after and four under Alert after on the Responding row. Leave the other rows unchanged. These are demonstration values, not a recommended response standard. The two columns allow the department to distinguish a warning interval from a later alert interval for the same status. Review the row label and both minute values before saving, so the timer applies to the intended operational meaning.",
+      "practice": "Set the fictional Responding thresholds in an isolated fictional training department."
+    },
+    {
+      "id": "04",
+      "title": "Require a reason and read back the saved settings",
+      "route": "/User/Department/MappingSettings",
+      "capture_refs": [
+        "006-required-reason-policy-before-save",
+        "007-reopened-saved-responding-timers",
+        "008-reopened-required-reason-policy"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Reason when acknowledging",
+        "Required for warnings and alerts",
+        "Save",
+        "Unit Status Timers",
+        "Warn after (minutes)",
+        "Alert after (minutes)",
+        "Responding",
+        "2",
+        "4"
+      ],
+      "narration": "Below the table, set Reason when acknowledging to Required for warnings and alerts. The help explains that this policy applies when acknowledging or muting a status timer alert. Select Save. Reload Mapping and BigBoard Settings and return to the table: Responding still shows two and four. Scroll down again and verify the required-reason selection. Reading back both controls checks the saved configuration before you examine its effect in Big Board.",
+      "practice": "Require a reason and read back the saved settings in an isolated fictional training department."
+    },
+    {
+      "id": "05",
+      "title": "Inspect the overdue unit on the refreshed board",
+      "route": "/home",
+      "capture_refs": [
+        "009-responding-unit-alert-result"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit Alerts",
+        "Squad 3",
+        "Responding · Firehouse 51",
+        "182h 18m"
+      ],
+      "narration": "Reload Big Board. Unit Alerts now shows Squad Three, its Responding state, Firehouse Fifty One and the elapsed time in that state. This fictional record is already more than one hundred eighty hours old, far beyond the four-minute alert threshold, so it appears red immediately. The elapsed value helps identify a status report needing review. It does not explain why the report is old. Use the unit's normal reporting and coordination process to investigate.",
+      "practice": "Inspect the overdue unit on the refreshed board in an isolated fictional training department."
+    },
+    {
+      "id": "06",
+      "title": "Acknowledge with a reason and inspect the saved result",
+      "route": "/home",
+      "capture_refs": [
+        "010-reason-required-disabled-actions",
+        "011-training-acknowledgement-reason",
+        "013-read-back-saved-acknowledgement",
+        "015-readable-saved-acknowledgement"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit status alert",
+        "Squad 3",
+        "Reason (required)",
+        "A reason is required before this alert can be acknowledged or muted.",
+        "Mute for",
+        "Until status changes",
+        "15 min",
+        "30 min",
+        "60 min",
+        "Acknowledge",
+        "Mute",
+        "Cancel",
+        "TRAINING ONLY - Timer review practice; verify the unit state with the exercise coordinator.",
+        "Seen by Wallace Boden",
+        "Clear acknowledgement"
+      ],
+      "narration": "Select the Squad Three row to open Unit status alert. With Reason empty, the sheet explains the requirement and disables Acknowledge and Mute. Enter the clearly labeled training reason, then select Acknowledge. Reopen the row. The saved section now says Seen by Wallace Boden and retains the exercise note. Acknowledging records that review; the unit still has its Responding state. The sheet also offers Clear acknowledgement for removing the saved acknowledgement.",
+      "practice": "Acknowledge with a reason and inspect the saved result in an isolated fictional training department."
+    },
+    {
+      "id": "07",
+      "title": "Give the panel enough space for its note",
+      "route": "/home",
+      "capture_refs": [
+        "902-clipped-note-settings-control",
+        "014-enlarge-alert-widget",
+        "015-readable-saved-acknowledgement",
+        "021-reopened-alert-widget-dimensions"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit Alerts",
+        "Squad 3",
+        "Responding · Firehouse 51",
+        "Widget Size",
+        "Width (grid units): 4",
+        "Height (grid units): 3",
+        "Save",
+        "Seen by Wallace Boden: TRAINING ONLY - Timer review practice; verify the unit state with the exercise coordinator."
+      ],
+      "narration": "If the small alert panel clips the saved note, open the gear settings and select Unit Alerts. Under Widget Size, this example uses width four and height three grid units. Select Save and return to the panel. The wider, taller result shows the unit, state, reviewer and complete training note together. Reopening these settings after a later reload still shows four by three. Check the rendered result as well as the values in the editing form.",
+      "practice": "Give the panel enough space for its note in an isolated fictional training department."
+    },
+    {
+      "id": "08",
+      "title": "Save and inspect a fifteen-minute training mute",
+      "route": "/home",
+      "capture_refs": [
+        "015-readable-saved-acknowledgement",
+        "016-fifteen-minute-mute-reason",
+        "017-muted-section-collapsed",
+        "018-muted-section-expanded"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit status alert",
+        "Squad 3",
+        "Reason (required)",
+        "Mute for",
+        "15 min",
+        "TRAINING ONLY - Practice a fifteen-minute mute; no operational response is being suppressed.",
+        "Mute",
+        "Unit Alerts",
+        "Muted (1)",
+        "Responding · Firehouse 51",
+        "Seen by Wallace Boden: TRAINING ONLY - Practice a fifteen-minute mute; no operational response is being suppressed."
+      ],
+      "narration": "Open the same alert again. Under Mute for, select fifteen minutes. Replace the reason with the note describing this fictional mute exercise, then choose Mute. The panel now has a collapsed Muted, one, section. Expand it to see Squad Three and the saved mute reason. The unit still says Responding. Moving an alert into this section changes how the timer alert is presented; it does not resolve the underlying unit state.",
+      "practice": "Save and inspect a fifteen-minute training mute in an isolated fictional training department."
+    },
+    {
+      "id": "09",
+      "title": "Verify persistence and clear the saved mute",
+      "route": "/home",
+      "capture_refs": [
+        "018-muted-section-expanded",
+        "019-reloaded-mute-with-saved-end-time",
+        "020-alert-restored-after-clear"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit status alert",
+        "Squad 3",
+        "Seen by Wallace Boden",
+        "Muted until 12:56 AM",
+        "TRAINING ONLY - Practice a fifteen-minute mute; no operational response is being suppressed.",
+        "Clear acknowledgement",
+        "Unit Alerts",
+        "Responding · Firehouse 51",
+        "182h 24m"
+      ],
+      "narration": "Reload Big Board, expand Muted, one, and reopen Squad Three. The sheet retains the reviewer and reason and displays a Muted until time. This checks that the saved mute survived a reload. For this exercise, choose Clear acknowledgement. The unit returns to the active red alert panel, because its unchanged Responding record is still beyond the configured threshold. The timer, saved acknowledgement or mute, and underlying unit status are separate things to verify.",
+      "practice": "Verify persistence and clear the saved mute in an isolated fictional training department."
+    },
+    {
+      "id": "10",
+      "title": "Apply the review process across departments",
+      "route": "/home",
+      "capture_refs": [
+        "020-alert-restored-after-clear"
+      ],
+      "capture_intent": "Show the actual Core threshold/policy controls, Big Board alert sheet, widget sizing form or persisted result being discussed.",
+      "required_labels": [
+        "Unit Alerts",
+        "Squad 3",
+        "Responding · Firehouse 51",
+        "182h 24m"
+      ],
+      "narration": "A security control room can use status timers to review a delayed patrol update. Search-and-rescue coordinators can follow a team's reporting interval. Community paramedicine and mental health response teams, wildland contractors, industrial response teams, and fire and E M S departments can apply the same review process with appropriate statuses and thresholds. Configure the timer, inspect the actual unit and elapsed time, document the review, and verify the saved result using fictional data before adopting the process.",
+      "practice": "Apply the review process across departments in an isolated fictional training department."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Security",
+      "scenario": "Review delayed patrol-unit status reports and document the reason."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use department-defined reporting intervals to review team updates."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Review unit status reports for paramedicine and mental health response coordination."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Document a contractor resource status-timer review."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Inspect aging response-unit states and saved review notes."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Practice timer configuration and acknowledgement using fictional units."
+    }
+  ],
+  "source_files": [],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "scope_limits": [
+    "The two/four-minute thresholds are fictional exercise inputs, not operational response standards.",
+    "The unit already had an older Responding record. A live warning-to-alert crossing, escalation invalidation and automatic mute expiry are not demonstrated.",
+    "No unit state, dispatch assignment, real notification, roster or payment changed in this exercise.",
+    "Source012 illustrates the clipped note in a small widget; no complete-note legibility is claimed there. Sources014/015/021 show the actual size change, legible result and retained dimensions.",
+    "The re-opened sheet resets its Mute for chooser to Until status changes; the saved Muted until time is the readback of the earlier fifteen-minute mute.",
+    "The small red elapsed/status line partly overlaps the saved acknowledgement box in the reopened sheet. Its text is not selected as a legible label in sources013/019.",
+    "Core thresholds and required-reason policy remain configured; the fictional acknowledgement/mute was cleared."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-bigboard-unit-status-timers-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/app-bigboard-unit-status-timers-source-proposal-20261101-v2/lesson.candidate.json",
+    "sha256": "b5efa8866435494c00c03d9423afd1af2d64583f59bcb68602ec31b5f8eede80"
+  }
+}

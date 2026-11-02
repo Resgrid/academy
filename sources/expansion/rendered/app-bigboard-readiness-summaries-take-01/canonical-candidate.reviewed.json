@@ -1,0 +1,364 @@
+{
+  "id": "app-bigboard-readiness-summaries",
+  "title": "Big Board: interpret readiness summaries and improve contrast",
+  "app": "BigBoard",
+  "summary": "Add personnel-status, staffing and unit summaries; improve status-count contrast; compare totals with unit states and update ages; and verify saved preferences.",
+  "audience": [
+    "Duty supervisors",
+    "Department coordinators",
+    "Administrators configuring a shared operational display"
+  ],
+  "prerequisites": [
+    "An authenticated Big Board session connected to an isolated fictional department.",
+    "Existing personnel staffing, personnel status and unit state data in the training department."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Add the three readiness summaries",
+      "route": "/home",
+      "capture_refs": [
+        "001-summary-widget-choices",
+        "003-rendered-readiness-summaries"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Resgrid BigBoard",
+        "Edit",
+        "Add Widget",
+        "Close",
+        "Personnel Status Summary",
+        "Personnel Staffing Summary",
+        "Units Summary",
+        "Personnel Status",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6",
+        "Responding"
+      ],
+      "narration": "Big Board gives a duty supervisor or department coordinator a shared view of operational information. From the board, use the plus icon at the upper right to open Add Widget. Choose Personnel Status Summary, Personnel Staffing Summary and Units Summary. After adding them, scroll to the three rendered panels. This fictional department already has calls, units and a personnel list elsewhere on its board. These summary panels provide counts that you can compare with those detailed views.",
+      "practice": "Add the three readiness summaries using an isolated fictional department and training board."
+    },
+    {
+      "id": "02",
+      "title": "Separate personnel status from staffing",
+      "route": "/home",
+      "capture_refs": [
+        "003-rendered-readiness-summaries"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Personnel Status",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6",
+        "Responding"
+      ],
+      "narration": "Read Personnel Status and Personnel Staffing as separate measures. Here, Standing By shows fourteen in the status panel. Staffing shows three Available, one Delayed, two Unavailable, zero Committed and eight On Shift. The same fourteen people are being described in different ways. A Standing By status therefore does not mean that fourteen people have Available staffing. Keep both panels visible when discussing the department's current staffing picture, rather than treating one count as a substitute for the other.",
+      "practice": "Separate personnel status from staffing using an isolated fictional department and training board."
+    },
+    {
+      "id": "03",
+      "title": "Improve contrast and verify the visible result",
+      "route": "/configure",
+      "capture_refs": [
+        "003-rendered-readiness-summaries",
+        "901-summary-settings-control",
+        "004-personnel-status-colors-disabled",
+        "005-neutral-status-counts-result"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Personnel Status",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6",
+        "Responding",
+        "Personnel Status Widget",
+        "Personnel Status Summary Widget",
+        "Display Options",
+        "Show Colors",
+        "Font Size: 14pt",
+        "Widget Size",
+        "Width (grid units): 4",
+        "Height (grid units): 4",
+        "Save",
+        "0",
+        "Not Responding",
+        "On Scene"
+      ],
+      "narration": "The colored personnel-status counts are difficult to distinguish against this dark background. Use the gear icon at the upper right to open configuration, then select Personnel Status Widget. On Personnel Status Summary Widget, turn Show Colors off. This example keeps Font Size at fourteen points, with width and height both set to four grid units. Select Save and return to the board. The Personnel Status numbers now use neutral light text, making the zero values easier to see.",
+      "practice": "Improve contrast and verify the visible result using an isolated fictional department and training board."
+    },
+    {
+      "id": "04",
+      "title": "Read the staffing distribution without overinterpreting it",
+      "route": "/home",
+      "capture_refs": [
+        "005-neutral-status-counts-result",
+        "009-unit-list-behind-summary-counts"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Personnel Status",
+        "Responding",
+        "0",
+        "Not Responding",
+        "On Scene",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6"
+      ],
+      "narration": "In Personnel Staffing, compare all five rows. Available is three, Delayed is one, Unavailable is two, Committed is zero and On Shift is eight. These totals describe the staffing values currently reported for the demo roster. The panel does not identify which individuals make up each count. Use it to spot a staffing question, then consult the personnel details before making an assignment. A count alone does not tell you a person's qualifications, current location or suitability for a particular task.",
+      "practice": "Read the staffing distribution without overinterpreting it using an isolated fictional department and training board."
+    },
+    {
+      "id": "05",
+      "title": "Compare unit totals with individual states",
+      "route": "/home",
+      "capture_refs": [
+        "005-neutral-status-counts-result",
+        "009-unit-list-behind-summary-counts"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Personnel Status",
+        "Responding",
+        "0",
+        "Not Responding",
+        "On Scene",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6",
+        "Name",
+        "State",
+        "Station",
+        "Type",
+        "Updated",
+        "Engine 51",
+        "4 days ago",
+        "Truck 81",
+        "7 days ago",
+        "Squad 3",
+        "Ambulance 61",
+        "Released",
+        "Reserve Engine 51",
+        "Out of Service",
+        "5 days ago",
+        "1 minute ago"
+      ],
+      "narration": "Units Summary shows eight total units, six Available, one Responding and zero On Scene. Scroll to the detailed Units table to see the individual names and State values. Squad Three is Responding, Ambulance Sixty One is Released, and Reserve Engine Fifty One is Out of Service. Other rows say Available. The summary groups underlying status categories, so its Available number is not simply a count of rows containing that exact word. Review the detailed states when selecting a specific resource.",
+      "practice": "Compare unit totals with individual states using an isolated fictional department and training board."
+    },
+    {
+      "id": "06",
+      "title": "Check the age of the underlying unit information",
+      "route": "/home",
+      "capture_refs": [
+        "009-unit-list-behind-summary-counts"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Units",
+        "Name",
+        "State",
+        "Station",
+        "Type",
+        "Updated",
+        "Engine 51",
+        "Available",
+        "4 days ago",
+        "Truck 81",
+        "7 days ago",
+        "Squad 3",
+        "Responding",
+        "Ambulance 61",
+        "Released",
+        "Reserve Engine 51",
+        "Out of Service",
+        "5 days ago",
+        "1 minute ago"
+      ],
+      "narration": "The Units table also includes Station, Type and Updated. In this recorded example, several unit updates are four, five or seven days old, while the two training vehicles show one minute ago. Those ages matter when interpreting a summary built from these states. A visible count does not establish that every underlying report is recent. Read Updated alongside State, and resolve stale information through your department's normal status-reporting process before relying on the board for an operational decision.",
+      "practice": "Check the age of the underlying unit information using an isolated fictional department and training board."
+    },
+    {
+      "id": "07",
+      "title": "Reload and read back the saved preferences",
+      "route": "/home",
+      "capture_refs": [
+        "008-reloaded-neutral-readiness-counts",
+        "010-fresh-session-saved-settings"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Personnel Status",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "0",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6",
+        "Responding",
+        "On Scene",
+        "Personnel Status Widget",
+        "Personnel Status Summary Widget",
+        "Display Options",
+        "Show Colors",
+        "Font Size: 14pt",
+        "Widget Size",
+        "Width (grid units): 4",
+        "Height (grid units): 4",
+        "Save"
+      ],
+      "narration": "After saving, reload the board and return to the summary panels. The neutral personnel-status counts remain visible. Reopen configuration and select Personnel Status Widget again. Show Colors is still off, and the form still shows fourteen points and four-by-four grid dimensions. This readback checks the setting that was actually saved. Repeat that check on the display used by your team, and assess the text from the distance where viewers will read it.",
+      "practice": "Reload and read back the saved preferences using an isolated fictional department and training board."
+    },
+    {
+      "id": "08",
+      "title": "Use the same panels across different organizations",
+      "route": "/home",
+      "capture_refs": [
+        "008-reloaded-neutral-readiness-counts"
+      ],
+      "capture_intent": "Show the actual widget chooser, summary counts, configuration control, saved result or detailed unit rows being discussed.",
+      "required_labels": [
+        "Personnel Status",
+        "Standing By",
+        "14",
+        "Personnel Staffing",
+        "Available",
+        "3",
+        "Delayed",
+        "1",
+        "Unavailable",
+        "2",
+        "Committed",
+        "0",
+        "On Shift",
+        "8",
+        "Units",
+        "Total",
+        "6",
+        "Responding",
+        "On Scene"
+      ],
+      "narration": "These panels can support more than fire and E M S. A security supervisor can compare staffing with patrol-unit states. A search-and-rescue coordinator can review people and vehicles separately. Community paramedicine and mental health response teams, wildland contractors and industrial emergency response teams can use the same distinction between personnel status, staffing and unit state. Keep the labels meaningful to your department, use the detailed lists to investigate the counts, and make sure the displayed information is readable and current.",
+      "practice": "Use the same panels across different organizations using an isolated fictional department and training board."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Security",
+      "scenario": "Compare staffing distribution with patrol-unit states."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Review personnel and vehicle counts separately, then inspect the detailed units."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Distinguish staffing from personnel status for paramedicine and mental health response teams."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review contractor personnel and unit readiness with update ages."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Use readable summary panels alongside detailed response-team resources."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Compare separate status, staffing and unit-state views in a fictional training department."
+    }
+  ],
+  "source_files": [],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "scope_limits": [
+    "This is a scrollable training board, not a completed wall-display layout.",
+    "No live dispatch, status update, roster change, database write, advanced mapping or alert configuration is demonstrated.",
+    "Font16 did not persist in two raw attempts. Sources002 and006 are excluded; the lesson leaves and reads back14pt.",
+    "Source003 has a low-contrast personnel On Scene zero. It is not selected as a legible value; source005 shows the neutral readable result.",
+    "Available unit counts group underlying status categories. The lesson does not equate them with literal Available labels in every detail row.",
+    "Counts and relative update ages are recorded examples, not assertions about current operational availability."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-bigboard-readiness-summaries-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/app-bigboard-readiness-summaries-source-proposal-20261101/lesson.candidate.json",
+    "sha256": "526c9514f3de7d561f772d247ed21cf93bc4b4401c9e9243d2a55027fd32291a"
+  }
+}

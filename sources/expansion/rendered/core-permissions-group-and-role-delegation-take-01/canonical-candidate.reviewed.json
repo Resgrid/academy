@@ -1,0 +1,190 @@
+{
+  "id": "core-permissions-group-and-role-delegation",
+  "title": "Delegate department permissions by group and personnel role",
+  "app": "Core",
+  "summary": "Compare department and group administrator scope, save and verify an Add Users delegation, inspect role-based training permissions, and read location scope and next-login behavior.",
+  "audience": [
+    "Department administrators",
+    "Managing members",
+    "Department trainers"
+  ],
+  "prerequisites": [
+    "An authorized administrator session in a fictional training department.",
+    "Existing groups and personnel roles appropriate to the practice scenario."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the department permission table",
+      "route": "/User/Security",
+      "capture_refs": [
+        "011-department-menu-permissions-entry",
+        "001-security-heading-and-user-permissions"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Security & Permissions",
+        "Security and Permissions",
+        "Permission",
+        "Selection"
+      ],
+      "narration": "Open the department name menu and choose Security and Permissions. The resulting Security and Permissions page contains a table of individual permissions. Read the Permission, Note and Selection columns together before changing a row. Group Only and Roles provide additional scope where offered. This lesson uses a fictional training department so we can compare a saved delegation with its original setting.",
+      "practice": "Open Security & Permissions and identify the Permission, Note, Selection, Group Only and Roles columns."
+    },
+    {
+      "id": "02",
+      "title": "Read the administrator scope for adding users",
+      "route": "/User/Security",
+      "capture_refs": [
+        "001-security-heading-and-user-permissions"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Who can Add Users",
+        "Department Admins"
+      ],
+      "narration": "Find Who can Add Users. Its current selection is Department Admins. The note explains that department administrators and the managing member can add users by default, and that group administrators can be allowed to add users only to the group they administer. Read that scope before delegating this task. A station or community-response team may need local roster administration without receiving every department-wide responsibility.",
+      "practice": "Read the complete Add Users note and describe the group boundary it states."
+    },
+    {
+      "id": "03",
+      "title": "Delegate one permission and verify the saved value",
+      "route": "/User/Security",
+      "capture_refs": [
+        "002-add-users-group-delegation-reloaded"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Who can Add Users",
+        "Department and Group Admins",
+        "Who can Remove Users",
+        "Department Admins"
+      ],
+      "narration": "For the practice change, set Who can Add Users to Department and Group Admins. This control saves when its selection changes. Reload the page and confirm that the same selection returns. Who can Remove Users still shows Department Admins. These are separate decisions: giving a group administrator permission to add a member does not change the remove-users selection. No person is created or removed in this exercise.",
+      "practice": "In a training department, change Add Users, reload, and compare the separate Remove Users selection."
+    },
+    {
+      "id": "04",
+      "title": "Restore the practice setting deliberately",
+      "route": "/User/Security",
+      "capture_refs": [
+        "003-add-users-baseline-restored"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Who can Add Users",
+        "Department Admins"
+      ],
+      "narration": "Return Who can Add Users to Department Admins when the practice comparison is complete. After another reload, the original selection is visible again. Use this same readback habit when making an intended departmental change: confirm the exact row and returned value. Record who should own the task before delegating it, and review that decision when personnel or group responsibilities change.",
+      "practice": "Restore the intended Add Users value and verify it after reloading."
+    },
+    {
+      "id": "05",
+      "title": "Choose a permission mode and a specific role",
+      "route": "/User/Security",
+      "capture_refs": [
+        "004-training-permission-baseline",
+        "005-training-selected-roles-picker",
+        "006-training-rescue-role-selected"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Who can Create Trainings",
+        "Department Admins",
+        "Department Admins and Select Roles",
+        "Rescue Technician"
+      ],
+      "narration": "Scroll to Who can Create Trainings. The starting selection is Department Admins with No Roles beside it. Choose Department Admins and Select Roles, then open Select roles. This training roster offers named choices including Rescue Technician and Paramedic. Select Rescue Technician for the example and read the resulting Rescue Technician tag beside the permission. This chooses a role for this particular permission; it does not demonstrate changing a member’s role assignment or promoting anyone to department administrator.",
+      "practice": "Inspect the offered role names and select an appropriate practice role for this permission only."
+    },
+    {
+      "id": "06",
+      "title": "Check the final permission mode after practice",
+      "route": "/User/Security",
+      "capture_refs": [
+        "006-training-rescue-role-selected",
+        "009-training-baseline-confirmed-empty-roles"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Who can Create Trainings",
+        "Department Admins",
+        "No Roles"
+      ],
+      "narration": "After the role-selection exercise, remove the practice selection and return Who can Create Trainings to Department Admins. The final view shows that mode and No Roles again. Compare both pieces, because a permission mode and its selected roles are separate parts of the configuration. Our demonstration restores the training baseline. For a real training coordinator, retain only the delegation your department has actually decided to use.",
+      "practice": "Verify both the intended training-permission mode and its role selection after practice."
+    },
+    {
+      "id": "07",
+      "title": "Read location visibility and group scope together",
+      "route": "/User/Security",
+      "capture_refs": [
+        "010-location-permission-and-group-scope"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Who can see the Location of Personnel",
+        "Who can see the Location of Units",
+        "Everyone",
+        "This option determines who can see the location of personnel on the maps. To lock the option to just group admins and roles within a group you need to check the Group Only option."
+      ],
+      "narration": "The location rows separate Who can see the Location of Personnel from Who can see the Location of Units. Both pictured selections are Everyone. The personnel-location note explains the Group Only option for limiting group administrators and roles to a group. Read the row’s selection and scope together rather than treating the checkbox as the entire permission. These controls address who may see locations; this view does not establish that a device is currently reporting its position.",
+      "practice": "Read the personnel and unit location rows and explain the Group Only note before changing location visibility."
+    },
+    {
+      "id": "08",
+      "title": "Plan the login check and departmental responsibilities",
+      "route": "/User/Security",
+      "capture_refs": [
+        "001-security-heading-and-user-permissions"
+      ],
+      "capture_intent": "Show the exact permission row, selected mode, role picker or returned result when discussed.",
+      "required_labels": [
+        "Security and Permissions",
+        "Changes to the permissions will take effect on the next login to the Resgrid web application."
+      ],
+      "narration": "Return to the note above the Security and Permissions table. It says changes take effect on the next login to the Resgrid web application. After an intended change, plan a normal login and check with the affected authorized account. Our screenshots verify saved settings, not that second-account test. A security company, search-and-rescue team, community paramedicine or mental health service, wildland contractor, industrial response team, or fire and E M S department can use these controls to match administration to actual responsibilities.",
+      "practice": "Identify the affected role or group administrator and plan a next-login permission check for your department."
+    }
+  ],
+  "sector_examples": [
+    {
+      "sector": "Security",
+      "scenario": "Delegate local roster work to a group supervisor while deciding removal authority separately."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Review a rescue-training role and group scope before assigning administration."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Match community paramedicine or mental health team administration to assigned responsibilities."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review contractor group administration and location visibility separately."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Separate team roster administration from training and location permissions."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Review station administrator scope without granting every department responsibility."
+    }
+  ],
+  "source_files": [],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "scope_limits": [
+    "Source proposal only; actual generated speech, complete listening review, cue mapping, encoded-frame review and browser playback remain required.",
+    "No member is created, removed, assigned a role or promoted in this exercise. No affected second-account login, map-position result, MFA setup or external notification is demonstrated."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-permissions-group-and-role-delegation-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-permissions-group-and-role-delegation-source-proposal-20261101/lesson.candidate.json",
+    "sha256": "1df2920ae6cb58d1bbb2fd1d6aaa6377c715bdeb3b332de9e616dffb7e510d31"
+  }
+}

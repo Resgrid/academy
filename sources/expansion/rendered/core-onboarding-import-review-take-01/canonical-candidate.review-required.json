@@ -1,0 +1,252 @@
+{
+  "id": "core-onboarding-import-review",
+  "title": "Prepare and review an onboarding import",
+  "app": "Core",
+  "audience": "Department administrators preparing external data",
+  "summary": "Review an existing two-group workspace, its files, mappings, proposed configuration, write mode and activation requirements before applying changes.",
+  "prerequisites": [
+    "Use the isolated fictional department and its existing Academy CSV Practice workspace.",
+    "Use department import-management access and public fictional source data.",
+    "This bounded recording uses an already-uploaded CSV. Applying the import, second-factor enrollment and member invitations are outside its scope."
+  ],
+  "scenes": [
+    {
+      "id": "workspace",
+      "title": "Choose the right workspace",
+      "required_labels": [
+        "Import & Migration",
+        "Academy CSV Practice",
+        "Add to a live department",
+        "Reviewing",
+        "Resume"
+      ],
+      "narration": "Import and Migration gives administrators a place to review external data before saving it into Resgrid. The existing Academy CSV Practice workspace is Reviewing, with Add to a live department as its mode. The separate Start an import form explains the choice between a new department and one already working. Use Resume for an existing workspace so its files and decisions stay together.",
+      "practice": "Identify the existing Reviewing workspace and its mode. Explain when to use Resume rather than start a separate import."
+    },
+    {
+      "id": "overview",
+      "title": "Separate ready rows from imported results",
+      "required_labels": [
+        "Overview",
+        "Rows checked",
+        "Ready to import",
+        "Imported",
+        "People to invite"
+      ],
+      "narration": "Overview separates preparation from results. This fictional workspace has two Rows checked, two Ready to import, zero Imported and zero People to invite. Its progress list still has later work to do. Use these counts to understand what has happened before deciding the next step. A ready data set has passed its current checks; those rows have not yet been added to the department.",
+      "practice": "Read Rows checked, Ready to import, Imported and People to invite together. Explain why two ready rows with zero imported rows have not changed the department."
+    },
+    {
+      "id": "files",
+      "title": "Review the uploaded data and source terminology",
+      "required_labels": [
+        "Files & data sets",
+        "Upload a file",
+        "Stations and groups",
+        "Ready",
+        "D4H Team Manager",
+        "Glossary",
+        "In D4H Team Manager",
+        "In Resgrid",
+        "Inventory (not imported)",
+        "Calls (not imported)"
+      ],
+      "narration": "Open Files and data sets. Upload a file accepts formats such as CSV, Excel and JSON. The existing training CSV is listed as Stations and groups with two ready rows. On the right, D4H Team Manager supplies terminology context. Selecting a source product helps explain names; Resgrid still reads and matches the uploaded file. Expand Glossary to compare In D4H Team Manager with In Resgrid. Members correspond to People, and Groups correspond to Stations and groups. Equipment is marked Inventory, not imported. Incidents is marked Calls, not imported. Read those limits when planning a migration. A familiar product name or suggested label does not mean every kind of historical data will be transferred.",
+      "practice": "Locate the existing training CSV and its Stations and groups destination. Compare the source glossary with the supported imported data before planning a migration."
+    },
+    {
+      "id": "templates",
+      "title": "Choose a supplied data layout",
+      "required_labels": [
+        "Resgrid starter workbook",
+        "Statuses",
+        "Certification types",
+        "Stations and groups",
+        "Download workbook",
+        "Stations and groups (CSV)",
+        "People (CSV)",
+        "Units (CSV)",
+        "Download current data"
+      ],
+      "narration": "The Resgrid starter workbook offers a sheet for each kind of data, with example rows and choices based on the department. Visible options include Statuses, Certification types, Stations and groups, and Roles. Choose a scope that matches the data being prepared. Farther down, Download workbook provides the selected layout. Individual CSV templates are available for Stations and groups, People and Units. Download current data provides existing department data in the same layout for review and editing. These are the actual download controls; this lesson reviews them without claiming a new downloaded or reimported file.",
+      "practice": "Find the workbook and CSV template controls. Choose the layout you would prepare; this exercise does not require downloading or uploading a new file."
+    },
+    {
+      "id": "columns",
+      "title": "Review the destination and field meaning",
+      "required_labels": [
+        "Match columns",
+        "TeamName",
+        "TeamCategory",
+        "Name",
+        "Type",
+        "Stations and groups",
+        "StationLatitude",
+        "StationLongitude",
+        "41.8721",
+        "-87.6523",
+        "Same value for every row"
+      ],
+      "narration": "Open the training data set and review Match columns. Its destination is Stations and groups. TeamName maps to Name, and TeamCategory maps to Type. Check the sample values and ask whether they mean the same thing in the destination. Keep the columns the department needs, rather than treating a confident suggestion as the final decision. StationLatitude and StationLongitude show paired numeric samples for the training location. Review them together. Same value for every row is a separate option for a shared value when the file has no suitable column. Its visible address fields remain blank. A shared default should describe the whole data set, rather than assigning one site's details to unrelated teams.",
+      "practice": "Compare TeamName and TeamCategory samples with the visible Name and Type destinations. Review the paired coordinate samples and distinguish placeholders from entered shared defaults."
+    },
+    {
+      "id": "references",
+      "title": "Inspect organizational relationships",
+      "required_labels": [
+        "Match values — Belongs to",
+        "Firehouse 51",
+        "ACADEMY-OPS",
+        "Not decided",
+        "Save choices"
+      ],
+      "narration": "Match values, Belongs to, makes the proposed hierarchy easier to inspect. Firehouse 51 is selected for one value. The in-file Academy Ops reference remains Not decided on this page. Check each relationship against the intended organization before using Save choices. This recording reviews the current choices; it does not resolve or save the undecided reference. Both the names and the resulting hierarchy matter.",
+      "practice": "Read Firehouse 51 and the undecided Academy Ops reference. Describe the intended hierarchy before making or saving any new choice."
+    },
+    {
+      "id": "issues",
+      "title": "Read the scope of issue checking",
+      "required_labels": [
+        "Issues",
+        "All data sets",
+        "Show resolved issues",
+        "No issues"
+      ],
+      "narration": "Open Issues and confirm the selected scope. All data sets is selected, and the page currently reports No issues. Show resolved issues is available for earlier corrections. This is the status of the checks for this workspace. The destination, relationship and change-preview reviews still matter. Here no issue is corrected and no import is committed.",
+      "practice": "Identify the All data sets scope and current No issues result. Explain why that check does not establish a completed import."
+    },
+    {
+      "id": "configure",
+      "title": "Review proposed configuration separately",
+      "required_labels": [
+        "Configure",
+        "Will be changed",
+        "Waiting for your decision",
+        "Names",
+        "Accept all suggestions",
+        "Calls",
+        "Incidents",
+        "Personnel",
+        "Members",
+        "Accept",
+        "Decline"
+      ],
+      "narration": "Configure shows proposed department settings alongside the imported data. Will be changed is zero, and Waiting for your decision is two. Names contains the suggestions in this example. Review them before using Accept all suggestions, because configuration can affect the words members see across the department. The proposals rename Calls to Incidents and Personnel to Members. Accept and Decline let an administrator decide each one. Both still have Suggested status. These terminology changes do not import incident history, create people, or establish who has joined. Useful names should reflect how a community response team, search-and-rescue organization or security company actually works.",
+      "practice": "Compare the proposed Incidents and Members names with the current Calls and Personnel names. Leave the suggestions unaccepted while reviewing their meaning."
+    },
+    {
+      "id": "preview",
+      "title": "Read the proposed additions",
+      "required_labels": [
+        "Review & import",
+        "Add",
+        "Update or link",
+        "Invite to join",
+        "Stations and groups"
+      ],
+      "narration": "Review and import summarizes the proposed write. Add is two. Update or link, Unchanged, Invite to join and Blocked are zero. The data-set row identifies Stations and groups and the training file, connecting the totals to their source. The large What will happen area is blank in this layout; use the visible counts and table. These remain proposed changes.",
+      "practice": "Read the proposed Add count and the Stations and groups data-set row. Use the table and counts while the What will happen area is blank."
+    },
+    {
+      "id": "write-mode",
+      "title": "Check the handling of existing records",
+      "required_labels": [
+        "How to treat records that already exist",
+        "Add only",
+        "Recalculate the preview",
+        "Data sets in this import"
+      ],
+      "narration": "How to treat records that already exist is set to Add only. The explanation says this mode never changes existing Resgrid records. It also explains that reviewed updates change approved fields and skip records edited since the preview. Recalculate the preview is available after a change. Check Data sets in this import so the mode and included files agree with the intended work. This example leaves Add only unchanged.",
+      "practice": "Read Add only and its explanation. Check the included data set without changing the write mode or recalculating this recorded example."
+    },
+    {
+      "id": "approval",
+      "title": "Recognize the approval requirements",
+      "required_labels": [
+        "Please confirm",
+        "You'll be asked to confirm with your second factor.",
+        "Approve and import"
+      ],
+      "narration": "Please confirm states that zero people will be added, and imported people cannot sign in or receive notifications until invited. The checkbox remains unchecked. The page also says approval requires confirmation with your second factor. Approve and import crosses from review into applying changes. This lesson stops its approval demonstration at those visible requirements. It does not approve this workspace or enroll a factor.",
+      "practice": "Locate the unchecked confirmation, zero-person explanation and second-factor requirement. Stop at review; this exercise does not approve the import or enroll a factor."
+    },
+    {
+      "id": "verify",
+      "title": "Read check history and activation separately",
+      "required_labels": [
+        "History",
+        "Runs",
+        "File check",
+        "Done",
+        "Verify & activate",
+        "People imported",
+        "Invited",
+        "Signed in",
+        "Activation checklist",
+        "Sign off and go live",
+        "No invitations yet."
+      ],
+      "narration": "Open History and read Run and Status together. The three retained runs are File check, each marked Done. They establish completed file checks, not a completed import. The generic background-work message below the table does not identify another successful operation. Verify and activate separates People imported, Invited and Signed in. All are zero, and Invitations says No invitations yet. The Activation checklist still requires reviewing results and signing off. Sign off and go live is disabled. Done beside an empty invitation step does not show that anybody received an invitation or signed in. Plan result verification and member activation as distinct work after the import.",
+      "practice": "Distinguish completed File check runs from an import commit. Read the zero invitation/sign-in counts and disabled sign-off before claiming activation."
+    },
+    {
+      "id": "practice",
+      "title": "Start with a small understood file",
+      "required_labels": [
+        "Overview",
+        "Rows checked",
+        "Ready to import",
+        "Imported",
+        "People to invite"
+      ],
+      "narration": "Return to Overview: two rows ready, zero imported and zero people to invite. This is a review of an existing preparation workspace, not a completed migration. Fire departments can start with station data. Community care and mental-health teams can review operational groups without clinical histories. Search-and-rescue groups can check volunteer organization; security companies can review site groups; wildland contractors can plan seasonal teams; industrial responders can review facility groups. Begin with a small understood file, verify its meaning, and use the proposed counts to guide the next authorized step.",
+      "practice": "Choose a small fictional stations-and-groups file relevant to your department. State the intended mapping, review the proposed changes, and identify the remaining approval work before applying data."
+    }
+  ],
+  "sector_examples": {
+    "Fire and emergency services": "Chicago Fire training: import fictional stations, engine types, units and a member with stable source IDs.",
+    "Community paramedicine and mental health response": "Mobile crisis teams: import team and personnel metadata, excluding private clinical notes and visit narratives.",
+    "Search and rescue": "Search and rescue: review team, role and certification references before importing volunteer rosters.",
+    "Security companies and departments": "Security: distinguish client sites, patrol units and member groups when mapping external exports.",
+    "Wildland contractors": "Wildland contractors: use additive seasonal roster imports and review existing-member matches carefully.",
+    "Industrial emergency response teams": "Industrial response: import facility teams and equipment types while reviewing qualifications and permissions separately."
+  },
+  "source_files": [
+    "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Controllers/DepartmentImportController.cs",
+    "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Index.cshtml",
+    "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Files.cshtml",
+    "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Dataset.cshtml",
+    "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Review.cshtml",
+    "evidence/expansion/Core/Web/Resgrid.Web/Areas/User/Views/DepartmentImport/Verify.cshtml",
+    "evidence/expansion/Core/Core/Resgrid.Services/Onboarding/ImportAnalysisHandler.cs",
+    "evidence/expansion/Core/Core/Resgrid.Services/Onboarding/ImportUploadService.cs",
+    "evidence/expansion/Core/Providers/Resgrid.Providers.Import/Catalog/ImportCatalog.cs"
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "parent_full_script_review_pending": true,
+  "full_onboarding_module_demonstrated": false,
+  "source_limits": [
+    "All 18 saved JPEGs were inspected. Every workspace visit was read-only; prior import-apply deferral remains in force.",
+    "Existing additive workspace stays Reviewing with two ready rows, zero imported and zero people to invite.",
+    "Source glossary distinguishes terminology suggestions from imported entity support; equipment and incidents explicitly show not imported.",
+    "Source ID, Belongs to and Longitude selector values are clipped in 007/008. Do not claim their complete option labels are visually legible. Their column names and numeric samples remain readable.",
+    "Parent values show existing Firehouse 51 selected and in-file ACADEMY-OPS Not decided; no successful parent resolution is inferred solely from that page.",
+    "Configure has zero accepted changes and two unaccepted terminology suggestions. No Accept, Change or operating-profile save occurred.",
+    "The What will happen diagram area is blank in the captured layout. Only the visible counts and data table are evidence; no diagram is narrated.",
+    "Review Add 2 is proposed, not applied. Capacity values come from the isolated demo entitlement and are not public plan limits.",
+    "Confirmation stays unchecked; no Approve and import, second-factor setup, import commit, invitation, communication test or sign-off was performed.",
+    "History contains completed File check rows only. Its generic background-work paragraph does not establish a running commit or notification delivery.",
+    "Verify has zero people/invitations and disabled sign-off. Empty-set Done or Everyone invited labels do not prove real activation."
+  ],
+  "capture_manifest": "expansion/plans/core-onboarding-import-review-source-candidate-20261030/captures.reviewed.json",
+  "learner_metadata_projection": {
+    "kind": "Proposed learner practice prompts only",
+    "original_source_sha256": "9f01f98c97b07f6a1eab43e1b933b90933c57670b3771f61fd25259e7f2382c5",
+    "parent_review": "pending",
+    "narration_changed": false
+  },
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-onboarding-import-review-take-01/evidence.reviewed.json"
+}

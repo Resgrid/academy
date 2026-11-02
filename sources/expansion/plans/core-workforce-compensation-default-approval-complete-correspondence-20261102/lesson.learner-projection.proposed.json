@@ -1,0 +1,198 @@
+{
+  "id": "core-workforce-compensation-default-approval",
+  "title": "Configure a compensation default and complete independent approval",
+  "app": "Core",
+  "summary": "Set effective dates, base pay and components; inspect the loaded-day preview and verify a separate manager’s approval.",
+  "audience": [
+    "Department administrators",
+    "Workforce managers",
+    "Operational supervisors"
+  ],
+  "prerequisites": [
+    "Authorized Workforce access in a separate fictional training department.",
+    "Existing workers, work entries and a disposable training unit; all example amounts are fictional."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Open compensation and understand the fallback order",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "001-overview-compensation-and-costing-links",
+        "002-compensation-precedence-and-empty-defaults"
+      ],
+      "required_labels": [
+        "Compensation",
+        "Add department default"
+      ],
+      "narration": "In Workforce, open Compensation. The page separates employee, role-default and department-default profiles. Its help gives the estimate order: employee profile, then role default, then department default. It also says an approved payroll cost takes precedence. This lesson creates one fictional department default so you can see its settings and independent approval. It does not set a real employee’s pay. Select Add department default to open the form.",
+      "practice": "Open compensation and understand the fallback order",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Set the effective period and hourly base",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "004-default-effective-period-and-base-rate"
+      ],
+      "required_labels": [
+        "Effective *",
+        "Expires",
+        "Pay basis",
+        "Currency",
+        "Base amount",
+        "Hours / day",
+        "Hours / week"
+      ],
+      "narration": "Check the profile heading so you know which scope you are editing. Set Effective to October first and Expires to November thirtieth in this dated exercise. Choose Hourly, use U S D, and enter a Base amount of twenty. The form explains that the base is interpreted according to the pay basis. Keep eight Hours per day and forty Hours per week. The Regular hourly equivalent is an optional override; it stays blank here. These are deliberately simple fictional values for checking the software calculation.",
+      "practice": "Set the effective period and hourly base",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Add a pay component",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "005-hourly-pay-component-prepared"
+      ],
+      "required_labels": [
+        "Pay components",
+        "Category",
+        "Name",
+        "Basis",
+        "Amount",
+        "Eligible pay codes",
+        "Per OT hour"
+      ],
+      "narration": "Use the plus control in Pay components to add a row. Each row has a Category, Name, Basis, Amount, Eligible pay codes and a Per O T hour checkbox. The example adds a named equipment differential with an amount of two per hour for Regular and Standby. Its overtime checkbox remains unchecked. The panel explains that these components sit on top of the base. Review the row as a separate contribution instead of putting every cost into the base amount.",
+      "practice": "Add a pay component",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Add the employer cost and multipliers",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "006-hourly-employer-cost-component",
+        "007-multipliers-source-and-save-controls"
+      ],
+      "required_labels": [
+        "Employer cost components",
+        "Rate",
+        "Cap",
+        "Eligible pay codes",
+        "Rate multipliers",
+        "Source"
+      ],
+      "narration": "Use the plus control in Employer cost components for a separate fictional overhead amount of five per hour, again limited to Regular and Standby. Leave its optional Cap blank. In Rate multipliers, the example sets Overtime to one point five, DoubleTime to two, and Standby and Travel to one, using the J S O N structure shown. Add a Source note that identifies this as a fictional software exercise. These values are configuration examples, not prescribed rates for any department.",
+      "practice": "Add the employer cost and multipliers",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Save and read the loaded-day preview",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "008-default-saved-unapproved",
+        "009-eight-hour-loaded-cost-preview"
+      ],
+      "required_labels": [
+        "Save",
+        "Saved.",
+        "Approval",
+        "216.00 USD"
+      ],
+      "narration": "Select Save, then confirm the Saved message and the persisted inputs. Scroll to Approval. Resgrid previews a regular eight-hour day at two hundred sixteen dollars: one hundred sixty in base pay, sixteen in pay components and forty in employer costs. Those amounts match the configured twenty, two and five per hour. The profile is still not approved. The notice says unapproved profiles can price estimates but flag their lines for review, and a rate change removes an approval.",
+      "practice": "Save and read the loaded-day preview",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Recognize the independent-review guard",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "047-latest-editor-full-approval-control",
+        "048-latest-editor-refusal-retained"
+      ],
+      "required_labels": [
+        "Approve profile",
+        "Compensation",
+        "No"
+      ],
+      "narration": "Approve profile is a separate action from Save. When the manager who made the latest change tries to approve this example, Resgrid refuses. The message says that it is the manager’s own pay or they made the latest change, and another manager must approve it. The index still shows No in Approved. Do not treat a saved profile or a calculated preview as approval. Have a different authorized manager review the same profile through their normal account.",
+      "practice": "Recognize the independent-review guard",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Approve as a separate manager and verify the stored result",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "040-independent-manager-opened-unapproved-profile",
+        "044-independent-approval-control-clear-of-footer",
+        "045-independent-approval-repeated-saved-date",
+        "046-independent-approval-repeated-index-yes"
+      ],
+      "required_labels": [
+        "Kelly Severide",
+        "Approve profile",
+        "Approval",
+        "Approved 2026-11-02",
+        "Yes"
+      ],
+      "narration": "The recording now uses a different, existing fictional administrator, Kelly Severide. The same department default is still not approved when that manager opens it. After reviewing the inputs and preview, select Approve profile. The returned form shows the approval date, and the Compensation index independently shows Yes. That is the successful stored result. The account switch uses normal sign-in; no permissions were changed and no approval restriction was bypassed.",
+      "practice": "Approve as a separate manager and verify the stored result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Apply the process to your own organization",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "046-independent-approval-repeated-index-yes"
+      ],
+      "required_labels": [
+        "Department default",
+        "Approved",
+        "Yes"
+      ],
+      "narration": "Use the same separation of preparation and review for search-and-rescue teams, security companies, wildland contractors, industrial emergency teams and community response services. Community paramedicine, mental health response, fire and E M S departments can all name components that fit their own organization. Agree who maintains profiles, who independently approves them, and who checks the resulting costing output. Keep fictional exercises separate from operational compensation data.",
+      "practice": "Apply the process to your own organization",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    }
+  ],
+  "scope_limits": [
+    "All amounts are fictional software inputs. No employment decision, real payroll import, external payment, tax filing, invoice or revenue transaction is performed."
+  ]
+}

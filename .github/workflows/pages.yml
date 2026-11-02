@@ -43,7 +43,7 @@ jobs:
       - name: Build the complete local website from authoring sources
         run: python3 scripts/build.py --local-preview
       - name: Audit the public repository for credentials
-        run: python3 scripts/audit_public_repo.py --report _reports/public-repo-audit.json
+        run: python3 scripts/audit_public_repo.py --progress --report _reports/public-repo-audit.json
       - name: Package the Pages website and SHA256-named Release videos
         env:
           ACADEMY_REPOSITORY: ${{ github.repository }}

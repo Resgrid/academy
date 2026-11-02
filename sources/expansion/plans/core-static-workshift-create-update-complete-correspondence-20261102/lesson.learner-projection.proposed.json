@@ -1,0 +1,184 @@
+{
+  "id": "core-static-workshift-create-update",
+  "title": "Create a static shift and verify an updated coverage window",
+  "app": "Core",
+  "summary": "Schedule a fixed unit commitment, confirm the saved local times, review the reassignment warning, and verify a revised shift.",
+  "audience": [
+    "Department administrators",
+    "Scheduling managers",
+    "Unit supervisors"
+  ],
+  "prerequisites": [
+    "Authorized Shifts creation and update access in a fictional training department.",
+    "An existing disposable training unit; updating a static shift recreates its assignments and signups."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the static-shift calendar",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "012-fresh-saved-november-calendar"
+      ],
+      "required_labels": [
+        "Shifts",
+        "Add Static Shift",
+        "November 2026"
+      ],
+      "narration": "Open Shifts and find the Calendar section. Add Static Shift creates a dated coverage window for selected units. Use this when you need a fixed commitment, such as a community standby, a security detail or a search support period. The calendar in this exercise is November. Select Add Static Shift to open the form. Use a separate training unit while you learn the save and update process.",
+      "practice": "Find the static-shift calendar",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Name the shift and choose a readable color",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "010-fresh-static-upper-prepared"
+      ],
+      "required_labels": [
+        "Name",
+        "Color",
+        "Description"
+      ],
+      "narration": "Give the shift a recognizable Name. The example uses Verified static coverage. Choose a light Color so the calendar’s black text stays readable; the help beside the field calls this out. Add a Description explaining the work and any coordination instructions. This fictional description also reminds the editor to verify dates and retained units before updating. A clear title and description help people recognize the commitment when they open it from the calendar.",
+      "practice": "Name the shift and choose a readable color",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Set the local window and select the unit",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "011-fresh-static-dates-unit-create"
+      ],
+      "required_labels": [
+        "Start Date/Time",
+        "End Date/Time",
+        "Create Static Shift"
+      ],
+      "narration": "Set Start Date and Time to November twelfth at nine in the morning, and End Date and Time to five that afternoon. The start help describes when entities are committed; the end help describes when they are available again. Under Units, select the fictional static demo unit and confirm its selected tag. Check both dates and the chosen unit before Create Static Shift. Dismiss the date picker so it does not cover the unit selection or save control.",
+      "practice": "Set the local window and select the unit",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Save and verify the actual day detail",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "011-fresh-static-dates-unit-create",
+        "013-fresh-shift-saved-local-nine-and-unit"
+      ],
+      "required_labels": [
+        "Create Static Shift",
+        "View Static Shift Day",
+        "Edit Static Shift"
+      ],
+      "narration": "Select Create Static Shift, then open the matching event from the calendar. View Static Shift Day shows November twelfth at nine, the shift title and description, and the selected unit. This is the saved result, not the preparation form. The training unit has no configured unit-role slots, so this example does not claim that any person has been assigned. Compare the saved day and unit with the intended commitment before moving on.",
+      "practice": "Save and verify the actual day detail",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Review the impact of editing",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "013-fresh-shift-saved-local-nine-and-unit",
+        "015-edit-readable-unit-selector-and-warning"
+      ],
+      "required_labels": [
+        "Edit Static Shift",
+        "Start Date/Time",
+        "End Date/Time",
+        "Update"
+      ],
+      "narration": "Select Edit Static Shift. The reopened dates retain nine in the morning through five in the afternoon. Read the yellow warning before Update: editing clears the shift’s assignments or signups and rebuilds them from the new settings. In this version, the Units selection is initially empty on Edit. Deliberately select every unit you intend to retain. Coordinate the change before updating a staffed operational shift; do not assume a saved date change preserves existing signups.",
+      "practice": "Review the impact of editing",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Change the window and retain the unit",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "016-updated-dates-retained-unit-before-update",
+        "017-update-saved-new-day-ten-and-retained-unit"
+      ],
+      "required_labels": [
+        "Start Date/Time",
+        "End Date/Time",
+        "Update",
+        "View Static Shift Day"
+      ],
+      "narration": "For this disposable exercise, move the window to November thirteenth, ten in the morning through six in the evening. Reselect the same training unit and verify its tag. Review the warning and select Update once. Open the saved calendar event again. Its day detail now shows November thirteenth at ten, with the same unit still listed. That readback checks both the new date and the unit submitted with the update.",
+      "practice": "Change the window and retain the unit",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Reopen once more and leave safely",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "018-fresh-reopen-ten-eighteen-cancel",
+        "017-update-saved-new-day-ten-and-retained-unit"
+      ],
+      "required_labels": [
+        "Edit Static Shift",
+        "Start Date/Time",
+        "End Date/Time",
+        "Cancel"
+      ],
+      "narration": "Reopen Edit to check the persisted start and end values: ten A M and six P M on November thirteenth. The Units picker is empty again in this editor, even though the saved day detail just showed the unit. Do not submit another update while merely reviewing. Select Cancel to leave the stored shift unchanged. Use the saved day detail to verify the current unit commitment, and review the edit warning whenever a change is actually required.",
+      "practice": "Reopen once more and leave safely",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Apply fixed coverage across department types",
+      "route": "/User/Shifts",
+      "capture_refs": [
+        "017-update-saved-new-day-ten-and-retained-unit"
+      ],
+      "required_labels": [
+        "View Static Shift Day",
+        "Units"
+      ],
+      "narration": "Use this same create, verify and carefully update process for search and rescue, security companies, wildland contractors and industrial emergency teams. Community paramedicine, mental health response, fire and E M S teams can plan fixed support windows as well. Choose a meaningful unit and coverage period, keep calendar labels readable, and verify the saved result after every change. This lesson covers a fixed unit commitment; recurring rotations and personnel signup workflows have their own walkthroughs.",
+      "practice": "Apply fixed coverage across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Schedule a dated unit commitment appropriate to your organization, verify local times and review reassignment before updating."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Schedule a dated unit commitment appropriate to your organization, verify local times and review reassignment before updating."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Schedule a dated unit commitment appropriate to your organization, verify local times and review reassignment before updating."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Schedule a dated unit commitment appropriate to your organization, verify local times and review reassignment before updating."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Schedule a dated unit commitment appropriate to your organization, verify local times and review reassignment before updating."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Schedule a dated unit commitment appropriate to your organization, verify local times and review reassignment before updating."
+    }
+  ],
+  "scope_limits": [
+    "This fixed training shift uses a unit with no unit-role slots; no personnel assignment, signup or recurring rotation is demonstrated. Existing Edit assignments must be reviewed and units reselected before Update."
+  ]
+}

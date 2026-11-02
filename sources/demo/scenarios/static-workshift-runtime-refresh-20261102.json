@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-11-02T19:23:15.506340+00:00",
+  "stack": "resgrid-academy-oct25",
+  "database": "resgrid_academy",
+  "web_port": 18967,
+  "purpose": "Bring the restored fictional recording database in line with the current web runtime before recording a successful static shift.",
+  "schema_before": 289,
+  "schema_after": 309,
+  "command": "Official Resgrid.Console --DbUpdate through the existing isolated compose migrate service.",
+  "exit_code": 0,
+  "new_shift_id": "09c03f32-91f2-4d1c-8a89-b124e998664d",
+  "normal_UI_readback": "Shifts calendar and ViewDay returned the new training title, November12 09:00 and the selected training unit.",
+  "backup": "Retained only in ignored private workshift-runtime-20261102 storage.",
+  "rollback": "Stop only this isolated stack and restore the private pre-migrations database dump plus pre-refresh binaries; do not run Down against captured data.",
+  "source_file_hashes": {
+    "Web/Resgrid.Web/Areas/User/Controllers/WorkshiftsController.cs": "e0a6ee127c2082f93a26a759fcb283fe0b529ab93e1ab0da27e7b529ce80fa78",
+    "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0305_AddShiftStaffingHoursPg.cs": "60f427fc7c373ef83e05546c0f57db05e82faafe7f9a7fefaf6583e33d2a77c9",
+    "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0306_AddOpenShiftTradesPg.cs": "02d5005bcb7d62df230ab474dfebe11b89b70e0ca82967d53e74285d528a2831",
+    "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0307_AddHomeDashboardsPg.cs": "070b34ed5429cb716511cbdc82440465115f824e84e710ee6ad18be661691505",
+    "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0308_AddMapLibreRoutingFoundationPg.cs": "48804b3c5bf8dc38475b8ad5b1c322498d51c1545f24e7a6ee617479c85cb491",
+    "Providers/Resgrid.Providers.MigrationsPg/Migrations/M0309_AddOfflineMapPacksPg.cs": "a25ae06eed59f32aa48023c6a9987ce049251f43d7c1c426ad7e15c7d1a57f10"
+  },
+  "preserved_department_members": 14,
+  "reseed_performed": false,
+  "production_or_remote_mutations": false,
+  "ui_layout_correction": {
+    "file": "Web/Resgrid.Web/Areas/User/Views/Workshifts/Edit.cshtml",
+    "change": "Match New by adding style width100percent to UnitsAssigned.",
+    "support_patch": "demo/client-support/static-workshift-20261102/edit-unit-selector-width.patch",
+    "build": "Regular Docker publish passed.",
+    "browser_result": "Select units field is now fully readable; assignment semantics unchanged."
+  }
+}

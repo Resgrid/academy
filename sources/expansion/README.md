@@ -1,9 +1,9 @@
 # App and configuration walkthrough production
 
 The generated `site/site-manifest.json` and each canonical lesson's current qualification
-establish the ready catalog. As of November 2, 2026, the complete local build has **68
+establish the ready catalog. As of November 2, 2026, the complete local build has **69
 qualified actual-screen videos**, including the introduction and original detailed lessons.
-The most recent addition is Calls Summary: active and priority counts, display limits,
+The most recent addition is the final inventory return and balance reconciliation walkthrough. The earlier Calls Summary lesson covers: active and priority counts, display limits,
 recent-call visibility, font size, restoration and saved readback. Readiness summaries
 and unit timer/acknowledgement/mute lessons are also complete.
 
@@ -16,7 +16,7 @@ The website's deployment package now serves the unchanged masters through this r
 GitHub Release assets. The custom hostname remains `academy.resgrid.com`. Local preview
 retains self-contained videos. See [Release delivery](../../docs/release-video-delivery.md).
 
-The latest [remaining-work audit](audits/academy-remaining-work-qualified68-20261102.json)
+The latest [remaining-work audit](audits/academy-remaining-work-qualified69-20261102.json)
 records work still needed across administration and the four apps. The full requested
 series is not complete. The following production notes retain historical checkpoints;
 their older counts, pending states and broad plans do not override current qualification.

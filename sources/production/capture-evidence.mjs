@@ -8,6 +8,37 @@ export function redact(text) {
     .replace(/\b(?:pk|sk)\.[A-Za-z0-9_.-]{16,}/g, '[REDACTED_MAP_KEY]');
 }
 
+// Browser CSS geometry can differ from the returned raster dimensions. Keep
+// both, and bind publication evidence to the actual unchanged image bytes.
+export function imageDimensions(bytes) {
+  const b = new Uint8Array(bytes);
+  const u16 = at => b[at] * 256 + b[at + 1];
+  const u32 = at => b[at] * 16777216 + b[at + 1] * 65536 + b[at + 2] * 256 + b[at + 3];
+  if (b.length >= 24 && [137,80,78,71,13,10,26,10].every((v,i) => b[i] === v) &&
+      [73,72,68,82].every((v,i) => b[12+i] === v)) {
+    const width=u32(16), height=u32(20);
+    if (width > 0 && height > 0) return { width, height };
+  }
+  if (b.length >= 4 && b[0] === 255 && b[1] === 216) {
+    for (let at=2; at+3 < b.length;) {
+      if (b[at++] !== 255) throw new Error('Invalid JPEG marker');
+      while (b[at] === 255) at++;
+      const marker=b[at++];
+      if ([216,1,...Array.from({length:8},(_,i)=>208+i)].includes(marker)) continue;
+      if (marker === 217 || marker === 218) break;
+      const length=u16(at);
+      if (length < 2 || at+length > b.length) throw new Error('Truncated JPEG segment');
+      if ([192,193,194,195,197,198,199,201,202,203,205,206,207].includes(marker)) {
+        if (length < 7) throw new Error('Invalid JPEG frame');
+        const height=u16(at+3), width=u16(at+5);
+        if (width > 0 && height > 0) return {width,height};
+      }
+      at+=length;
+    }
+  }
+  throw new Error('Unsupported screenshot image header');
+}
+
 export async function createCapture(sources, folder = 'captures/expansion') {
   const directory = path.resolve(sources, folder);
   if (!directory.startsWith(path.resolve(sources) + path.sep)) throw new Error('Unsafe capture directory');
@@ -99,9 +130,11 @@ export async function createCapture(sources, folder = 'captures/expansion') {
     const bytes = await tab.screenshot({ fullPage: false });
     const file = folder + '/' + id + '.jpg';
     await fs.writeFile(path.join(sources, file), bytes);
+    const dimensions = imageDimensions(bytes);
     const record = { id, app, kind: 'application_screenshot', file,
       sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
-      width: witness.width, height: witness.height,
+      ...dimensions,
+      css_viewport: {width: witness.width, height: witness.height},
       provenance: { method: 'browser_screenshot', url: redact(witness.url), captured_at: new Date().toISOString() },
       visible_labels: witness.visible_labels.map(redact),
       visible_field_text: witness.visible_field_text.map(field => ({ ...field,

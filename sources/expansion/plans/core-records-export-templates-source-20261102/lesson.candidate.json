@@ -1,0 +1,242 @@
+{
+  "id": "core-records-export-templates",
+  "title": "Configure a Records CSV export and verify its runs and schedule",
+  "app": "Core",
+  "summary": "Build a six-column training-record export, verify a manual CSV, inspect the next scheduled run, and restore manual operation.",
+  "audience": [
+    "Department administrators",
+    "Records managers",
+    "Department supervisors"
+  ],
+  "prerequisites": [
+    "Authorized Records administration and a separate fictional training department.",
+    "Existing permitted finalized records for the selected definition."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Open report exports",
+      "route": "/User/Records",
+      "capture_refs": [
+        "001-records-manage-report-exports",
+        "002-export-list-and-workflow-context",
+        "003-new-export-format-and-scope"
+      ],
+      "required_labels": [
+        "Manage",
+        "Report exports",
+        "New export"
+      ],
+      "narration": "From Records, open Manage and select Report exports. This area defines a repeatable output file: its columns, format and scope. The page also explains that exports can be attached to a Workflow step or placed on a schedule. This lesson configures and checks the file locally; it does not send an email or upload anything to an outside agency. Select New export to prepare a separate training-record handoff.",
+      "practice": "Open report exports",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Name the export and give it a stable key",
+      "route": "/User/Records",
+      "capture_refs": [
+        "021-new-export-window-settings-replayed-unsaved"
+      ],
+      "required_labels": [
+        "Export name",
+        "Key",
+        "Description"
+      ],
+      "narration": "Enter a meaningful Export name and a stable Key. The example is Training record handoff, with an academy training handoff key. The help requires lower-case letters, digits and hyphens, and explains that a Workflow step or agency import may rely on this key. Keep that relationship in mind before changing names in a live integration. Add a description of exactly what this file is intended to contain. Here the description explicitly limits the exercise to fictional training-record identity, state and dates.",
+      "practice": "Name the export and give it a stable key",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Choose the scope and CSV layout",
+      "route": "/User/Records",
+      "capture_refs": [
+        "021-new-export-window-settings-replayed-unsaved",
+        "020-new-export-save-control-replayed-unsaved"
+      ],
+      "required_labels": [
+        "Format",
+        "CSV",
+        "Scope",
+        "Training",
+        "File name",
+        "Delimiter",
+        "Include a header row",
+        "Enabled"
+      ],
+      "narration": "Use C S V as the Format, and choose the window scope for finalized records. Check Training under Record definitions. The help says that leaving every definition unchecked would export all definitions, so select the intended scope deliberately. For File name, enter the template token followed by the date token, as shown. Keep the comma Delimiter, include a header row, and leave Enabled checked. These settings define the file layout that the receiving process will need to recognize.",
+      "practice": "Choose the scope and CSV layout",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Choose six specific columns",
+      "route": "/User/Records",
+      "capture_refs": [
+        "005-selected-safe-record-columns"
+      ],
+      "required_labels": [
+        "Columns",
+        "Record number",
+        "Record type",
+        "State",
+        "Duration (minutes)",
+        "Finalized (UTC)",
+        "Course (records)"
+      ],
+      "narration": "Review Columns rather than accepting an unnecessarily broad output. Select Record number, Record type, State, Duration in minutes, Finalized in U T C, and Course from records. The screenshot shows those six checks. Other identity, participant and incident fields remain unselected in this example. Choose the smallest useful set for your actual handoff and agree its meaning with the recipient. A consistent set of fields makes repeated exports easier to compare and import.",
+      "practice": "Choose six specific columns",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Review the narrative and restricted-content controls",
+      "route": "/User/Records",
+      "capture_refs": [
+        "006-narrative-restricted-and-egress-controls"
+      ],
+      "required_labels": [
+        "Include narrative and personal detail (Tier 2)",
+        "Include restricted sections (Tier 1)"
+      ],
+      "narration": "Scroll through the narrative and restricted sections before saving. This exercise leaves all their column checkboxes unselected. It also leaves Include narrative and personal detail, Include restricted sections, and the acknowledgement about sending that content outside Resgrid unchecked. These are separate controls beneath the column catalog. Review them together with the selected columns and the intended Workflow destination when planning an actual integration. Our local file contains none of those narrative or restricted fields.",
+      "practice": "Review the narrative and restricted-content controls",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Set the manual window and verify the saved template",
+      "route": "/User/Records",
+      "capture_refs": [
+        "007-manual-schedule-and-thirty-day-window",
+        "020-new-export-save-control-replayed-unsaved",
+        "009-export-saved-and-reopened",
+        "010-saved-template-index"
+      ],
+      "required_labels": [
+        "Schedule",
+        "Window (days)",
+        "30",
+        "Save",
+        "The export was saved."
+      ],
+      "narration": "For the first test, use No schedule and set Window to thirty days. The help explains that zero instead uses the schedule period ending at the run. Select Save after reviewing the prepared settings. The saved template can be reopened with the same format, Training selection and thirty-day window. The Report exports index confirms The export was saved and lists the window scope with No schedule. Saving the template establishes the configuration; it does not prove that the resulting file contains the expected records.",
+      "practice": "Set the manual window and verify the saved template",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Run locally and inspect the recorded result",
+      "route": "/User/Records",
+      "capture_refs": [
+        "010-saved-template-index",
+        "011-run-now-explanation-and-control",
+        "012-manual-run-succeeded-two-records"
+      ],
+      "required_labels": [
+        "Runs",
+        "Run now",
+        "Manual",
+        "Records",
+        "Bytes",
+        "Checksum",
+        "Download"
+      ],
+      "narration": "Open Runs for the template, then select Run now. The page says this renders the export for checking before an agency sees it, and audits every included record as an export. The completed run shows a Manual trigger, two records, three hundred sixteen bytes, a checksum and a Download link. Download the file and compare its headers and rows with the intended handoff. The retained exercise file has the six selected headers and two training records, including one amended record in this finalized-record window.",
+      "practice": "Run locally and inspect the recorded result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Prepare and save a daily schedule",
+      "route": "/User/Records",
+      "capture_refs": [
+        "013-reopened-export-manual-schedule",
+        "014-daily-six-local-schedule-prepared",
+        "015-save-daily-schedule-button"
+      ],
+      "required_labels": [
+        "Schedule",
+        "Daily",
+        "Hour (department local time)",
+        "Window (days)",
+        "Save"
+      ],
+      "narration": "Return to Edit and change Schedule to Daily. Set Hour to six in department local time and keep the thirty-day window. The form also contains weekday and day-of-month controls for other schedule choices, but this exercise saves the Daily choice. Review the hour and window together, then select Save. Changing a schedule is a configuration step; the next screen will confirm the stored next-run time. We do not claim that an automatic run has already occurred.",
+      "practice": "Prepare and save a daily schedule",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Verify next run and restore manual operation",
+      "route": "/User/Records",
+      "capture_refs": [
+        "016-daily-saved-next-run",
+        "017-index-daily-next-run-confirmed",
+        "018-restore-manual-only-before-save",
+        "019-manual-only-cleanup-saved"
+      ],
+      "required_labels": [
+        "Next run",
+        "11/03/2026 06:00:00",
+        "Save",
+        "Schedule"
+      ],
+      "narration": "After saving, Next run shows November third at six in the morning. The index independently shows Daily and the same next-run value. That is the saved scheduling result for this dated training exercise. To leave the department without an active timer, reopen the template, choose No schedule, and select Save again. Reopening now shows No schedule with a dash for Next run. Verify that stored result instead of assuming an unsaved selection stopped the schedule.",
+      "practice": "Verify next run and restore manual operation",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "10",
+      "title": "Use a checked export for your department’s handoff",
+      "route": "/User/Records",
+      "capture_refs": [
+        "019-manual-only-cleanup-saved",
+        "012-manual-run-succeeded-two-records"
+      ],
+      "required_labels": [
+        "Schedule",
+        "Runs",
+        "Download"
+      ],
+      "narration": "Use the same configuration and checking process across department types. Search-and-rescue teams, security companies, wildland contractors and industrial emergency teams can standardize their permitted record handoffs. Community paramedicine and mental health response teams can define an appropriate coordination or training export, as can fire and E M S departments. Start with the right definition and columns, check a manual file, and verify the schedule before relying on it. Delivery through a Workflow is a separate operation that must be configured and tested for the intended recipient.",
+      "practice": "Use a checked export for your department’s handoff",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; actual speech generation, listening, complete correspondence, encoded-frame review and playback qualification remain required.",
+    "This exercise uses fictional records and demonstrates only the saved-report and CSV operations actually recorded."
+  ]
+}

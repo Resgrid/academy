@@ -1,0 +1,200 @@
+{
+  "id": "core-inventory-final-return",
+  "title": "Return the final issued quantity and reconcile inventory balances",
+  "app": "Core",
+  "summary": "Complete an outstanding equipment return, inspect its ledger movement, and reconcile before-and-after location balances.",
+  "audience": [
+    "Inventory administrators",
+    "Equipment officers",
+    "Department supervisors"
+  ],
+  "prerequisites": [
+    "Authorized Inventory access and a separate fictional training issuance.",
+    "An existing partially returned issuance; this recording continues historical training data rather than creating a new issuance."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find the remaining issued quantity",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "002-partially-returned-issuance"
+      ],
+      "required_labels": [
+        "Issuances",
+        "Outstanding",
+        "Partially returned",
+        "Return"
+      ],
+      "narration": "In Inventory, open Issuances and find the item that has come back. This example follows Academy training batteries after an earlier partial return. The row still shows one outstanding, the Personnel location, and Partially returned. Check the item, outstanding quantity and expected return date together. Select Return on that row to open its return form. This is a fictional software exercise in the training department.",
+      "practice": "Find the correct issuance and compare its outstanding quantity before opening Return.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "02",
+      "title": "Read the return form before entering changes",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "004-return-form-settled"
+      ],
+      "required_labels": [
+        "Amount",
+        "Destination location",
+        "Status",
+        "Note",
+        "Return"
+      ],
+      "narration": "The Return dialog separates Amount, Destination location, Status and Note. Amount starts at the remaining quantity. The destination is initially blank, and the status is In service. The help beneath Destination location says to leave it blank when consuming or writing stock off. For this exercise the item is being returned to a stock location, so we will select a destination before submitting. Close exits this dialog without making the prepared return.",
+      "practice": "Identify the amount, destination, condition and note controls in the actual dialog.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "03",
+      "title": "Choose where the returned stock goes",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "005-return-prepared-station"
+      ],
+      "required_labels": [
+        "Amount",
+        "Destination location",
+        "Station",
+        "In service",
+        "Note"
+      ],
+      "narration": "Set Amount to one and choose Station as the Destination location. Leave Status at In service for the intended return. Add a clear note explaining the movement. Here it says that the remaining fictional training battery pack is going back to Station, and that no physical movement is taking place. The quantity and destination are separate decisions: one tells Resgrid how much came back, and the other tells it where that stock is going.",
+      "practice": "Prepare the remaining quantity, the intended stock location and a useful explanation.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "04",
+      "title": "Distinguish return conditions",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "006-return-condition-repair-unsaved",
+        "007-return-condition-damaged-unsaved",
+        "008-final-return-review"
+      ],
+      "required_labels": [
+        "Status",
+        "Out for repair",
+        "Damaged"
+      ],
+      "narration": "The Status control also offers Out for repair and Damaged. These screens show those choices selected in the form before saving. The help describes Status as the state the equipment came back in. Choose the condition that matches the actual return, following your department procedure. In this recording we inspect both alternatives and then restore In service; we do not post a damaged or repair return.",
+      "practice": "Recognize the condition choices without submitting a condition that does not match the item.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "05",
+      "title": "Submit the final return and verify its result",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "008-final-return-review",
+        "009-returned-zero-outstanding"
+      ],
+      "required_labels": [
+        "Amount",
+        "Station",
+        "In service",
+        "Return",
+        "Returned",
+        "Outstanding"
+      ],
+      "narration": "Before submitting, check the final form again: one item, Station, In service, and the training note. Select Return at the bottom of the dialog. The returned Issuances table now shows zero outstanding and a green Returned status on the same item row. Its Return action is gone. This saved result is the check that the last outstanding quantity has been cleared; a completed form alone would not establish that the return was stored.",
+      "practice": "Submit once, then verify zero outstanding and Returned on the matching issuance.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "06",
+      "title": "Read the movement in History",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "002-partially-returned-issuance",
+        "010-new-return-ledger-readback"
+      ],
+      "required_labels": [
+        "History",
+        "Filter",
+        "Return",
+        "Personnel",
+        "Station"
+      ],
+      "narration": "Open History to inspect the movement ledger. Filter to Academy training batteries. The newest row is a Return of one, moving from Personnel to Station, with the same explanatory note. The earlier partial return and the earlier Consume row remain visible as separate movements. Check the quantity, direction and note together when explaining a balance change. This review uses the ledger as shown; no witness attestation or stock-balance rebuild is performed.",
+      "practice": "Match the return to its ledger quantity, direction and note.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "07",
+      "title": "Reconcile on-hand balances",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "002-partially-returned-issuance",
+        "001-current-filtered-balances",
+        "011-balances-after-return"
+      ],
+      "required_labels": [
+        "On hand",
+        "Filter",
+        "Station",
+        "Unit",
+        "Personnel"
+      ],
+      "narration": "Return to On hand and apply the item filter. Before this return, the recorded balances were thirteen at Station, five at Unit and one at Personnel. After the return, they are fourteen at Station, five at Unit and zero at Personnel. The total stays nineteen. Returning issued stock changes where that quantity is held; it does not reverse the separate earlier consumption or restore the original receipt of twenty.",
+      "practice": "Compare the before and after locations, and reconcile the unchanged total.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    },
+    {
+      "id": "08",
+      "title": "Use the same review across department types",
+      "route": "/User/Inventory",
+      "capture_refs": [
+        "011-balances-after-return"
+      ],
+      "required_labels": [
+        "Academy training batteries",
+        "Station",
+        "Unit",
+        "Personnel"
+      ],
+      "narration": "Use the same quantity, location and condition checks for other department equipment. A search-and-rescue team can track returned radio batteries, a security company can track issued equipment, and a wildland contractor can reconcile field supplies. Community paramedicine and mental health response teams, industrial emergency teams, and fire and E M S departments can use the same recorded return process. Agree who records returns, and verify both the issuance and the location balances after each exercise.",
+      "practice": "Choose an example relevant to your department and define who verifies its return.",
+      "capture_intent": "Show each real control before its recorded result; retain the separate historical balance checkpoints."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Search and rescue",
+      "scenario": "Reconcile a final radio-battery return to a base stock location."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Review remaining issued equipment and its return condition."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Check returned equipment for community paramedicine and mental health teams."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Trace returned field supplies without reversing earlier consumption."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Review equipment condition and location balances."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Close the remaining issuance and verify the corresponding ledger movement."
+    }
+  ],
+  "scope_limits": [
+    "New narration, exact caption correspondence, complete listening, encoded frame review and actual browser playback remain required.",
+    "Only the In service return is submitted. Repair and Damaged are inspected unsaved choices.",
+    "No record-linked consumption reversal, successful PDF export, witness attestation or balance rebuild is demonstrated.",
+    "Balances are the dated historical snapshots shown in the unmodified screenshots."
+  ]
+}

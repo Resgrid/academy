@@ -1,0 +1,226 @@
+{
+  "id": "core-records-saved-reports",
+  "title": "Build, validate and run a saved Records report",
+  "app": "Core",
+  "summary": "Choose a definition and columns, validate a finalized-record filter, download CSV, and add a grouped count.",
+  "audience": [
+    "Department administrators",
+    "Records managers",
+    "Department supervisors"
+  ],
+  "prerequisites": [
+    "Authorized Records administration and a separate fictional training department.",
+    "Existing permitted finalized records for the selected definition."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find saved reports",
+      "route": "/User/Records",
+      "capture_refs": [
+        "001-records-reports-menu",
+        "002-saved-reports-empty"
+      ],
+      "required_labels": [
+        "Reports",
+        "Saved reports",
+        "New report"
+      ],
+      "narration": "From Records, open Reports and select Saved reports. This is where you keep a reusable report instead of rebuilding the same query each time. The page explains that a saved report queries one definition, can group or aggregate its records, and can export the results to C S V. Results still respect record visibility and restricted fields. Select New report to begin a separate fictional community coordination report.",
+      "practice": "Find saved reports",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Choose the definition and fields",
+      "route": "/User/Records",
+      "capture_refs": [
+        "004-report-columns-sort-prepared",
+        "003-new-report-definition-picker"
+      ],
+      "required_labels": [
+        "Definition",
+        "Report name",
+        "Columns",
+        "record.number",
+        "record.state",
+        "Summary"
+      ],
+      "narration": "Give the report a recognizable name and description. Select the definition that owns the records you want to review. Here it is the training community software exercise. The Columns panel then offers record fields and that definition’s detail fields. Select record dot number, record dot state, and Summary. These three choices become the three result columns. Leave Notes unselected for this example. A clear report name helps supervisors choose the right recurring review.",
+      "practice": "Choose the definition and fields",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Set the sort and keep detail rows",
+      "route": "/User/Records",
+      "capture_refs": [
+        "004-report-columns-sort-prepared"
+      ],
+      "required_labels": [
+        "Sort by",
+        "record.number",
+        "Descending",
+        "Group by",
+        "Aggregates (JSON)"
+      ],
+      "narration": "Set Sort by to record dot number and check Descending. The first version is a detail report, so leave Group by and Aggregates empty. This makes the newest training number appear first in the recorded result. Sorting determines the order of rows; grouping is a separate decision. Later we will edit this same report to count records by state without replacing the detail columns.",
+      "practice": "Set the sort and keep detail rows",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Filter finalized records and limit the result",
+      "route": "/User/Records",
+      "capture_refs": [
+        "005-filter-row-limit-and-validation-controls"
+      ],
+      "required_labels": [
+        "Filters (JSON)",
+        "Max rows",
+        "Include drafts",
+        "Include restricted fields"
+      ],
+      "narration": "Scroll to Filters. This example uses a J S O N array with FieldKey set to record dot state, Operator set to Equals, and Value set to Finalized. Match the quoted text and brackets shown in the form. The inline example and schema help explain the expected structure. Set Max rows to twenty-five. Leave Include drafts and Include restricted fields unchecked. Leave Version mappings empty for this exercise. These choices keep this report focused on a small, permitted set of finalized records.",
+      "practice": "Filter finalized records and limit the result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Validate before saving",
+      "route": "/User/Records",
+      "capture_refs": [
+        "005-filter-row-limit-and-validation-controls",
+        "006-validation-passed-before-save",
+        "009-saved-report-index-run-control"
+      ],
+      "required_labels": [
+        "Validate",
+        "The report is valid.",
+        "Save",
+        "Report saved."
+      ],
+      "narration": "Select Validate before saving. The page returns with The report is valid above the prepared settings and selected columns. Validation checks the report definition; it is not a result count and does not replace Save. Return to the bottom controls and select Save. The Saved reports page now shows Report saved, the report name, its definition, three columns, and the Run action. That saved row is the first readback that the reusable report exists.",
+      "practice": "Validate before saving",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Run and download the detailed result",
+      "route": "/User/Records",
+      "capture_refs": [
+        "009-saved-report-index-run-control",
+        "010-report-two-finalized-rows"
+      ],
+      "required_labels": [
+        "Run",
+        "Rows (2 / 2)",
+        "Record number",
+        "State",
+        "Summary",
+        "CSV"
+      ],
+      "narration": "Select Run on the saved row. The result shows two of two rows, with Record number, State and Summary as configured. Both records are Finalized, and the larger training number is first. Compare those values with the purpose of the report before distributing its output. Use the C S V button on this result page to download the data. In this exercise the downloaded file contains the same three headers and the same two fictional records shown here.",
+      "practice": "Run and download the detailed result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Reopen and add a grouped count",
+      "route": "/User/Records",
+      "capture_refs": [
+        "010-report-two-finalized-rows",
+        "011-reopened-persisted-report",
+        "012-group-by-state-count-prepared"
+      ],
+      "required_labels": [
+        "Edit",
+        "Group by",
+        "record.state",
+        "Aggregates (JSON)",
+        "Count"
+      ],
+      "narration": "Select Edit and review the persisted settings. The three column choices and descending record-number sort are still present. Set Group by to record dot state. In Aggregates, enter a J S O N array whose object has Aggregate set to Count, exactly as the form’s Count example shows. This asks a different question: how many matching records are in each state? The original detail columns remain selected.",
+      "practice": "Reopen and add a grouped count",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Validate, save and rerun the changed report",
+      "route": "/User/Records",
+      "capture_refs": [
+        "013-count-report-valid",
+        "016-current-grouped-report-save-controls",
+        "014-updated-report-run-and-last-run",
+        "015-grouped-count-and-detail-results"
+      ],
+      "required_labels": [
+        "The report is valid.",
+        "Save",
+        "Run",
+        "Groups",
+        "Finalized",
+        "Count",
+        "Rows (2 / 2)"
+      ],
+      "narration": "Validate the changed report and confirm The report is valid. Use the same bottom Save control, then run the saved report again. The updated index identifies Group by record dot state and shows a Last run time. The new result has a Groups section: Finalized has a count of two. The detail section still shows the same two rows. Check both sections so that the summary count can be traced back to its records.",
+      "practice": "Validate, save and rerun the changed report",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Apply the review to your department",
+      "route": "/User/Records",
+      "capture_refs": [
+        "015-grouped-count-and-detail-results"
+      ],
+      "required_labels": [
+        "Groups",
+        "Rows (2 / 2)",
+        "Summary"
+      ],
+      "narration": "Use this pattern for the records your department actually maintains. A community paramedicine or mental health response team can review completed coordination records. Search-and-rescue teams can summarize activity forms, security departments can review service records, and wildland contractors or industrial emergency teams can track their operational paperwork. Fire and E M S departments can use the same controls. Choose the appropriate definition, select only needed fields, validate the settings, and verify the detail behind each grouped total.",
+      "practice": "Apply the review to your department",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Choose the appropriate department record definition and verify the matching output."
+    }
+  ],
+  "scope_limits": [
+    "This exercise uses fictional records and demonstrates only the saved-report and CSV operations actually recorded."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-records-saved-reports-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-records-saved-reports-source-20261102-v2/lesson.candidate.json",
+    "sha256": "922049ebb9d0d62e358256498098ceae9887297713e794ff39c158e653a5917c"
+  }
+}

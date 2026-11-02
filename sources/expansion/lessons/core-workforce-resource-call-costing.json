@@ -1,0 +1,241 @@
+{
+  "id": "core-workforce-resource-call-costing",
+  "title": "Configure resource costs and compare a call’s loaded cost",
+  "app": "Core",
+  "summary": "Create an operating-hour resource profile, associate labor and usage with a call, and verify estimated versus approved-input totals.",
+  "audience": [
+    "Department administrators",
+    "Workforce managers",
+    "Operational supervisors"
+  ],
+  "prerequisites": [
+    "Authorized Workforce access in a separate fictional training department.",
+    "Existing workers, work entries and a disposable training unit; all example amounts are fictional."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Open resource profiles and choose the subject",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "012-resource-cost-profiles-empty",
+        "037-saved-resource-subject-and-effective-period"
+      ],
+      "required_labels": [
+        "Resource costs",
+        "Add resource profile",
+        "Subject type",
+        "Unit",
+        "Effective *",
+        "Expires"
+      ],
+      "narration": "In Workforce, open Resource costs, then select Add resource profile. Choose Unit as the Subject type and select the fictional community van. Give the profile a clear Name and check its Effective and Expires dates. The saved example covers October through November and uses U S D. A resource profile prices the selected unit, asset or external resource class. Check that subject before applying rates to an operational resource.",
+      "practice": "Open resource profiles and choose the subject",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Configure straight-line depreciation",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "014-resource-depreciation-prepared"
+      ],
+      "required_labels": [
+        "Depreciation",
+        "Acquisition cost",
+        "Salvage value",
+        "Allocation basis",
+        "Useful life (units)"
+      ],
+      "narration": "In Depreciation, the example enters an Acquisition cost of ten thousand and a Salvage value of one thousand. Choose Per operating hour as the Allocation basis and enter nine hundred Useful life units. The form gives the straight-line formula: cost minus salvage, divided by life. These fictional inputs produce ten per operating hour. Expected annual utilization is six hundred. Use units that match the chosen basis; this software example does not prescribe an accounting policy.",
+      "practice": "Configure straight-line depreciation",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Add consumption-based fuel cost and save",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "015-resource-fuel-consumption-times-unit-price",
+        "038-resource-approval-and-components-reopened",
+        "016-resource-profile-saved-depreciation-ten",
+        "037-saved-resource-subject-and-effective-period"
+      ],
+      "required_labels": [
+        "Cost components",
+        "Category",
+        "Basis",
+        "Consumption",
+        "Unit price",
+        "Source",
+        "Approved",
+        "Save"
+      ],
+      "narration": "Add a Cost components row for Fuel or energy. Use the operating-hour basis, Consumption of two and Unit price of four, with Manual as the Source. That combination produces eight per operating hour. Mark the fictional component and profile Approved, then select Save. The saved profile row shows depreciation of ten and one component. Reopening lets you check the subject, dates, approval and component inputs instead of relying on an unsaved form.",
+      "practice": "Add consumption-based fuel cost and save",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Associate approved work hours with the call",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "020-call-hours-approved-prepared-upper",
+        "021-call-hours-source-approval-save",
+        "022-call-hours-saved-row"
+      ],
+      "required_labels": [
+        "Work entries",
+        "Worker *",
+        "Date *",
+        "Hours *",
+        "Hours type",
+        "Call #",
+        "Approved",
+        "Save"
+      ],
+      "narration": "Open Work entries and add the fictional worker’s two Regular hours on November second. Enter the exercise call number, fifty-one thousand and one, in Call number. Keep the chosen establishment, identify the fictional source, and review Approved before Save. The saved row shows two hours, the call context and Yes. Associating hours with the correct call is essential: an approved work entry without that call relationship would not be the same call-cost input.",
+      "practice": "Associate approved work hours with the call",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Find the call calculator and compare the first result",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "039-call-number-calculation-control-replayed",
+        "024-cost-run-fifty-four-summary"
+      ],
+      "required_labels": [
+        "Call #",
+        "Calculate call cost",
+        "Personnel",
+        "Resources",
+        "Total loaded cost"
+      ],
+      "narration": "Open Cost runs and find Call number with Calculate call cost. This control uses work entries and resource usage recorded against that call and supplies no revenue. The recording retains a before-and-after comparison from this exercise. Its first successful result shows fifty-four in Personnel, zero in Resources and fifty-four total. Two hours at the configured loaded estimate of twenty-seven explain the personnel amount. A zero resource result does not prove the vehicle cost nothing; first check whether usage was recorded.",
+      "practice": "Find the call calculator and compare the first result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Record two operating hours for the same call",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "025-cost-review-missing-inputs-and-usage",
+        "028-resource-unit-phase-source-prepared",
+        "029-resource-operating-hours-approval-save",
+        "030-resource-reading-saved-two-hours"
+      ],
+      "required_labels": [
+        "Usage entries",
+        "Unit *",
+        "Phase",
+        "Source",
+        "Operating hours",
+        "Approved",
+        "Save"
+      ],
+      "narration": "From the cost result, open Resource usage and add a reading. Select the same community van, the exercise date, Incident as the Phase and Manual as the Source. Enter two Operating hours, then review Approved and Save. The saved usage row confirms two operating hours. This exercise uses operating hours, so it leaves odometer, engine-hour and fuel-quantity inputs empty. Match the recorded measurement to the allocation basis rather than entering the same work into several unrelated meter fields.",
+      "practice": "Record two operating hours for the same call",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Recalculate and explain the resource contribution",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "039-call-number-calculation-control-replayed",
+        "031-cost-recalculated-personnel-fifty-four-resource-thirty-six"
+      ],
+      "required_labels": [
+        "Personnel",
+        "Resources",
+        "Total loaded cost"
+      ],
+      "narration": "Recalculate the call after saving its usage. The recorded result now shows Personnel of fifty-four, Resources of thirty-six and a total of ninety. The resource contribution is twenty in depreciation plus sixteen in fuel or energy: two hours multiplied by ten and eight. Compare the input quantities and saved result together. A configured resource profile needs corresponding usage before this example contributes a resource amount.",
+      "practice": "Recalculate and explain the resource contribution",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Compare an approved payroll input and review the result",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "032-approved-payroll-cost-forty-prepared",
+        "033-approved-payroll-cost-saved-forty",
+        "034-approved-actual-forty-resource-thirty-six-total-seventy-six",
+        "035-cost-summary-needs-review-after-actual",
+        "036-latest-unfrozen-run-needs-review"
+      ],
+      "required_labels": [
+        "Approved payroll cost",
+        "Save",
+        "Personnel",
+        "Resources",
+        "Total loaded cost",
+        "Missing inputs",
+        "Frozen",
+        "Needs review"
+      ],
+      "narration": "Return to the same work entry and enter forty in Approved payroll cost, retaining a clearly fictional source. Save and verify forty on the work-entry row, then recalculate. Personnel becomes forty, Resources stays thirty-six and the total becomes seventy-six. The form explains that this approved payroll input replaces the estimate. No payroll system was contacted. The saved result still has one Missing input and is not Frozen; its index says Needs review. Inspect that state before using a total as a finished cost report.",
+      "practice": "Compare an approved payroll input and review the result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Adapt the exercise to department operations",
+      "route": "/User/Workforce",
+      "capture_refs": [
+        "036-latest-unfrozen-run-needs-review"
+      ],
+      "required_labels": [
+        "Cost runs",
+        "Needs review",
+        "Total loaded cost"
+      ],
+      "narration": "These controls can support security patrols, search and rescue, wildland contractors, industrial emergency teams, community paramedicine or mental health response, and fire or E M S operations. Use a resource, measurement basis and call context that fit your organization. Verify saved inputs, recalculate after changes, and resolve review items before relying on the result. All amounts here are fictional software inputs, with no external payment, invoice or real payroll import.",
+      "practice": "Adapt the exercise to department operations",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Review the same fictional personnel and resource costing controls using the terminology appropriate to your department."
+    }
+  ],
+  "scope_limits": [
+    "All amounts are fictional software inputs. No employment decision, real payroll import, external payment, tax filing, invoice or revenue transaction is performed."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-workforce-resource-call-costing-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-workforce-resource-call-costing-source-20261102/lesson.candidate.json",
+    "sha256": "1dd392e8921ff53e31f7ab7c8fdb98b4c7b1513ecd5cbb37d58763bb9959233c"
+  }
+}

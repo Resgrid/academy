@@ -1,0 +1,505 @@
+1
+00:00:00,070 --> 00:00:03,470
+Open Workflows in the Chicago
+Fire demonstration department.
+
+2
+00:00:03,849 --> 00:00:07,809
+We will build a training call-created
+workflow with two ordered actions
+
+3
+00:00:07,860 --> 00:00:09,960
+and a separate call-closed workflow.
+
+4
+00:00:10,479 --> 00:00:13,529
+Begin with the outcome you want
+and the event that should cause it.
+
+5
+00:00:14,000 --> 00:00:16,170
+Each workflow listens to one event.
+
+6
+00:00:16,530 --> 00:00:19,469
+Multiple steps can respond to
+that event, while a different
+
+7
+00:00:19,469 --> 00:00:21,049
+event needs a different workflow.
+
+8
+00:00:21,309 --> 00:00:24,950
+Inspect the list's event and
+enabled columns before editing,
+
+9
+00:00:25,359 --> 00:00:29,089
+and identify who will monitor the
+result when the automation runs.
+
+10
+00:00:29,309 --> 00:00:32,740
+Open Credentials and create
+Academy local captured mail.
+
+11
+00:00:33,210 --> 00:00:35,229
+Choose SMTP Email.
+
+12
+00:00:35,680 --> 00:00:39,569
+In this isolated exercise,
+Mailpit receives messages inside
+
+13
+00:00:39,569 --> 00:00:43,099
+the training network; nothing
+goes to an outside mail service.
+
+14
+00:00:43,550 --> 00:00:47,570
+Set the local host, port and
+demonstration sender, keep the
+
+15
+00:00:47,599 --> 00:00:49,849
+unused password masked, and save.
+
+16
+00:00:50,329 --> 00:00:53,509
+Your live department needs its
+own mail provider settings and
+
+17
+00:00:53,509 --> 00:00:55,220
+appropriate transport security.
+
+18
+00:00:55,560 --> 00:00:58,040
+The credential type must match the action.
+
+19
+00:00:58,279 --> 00:01:01,960
+A stored credential supplies
+authentication details; it does
+
+20
+00:01:01,960 --> 00:01:06,240
+not establish that a destination
+is reachable or accepts a message.
+
+21
+00:01:06,370 --> 00:01:10,899
+Choose New Workflow and name it
+Academy call opened — captured mail.
+
+22
+00:01:11,370 --> 00:01:13,649
+Select CallAdded as Trigger Event.
+
+23
+00:01:14,080 --> 00:01:17,660
+Turn Enabled off while configuring
+the destination and actions,
+
+24
+00:01:17,859 --> 00:01:19,590
+and review the retry controls.
+
+25
+00:01:19,910 --> 00:01:23,820
+The event becomes fixed after
+creation, so confirm it before saving.
+
+26
+00:01:24,219 --> 00:01:28,789
+Keep retry values modest for practice
+and observe actual attempt timing later.
+
+27
+00:01:28,909 --> 00:01:32,649
+Template gallery examples also need
+their destinations and credentials
+
+28
+00:01:32,649 --> 00:01:34,249
+completed before enabling.
+
+29
+00:01:34,700 --> 00:01:38,419
+A descriptive name makes the event
+and operational purpose easier to
+
+30
+00:01:38,419 --> 00:01:40,209
+recognize in the workflow list.
+
+31
+00:01:40,390 --> 00:01:41,749
+Select Add Step.
+
+32
+00:01:42,209 --> 00:01:45,169
+Choose Send Email and set Order to one.
+
+33
+00:01:45,669 --> 00:01:49,500
+Enter the fictional training-supervisor
+address and a subject, then
+
+34
+00:01:49,500 --> 00:01:53,700
+select Academy local captured
+mail as the SMTP credential.
+
+35
+00:01:54,149 --> 00:01:58,459
+In Output Template, use a short training
+message with department name and call
+
+36
+00:01:58,459 --> 00:02:00,110
+name from the variable reference.
+
+37
+00:02:00,490 --> 00:02:04,360
+Keep unnecessary personal details
+and narratives out of the message.
+
+38
+00:02:04,519 --> 00:02:07,319
+Save the step and inspect
+its card in the editor.
+
+39
+00:02:07,670 --> 00:02:12,130
+The card shows the action and a template
+excerpt; the execution history will
+
+40
+00:02:12,130 --> 00:02:14,349
+show whether a send actually completed.
+
+41
+00:02:14,589 --> 00:02:17,329
+Add a second Send Email step at Order two.
+
+42
+00:02:17,869 --> 00:02:21,880
+For this exercise, run it only when
+the call name contains TRAINING.
+
+43
+00:02:22,340 --> 00:02:27,440
+Use Visual Builder for simple comparisons,
+or Raw Expression with Scriban braces.
+
+44
+00:02:27,740 --> 00:02:29,400
+Here, call.name
+
+45
+00:02:29,400 --> 00:02:31,209
+piped to string.contains
+
+46
+00:02:31,240 --> 00:02:34,080
+TRAINING must render
+true for the step to run.
+
+47
+00:02:34,510 --> 00:02:37,660
+Select Test Condition and
+read the result carefully.
+
+48
+00:02:37,789 --> 00:02:41,910
+A syntax-valid message means the
+expression can be read; without
+
+49
+00:02:41,910 --> 00:02:45,879
+sample event data, it does not
+establish whether this call will pass.
+
+50
+00:02:46,369 --> 00:02:50,360
+Save the condition with the step,
+then inspect the actual run later to
+
+51
+00:02:50,360 --> 00:02:52,350
+confirm whether it ran or skipped.
+
+52
+00:02:52,480 --> 00:02:58,190
+Create Academy call closed — captured mail
+as a second workflow, choose CallClosed,
+
+53
+00:02:58,369 --> 00:03:00,190
+and add its own closeout action.
+
+54
+00:03:00,530 --> 00:03:02,290
+Keep it disabled until checked.
+
+55
+00:03:02,669 --> 00:03:05,759
+This gives each event a
+visible definition and history.
+
+56
+00:03:06,080 --> 00:03:09,129
+It does not make the first
+workflow wait for the second event.
+
+57
+00:03:09,520 --> 00:03:13,340
+For other operations, choose the
+actual available event, such as
+
+58
+00:03:13,340 --> 00:03:17,250
+a unit status change, completed
+checklist or finalized record.
+
+59
+00:03:17,440 --> 00:03:21,299
+Check the event's timing and data
+before choosing template variables.
+
+60
+00:03:21,679 --> 00:03:25,329
+Ordered steps belong to the event
+that started that specific run.
+
+61
+00:03:25,590 --> 00:03:30,000
+Reopen Academy call opened — captured
+mail and review the destination,
+
+62
+00:03:30,190 --> 00:03:32,679
+credential, enabled steps and order.
+
+63
+00:03:33,130 --> 00:03:36,349
+Confirm the training receiver and
+background processing are ready.
+
+64
+00:03:36,809 --> 00:03:38,480
+Enable the workflow and save.
+
+65
+00:03:39,009 --> 00:03:42,739
+Create one approved training call
+whose name contains TRAINING.
+
+66
+00:03:43,140 --> 00:03:45,929
+That operational event
+is the execution test.
+
+67
+00:03:46,109 --> 00:03:49,639
+If the action is meant for email,
+a file store or a messaging
+
+68
+00:03:49,639 --> 00:03:53,420
+platform, use a controlled test
+destination for that service.
+
+69
+00:03:53,819 --> 00:03:57,979
+Do not infer a working integration
+merely from the workflow's enabled
+
+70
+00:03:57,979 --> 00:04:00,269
+badge or the absence of a form error.
+
+71
+00:04:00,519 --> 00:04:03,839
+Open Runs for the workflow,
+then open the training run.
+
+72
+00:04:04,349 --> 00:04:08,210
+Read its status, attempt number,
+start and completion times.
+
+73
+00:04:08,570 --> 00:04:12,570
+Inspect each step's log and duration,
+including the conditional step.
+
+74
+00:04:12,990 --> 00:04:16,529
+Expand Rendered Output when your
+permissions allow it and compare the
+
+75
+00:04:16,559 --> 00:04:18,170
+actual message with the template.
+
+76
+00:04:18,580 --> 00:04:22,469
+A skipped step should have an
+understandable reason; a failed step
+
+77
+00:04:22,570 --> 00:04:24,439
+needs its recorded error reviewed.
+
+78
+00:04:24,710 --> 00:04:28,499
+Compare the receiver's own controlled
+receipt when you need proof of delivery,
+
+79
+00:04:28,770 --> 00:04:32,440
+because a workflow log alone may
+describe only the action's handoff.
+
+80
+00:04:32,870 --> 00:04:37,769
+Open Health to review recent successful,
+failed and skipped runs and performance.
+
+81
+00:04:38,109 --> 00:04:40,700
+Use the different time windows
+to see whether a single
+
+82
+00:04:40,700 --> 00:04:42,230
+failure is part of a pattern.
+
+83
+00:04:42,789 --> 00:04:46,339
+Pending Runs shows work that is
+waiting, running or retrying.
+
+84
+00:04:46,789 --> 00:04:51,529
+Inspect a run before using Cancel, and
+understand what Clear Pending will affect.
+
+85
+00:04:51,709 --> 00:04:56,129
+These controls manage queued work;
+they do not undo an action already
+
+86
+00:04:56,129 --> 00:04:57,839
+accepted by another service.
+
+87
+00:04:58,190 --> 00:05:02,240
+Keep the run identifier when
+investigating, so the workflow, event and
+
+88
+00:05:02,240 --> 00:05:04,450
+destination evidence remain connected.
+
+89
+00:05:04,870 --> 00:05:09,660
+For a controlled retry exercise, pause
+only the isolated training receiver
+
+90
+00:05:09,700 --> 00:05:11,530
+and trigger a fresh close event.
+
+91
+00:05:11,890 --> 00:05:16,190
+In this example the same run reaches
+three attempts, then fails with
+
+92
+00:05:16,190 --> 00:05:18,119
+Maximum retry attempts exceeded.
+
+93
+00:05:18,529 --> 00:05:21,080
+Read the SMTP error in its step logs.
+
+94
+00:05:21,449 --> 00:05:24,689
+Restoring the receiver does
+not restart an exhausted run.
+
+95
+00:05:24,909 --> 00:05:28,620
+A fresh training close event creates
+a different run, which completes on
+
+96
+00:05:28,620 --> 00:05:30,769
+attempt one and arrives in the receiver.
+
+97
+00:05:31,249 --> 00:05:35,989
+Retries happen automatically; this page
+does not provide a general Retry button.
+
+98
+00:05:36,480 --> 00:05:39,659
+Earlier actions can run
+again, so destinations must
+
+99
+00:05:39,659 --> 00:05:41,209
+tolerate duplicate attempts.
+
+100
+00:05:41,660 --> 00:05:45,740
+In this build, the saved thirty-second
+backoff did not match the observed
+
+101
+00:05:45,740 --> 00:05:49,709
+five- and ten-second gaps, so
+confirm timing in the run history.
+
+102
+00:05:49,910 --> 00:05:53,730
+Finally, disable the training
+workflows and keep their run history.
+
+103
+00:05:54,169 --> 00:05:58,110
+These controls also fit community
+care and mental health teams, search
+
+104
+00:05:58,110 --> 00:06:02,430
+and rescue organizations, security
+departments, wildland contractors
+
+105
+00:06:02,470 --> 00:06:04,190
+and industrial response teams.
+
+106
+00:06:04,669 --> 00:06:08,520
+Choose the operational event and the
+minimum information your own process
+
+107
+00:06:08,520 --> 00:06:13,760
+needs; for example, route a site incident
+to a supervisor or a completed readiness
+
+108
+00:06:13,760 --> 00:06:15,340
+check to a training coordinator.
+
+

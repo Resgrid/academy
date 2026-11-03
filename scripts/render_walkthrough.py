@@ -477,7 +477,9 @@ def render(lesson_path, plan_path, asset_root, output_dir, ffmpeg="ffmpeg", font
         chapter_file = staging / (ident + ".chapters.json"); chapter_file.write_text(json.dumps(chapters, indent=2) + "\n")
         metadata = working / "chapters.ffmetadata"; metadata.write_text(ffmetadata(chapters, recipe["lesson"]["title"]), encoding="utf-8")
         movie = staging / (ident + ".mp4")
-        run([str(ffmpeg), "-nostdin", "-hide_banner", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(concat), "-i", str(wav), "-i", str(srt), "-f", "ffmetadata", "-i", str(metadata), "-map", "0:v:0", "-map", "1:a:0", "-map", "2:0", "-map_metadata", "3", "-map_chapters", "3", "-t", str(recipe["duration"]), "-vf", f"fps={FPS}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage", "-crf", "18", "-threads", "2", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-c:s", "mov_text", "-metadata:s:s:0", "language=eng", "-movflags", "+faststart", str(movie)], "render")
+        # A millisecond movie clock can round an edit-list endpoint down and
+        # discard the last PCM samples. Match the clock to the decoded audio.
+        run([str(ffmpeg), "-nostdin", "-hide_banner", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(concat), "-i", str(wav), "-i", str(srt), "-f", "ffmetadata", "-i", str(metadata), "-map", "0:v:0", "-map", "1:a:0", "-map", "2:0", "-map_metadata", "3", "-map_chapters", "3", "-t", str(recipe["duration"]), "-vf", f"fps={FPS}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-tune", "stillimage", "-crf", "18", "-threads", "2", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-c:s", "mov_text", "-metadata:s:s:0", "language=eng", "-movie_timescale", "48000", "-movflags", "+faststart", str(movie)], "render")
         decoded = run([str(ffmpeg), "-nostdin", "-v", "error", "-nostats", "-i", str(movie), "-map", "0:v:0", "-map", "0:a:0", "-progress", "pipe:1", "-f", "null", "-"], "render.full_decode")
         counts = re.findall(r"^frame=(\d+)\s*$", decoded.stdout, re.MULTILINE)
         frame_count = int(counts[-1]) if counts else 0

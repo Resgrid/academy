@@ -1,0 +1,2220 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Resgrid.Framework;
+using Resgrid.Model.Services;
+using Resgrid.Providers.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using Resgrid.Web.Services.Helpers;
+using Resgrid.Web.Services.Models.v4.CallPriorities;
+using System.Linq;
+using Resgrid.Model;
+using Resgrid.Model.Providers;
+using System;
+using System.Globalization;
+using Resgrid.Web.Services.Models.v4.Mapping;
+using Resgrid.Web.Services.Models.v4.Roles;
+using GeoJSON.Net;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using GeoJSON.Net.Feature;
+using Resgrid.Model.Helpers;
+using Resgrid.Services;
+
+namespace Resgrid.Web.Services.Controllers.v4
+{
+	/// <summary>
+	/// Mapping operations
+	/// </summary>
+	[Route("api/v{VersionId:apiVersion}/[controller]")]
+	[ApiVersion("4.0")]
+	[ApiExplorerSettings(GroupName = "v4")]
+	public class MappingController : V4AuthenticatedApiControllerbase
+	{
+		#region Members and Constructors
+		private readonly IUsersService _usersService;
+		private readonly IActionLogsService _actionLogsService;
+		private readonly IDepartmentsService _departmentsService;
+		private readonly IUserProfileService _userProfileService;
+		private readonly IUserStateService _userStateService;
+		private readonly IUnitsService _unitsService;
+		private readonly ICallsService _callsService;
+		private readonly IDepartmentGroupsService _departmentGroupsService;
+		private readonly ICustomStateService _customStateService;
+		private readonly IDepartmentSettingsService _departmentSettingsService;
+		private readonly IGeoLocationProvider _geoLocationProvider;
+		private readonly IMappingService _mappingService;
+		private readonly IRecordsHydrantsService _hydrantsService;
+		private readonly Model.Services.IAuthorizationService _authorizationService;
+		private readonly IIndoorMapService _indoorMapService;
+		private readonly ICustomMapService _customMapService;
+		private readonly IProtectedReadService _protectedReadService;
+		private readonly IDepartmentDataProtectionService _dataProtectionService;
+		private readonly IDispatchScopeService _dispatchScopeService;
+		private readonly IMapIconsService _mapIconsService;
+		private readonly IMapStyleService _mapStyleService;
+		private readonly IStaticMapService _staticMapService;
+		private readonly ICustomMapMercatorTileRenderer _mercatorTileRenderer;
+		private readonly IOfflineMapPackService _offlineMapPackService;
+		private readonly IOfflineMapPackStore _offlineMapPackStore;
+		private readonly Microsoft.AspNetCore.Authorization.IAuthorizationService _policyAuthorization;
+		private readonly Microsoft.Extensions.Localization.IStringLocalizer<Resgrid.Localization.Areas.User.Mapping.MapIconLegend> _legendStrings;
+
+		public MappingController(
+			IUsersService usersService,
+			IActionLogsService actionLogsService,
+			IDepartmentsService departmentsService,
+			IUserProfileService userProfileService,
+			IUserStateService userStateService,
+			IUnitsService unitsService,
+			ICallsService callsService,
+			IDepartmentGroupsService departmentGroupsService,
+			ICustomStateService customStateService,
+			IDepartmentSettingsService departmentSettingsService,
+			IGeoLocationProvider geoLocationProvider,
+			IMappingService mappingService,
+			Model.Services.IAuthorizationService authorizationService,
+			IIndoorMapService indoorMapService,
+			ICustomMapService customMapService,
+			IProtectedReadService protectedReadService,
+			IDepartmentDataProtectionService dataProtectionService,
+			IRecordsHydrantsService hydrantsService,
+			IDispatchScopeService dispatchScopeService,
+			IMapIconsService mapIconsService,
+			Microsoft.Extensions.Localization.IStringLocalizer<Resgrid.Localization.Areas.User.Mapping.MapIconLegend> legendStrings,
+			IMapStyleService mapStyleService,
+			IStaticMapService staticMapService,
+			Microsoft.AspNetCore.Authorization.IAuthorizationService policyAuthorization,
+			ICustomMapMercatorTileRenderer mercatorTileRenderer,
+			IOfflineMapPackService offlineMapPackService,
+			IOfflineMapPackStore offlineMapPackStore
+			)
+		{
+			_offlineMapPackService = offlineMapPackService;
+			_offlineMapPackStore = offlineMapPackStore;
+			_mercatorTileRenderer = mercatorTileRenderer;
+			_mapStyleService = mapStyleService;
+			_staticMapService = staticMapService;
+			_policyAuthorization = policyAuthorization;
+			_dispatchScopeService = dispatchScopeService;
+			_mapIconsService = mapIconsService;
+			_legendStrings = legendStrings;
+			_usersService = usersService;
+			_actionLogsService = actionLogsService;
+			_departmentsService = departmentsService;
+			_userProfileService = userProfileService;
+			_userStateService = userStateService;
+			_unitsService = unitsService;
+			_callsService = callsService;
+			_departmentGroupsService = departmentGroupsService;
+			_customStateService = customStateService;
+			_departmentSettingsService = departmentSettingsService;
+			_geoLocationProvider = geoLocationProvider;
+			_mappingService = mappingService;
+			_hydrantsService = hydrantsService;
+			_authorizationService = authorizationService;
+			_indoorMapService = indoorMapService;
+			_customMapService = customMapService;
+			_protectedReadService = protectedReadService;
+			_dataProtectionService = dataProtectionService;
+		}
+
+		/// <summary>
+		/// True when the caller authenticated as the BigBoard client application. BigBoard is an
+		/// unattended display: it can never hold a grant, so it is stepped down structurally
+		/// (plan section 7.3) and egress policy can never relax that.
+		/// </summary>
+		private bool IsBigBoardSession =>
+			string.Equals(User?.FindFirst(Resgrid.Model.Security.SessionClaimTypes.ClientApp)?.Value,
+				((int)UserSessionClientApplication.BigBoard).ToString(CultureInfo.InvariantCulture),
+				StringComparison.Ordinal);
+
+		/// <summary>The generic label a protected call carries on a map that cannot reveal it.</summary>
+		#endregion Members and Constructors
+
+		/// <summary>
+		/// Data to center the map and it's default location plus marker information for displaying makers on the map.
+		/// </summary>
+		/// <returns>GetMapDataResult object</returns>
+		[HttpGet("GetMapDataAndMarkers")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetMapDataResult>> GetMapDataAndMarkers()
+		{
+			var result = new GetMapDataResult();
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var stations = await _departmentGroupsService.GetAllStationGroupsForDepartmentAsync(DepartmentId);
+
+			var calls = await _dispatchScopeService.FilterCallsForUserAsync(DepartmentId, UserId, await _callsService.GetActiveCallsByDepartmentAsync(DepartmentId));
+			var units = await _unitsService.GetUnitsForDepartmentAsync(DepartmentId);
+			var unitStates = await _unitsService.GetAllLatestStatusForUnitsByDepartmentIdAsync(DepartmentId);
+			var unitLocations = await _unitsService.GetLatestUnitLocationsAsync(DepartmentId);
+			var poiTypes = await _mappingService.GetPOITypesForDepartmentAsync(DepartmentId);
+
+			var personnelStates = await _actionLogsService.GetLastActionLogsForDepartmentAsync(DepartmentId);
+			//var personnelNames = await _departmentsService.GetAllPersonnelNamesForDepartmentAsync(DepartmentId);
+			var people = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false);
+			var personnelLocations = await _usersService.GetLatestLocationsForDepartmentPersonnelAsync(DepartmentId);
+			// Every call, unit and person icon follows its type or role and its priority or status (MapIconResolver).
+			var icons = await _mapIconsService.GetResolverAsync(DepartmentId, unitStates);
+			// A person holding an active role on a unit is labelled "Name (Unit)", naming only units this member may view.
+			var unitNamesByUser = await PersonnelMapLabel.BuildUnitNamesByUserAsync(
+				await _unitsService.GetAllActiveRolesForUnitsByDepartmentIdAsync(DepartmentId), units,
+				unitId => _authorizationService.CanUserViewUnitViaMatrixAsync(unitId, UserId, DepartmentId));
+
+			var personnelLocationTTL = await _departmentSettingsService.GetMappingPersonnelLocationTTLAsync(DepartmentId);
+			var unitLocationTTL = await _departmentSettingsService.GetMappingUnitLocationTTLAsync(DepartmentId);
+			var personnelAllowStatusWithNoLocationToOverwrite = await _departmentSettingsService.GetMappingPersonnelAllowStatusWithNoLocationToOverwriteAsync(DepartmentId);
+			var unitAllowStatusWithNoLocationToOverwrite = await _departmentSettingsService.GetMappingUnitAllowStatusWithNoLocationToOverwriteAsync(DepartmentId);
+
+			var center = await GetDepartmentMapCenterAsync(department);
+
+			result.Data.CenterLat = center.Latitude;
+			result.Data.CenterLon = center.Longitude;
+			result.Data.ZoomLevel = center.ZoomLevel;
+
+			if (stations != null && stations.Any())
+			{
+				foreach (var station in stations)
+				{
+					MapMakerInfoData info = new MapMakerInfoData();
+					info.Id = $"s{station.DepartmentGroupId}";
+					info.ImagePath = "Station";
+					info.Title = station.Name;
+					info.InfoWindowContent = station.Name;
+					info.Type = 2;
+
+					try
+					{
+						if (station.Address != null)
+						{
+							string coordinates = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3}", station.Address.Address1,
+																				station.Address.City,
+																				station.Address.State,
+																				station.Address.PostalCode));
+
+							if (!String.IsNullOrEmpty(coordinates))
+							{
+								info.Latitude = double.Parse(coordinates.Split(char.Parse(","))[0]);
+								info.Longitude = double.Parse(coordinates.Split(char.Parse(","))[1]);
+
+								result.Data.MapMakerInfos.Add(info);
+							}
+						}
+						else if (!String.IsNullOrWhiteSpace(station.Latitude) && !String.IsNullOrWhiteSpace(station.Longitude))
+						{
+							info.Latitude = double.Parse(station.Latitude);
+							info.Longitude = double.Parse(station.Longitude);
+
+							result.Data.MapMakerInfos.Add(info);
+						}
+					}
+					catch { }
+				}
+			}
+
+			if (calls != null && calls.Any())
+			{
+				// ADP (plan sections 7.1, 7.3): a marker's name, type and position are operational and always shown
+				// (2026-10-17). Only the nature in the info window is protected: it runs through the protected-read
+				// pipeline and is left out when it comes back redacted. BigBoard never holds a grant.
+				var mapCallsAreProtected = await _dataProtectionService.IsProtectionEnforcedAsync(DepartmentId);
+				if (mapCallsAreProtected)
+				{
+					var mapGrantToken = IsBigBoardSession
+						? null
+						: Request.Headers[Resgrid.Web.Services.Controllers.v4.DataProtectionController.GrantHeader].ToString();
+
+					await _protectedReadService.ResolveForReadAsync(DepartmentId, calls.ToList(), mapGrantToken, UserId);
+				}
+
+				foreach (var call in calls)
+				{
+					var natureIsRedacted = call.NatureOfCall == ProtectedDataEnvelope.RedactionValue || ProtectedDataEnvelope.HasEnvelopePrefix(call.NatureOfCall);
+
+					MapMakerInfoData info = new MapMakerInfoData();
+					info.Id = $"c{call.CallId}";
+					info.Title = ProtectedDataEnvelope.SafeDisplay(call.Name);
+					info.InfoWindowContent = natureIsRedacted ? null : call.NatureOfCall;
+					info.Type = 0;
+
+					try
+					{
+						ApplyIcon(info, icons.ForCall(call));
+
+						if (!String.IsNullOrEmpty(call.GeoLocationData) && call.GeoLocationData.Length > 1 &&
+							call.GeoLocationData != ProtectedDataEnvelope.RedactionValue &&
+							!ProtectedDataEnvelope.HasEnvelopePrefix(call.GeoLocationData))
+						{
+							try
+							{
+								info.Latitude = double.Parse(call.GeoLocationData.Split(char.Parse(","))[0]);
+								info.Longitude = double.Parse(call.GeoLocationData.Split(char.Parse(","))[1]);
+
+								result.Data.MapMakerInfos.Add(info);
+							}
+							catch { }
+						}
+						else if (!String.IsNullOrEmpty(call.Address) &&
+							call.Address != ProtectedDataEnvelope.RedactionValue &&
+							!ProtectedDataEnvelope.HasEnvelopePrefix(call.Address))
+						{
+							string coordinates = await _geoLocationProvider.GetLatLonFromAddress(call.Address);
+							if (!String.IsNullOrEmpty(coordinates))
+							{
+								info.Latitude = double.Parse(coordinates.Split(char.Parse(","))[0]);
+								info.Longitude = double.Parse(coordinates.Split(char.Parse(","))[1]);
+							}
+
+							result.Data.MapMakerInfos.Add(info);
+						}
+					}
+					catch { }
+				}
+			}
+
+			if (units != null && units.Any())
+			{
+				foreach (var unit in units)
+				{
+					if (!await _authorizationService.CanUserViewUnitLocationViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+						continue;
+
+					var unitState = unitStates.FirstOrDefault(x => x.UnitId == unit.UnitId);
+					var unitMarker = BuildUnitMarker(unit, unitLocations.FirstOrDefault(x => x.UnitId == unit.UnitId),
+						unitState, icons.ForUnit(unit, unitState), unitLocationTTL, unitAllowStatusWithNoLocationToOverwrite, DateTime.UtcNow);
+
+					if (unitMarker.Marker != null)
+						result.Data.MapMakerInfos.Add(unitMarker.Marker);
+				}
+			}
+
+			if (people != null && people.Any())
+			{
+				foreach (var person in people)
+				{
+					if (!await _authorizationService.CanUserViewPersonLocationViaMatrixAsync(person.UserId, UserId, DepartmentId))
+						continue;
+
+					var personState = personnelStates.FirstOrDefault(x => x.UserId == person.UserId);
+					var personMarker = BuildPersonMarker(person, PersonnelMapLabel.Format(person.Name, person.UserId, unitNamesByUser),
+						personnelLocations.FirstOrDefault(x => x.UserId == person.UserId), personState,
+						icons.ForPerson(person.RoleList, personState), personnelLocationTTL, personnelAllowStatusWithNoLocationToOverwrite, DateTime.UtcNow);
+
+					if (personMarker.Marker != null)
+						result.Data.MapMakerInfos.Add(personMarker.Marker);
+				}
+			}
+
+			var hydrantPoints = new List<HydrantMapPoint>();
+			try
+			{
+				hydrantPoints = await GetHydrantPointsAsync();
+				result.Data.HydrantsAvailable = User.HasClaim(ResgridClaimTypes.Resources.Record, ResgridClaimTypes.Actions.View) && await _hydrantsService.IsModuleEnabledAsync(DepartmentId);
+			}
+			catch (OperationCanceledException) { throw; }
+			catch (Exception ex)
+			{
+				Logging.LogException(ex, "Hydrant map layer could not be loaded");
+				result.Data.HydrantsError = "Hydrants could not be loaded. Refresh the page to retry. Other map layers remain available.";
+			}
+			var hydrantPoiIds = hydrantPoints.Where(h => h.PoiId.HasValue).Select(h => h.PoiId.Value).ToHashSet();
+			result.Data.MapMakerInfos.AddRange(hydrantPoints.Select(ConvertHydrantMapMarker));
+
+			if (poiTypes != null && poiTypes.Any())
+			{
+				foreach (var poiType in poiTypes.Where(x => x.Pois != null && x.Pois.Any()))
+				{
+					result.Data.PoiLayers.Add(new PoiLayerData
+					{
+						PoiTypeId = poiType.PoiTypeId,
+						Name = poiType.Name,
+						Color = poiType.Color,
+						ImagePath = PoiIconHelper.ResolveIconName(poiType.Image),
+						PoiImage = poiType.Image,
+						Marker = poiType.Marker,
+						IsDestination = poiType.IsDestination,
+						IconUrl = TypeIcons.ApiIconUrl(Config.SystemBehaviorConfig.ResgridApiBaseUrl, poiType)
+					});
+
+					foreach (var poi in poiType.Pois.Where(p => !hydrantPoiIds.Contains(p.PoiId)))
+					{
+						result.Data.MapMakerInfos.Add(ConvertPoiMapMarker(poi, poiType));
+					}
+				}
+			}
+
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// One unit's map: the unit's own position, when it reports one, and the positions of the members seated in its
+		/// active roles, plus the department's default view for when none of them has a position. Positions follow the same
+		/// location TTL, status fallback and location visibility matrix as GetMapDataAndMarkers. Live moves arrive on the
+		/// geolocation hub (onUnitLocationUpdated / onPersonnelLocationUpdated for "u{unitId}" and "p{userId}"), and a crew
+		/// change arrives on the eventing hub as unitActiveRolesUpdated, after which the client reloads this.
+		/// </summary>
+		/// <param name="unitId">The unit to map.</param>
+		/// <returns>GetUnitMapDataResult object</returns>
+		[HttpGet("GetUnitMapData")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Unit_View)]
+		public async Task<ActionResult<GetUnitMapDataResult>> GetUnitMapData(int unitId)
+		{
+			var result = new GetUnitMapDataResult();
+
+			var unit = unitId > 0 ? await _unitsService.GetUnitByIdAsync(unitId) : null;
+
+			// Another department's unit, a deleted one and one Security > View Units hides from this member all read as missing.
+			if (unit == null || unit.DepartmentId != DepartmentId || unit.IsDeleted ||
+				!await _authorizationService.CanUserViewUnitViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+			{
+				ResponseHelper.PopulateV4ResponseNotFound(result);
+				return Ok(result);
+			}
+
+			var department = await _departmentsService.GetDepartmentByIdAsync(DepartmentId, false);
+			var center = await GetDepartmentMapCenterAsync(department);
+			var now = DateTime.UtcNow;
+
+			result.Data.UnitId = unit.UnitId.ToString();
+			result.Data.Name = unit.Name;
+			result.Data.Type = unit.Type;
+			result.Data.CenterLat = center.Latitude;
+			result.Data.CenterLon = center.Longitude;
+			result.Data.ZoomLevel = center.ZoomLevel;
+
+			if (unit.StationGroupId.HasValue)
+				result.Data.GroupName = (await _departmentGroupsService.GetGroupByIdAsync(unit.StationGroupId.Value, false))?.Name;
+
+			var unitState = await _unitsService.GetLastUnitStateByUnitIdAsync(unit.UnitId);
+			var icons = await _mapIconsService.GetResolverAsync(DepartmentId, unitState != null ? new[] { unitState } : null);
+
+			if (await _authorizationService.CanUserViewUnitLocationViaMatrixAsync(unit.UnitId, UserId, DepartmentId))
+			{
+				var unitMarker = BuildUnitMarker(unit, await _unitsService.GetLatestUnitLocationAsync(unit.UnitId),
+					unitState, icons.ForUnit(unit, unitState),
+					await _departmentSettingsService.GetMappingUnitLocationTTLAsync(DepartmentId),
+					await _departmentSettingsService.GetMappingUnitAllowStatusWithNoLocationToOverwriteAsync(DepartmentId), now);
+
+				result.Data.UnitMarker = unitMarker.Marker;
+				result.Data.UnitLocationTimestamp = unitMarker.Timestamp;
+			}
+
+			// The crew is the seats the unit defines, matched by role name, exactly as Units/GetAllUnitsInfos reports them.
+			var roles = await _unitsService.GetRolesForUnitAsync(unit.UnitId) ?? new List<UnitRole>();
+			var activeRoles = await _unitsService.GetActiveRolesForUnitAsync(unit.UnitId) ?? new List<UnitActiveRole>();
+			var seats = roles
+				.Select(role => (Role: role, Seat: activeRoles.FirstOrDefault(x => x.Role == role.Name)))
+				.Where(x => x.Seat != null && !String.IsNullOrWhiteSpace(x.Seat.UserId))
+				.ToList();
+
+			if (seats.Any())
+			{
+				// Only current members are listed: a seat left behind by someone since removed, disabled or hidden shows no one.
+				var people = await _usersService.GetUserGroupAndRolesByDepartmentIdAsync(DepartmentId, false, false, false) ?? new List<UserGroupRole>();
+				var personnelLocations = await _usersService.GetLatestLocationsForDepartmentPersonnelAsync(DepartmentId) ?? new List<PersonnelLocation>();
+				var personnelStates = await _actionLogsService.GetLastActionLogsForDepartmentAsync(DepartmentId) ?? new List<ActionLog>();
+				var personnelLocationTTL = await _departmentSettingsService.GetMappingPersonnelLocationTTLAsync(DepartmentId);
+				var personnelAllowStatusWithNoLocationToOverwrite = await _departmentSettingsService.GetMappingPersonnelAllowStatusWithNoLocationToOverwriteAsync(DepartmentId);
+
+				// One member in two seats is one person on the map, listed once with both role names.
+				foreach (var member in seats.GroupBy(x => x.Seat.UserId, StringComparer.OrdinalIgnoreCase))
+				{
+					var person = people.FirstOrDefault(p => String.Equals(p.UserId, member.Key, StringComparison.OrdinalIgnoreCase));
+
+					if (person == null)
+						continue;
+
+					var crewMember = new UnitMapCrewMemberData
+					{
+						UserId = person.UserId,
+						Name = person.Name,
+						RoleName = String.Join(", ", member.Select(x => x.Role.Name))
+					};
+
+					if (await _authorizationService.CanUserViewPersonLocationViaMatrixAsync(person.UserId, UserId, DepartmentId))
+					{
+						var personState = personnelStates.FirstOrDefault(x => x.UserId == person.UserId);
+						var personMarker = BuildPersonMarker(person, $"{person.Name} ({crewMember.RoleName})",
+							personnelLocations.FirstOrDefault(x => x.UserId == person.UserId), personState,
+							icons.ForPerson(person.RoleList, personState), personnelLocationTTL, personnelAllowStatusWithNoLocationToOverwrite, now);
+
+						crewMember.Marker = personMarker.Marker;
+						crewMember.LocationTimestamp = personMarker.Timestamp;
+					}
+
+					result.Data.Crew.Add(crewMember);
+				}
+			}
+
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// The department's default map view: the BigBoard center coordinates, else the BigBoard center address, else the
+		/// department address, else a fixed fallback; with the BigBoard zoom level (9 when unset).
+		/// </summary>
+		private async Task<(double Latitude, double Longitude, int ZoomLevel)> GetDepartmentMapCenterAsync(Department department)
+		{
+			var address = await _departmentSettingsService.GetBigBoardCenterAddressDepartmentAsync(DepartmentId);
+			var gpsCoordinates = await _departmentSettingsService.GetBigBoardCenterGpsCoordinatesDepartmentAsync(DepartmentId);
+
+			double? centerLat = null;
+			double? centerLon = null;
+
+			if (!String.IsNullOrWhiteSpace(gpsCoordinates))
+			{
+				string[] coordinates = gpsCoordinates.Split(char.Parse(","));
+
+				if (coordinates.Count() == 2)
+				{
+					double newLat;
+					double newLon;
+					if (double.TryParse(coordinates[0], out newLat) && double.TryParse(coordinates[1], out newLon))
+					{
+						centerLat = newLat;
+						centerLon = newLon;
+					}
+				}
+			}
+
+			if (!centerLat.HasValue && !centerLon.HasValue && address != null)
+			{
+				string coordinates = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3}", address.Address1,
+																		address.City, address.State, address.PostalCode));
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					double newLat;
+					double newLon;
+					var coordinatesArr = coordinates.Split(char.Parse(","));
+					if (double.TryParse(coordinatesArr[0], out newLat) && double.TryParse(coordinatesArr[1], out newLon))
+					{
+						centerLat = newLat;
+						centerLon = newLon;
+					}
+				}
+			}
+
+			if (!centerLat.HasValue && !centerLon.HasValue && department?.Address != null)
+			{
+				string coordinates = await _geoLocationProvider.GetLatLonFromAddress(string.Format("{0} {1} {2} {3}", department.Address.Address1,
+																		department.Address.City,
+																		department.Address.State,
+																		department.Address.PostalCode));
+
+				if (!String.IsNullOrEmpty(coordinates))
+				{
+					double newLat;
+					double newLon;
+					var coordinatesArr = coordinates.Split(char.Parse(","));
+					if (double.TryParse(coordinatesArr[0], out newLat) && double.TryParse(coordinatesArr[1], out newLon))
+					{
+						centerLat = newLat;
+						centerLon = newLon;
+					}
+				}
+			}
+
+			if (!centerLat.HasValue || !centerLon.HasValue)
+			{
+				centerLat = 39.14086268299356;
+				centerLon = -119.7583809782715;
+			}
+
+			var zoomLevel = await _departmentSettingsService.GetBigBoardMapZoomLevelForDepartmentAsync(DepartmentId);
+
+			return (centerLat.Value, centerLon.Value, zoomLevel.HasValue ? zoomLevel.Value : 9);
+		}
+
+		/// <summary>
+		/// A unit's marker ("u{unitId}", Type 1) at its latest location ping, or at its status location when the ping has
+		/// expired or the status is newer; Marker is null when it has no current position. Timestamp is the source's time.
+		/// </summary>
+		private static (MapMakerInfoData Marker, DateTime? Timestamp) BuildUnitMarker(Unit unit, UnitsLocation latestLocation, UnitState state,
+			MapMarkerIcon icon, int unitLocationTTL, bool allowStatusWithNoLocationToOverwrite, DateTime nowUtc)
+		{
+			MapMakerInfoData info = new MapMakerInfoData();
+			info.Id = $"u{unit.UnitId}";
+			info.Title = unit.Name;
+			info.InfoWindowContent = "";
+			info.Type = 1;
+
+			try
+			{
+				ApplyIcon(info, icon);
+
+				var markerSource = MappingMarkerSelection.Select(latestLocation?.Timestamp, state?.Timestamp, () => state?.HasLocation() == true,
+					unitLocationTTL, allowStatusWithNoLocationToOverwrite, nowUtc);
+				if (markerSource == MappingMarkerSource.LocationPing)
+				{
+					info.Latitude = (double)latestLocation.Latitude;
+					info.Longitude = (double)latestLocation.Longitude;
+					return (info, AsUtc(latestLocation.Timestamp));
+				}
+				else if (markerSource == MappingMarkerSource.Status)
+				{
+					info.Latitude = (double)state.Latitude.Value;
+					info.Longitude = (double)state.Longitude.Value;
+					return (info, AsUtc(state.Timestamp));
+				}
+			}
+			catch { }
+
+			return (null, null);
+		}
+
+		/// <summary>
+		/// A person's marker ("p{userId}", Type 3) titled <paramref name="title"/>, at their latest location ping or their
+		/// status location under the same rules as a unit; Marker is null when they have no current position.
+		/// </summary>
+		private static (MapMakerInfoData Marker, DateTime? Timestamp) BuildPersonMarker(UserGroupRole person, string title, PersonnelLocation latestLocation,
+			ActionLog state, MapMarkerIcon icon, int personnelLocationTTL, bool allowStatusWithNoLocationToOverwrite, DateTime nowUtc)
+		{
+			MapMakerInfoData info = new MapMakerInfoData();
+
+			info.Id = $"p{person.UserId}";
+			info.Title = title;
+			info.InfoWindowContent = "";
+			info.Type = 3;
+
+			try
+			{
+				ApplyIcon(info, icon);
+
+				var markerSource = MappingMarkerSelection.Select(latestLocation?.Timestamp, state?.Timestamp, () => state?.HasLocation() == true,
+					personnelLocationTTL, allowStatusWithNoLocationToOverwrite, nowUtc);
+				if (markerSource == MappingMarkerSource.LocationPing)
+				{
+					info.Latitude = (double)latestLocation.Latitude;
+					info.Longitude = (double)latestLocation.Longitude;
+					return (info, AsUtc(latestLocation.Timestamp));
+				}
+				else if (markerSource == MappingMarkerSource.Status)
+				{
+					var location = state.GetCoordinates();
+					info.Latitude = location.Latitude.Value;
+					info.Longitude = location.Longitude.Value;
+					return (info, AsUtc(state.Timestamp));
+				}
+			}
+			catch { }
+
+			return (null, null);
+		}
+
+		/// <summary>
+		/// Sets a call, unit or person marker's icon fields: ImagePath stays the bundled icon older clients show, IconUrl the
+		/// department's uploaded icon (for the exact status or priority, else the type's own icon with a badge of the style),
+		/// PinIconUrl the built-in pin in the style of the status or priority and IconStyle that style.
+		/// </summary>
+		private static void ApplyIcon(MapMakerInfoData info, MapMarkerIcon icon)
+		{
+			var apiBaseUrl = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+
+			info.ImagePath = icon.ImagePath;
+			info.IconUrl = TypeIcons.ApiIconUrl(apiBaseUrl, icon.IconKey, icon.BadgeStyle);
+			info.PinIconUrl = TypeIcons.ApiPinUrl(apiBaseUrl, icon.PinName);
+			info.IconStyle = icon.Style;
+		}
+
+		// Location and status times are stored as UTC but can come back from the document store as Unspecified; without a
+		// "Z" on the wire a browser would read them as local time.
+		private static DateTime AsUtc(DateTime timestamp) =>
+			timestamp.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(timestamp, DateTimeKind.Utc) : timestamp.ToUniversalTime();
+
+		/// <summary>
+		/// Every icon the department's map can show, for an in-app map legend: calls by type and priority, units by type and
+		/// status, members by role and status, the status and priority colours and the POI types. Built from the same icons as
+		/// GetMapDataAndMarkers, so the department's uploads, the built-in pin each type picked and its own names for types,
+		/// priorities, status sets, statuses and roles all show as they do on the map.
+		/// </summary>
+		/// <returns>GetMapIconLegendResult object</returns>
+		[HttpGet("GetMapIconLegend")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetMapIconLegendResult>> GetMapIconLegend()
+		{
+			var result = new GetMapIconLegendResult();
+			var apiBaseUrl = Config.SystemBehaviorConfig.ResgridApiBaseUrl;
+			var legend = await _mapIconsService.GetLegendAsync(DepartmentId, _legendStrings["NoCallType"], _legendStrings["NoUnitType"], _legendStrings["NoRoleIcon"]);
+
+			result.Data.StatusStyles = legend.StatusStyles.Select(style => new MapLegendStyleData
+			{
+				Key = style.Key,
+				Color = style.Color,
+				Meanings = style.Meanings.Select(x => (int)x).ToList(),
+				UnitStatuses = style.UnitStatusNames,
+				PersonnelStatuses = style.PersonnelStatusNames,
+				UnitPinIconUrl = TypeIcons.ApiPinUrl(apiBaseUrl, TypeIcons.PinName(TypeIcons.UnitPinBase, style.Key)),
+				PersonPinIconUrl = TypeIcons.ApiPinUrl(apiBaseUrl, TypeIcons.PinName(TypeIcons.PersonPinBase, style.Key))
+			}).ToList();
+
+			result.Data.PriorityStyles = legend.PriorityStyles.Select(style => new MapLegendStyleData
+			{
+				Key = style.Key,
+				Color = style.Color,
+				Priorities = style.PriorityNames,
+				CallPinIconUrl = TypeIcons.ApiPinUrl(apiBaseUrl, TypeIcons.PinName(TypeIcons.CallPinBase, style.Key))
+			}).ToList();
+
+			result.Data.Calls = legend.CallRows.Select(x => ConvertLegendRow(x, apiBaseUrl)).ToList();
+			result.Data.Units = legend.UnitRows.Select(x => ConvertLegendRow(x, apiBaseUrl)).ToList();
+			result.Data.Personnel = legend.PersonnelRows.Select(x => ConvertLegendRow(x, apiBaseUrl)).ToList();
+
+			var poiTypes = await _mappingService.GetPOITypesForDepartmentAsync(DepartmentId) ?? new List<PoiType>();
+			result.Data.PoiTypes = poiTypes.OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase).Select(poiType => new MapLegendPoiTypeData
+			{
+				PoiTypeId = poiType.PoiTypeId,
+				Name = poiType.Name,
+				Color = poiType.Color,
+				PoiImage = poiType.Image,
+				ImagePath = PoiIconHelper.ResolveIconName(poiType.Image),
+				Marker = poiType.Marker,
+				IconUrl = TypeIcons.ApiIconUrl(apiBaseUrl, poiType)
+			}).ToList();
+
+			result.PageSize = result.Data.Calls.Count + result.Data.Units.Count + result.Data.Personnel.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		private static MapLegendRowData ConvertLegendRow(MapIconLegendRow row, string apiBaseUrl) =>
+			new MapLegendRowData
+			{
+				Id = row.Id,
+				Name = row.Name,
+				StatusSetName = row.StatusSetName,
+				IconUrl = TypeIcons.ApiIconUrl(apiBaseUrl, row.OwnIcon.IconKey, row.OwnIcon.BadgeStyle),
+				PinIconUrl = TypeIcons.ApiPinUrl(apiBaseUrl, row.OwnIcon.PinName),
+				ImagePath = row.OwnIcon.ImagePath,
+				States = row.States.Select(state => new MapLegendStateData
+				{
+					Id = state.Value,
+					Name = state.Name,
+					Color = state.Color,
+					IconStyle = state.Style,
+					IconUrl = TypeIcons.ApiIconUrl(apiBaseUrl, state.Icon.IconKey, state.Icon.BadgeStyle),
+					PinIconUrl = TypeIcons.ApiPinUrl(apiBaseUrl, state.Icon.PinName),
+					ImagePath = state.Icon.ImagePath,
+					IsVariant = state.Icon.IconIsVariant,
+					FollowsUnitStatus = state.FollowsUnitStatus
+				}).ToList()
+			};
+
+		/// <summary>
+		/// Gets the user created map layers in the system.
+		/// </summary>
+		/// <returns>GetMapLayersResult object</returns>
+		[HttpGet("GetMayLayers")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetMapLayersResult>> GetMayLayers(int type)
+		{
+			var result = new GetMapLayersResult();
+
+			var layers = await _mappingService.GetMapLayersForTypeDepartmentAsync(DepartmentId, (MapLayerTypes)type);
+
+			if (layers != null && layers.Count > 0)
+			{
+				foreach (var layer in layers)
+				{
+					result.Data.Layers.Add(ConvertMapLayerData(layer));
+				}
+			}
+
+			result.Data.LayerJson = JsonConvert.SerializeObject(result.Data.Layers.Select(x => x.Data.Features).ToList());
+
+			result.PageSize = result.Data.Layers.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		[HttpGet("GetPoiTypes")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<ActionResult<PoiTypesResult>> GetPoiTypes()
+		{
+			var result = new PoiTypesResult();
+			var poiTypes = await _mappingService.GetPOITypesForDepartmentAsync(DepartmentId);
+
+			if (poiTypes != null && poiTypes.Any())
+			{
+				foreach (var poiType in poiTypes)
+				{
+					result.Data.Add(ConvertPoiTypeData(poiType));
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		[HttpGet("GetPois")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<ActionResult<PoisResult>> GetPois(int? poiTypeId, bool destinationOnly = false)
+		{
+			var result = new PoisResult();
+			var poiTypes = await _mappingService.GetPOITypesForDepartmentAsync(DepartmentId);
+
+			if (poiTypes != null && poiTypes.Any())
+			{
+				var filteredPoiTypes = poiTypes.AsEnumerable();
+
+				if (poiTypeId.HasValue)
+					filteredPoiTypes = filteredPoiTypes.Where(x => x.PoiTypeId == poiTypeId.Value);
+
+				if (destinationOnly)
+					filteredPoiTypes = filteredPoiTypes.Where(x => x.IsDestination);
+
+				foreach (var poiType in filteredPoiTypes.Where(x => x.Pois != null && x.Pois.Any()))
+				{
+					foreach (var poi in poiType.Pois)
+					{
+						result.Data.Add(ConvertPoiData(poi, poiType));
+					}
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		[HttpGet("GetPoi/{poiId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		public async Task<ActionResult<PoiResult>> GetPoi(int poiId)
+		{
+			var result = new PoiResult();
+			var poi = await _mappingService.GetPOIByIdAsync(poiId);
+
+			if (poi == null)
+				return NotFound();
+
+			var poiType = await _mappingService.GetTypeByIdAsync(poi.PoiTypeId);
+
+			if (poiType == null || poiType.DepartmentId != DepartmentId)
+				return NotFound();
+
+			result.Data = ConvertPoiData(poi, poiType);
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		public static GetMapLayersData ConvertMapLayerData(MapLayer layer)
+		{
+			var result = new GetMapLayersData();
+
+			result.Id = layer.GetId();
+			result.DepartmentId = layer.DepartmentId;
+			result.Name = layer.Name;
+			result.Type = layer.Type;
+			result.Color = layer.Color;
+			result.IsSearchable = layer.IsSearchable;
+			result.IsOnByDefault = layer.IsOnByDefault;
+			result.AddedById = layer.AddedById;
+			result.AddedOn = layer.AddedOn;
+			result.UpdatedById = layer.UpdatedById;
+			result.UpdatedOn = layer.UpdatedOn;
+
+			result.Data = new GetMapLayersDataInfo();
+			result.Data.Type = ((GeoJSONObjectType)layer.Type).ToString();
+			result.Data.Features = layer.Data.Convert();
+
+			return result;
+		}
+
+		public static PoiTypeResultData ConvertPoiTypeData(PoiType poiType)
+		{
+			return new PoiTypeResultData
+			{
+				PoiTypeId = poiType.PoiTypeId,
+				Name = poiType.Name,
+				Color = poiType.Color,
+				ImagePath = PoiIconHelper.ResolveIconName(poiType.Image),
+				PoiImage = poiType.Image,
+				Marker = poiType.Marker,
+				IsDestination = poiType.IsDestination,
+				IconUrl = TypeIcons.ApiIconUrl(Config.SystemBehaviorConfig.ResgridApiBaseUrl, poiType)
+			};
+		}
+
+		public static PoiResultData ConvertPoiData(Poi poi, PoiType poiType)
+		{
+			return new PoiResultData
+			{
+				PoiId = poi.PoiId,
+				PoiTypeId = poiType.PoiTypeId,
+				PoiTypeName = poiType.Name,
+				Name = poi.Name,
+				Address = poi.Address,
+				Note = poi.Note,
+				Latitude = poi.Latitude,
+				Longitude = poi.Longitude,
+				Color = poiType.Color,
+				ImagePath = PoiIconHelper.ResolveIconName(poiType.Image),
+				PoiImage = poiType.Image,
+				Marker = poiType.Marker,
+				IsDestination = poiType.IsDestination,
+				IconUrl = TypeIcons.ApiIconUrl(Config.SystemBehaviorConfig.ResgridApiBaseUrl, poiType)
+			};
+		}
+
+
+		private async Task<List<HydrantMapPoint>> GetHydrantPointsAsync()
+		{
+			if (!User.HasClaim(Resgrid.Providers.Claims.ResgridClaimTypes.Resources.Record, Resgrid.Providers.Claims.ResgridClaimTypes.Actions.View)) return new List<HydrantMapPoint>();
+			try
+			{
+				if (!await _hydrantsService.IsModuleEnabledAsync(DepartmentId)) return new List<HydrantMapPoint>();
+				return await _hydrantsService.GetMapLayerAsync(DepartmentId, UserId, null, null, null, null);
+			}
+			catch (UnauthorizedAccessException) { return new List<HydrantMapPoint>(); }
+			catch (RecordsModuleDisabledException) { return new List<HydrantMapPoint>(); }
+		}
+
+		public static MapMakerInfoData ConvertHydrantMapMarker(HydrantMapPoint point)
+		{
+			var title = "Hydrant " + point.HydrantNumber;
+			var info = "<strong>" + System.Net.WebUtility.HtmlEncode(title) + "</strong><br/>" + (point.InService ? "In service" : "Out of service");
+			if (point.FlowGpm.HasValue) info += "<br/>" + point.FlowGpm.Value.ToString(CultureInfo.InvariantCulture) + " gpm";
+			return new MapMakerInfoData { Id = "hydrant-" + point.HydrantId, Latitude = (double)point.Latitude, Longitude = (double)point.Longitude,
+				Title = title, InfoWindowContent = info, Type = 5, LayerId = "hydrants", LayerName = "Hydrants", Color = point.Color, ImagePath = "hydrant", zIndex = 5 };
+		}
+
+		private static MapMakerInfoData ConvertPoiMapMarker(Poi poi, PoiType poiType)
+		{
+			return new MapMakerInfoData
+			{
+				Id = $"poi{poi.PoiId}",
+				Longitude = poi.Longitude,
+				Latitude = poi.Latitude,
+				Title = GetPoiTitle(poi, poiType),
+				InfoWindowContent = GetPoiInfoWindowContent(poi, poiType),
+				ImagePath = PoiIconHelper.ResolveIconName(poiType.Image),
+				PoiImage = poiType.Image,
+				Marker = poiType.Marker,
+				Color = poiType.Color,
+				Type = 4,
+				PoiTypeId = poiType.PoiTypeId,
+				PoiTypeName = poiType.Name,
+				Address = poi.Address,
+				Note = poi.Note,
+				LayerId = GetPoiLayerId(poiType),
+				LayerName = poiType.Name,
+				IconUrl = TypeIcons.ApiIconUrl(Config.SystemBehaviorConfig.ResgridApiBaseUrl, poiType)
+			};
+		}
+
+		private static string GetPoiTitle(Poi poi, PoiType poiType)
+		{
+			return PoiDisplayHelper.GetDisplayName(poi, poiType.Name);
+		}
+
+		private static string GetPoiInfoWindowContent(Poi poi, PoiType poiType)
+		{
+			var rows = PoiDisplayHelper.GetDisplayRows(poi, poiType.Name);
+			if (!rows.Any())
+				return String.Empty;
+
+			var encodedRows = rows.Select(System.Net.WebUtility.HtmlEncode).ToList();
+			encodedRows[0] = $"<strong>{encodedRows[0]}</strong>";
+
+			return String.Join("<br/>", encodedRows);
+		}
+
+		private static string GetPoiLayerId(PoiType poiType)
+		{
+			return $"poi-type-{poiType.PoiTypeId}";
+		}
+
+		/// <summary>
+		/// Gets all indoor maps for the department.
+		/// </summary>
+		/// <returns>GetIndoorMapsResult object with list of indoor maps</returns>
+		[HttpGet("GetIndoorMaps")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetIndoorMapsResult>> GetIndoorMaps()
+		{
+			var result = new GetIndoorMapsResult();
+
+			var maps = await _indoorMapService.GetIndoorMapsForDepartmentAsync(DepartmentId);
+
+			if (maps != null && maps.Count > 0)
+			{
+				foreach (var m in maps)
+				{
+					result.Data.Add(new IndoorMapResultData
+					{
+						IndoorMapId = m.IndoorMapId,
+						Name = m.Name,
+						Description = m.Description,
+						CenterLatitude = m.CenterLatitude,
+						CenterLongitude = m.CenterLongitude,
+						BoundsNELat = m.BoundsNELat,
+						BoundsNELon = m.BoundsNELon,
+						BoundsSWLat = m.BoundsSWLat,
+						BoundsSWLon = m.BoundsSWLon,
+						DefaultFloorId = m.DefaultFloorId
+					});
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets a specific indoor map with its floors.
+		/// </summary>
+		/// <param name="id">Indoor map id</param>
+		/// <returns>GetIndoorMapResult object with map and floor data</returns>
+		[HttpGet("GetIndoorMap/{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetIndoorMapResult>> GetIndoorMap(string id)
+		{
+			var result = new GetIndoorMapResult();
+
+			var map = await _indoorMapService.GetIndoorMapByIdAsync(id);
+
+			if (map == null || map.DepartmentId != DepartmentId)
+				return NotFound();
+
+			result.Data.Map = new IndoorMapResultData
+			{
+				IndoorMapId = map.IndoorMapId,
+				Name = map.Name,
+				Description = map.Description,
+				CenterLatitude = map.CenterLatitude,
+				CenterLongitude = map.CenterLongitude,
+				BoundsNELat = map.BoundsNELat,
+				BoundsNELon = map.BoundsNELon,
+				BoundsSWLat = map.BoundsSWLat,
+				BoundsSWLon = map.BoundsSWLon,
+				DefaultFloorId = map.DefaultFloorId
+			};
+
+			var floors = await _indoorMapService.GetFloorsForMapAsync(id);
+
+			if (floors != null && floors.Count > 0)
+			{
+				foreach (var f in floors)
+				{
+					result.Data.Floors.Add(new IndoorMapFloorResultData
+					{
+						IndoorMapFloorId = f.IndoorMapFloorId,
+						IndoorMapId = f.IndoorMapId,
+						Name = f.Name,
+						FloorOrder = f.FloorOrder,
+						HasImage = f.ImageData != null && f.ImageData.Length > 0,
+						BoundsNELat = f.BoundsNELat,
+						BoundsNELon = f.BoundsNELon,
+						BoundsSWLat = f.BoundsSWLat,
+						BoundsSWLon = f.BoundsSWLon,
+						Opacity = f.Opacity
+					});
+				}
+			}
+
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets a specific indoor map floor with its zones.
+		/// </summary>
+		/// <param name="floorId">Indoor map floor id</param>
+		/// <returns>GetIndoorMapFloorResult object with floor and zone data</returns>
+		[HttpGet("GetIndoorMapFloor/{floorId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetIndoorMapFloorResult>> GetIndoorMapFloor(string floorId)
+		{
+			var result = new GetIndoorMapFloorResult();
+
+			var floor = await _indoorMapService.GetFloorByIdAsync(floorId);
+
+			if (floor == null)
+				return NotFound();
+
+			var map = await _indoorMapService.GetIndoorMapByIdAsync(floor.IndoorMapId);
+
+			if (map == null || map.DepartmentId != DepartmentId)
+				return NotFound();
+
+			result.Data = new IndoorMapFloorResultData
+			{
+				IndoorMapFloorId = floor.IndoorMapFloorId,
+				IndoorMapId = floor.IndoorMapId,
+				Name = floor.Name,
+				FloorOrder = floor.FloorOrder,
+				HasImage = floor.ImageData != null && floor.ImageData.Length > 0,
+				BoundsNELat = floor.BoundsNELat,
+				BoundsNELon = floor.BoundsNELon,
+				BoundsSWLat = floor.BoundsSWLat,
+				BoundsSWLon = floor.BoundsSWLon,
+				Opacity = floor.Opacity,
+				Zones = new List<IndoorMapZoneResultData>()
+			};
+
+			var zones = await _indoorMapService.GetZonesForFloorAsync(floorId);
+
+			if (zones != null && zones.Count > 0)
+			{
+				foreach (var z in zones)
+				{
+					result.Data.Zones.Add(new IndoorMapZoneResultData
+					{
+						IndoorMapZoneId = z.IndoorMapZoneId,
+						IndoorMapFloorId = z.IndoorMapFloorId,
+						Name = z.Name,
+						Description = z.Description,
+						ZoneType = z.ZoneType,
+						PixelGeometry = z.PixelGeometry,
+						GeoGeometry = z.GeoGeometry,
+						CenterPixelX = z.CenterPixelX,
+						CenterPixelY = z.CenterPixelY,
+						CenterLatitude = z.CenterLatitude,
+						CenterLongitude = z.CenterLongitude,
+						Color = z.Color,
+						Metadata = z.Metadata,
+						IsSearchable = z.IsSearchable
+					});
+				}
+			}
+
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets the image for a specific indoor map floor.
+		/// </summary>
+		/// <param name="floorId">Indoor map floor id</param>
+		/// <returns>Floor image file</returns>
+		[HttpGet("GetIndoorMapFloorImage/{floorId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetIndoorMapFloorImage(string floorId)
+		{
+			// Bearer callers are checked exactly as before; native map sources that cannot send a header use a signed URL (plan D12).
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.IndoorFloorScope(floorId));
+			if (departmentId == null)
+				return Unauthorized();
+
+			var floor = await _indoorMapService.GetFloorByIdAsync(floorId);
+
+			if (floor == null)
+				return NotFound();
+
+			var map = await _indoorMapService.GetIndoorMapByIdAsync(floor.IndoorMapId);
+
+			if (map == null || map.DepartmentId != departmentId.Value)
+				return NotFound();
+
+			if (floor.ImageData == null || floor.ImageData.Length == 0)
+				return NotFound();
+
+			return File(floor.ImageData, floor.ImageContentType ?? "image/png");
+		}
+
+		/// <summary>
+		/// Searches for indoor map zones matching the specified term.
+		/// </summary>
+		/// <param name="term">Search term</param>
+		/// <returns>SearchIndoorLocationsResult object with matching zones</returns>
+		[HttpGet("SearchIndoorLocations")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<SearchIndoorLocationsResult>> SearchIndoorLocations(string term, string mapId = null)
+		{
+			var result = new SearchIndoorLocationsResult();
+
+			if (!string.IsNullOrWhiteSpace(term))
+			{
+				var zones = await _indoorMapService.SearchZonesAsync(DepartmentId, term);
+
+				if (zones != null && zones.Count > 0)
+				{
+					HashSet<string> floorIdsForMap = null;
+					if (!string.IsNullOrWhiteSpace(mapId))
+					{
+						var floors = await _indoorMapService.GetFloorsForMapAsync(mapId);
+						floorIdsForMap = floors?.Select(f => f.IndoorMapFloorId).ToHashSet() ?? new HashSet<string>();
+					}
+
+					foreach (var z in zones)
+					{
+						if (floorIdsForMap != null && !floorIdsForMap.Contains(z.IndoorMapFloorId))
+							continue;
+
+						result.Data.Add(new IndoorMapZoneResultData
+						{
+							IndoorMapZoneId = z.IndoorMapZoneId,
+							IndoorMapFloorId = z.IndoorMapFloorId,
+							Name = z.Name,
+							Description = z.Description,
+							ZoneType = z.ZoneType,
+							PixelGeometry = z.PixelGeometry,
+							GeoGeometry = z.GeoGeometry,
+							CenterPixelX = z.CenterPixelX,
+							CenterPixelY = z.CenterPixelY,
+							CenterLatitude = z.CenterLatitude,
+							CenterLongitude = z.CenterLongitude,
+							Color = z.Color,
+							Metadata = z.Metadata,
+							IsSearchable = z.IsSearchable
+						});
+					}
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets all custom maps for the department, with optional type filter.
+		/// </summary>
+		/// <param name="type">Optional map type filter (0=Indoor, 1=Outdoor, 2=Event, 3=Custom)</param>
+		/// <returns>GetCustomMapsResult object</returns>
+		[HttpGet("GetCustomMaps")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetCustomMapsResult>> GetCustomMaps(int? type)
+		{
+			var result = new GetCustomMapsResult();
+
+			CustomMapType? filterType = type.HasValue ? (CustomMapType)type.Value : null;
+			var maps = await _customMapService.GetCustomMapsForDepartmentAsync(DepartmentId, filterType);
+
+			if (maps != null && maps.Count > 0)
+			{
+				foreach (var m in maps)
+				{
+					result.Data.Add(new CustomMapResultData
+					{
+						IndoorMapId = m.IndoorMapId,
+						Name = m.Name,
+						Description = m.Description,
+						MapType = m.MapType,
+						CenterLatitude = m.CenterLatitude,
+						CenterLongitude = m.CenterLongitude,
+						BoundsNELat = m.BoundsNELat,
+						BoundsNELon = m.BoundsNELon,
+						BoundsSWLat = m.BoundsSWLat,
+						BoundsSWLon = m.BoundsSWLon,
+						BoundsGeoJson = m.BoundsGeoJson,
+						DefaultFloorId = m.DefaultFloorId
+					});
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets a specific custom map with its layers.
+		/// </summary>
+		/// <param name="id">Custom map id</param>
+		/// <returns>GetCustomMapResult object</returns>
+		[HttpGet("GetCustomMap/{id}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetCustomMapResult>> GetCustomMap(string id)
+		{
+			var result = new GetCustomMapResult();
+
+			var map = await _customMapService.GetCustomMapByIdAsync(id);
+			if (map == null || map.DepartmentId != DepartmentId)
+				return NotFound();
+
+			result.Data.Map = new CustomMapResultData
+			{
+				IndoorMapId = map.IndoorMapId,
+				Name = map.Name,
+				Description = map.Description,
+				MapType = map.MapType,
+				CenterLatitude = map.CenterLatitude,
+				CenterLongitude = map.CenterLongitude,
+				BoundsNELat = map.BoundsNELat,
+				BoundsNELon = map.BoundsNELon,
+				BoundsSWLat = map.BoundsSWLat,
+				BoundsSWLon = map.BoundsSWLon,
+				BoundsGeoJson = map.BoundsGeoJson,
+				DefaultFloorId = map.DefaultFloorId
+			};
+
+			var layers = await _customMapService.GetLayersForMapAsync(id);
+			if (layers != null && layers.Count > 0)
+			{
+				foreach (var l in layers)
+				{
+					result.Data.Layers.Add(new CustomMapLayerResultData
+					{
+						IndoorMapFloorId = l.IndoorMapFloorId,
+						IndoorMapId = l.IndoorMapId,
+						Name = l.Name,
+						FloorOrder = l.FloorOrder,
+						LayerType = l.LayerType,
+						HasImage = (l.ImageData != null && l.ImageData.Length > 0) || l.IsTiled,
+						IsTiled = l.IsTiled,
+						TileMinZoom = l.TileMinZoom,
+						TileMaxZoom = l.TileMaxZoom,
+						BoundsNELat = l.BoundsNELat,
+						BoundsNELon = l.BoundsNELon,
+						BoundsSWLat = l.BoundsSWLat,
+						BoundsSWLon = l.BoundsSWLon,
+						Opacity = l.Opacity,
+						MercatorTileUrl = await MercatorTileUrlAsync(l)
+					});
+				}
+			}
+
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets a specific custom map layer with its regions.
+		/// </summary>
+		/// <param name="layerId">Layer id</param>
+		/// <returns>GetCustomMapLayerResult object</returns>
+		[HttpGet("GetCustomMapLayer/{layerId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetCustomMapLayerResult>> GetCustomMapLayer(string layerId)
+		{
+			var result = new GetCustomMapLayerResult();
+
+			var layer = await _customMapService.GetLayerByIdAsync(layerId);
+			if (layer == null)
+				return NotFound();
+
+			var map = await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId);
+			if (map == null || map.DepartmentId != DepartmentId)
+				return NotFound();
+
+			result.Data = new CustomMapLayerResultData
+			{
+				IndoorMapFloorId = layer.IndoorMapFloorId,
+				IndoorMapId = layer.IndoorMapId,
+				Name = layer.Name,
+				FloorOrder = layer.FloorOrder,
+				LayerType = layer.LayerType,
+				HasImage = (layer.ImageData != null && layer.ImageData.Length > 0) || layer.IsTiled,
+				IsTiled = layer.IsTiled,
+				TileMinZoom = layer.TileMinZoom,
+				TileMaxZoom = layer.TileMaxZoom,
+				BoundsNELat = layer.BoundsNELat,
+				BoundsNELon = layer.BoundsNELon,
+				BoundsSWLat = layer.BoundsSWLat,
+				BoundsSWLon = layer.BoundsSWLon,
+				Opacity = layer.Opacity,
+				MercatorTileUrl = await MercatorTileUrlAsync(layer),
+				Regions = new System.Collections.Generic.List<CustomMapRegionResultData>()
+			};
+
+			var regions = await _customMapService.GetRegionsForLayerAsync(layerId);
+			if (regions != null && regions.Count > 0)
+			{
+				foreach (var r in regions)
+				{
+					result.Data.Regions.Add(new CustomMapRegionResultData
+					{
+						IndoorMapZoneId = r.IndoorMapZoneId,
+						IndoorMapFloorId = r.IndoorMapFloorId,
+						Name = r.Name,
+						Description = r.Description,
+						ZoneType = r.ZoneType,
+						PixelGeometry = r.PixelGeometry,
+						GeoGeometry = r.GeoGeometry,
+						CenterPixelX = r.CenterPixelX,
+						CenterPixelY = r.CenterPixelY,
+						CenterLatitude = r.CenterLatitude,
+						CenterLongitude = r.CenterLongitude,
+						Color = r.Color,
+						Metadata = r.Metadata,
+						IsSearchable = r.IsSearchable,
+						IsDispatchable = r.IsDispatchable
+					});
+				}
+			}
+
+			result.PageSize = 1;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Gets a tile image for a specific custom map layer.
+		/// </summary>
+		/// <param name="layerId">Layer id</param>
+		/// <param name="z">Zoom level</param>
+		/// <param name="x">Tile X</param>
+		/// <param name="y">Tile Y</param>
+		/// <returns>Tile image file</returns>
+		[HttpGet("GetCustomMapTile/{layerId}/{z}/{x}/{y}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetCustomMapTile(string layerId, int z, int x, int y)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.CustomMapScope(layerId));
+			if (departmentId == null)
+				return Unauthorized();
+
+			// The layer must belong to the caller's department (the web's GetLayerTile always checked this).
+			var layer = await _customMapService.GetLayerByIdAsync(layerId);
+			var map = layer != null ? await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId) : null;
+			if (map == null || map.DepartmentId != departmentId.Value)
+				return NotFound();
+
+			var tile = await _customMapService.GetTileAsync(layerId, z, x, y);
+
+			if (tile == null)
+				return NotFound();
+
+			return File(tile.TileData, tile.TileContentType ?? "image/png");
+		}
+
+		/// <summary>
+		/// Gets the full image for a non-tiled custom map layer.
+		/// </summary>
+		/// <param name="layerId">Layer id</param>
+		/// <returns>Layer image file</returns>
+		[HttpGet("GetCustomMapLayerImage/{layerId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetCustomMapLayerImage(string layerId)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.CustomMapScope(layerId));
+			if (departmentId == null)
+				return Unauthorized();
+
+			var layer = await _customMapService.GetLayerByIdAsync(layerId);
+			if (layer == null)
+				return NotFound();
+
+			var map = await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId);
+			if (map == null || map.DepartmentId != departmentId.Value)
+				return NotFound();
+
+			if (layer.ImageData == null || layer.ImageData.Length == 0)
+				return NotFound();
+
+			return File(layer.ImageData, layer.ImageContentType ?? "image/png");
+		}
+
+		/// <summary>
+		/// Searches for custom map regions matching the specified term.
+		/// </summary>
+		/// <param name="term">Search term</param>
+		/// <returns>SearchCustomMapRegionsResult object</returns>
+		[HttpGet("SearchCustomMapRegions")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<SearchCustomMapRegionsResult>> SearchCustomMapRegions(string term, string layerId = null)
+		{
+			var result = new SearchCustomMapRegionsResult();
+
+			if (!string.IsNullOrWhiteSpace(term))
+			{
+				var regions = await _customMapService.SearchRegionsAsync(DepartmentId, term);
+
+				if (regions != null && regions.Count > 0)
+				{
+					foreach (var r in regions)
+					{
+						if (!string.IsNullOrWhiteSpace(layerId) && r.IndoorMapFloorId != layerId)
+							continue;
+
+						result.Data.Add(new CustomMapRegionResultData
+						{
+							IndoorMapZoneId = r.IndoorMapZoneId,
+							IndoorMapFloorId = r.IndoorMapFloorId,
+							Name = r.Name,
+							Description = r.Description,
+							ZoneType = r.ZoneType,
+							PixelGeometry = r.PixelGeometry,
+							GeoGeometry = r.GeoGeometry,
+							CenterPixelX = r.CenterPixelX,
+							CenterPixelY = r.CenterPixelY,
+							CenterLatitude = r.CenterLatitude,
+							CenterLongitude = r.CenterLongitude,
+							Color = r.Color,
+							Metadata = r.Metadata,
+							IsSearchable = r.IsSearchable,
+							IsDispatchable = r.IsDispatchable
+						});
+					}
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Returns raw GeoJSON FeatureCollection for a MapLayer (legacy vector layers).
+		/// </summary>
+		/// <param name="layerId">Map layer id</param>
+		[HttpGet("GetMapLayerGeoJSON/{layerId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetMapLayerGeoJSON(string layerId)
+		{
+			var layer = await _mappingService.GetMapLayersByIdAsync(layerId);
+			if (layer == null || layer.DepartmentId != DepartmentId)
+				return NotFound();
+
+			var fc = layer.Data?.Convert() ?? new FeatureCollection();
+			var geoJson = JsonConvert.SerializeObject(fc);
+
+			return Content(geoJson, "application/geo+json");
+		}
+
+		/// <summary>
+		/// Returns a summary of all map layers that are on by default for the department.
+		/// </summary>
+		[HttpGet("GetAllActiveLayers")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetAllActiveLayersResult>> GetAllActiveLayers()
+		{
+			var result = new GetAllActiveLayersResult();
+
+			var mapLayers = await _mappingService.GetMapLayersForTypeDepartmentAsync(DepartmentId, MapLayerTypes.TopLevel);
+			if (mapLayers != null)
+			{
+				foreach (var layer in mapLayers.Where(l => !l.IsDeleted && l.IsOnByDefault))
+				{
+					result.Data.Add(new ActiveLayerResultData
+					{
+						Id = layer.GetId(),
+						Name = layer.Name,
+						LayerSource = "maplayer",
+						Type = layer.Type,
+						Color = layer.Color,
+						IsSearchable = layer.IsSearchable,
+						IsOnByDefault = layer.IsOnByDefault
+					});
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Unified search across indoor zones and custom map regions.
+		/// </summary>
+		/// <param name="term">Search term</param>
+		/// <param name="type">Filter: "all" (default), "indoor", or "custom"</param>
+		[HttpGet("SearchAllMapFeatures")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<SearchAllMapFeaturesResult>> SearchAllMapFeatures(string term, string type = "all")
+		{
+			var result = new SearchAllMapFeaturesResult();
+
+			if (string.IsNullOrWhiteSpace(term))
+			{
+				result.Status = ResponseHelper.Success;
+				ResponseHelper.PopulateV4ResponseData(result);
+				return Ok(result);
+			}
+
+			if (type == "all" || type == "indoor")
+			{
+				var zones = await _indoorMapService.SearchZonesAsync(DepartmentId, term);
+				if (zones != null)
+				{
+					foreach (var z in zones)
+					{
+						var floor = await _indoorMapService.GetFloorByIdAsync(z.IndoorMapFloorId);
+						var map = floor != null ? await _indoorMapService.GetIndoorMapByIdAsync(floor.IndoorMapId) : null;
+
+						result.Data.Add(new MapFeatureResultData
+						{
+							FeatureType = "indoor_zone",
+							Id = z.IndoorMapZoneId,
+							Name = z.Name,
+							Description = z.Description,
+							MapId = map?.IndoorMapId,
+							MapName = map?.Name,
+							FloorOrLayerId = z.IndoorMapFloorId,
+							FloorOrLayerName = floor?.Name,
+							CenterLatitude = z.CenterLatitude,
+							CenterLongitude = z.CenterLongitude,
+							IsDispatchable = z.IsDispatchable
+						});
+					}
+				}
+			}
+
+			if (type == "all" || type == "custom")
+			{
+				var regions = await _customMapService.SearchRegionsAsync(DepartmentId, term);
+				if (regions != null)
+				{
+					foreach (var r in regions)
+					{
+						var layer = await _customMapService.GetLayerByIdAsync(r.IndoorMapFloorId);
+						var map = layer != null ? await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId) : null;
+
+						result.Data.Add(new MapFeatureResultData
+						{
+							FeatureType = "custom_region",
+							Id = r.IndoorMapZoneId,
+							Name = r.Name,
+							Description = r.Description,
+							MapId = map?.IndoorMapId,
+							MapName = map?.Name,
+							FloorOrLayerId = r.IndoorMapFloorId,
+							FloorOrLayerName = layer?.Name,
+							CenterLatitude = r.CenterLatitude,
+							CenterLongitude = r.CenterLongitude,
+							IsDispatchable = r.IsDispatchable
+						});
+					}
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Returns indoor maps whose bounding box is within radiusMeters of the given lat/lon.
+		/// </summary>
+		/// <param name="lat">Latitude</param>
+		/// <param name="lon">Longitude</param>
+		/// <param name="radiusMeters">Search radius in meters</param>
+		[HttpGet("GetNearbyIndoorMaps")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<GetIndoorMapsResult>> GetNearbyIndoorMaps(double lat, double lon, double radiusMeters = 200)
+		{
+			var result = new GetIndoorMapsResult();
+
+			var maps = await _indoorMapService.GetIndoorMapsForDepartmentAsync(DepartmentId);
+			if (maps != null)
+			{
+				foreach (var m in maps)
+				{
+					if (IsPointNearBounds(lat, lon, radiusMeters, m.BoundsNELat, m.BoundsNELon, m.BoundsSWLat, m.BoundsSWLon))
+					{
+						result.Data.Add(new IndoorMapResultData
+						{
+							IndoorMapId = m.IndoorMapId,
+							Name = m.Name,
+							Description = m.Description,
+							CenterLatitude = m.CenterLatitude,
+							CenterLongitude = m.CenterLongitude,
+							BoundsNELat = m.BoundsNELat,
+							BoundsNELon = m.BoundsNELon,
+							BoundsSWLat = m.BoundsSWLat,
+							BoundsSWLon = m.BoundsSWLon,
+							DefaultFloorId = m.DefaultFloorId
+						});
+					}
+				}
+			}
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+
+			return Ok(result);
+		}
+
+		/// <summary>
+		/// Returns all zones for an indoor map floor as a GeoJSON FeatureCollection for direct rnmapbox consumption.
+		/// </summary>
+		/// <param name="floorId">Indoor map floor id</param>
+		[HttpGet("GetIndoorMapZonesGeoJSON/{floorId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetIndoorMapZonesGeoJSON(string floorId)
+		{
+			var floor = await _indoorMapService.GetFloorByIdAsync(floorId);
+			if (floor == null)
+				return NotFound();
+
+			var map = await _indoorMapService.GetIndoorMapByIdAsync(floor.IndoorMapId);
+			if (map == null || map.DepartmentId != DepartmentId)
+				return NotFound();
+
+			var zones = await _indoorMapService.GetZonesForFloorAsync(floorId);
+			var geoJson = BuildZonesGeoJson(zones ?? new List<Model.IndoorMapZone>());
+
+			return Content(geoJson, "application/geo+json");
+		}
+
+		/// <summary>
+		/// Returns all regions for a custom map layer as a GeoJSON FeatureCollection for direct rnmapbox consumption.
+		/// </summary>
+		/// <param name="layerId">Custom map layer id</param>
+		[HttpGet("GetCustomMapRegionsGeoJSON/{layerId}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<IActionResult> GetCustomMapRegionsGeoJSON(string layerId)
+		{
+			var layer = await _customMapService.GetLayerByIdAsync(layerId);
+			if (layer == null)
+				return NotFound();
+
+			var map = await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId);
+			if (map == null || map.DepartmentId != DepartmentId)
+				return NotFound();
+
+			var regions = await _customMapService.GetRegionsForLayerAsync(layerId);
+			var geoJson = BuildZonesGeoJson(regions ?? new List<Model.IndoorMapZone>());
+
+			return Content(geoJson, "application/geo+json");
+		}
+
+		private static string BuildZonesGeoJson(List<Model.IndoorMapZone> zones)
+		{
+			var features = zones
+				.Where(z => !z.IsDeleted && !string.IsNullOrWhiteSpace(z.GeoGeometry))
+				.Select(z =>
+				{
+					JToken geometry;
+					try { geometry = JToken.Parse(z.GeoGeometry); }
+					catch { geometry = JValue.CreateNull(); }
+
+					return new
+					{
+						type = "Feature",
+						id = z.IndoorMapZoneId,
+						geometry,
+						properties = new
+						{
+							id = z.IndoorMapZoneId,
+							name = z.Name,
+							description = z.Description,
+							zoneType = z.ZoneType,
+							color = z.Color,
+							isSearchable = z.IsSearchable,
+							isDispatchable = z.IsDispatchable,
+							metadata = z.Metadata
+						}
+					};
+				})
+				.ToList();
+
+			return JsonConvert.SerializeObject(new { type = "FeatureCollection", features });
+		}
+
+		#region MapLibre map resources (maplibre-mapping-routing-navigation-plan.md D6, D12, §6.5, §6.6)
+
+		/// <summary>
+		/// The department's base map as a MapLibre style (Mapbox styles with mapbox:// URLs rewritten, self-hosted
+		/// styles, or a raster style). Bearer callers, or a signed URL from the config API.
+		/// </summary>
+		/// <param name="key">App key (surface) the style is for; empty for the website.</param>
+		/// <param name="variant">"day" (default) or "night".</param>
+		[HttpGet("GetStyle")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetStyle([FromQuery] string key, [FromQuery] string variant, System.Threading.CancellationToken cancellationToken)
+		{
+			var surface = string.IsNullOrWhiteSpace(key) ? Config.InfoConfig.WebsiteKey : key;
+			var night = string.Equals(variant, "night", StringComparison.OrdinalIgnoreCase);
+
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.StyleScope(surface, night));
+			if (departmentId == null)
+				return Unauthorized();
+
+			var json = await _mapStyleService.GetStyleJsonAsync(departmentId.Value, surface, night, cancellationToken);
+			Response.Headers["Cache-Control"] = "private, max-age=3600";
+			return Content(json, "application/json");
+		}
+
+		/// <summary>
+		/// A small map image centred on a point, in the department's style. The URL template the config API publishes
+		/// (StaticMapUrlTemplate) fills lat, lon, zoom (GL scale), width, height, scale (1|2) and scheme (day|night).
+		/// </summary>
+		[HttpGet("GetStaticMap")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetStaticMap([FromQuery] string key, [FromQuery] double lat, [FromQuery] double lon, [FromQuery] double zoom,
+			[FromQuery] int width, [FromQuery] int height, [FromQuery] int scale, [FromQuery] string scheme, [FromQuery] int? marker,
+			[FromQuery] int? style, System.Threading.CancellationToken cancellationToken)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.StaticMapScope);
+			if (departmentId == null)
+				return Unauthorized();
+
+			if (lat < -85 || lat > 85 || lon < -180 || lon > 180 || width <= 0 || height <= 0)
+				return BadRequest();
+
+			var night = string.Equals(scheme, "night", StringComparison.OrdinalIgnoreCase);
+
+			// style: a preset preview (Mapping Settings) instead of the department's own style; additive, Omni never sends it.
+			var image = style.HasValue && Enum.IsDefined(typeof(MapStyleTypes), style.Value)
+				? await _staticMapService.GetStylePreviewAsync((MapStyleTypes)style.Value, night, lat, lon, zoom <= 0 ? 15 : zoom, width, height, scale, cancellationToken)
+				: await _staticMapService.GetStaticMapAsync(departmentId.Value, key, lat, lon, zoom <= 0 ? 15 : zoom, width, height, scale, night, marker != 0, cancellationToken);
+
+			Response.Headers["Cache-Control"] = "private, max-age=86400";
+			return File(image.Bytes, image.ContentType);
+		}
+
+		/// <summary>
+		/// A georeferenced custom map layer as Web Mercator XYZ tiles for MapLibre (plan §6.7). Empty (204) outside the
+		/// layer; 404 for a pixel-only layer. Bearer callers, or the signed template from the layer results.
+		/// </summary>
+		[HttpGet("GetCustomMapMercatorTile/{layerId}/{z}/{x}/{y}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[AllowAnonymous]
+		public async Task<IActionResult> GetCustomMapMercatorTile(string layerId, int z, int x, int y)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.CustomMapScope(layerId));
+			if (departmentId == null)
+				return Unauthorized();
+
+			var layer = await _customMapService.GetLayerByIdAsync(layerId);
+			var map = layer != null ? await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId) : null;
+			if (map == null || map.DepartmentId != departmentId.Value)
+				return NotFound();
+
+			if (await _mercatorTileRenderer.GetBoundsAsync(layer) == null)
+				return NotFound();
+
+			var tile = await _mercatorTileRenderer.RenderTileAsync(layer, z, x, y);
+			Response.Headers["Cache-Control"] = "private, max-age=604800";
+
+			return tile == null ? NoContent() : File(tile, "image/png");
+		}
+
+		#region Offline map packs (maplibre-mapping-routing-navigation-plan.md section 19)
+
+		/// <summary>
+		/// The offline manifest the apps sync (§19.3): base-map cells over the department's response area, custom map
+		/// rasters, indoor/custom map images, the department data bundle, sprite and offline styles, each with a signed,
+		/// same-origin, Range-capable download URL. Bearer callers, or the signed URL from the config API.
+		/// </summary>
+		[HttpGet("GetOfflineManifest")]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> GetOfflineManifest(CancellationToken cancellationToken)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.OfflineManifestScope);
+			if (!departmentId.HasValue)
+				return DeniedMapResource();
+
+			if (!await _offlineMapPackService.IsAvailableForDepartmentAsync(departmentId.Value))
+				return NotFound();
+
+			var manifest = await _offlineMapPackService.GetManifestAsync(departmentId.Value, cancellationToken);
+			var lifetime = TimeSpan.FromHours(Math.Max(1, Config.MappingConfig.SignedMapUrlTtlHours));
+			var expires = DateTime.UtcNow.Add(lifetime).ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
+			var api = $"{Config.SystemBehaviorConfig.ResgridApiBaseUrl}/api/v4/Mapping";
+
+			// Signed per request (the manifest itself is cached without URLs).
+			var signed = JsonConvert.DeserializeObject<OfflineManifest>(JsonConvert.SerializeObject(manifest));
+			signed.Sprite = manifest.Sprite == null ? null : JsonConvert.DeserializeObject<OfflineManifestSprite>(JsonConvert.SerializeObject(manifest.Sprite));
+
+			foreach (var pack in signed.Packs)
+			{
+				if (pack.Status != (int)OfflineMapPackStatus.Ready)
+					continue;
+
+				pack.DownloadUrl = MapResourceUrls.Sign($"{api}/GetOfflinePack/{pack.PackId}", departmentId.Value, MapResourceUrls.OfflinePackScope(pack.PackId), lifetime);
+				pack.ExpiresUtc = expires;
+			}
+
+			if (signed.Sprite != null && manifest.Sprite != null)
+			{
+				foreach (var file in signed.Sprite.Files)
+					file.Url = MapResourceUrls.Sign($"{api}/GetOfflinePack/{manifest.Sprite.PackId}?file={Uri.EscapeDataString(file.Name)}", departmentId.Value,
+						MapResourceUrls.OfflinePackScope(manifest.Sprite.PackId), lifetime);
+			}
+
+			if (signed.DepartmentData != null)
+				signed.DepartmentData.Url = MapResourceUrls.Sign($"{api}/GetOfflineDepartmentData", departmentId.Value, MapResourceUrls.OfflineDataScope, lifetime);
+
+			if (signed.Styles != null)
+			{
+				foreach (var (file, name) in new[] { (signed.Styles.Day, "day.json"), (signed.Styles.Night, "night.json"), (signed.Styles.Glyphs, "glyphs.zip") })
+				{
+					if (file != null)
+						file.Url = MapResourceUrls.Sign($"{api}/GetOfflineAsset/{name}", departmentId.Value, MapResourceUrls.OfflineAssetScope(name), lifetime);
+				}
+			}
+
+			for (var i = 0; i < signed.IndoorFloors.Count; i++)
+			{
+				var floor = signed.IndoorFloors[i];
+				floor.ImageUrl = manifest.IndoorFloors[i].IsCustomMapLayer
+					? MapResourceUrls.Sign($"{api}/GetCustomMapLayerImage/{floor.FloorId}", departmentId.Value, MapResourceUrls.CustomMapScope(floor.FloorId), lifetime)
+					: MapResourceUrls.Sign($"{api}/GetIndoorMapFloorImage/{floor.FloorId}", departmentId.Value, MapResourceUrls.IndoorFloorScope(floor.FloorId), lifetime);
+			}
+
+			Response.Headers["Cache-Control"] = "private, no-store";
+			return Content(JsonConvert.SerializeObject(new { Data = signed, Status = ResponseHelper.Success }), "application/json");
+		}
+
+		/// <summary>
+		/// Downloads a built offline pack (§19.3): PMTiles, or one sprite file (?file=). Supports HTTP Range; the ETag is the
+		/// SHA-256. An expired or invalid signature answers 410 so the app refetches the manifest.
+		/// </summary>
+		[HttpGet("GetOfflinePack/{packId}")]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status206PartialContent)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status410Gone)]
+		public async Task<IActionResult> GetOfflinePack(string packId, [FromQuery] string file, CancellationToken cancellationToken)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.OfflinePackScope(packId));
+			if (!departmentId.HasValue)
+				return DeniedMapResource();
+
+			var pack = await _offlineMapPackService.GetPackAsync(packId);
+
+			// Shared base-map cells serve every department; department packs only their own.
+			if (pack == null || pack.Status != (int)OfflineMapPackStatus.Ready || (pack.DepartmentId.HasValue && pack.DepartmentId.Value != departmentId.Value))
+				return NotFound();
+
+			string key, sha, contentType;
+			long size;
+
+			if (pack.Kind == (int)OfflineMapPackKind.Sprite)
+			{
+				var files = JsonConvert.DeserializeObject<List<OfflineMapPackFile>>(pack.FilesJson ?? "[]") ?? new List<OfflineMapPackFile>();
+				var entry = files.FirstOrDefault(f => f.Name == file);
+				if (entry == null)
+					return NotFound();
+
+				key = pack.StoragePath + "/" + entry.Name;
+				sha = entry.Sha256;
+				size = entry.SizeBytes;
+				contentType = entry.Name.EndsWith(".png", StringComparison.Ordinal) ? "image/png" : "application/json";
+			}
+			else
+			{
+				key = pack.StoragePath;
+				sha = pack.Sha256;
+				size = pack.SizeBytes;
+				contentType = "application/vnd.pmtiles";
+			}
+
+			return await ServeStoredFileAsync(key, size, sha, contentType, cancellationToken);
+		}
+
+		/// <summary>The department data bundle (gzip JSON of GeoJSON collections by section).</summary>
+		[HttpGet("GetOfflineDepartmentData")]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status410Gone)]
+		public async Task<IActionResult> GetOfflineDepartmentData(CancellationToken cancellationToken)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.OfflineDataScope);
+			if (!departmentId.HasValue)
+				return DeniedMapResource();
+
+			if (!await _offlineMapPackService.IsAvailableForDepartmentAsync(departmentId.Value))
+				return NotFound();
+
+			var data = await _offlineMapPackService.GetDepartmentDataAsync(departmentId.Value, cancellationToken);
+			Response.Headers["ETag"] = $"\"{data.Sha256}\"";
+			Response.Headers["Cache-Control"] = "private, no-cache";
+
+			// Served as the gzip file itself (no Content-Encoding), so the app checks the SHA-256 of exactly what it stores.
+			return File(data.Content, "application/gzip", enableRangeProcessing: true);
+		}
+
+		/// <summary>An offline style or glyph archive (day.json, night.json, glyphs.zip) mirrored into the pack store.</summary>
+		[HttpGet("GetOfflineAsset/{name}")]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status410Gone)]
+		public async Task<IActionResult> GetOfflineAsset(string name, CancellationToken cancellationToken)
+		{
+			var departmentId = await ResolveMapResourceDepartmentAsync(MapResourceUrls.OfflineAssetScope(name));
+			if (!departmentId.HasValue)
+				return DeniedMapResource();
+
+			var key = Resgrid.Services.OfflineMapPackService.StyleStoreKey(name);
+			if (key == null)
+				return NotFound();
+
+			var manifest = await _offlineMapPackService.GetManifestAsync(departmentId.Value, cancellationToken);
+			var listed = name == "day.json" ? manifest.Styles?.Day : name == "night.json" ? manifest.Styles?.Night : manifest.Styles?.Glyphs;
+			if (listed == null)
+				return NotFound();
+
+			return await ServeStoredFileAsync(key, listed.SizeBytes ?? 0, listed.Sha256, name.EndsWith(".zip", StringComparison.Ordinal) ? "application/zip" : "application/json", cancellationToken);
+		}
+
+		/// <summary>
+		/// The base-map download size of a maximum response area while it is drawn (§19.3): size in bytes, cell count and
+		/// whether it fits the limit. An empty area measures the fallback circle.
+		/// </summary>
+		[HttpPost("EstimateResponseArea")]
+		[Authorize(Policy = ResgridResources.Department_View)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<ActionResult<EstimateResponseAreaResult>> EstimateResponseArea([FromBody] EstimateResponseAreaInput input, CancellationToken cancellationToken)
+		{
+			var estimate = await _offlineMapPackService.EstimateResponseAreaAsync(DepartmentId, input?.GeoJson, cancellationToken);
+
+			var result = new EstimateResponseAreaResult { Data = estimate };
+			result.PageSize = 1;
+			result.Status = estimate.Valid ? ResponseHelper.Success : ResponseHelper.Failure;
+			ResponseHelper.PopulateV4ResponseData(result);
+			return Ok(result);
+		}
+
+		/// <summary>No bearer and no valid signature: 410 when a signature was sent (expired), else 401.</summary>
+		private IActionResult DeniedMapResource()
+		{
+			return string.IsNullOrWhiteSpace(Request.Query[MapResourceUrls.SignatureParameter]) ? Unauthorized() : StatusCode(StatusCodes.Status410Gone);
+		}
+
+		/// <summary>A stored file with Accept-Ranges, a single byte range when asked, and the SHA-256 as ETag.</summary>
+		private async Task<IActionResult> ServeStoredFileAsync(string key, long size, string sha, string contentType, CancellationToken cancellationToken)
+		{
+			if (size <= 0)
+				size = await _offlineMapPackStore.GetSizeAsync(key, cancellationToken) ?? 0;
+			if (size <= 0)
+				return NotFound();
+
+			Response.Headers["Accept-Ranges"] = "bytes";
+			if (!string.IsNullOrWhiteSpace(sha))
+				Response.Headers["ETag"] = $"\"{sha}\"";
+			Response.Headers["Cache-Control"] = "private, max-age=86400";
+
+			long start = 0, end = size - 1;
+			var ranged = false;
+			var range = Request.Headers["Range"].ToString();
+			if (!string.IsNullOrWhiteSpace(range) && range.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase) && !range.Contains(','))
+			{
+				var parts = range.Substring(6).Split('-');
+				if (parts.Length == 2)
+				{
+					if (parts[0].Length == 0 && long.TryParse(parts[1], out var suffix) && suffix > 0)
+					{
+						start = Math.Max(0, size - suffix);
+						ranged = true;
+					}
+					else if (long.TryParse(parts[0], out var first))
+					{
+						start = first;
+						if (parts[1].Length > 0 && long.TryParse(parts[1], out var last))
+							end = Math.Min(last, size - 1);
+						ranged = true;
+					}
+				}
+
+				if (ranged && (start >= size || start > end))
+				{
+					Response.Headers["Content-Range"] = $"bytes */{size}";
+					return StatusCode(StatusCodes.Status416RangeNotSatisfiable);
+				}
+			}
+
+			var length = end - start + 1;
+			var stream = await _offlineMapPackStore.OpenReadAsync(key, start, length, cancellationToken);
+
+			Response.ContentLength = length;
+			if (ranged)
+			{
+				Response.StatusCode = StatusCodes.Status206PartialContent;
+				Response.Headers["Content-Range"] = $"bytes {start}-{end}/{size}";
+			}
+
+			return new FileStreamResult(stream, contentType);
+		}
+
+		#endregion Offline map packs
+
+		private async Task<string> MercatorTileUrlAsync(IndoorMapFloor layer)
+		{
+			if (layer == null || await _mercatorTileRenderer.GetBoundsAsync(layer) == null)
+				return null;
+
+			var url = $"{Config.SystemBehaviorConfig.ResgridApiBaseUrl}/api/v4/Mapping/GetCustomMapMercatorTile/{layer.IndoorMapFloorId}/{{z}}/{{x}}/{{y}}";
+			return MapResourceUrls.Sign(url, DepartmentId, MapResourceUrls.CustomMapScope(layer.IndoorMapFloorId));
+		}
+
+		/// <summary>
+		/// Signs custom map tile/image and indoor floor image URLs of the caller's department so native map sources, which
+		/// cannot send an Authorization header, can load them. Template URLs ({z}/{x}/{y}) stay valid after signing.
+		/// URLs for other resources or other departments come back null.
+		/// </summary>
+		[HttpPost("SignMapResourceUrls")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize(Policy = ResgridResources.Call_View)]
+		public async Task<ActionResult<SignMapResourceUrlsResult>> SignMapResourceUrls([FromBody] SignMapResourceUrlsInput input)
+		{
+			var result = new SignMapResourceUrlsResult();
+
+			foreach (var url in (input?.Urls ?? new List<string>()).Take(200))
+				result.Data.Add(new SignedMapResourceUrl { Url = url, SignedUrl = await SignIfOwnedAsync(url) });
+
+			result.PageSize = result.Data.Count;
+			result.Status = ResponseHelper.Success;
+			ResponseHelper.PopulateV4ResponseData(result);
+			return Ok(result);
+		}
+
+		private async Task<string> SignIfOwnedAsync(string url)
+		{
+			if (string.IsNullOrWhiteSpace(url))
+				return null;
+
+			var path = url;
+			var queryStart = path.IndexOf('?');
+			if (queryStart >= 0)
+				path = path.Substring(0, queryStart);
+
+			var marker = "/Mapping/";
+			var index = path.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+			if (index < 0)
+				return null;
+
+			var segments = path.Substring(index + marker.Length).Split('/', StringSplitOptions.RemoveEmptyEntries);
+			if (segments.Length < 2)
+				return null;
+
+			string scope = null;
+			switch (segments[0].ToLowerInvariant())
+			{
+				case "getcustommaptile":
+				case "getcustommaplayerimage":
+				case "getcustommapmercatortile":
+				{
+					var layer = await _customMapService.GetLayerByIdAsync(segments[1]);
+					var map = layer != null ? await _customMapService.GetCustomMapByIdAsync(layer.IndoorMapId) : null;
+					if (map != null && map.DepartmentId == DepartmentId)
+						scope = MapResourceUrls.CustomMapScope(segments[1]);
+					break;
+				}
+				case "getindoormapfloorimage":
+				{
+					var floor = await _indoorMapService.GetFloorByIdAsync(segments[1]);
+					var map = floor != null ? await _indoorMapService.GetIndoorMapByIdAsync(floor.IndoorMapId) : null;
+					if (map != null && map.DepartmentId == DepartmentId)
+						scope = MapResourceUrls.IndoorFloorScope(segments[1]);
+					break;
+				}
+			}
+
+			return scope == null ? null : MapResourceUrls.Sign(url, DepartmentId, scope);
+		}
+
+		/// <summary>
+		/// The department a map resource request may read: a bearer caller with Call_View (exactly as these routes always
+		/// required), or a valid signed URL for this resource. Null means not allowed.
+		/// </summary>
+		private async Task<int?> ResolveMapResourceDepartmentAsync(string scope)
+		{
+			if (User?.Identity?.IsAuthenticated == true)
+			{
+				var authorized = await _policyAuthorization.AuthorizeAsync(User, ResgridResources.Call_View);
+				return authorized.Succeeded ? DepartmentId : (int?)null;
+			}
+
+			if (MapResourceUrls.TryValidate(Request.Query[MapResourceUrls.DepartmentParameter], Request.Query[MapResourceUrls.ExpiresParameter],
+				    Request.Query[MapResourceUrls.SignatureParameter], scope, out var signedDepartmentId))
+				return signedDepartmentId;
+
+			return null;
+		}
+
+		#endregion MapLibre map resources
+
+		private static bool IsPointNearBounds(double lat, double lon, double radiusMeters,
+			decimal boundsNELat, decimal boundsNELon, decimal boundsSWLat, decimal boundsSWLon)
+		{
+			// ~111,320 meters per degree of latitude
+			double pad = radiusMeters / 111320.0;
+			return lat <= (double)boundsNELat + pad && lat >= (double)boundsSWLat - pad
+				&& lon <= (double)boundsNELon + pad && lon >= (double)boundsSWLon - pad;
+		}
+	}
+}

@@ -1,0 +1,163 @@
+{
+  "id": "core-map-layer-authoring",
+  "title": "Create a map layer and verify its display choices",
+  "app": "Core",
+  "summary": "Draw a rectangle and point, save and reopen their geometry, and distinguish the department visibility default from the current map selection.",
+  "audience": [
+    "Department administrators",
+    "Mapping coordinators",
+    "Operations supervisors"
+  ],
+  "prerequisites": [
+    "Mapping administration access and a separate fictional practice department.",
+    "Reviewed source geometry and a clear operational meaning for each published layer."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose clear layer display settings",
+      "route": "/User/Mapping",
+      "capture_refs": [
+        "001-new-layer-display-options"
+      ],
+      "required_labels": [
+        "New Layer",
+        "Name",
+        "Is Visible By Default",
+        "Is Destination",
+        "Color"
+      ],
+      "narration": "On New Layer, enter a recognizable Name. This example uses Outreach staging example. Is Visible By Default starts checked. Leave Is Destination clear for this drawing-only reference. That option controls whether layer coordinates participate in address searching; it is not the same as displaying a layer. Color is blue here. Use a name and color your department can distinguish from operational calls and resources.",
+      "practice": "Choose clear layer display settings",
+      "capture_intent": "Show the actual setting, drawing control, saved geometry or named display choice being discussed."
+    },
+    {
+      "id": "02",
+      "title": "Draw the example boundary",
+      "route": "/User/Mapping",
+      "capture_refs": [
+        "002-draw-rectangle-mode",
+        "003-first-corner-selected",
+        "004-marker-tool-selected"
+      ],
+      "required_labels": [
+        "Layer Elements",
+        "Cancel"
+      ],
+      "narration": "In Layer Elements, pan and zoom to the intended practice area. Select the rectangle-shaped drawing tool on the left. Cancel is available while drawing. Click the first corner, then the opposite corner to finish the rectangle. The outlined, shaded area is the saved shape you are preparing. It is a fictional planning reference, not an official hazard boundary or a live tracking area.",
+      "practice": "Draw the example boundary",
+      "capture_intent": "Show the actual setting, drawing control, saved geometry or named display choice being discussed."
+    },
+    {
+      "id": "03",
+      "title": "Add one point and save the layer",
+      "route": "/User/Mapping",
+      "capture_refs": [
+        "004-marker-tool-selected",
+        "005-shapes-and-add-control",
+        "006-saved-two-item-layer"
+      ],
+      "required_labels": [
+        "Cancel",
+        "Add Layer",
+        "TRAINING ONLY - Outreach staging example",
+        "Item Count"
+      ],
+      "narration": "Select the marker-shaped tool and click the intended point once. Inspect the marker and rectangle together before saving. Scroll below the map and select Add Layer. The returned Layers list shows Outreach staging example with an Item Count of two. Those two stored items are the rectangle and marker. Check the count to catch accidental duplicate points.",
+      "practice": "Add one point and save the layer",
+      "capture_intent": "Show the actual setting, drawing control, saved geometry or named display choice being discussed."
+    },
+    {
+      "id": "04",
+      "title": "Reopen the stored drawing",
+      "route": "/User/Mapping",
+      "capture_refs": [
+        "006-saved-two-item-layer",
+        "007-reopened-display-options",
+        "008-reopened-shapes"
+      ],
+      "required_labels": [
+        "Edit",
+        "Is Visible By Default",
+        "Is Destination",
+        "Color",
+        "Edit Layer"
+      ],
+      "narration": "Select Edit on the Outreach staging example row. The stored name, blue Color and checked default-visibility option return. Scroll down to inspect the retained rectangle and marker. Reopening the layer verifies that its geometry survived the save; a successful return to the list alone would not establish that the intended shape was retained.",
+      "practice": "Reopen the stored drawing",
+      "capture_intent": "Show the actual setting, drawing control, saved geometry or named display choice being discussed."
+    },
+    {
+      "id": "05",
+      "title": "Change the department default and verify it",
+      "route": "/User/Mapping",
+      "capture_refs": [
+        "009-default-visibility-cleared",
+        "010-save-display-policy",
+        "011-saved-edited-layer-list",
+        "012-fresh-default-off-readback"
+      ],
+      "required_labels": [
+        "Is Visible By Default",
+        "Edit Layer",
+        "TRAINING ONLY - Outreach staging example"
+      ],
+      "narration": "Clear Is Visible By Default. Scroll down and select Edit Layer to save the change. From the returned list, reopen the same layer. Its default-visibility checkbox is now clear, while the name, color and drawing remain stored. This changes the department default. It does not delete the layer or force every existing browser to discard its own map visibility selection.",
+      "practice": "Change the department default and verify it",
+      "capture_intent": "Show the actual setting, drawing control, saved geometry or named display choice being discussed."
+    },
+    {
+      "id": "06",
+      "title": "Control the current map display",
+      "route": "/User/Mapping",
+      "capture_refs": [
+        "013-map-personal-layer-selection",
+        "016-outreach-layer-personally-enabled",
+        "017-outreach-layer-personally-disabled",
+        "015-layer-choice-after-reload"
+      ],
+      "required_labels": [
+        "Mapping",
+        "Map layers",
+        "TRAINING ONLY - Outreach staging example"
+      ],
+      "narration": "On Mapping, inspect the Map layers section. This browser already has a saved display choice for Outreach staging example, so compare that checkbox with the department setting you just reopened. Select or clear the named layer to control this map display. After clearing it and reloading, its checkbox remains clear. This is a display choice, separate from deleting the underlying drawing. Departments can use reviewed layers for search-and-rescue planning, security patrol areas, wildland logistics, industrial response or community paramedicine and mental health support, as well as fire and E M S. Keep the drawing purpose clear and confirm the intended map extent.",
+      "practice": "Control the current map display",
+      "capture_intent": "Show the actual setting, drawing control, saved geometry or named display choice being discussed."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Maintain reviewed map-reference drawings and confirm how the relevant display selections affect each browser."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Maintain reviewed map-reference drawings and confirm how the relevant display selections affect each browser."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Maintain reviewed map-reference drawings and confirm how the relevant display selections affect each browser."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Maintain reviewed map-reference drawings and confirm how the relevant display selections affect each browser."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Maintain reviewed map-reference drawings and confirm how the relevant display selections affect each browser."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Maintain reviewed map-reference drawings and confirm how the relevant display selections affect each browser."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; complete speech/caption correspondence, genuine listening, actual encoded-frame and playback reviews remain required.",
+    "Actual normal UI created PostgreSQL layer4 with a rectangle and one marker, saved Item Count2, reopened geometry, changed default visibility fromtrue tofalse and reopened it. Actual current-map selection was independently enabled/disabled. Existing browser visibility preferences take precedence over a changed default; this is retained MapElement behavior. No official boundary, automatic geofence or live-location result is claimed. Earlier gray loading/duplicate examples are excluded. Backend geometry-storage support is retained under demo/core-support/mapping-consistent-runtime-20261102."
+  ]
+}

@@ -1,0 +1,48 @@
+// Exercise the actual transpiled adapter against retained legacy-data and signed-image contracts.
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+const here=path.dirname(fileURLToPath(import.meta.url));
+const target=path.resolve(process.argv[2]||'');
+assert(target.endsWith('/capture-apps/Unit-records'));
+const ts=createRequire(path.join(target,'package.json'))('typescript');
+const ring=[[-104.992459,39.739453],[-104.992459,39.739672],[-104.991902,39.739672],[-104.991902,39.739453]];
+const room={IndoorMapZoneId:'fictional-room',Name:'Briefing room - training',PixelGeometry:JSON.stringify(ring),CenterLongitude:-104.99218,CenterLatitude:39.73956,Color:'#006f83',IsSearchable:true};
+let geo={type:'FeatureCollection',features:[]};
+let zones=[room];
+let signed=true;
+const calls=[];
+function load(file){
+ const exports={};
+ const get=async endpoint=>{calls.push({method:'GET',endpoint});if(endpoint.includes('GetIndoorMapZonesGeoJSON/'))return {data:structuredClone(geo)};if(endpoint.includes('GetIndoorMapFloor/'))return {data:{Data:{HasImage:true,Zones:structuredClone(zones)}}};throw Error('Unexpected test endpoint');};
+ const post=async(endpoint,body)=>{calls.push({method:'POST',endpoint,body});assert.equal(endpoint,'/Mapping/SignMapResourceUrls');return {data:{Data:body.Urls.map(url=>({Url:url,SignedUrl:signed?'https://maps.example.invalid/department-scoped-floor-image':null}))}};};
+ const factory=endpoint=>({get:async()=>get(endpoint)});
+ const require=name=>name.includes('/common/')?{api:{get,post},createApiEndpoint:factory,createCachedApiEndpoint:factory}:name==='@/lib/storage/app'?{getBaseApiUrl:()=> 'https://api.example.invalid/api/v4'}:{};
+ const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+ vm.runInNewContext(code,{exports,require,console,encodeURIComponent},{filename:file});return exports;
+}
+const before=load(path.join(here,'before/src/api/mapping/mapping.ts'));
+assert.equal((await before.getIndoorMapZonesGeoJSON('floor')).Data.features.length,0);
+assert.equal(before.getSignedFloorImageUrl,undefined);
+console.log('PASS reproduced missing legacy-room geometry and unsigned floor-image request');
+const api=load(path.join(target,'src/api/mapping/mapping.ts'));
+const actual=(await api.getIndoorMapZonesGeoJSON('floor')).Data;
+assert.equal(actual.features.length,1);
+assert.equal(JSON.stringify(actual.features[0].geometry.coordinates[0]),JSON.stringify([...ring,ring[0]]));
+assert.equal(actual.features[0].properties.name,room.Name);
+assert.equal(actual.features[0].properties.isDispatchable,false);
+assert.equal(actual.features[0].properties.color,room.Color);
+console.log('PASS actual stored geographic coordinates retained and closed, with real name/color and no invented dispatch permission');
+zones=[{...room,PixelGeometry:'[[10,20],[20,20],[20,30]]'},{...room,PixelGeometry:'not-json'},{...room,CenterLatitude:0,CenterLongitude:0}];
+assert.equal((await api.getIndoorMapZonesGeoJSON('floor')).Data.features.length,0);
+console.log('PASS ordinary pixel coordinates, malformed rings and missing geographic centres rejected');
+geo=actual;zones=[];const prior=calls.length;
+assert.equal(JSON.stringify((await api.getIndoorMapZonesGeoJSON('floor')).Data),JSON.stringify(actual));
+assert.equal(calls.length-prior,1);
+assert.equal(await api.getSignedFloorImageUrl('floor'),'https://maps.example.invalid/department-scoped-floor-image');
+const post=calls.find(c=>c.method==='POST');assert.equal(post.body.Urls[0],'https://api.example.invalid/api/v4/Mapping/GetIndoorMapFloorImage/floor');
+signed=false;await assert.rejects(api.getSignedFloorImageUrl('floor'),/access is unavailable/);
+console.log('PASS existing GeoJSON unchanged; only exact floor-image URL is signed through authorized Core contract; refusal fails closed');

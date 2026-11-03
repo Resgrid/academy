@@ -1,0 +1,132 @@
+--- a/src/api/mapping/mapping.ts
++++ b/src/api/mapping/mapping.ts
+@@ -123,7 +123,29 @@
+ export const getIndoorMapZonesGeoJSON = async (floorId: string) => {
+   const response = await api.get<FeatureCollection> (`/Mapping/GetIndoorMapZonesGeoJSON/${encodeURIComponent(floorId)}`);
+   if (response.data.type !== 'FeatureCollection' || !Array.isArray(response.data.features)) throw new Error('Invalid GeoJSON feature collection');
+-  return {Data: response.data};
++  if (response.data.features.length > 0) return {Data: response.data};
++  // Legacy Core floor-editor regions may retain georeferenced coordinate rings
++  // in PixelGeometry. Accept only a geographic ring around its stored geo centre;
++  // ordinary image-pixel coordinates are deliberately not projected or invented.
++  const floor = await getIndoorMapFloor(floorId);
++  const zones = floor.Data.Zones as unknown as Array<Record<string, unknown>>;
++  const features = (zones ?? []).flatMap(zone => {
++    if (typeof zone.PixelGeometry !== 'string' || !zone.PixelGeometry.trim()) return [];
++    const latitude = Number(zone.CenterLatitude), longitude = Number(zone.CenterLongitude);
++    if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || (latitude === 0 && longitude === 0)) return [];
++    let ring: number[][];
++    try { ring = JSON.parse(zone.PixelGeometry); } catch { return []; }
++    if (!Array.isArray(ring) || ring.length < 3 || !ring.every(point => Array.isArray(point) && point.length === 2 && point.every(Number.isFinite)
++      && Math.abs(point[0]) <= 180 && Math.abs(point[1]) <= 90 && Math.abs(point[0] - longitude) <= 0.02 && Math.abs(point[1] - latitude) <= 0.02)) return [];
++    const coordinates = ring.map(point => [...point]);
++    if (coordinates[0][0] !== coordinates[coordinates.length - 1][0] || coordinates[0][1] !== coordinates[coordinates.length - 1][1]) coordinates.push([...coordinates[0]]);
++    return [{type: 'Feature' as const, id: String(zone.IndoorMapZoneId), geometry: {type: 'Polygon' as const, coordinates: [coordinates]}, properties: {
++      id: zone.IndoorMapZoneId, name: zone.Name, description: zone.Description,
++      zoneType: zone.ZoneType, color: zone.Color || '#3388ff', isSearchable: zone.IsSearchable === true,
++      isDispatchable: zone.IsDispatchable === true,
++    }}];
++  });
++  return {Data: {type: 'FeatureCollection' as const, features}};
+ };
+ 
+ export const searchIndoorLocations = async (term: string, mapId?: string) => {
+@@ -220,3 +242,15 @@
+ export const getCustomMapTileUrl = (layerId: string): string => {
+   return `${getBaseApiUrl()}/Mapping/GetCustomMapTile/${encodeURIComponent(layerId)}/{z}/{x}/{y}`;
+ };
++
++// Native/web map image sources cannot attach the API bearer header. Request an
++// existing department-scoped signed resource URL; do not fall back to public access.
++export const getSignedFloorImageUrl = async (floorId: string): Promise<string> => {
++  const url = getFloorImageUrl(floorId);
++  const response = await api.post<{Data: Array<{Url: string; SignedUrl: string | null}>}>(
++    '/Mapping/SignMapResourceUrls', {Urls: [url]}
++  );
++  const signed = response.data.Data.find(item => item.Url === url)?.SignedUrl;
++  if (!signed) throw new Error('Floor image access is unavailable');
++  return signed;
++};
+--- a/src/app/maps/indoor/[id].tsx
++++ b/src/app/maps/indoor/[id].tsx
+@@ -4,7 +4,7 @@
+ import { useTranslation } from 'react-i18next';
+ import { Pressable, ScrollView, View } from 'react-native';
+ 
+-import { getFloorImageUrl } from '@/api/mapping/mapping';
++import { getSignedFloorImageUrl } from '@/api/mapping/mapping';
+ import { Loading } from '@/components/common/loading';
+ import ZeroState from '@/components/common/zero-state';
+ import Mapbox from '@/components/maps/mapbox';
+@@ -80,10 +80,21 @@
+     }
+   }, [selectedZone]);
+ 
+-  const floorImageUrl = useMemo(() => {
+-    if (!currentFloorId) return null;
+-    return getFloorImageUrl(currentFloorId);
+-  }, [currentFloorId]);
++  const [floorImageUrl, setFloorImageUrl] = useState<string | null>(null);
++  const [floorImageError, setFloorImageError] = useState(false);
++  useEffect(() => {
++    let current = true;
++    setFloorImageUrl(null);
++    setFloorImageError(false);
++    if (currentFloorId && currentFloor?.HasImage) {
++      getSignedFloorImageUrl(currentFloorId).then(url => {
++        if (current) setFloorImageUrl(url);
++      }).catch(() => {
++        if (current) setFloorImageError(true);
++      });
++    }
++    return () => { current = false; };
++  }, [currentFloorId, currentFloor?.HasImage]);
+ 
+   const filteredZonesGeoJSON = useMemo(() => {
+     if (!currentZonesGeoJSON || !zoneSearchQuery.trim()) return currentZonesGeoJSON;
+@@ -144,7 +155,7 @@
+           <InputSlot className="pl-3">
+             <InputIcon as={Search} />
+           </InputSlot>
+-          <InputField placeholder={t('maps.search_placeholder')} value={zoneSearchQuery} onChangeText={setZoneSearchQuery} />
++          <InputField placeholder={t('maps.search_placeholder')} placeholderTextColor="#64748b" style={{ color: '#111827', backgroundColor: '#f9fafb' }} value={zoneSearchQuery} onChangeText={setZoneSearchQuery} />
+           {zoneSearchQuery ? (
+             <InputSlot className="pr-3" onPress={() => setZoneSearchQuery('')}>
+               <InputIcon as={X} />
+@@ -153,6 +164,8 @@
+         </Input>
+       </Box>
+ 
++      {floorImageError ? <Text className="px-4 py-2 text-red-600">The floor plan image is unavailable. Try reopening this floor.</Text> : null}
++
+       {/* Map */}
+       <View className="flex-1">
+         {/* The map stays mounted across floor switches — unmounting it tore down
+@@ -183,14 +196,14 @@
+               <Mapbox.FillLayer
+                 id="zones-fill"
+                 style={{
+-                  fillColor: ['get', 'color'],
++                  fillColor: ['coalesce', ['get', 'color'], '#3388ff'],
+                   fillOpacity: 0.3,
+                 }}
+               />
+               <Mapbox.LineLayer
+                 id="zones-line"
+                 style={{
+-                  lineColor: ['get', 'color'],
++                  lineColor: ['coalesce', ['get', 'color'], '#3388ff'],
+                   lineWidth: 2,
+                   lineOpacity: 0.8,
+                 }}
+--- a/src/app/maps/index.tsx
++++ b/src/app/maps/index.tsx
+@@ -101,7 +101,7 @@
+                 {map.Description}
+               </Text>
+             ) : null}
+-            <Text className="text-xs text-gray-400 dark:text-gray-500">{t('maps.floor_count', { count: map.Floors?.length ?? 0 })}</Text>
++            {Array.isArray(map.Floors) ? <Text className="text-xs text-gray-400 dark:text-gray-500">{t('maps.floor_count', { count: map.Floors.length })}</Text> : null}
+           </VStack>
+           <Badge action="muted" variant="outline" size="sm">
+             <BadgeText>{t('maps.indoor')}</BadgeText>

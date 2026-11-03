@@ -1,0 +1,167 @@
+{
+  "id": "core-indoor-call-location",
+  "title": "Make indoor rooms searchable and retain a call reference",
+  "app": "Core",
+  "summary": "Verify room search availability, distinguish outdoor and indoor locations, and reopen a saved pending call to check the retained room.",
+  "audience": [
+    "Department administrators",
+    "Dispatch coordinators",
+    "Facility and operations supervisors"
+  ],
+  "prerequisites": [
+    "A reviewed custom indoor map, ground-floor image and named room; see the floor-plan setup lesson.",
+    "Appropriate region and call administration permissions in a fictional training department."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review the room and its search controls",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "009-room-searchable-properties"
+      ],
+      "required_labels": [
+        "Region Properties",
+        "Briefing room - training",
+        "Type",
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region"
+      ],
+      "narration": "In the ground-floor Region Editor, select the Briefing room polygon to open Region Properties. Review its Name, Room Type, Color and Description. Searchable in dispatch is checked, while Dispatchable is clear in this example. These are separate options. We will verify the search setting through New Call, rather than assuming both checkboxes mean the same thing.",
+      "practice": "Review the room and its search controls",
+      "capture_intent": "Show the actual room property, returned search option, pending save or reopened reference being explained."
+    },
+    {
+      "id": "02",
+      "title": "Hide the room from new searches",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "010-searchable-disabled-prepared",
+        "011-hidden-room-search-result"
+      ],
+      "required_labels": [
+        "Searchable in dispatch",
+        "Save Region",
+        "Indoor Location",
+        "No results found"
+      ],
+      "narration": "Clear Searchable in dispatch and select Save Region. On New Call, open Indoor Location and search for Briefing. The returned search now says No results found. This removes the room from that new selection search. It has not deleted the underlying floor plan or the room polygon.",
+      "practice": "Hide the room from new searches",
+      "capture_intent": "Show the actual room property, returned search option, pending save or reopened reference being explained."
+    },
+    {
+      "id": "03",
+      "title": "Restore the search option and verify it",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "012-searchability-restore-prepared",
+        "013-room-search-restored"
+      ],
+      "required_labels": [
+        "Searchable in dispatch",
+        "Save Region",
+        "Indoor Location",
+        "Briefing room - training"
+      ],
+      "narration": "Return to the same room’s properties, check Searchable in dispatch and save again. Repeat the Indoor Location search on New Call. Briefing room now returns as a selectable result. Dispatchable remains clear during this test. The actual returned option verifies which setting controls this search in the recorded system.",
+      "practice": "Restore the search option and verify it",
+      "capture_intent": "Show the actual room property, returned search option, pending save or reopened reference being explained."
+    },
+    {
+      "id": "04",
+      "title": "Select the indoor reference and keep the outdoor position accurate",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "001-indoor-room-search-result",
+        "002-selected-indoor-location",
+        "004-outdoor-coordinate-fields",
+        "003-room-and-outdoor-map"
+      ],
+      "required_labels": [
+        "Indoor Location",
+        "Briefing room - training",
+        "Lat",
+        "Lng",
+        "Set Pin on Map"
+      ],
+      "narration": "Select Briefing room from Indoor Location. Review the selected room name before saving the call. The outdoor location is separate. This fictional exercise also enters a latitude and longitude and uses Set Pin on Map to place the outdoor marker. Selecting an indoor room has not automatically supplied those outdoor coordinates. Review the outdoor map and the indoor reference together so responders have the intended context.",
+      "practice": "Select the indoor reference and keep the outdoor position accurate",
+      "capture_intent": "Show the actual room property, returned search option, pending save or reopened reference being explained."
+    },
+    {
+      "id": "05",
+      "title": "Save pending and reopen the retained reference",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "005-save-pending-prepared",
+        "006-pending-call-saved",
+        "007-pending-state-confirmed",
+        "008-reopened-call-room-retained"
+      ],
+      "required_labels": [
+        "Save as pending (do not dispatch yet)",
+        "Create and Dispatch Call",
+        "Pending Calls",
+        "View",
+        "Update Call",
+        "Indoor Location",
+        "Briefing room - training"
+      ],
+      "narration": "After preparing the call information, select Save as pending, do not dispatch yet. The submit button still reads Create and Dispatch Call, so verify that the pending checkbox is selected before submitting this exercise. The returned Pending Calls list contains the saved call. Open View and confirm the Pending banner. Then use Update Call and scroll back to Indoor Location. Briefing room is still selected. This checks the persisted reference independently of the original form.",
+      "practice": "Save pending and reopen the retained reference",
+      "capture_intent": "Show the actual room property, returned search option, pending save or reopened reference being explained."
+    },
+    {
+      "id": "06",
+      "title": "Distinguish a saved room from a live location",
+      "route": "/User/Dispatch/NewCall",
+      "capture_refs": [
+        "009-room-searchable-properties",
+        "008-reopened-call-room-retained"
+      ],
+      "required_labels": [
+        "Region Properties",
+        "Indoor Location",
+        "Briefing room - training"
+      ],
+      "narration": "The floor plan and selected room are stored references. They do not establish who is currently inside the room, track movement or confirm physical arrival. Keep that distinction clear when briefing a crew. A community paramedicine or mental health team can use a reviewed coordination-room reference; search-and-rescue, security, wildland support and industrial teams can use equivalent named areas. Use verified local map information and the appropriate live-location tools separately. This exercise demonstrates room search and a saved pending-call reference.",
+      "practice": "Distinguish a saved room from a live location",
+      "capture_intent": "Show the actual room property, returned search option, pending save or reopened reference being explained."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Maintain reviewed named indoor references and verify that the intended call keeps its room context."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Maintain reviewed named indoor references and verify that the intended call keeps its room context."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Maintain reviewed named indoor references and verify that the intended call keeps its room context."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Maintain reviewed named indoor references and verify that the intended call keeps its room context."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Maintain reviewed named indoor references and verify that the intended call keeps its room context."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Maintain reviewed named indoor references and verify that the intended call keeps its room context."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; complete speech/caption correspondence, genuine listening, actual encoded-frame and playback reviews remain required.",
+    "Actual Core UI changed Searchable for roomf57fb4a2 off/on and verified absent/returned New Call search results while Dispatchable remainedfalse. Pending call51018 retained the selected room and separate outdoor39.7394113,-104.9916387 coordinates after save and reopen. The historical source sequence first saved the call, then tested search availability; tutorial groups the settings exercise before the independent saved-call example. No call dispatch, physical arrival, occupancy, sensor fix or indoor live tracking is claimed. Ground floor image is a self-authored fictional schematic."
+  ]
+}

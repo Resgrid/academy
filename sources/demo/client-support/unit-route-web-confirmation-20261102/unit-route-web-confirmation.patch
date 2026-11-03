@@ -1,0 +1,82 @@
+--- a/src/app/routes/active.tsx
++++ b/src/app/routes/active.tsx
+@@ -2,7 +2,7 @@
+ import { Compass, LogOut, Navigation, SkipForward } from 'lucide-react-native';
+ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+ import { useTranslation } from 'react-i18next';
+-import { Alert, AppState, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
++import { Alert, AppState, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+ 
+ import { NativeModal } from '@/components/common/native-modal';
+ import Mapbox from '@/components/maps/mapbox';
+@@ -75,6 +75,7 @@
+   const [isMapReady, setIsMapReady] = useState(false);
+   const [skipModalVisible, setSkipModalVisible] = useState(false);
+   const [skipReason, setSkipReason] = useState('');
++  const [endConfirmationVisible, setEndConfirmationVisible] = useState(false);
+ 
+   // --- Stores ---
+   const activeUnitId = useCoreStore((s) => s.activeUnitId);
+@@ -212,24 +213,28 @@
+     skip(currentStop.RouteInstanceStopId, skipReason.trim() || t('routes.skipped_by_driver'));
+   }, [currentStop, skipReason, skip, t]);
+ 
++  const confirmEndRoute = useCallback(async () => {
++    if (!resolvedInstanceId) return;
++    setEndConfirmationVisible(false);
++    try {
++      await endRouteInstance(resolvedInstanceId);
++      router.back();
++    } catch {
++      Alert.alert(t('common.error'), t('common.errorOccurred'));
++    }
++  }, [resolvedInstanceId, endRouteInstance, router, t]);
++
+   const handleEndRoute = useCallback(() => {
+     if (!resolvedInstanceId) return;
++    if (Platform.OS === 'web') {
++      setEndConfirmationVisible(true);
++      return;
++    }
+     Alert.alert(t('routes.end_route'), t('routes.end_route_confirm'), [
+       { text: t('common.cancel'), style: 'cancel' },
+-      {
+-        text: t('routes.end_route'),
+-        style: 'destructive',
+-        onPress: async () => {
+-          try {
+-            await endRouteInstance(resolvedInstanceId);
+-            router.back();
+-          } catch {
+-            Alert.alert(t('common.error'), t('common.errorOccurred'));
+-          }
+-        },
+-      },
++      { text: t('routes.end_route'), style: 'destructive', onPress: confirmEndRoute },
+     ]);
+-  }, [resolvedInstanceId, endRouteInstance, router, t]);
++  }, [resolvedInstanceId, confirmEndRoute, t]);
+ 
+   const handleDirections = useCallback(() => {
+     if (!resolvedInstanceId) return;
+@@ -385,6 +390,20 @@
+           </Box>
+         </ScrollView>
+       </Box>
++
++      {/* React Native Alert has no web implementation. Keep explicit confirmation. */}
++      <NativeModal visible={endConfirmationVisible} transparent animationType="fade" onRequestClose={() => setEndConfirmationVisible(false)}>
++        <Box className="flex-1 items-center justify-center bg-black/50 px-6">
++          <Box className="w-full rounded-2xl bg-white p-6 dark:bg-gray-800">
++            <Text className="mb-2 text-base font-semibold text-gray-900 dark:text-white">{t('routes.end_route')}</Text>
++            <Text className="mb-4 text-sm text-gray-700 dark:text-gray-300">{t('routes.end_route_confirm')}</Text>
++            <HStack className="gap-3">
++              <Button action="secondary" className="flex-1" onPress={() => setEndConfirmationVisible(false)}><ButtonText>{t('common.cancel')}</ButtonText></Button>
++              <Button action="negative" className="flex-1" onPress={confirmEndRoute}><ButtonText>{t('routes.end_route')}</ButtonText></Button>
++            </HStack>
++          </Box>
++        </Box>
++      </NativeModal>
+ 
+       {/* Skip reason modal */}
+       <NativeModal visible={skipModalVisible} transparent animationType="fade" onRequestClose={() => setSkipModalVisible(false)}>

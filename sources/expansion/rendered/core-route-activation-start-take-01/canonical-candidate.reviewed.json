@@ -1,0 +1,232 @@
+{
+  "id": "core-route-activation-start",
+  "title": "Activate a route, assign a unit and review its execution",
+  "app": "Core",
+  "summary": "Activate a saved plan, start its assigned training unit, reopen progress and history, and recognize the busy-unit refusal.",
+  "audience": [
+    "Department administrators",
+    "Operations supervisors",
+    "Route and logistics coordinators"
+  ],
+  "prerequisites": [
+    "Authorized Routes access and a separate fictional training department.",
+    "A reviewed saved route and an appropriate available unit; verify road guidance before real operational use."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review the prepared plan before activation",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-001-draft-details"
+      ],
+      "required_labels": [
+        "Edit Route Plan",
+        "Name",
+        "Description",
+        "Unit",
+        "Status",
+        "Draft"
+      ],
+      "narration": "Open the saved route in Edit and check its Name and Description before changing its state. This is the fictional Community supply loop from the route-planning lesson. It has two prepared stops. Unit still says Assign at start time, and Status is Draft. Practice in a separate training department. Before using a real plan, verify its locations, contacts and directions with the people responsible for the work.",
+      "practice": "Review the prepared plan before activation",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "02",
+      "title": "Activate the plan and verify the saved action",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-002-active-prepared",
+        "route-start-20261102-003-save-active",
+        "route-start-20261102-004-active-saved"
+      ],
+      "required_labels": [
+        "Status",
+        "Active",
+        "Save Changes",
+        "Start"
+      ],
+      "narration": "Change Status from Draft to Active. Scroll to the bottom and select Save Changes. The returned Routes list shows Active beside Community supply loop, and its Actions now include Start. The plan is ready for the start operation, but this saved status alone does not show a unit executing it. The next step explicitly chooses the unit and creates that execution.",
+      "practice": "Activate the plan and verify the saved action",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "03",
+      "title": "Choose the unit that will execute the route",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-004-active-saved",
+        "route-start-20261102-005-unit-selection",
+        "route-start-20261102-006-van-prepared"
+      ],
+      "required_labels": [
+        "Start",
+        "Assign Unit",
+        "TRAINING ONLY - Community van 20261028",
+        "Start Route Now"
+      ],
+      "narration": "Select Start on the saved route row. The Start Route page asks for Assign Unit and says to select the unit that will execute this route. Choose the fictional Community van from the dropdown. Review the route name and this unit selection together. In your department, choose the resource responsible for these stops. The Start Route Now button is the action that begins the execution; Cancel leaves this start form.",
+      "practice": "Choose the unit that will execute the route",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "04",
+      "title": "Start and inspect the returned instance",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-006-van-prepared",
+        "route-start-20261102-007-instance-started"
+      ],
+      "required_labels": [
+        "Start Route Now",
+        "Instance Info",
+        "InProgress",
+        "51008",
+        "Started",
+        "Ended",
+        "0 / 2"
+      ],
+      "narration": "Select Start Route Now once. The returned Route Instance page shows In Progress in Instance Info, the unit identifier, and a Started time. Here the selected training van is represented by unit number fifty-one thousand eight. Ended is a dash, and Progress is zero of two. These saved instance details show that the start succeeded. They do not say that either service stop has already been completed.",
+      "practice": "Start and inspect the returned instance",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "05",
+      "title": "Read the initial stop timeline",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-008-pending-timeline"
+      ],
+      "required_labels": [
+        "Instance Info",
+        "Stop Timeline",
+        "Pending",
+        "0 / 2"
+      ],
+      "narration": "Scroll down to inspect Stop Timeline. Both entries are Pending in this newly started instance, and the progress remains zero of two. Use the status text and progress together when reviewing a route. This recording has not checked into either location, and the map does not display a generated road route. Starting an instance is an administration step; verify navigation and actual field progress separately before relying on them.",
+      "practice": "Read the initial stop timeline",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "06",
+      "title": "Reopen from the In Progress overview",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-022-stable-routes-actions",
+        "route-start-20261102-023-stable-progress",
+        "route-start-20261102-024-stable-reopened-instance"
+      ],
+      "required_labels": [
+        "In Progress",
+        "In Progress Routes",
+        "InProgress",
+        "51008",
+        "0 / 2",
+        "View Details"
+      ],
+      "narration": "Return to Routes and select In Progress in the top action bar. The overview now contains the Community supply loop card, its unit number, start time and zero-of-two stop count. Select View Details on that card. The same instance information returns with In Progress and the original start time. This lets a supervisor find an executing route again without starting another instance.",
+      "practice": "Reopen from the In Progress overview",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "07",
+      "title": "Inspect the plan history",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-022-stable-routes-actions",
+        "route-start-20261102-013-saved-history"
+      ],
+      "required_labels": [
+        "History",
+        "Route History - TRAINING ONLY - Community supply loop",
+        "Status",
+        "Unit",
+        "Started",
+        "Ended",
+        "Stops",
+        "Detail"
+      ],
+      "narration": "Return to Routes and select History on the Community supply loop row. Route History lists the stored execution with Status, Unit, Started, Ended and Stops columns. In this exercise there is one In Progress row, a start time, no end time and zero of two completed stops. Detail opens that execution. Use this history when checking which instance a progress report refers to, rather than treating the plan status as the execution history.",
+      "practice": "Inspect the plan history",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "08",
+      "title": "Recognize the busy-unit guard",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-022-stable-routes-actions",
+        "route-start-20261102-016-repeat-van-prepared",
+        "route-start-20261102-017-busy-unit-refusal"
+      ],
+      "required_labels": [
+        "Start",
+        "TRAINING ONLY - Community van 20261028",
+        "Start Route Now",
+        "Unit already has an active route instance."
+      ],
+      "narration": "For this training check, return to Start and select the same Community van while its first instance is still in progress. Select Start Route Now once. Resgrid returns Unit already has an active route instance. This refusal means the second start did not succeed. Do not keep retrying that unit. Review its existing route before deciding whether another appropriate resource should take a different assignment.",
+      "practice": "Recognize the busy-unit guard",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    },
+    {
+      "id": "09",
+      "title": "Verify retained history and apply the review",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "route-start-20261102-017-busy-unit-refusal",
+        "route-start-20261102-021-stable-single-history"
+      ],
+      "required_labels": [
+        "Cancel",
+        "Route History - TRAINING ONLY - Community supply loop",
+        "InProgress",
+        "51008",
+        "0 / 2"
+      ],
+      "narration": "Leave the refused start with Cancel, return to Routes and open History again. The recorded result still has the original single In Progress instance with zero of two stops completed. Keep the distinction clear: prepare the plan, start the intended unit, then inspect actual progress. This pattern can support search-and-rescue logistics, security service visits, wildland supplies, industrial response support, community paramedicine or mental health outreach, as well as fire and E M S. Match the stops and assigned resource to your department’s work.",
+      "practice": "Verify retained history and apply the review",
+      "capture_intent": "Show the actual prepared control, saved execution or returned refusal at the words discussing it."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Assign an appropriate unit to a reviewed service or logistics plan and verify the saved instance, history and real progress."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Assign an appropriate unit to a reviewed service or logistics plan and verify the saved instance, history and real progress."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Assign an appropriate unit to a reviewed service or logistics plan and verify the saved instance, history and real progress."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Assign an appropriate unit to a reviewed service or logistics plan and verify the saved instance, history and real progress."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Assign an appropriate unit to a reviewed service or logistics plan and verify the saved instance, history and real progress."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Assign an appropriate unit to a reviewed service or logistics plan and verify the saved instance, history and real progress."
+    }
+  ],
+  "scope_limits": [
+    "One fictional plan was saved from Draft to Active through normal UI, then started once for the training Community van (unit51008). Instance9e14f10f-fa21-426c-8885-4b3a32f3fddc persisted InProgress, start2026-11-03T03:56UTC, zero of two complete, and both timeline entries Pending. Normal In Progress and History navigation reopened this execution. One repeat start for the same unit was refused; fresh history retained exactly one row. No road directions, live journey, field movement, ETA, stop check-in/completion, instance end/cancellation, paused behavior or archival is claimed. The recorded timeline labels are2/3 for two saved stops; those labels are not described as authoritative stop ordering. Sources022/023/024 are fresh settled navigation readbacks replacing faded earlier transitions; they do not claim another execution or another start time."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-route-activation-start-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-route-activation-start-source-20261102-v2/lesson.candidate.json",
+    "sha256": "06e411bae5427a925704158bfe6e2d9c501dfc68637eab796ccf471900f250b5"
+  }
+}

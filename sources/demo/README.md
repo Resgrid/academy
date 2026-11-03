@@ -115,3 +115,19 @@ The setup plan, credential generation, schema-checked seed generation and existi
 guards are tested offline. A newly created full stack still needs a live setup and browser
 sign-in check on the machine used for recording. Earlier recordings used a separate
 local training profile; this reusable profile is independent.
+
+## Mapping recording extensions
+
+The later mapping recordings retain their exact fictional values, KML/KMZ fixtures,
+normal-UI replay steps and historical evidence in
+[the mapping replay recipe](scenarios/mapping-recordings-actual-ui-20261103.json).
+The [mapping runtime support pack](core-support/mapping-consistent-runtime-20261102/README.md)
+contains hash-checked isolated Core changes and the 16 actual storage checks.
+The [Unit mapping contract pack](client-support/unit-mapping-contract-20261103/README.md)
+records the client/API adaptation and its current indoor-viewer limits. These packs
+do not change the older source pins or seed completed executions as live journeys.
+
+The later [Unit indoor rendering pack](client-support/unit-indoor-render-compatibility-20261103/README.md)
+retains the authorized image/legacy-region adaptation, meaningful contract checks
+and successful actual browser evidence. Its floor-plan/detail/filter walkthrough is
+read-only and does not demonstrate live occupants or physical arrival.

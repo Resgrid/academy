@@ -1,0 +1,174 @@
+{
+  "id": "app-unit-indoor-floor-reference",
+  "title": "Unit: read floor plans and find saved rooms",
+  "app": "Unit",
+  "summary": "Open an indoor reference map, inspect saved room details, switch layers and filter imported regions.",
+  "audience": [
+    "Unit crews",
+    "Site and logistics coordinators",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "An authorized Unit session and reviewed indoor map, floor image and saved regions prepared for your department.",
+    "Use a fictional practice map for this exercise; verify operational site information with its owner."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Open the indoor reference map",
+      "route": "/maps",
+      "capture_refs": [
+        "011-maps-indoor-entry",
+        "012-reopened-ground-floor"
+      ],
+      "required_labels": [
+        "Maps",
+        "Indoor Maps",
+        "TRAINING ONLY - Community coordination centre",
+        "TRAINING ONLY - Ground floor"
+      ],
+      "narration": "In Unit, open Maps and find the Community coordination centre under Indoor Maps. Select that indoor entry. The viewer opens with Ground floor selected in blue. The row beneath the Indoor Maps heading lets you switch between this floor plan and the department’s other saved layers. This fictional example is for reviewing reference information with a crew.",
+      "practice": "Open the indoor reference map",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    },
+    {
+      "id": "02",
+      "title": "Select a saved room and read its details",
+      "route": "/maps/indoor/d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+      "capture_refs": [
+        "012-reopened-ground-floor",
+        "013-final-briefing-room-details"
+      ],
+      "required_labels": [
+        "Indoor Maps",
+        "TRAINING ONLY - Ground floor",
+        "Briefing room - training",
+        "Fictional team briefing room for this software exercise."
+      ],
+      "narration": "On Ground floor, inspect the floor-plan image and the shaded room area. Select that shaded area. A card opens with the saved name, Briefing room, and its description. Read the card before relying on a short map label. The image and the selectable room overlay are separate pieces of reference information that should agree with the reviewed plan.",
+      "practice": "Select a saved room and read its details",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    },
+    {
+      "id": "03",
+      "title": "Switch layers and inspect an imported room",
+      "route": "/maps/indoor/d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+      "capture_refs": [
+        "014-final-gis-two-regions",
+        "015-final-training-room-details"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - GIS import",
+        "Training room - import"
+      ],
+      "narration": "Select the G I S import tab. This layer shows two imported region overlays on the floor image. Select the training-room area to open its saved Training room import details. Changing a tab changes the layer you are inspecting. Check the selected blue tab and the opened region’s name together so you are discussing the intended reference.",
+      "practice": "Switch layers and inspect an imported room",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    },
+    {
+      "id": "04",
+      "title": "Filter the visible region overlays",
+      "route": "/maps/indoor/d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+      "capture_refs": [
+        "005-readable-equipment-filter",
+        "006-filtered-equipment-details"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - GIS import",
+        "Equipment",
+        "Equipment - import"
+      ],
+      "narration": "Enter Equipment in the search field. The matching equipment overlay remains while the other region overlay is filtered out. The room names printed inside the floor-plan image remain visible because that image is separate from the searchable overlay. Select the matching shaded area to open Equipment import and review its saved description. Search helps focus the display; it does not change the saved floor drawing.",
+      "practice": "Filter the visible region overlays",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    },
+    {
+      "id": "05",
+      "title": "Clear the search and restore the layer view",
+      "route": "/maps/indoor/d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+      "capture_refs": [
+        "006-filtered-equipment-details",
+        "007-cleared-search-two-overlays"
+      ],
+      "required_labels": [
+        "Indoor Maps",
+        "TRAINING ONLY - GIS import"
+      ],
+      "narration": "Close the detail card and remove Equipment from the search field. Both region overlays return on the G I S import layer. Clear a search when handing the device to another crew member so the restricted view is not mistaken for the complete layer.",
+      "practice": "Clear the search and restore the layer view",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    },
+    {
+      "id": "06",
+      "title": "Review imported KML and KMZ areas",
+      "route": "/maps/indoor/d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+      "capture_refs": [
+        "008-kml-kmz-regions-visible",
+        "009-kml-region-details",
+        "010-kmz-region-details"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - KML and KMZ import",
+        "KML training assembly area",
+        "KMZ training access area",
+        "Dispatch to this zone"
+      ],
+      "narration": "Select the K M L and K M Z import tab. This data layer displays the two imported areas over the base map, without the floor-plan image. Select each area and read its saved name and description. The dispatchable area also offers Dispatch to this zone. This walkthrough reviews the reference cards without submitting a call. Verify the selected area and your department’s call procedure before using a dispatch action.",
+      "practice": "Review imported KML and KMZ areas",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    },
+    {
+      "id": "07",
+      "title": "Reopen the map and explain its operational use",
+      "route": "/maps",
+      "capture_refs": [
+        "011-maps-indoor-entry",
+        "012-reopened-ground-floor"
+      ],
+      "required_labels": [
+        "Maps",
+        "Indoor Maps",
+        "TRAINING ONLY - Community coordination centre",
+        "TRAINING ONLY - Ground floor"
+      ],
+      "narration": "Return to Maps and reopen the same Indoor Maps entry. Ground floor and the saved room overlay return in this example. These are stored reference locations; this viewer does not show who is inside a room or confirm physical arrival. Community paramedicine and mental health teams, search-and-rescue crews, security departments, wildland contractors and industrial response teams can use reviewed site references alongside fire and E M S. Keep the map current and verify live-location information separately.",
+      "practice": "Reopen the map and explain its operational use",
+      "capture_intent": "Show the actual Unit indoor map, selected layer, floor image, saved region detail or search field being discussed."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Use reviewed floor plans and named site areas as crew references, inspect the saved details and keep a filtered display distinct from the complete layer."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use reviewed floor plans and named site areas as crew references, inspect the saved details and keep a filtered display distinct from the complete layer."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Use reviewed floor plans and named site areas as crew references, inspect the saved details and keep a filtered display distinct from the complete layer."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Use reviewed floor plans and named site areas as crew references, inspect the saved details and keep a filtered display distinct from the complete layer."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Use reviewed floor plans and named site areas as crew references, inspect the saved details and keep a filtered display distinct from the complete layer."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Use reviewed floor plans and named site areas as crew references, inspect the saved details and keep a filtered display distinct from the complete layer."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; complete speech/caption correspondence, genuine listening, actual encoded-frame and playback reviews remain required.",
+    "Actual Unit read-only UI operations on the fictional Community coordination centre. The isolated indoor compatibility pack uses authorized signed images and actual stored geographic coordinate rings; source changes and checks are retained under demo/client-support. Earlier blank viewer attempts are excluded. No live personnel/unit indoor floor assignment, sensor feed, occupant tracking, physical arrival, dispatch submission or real operational site accuracy is claimed.",
+    "The normal Maps entry was captured after the detail exercises and used as an instructional introduction and reopen check. This groups read-only operations without altering saved data or original evidence."
+  ]
+}

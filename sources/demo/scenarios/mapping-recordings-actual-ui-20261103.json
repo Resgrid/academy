@@ -1,0 +1,143 @@
+{
+  "training_only": true,
+  "department_id": 51,
+  "recorded_at": "2026-11-03T07:54:53.678121+00:00",
+  "snapshot": {
+    "file": "demo/scenarios/mapping-recording-data-snapshot-20261103.json",
+    "sha256": "188f76045e1bec1d199dc385856ce98332be8e68c38697e4173801df22df366e",
+    "purpose": "Whitelisted fictional values and historical identifiers; not an automatic database import or a new journey."
+  },
+  "assets": [
+    {
+      "file": "demo/assets/academy-geospatial-assembly.kml",
+      "sha256": "42015294638985a10b67275a9d95b27be8bb633ec6fd69f315b002e71302b03b"
+    },
+    {
+      "file": "demo/assets/academy-geospatial-access.kmz",
+      "sha256": "2b382718f2797702f4ddb2a165b2d7845ed025c25458a050deb745b7c249c2c5"
+    },
+    {
+      "file": "demo/assets/academy-geospatial-empty.kml",
+      "sha256": "b49f2c91110072035fdf5a66dc460d13ebc86930b5e29da329e4d34802794f19"
+    }
+  ],
+  "source_support": [
+    "demo/core-support/mapping-consistent-runtime-20261102/README.md",
+    "demo/core-support/routes-new-numeric-stops-20261102/README.md",
+    "demo/client-support/unit-route-web-confirmation-20261102/README.md",
+    "demo/client-support/unit-route-progress-contract-20261102/README.md",
+    "demo/client-support/unit-mapping-contract-20261103/README.md",
+    "demo/client-support/unit-indoor-render-compatibility-20261103/README.md"
+  ],
+  "replay_rules": [
+    "Use a fresh fictional Academy profile for new recordings. Existing profiles retain their source pins, credentials, storage and saved history. Never reset or overwrite a department to match historical IDs.",
+    "Use normal signed-in UI operations. Record each fresh save, reopen and resulting state; historical timestamps and IDs identify evidence rather than values to copy into a live execution.",
+    "Keep credentials, runtime configuration, provider tokens, generated database files and private audio links outside public source and captures.",
+    "No real journey, live personnel occupancy, operational hazard or provider alert delivery is represented by these fictional examples."
+  ],
+  "operations": [
+    {
+      "lesson": "core-weather-sources-zones",
+      "steps": [
+        "Weather Alerts > Settings: keep global alerts, automatic severity messages and call integration disabled.",
+        "Create the named Illinois NWS source with area filter [\"IL\"], initially 15-minute interval, inactive. Save, reopen, change to 30 minutes and verify the saved interval. Do not infer polling from OK; the recorded source remains Never Polled.",
+        "Create Downtown support zone at 41.8781,-87.6298, initially 5-mile radius, primary and active. Save, reopen and change radius to 8 miles. Disable and verify Inactive; enable and verify Active."
+      ],
+      "observed_source_active": false,
+      "provider_poll_or_message_delivery_claimed": false,
+      "captures": "captures/expansion/core-weather-sources-zones-20261102/manifest.json"
+    },
+    {
+      "lesson": "app-unit-route-stop-completion",
+      "steps": [
+        "Select the saved Community support route in Unit and review its two stops. Keep automatic GPS arrival disabled for this manual software exercise.",
+        "Start a new execution. Check In at Community point A; verify In Progress and Check Out. Check Out; verify progress and the next pending stop.",
+        "Check In and Check Out at Community point B; verify both stops completed and 100 percent. End Route through the visible confirmation.",
+        "Verify Unit no longer has the active execution, then inspect Core execution history for Completed, 2/2 stops, saved start/end and each stop time."
+      ],
+      "evidence_note": "The primary completed run is 753b31f0-9092-4631-95b9-44a7722f9eed. The clean Stops Completed banner pickup is from a separate third rehearsal, f71906df-9386-4f87-9e3e-1ed932471448, with the same plan and 2/2 stops but not yet ended. Its banner is not evidence of the primary timestamps.",
+      "captures": "captures/expansion/app-unit-route-stop-completion-20261102/manifest.json"
+    },
+    {
+      "lesson": "core-unit-road-guidance",
+      "steps": [
+        "Core Routes > Directions: inspect the route overview, its departure leg, second leg and return leg. Compare travel time with the additional configured dwell time.",
+        "Review the stop summary, contacts and notes. In Unit, inspect View Route and then start the saved route.",
+        "Open the active Directions view and inspect the actual provider distance, time, destination and No traffic data message. Open in Maps is shown as an available action; an external navigation trip was not recorded."
+      ],
+      "limits": "Core includes departure and return to station plus dwell, whereas Unit guidance uses the selected route endpoints. Estimates may change on replay. No GPS journey or traffic claim.",
+      "captures": "captures/expansion/core-route-road-guidance-20261102/manifest.json"
+    },
+    {
+      "lesson": "core-map-layer-authoring",
+      "steps": [
+        "Mapping > Layers > New Layer: enter the fictional Outreach staging example name and choose blue. Draw a rectangle with its normal first/second corner interaction, then place one marker. Save Add Layer.",
+        "Verify the saved row has two items; reopen to inspect retained geometry and Display on Map by Default. Clear that default, save, and reopen to verify it stayed clear.",
+        "On Mapping, switch only Outreach staging on and off while leaving Community staging checked. Reload and verify the retained individual visibility state."
+      ],
+      "captures": "captures/expansion/core-map-layer-create-clean-20261103/manifest.json",
+      "excluded_capture_ids": [
+        "013",
+        "014",
+        "015",
+        "016",
+        "017"
+      ],
+      "exclusion_reason": "Those earlier main-map captures exposed a shared empty PostgreSQL layer identifier; fresh 018–021 show the repaired independent controls. Original evidence bytes remain retained."
+    },
+    {
+      "lesson": "core-indoor-call-location",
+      "steps": [
+        "Custom Maps > Community coordination centre > Ground floor > Edit Regions: inspect Briefing room - training, with Searchable true and Dispatchable false.",
+        "Clear Searchable and save. On New Call, search Briefing in Indoor Location and verify no matching result. Restore Searchable, save and verify the room returns.",
+        "In a separate New Call exercise, select the room, set and verify the separate outdoor latitude/longitude reference, and select Save as pending before submitting.",
+        "Verify the saved pending call, open it and use Update Call to inspect the retained room/floor reference. No actual dispatch is sent."
+      ],
+      "evidence_note": "The recorded call was saved before the searchability round trip; the instructional order groups the room search controls before the separate call example. Searchable controls this lookup independently of Dispatchable.",
+      "captures": "captures/expansion/core-indoor-call-location-20261102/manifest.json"
+    },
+    {
+      "lesson": "core-kml-kmz-import",
+      "steps": [
+        "Add the dedicated KML and KMZ import Data Layer to the fictional custom map.",
+        "Open Import, explicitly choose that target layer and choose academy-geospatial-assembly.kml. Import and verify Complete in history.",
+        "Reselect the target after the form resets, choose academy-geospatial-access.kmz and verify both imports Complete.",
+        "Reselect the target, import academy-geospatial-empty.kml, and inspect the expected Failed row explaining that no supported placemarks were found.",
+        "Open Edit Regions for the dedicated layer. Inspect both separate polygons and their Custom, Searchable and Dispatchable properties without changing them.",
+        "On unsaved New Call, search training under Indoor Location and verify both imported names are available. Do not submit a call."
+      ],
+      "captures": "captures/expansion/core-kml-kmz-import-20261103/manifest.json",
+      "expected_negative_case": "A valid KML container with no supported placemarks is rejected; its Failed history row is not hidden."
+    },
+    {
+      "lesson": "app-unit-indoor-floor-reference",
+      "read_only": true,
+      "steps": [
+        "Unit Maps > Indoor Maps: select the fictional Community coordination centre; verify the Ground floor tab and actual floor image/room overlay.",
+        "Select the shaded Briefing room area and inspect its saved name/description.",
+        "Switch GIS import, inspect the two regions and open Training room - import details.",
+        "Enter Equipment in the viewer search; inspect the matching equipment region and its detail card. Close the card, remove the search text and verify both overlays return.",
+        "Switch KML and KMZ import and inspect each saved region card. Dispatch to this zone is available on dispatchable references but is not clicked in this exercise.",
+        "Return to Maps and reopen the same indoor entry; verify the saved ground-floor reference. No real occupant or arrival is represented."
+      ],
+      "captures": "captures/expansion/app-unit-indoor-floor-reference-20261103/manifest.json",
+      "source": "expansion/plans/app-unit-indoor-floor-reference-source-20261103"
+    }
+  ],
+  "live_indoor_recording_limit": {
+    "completed": false,
+    "source_findings": [
+      "Legacy room geometry is stored in PixelGeometry while the API zone projection reads GeoGeometry.",
+      "Legacy floor bounds are null; the client needs non-zero georeferenced image bounds and authorized image access.",
+      "The current ordinary personnel/unit location contracts do not identify an indoor floor or room, and this viewer has no live-occupancy overlay."
+    ],
+    "no_live_location_or_occupancy_demonstrated": true,
+    "earlier_observation": "The Unit recording viewer can list maps and floors after API contract adaptation, but it does not render the floor image or region overlay. No blank viewer is qualified as a tutorial.",
+    "actual_observation": "The later isolated compatibility pack successfully renders the actual floor image and saved geographic room/region overlays. Normal-UI details, filtering, layer switches and reopening are recorded. The current viewer still has no live occupant or indoor personnel-floor tracking feed.",
+    "floor_image_and_reference_region_render_fixed": true,
+    "reference_viewer_capture_manifest": "captures/expansion/app-unit-indoor-floor-reference-20261103/manifest.json",
+    "reference_viewer_video_qualified": false
+  },
+  "git_mutations": 0,
+  "automatic_database_import": false
+}

@@ -1,0 +1,232 @@
+{
+  "id": "core-weather-sources-zones",
+  "title": "Configure weather sources and monitoring zones",
+  "app": "Core",
+  "summary": "Create and reopen a weather source, change its interval, and save, edit and toggle a named monitoring zone.",
+  "audience": [
+    "Department administrators",
+    "Operations supervisors",
+    "Weather monitoring coordinators"
+  ],
+  "prerequisites": [
+    "Authorized Weather Alerts administration and a separate fictional training department.",
+    "Verified provider area identifiers for operational use; keep any API key out of public recordings."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Separate source setup from notification policy",
+      "route": "/User/WeatherAlerts/Settings",
+      "capture_refs": [
+        "001-disabled-notification-policy"
+      ],
+      "required_labels": [
+        "Settings",
+        "Notification Settings",
+        "Enable Weather Alerts",
+        "Minimum Severity to Display",
+        "Moderate",
+        "Manage Zones"
+      ],
+      "narration": "Open Weather Alerts settings with department administration access. Source configuration, monitoring-zone configuration and notification policy are separate parts of this page. In this fictional department, Enable Weather Alerts is unchecked and the display threshold is Moderate. We will retain that training policy while configuring and checking a source and a named monitoring zone. No member notification is demonstrated in this exercise.",
+      "practice": "Separate source setup from notification policy",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "02",
+      "title": "Prepare an inactive National Weather Service source",
+      "route": "/User/WeatherAlerts/Settings",
+      "capture_refs": [
+        "002-configured-inactive-source"
+      ],
+      "required_labels": [
+        "Add / Edit Source",
+        "Source Name",
+        "Source Type",
+        "National Weather Service",
+        "Area Filter (JSON zone codes)",
+        "API Key",
+        "Poll Interval (minutes)",
+        "Active",
+        "Save"
+      ],
+      "narration": "In Add or Edit Source, enter a recognizable Source Name. Choose National Weather Service as Source Type. This example enters I L in Area Filter for Illinois. The field accepts a comma-separated list and stores the normalized filter. The API Key field is blank here. Poll Interval is fifteen minutes. Clear Active while preparing this training source, then select Save.",
+      "practice": "Prepare an inactive National Weather Service source",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "03",
+      "title": "Read the stored source state",
+      "route": "/User/WeatherAlerts/Settings",
+      "capture_refs": [
+        "003-inactive-source-saved-row"
+      ],
+      "required_labels": [
+        "Alert Sources",
+        "TRAINING ONLY - Illinois NWS source",
+        "National Weather Service",
+        "15 min",
+        "Inactive",
+        "Never Polled",
+        "OK",
+        "Edit",
+        "Enable"
+      ],
+      "narration": "The returned Alert Sources row shows the saved name, National Weather Service, the stored I L filter and fifteen-minute interval. Its status is Inactive and Last Poll says Never Polled. The O K badge is not proof that this source has contacted its provider: there is no completed poll in this example. Review the saved status and last-poll evidence before deciding a feed is operational.",
+      "practice": "Read the stored source state",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "04",
+      "title": "Change the polling interval and verify readback",
+      "route": "/User/WeatherAlerts/Settings",
+      "capture_refs": [
+        "003-inactive-source-saved-row",
+        "014-source-interval-ready-after-repair",
+        "015-source-thirty-minute-readback",
+        "016-source-reopened-thirty-minutes"
+      ],
+      "required_labels": [
+        "Edit",
+        "Edit Source",
+        "Poll Interval (minutes)",
+        "Active",
+        "Save",
+        "30 min",
+        "Inactive",
+        "Never Polled"
+      ],
+      "narration": "Select Edit on the source row. Change Poll Interval to thirty minutes and leave Active clear. Select Save. The fresh source row now shows thirty minutes, Inactive and Never Polled. Reopen Edit to verify the thirty-minute value in the form as well. Choose a polling interval deliberately for your provider and department; a saved interval by itself does not demonstrate a successful provider request.",
+      "practice": "Change the polling interval and verify readback",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "05",
+      "title": "Create a named monitoring zone",
+      "route": "/User/WeatherAlerts/Zones",
+      "capture_refs": [
+        "001-disabled-notification-policy",
+        "007-configured-zone-form",
+        "008-saved-zone-row"
+      ],
+      "required_labels": [
+        "Manage Zones",
+        "Monitoring Zones",
+        "Add Monitoring Zone",
+        "Zone Name",
+        "Zone Code",
+        "Center Location",
+        "Radius (miles)",
+        "Primary Zone",
+        "Active",
+        "Save Zone",
+        "Primary"
+      ],
+      "narration": "Use Manage Zones to open Monitoring Zones. Enter a clear Zone Name, then the latitude and longitude in Center Location. This fictional downtown reference uses a five-mile Radius. Zone Code is optional and is blank in this example; do not invent a provider’s zone code. Mark Primary Zone and leave the zone Active. Select Save Zone. The returned row retains its center, five-mile radius, Primary badge and Active state.",
+      "practice": "Create a named monitoring zone",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "06",
+      "title": "Update the zone radius and reopen its configuration",
+      "route": "/User/WeatherAlerts/Zones",
+      "capture_refs": [
+        "008-saved-zone-row",
+        "009-reopened-zone-values",
+        "010-zone-radius-update",
+        "011-zone-radius-saved"
+      ],
+      "required_labels": [
+        "Edit",
+        "Edit Monitoring Zone",
+        "Radius (miles)",
+        "Save Zone",
+        "8",
+        "Primary",
+        "Active"
+      ],
+      "narration": "Select Edit on the saved zone row. The form reopens with the stored name, center, five-mile radius and checked options. Change Radius to eight miles. Select Save Zone again. The returned row shows eight while retaining Primary and Active. This round trip verifies the stored configuration. Confirm actual alert coverage separately; this recording does not demonstrate a live alert intersecting the zone.",
+      "practice": "Update the zone radius and reopen its configuration",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "07",
+      "title": "Disable and restore the zone",
+      "route": "/User/WeatherAlerts/Zones",
+      "capture_refs": [
+        "011-zone-radius-saved",
+        "012-zone-disabled",
+        "013-zone-reenabled"
+      ],
+      "required_labels": [
+        "Disable",
+        "Inactive",
+        "Enable",
+        "Active",
+        "TRAINING ONLY - Downtown support zone"
+      ],
+      "narration": "Select Disable on the monitoring-zone row. Its badge changes to Inactive and the action changes to Enable. The name, center and radius remain saved. Select Enable to restore the Active state. Use these status controls when reviewing which configured zones should be available, and verify the resulting badge after each change. This exercise retains the active eight-mile primary training zone.",
+      "practice": "Disable and restore the zone",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    },
+    {
+      "id": "08",
+      "title": "Verify alert evidence before relying on the setup",
+      "route": "/User/WeatherAlerts/Settings",
+      "capture_refs": [
+        "017-no-live-alert-claim",
+        "015-source-thirty-minute-readback",
+        "018-policy-retained-disabled"
+      ],
+      "required_labels": [
+        "Never Polled",
+        "Inactive",
+        "Active Weather Alerts",
+        "No active weather alerts for your department.",
+        "Enable Weather Alerts"
+      ],
+      "narration": "Return to Weather Alerts and inspect Active Weather Alerts. This department has no active alerts, and the configured source remains inactive and never polled. The global training policy is still disabled. A security company, search-and-rescue team, wildland contractor, industrial response team or community paramedicine and mental health program can document the relevant operating areas, just as fire and E M S can. Before operational use, verify the intended source’s provider results, monitoring coverage and delivery policy with the responsible department administrator.",
+      "practice": "Verify alert evidence before relying on the setup",
+      "capture_intent": "Show each actual setting/control, its saved row or independent returned readback as it is discussed."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Maintain provider settings and named operating-area references, then verify actual provider coverage and notification policy."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Maintain provider settings and named operating-area references, then verify actual provider coverage and notification policy."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Maintain provider settings and named operating-area references, then verify actual provider coverage and notification policy."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Maintain provider settings and named operating-area references, then verify actual provider coverage and notification policy."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Maintain provider settings and named operating-area references, then verify actual provider coverage and notification policy."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Maintain provider settings and named operating-area references, then verify actual provider coverage and notification policy."
+    }
+  ],
+  "scope_limits": [
+    "Actual normal UI created an inactive NWS source with filter[\"IL\"] and15min, then the tested PostgreSQL runtime repair allowed a successful30min edit and fresh form readback. Never Polled retained. Actual normal UI created primary active monitoring zoneb457284e-95c3-44c3-8669-92dabf3f86b9 at41.8781,-87.6298/radius5, saved edit8mi, disabled and re-enabled it. Global weather enable and auto-message settings remain off. No successful provider poll, real alert, zone intersection, member delivery or call-context note is claimed. Runtime support/source/probe retained under demo/core-support/mapping-consistent-runtime-20261102."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-weather-sources-zones-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-weather-sources-zones-source-20261102/lesson.candidate.json",
+    "sha256": "662b129c026e21705eb6ae8f16dc6d31c097f7b88181309f46269792ee461f0c"
+  }
+}

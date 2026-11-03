@@ -1,0 +1,837 @@
+[
+  {
+    "id": "01",
+    "title": "Review the room and its search controls",
+    "kind": "operational",
+    "start": 0.0,
+    "end": 22.53,
+    "visual_required_labels": [
+      "Region Properties",
+      "Briefing room - training",
+      "Type",
+      "Searchable in dispatch",
+      "Dispatchable",
+      "Save Region"
+    ],
+    "screens": [
+      {
+        "screenshot_id": "009-room-searchable-properties",
+        "start": 0.0,
+        "end": 22.53
+      }
+    ],
+    "captions": [
+      {
+        "start": 0.039,
+        "end": 3.23,
+        "text": "In the ground-floor Region Editor, select the Briefing room",
+        "cue": 1,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [
+          "Briefing room - training"
+        ],
+        "spoken_references": {
+          "Briefing room - training": "Briefing room"
+        },
+        "instructional": true
+      },
+      {
+        "start": 3.23,
+        "end": 5.369,
+        "text": "polygon to open Region Properties.",
+        "cue": 2,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [
+          "Region Properties"
+        ],
+        "spoken_references": {
+          "Region Properties": "Region Properties"
+        },
+        "instructional": true
+      },
+      {
+        "start": 5.75,
+        "end": 9.26,
+        "text": "Review its Name, Room Type, Color and Description.",
+        "cue": 3,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [
+          "Name",
+          "Room",
+          "Type",
+          "Color",
+          "Description"
+        ],
+        "spoken_references": {
+          "Name": "Name",
+          "Room": "Room",
+          "Type": "Type",
+          "Color": "Color",
+          "Description": "Description"
+        },
+        "instructional": true
+      },
+      {
+        "start": 9.67,
+        "end": 14.46,
+        "text": "Searchable in dispatch is checked, while Dispatchable is clear in this example.",
+        "cue": 4,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [
+          "Searchable in dispatch",
+          "Dispatchable"
+        ],
+        "spoken_references": {
+          "Searchable in dispatch": "Searchable in dispatch",
+          "Dispatchable": "Dispatchable"
+        },
+        "instructional": true
+      },
+      {
+        "start": 14.85,
+        "end": 16.35,
+        "text": "These are separate options.",
+        "cue": 5,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 16.729,
+        "end": 20.36,
+        "text": "We will verify the search setting through New Call, rather than assuming",
+        "cue": 6,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 20.36,
+        "end": 22.26,
+        "text": "both checkboxes mean the same thing.",
+        "cue": 7,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      }
+    ],
+    "instruction_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-11-03T15:58:04.009328+00:00",
+      "passed": true,
+      "correspondence_reviewed": true,
+      "no_unseen_controls": true,
+      "mapping_sha256": "0ff908c0f484d52b7ef62f4a3a8f80f9ab8452eea21f93da774f9c2c0e4fe552",
+      "evidence_file": "expansion/plans/core-indoor-call-location-complete-correspondence-20261103-v2/root-complete-correspondence-review.json",
+      "evidence_sha256": "fdc9e5213591eb60db2c14d311e5db5b6e8899550833991475d2cab25b80a12b"
+    }
+  },
+  {
+    "id": "02",
+    "title": "Hide the room from new searches",
+    "kind": "operational",
+    "start": 22.53,
+    "end": 40.619,
+    "visual_required_labels": [
+      "Searchable in dispatch",
+      "Save Region",
+      "Indoor Location",
+      "No results found"
+    ],
+    "screens": [
+      {
+        "screenshot_id": "010-searchable-disabled-prepared",
+        "start": 22.53,
+        "end": 26.39
+      },
+      {
+        "screenshot_id": "011-hidden-room-search-result",
+        "start": 26.39,
+        "end": 40.619
+      }
+    ],
+    "captions": [
+      {
+        "start": 22.53,
+        "end": 25.92,
+        "text": "Clear Searchable in dispatch and select Save Region.",
+        "cue": 8,
+        "screenshot_id": "010-searchable-disabled-prepared",
+        "required_labels": [
+          "Searchable in dispatch",
+          "Save Region"
+        ],
+        "spoken_references": {
+          "Searchable in dispatch": "Searchable in dispatch",
+          "Save Region": "Save Region"
+        },
+        "instructional": true
+      },
+      {
+        "start": 26.39,
+        "end": 30.159,
+        "text": "On New Call, open Indoor Location and search for Briefing.",
+        "cue": 9,
+        "screenshot_id": "011-hidden-room-search-result",
+        "required_labels": [
+          "Indoor Location"
+        ],
+        "spoken_references": {
+          "Indoor Location": "Indoor Location"
+        },
+        "instructional": true
+      },
+      {
+        "start": 30.58,
+        "end": 33.469,
+        "text": "The returned search now says No results found.",
+        "cue": 10,
+        "screenshot_id": "011-hidden-room-search-result",
+        "required_labels": [
+          "No results found"
+        ],
+        "spoken_references": {
+          "No results found": "No results found"
+        },
+        "instructional": true
+      },
+      {
+        "start": 33.83,
+        "end": 36.45,
+        "text": "This removes the room from that new selection search.",
+        "cue": 11,
+        "screenshot_id": "011-hidden-room-search-result",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 36.78,
+        "end": 40.389,
+        "text": "It has not deleted the underlying floor plan or the room polygon.",
+        "cue": 12,
+        "screenshot_id": "011-hidden-room-search-result",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      }
+    ],
+    "instruction_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-11-03T15:58:04.009328+00:00",
+      "passed": true,
+      "correspondence_reviewed": true,
+      "no_unseen_controls": true,
+      "mapping_sha256": "5a58ff04f58c8941c0b375923361e8dd64354449431358f5c28e26dc47bc72ed",
+      "evidence_file": "expansion/plans/core-indoor-call-location-complete-correspondence-20261103-v2/root-complete-correspondence-review.json",
+      "evidence_sha256": "fdc9e5213591eb60db2c14d311e5db5b6e8899550833991475d2cab25b80a12b"
+    }
+  },
+  {
+    "id": "03",
+    "title": "Restore the search option and verify it",
+    "kind": "operational",
+    "start": 40.619,
+    "end": 60.72,
+    "visual_required_labels": [
+      "Searchable in dispatch",
+      "Save Region",
+      "Indoor Location",
+      "Briefing room - training"
+    ],
+    "screens": [
+      {
+        "screenshot_id": "012-searchability-restore-prepared",
+        "start": 40.619,
+        "end": 46.0
+      },
+      {
+        "screenshot_id": "013-room-search-restored",
+        "start": 46.0,
+        "end": 52.27
+      },
+      {
+        "screenshot_id": "012-searchability-restore-prepared",
+        "start": 52.27,
+        "end": 55.179
+      },
+      {
+        "screenshot_id": "013-room-search-restored",
+        "start": 55.179,
+        "end": 60.72
+      }
+    ],
+    "captions": [
+      {
+        "start": 40.619,
+        "end": 43.839,
+        "text": "Return to the same room’s properties, check Searchable",
+        "cue": 13,
+        "screenshot_id": "012-searchability-restore-prepared",
+        "required_labels": [
+          "Searchable in dispatch"
+        ],
+        "spoken_references": {
+          "Searchable in dispatch": "Searchable"
+        },
+        "instructional": true
+      },
+      {
+        "start": 43.839,
+        "end": 45.48,
+        "text": "in dispatch and save again.",
+        "cue": 14,
+        "screenshot_id": "012-searchability-restore-prepared",
+        "required_labels": [
+          "Save Region"
+        ],
+        "spoken_references": {
+          "Save Region": "save again"
+        },
+        "instructional": true
+      },
+      {
+        "start": 46.0,
+        "end": 48.58,
+        "text": "Repeat the Indoor Location search on New Call.",
+        "cue": 15,
+        "screenshot_id": "013-room-search-restored",
+        "required_labels": [
+          "Indoor Location"
+        ],
+        "spoken_references": {
+          "Indoor Location": "Indoor Location"
+        },
+        "instructional": true
+      },
+      {
+        "start": 49.049,
+        "end": 51.849,
+        "text": "Briefing room now returns as a selectable result.",
+        "cue": 16,
+        "screenshot_id": "013-room-search-restored",
+        "required_labels": [
+          "Briefing room - training"
+        ],
+        "spoken_references": {
+          "Briefing room - training": "Briefing room"
+        },
+        "instructional": true
+      },
+      {
+        "start": 52.27,
+        "end": 54.77,
+        "text": "Dispatchable remains clear during this test.",
+        "cue": 17,
+        "screenshot_id": "012-searchability-restore-prepared",
+        "required_labels": [
+          "Dispatchable"
+        ],
+        "spoken_references": {
+          "Dispatchable": "Dispatchable"
+        },
+        "instructional": true
+      },
+      {
+        "start": 55.179,
+        "end": 58.879,
+        "text": "The actual returned option verifies which setting controls this",
+        "cue": 18,
+        "screenshot_id": "013-room-search-restored",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 58.879,
+        "end": 60.51,
+        "text": "search in the recorded system.",
+        "cue": 19,
+        "screenshot_id": "013-room-search-restored",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      }
+    ],
+    "instruction_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-11-03T15:58:04.009328+00:00",
+      "passed": true,
+      "correspondence_reviewed": true,
+      "no_unseen_controls": true,
+      "mapping_sha256": "b42c303e08c3e22e26734e70c153cae5de59085328ce16e28cb0afe7206bee12",
+      "evidence_file": "expansion/plans/core-indoor-call-location-complete-correspondence-20261103-v2/root-complete-correspondence-review.json",
+      "evidence_sha256": "fdc9e5213591eb60db2c14d311e5db5b6e8899550833991475d2cab25b80a12b"
+    }
+  },
+  {
+    "id": "04",
+    "title": "Select the indoor reference and keep the outdoor position accurate",
+    "kind": "operational",
+    "start": 60.72,
+    "end": 87.419,
+    "visual_required_labels": [
+      "Indoor Location",
+      "Briefing room - training",
+      "Lat",
+      "Lng",
+      "Set Pin on Map"
+    ],
+    "screens": [
+      {
+        "screenshot_id": "001-indoor-room-search-result",
+        "start": 60.72,
+        "end": 63.839
+      },
+      {
+        "screenshot_id": "002-selected-indoor-location",
+        "start": 63.839,
+        "end": 67.04
+      },
+      {
+        "screenshot_id": "003-room-and-outdoor-map",
+        "start": 67.04,
+        "end": 69.31
+      },
+      {
+        "screenshot_id": "004-outdoor-coordinate-fields",
+        "start": 69.31,
+        "end": 81.73
+      },
+      {
+        "screenshot_id": "003-room-and-outdoor-map",
+        "start": 81.73,
+        "end": 87.419
+      }
+    ],
+    "captions": [
+      {
+        "start": 60.72,
+        "end": 63.36,
+        "text": "Select Briefing room from Indoor Location.",
+        "cue": 20,
+        "screenshot_id": "001-indoor-room-search-result",
+        "required_labels": [
+          "Briefing room - training",
+          "Indoor Location"
+        ],
+        "spoken_references": {
+          "Briefing room - training": "Briefing room",
+          "Indoor Location": "Indoor Location"
+        },
+        "instructional": true
+      },
+      {
+        "start": 63.839,
+        "end": 66.66,
+        "text": "Review the selected room name before saving the call.",
+        "cue": 21,
+        "screenshot_id": "002-selected-indoor-location",
+        "required_labels": [
+          "Briefing room - training"
+        ],
+        "spoken_references": {
+          "Briefing room - training": "room name"
+        },
+        "instructional": true
+      },
+      {
+        "start": 67.04,
+        "end": 68.9,
+        "text": "The outdoor location is separate.",
+        "cue": 22,
+        "screenshot_id": "003-room-and-outdoor-map",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 69.31,
+        "end": 74.15,
+        "text": "This fictional exercise also enters a latitude and longitude and uses Set",
+        "cue": 23,
+        "screenshot_id": "004-outdoor-coordinate-fields",
+        "required_labels": [
+          "Lat",
+          "Lng"
+        ],
+        "spoken_references": {
+          "Lat": "latitude",
+          "Lng": "longitude"
+        },
+        "instructional": true
+      },
+      {
+        "start": 74.15,
+        "end": 76.549,
+        "text": "Pin on Map to place the outdoor marker.",
+        "cue": 24,
+        "screenshot_id": "004-outdoor-coordinate-fields",
+        "required_labels": [
+          "Set Pin on Map"
+        ],
+        "spoken_references": {
+          "Set Pin on Map": "Pin on Map"
+        },
+        "instructional": true
+      },
+      {
+        "start": 77.01,
+        "end": 80.119,
+        "text": "Selecting an indoor room has not automatically supplied",
+        "cue": 25,
+        "screenshot_id": "004-outdoor-coordinate-fields",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 80.119,
+        "end": 81.42,
+        "text": "those outdoor coordinates.",
+        "cue": 26,
+        "screenshot_id": "004-outdoor-coordinate-fields",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 81.73,
+        "end": 85.029,
+        "text": "Review the outdoor map and the indoor reference together so",
+        "cue": 27,
+        "screenshot_id": "003-room-and-outdoor-map",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 85.029,
+        "end": 87.269,
+        "text": "responders have the intended context.",
+        "cue": 28,
+        "screenshot_id": "003-room-and-outdoor-map",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      }
+    ],
+    "instruction_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-11-03T15:58:04.009328+00:00",
+      "passed": true,
+      "correspondence_reviewed": true,
+      "no_unseen_controls": true,
+      "mapping_sha256": "92b206453cb8e6531ae88b5c5d26712d8c0f674788aa0a53a4abab170e235da9",
+      "evidence_file": "expansion/plans/core-indoor-call-location-complete-correspondence-20261103-v2/root-complete-correspondence-review.json",
+      "evidence_sha256": "fdc9e5213591eb60db2c14d311e5db5b6e8899550833991475d2cab25b80a12b"
+    }
+  },
+  {
+    "id": "05",
+    "title": "Save pending and reopen the retained reference",
+    "kind": "operational",
+    "start": 87.419,
+    "end": 117.819,
+    "visual_required_labels": [
+      "Save as pending (do not dispatch yet)",
+      "Create and Dispatch Call",
+      "Pending Calls",
+      "View",
+      "Update Call",
+      "Indoor Location",
+      "Briefing room - training"
+    ],
+    "screens": [
+      {
+        "screenshot_id": "005-save-pending-prepared",
+        "start": 87.419,
+        "end": 101.509
+      },
+      {
+        "screenshot_id": "006-pending-call-saved",
+        "start": 101.509,
+        "end": 104.96
+      },
+      {
+        "screenshot_id": "007-pending-state-confirmed",
+        "start": 104.96,
+        "end": 111.829
+      },
+      {
+        "screenshot_id": "008-reopened-call-room-retained",
+        "start": 111.829,
+        "end": 117.819
+      }
+    ],
+    "captions": [
+      {
+        "start": 87.419,
+        "end": 90.699,
+        "text": "After preparing the call information, select Save as",
+        "cue": 29,
+        "screenshot_id": "005-save-pending-prepared",
+        "required_labels": [
+          "Save as pending (do not dispatch yet)"
+        ],
+        "spoken_references": {
+          "Save as pending (do not dispatch yet)": "Save as"
+        },
+        "instructional": true
+      },
+      {
+        "start": 90.699,
+        "end": 92.62,
+        "text": "pending, do not dispatch yet.",
+        "cue": 30,
+        "screenshot_id": "005-save-pending-prepared",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 93.12,
+        "end": 97.469,
+        "text": "The submit button still reads Create and Dispatch Call, so verify that",
+        "cue": 31,
+        "screenshot_id": "005-save-pending-prepared",
+        "required_labels": [
+          "Create and Dispatch Call"
+        ],
+        "spoken_references": {
+          "Create and Dispatch Call": "Create and Dispatch Call"
+        },
+        "instructional": true
+      },
+      {
+        "start": 97.469,
+        "end": 101.11,
+        "text": "the pending checkbox is selected before submitting this exercise.",
+        "cue": 32,
+        "screenshot_id": "005-save-pending-prepared",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 101.509,
+        "end": 104.61,
+        "text": "The returned Pending Calls list contains the saved call.",
+        "cue": 33,
+        "screenshot_id": "006-pending-call-saved",
+        "required_labels": [
+          "Pending Calls"
+        ],
+        "spoken_references": {
+          "Pending Calls": "Pending Calls"
+        },
+        "instructional": true
+      },
+      {
+        "start": 104.96,
+        "end": 107.39,
+        "text": "Open View and confirm the Pending banner.",
+        "cue": 34,
+        "screenshot_id": "007-pending-state-confirmed",
+        "required_labels": [
+          "Pending"
+        ],
+        "spoken_references": {
+          "Pending": "Pending"
+        },
+        "instructional": true
+      },
+      {
+        "start": 107.759,
+        "end": 111.409,
+        "text": "Then use Update Call and scroll back to Indoor Location.",
+        "cue": 35,
+        "screenshot_id": "007-pending-state-confirmed",
+        "required_labels": [
+          "Update Call"
+        ],
+        "spoken_references": {
+          "Update Call": "Update Call"
+        },
+        "instructional": true
+      },
+      {
+        "start": 111.829,
+        "end": 113.489,
+        "text": "Briefing room is still selected.",
+        "cue": 36,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [
+          "Briefing room - training"
+        ],
+        "spoken_references": {
+          "Briefing room - training": "Briefing room"
+        },
+        "instructional": true
+      },
+      {
+        "start": 113.9,
+        "end": 117.55,
+        "text": "This checks the persisted reference independently of the original form.",
+        "cue": 37,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      }
+    ],
+    "instruction_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-11-03T15:58:04.009328+00:00",
+      "passed": true,
+      "correspondence_reviewed": true,
+      "no_unseen_controls": true,
+      "mapping_sha256": "5111f02ea8dd2ca9a4898561d9bfe0fba801e9d2e3f87776562b5560f698c099",
+      "evidence_file": "expansion/plans/core-indoor-call-location-complete-correspondence-20261103-v2/root-complete-correspondence-review.json",
+      "evidence_sha256": "fdc9e5213591eb60db2c14d311e5db5b6e8899550833991475d2cab25b80a12b"
+    }
+  },
+  {
+    "id": "06",
+    "title": "Distinguish a saved room from a live location",
+    "kind": "operational",
+    "start": 117.819,
+    "end": 151.60310416666667,
+    "visual_required_labels": [
+      "Region Properties",
+      "Indoor Location",
+      "Briefing room - training"
+    ],
+    "screens": [
+      {
+        "screenshot_id": "009-room-searchable-properties",
+        "start": 117.819,
+        "end": 130.32
+      },
+      {
+        "screenshot_id": "008-reopened-call-room-retained",
+        "start": 130.32,
+        "end": 151.60310416666667
+      }
+    ],
+    "captions": [
+      {
+        "start": 117.819,
+        "end": 120.93,
+        "text": "The floor plan and selected room are stored references.",
+        "cue": 38,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [
+          "Briefing room - training"
+        ],
+        "spoken_references": {
+          "Briefing room - training": "selected room"
+        },
+        "instructional": true
+      },
+      {
+        "start": 121.309,
+        "end": 124.609,
+        "text": "They do not establish who is currently inside the room, track",
+        "cue": 39,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 124.609,
+        "end": 126.98,
+        "text": "movement or confirm physical arrival.",
+        "cue": 40,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 127.369,
+        "end": 129.69,
+        "text": "Keep that distinction clear when briefing a crew.",
+        "cue": 41,
+        "screenshot_id": "009-room-searchable-properties",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 130.32,
+        "end": 134.589,
+        "text": "A community paramedicine or mental health team can use a reviewed coordination-room",
+        "cue": 42,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 134.589,
+        "end": 139.38,
+        "text": "reference; search-and-rescue, security, wildland support and industrial",
+        "cue": 43,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 139.38,
+        "end": 141.669,
+        "text": "teams can use equivalent named areas.",
+        "cue": 44,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 142.089,
+        "end": 145.059,
+        "text": "Use verified local map information and the appropriate",
+        "cue": 45,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 145.059,
+        "end": 146.79,
+        "text": "live-location tools separately.",
+        "cue": 46,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      },
+      {
+        "start": 147.3,
+        "end": 151.48,
+        "text": "This exercise demonstrates room search and a saved pending-call reference.",
+        "cue": 47,
+        "screenshot_id": "008-reopened-call-room-retained",
+        "required_labels": [],
+        "spoken_references": {},
+        "instructional": false
+      }
+    ],
+    "instruction_review": {
+      "reviewer": "Codex /root",
+      "reviewed_at": "2026-11-03T15:58:04.009328+00:00",
+      "passed": true,
+      "correspondence_reviewed": true,
+      "no_unseen_controls": true,
+      "mapping_sha256": "441f1e4ced4b9365f7a01629cd234978de325c81085d08a57408d7afee8752e5",
+      "evidence_file": "expansion/plans/core-indoor-call-location-complete-correspondence-20261103-v2/root-complete-correspondence-review.json",
+      "evidence_sha256": "fdc9e5213591eb60db2c14d311e5db5b6e8899550833991475d2cab25b80a12b"
+    }
+  }
+]

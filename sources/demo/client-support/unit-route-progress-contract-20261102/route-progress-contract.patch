@@ -1,0 +1,33 @@
+--- a/src/models/v4/routes/routeResults.ts
++++ b/src/models/v4/routes/routeResults.ts
+@@ -26,7 +26,7 @@
+ }
+ 
+ export class GetRouteProgressResult extends BaseV4Request {
+-  public Data: RouteInstanceResultData = {} as RouteInstanceResultData;
++  public Data: ActiveRouteForUnitData = {} as ActiveRouteForUnitData;
+ }
+ 
+ export class GetRouteInstanceStopsResult extends BaseV4Request {
+--- a/src/stores/routes/store.ts
++++ b/src/stores/routes/store.ts
+@@ -246,7 +246,7 @@
+   fetchRouteProgress: async (instanceId: string) => {
+     try {
+       const response = await getRouteProgress(instanceId);
+-      set({ activeInstance: response.Data });
++      set({ activeInstance: response.Data.Instance });
+     } catch (error) {
+       set({ error: 'Failed to fetch route progress' });
+     }
+--- a/src/app/routes/history/instance/[id].tsx
++++ b/src/app/routes/history/instance/[id].tsx
+@@ -133,7 +133,7 @@
+       setIsLoading(true);
+       setError(null);
+       getRouteProgress(instanceId)
+-        .then((r) => setActiveInstance(r.Data))
++        .then((r) => setActiveInstance(r.Data.Instance))
+         .catch(() => setError('Failed to load instance'))
+         .finally(() => setIsLoading(false));
+       setIsLoadingStops(true);

@@ -1,0 +1,135 @@
+--- a/src/api/mapping/mapping.ts
++++ b/src/api/mapping/mapping.ts
+@@ -1,16 +1,15 @@
+ import { type FeatureCollection } from 'geojson';
++import { type IndoorMapFloorResultData, type IndoorMapResultData } from '@/models/v4/mapping/indoorMapResultData';
++import { type ActiveLayerSummary } from '@/models/v4/mapping/mappingResults';
+ 
+ import { getBaseApiUrl } from '@/lib/storage/app';
+ import { type GetMapDataAndMarkersResult } from '@/models/v4/mapping/getMapDataAndMarkersResult';
+ import { type GetMapLayersResult } from '@/models/v4/mapping/getMapLayersResult';
+ import {
+-  type GetAllActiveLayersResult,
+   type GetCustomMapLayerResult,
+   type GetCustomMapResult,
+   type GetCustomMapsResult,
+-  type GetGeoJSONResult,
+   type GetIndoorMapFloorResult,
+-  type GetIndoorMapResult,
+   type GetIndoorMapsResult,
+   type SearchAllMapFeaturesResult,
+   type SearchCustomMapRegionsResult,
+@@ -19,7 +18,7 @@
+ import { type PoiResult, type PoisResult, type PoiTypesResult } from '@/models/v4/mapping/poiResults';
+ 
+ import { createCachedApiEndpoint } from '../common/cached-client';
+-import { createApiEndpoint } from '../common/client';
++import { api, createApiEndpoint } from '../common/client';
+ 
+ const getMayLayersApi = createApiEndpoint('/Mapping/GetMayLayers');
+ const getMapDataAndMarkersApi = createApiEndpoint('/Mapping/GetMapDataAndMarkers');
+@@ -41,9 +40,6 @@
+   ttl: 5 * 60 * 1000,
+   enabled: true,
+ });
+-const getIndoorMapApi = createApiEndpoint('/Mapping/GetIndoorMap');
+-const getIndoorMapFloorApi = createApiEndpoint('/Mapping/GetIndoorMapFloor');
+-const getIndoorMapZonesGeoJSONApi = createApiEndpoint('/Mapping/GetIndoorMapZonesGeoJSON');
+ const searchIndoorLocationsApi = createApiEndpoint('/Mapping/SearchIndoorLocations');
+ const getNearbyIndoorMapsApi = createApiEndpoint('/Mapping/GetNearbyIndoorMaps');
+ 
+@@ -54,8 +50,6 @@
+ });
+ const getCustomMapApi = createApiEndpoint('/Mapping/GetCustomMap');
+ const getCustomMapLayerApi = createApiEndpoint('/Mapping/GetCustomMapLayer');
+-const getMapLayerGeoJSONApi = createApiEndpoint('/Mapping/GetMapLayerGeoJSON');
+-const getCustomMapRegionsGeoJSONApi = createApiEndpoint('/Mapping/GetCustomMapRegionsGeoJSON');
+ const searchCustomMapRegionsApi = createApiEndpoint('/Mapping/SearchCustomMapRegions');
+ 
+ // Discovery endpoints
+@@ -115,24 +109,21 @@
+ };
+ 
+ export const getIndoorMap = async (mapId: string) => {
+-  const response = await getIndoorMapApi.get<GetIndoorMapResult>({
+-    id: encodeURIComponent(mapId),
+-  });
+-  return response.data;
++  type CoreMap = IndoorMapResultData & { BoundsNELat: number; BoundsNELon: number; BoundsSWLat: number; BoundsSWLon: number };
++  const response = await api.get<{Data: {Map: CoreMap; Floors: IndoorMapFloorResultData[]}}> (`/Mapping/GetIndoorMap/${encodeURIComponent(mapId)}`);
++  const { Map: map, Floors: floors } = response.data.Data;
++  return {...response.data, Data: {...map, Floors: floors, BoundsNELatitude: map.BoundsNELat, BoundsNELongitude: map.BoundsNELon, BoundsSWLatitude: map.BoundsSWLat, BoundsSWLongitude: map.BoundsSWLon}};
+ };
+ 
+ export const getIndoorMapFloor = async (floorId: string) => {
+-  const response = await getIndoorMapFloorApi.get<GetIndoorMapFloorResult>({
+-    floorId: encodeURIComponent(floorId),
+-  });
++  const response = await api.get<GetIndoorMapFloorResult> (`/Mapping/GetIndoorMapFloor/${encodeURIComponent(floorId)}`);
+   return response.data;
+ };
+ 
+ export const getIndoorMapZonesGeoJSON = async (floorId: string) => {
+-  const response = await getIndoorMapZonesGeoJSONApi.get<GetGeoJSONResult>({
+-    floorId: encodeURIComponent(floorId),
+-  });
+-  return response.data;
++  const response = await api.get<FeatureCollection> (`/Mapping/GetIndoorMapZonesGeoJSON/${encodeURIComponent(floorId)}`);
++  if (response.data.type !== 'FeatureCollection' || !Array.isArray(response.data.features)) throw new Error('Invalid GeoJSON feature collection');
++  return {Data: response.data};
+ };
+ 
+ export const searchIndoorLocations = async (term: string, mapId?: string) => {
+@@ -179,17 +170,15 @@
+ };
+ 
+ export const getMapLayerGeoJSON = async (layerId: string) => {
+-  const response = await getMapLayerGeoJSONApi.get<GetGeoJSONResult>({
+-    layerId: encodeURIComponent(layerId),
+-  });
+-  return response.data;
++  const response = await api.get<FeatureCollection> (`/Mapping/GetMapLayerGeoJSON/${encodeURIComponent(layerId)}`);
++  if (response.data.type !== 'FeatureCollection' || !Array.isArray(response.data.features)) throw new Error('Invalid GeoJSON feature collection');
++  return {Data: response.data};
+ };
+ 
+ export const getCustomMapRegionsGeoJSON = async (layerId: string) => {
+-  const response = await getCustomMapRegionsGeoJSONApi.get<GetGeoJSONResult>({
+-    layerId: encodeURIComponent(layerId),
+-  });
+-  return response.data;
++  const response = await api.get<FeatureCollection> (`/Mapping/GetCustomMapRegionsGeoJSON/${encodeURIComponent(layerId)}`);
++  if (response.data.type !== 'FeatureCollection' || !Array.isArray(response.data.features)) throw new Error('Invalid GeoJSON feature collection');
++  return {Data: response.data};
+ };
+ 
+ export const searchCustomMapRegions = async (term: string, layerId?: string) => {
+@@ -204,8 +193,9 @@
+ // --- Discovery & Search ---
+ 
+ export const getAllActiveLayers = async () => {
+-  const response = await getAllActiveLayersApi.get<GetAllActiveLayersResult>();
+-  return response.data;
++  type CoreLayer = Omit<ActiveLayerSummary, 'LayerId' | 'Source'> & {Id: string; LayerSource: ActiveLayerSummary['Source']};
++  const response = await getAllActiveLayersApi.get<{Data: CoreLayer[]}>();
++  return {...response.data, Data: response.data.Data.map(layer => ({...layer, LayerId: layer.Id, Source: layer.LayerSource}))};
+ };
+ 
+ export const searchAllMapFeatures = async (term: string, type?: 'all' | 'indoor' | 'custom') => {
+--- a/src/models/v4/mapping/mappingResults.ts
++++ b/src/models/v4/mapping/mappingResults.ts
+@@ -35,11 +35,11 @@
+ export interface ActiveLayerSummary {
+   LayerId: string;
+   Name: string;
+-  Type: string;
++  Type: string | number;
+   Color: string;
+   IsOnByDefault: boolean;
+-  Source: 'indoor' | 'custom';
+-  MapId: string;
++  Source: 'indoor' | 'custom' | 'maplayer' | 'custommaplayer';
++  MapId?: string;
+ }
+ 
+ export class GetAllActiveLayersResult extends BaseV4Request {

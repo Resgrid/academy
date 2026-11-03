@@ -1,0 +1,101 @@
+using Dapper;
+using GeoJSON.Net.Feature;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Npgsql;
+using Resgrid.Model;
+using Resgrid.Model.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Resgrid.Repositories.NoSqlRepository
+{
+    public class MapLayersDocRepository : IMapLayersDocRepository
+    {
+        private const string Projection = "jsonb_set(data, '{id}', to_jsonb(id::text))::text";
+
+        // The Mongo geometry fields deliberately opt out of Newtonsoft serialization.
+        // Persist the public GeoJSON shape alongside metadata so a PostgreSQL round trip
+        // preserves the coordinates, rings, properties and geometry types.
+        internal static string SerializeDocument(MapLayer layer)
+        {
+            var document = JObject.FromObject(layer);
+            document["featureCollection"] = JToken.FromObject(layer.Data.Convert());
+            return document.ToString(Formatting.None);
+        }
+
+        internal static MapLayer DeserializeDocument(string value)
+        {
+            var document = JObject.Parse(value);
+            var features = document["featureCollection"]?.ToObject<FeatureCollection>();
+            if (features == null)
+            {
+                var oldFeatures = document["data"]?["Features"] as JArray;
+                if (oldFeatures?.Count > 0)
+                    throw new InvalidOperationException("This legacy PostgreSQL map layer has no stored coordinates. Restore or recreate its geometry before use.");
+                features = new FeatureCollection();
+            }
+            document.Remove("Id");
+            document.Remove("CreatedAt");
+            document.Remove("data");
+            document.Remove("featureCollection");
+            var layer = document.ToObject<MapLayer>();
+            layer.Data = new MapLayerData();
+            layer.Data.Hydrate(features);
+            return layer;
+        }
+
+        public async Task<List<MapLayer>> GetAllMapLayersByDepartmentIdAsync(int departmentId, MapLayerTypes type)
+        {
+            using var connection = new NpgsqlConnection(Config.DataConfig.DocumentConnectionString);
+            await connection.OpenAsync();
+            var documents = await connection.QueryAsync<string>(
+                $"SELECT {Projection} FROM public.maplayers WHERE departmentid = @departmentId;", new { departmentId });
+            return documents.Select(DeserializeDocument).Where(x => x.Type == (int)type && !x.IsDeleted).ToList();
+        }
+
+        public async Task<MapLayer> GetByIdAsync(string id)
+        {
+            using var connection = new NpgsqlConnection(Config.DataConfig.DocumentConnectionString);
+            await connection.OpenAsync();
+            var value = await connection.QueryFirstOrDefaultAsync<string>(
+                $"SELECT {Projection} FROM public.maplayers WHERE oid = @id OR id::text = @id;", new { id });
+            return value == null ? null : DeserializeDocument(value);
+        }
+
+        public async Task<MapLayer> GetByOldIdAsync(string id)
+        {
+            using var connection = new NpgsqlConnection(Config.DataConfig.DocumentConnectionString);
+            await connection.OpenAsync();
+            var value = await connection.QueryFirstOrDefaultAsync<string>(
+                $"SELECT {Projection} FROM public.maplayers WHERE oid = @id;", new { id });
+            return value == null ? null : DeserializeDocument(value);
+        }
+
+        public async Task<MapLayer> InsertAsync(MapLayer mapLayer)
+        {
+            using var connection = new NpgsqlConnection(Config.DataConfig.DocumentConnectionString);
+            await connection.OpenAsync();
+            mapLayer.PgId = await connection.ExecuteScalarAsync<string>(
+                "INSERT INTO public.maplayers (departmentid, data) VALUES (@departmentId, CAST(@data AS jsonb)) RETURNING id::text;",
+                new { departmentId = mapLayer.DepartmentId, data = SerializeDocument(mapLayer) });
+            return mapLayer;
+        }
+
+        public async Task<MapLayer> UpdateAsync(MapLayer mapLayer)
+        {
+            if (!int.TryParse(mapLayer.PgId, out var pgId))
+                throw new ArgumentException("A saved PostgreSQL map layer ID is required.", nameof(mapLayer));
+            using var connection = new NpgsqlConnection(Config.DataConfig.DocumentConnectionString);
+            await connection.OpenAsync();
+            var affected = await connection.ExecuteAsync(
+                "UPDATE public.maplayers SET data = CAST(@data AS jsonb) WHERE id = @pgId AND departmentid = @departmentId;",
+                new { data = SerializeDocument(mapLayer), pgId, departmentId = mapLayer.DepartmentId });
+            if (affected != 1)
+                throw new InvalidOperationException("The expected department map layer was not updated.");
+            return mapLayer;
+        }
+    }
+}

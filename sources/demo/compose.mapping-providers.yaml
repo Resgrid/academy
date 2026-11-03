@@ -1,0 +1,23 @@
+# Optional recording support: only this unpublished allowlisted tunnel has egress.
+# Application containers retain the internal training network and TLS verification.
+services:
+  routing-egress:
+    image: python:3.13-alpine
+    user: "1654:1654"
+    command: ["python", "/support/provider-tunnel.py"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    volumes:
+      - ./core-support/mapping-consistent-runtime-20261102:/support:ro
+    networks:
+      training:
+      ingress:
+        gw_priority: 1
+  web:
+    environment: &provider_proxy
+      HTTPS_PROXY: http://routing-egress:3128
+      HTTP_PROXY: http://routing-egress:3128
+      NO_PROXY: localhost,127.0.0.1,::1,api,web,billing,object-store,postgres,redis,rabbit,mail
+  api:
+    environment: *provider_proxy

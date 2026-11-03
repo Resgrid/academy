@@ -1,0 +1,216 @@
+{
+  "id": "app-unit-route-stop-completion",
+  "title": "Complete route stops and verify the ended execution",
+  "app": "Unit",
+  "summary": "Use manual stop check-ins and checkouts, end a route, and verify its saved completion and stop times in Core.",
+  "audience": [
+    "Unit crews",
+    "Logistics coordinators",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "A fictional practice department and permission to update the assigned unit’s route.",
+    "An active execution with reviewed stop locations. Core supervision requires appropriate access."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Keep manual progress separate from location",
+      "route": "/routes",
+      "capture_refs": [
+        "012-geolocation-disabled-training",
+        "013-repeat-active-route"
+      ],
+      "required_labels": [
+        "Realtime Geolocation",
+        "Background Geolocation",
+        "Routes",
+        "Active Route",
+        "0% complete"
+      ],
+      "narration": "This exercise follows a fictional route already started for the assigned training unit. In Settings, Realtime Geolocation and Background Geolocation are off for this software exercise. The check-ins you will see are manual status updates. They do not demonstrate physical arrival or geofence validation. Open Routes and find the Active Route card. Its zero-percent progress is separate from the saved plan listed below it.",
+      "practice": "Keep manual progress separate from location",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "02",
+      "title": "Open the current stop and check in",
+      "route": "/routes",
+      "capture_refs": [
+        "013-repeat-active-route",
+        "014-repeat-first-pending",
+        "015-repeat-first-in-progress"
+      ],
+      "required_labels": [
+        "Active Route",
+        "CURRENT STEP",
+        "TRAINING ONLY - Supply point A",
+        "PENDING",
+        "Check In",
+        "IN PROGRESS",
+        "Check Out"
+      ],
+      "narration": "Select Active Route. Current Step identifies Supply point A and shows Pending. Review the intended stop before selecting Check In. The returned current step now says In Progress, and Check Out replaces Check In. Progress remains zero percent because the stop is still in progress. In operational use, follow your department’s arrival procedure and confirm you are updating the correct assigned route.",
+      "practice": "Open the current stop and check in",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "03",
+      "title": "Check out and verify the next pending stop",
+      "route": "/routes",
+      "capture_refs": [
+        "015-repeat-first-in-progress",
+        "016-repeat-second-pending"
+      ],
+      "required_labels": [
+        "Check Out",
+        "50% Completed",
+        "CURRENT STEP",
+        "TRAINING ONLY - Community point B",
+        "PENDING",
+        "Check In"
+      ],
+      "narration": "After the first stop’s work is finished, select Check Out. The progress display changes to fifty percent. Current Step now identifies Community point B, with Pending and its Check In button. Check the name and state together. The changed current step and percentage provide immediate feedback that the first stop’s checkout was saved.",
+      "practice": "Check out and verify the next pending stop",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "04",
+      "title": "Complete the second stop",
+      "route": "/routes",
+      "capture_refs": [
+        "016-repeat-second-pending",
+        "017-repeat-second-in-progress",
+        "018-repeat-all-stops-complete"
+      ],
+      "required_labels": [
+        "Check In",
+        "TRAINING ONLY - Community point B",
+        "IN PROGRESS",
+        "Check Out",
+        "100% Completed",
+        "Stops Completed",
+        "End Route"
+      ],
+      "narration": "For Community point B, select Check In and review the returned In Progress state. Select Check Out after completing that stop’s work. The page now shows one hundred percent and Stops Completed. Scroll the stop list to reach End Route. Finishing all the stop checkouts and ending the route are separate actions; the End Route control is still available here.",
+      "practice": "Complete the second stop",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "05",
+      "title": "End the execution deliberately",
+      "route": "/routes",
+      "capture_refs": [
+        "018-repeat-all-stops-complete",
+        "019-repeat-end-confirmation",
+        "020-repeat-route-list-after-end"
+      ],
+      "required_labels": [
+        "End Route",
+        "Are you sure you want to end this route?",
+        "Cancel",
+        "Routes",
+        "TRAINING ONLY - Community supply loop"
+      ],
+      "narration": "Select End Route. Read the confirmation asking whether you want to end this route. Cancel leaves the execution open; confirm End Route when the assignment is finished. After confirmation, the app returns to Routes. The saved Community supply loop plan remains in the list, while the Active Route card is gone. Ending this execution has not deleted the reusable plan.",
+      "practice": "End the execution deliberately",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "06",
+      "title": "Verify the saved execution in Core",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "021-repeat-completed-instance"
+      ],
+      "required_labels": [
+        "Instance Info",
+        "Status",
+        "Completed",
+        "Unit",
+        "51008",
+        "Started",
+        "Ended",
+        "Progress",
+        "2 / 2"
+      ],
+      "narration": "An authorized supervisor can reopen the same execution in Core. Instance Info now shows Completed, unit fifty-one thousand eight, a Started time, an Ended time, and progress of two out of two. Use these stored details to verify the result independently of the Unit screen’s navigation. The map here is not evidence of a recorded vehicle journey.",
+      "practice": "Verify the saved execution in Core",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "07",
+      "title": "Read the retained stop times",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "022-repeat-stop-times"
+      ],
+      "required_labels": [
+        "Stop Timeline",
+        "Completed",
+        "In: 05:53:06",
+        "Out: 05:53:15",
+        "Dwell: 0m 20s"
+      ],
+      "narration": "Scroll to Stop Timeline. Each of the two recorded entries shows Completed, an In time, an Out time, and Dwell. These are the saved times from the manual training check-ins and checkouts. Very short exercise dwell times are not operational travel estimates. Review these entries when investigating an execution, while keeping your department’s location and reporting procedures in mind.",
+      "practice": "Read the retained stop times",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    },
+    {
+      "id": "08",
+      "title": "Compare history and apply the workflow",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "024-repeat-history-settled"
+      ],
+      "required_labels": [
+        "Route History - TRAINING ONLY - Community supply loop",
+        "Status",
+        "Completed",
+        "Unit",
+        "Started",
+        "Ended",
+        "Stops",
+        "2 / 2",
+        "Detail"
+      ],
+      "narration": "Route History retains both completed practice executions. Compare Started and Ended to identify the intended run, then use Detail to reopen it. Both rows have two out of two stops completed. This workflow can support community paramedicine visits, mental health response logistics, search-and-rescue supply runs, security rounds, wildland support and industrial response teams, as well as fire and E M S. Choose meaningful stops, assign the right unit and verify saved results.",
+      "practice": "Compare history and apply the workflow",
+      "capture_intent": "Show the actual control before its normal-UI returned state or saved readback."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Assign appropriate visit or logistics stops to a unit, update manual progress accurately and review the retained execution."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Assign appropriate visit or logistics stops to a unit, update manual progress accurately and review the retained execution."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Assign appropriate visit or logistics stops to a unit, update manual progress accurately and review the retained execution."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Assign appropriate visit or logistics stops to a unit, update manual progress accurately and review the retained execution."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Assign appropriate visit or logistics stops to a unit, update manual progress accurately and review the retained execution."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Assign appropriate visit or logistics stops to a unit, update manual progress accurately and review the retained execution."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; complete speech/caption correspondence, genuine listening review, encoded-frame review and actual playback are still required.",
+    "Normal Unit UI checked in/out both stops of instance753b31f0-9092-4631-95b9-44a7722f9eed for unit51008, confirmed End Route, and returned to Routes. Fresh Core detail/history retained Completed, end05:54UTC and2/2, with both stop In/Out/Dwell entries. An earlier completed rehearsal remains in history. Actual GPS was disabled: no physical arrival, location validation, live movement, road geometry or ETA is claimed. The isolated RN-web confirmation compatibility patch is retained under demo/client-support/unit-route-web-confirmation-20261102; native app behavior was not changed. Timeline labels2/3 are not described as authoritative stop ordering."
+  ]
+}

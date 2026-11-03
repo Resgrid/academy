@@ -1,0 +1,17 @@
+PASS PostgreSQL identity retained
+PASS metadata retained
+PASS visibility flags retained
+PASS all original coordinates, properties and polygon holes retained
+PASS interior polygon ring retained
+PASS second save/edit round trip retained
+PASS legacy coordinate loss refused without invented geometry
+PASS original citext-to-Guid source-read failure reproduced
+PASS legacy citext identifier materializes as exact Guid
+PASS native UUID read and Guid parameter write preserved
+PASS invalid identifier refused instead of authorizing an empty identity
+PASS GUID parameters insert into citext and UUID columns
+PASS GUID lookup matches a legacy citext identifier
+PASS GUID lookup matches a native UUID identifier
+PASS GUID update matches a legacy citext identifier
+PASS GUID delete matches a legacy citext identifier
+16 mapping/storage checks passed; temporary writes rolled back; no persistent database mutations.

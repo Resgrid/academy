@@ -1,0 +1,175 @@
+{
+  "id": "core-kml-kmz-import",
+  "title": "Import KML and KMZ and verify the resulting regions",
+  "app": "Core",
+  "summary": "Import two fictional geospatial sources, diagnose an empty-file failure, and verify retained geometry, region flags and call search results.",
+  "audience": [
+    "Department administrators",
+    "GIS and mapping coordinators",
+    "Operations supervisors"
+  ],
+  "prerequisites": [
+    "A separate fictional practice map and access to Custom Maps, layer creation and imports.",
+    "The retained fictional KML/KMZ fixtures under demo/assets; review any operational source before importing."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Prepare a dedicated import layer",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "001-data-layer-prepared",
+        "002-data-layer-saved"
+      ],
+      "required_labels": [
+        "Layer Name",
+        "Order",
+        "Type",
+        "Data Layer",
+        "Add Layer",
+        "TRAINING ONLY - KML and KMZ import"
+      ],
+      "narration": "Prepare a separate layer for the import exercise. Enter K M L and K M Z import as the Layer Name, set Order to twenty, choose Data Layer, and select Add Layer. The returned row shows the new layer with no image. This keeps the imported geometry separate from the existing ground-floor drawing and the earlier Geo J S O N example.",
+      "practice": "Prepare a dedicated import layer",
+      "capture_intent": "Show the actual target/file control, import history result, retained geometry or returned search option being discussed."
+    },
+    {
+      "id": "02",
+      "title": "Select the map, target layer and KML file",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "003-custom-map-import-entry",
+        "004-kml-file-target-prepared"
+      ],
+      "required_labels": [
+        "Custom Maps",
+        "Import",
+        "Target Layer",
+        "TRAINING ONLY - KML and KMZ import",
+        "File"
+      ],
+      "narration": "On Custom Maps, select Import for the Community coordination centre. In Import Geospatial Data, select the dedicated Target Layer. Choose the fictional assembly-area K M L file, review the target again and select Import. The file contains one named polygon. The source files for this exercise are retained with the Academy so the example can be reproduced.",
+      "practice": "Select the map, target layer and KML file",
+      "capture_intent": "Show the actual target/file control, import history result, retained geometry or returned search option being discussed."
+    },
+    {
+      "id": "03",
+      "title": "Review history and repeat with KMZ",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "005-kml-history-complete",
+        "006-kmz-target-prepared",
+        "007-kml-and-kmz-history-complete"
+      ],
+      "required_labels": [
+        "Import History",
+        "import.kml",
+        "KML",
+        "Complete",
+        "Target Layer",
+        "import.kmz",
+        "KMZ"
+      ],
+      "narration": "Import History now shows import dot K M L, Type K M L, and Complete. The returned form has reset its target selection, so choose the dedicated layer again before the next upload. Choose the access-area K M Z archive and import it. History now contains separate Complete entries for K M L and K M Z. A completed import still needs a visual geometry review.",
+      "practice": "Review history and repeat with KMZ",
+      "capture_intent": "Show the actual target/file control, import history result, retained geometry or returned search option being discussed."
+    },
+    {
+      "id": "04",
+      "title": "Read an import failure instead of assuming success",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "008-empty-kml-target-prepared",
+        "009-empty-file-failed-history"
+      ],
+      "required_labels": [
+        "Target Layer",
+        "Import",
+        "Import History",
+        "Failed",
+        "No placemarks with a point, line or polygon were found in the file."
+      ],
+      "narration": "This additional test selects the same target and uploads a K M L file with no placemarks. Its returned history row says Failed. The Error column explains that no placemarks with a point, line or polygon were found. Check the specific result and error for the intended run. Do not treat returning to the form as proof that useful geometry was imported.",
+      "practice": "Read an import failure instead of assuming success",
+      "capture_intent": "Show the actual target/file control, import history result, retained geometry or returned search option being discussed."
+    },
+    {
+      "id": "05",
+      "title": "Inspect the actual retained polygons and their flags",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "002-data-layer-saved",
+        "010-two-imported-polygons",
+        "011-imported-kml-region-properties",
+        "012-imported-kmz-region-properties"
+      ],
+      "required_labels": [
+        "Region Editor",
+        "Regions",
+        "KML training assembly area",
+        "KMZ training access area",
+        "Region Properties",
+        "Searchable in dispatch",
+        "Dispatchable"
+      ],
+      "narration": "Open Region Editor for the dedicated layer. The two successful imports are visible as separate polygons and named entries. Select each polygon to review Region Properties. Both imported areas are Custom regions; Searchable in dispatch and Dispatchable are checked in this example. Review those defaults before operational use. The import status describes processing, while the map and properties show what was actually retained.",
+      "practice": "Inspect the actual retained polygons and their flags",
+      "capture_intent": "Show the actual target/file control, import history result, retained geometry or returned search option being discussed."
+    },
+    {
+      "id": "06",
+      "title": "Verify search availability and apply the pattern",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "013-imported-areas-in-call-search"
+      ],
+      "required_labels": [
+        "Indoor Location",
+        "KML training assembly area",
+        "KMZ training access area"
+      ],
+      "narration": "On New Call, open Indoor Location and search for training. Both imported areas now appear as selectable results. No call is dispatched in this exercise. This pattern can bring reviewed planning areas into a search-and-rescue, security, wildland, industrial or community response department, alongside fire and E M S. Verify coordinates, naming and operational permissions before relying on imported reference data.",
+      "practice": "Verify search availability and apply the pattern",
+      "capture_intent": "Show the actual target/file control, import history result, retained geometry or returned search option being discussed."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Import reviewed reference geometry into a separate layer, inspect the saved regions and verify their intended search and dispatch policy."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Import reviewed reference geometry into a separate layer, inspect the saved regions and verify their intended search and dispatch policy."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Import reviewed reference geometry into a separate layer, inspect the saved regions and verify their intended search and dispatch policy."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Import reviewed reference geometry into a separate layer, inspect the saved regions and verify their intended search and dispatch policy."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Import reviewed reference geometry into a separate layer, inspect the saved regions and verify their intended search and dispatch policy."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Import reviewed reference geometry into a separate layer, inspect the saved regions and verify their intended search and dispatch policy."
+    }
+  ],
+  "scope_limits": [
+    "Actual Core UI created data layer5fca08cc-2c98-453a-be58-cbd24ddc8666 with order20/no image. Imported one fictional polygon from academy-geospatial-assembly.kml and another from academy-geospatial-access.kmz; both returned Complete and distinct regions. Empty KML returned Failed/no placemarks without adding a third region. Both successful imports defaulted searchable/dispatchable true and appeared in New Call search. No physical occupancy, operational boundary validation, automatic tracking or call dispatch is claimed. Names and geometry are synthetic software fixtures."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-kml-kmz-import-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-kml-kmz-import-source-20261103/lesson.candidate.json",
+    "sha256": "5092a1b5ad90fed30841fa29f7181321e36b0bb9f3696579227597c20d1d33e6"
+  }
+}

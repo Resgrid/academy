@@ -1,0 +1,165 @@
+{
+  "id": "app-bigboard-timer-expiry-escalation",
+  "title": "Big Board: verify automatic unit timer expiry and escalation",
+  "app": "BigBoard",
+  "summary": "Watch a timed mute expire, then verify that escalation returns a warning to the board as a new alert.",
+  "audience": [
+    "Department administrators",
+    "Operations and coordination staff"
+  ],
+  "prerequisites": [
+    "A Big Board session in a training department with the relevant widget and access to the settings shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Community response",
+      "scenario": "Use the board during a community paramedicine exercise."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a shared display to coordinate a staging area."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Verify the display for an industrial response team."
+    },
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice these settings with fictional units and calls."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Set up a board for a shift supervisor monitoring assigned sites."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Set up a shared display for a contractor’s staging operation."
+    }
+  ],
+  "scope_limits": [
+    "The demonstration uses a fictional training department.",
+    "The short thresholds are for the exercise. Use your department’s own follow-up intervals."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "What a unit timer measures",
+      "route": "/home",
+      "capture_refs": [
+        "006-live-one-minute-warning",
+        "014-mute-expired-automatically-acknowledgement-retained",
+        "025-warning-mute-overridden-at-four-minute-alert"
+      ],
+      "required_labels": [
+        "Staging"
+      ],
+      "capture_intent": "What a unit timer measures",
+      "narration": "A unit timer answers a simple question: how long has this unit been in its current status? Big Board can show a warning, then an alert, when a unit stays there past the times your department sets. We will compare two outcomes. First, a mute ends on its own. Then a warning becomes an alert while its mute still has time left.",
+      "practice": "What a unit timer measures in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "02",
+      "title": "Set department thresholds",
+      "route": "/User/Department/Settings",
+      "capture_refs": [
+        "028-operations-menu-mapping-settings-link",
+        "001-staging-timer-thresholds-prepared",
+        "029-required-reason-policy-readback",
+        "002-save-department-settings",
+        "003-thresholds-saved-and-reopened"
+      ],
+      "required_labels": [
+        "Mapping and BigBoard Settings",
+        "Unit Status Timers",
+        "Reason when acknowledging",
+        "Save"
+      ],
+      "capture_intent": "Set department thresholds",
+      "narration": "In Core, open Mapping and BigBoard Settings from Department Settings. Find Unit Status Timers. For the first exercise, Staging warns after one minute and alerts after two. These are short practice thresholds. Enter zero in both boxes for a status you do not want to time. The rows correspond to what a unit status means, so check that meaning when you use custom statuses. This department requires a reason for warnings and alerts. That setting controls what you must enter when acknowledging or muting an item. It does not change the timer. Save the department settings, then reopen the page to check that the Staging values stayed in place.",
+      "practice": "Set department thresholds in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "03",
+      "title": "Start a timer and watch both levels",
+      "route": "/User/Units",
+      "capture_refs": [
+        "004-staging-status-prepared",
+        "005-before-staging-warning",
+        "006-live-one-minute-warning",
+        "008-live-two-minute-alert"
+      ],
+      "required_labels": [
+        "Set Unit Status",
+        "Staging"
+      ],
+      "capture_intent": "Start a timer and watch both levels",
+      "narration": "On the Units page, use Set Status on the training unit. Set it to Staging and save. The Unit Alerts widget already has another unit on it. Look for the training unit by name so you can follow the right timer. It does not need a new call to start measuring time in Staging. Here is the training unit at the warning stage, shown in amber. The unit still says Staging. In the later screen, the same status has crossed the alert threshold and the row is red. The colour reflects elapsed time; it does not mean the unit changed its status.",
+      "practice": "Start a timer and watch both levels in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "04",
+      "title": "Verify automatic mute expiry",
+      "route": "/home",
+      "capture_refs": [
+        "012-saved-alert-mute-expiry-and-note",
+        "011-corrected-muted-alert-expanded",
+        "013-muted-before-real-expiry",
+        "014-mute-expired-automatically-acknowledgement-retained"
+      ],
+      "required_labels": [
+        "Muted (1)",
+        "Unit Alerts"
+      ],
+      "capture_intent": "Verify automatic mute expiry",
+      "narration": "For the first exercise, the alert was muted for fifteen minutes with a training reason. Open the Muted section to see that it is still tracked. The saved alert sheet shows the acknowledgement and when the mute ends. You can use that time and reason in a shift handover. Now compare the board before and after that deadline. The muted row returns to the active Unit Alerts list automatically. It keeps the Seen by line and the reason that was entered. The unit is still in Staging. The return is a reminder to look again, even though someone has already seen the alert.",
+      "practice": "Verify automatic mute expiry in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "05",
+      "title": "Start a fresh escalation exercise",
+      "route": "/User/Department/MappingSettings",
+      "capture_refs": [
+        "016-escalation-thresholds-saved-and-reopened",
+        "017-reset-training-unit-status",
+        "018-status-reset-removes-old-alert",
+        "019-start-new-staging-timer"
+      ],
+      "required_labels": [
+        "Staging",
+        "Available"
+      ],
+      "capture_intent": "Start a fresh escalation exercise",
+      "narration": "For the escalation exercise, the saved Staging row has a one minute warning and a four minute alert. That gives us time to inspect the warning before it becomes an alert. We put the training unit back to Available and verified that the old alert disappeared. Then we saved a new Staging status to start a fresh timer.",
+      "practice": "Start a fresh escalation exercise in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "06",
+      "title": "Verify escalation during a warning mute",
+      "route": "/home",
+      "capture_refs": [
+        "020-fresh-warning-at-one-minute",
+        "021-prepare-warning-mute-with-reason",
+        "022-warning-is-muted-before-escalation",
+        "023-warning-mute-deadline-retained",
+        "024-warning-still-muted-at-three-minutes",
+        "025-warning-mute-overridden-at-four-minute-alert",
+        "026-escalated-alert-awaits-new-acknowledgement"
+      ],
+      "required_labels": [
+        "Mute",
+        "Acknowledge"
+      ],
+      "capture_intent": "Verify escalation during a warning mute",
+      "narration": "When the new amber warning appears, open its row. Choose fifteen minutes, enter a reason, and select Mute. Expand Muted to check the saved result. The sheet shows a future mute deadline. At three minutes the warning is still in the Muted section, so we know the mute took effect. At four minutes, the same unit returns as a red alert even though the warning mute has time left. Its earlier Seen by line no longer covers this alert. Big Board treats the higher level as a new item to review. Acknowledge it only after checking what is happening with that unit. A community paramedicine team could use this to notice a vehicle waiting at a staging point. A search and rescue team could watch a resource waiting at a trailhead, while industrial response or security teams could use their own status meanings and realistic follow-up times. Start with a training unit, confirm each transition, and agree who checks an alert and records the reason.",
+      "practice": "Verify escalation during a warning mute in a fictional training department, then compare the saved result."
+    }
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-bigboard-timer-expiry-escalation-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/bigboard-timer-expiry-escalation-source-20261103/lesson.candidate.json",
+    "sha256": "a23fe172b36b062c2ff49ebd8ba042cd217c02aabc50430b88e0c61c32114aa4"
+  }
+}

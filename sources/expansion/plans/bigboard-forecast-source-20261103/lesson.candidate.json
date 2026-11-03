@@ -1,0 +1,96 @@
+{
+  "id": "app-bigboard-forecast",
+  "title": "Big Board: set the forecast location and units",
+  "app": "BigBoard",
+  "summary": "Choose temperature units and a location, resize the forecast, and check the saved result.",
+  "audience": [
+    "Department administrators",
+    "Operations and coordination staff"
+  ],
+  "prerequisites": [
+    "A Big Board session in a training department with the relevant widget and access to the settings shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Community response",
+      "scenario": "Use the board during a community paramedicine exercise."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a shared display to coordinate a staging area."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Verify the display for an industrial response team."
+    }
+  ],
+  "scope_limits": [
+    "The demonstration uses a fictional training department."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Read the existing forecast",
+      "route": "/home",
+      "capture_refs": [
+        "001-chicago-current-conditions-imperial"
+      ],
+      "required_labels": [
+        "Weather - Chicago"
+      ],
+      "capture_intent": "Read the existing forecast",
+      "narration": "The Weather widget gives a shared board a quick read on current conditions and the days ahead. Here it shows Chicago in Fahrenheit. A security supervisor can use the same display for outdoor posts, and a search and rescue coordinator can use it for a staging area.",
+      "practice": "Read the existing forecast in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "02",
+      "title": "Set units and location",
+      "route": "/configure",
+      "capture_refs": [
+        "002-weather-widget-settings",
+        "003-metric-and-chicago-coordinates"
+      ],
+      "required_labels": [
+        "Weather Widget",
+        "Units",
+        "Latitude",
+        "Longitude"
+      ],
+      "capture_intent": "Set units and location",
+      "narration": "In Configure, open Weather Widget. The Units choices are Standard, Metric and Imperial. Standard uses Kelvin, Metric uses Celsius, and Imperial uses Fahrenheit. Pick the units your team expects to read at a glance. This board starts in Imperial. Select Metric. The latitude and longitude fields choose the location for this widget. Here we enter forty-one point eight five north and negative eighty-seven point six nine for longitude. Keep the minus sign for a location west of Greenwich. Leaving both values at zero lets the app use the department map center when it is available.",
+      "practice": "Set units and location in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "03",
+      "title": "Resize and verify the forecast",
+      "route": "/configure",
+      "capture_refs": [
+        "004-resize-forecast-and-save",
+        "005-metric-chicago-forecast",
+        "006-weather-settings-reopened"
+      ],
+      "required_labels": [
+        "Save",
+        "5-Day Forecast"
+      ],
+      "capture_intent": "Resize and verify the forecast",
+      "narration": "Give the forecast room to breathe. In this example, we increase Width to five and Height to four, then select Save. A larger tile makes it easier for a team to read the upcoming days from across a room. Back on the board, verify the city as well as the units. The Chicago widget now shows temperature in Celsius and wind speed in meters per second. The forecast rows give the team a quick way to compare the coming days. These are live readings, so the exact values will change. Reopen Weather Widget settings and check that Metric, the coordinates, and the larger tile size survived the save.",
+      "practice": "Resize and verify the forecast in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "04",
+      "title": "Separate forecasts from alerts",
+      "route": "/home",
+      "capture_refs": [
+        "005-metric-chicago-forecast"
+      ],
+      "required_labels": [
+        "Weather Alerts (1)"
+      ],
+      "capture_intent": "Separate forecasts from alerts",
+      "narration": "A community paramedicine team could center a board on its outreach area; a wildland contractor could center one on its base of operations. Use the separate Weather Alerts widget to review alert headlines and instructions.",
+      "practice": "Separate forecasts from alerts in a fictional training department, then compare the saved result."
+    }
+  ]
+}

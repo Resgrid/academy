@@ -1,0 +1,120 @@
+{
+  "id": "app-bigboard-map-widget",
+  "title": "Big Board: filter map pins and set fixed framing",
+  "app": "BigBoard",
+  "summary": "Choose which pin types are visible, set a fixed map center, and verify that pins remain visible when labels are hidden.",
+  "audience": [
+    "Department administrators",
+    "Operations and coordination staff"
+  ],
+  "prerequisites": [
+    "A Big Board session in a training department with the relevant widget and access to the settings shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Community response",
+      "scenario": "Use the board during a community paramedicine exercise."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a shared display to coordinate a staging area."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Verify the display for an industrial response team."
+    },
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice these settings with fictional units and calls."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Set up a board for a shift supervisor monitoring assigned sites."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Set up a shared display for a contractor’s staging operation."
+    }
+  ],
+  "scope_limits": [
+    "The demonstration uses a fictional training department."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Read the board and open map settings",
+      "route": "/home",
+      "capture_refs": [
+        "001-map-widget-with-current-markers",
+        "002-map-options-and-visibility"
+      ],
+      "required_labels": [
+        "Map",
+        "Zoom Out to Show All Pins",
+        "Visible Pins",
+        "Show Linked Calls"
+      ],
+      "capture_intent": "Read the board and open map settings",
+      "narration": "A Big Board map can give everyone in a room the same view of calls, stations, and resources. This training board starts with several kinds of pins and labels. A search and rescue team might use it to watch a staging area. An industrial response team could focus the same widget on its facility. Open Settings and choose Map. Under Map Options, Zoom Out to Show All Pins fits the view to the displayed pins. The Visible Pins switches control what the widget includes. Calls and linked calls have separate switches, so check both when choosing what the board needs to show.",
+      "practice": "Read the board and open map settings in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "02",
+      "title": "Choose visible pin types",
+      "route": "/configure",
+      "capture_refs": [
+        "003-hide-call-pins-keep-operational-reference",
+        "004-map-with-calls-hidden"
+      ],
+      "required_labels": [
+        "Show Calls",
+        "Save"
+      ],
+      "capture_intent": "Choose visible pin types",
+      "narration": "Turn off Show Calls and leave stations, units, and personnel enabled. Save, then return to the map. The training call pins are gone while the other references remain. This is a display preference for the widget. It does not close any calls or remove assignments.",
+      "practice": "Choose visible pin types in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "03",
+      "title": "Set a fixed center and hide labels",
+      "route": "/configure",
+      "capture_refs": [
+        "005-fixed-zoom-and-hide-labels",
+        "006-chicago-center-and-save",
+        "009-verified-fixed-map-labels-hidden"
+      ],
+      "required_labels": [
+        "Zoom Out to Show All Pins",
+        "Latitude",
+        "Longitude",
+        "Hide Labels"
+      ],
+      "capture_intent": "Set a fixed center and hide labels",
+      "narration": "For a board that should stay centered on the same area, turn off Zoom Out to Show All Pins. Enter a zoom and set the center with latitude and longitude. We use a Chicago center. Keep the minus sign in the west longitude. Turn on Hide Labels to simplify the view. After saving, check that the frame covers the area you intended. Our first zoom is too tight to show the resources.",
+      "practice": "Set a fixed center and hide labels in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "04",
+      "title": "Widen the frame and verify the result",
+      "route": "/configure",
+      "capture_refs": [
+        "010-fixed-zoom-with-visible-pin-area",
+        "011-verified-pins-visible-without-labels"
+      ],
+      "required_labels": [
+        "Zoom Level: 12"
+      ],
+      "capture_intent": "Widen the frame and verify the result",
+      "narration": "Reopen Map settings and set the zoom to twelve, then save again. The wider view keeps the fixed center while bringing the training pins back into the frame. Now the pins remain but their Resgrid names are hidden. Street names from the basemap are still visible. Some training pins share a location, so their icons overlap. A community paramedicine team could use fixed framing for an outreach area, while a security team could keep the view centered on the sites it monitors. Check the actual board from its viewing distance after making changes.",
+      "practice": "Widen the frame and verify the result in a fictional training department, then compare the saved result."
+    }
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-bigboard-map-widget-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/bigboard-map-widget-source-20261103/lesson.candidate.json",
+    "sha256": "89e6c8bc45a754cd9167a3211f6bd37a306d7caf458bdfb00e675a61c7133294"
+  }
+}

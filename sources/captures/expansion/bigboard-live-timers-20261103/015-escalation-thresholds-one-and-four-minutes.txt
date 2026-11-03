@@ -1,0 +1,180 @@
+Wallace Boden
+ Home
+ Calls
+ Personnel
+ Units
+ Contacts
+ Mapping
+ Shifts
+Records
+ Reports
+ Documents
+ Calendar
+ Notes
+ Trainings
+ Inventory
+Readiness
+Workforce & Business Ops
+0
+ 
+4
+Firehouse 51 — Training Department 
+ 
+Help 
+ 
+ 
+Mapping and BigBoard Settings
+Home  Department Settings  Mapping and BigBoard Settings
+Personnel Mapping Settings
+Allow Status with No Location Data to hide previous location
+Allow a personnel status without a location to replace the previous location-bearing state. This can remove a marker.
+If enabled and a status comes in for that user (i.e. Standing By) without a geolocation it'll hide the users location on the map. Otherwise the last location of the user will be shown even if it's older.
+TTL In Minutes for Personnel Locations
+Maximum personnel location age in minutes. Zero keeps stale positions visible without an age limit; assess actual ping ages.
+In Minutes, how long locations are valid for to be shown in the map. I.e. a value of 60 would mean a marker for a person would show on the maps for up to 60 minutes, afterwards would not be shown. Setting 0 disables TTL and a location, no matter how old, will be shown on the map.
+Units Mapping Settings
+Allow Unit Status with No Location Data to hide previous location
+Allow a unit status without a location to overwrite earlier location data. Check hardware and app updates together.
+If enabled and a status comes in for that unit (i.e. In Quarters) without a geolocation it'll hide the units location on the map. Otherwise the last location of the user will be shown even if it's older.
+TTL In Minutes for Unit Locations
+Maximum unit location age in minutes. Zero retains stale unit locations indefinitely in supported map consumers.
+In Minutes, how long locations are valid for to be shown in the map. I.e. a value of 60 would mean a marker for a unit would show on the maps for up to 60 minutes, afterwards would not be shown. Setting 0 disables TTL and a location, no matter how old, will be shown on the map.
+Map Style
+The base map your department sees on every map in Resgrid: the website, Dispatch, Responder, Unit, IC and BigBoard.
+Base map: This server's own maps (OpenStreetMap)
+Routing: Mapbox
+Live traffic: Not available
+This server draws its own maps, so only the styles it can show are listed. Community styles, and satellite imagery unless the server provides it, need Mapbox.
+This Resgrid server has no Mapbox token for the website, so website maps keep the standard map. The style you choose still applies in the apps.
+Day Map Style
+Automatic (Streets)
+Streets
+Outdoors (terrain)
+Light
+Dark
+Navigation Day
+Navigation Night
+Mapbox base map every department map shows in a light theme, on the website and in all apps. Automatic is Streets; the website needs a server Mapbox token, and the department Mapbox override replaces it everywhere. On a server that draws its own maps, only the styles it can render are offered.
+Used on the website, and in the apps when the device is in light mode.
+Night Map Style
+Automatic (Dark)
+Streets
+Outdoors (terrain)
+Light
+Dark
+Navigation Day
+Navigation Night
+Base map the apps show in dark mode. Automatic pairs with the day style (Dark for road maps, Navigation Night for Navigation Day; Outdoors and satellite unchanged). The website always uses the day style.
+Used in the apps when the device is in dark mode. Automatic picks the night version of the day style.
+Department Mapbox Override
+Use Department Mapbox Map
+Use the department map provider override. Turning it off on the owning screen removes the stored style and token.
+When enabled, this department's own Mapbox style and public token replace the Map Style above everywhere: the department website views (even when the system stays on Leaflet) and the Dispatch, Responder, Unit, IC and BigBoard apps, which load the token and style the next time they fetch their configuration. The custom style is used in both light and dark mode.
+Mapbox Style Url
+Custom map style reference. Verify the provider style and credential together; disabling the override deletes this value.
+Supported values are `mapbox://styles/...` or `https://api.mapbox.com/styles/v1/...`.
+Mapbox Public Access Token
+Map-provider access token. Only presence is reported. Disabling the override deletes it and requires re-entry to restore.
+Use a public (pk.) Mapbox token intended for website and mobile client-side map rendering for this department. It is sent to every member's browser and app; never use a secret (sk.) token.
+Unit Status Timers
+Highlight a unit on the Big Board when it has been sitting in a status too long — for example, dispatched for more than four minutes without reporting that it has departed. Leave both columns at 0 to time nothing.
+Status	Warn after (minutes)	Alert after (minutes)
+Dispatched	
+	
+
+Responding	
+	
+
+En Route	
+	
+
+On Scene	
+	
+
+Staging	
+	
+
+At Patient	
+	
+
+Transporting	
+	
+
+At Hospital	
+	
+
+Returning	
+	
+Reason when acknowledging
+Optional
+Required for alerts
+Required for warnings and alerts
+Whether acknowledging or muting a status timer alert needs a reason: optional, required for alerts, or required for warnings and alerts. It does not change the timers or the unit status.
+Whether a dispatcher must enter a reason when acknowledging or muting a status timer alert on the Big Board. The reason stays with the alert for follow-up on recurring delays.
+Navigation
+Defaults for turn-by-turn navigation in the Resgrid Unit app. Crews can still change spoken guidance and roads to avoid on their device.
+In-app navigation is not on for your department yet. These defaults apply once it is.
+Spoken guidance
+Defaults for turn-by-turn navigation in the Unit app (voice, distance units, arrival radius, the On Scene prompt, roads to avoid) and how late an arrival or how long a stop runs over before a route deviation is recorded.
+Read directions aloud by default.
+Distance units
+Follow the device
+Miles and feet
+Kilometres and metres
+Arrival radius (metres)
+How close a unit must get to its destination to count as arrived. 10 to 1000; default 50.
+Offer On Scene on arrival
+When a unit arrives at a call, navigation offers to set its status to On Scene.
+Avoid by default
+Tolls 
+Highways 
+Ferries 
+Unpaved roads
+Roads unit navigation avoids unless the crew changes it.
+Route deviations
+Record late arrivals and long stops
+Records a deviation when a unit on a route arrives at a stop later than planned, or stays at a stop longer than estimated.
+Deviation threshold (minutes)
+How many minutes late, or over the estimated stop time, before a deviation is recorded. 1 to 1440; default 15.
+Offline maps
+What the Resgrid apps download so their maps keep working without a network.
+Offline maps are not on for your department yet. These settings apply once they are.
+Maximum response area
+Draw the area the apps download at full detail; you can draw several shapes. With no area drawn, the apps download a 40 km circle around the department map centre.
++
+−
+Leaflet | © OpenStreetMap contributors CC-BY-SA
+Area: 5,018.5 km². The download size cannot be measured until a base map is set up on the server.
+Clear area
+What the apps download for use without a network: the maximum response area (its base map download must fit the size limit), which map data is included, when downloads run, and extra coverage for calls and routes outside the area.
+The area as GeoJSON. You can paste a Polygon or MultiPolygon from a GIS tool here instead of drawing it.
+Included data
+Custom maps 
+Indoor maps 
+Map layers 
+Points of interest 
+Hydrants
+Downloads
+Over Wi-Fi only
+Over any network
+Only when the user starts them
+When the apps download and refresh offline maps.
+Calls outside the area
+Download the map around a call outside the response area.
+Radius around calls (km)
+Routes outside the area
+Download the map along a planned route where it leaves the response area.
+Width either side of routes (metres)
+Check for updates every (hours)
+How often the apps check for changed maps. 1 to 720; default 24.
+Out of date after (days)
+Downloaded maps not refreshed for this long are shown as out of date. 1 to 365; default 7.
+Use downloaded maps when online
+Inside the response area, the apps use the downloaded base map even with a network, which saves mobile data.
+Cancel Save
+✨
+Assistant
+ 
+💬
+Chat
+Copyright Resgrid, LLC © 2026 All Rights Reserved. Version 3.0.0.0

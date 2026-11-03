@@ -1,0 +1,109 @@
+{
+  "id": "app-bigboard-weather-alerts",
+  "title": "Big Board: review and filter weather alerts",
+  "app": "BigBoard",
+  "summary": "Enable department display, inspect fictional alert details, and verify how widget filters affect the board and the full list.",
+  "audience": [
+    "Department administrators",
+    "Operations and coordination staff"
+  ],
+  "prerequisites": [
+    "A Big Board session in a training department with the relevant widget and access to the settings shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Community response",
+      "scenario": "Use the board during a community paramedicine exercise."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a shared display to coordinate a staging area."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Verify the display for an industrial response team."
+    }
+  ],
+  "scope_limits": [
+    "The demonstration uses a fictional training department.",
+    "The alerts are fictional exercise fixtures. Live source polling, notifications, and call integration are not exercised."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Add the widget and check department policy",
+      "route": "/home",
+      "capture_refs": [
+        "003-weather-alerts-disabled-on-board",
+        "001-department-alert-policy-before-display",
+        "002-add-weather-alerts-widget"
+      ],
+      "required_labels": [
+        "Add Widget"
+      ],
+      "capture_intent": "Add the widget and check department policy",
+      "narration": "The Weather Alerts widget gives a shared display a place to surface weather hazards. Start in Core, in the department's Weather Alerts settings. The display control is separate from the controls that send notifications or integrate alerts with calls. In this exercise, display starts disabled. On Big Board, open Add Widget and choose Weather Alerts. The widget is now on the board, but it says weather alerts are disabled. Adding the tile is only one part of setup; the department has to allow the display.",
+      "practice": "Add the widget and check department policy in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "02",
+      "title": "Enable display without delivery",
+      "route": "/User/WeatherAlerts/Settings",
+      "capture_refs": [
+        "004-enable-display-with-delivery-disabled",
+        "006-inactive-training-source-retained",
+        "005-weather-display-policy-reopened"
+      ],
+      "required_labels": [
+        "Enable Weather Alerts",
+        "Minimum Severity to Display",
+        "Save Settings",
+        "Alert Sources"
+      ],
+      "capture_intent": "Enable display without delivery",
+      "narration": "Return to Core and enable weather alerts. Set the minimum display severity to Minor for this exercise. Leave notification delivery and call integration off, save, and reopen the settings to verify the saved choices. This keeps the exercise on the board without asking the system to send messages or create calls. The source page shows that our training source is inactive. The headlines you will see are fictional alerts already loaded for this exercise. A working source needs to be configured for a department that wants live provider alerts. The forecast tile and this alert list serve different purposes.",
+      "practice": "Enable display without delivery in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "03",
+      "title": "Read the alert list and details",
+      "route": "/home",
+      "capture_refs": [
+        "007-active-training-alerts-widget",
+        "008-full-weather-alert-list",
+        "009-inspect-alert-timing-and-instructions",
+        "010-inspect-alert-urgency-certainty-source"
+      ],
+      "required_labels": [
+        "Weather Alerts (3)",
+        "Weather Alerts",
+        "Timing",
+        "Details"
+      ],
+      "capture_intent": "Read the alert list and details",
+      "narration": "Return to Big Board. The widget now shows three active alerts. Open the full list to see all three. Check the severity badges as you scan. A headline may give you enough to decide which alert to open first, but read the details before acting. Open the severe exercise alert. Read the timing, affected area, and instructions. Then check urgency, certainty, and sender. A search and rescue coordinator can compare the affected area with a staging location. An industrial team can use the same view to brief people working outdoors.",
+      "practice": "Read the alert list and details in a fictional training department, then compare the saved result."
+    },
+    {
+      "id": "04",
+      "title": "Set widget filters and verify both views",
+      "route": "/configure",
+      "capture_refs": [
+        "011-filter-severity-and-category",
+        "012-weather-card-display-options-and-save",
+        "013-filtered-weather-widget-result",
+        "014-full-list-still-has-all-training-alerts"
+      ],
+      "required_labels": [
+        "Health",
+        "Display Options",
+        "Save",
+        "Weather Alerts (1)"
+      ],
+      "capture_intent": "Set widget filters and verify both views",
+      "narration": "Now open the widget settings. Turn off Minor severity and the Health category for this board. A department might keep those items visible on a community outreach board and use a narrower selection on an operations board. These controls change which alerts this widget shows. Review the display options. Keep the headline, area, and expiry visible. Set the maximum to three and give the card enough space to read on the board, then save. The widget now shows one severe training alert. Open the full list again and verify that the three department alerts are still there. The board filter focuses the tile; it does not remove the alerts from the department list. That gives teams a way to tailor their displays while keeping the broader view available.",
+      "practice": "Set widget filters and verify both views in a fictional training department, then compare the saved result."
+    }
+  ]
+}

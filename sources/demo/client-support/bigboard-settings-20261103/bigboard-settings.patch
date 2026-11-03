@@ -1,0 +1,1912 @@
+--- a/src/app/(app)/__tests__/configure.test.tsx
++++ b/src/app/(app)/__tests__/configure.test.tsx
+@@ -1,5 +1,9 @@
+ import { fireEvent, render, screen } from '@testing-library/react-native';
+ import React from 'react';
++
++import { useCallsSettingsStore } from '@/stores/widget-settings/calls-settings-store';
++import { usePersonnelSettingsStore } from '@/stores/widget-settings/personnel-settings-store';
++import { useWidgetSettingsStore } from '@/stores/widget-settings/store';
+ 
+ import Configure from '../configure';
+ 
+@@ -48,6 +52,16 @@
+ }));
+ 
+ describe('Configure screen', () => {
++  it('preserves the same font settings and columns the operational widgets use when saving', () => {
++    usePersonnelSettingsStore.getState().updateSettings({ fontSize: 19, hideUnavailable: true, columnOrder: ['name', 'status'] });
++    useCallsSettingsStore.getState().updateSettings({ fontSize: 21, dispatchScrollSpeed: 55, columnOrder: ['priority', 'name'] });
++    const view = render(<Configure />);
++    fireEvent.press(screen.getByTestId('configure-save-button'));
++    expect(usePersonnelSettingsStore.getState().settings).toEqual(expect.objectContaining({ fontSize: 19, hideUnavailable: true, columnOrder: ['name', 'status'] }));
++    expect(useCallsSettingsStore.getState().settings).toEqual(expect.objectContaining({ fontSize: 21, dispatchScrollSpeed: 55, columnOrder: ['priority', 'name'] }));
++    view.unmount();
++  });
++
+   it('renders the Unit Alerts content when the Unit Alerts tab is selected', () => {
+     render(<Configure />);
+ 
+@@ -58,3 +72,26 @@
+     expect(screen.getByTestId('configure-unitAlerts-content')).toBeVisible();
+   });
+ });
++
++it('keeps a partial minus sign and saves a valid west longitude', () => {
++  const view = render(<Configure />);
++  fireEvent.press(screen.getByTestId('configure-tab-map'));
++  fireEvent.changeText(screen.getByPlaceholderText('configure.longitude'), '-');
++  expect(screen.getByDisplayValue('-')).toBeTruthy();
++  fireEvent.changeText(screen.getByPlaceholderText('configure.latitude'), '41.85');
++  fireEvent.changeText(screen.getByPlaceholderText('configure.longitude'), '-87.69');
++  fireEvent.press(screen.getByTestId('configure-save-button'));
++  expect(useWidgetSettingsStore.getState().map).toEqual(expect.objectContaining({ latitude: 41.85, longitude: -87.69 }));
++  view.unmount();
++});
++
++it('shows an error and does not replace saved coordinates with an invalid value', () => {
++  useWidgetSettingsStore.getState().updateMapSettings({ latitude: 41.85, longitude: -87.69 });
++  const view = render(<Configure />);
++  fireEvent.press(screen.getByTestId('configure-tab-map'));
++  fireEvent.changeText(screen.getByPlaceholderText('configure.latitude'), '91');
++  fireEvent.press(screen.getByTestId('configure-save-button'));
++  expect(screen.getByText('calls.coordinates_out_of_range')).toBeTruthy();
++  expect(useWidgetSettingsStore.getState().map.latitude).toBe(41.85);
++  view.unmount();
++});
+--- a/src/app/(app)/_layout.tsx
++++ b/src/app/(app)/_layout.tsx
+@@ -20,6 +20,7 @@
+ import { Pressable } from '@/components/ui/pressable';
+ import { Text } from '@/components/ui/text';
+ import { DrawerProvider, useDrawer } from '@/contexts/DrawerContext';
++import { useCommittedInitialization } from '@/hooks/use-app-initialization';
+ import { useAppLifecycle } from '@/hooks/use-app-lifecycle';
+ import { useSignalRLifecycle } from '@/hooks/use-signalr-lifecycle';
+ import { useAuthStore } from '@/lib/auth';
+@@ -71,8 +72,14 @@
+ 
+   // Refs to track initialization state
+   const isInitializing = useRef(false);
++  const mounted = useRef(false);
++  useEffect(() => {
++    mounted.current = true;
++    return () => {
++      mounted.current = false;
++    };
++  }, []);
+   const hasHiddenSplash = useRef(false);
+-  const lastSignedInStatus = useRef<string | null>(null);
+   const parentRef = useRef(null);
+ 
+   // Initialize push notifications
+@@ -151,7 +158,7 @@
+         });
+ 
+         // Stop mutating stores if the timeout already won the race
+-        if (initTimedOut) return;
++        if (initTimedOut || !mounted.current) return;
+ 
+         // Connect to SignalR after core initialization is complete
+         try {
+@@ -194,7 +201,7 @@
+         }
+ 
+         // Avoid marking initialized if the timeout already won the race
+-        if (initTimedOut) return;
++        if (initTimedOut || !mounted.current) return;
+ 
+         setHasInitialized(true);
+ 
+@@ -211,8 +218,10 @@
+         context: { error, platform: Platform.OS },
+       });
+       // Reset initialization state on error so it can be retried
+-      setHasInitialized(false);
+-      setInitError(error instanceof Error ? error.message : String(error));
++      if (mounted.current) {
++        setHasInitialized(false);
++        setInitError(error instanceof Error ? error.message : String(error));
++      }
+     } finally {
+       clearTimeout(initTimeoutId);
+       isInitializing.current = false;
+@@ -252,74 +261,8 @@
+     hasInitialized,
+   });
+ 
+-  // WEB PLATFORM WORKAROUND: Call initialization directly during render
+-  // useEffect doesn't reliably fire on web platform due to React Native Web issues
+-  if (Platform.OS === 'web') {
+-    // CRITICAL: Also check coreIsInitializing from the store to prevent re-initialization during state updates
+-    const shouldInitialize = status === 'signedIn' && !hasInitialized && !isInitializing.current && !coreIsInitializing;
+-
+-    if (shouldInitialize) {
+-      logger.info({
+-        message: 'WEB: Triggering initialization during render phase',
+-        context: {
+-          status,
+-          hasInitialized,
+-          isInitializing: isInitializing.current,
+-          coreIsInitializing,
+-        },
+-      });
+-      // Trigger initialization in next tick to avoid setState during render
+-      Promise.resolve().then(() => {
+-        initializeApp();
+-      });
+-    }
+-  }
+-
+-  // Handle app initialization (for native platforms)
+-  useEffect(() => {
+-    // Skip on web - handled above in render phase
+-    if (Platform.OS === 'web') {
+-      logger.info({
+-        message: 'Skipping useEffect initialization on web (handled in render)',
+-      });
+-      return;
+-    }
+-
+-    const shouldInitialize = status === 'signedIn' && !hasInitialized && !isInitializing.current;
+-
+-    logger.info({
+-      message: 'App initialization effect triggered',
+-      context: {
+-        status,
+-        hasInitialized,
+-        isInitializing: isInitializing.current,
+-        shouldInitialize,
+-        lastStatus: lastSignedInStatus.current,
+-      },
+-    });
+-
+-    if (shouldInitialize) {
+-      logger.info({
+-        message: 'Triggering app initialization',
+-        context: {
+-          statusChanged: lastSignedInStatus.current !== status,
+-          lastStatus: lastSignedInStatus.current,
+-          currentStatus: status,
+-        },
+-      });
+-      initializeApp();
+-    }
+-
+-    // Stop location tracking when user signs out
+-    if (status === 'signedOut' && lastSignedInStatus.current === 'signedIn') {
+-      logger.info({
+-        message: 'User signed out, stopping location tracking',
+-      });
+-    }
+-
+-    // Update last known status
+-    lastSignedInStatus.current = status;
+-  }, [status, hasInitialized, initializeApp]);
++  // Start only after React commits this layout on every platform. Abandoned web renders must not initialize stores or set state.
++  useCommittedInitialization(status === 'signedIn' && _hasHydrated, hasInitialized, isInitializing, initializeApp);
+ 
+   // Handle app resuming from background - separate from initialization
+   useEffect(() => {
+@@ -441,7 +384,15 @@
+   return (
+     <>
+       {userId && config && rights?.DepartmentCode ? (
+-        <NovuProvider subscriberId={`${rights?.DepartmentCode}_User_${userId}`} applicationIdentifier={config.NovuApplicationId} backendUrl={config.NovuBackendApiUrl} socketUrl={config.NovuSocketUrl}>
++        // subscriberHash: issued by the server for this user's own subscriber; Novu refuses the session
++        // without it once HMAC is enforced. Absent from older servers, which is fine until then.
++        <NovuProvider
++          subscriberId={`${rights?.DepartmentCode}_User_${userId}`}
++          subscriberHash={rights?.NovuSubscriberHash ?? undefined}
++          applicationIdentifier={config.NovuApplicationId}
++          backendUrl={config.NovuBackendApiUrl}
++          socketUrl={config.NovuSocketUrl}
++        >
+           {/* NotificationInbox at the root level */}
+           <NotificationInbox isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
+           {content}
+--- a/src/app/(app)/configure.tsx
++++ b/src/app/(app)/configure.tsx
+@@ -160,11 +160,8 @@
+   const isDark = colorScheme === 'dark';
+   const { widgets } = useDashboardStore();
+   const {
+-    personnel,
+     map,
+     weather,
+-    units,
+-    calls,
+     notes,
+     time,
+     personnelStatusSummary,
+@@ -172,11 +169,8 @@
+     unitsSummary,
+     callsSummary,
+     weatherAlerts: weatherAlertsSettings,
+-    updatePersonnelSettings,
+     updateMapSettings,
+     updateWeatherSettings,
+-    updateUnitsSettings,
+-    updateCallsSettings,
+     updateNotesSettings,
+     updateTimeSettings,
+     updatePersonnelStatusSummarySettings,
+@@ -192,6 +186,12 @@
+   const { settings: unitsSettings, updateSettings: updateUnitsColumnSettings } = useUnitsSettingsStore();
+   const { settings: callsColumnSettings, updateSettings: updateCallsColumnSettings } = useCallsSettingsStore();
+   const { settings: scheduledCallsSettings, updateSettings: updateScheduledCallsColumnSettings } = useScheduledCallsSettingsStore();
++  const personnel = personnelSettings;
++  const units = unitsSettings;
++  const calls = callsColumnSettings;
++  const updatePersonnelSettings = updatePersonnelColumnSettings;
++  const updateUnitsSettings = updateUnitsColumnSettings;
++  const updateCallsSettings = updateCallsColumnSettings;
+ 
+   const personnelColumnOrder: PersonnelColumnKey[] = personnelSettings.columnOrder?.length ? personnelSettings.columnOrder : DEFAULT_PERSONNEL_COLUMN_ORDER;
+   const unitsColumnOrder: UnitsColumnKey[] = unitsSettings.columnOrder?.length ? unitsSettings.columnOrder : DEFAULT_UNITS_COLUMN_ORDER;
+@@ -242,6 +242,11 @@
+ 
+   const [activeTab, setActiveTab] = useState<TabType>('personnel');
+ 
++  // Keep partial signed decimals while typing; only save complete, valid coordinates.
++  const [mapCoordinates, setMapCoordinates] = useState({ latitude: String(map.latitude), longitude: String(map.longitude) });
++  const [weatherCoordinates, setWeatherCoordinates] = useState({ latitude: String(weather.latitude), longitude: String(weather.longitude) });
++  const [coordinateError, setCoordinateError] = useState<'map' | 'weather' | null>(null);
++
+   // Local state for font size sliders to break the onChange -> store update -> re-render cycle
+   const [fontSizes, setFontSizes] = useState({
+     personnel: personnel.fontSize,
+@@ -263,6 +268,41 @@
+   });
+ 
+   const handleSave = () => {
++    const parse = ({ latitude, longitude }: { latitude: string; longitude: string }) => {
++      const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/;
++      const latText = latitude.trim();
++      const lonText = longitude.trim();
++      if ((latText && !decimal.test(latText)) || (lonText && !decimal.test(lonText))) return null;
++      const lat = Number(latText);
++      const lon = Number(lonText);
++      return Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lon) && Math.abs(lon) <= 180 ? { latitude: lat, longitude: lon } : null;
++    };
++    const mapCenter = parse(mapCoordinates);
++    const weatherLocation = parse(weatherCoordinates);
++    if (!mapCenter || !weatherLocation) {
++      const invalid = !mapCenter ? 'map' : 'weather';
++      setCoordinateError(invalid);
++      setActiveTab(invalid);
++      return;
++    }
++    setCoordinateError(null);
++    updateMapSettings(mapCenter);
++    updateWeatherSettings(weatherLocation);
++    updatePersonnelSettings({ fontSize: fontSizes.personnel });
++    updateUnitsSettings({ fontSize: fontSizes.units });
++    updateCallsSettings({ fontSize: fontSizes.calls, dispatchScrollSpeed: fontSizes.callsDispatchSpeed });
++    updatePersonnelStatusSummarySettings({ fontSize: fontSizes.personnelStatusSummary });
++    updatePersonnelStaffingSummarySettings({ fontSize: fontSizes.personnelStaffingSummary });
++    updateUnitsSummarySettings({ fontSize: fontSizes.unitsSummary });
++    updateCallsSummarySettings({ fontSize: fontSizes.callsSummary, maxPrioritiesToShow: fontSizes.callsSummaryMaxPriorities });
++    updateWeatherAlertsSettings({ fontSize: fontSizes.weatherAlerts, maxAlertsInWidget: fontSizes.weatherAlertsMaxInWidget });
++    updateScheduledCallsColumnSettings({
++      fontSize: fontSizes.scheduledCalls,
++      dispatchScrollSpeed: fontSizes.scheduledCallsDispatchSpeed,
++      colorThresholdRedMinutes: fontSizes.scheduledCallsRedThreshold,
++      colorThresholdYellowMinutes: fontSizes.scheduledCallsYellowThreshold,
++      colorThresholdGreenMinutes: fontSizes.scheduledCallsGreenThreshold,
++    });
+     router.back();
+   };
+ 
+@@ -447,19 +487,40 @@
+               <VStack space="sm">
+                 <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>{t('configure.latitude')}</Text>
+                 <Input variant="outline" size="md">
+-                  <InputField placeholder={t('configure.latitude')} value={map.latitude.toString()} onChangeText={(text) => updateMapSettings({ latitude: parseFloat(text) || 0 })} keyboardType="numeric" />
++                  <InputField
++                    placeholder={t('configure.latitude')}
++                    value={mapCoordinates.latitude}
++                    onChangeText={(text) => {
++                      setMapCoordinates((previous) => ({ ...previous, latitude: text }));
++                      setCoordinateError(null);
++                    }}
++                    keyboardType="numeric"
++                  />
+                 </Input>
+               </VStack>
+ 
+               <VStack space="sm">
+                 <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>{t('configure.longitude')}</Text>
+                 <Input variant="outline" size="md">
+-                  <InputField placeholder={t('configure.longitude')} value={map.longitude.toString()} onChangeText={(text) => updateMapSettings({ longitude: parseFloat(text) || 0 })} keyboardType="numeric" />
++                  <InputField
++                    placeholder={t('configure.longitude')}
++                    value={mapCoordinates.longitude}
++                    onChangeText={(text) => {
++                      setMapCoordinates((previous) => ({ ...previous, longitude: text }));
++                      setCoordinateError(null);
++                    }}
++                    keyboardType="numeric"
++                  />
+                 </Input>
+               </VStack>
+             </VStack>
+ 
+             {/* Widget Dimensions */}
++            {coordinateError === 'map' ? (
++              <Text accessibilityRole="alert" className={isDark ? 'text-red-400' : 'text-red-600'}>
++                {t('calls.coordinates_out_of_range')}
++              </Text>
++            ) : null}
+             <WidgetSizeSection widgetType="map" defaultW={2} defaultH={3} isDark={isDark} />
+           </VStack>
+         );
+@@ -490,19 +551,40 @@
+               <VStack space="sm">
+                 <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>Latitude</Text>
+                 <Input variant="outline" size="md">
+-                  <InputField placeholder="Latitude" value={weather.latitude.toString()} onChangeText={(text) => updateWeatherSettings({ latitude: parseFloat(text) || 0 })} keyboardType="numeric" />
++                  <InputField
++                    placeholder="Latitude"
++                    value={weatherCoordinates.latitude}
++                    onChangeText={(text) => {
++                      setWeatherCoordinates((previous) => ({ ...previous, latitude: text }));
++                      setCoordinateError(null);
++                    }}
++                    keyboardType="numeric"
++                  />
+                 </Input>
+               </VStack>
+ 
+               <VStack space="sm">
+                 <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>Longitude</Text>
+                 <Input variant="outline" size="md">
+-                  <InputField placeholder="Longitude" value={weather.longitude.toString()} onChangeText={(text) => updateWeatherSettings({ longitude: parseFloat(text) || 0 })} keyboardType="numeric" />
++                  <InputField
++                    placeholder="Longitude"
++                    value={weatherCoordinates.longitude}
++                    onChangeText={(text) => {
++                      setWeatherCoordinates((previous) => ({ ...previous, longitude: text }));
++                      setCoordinateError(null);
++                    }}
++                    keyboardType="numeric"
++                  />
+                 </Input>
+               </VStack>
+             </VStack>
+ 
+             {/* Widget Dimensions */}
++            {coordinateError === 'weather' ? (
++              <Text accessibilityRole="alert" className={isDark ? 'text-red-400' : 'text-red-600'}>
++                {t('calls.coordinates_out_of_range')}
++              </Text>
++            ) : null}
+             <WidgetSizeSection widgetType="weather" defaultW={2} defaultH={2} isDark={isDark} />
+           </VStack>
+         );
+--- a/src/components/maps/__tests__/pin-marker.web.test.tsx
++++ b/src/components/maps/__tests__/pin-marker.web.test.tsx
+@@ -1,7 +1,7 @@
+ /**
+  * @jest-environment jsdom
+  */
+-import { act, render } from '@testing-library/react-native';
++import { act, render, screen } from '@testing-library/react-native';
+ import React from 'react';
+ 
+ import PinMarker from '../pin-marker.web';
+@@ -49,3 +49,72 @@
+     expect(images(view)[0].props.onError).toBeUndefined();
+   });
+ });
++
++describe('PinMarker (web) status pins', () => {
++  const PIN_URL = 'https://api.resgrid.dev/api/v4/TypeIcons/Pins/ambulance-responding?v=1';
++
++  it("draws the status pin in the bundled icon's place, box and fit, and the bundled icon when it fails to load", () => {
++    const view = render(<PinMarker imagePath="ambulance" pinIconUrl={PIN_URL} title="Medic 1" />);
++
++    const [pinImage] = images(view);
++    expect(images(view)).toHaveLength(1);
++    expect(pinImage.props.src).toBe(PIN_URL);
++    const pinStyle = pinImage.props.style;
++    expect(pinStyle).toEqual({ width: 32, height: 32, objectFit: 'cover' });
++
++    act(() => {
++      pinImage.props.onError();
++    });
++
++    const [bundled] = images(view);
++    expect(images(view)).toHaveLength(1);
++    expect(bundled.props.src).not.toBe(PIN_URL);
++    expect(bundled.props.onError).toBeUndefined();
++    // Same footprint, so the marker does not shift when the pin falls back.
++    expect(bundled.props.style).toEqual(pinStyle);
++  });
++
++  it('prefers the upload over the status pin, then falls through to the status pin and the bundled icon as images fail', () => {
++    const view = render(<PinMarker imagePath="ambulance" iconUrl={ICON_URL} pinIconUrl={PIN_URL} title="Medic 1" />);
++
++    expect(images(view)).toHaveLength(1);
++    expect(images(view)[0].props.src).toBe(ICON_URL);
++
++    act(() => {
++      images(view)[0].props.onError();
++    });
++
++    expect(images(view)[0].props.src).toBe(PIN_URL);
++
++    act(() => {
++      images(view)[0].props.onError();
++    });
++
++    expect(images(view)).toHaveLength(1);
++    expect(images(view)[0].props.src).not.toBe(PIN_URL);
++    expect(images(view)[0].props.onError).toBeUndefined();
++  });
++
++  it('tries the next status pin afresh after one failed', () => {
++    const view = render(<PinMarker imagePath="ambulance" pinIconUrl={PIN_URL} title="Medic 1" />);
++
++    act(() => {
++      images(view)[0].props.onError();
++    });
++
++    // A status change is a new pin URL
++    const onSceneUrl = 'https://api.resgrid.dev/api/v4/TypeIcons/Pins/ambulance-onscene?v=1';
++    view.rerender(<PinMarker imagePath="ambulance" pinIconUrl={onSceneUrl} title="Medic 1" />);
++
++    expect(images(view)[0].props.src).toBe(onSceneUrl);
++  });
++});
++
++it('hides the visible label without removing the marker or its accessible name', () => {
++  const view = render(<PinMarker imagePath="ambulance" title="Medic 1" />);
++  expect(screen.getByText('Medic 1')).toBeTruthy();
++  view.rerender(<PinMarker imagePath="ambulance" title="Medic 1" hideLabel />);
++  expect(screen.queryByText('Medic 1')).toBeNull();
++  expect(images(view)[0].props.alt).toBe('Medic 1');
++  view.unmount();
++});
+--- a/src/components/maps/map-pins.tsx
++++ b/src/components/maps/map-pins.tsx
+@@ -12,32 +12,35 @@
+ 
+ interface MapPinsProps {
+   pins: MapMakerInfoData[];
++  hideLabels?: boolean;
+   onPinPress?: (pin: MapMakerInfoData) => void;
+ }
+ 
+ interface MapPinProps {
+   pin: MapMakerInfoData;
++  hideLabels?: boolean;
+   onPinPress?: (pin: MapMakerInfoData) => void;
+ }
+ 
+ // Memoised per pin: a realtime position update replaces only the moved pin's object, so only that
+ // marker re-renders. The key/id never include coordinates, so the marker moves in place rather than
+-// being unmounted and recreated.
+-const MapPin = React.memo(({ pin, onPinPress }: MapPinProps) => {
++// being unmounted and recreated. A refresh hands back new pin objects, so a status change that only
++// changes the pin image (PinIconUrl) or the upload (IconUrl) is always redrawn.
++const MapPin = React.memo(({ pin, onPinPress, hideLabels }: MapPinProps) => {
+   const handlePress = useCallback(() => onPinPress?.(pin), [onPinPress, pin]);
+ 
+   return (
+     <Mapbox.MarkerView id={`pin-${pin.Id}`} coordinate={[pin.Longitude, pin.Latitude]} anchor={MARKER_ANCHOR} allowOverlap={true}>
+-      <PinMarker imagePath={pin.ImagePath as MapIconKey} iconUrl={pin.IconUrl} title={pin.Title} size={32} onPress={handlePress} />
++      <PinMarker imagePath={pin.ImagePath as MapIconKey} iconUrl={pin.IconUrl} pinIconUrl={pin.PinIconUrl} title={pin.Title} hideLabel={hideLabels} size={32} onPress={handlePress} />
+     </Mapbox.MarkerView>
+   );
+ });
+ 
+-const MapPins: React.FC<MapPinsProps> = ({ pins, onPinPress }) => {
++const MapPins: React.FC<MapPinsProps> = ({ pins, onPinPress, hideLabels }) => {
+   return (
+     <>
+       {pins.map((pin) => (
+-        <MapPin key={`pin-${pin.Id}`} pin={pin} onPinPress={onPinPress} />
++        <MapPin key={`pin-${pin.Id}`} pin={pin} onPinPress={onPinPress} hideLabels={hideLabels} />
+       ))}
+     </>
+   );
+--- a/src/components/maps/map-pins.web.tsx
++++ b/src/components/maps/map-pins.web.tsx
+@@ -12,6 +12,7 @@
+ interface MapPinsProps {
+   map: mapboxgl.Map | null;
+   pins: MapMakerInfoData[];
++  hideLabels?: boolean;
+   onPinPress?: (pin: MapMakerInfoData) => void;
+   isMapReady: boolean;
+ }
+@@ -21,6 +22,7 @@
+   root: Root;
+   /** The pin this marker currently shows; the click handler reads it so it never goes stale. */
+   pin: MapMakerInfoData;
++  hideLabels: boolean;
+ }
+ 
+ const hasCoordinates = (pin: MapMakerInfoData): boolean =>
+@@ -52,7 +54,7 @@
+  * a new position is a `setLngLat` -- so realtime location updates move markers without rebuilding the
+  * layer, flickering, leaking React roots, or touching the camera.
+  */
+-const MapPins: React.FC<MapPinsProps> = ({ map, pins, onPinPress, isMapReady }) => {
++const MapPins: React.FC<MapPinsProps> = ({ map, pins, onPinPress, isMapReady, hideLabels = false }) => {
+   const entriesRef = useRef<Map<string, MarkerEntry>>(new Map());
+   const onPinPressRef = useRef(onPinPress);
+ 
+@@ -74,7 +76,18 @@
+ 
+     const entries = entriesRef.current;
+     const renderPin = (entry: MarkerEntry) => {
+-      entry.root.render(<PinMarker imagePath={entry.pin.ImagePath as MapIconKey} iconUrl={entry.pin.IconUrl} title={entry.pin.Title} size={32} onPress={() => onPinPressRef.current?.(entry.pin)} />);
++      entry.hideLabels = hideLabels;
++      entry.root.render(
++        <PinMarker
++          imagePath={entry.pin.ImagePath as MapIconKey}
++          iconUrl={entry.pin.IconUrl}
++          pinIconUrl={entry.pin.PinIconUrl}
++          title={entry.pin.Title}
++          hideLabel={hideLabels}
++          size={32}
++          onPress={() => onPinPressRef.current?.(entry.pin)}
++        />
++      );
+     };
+ 
+     const currentIds = new Set<string>();
+@@ -98,13 +111,16 @@
+           .setLngLat([pin.Longitude, pin.Latitude])
+           .addTo(map);
+ 
+-        const entry: MarkerEntry = { marker, root, pin };
++        const entry: MarkerEntry = { marker, root, pin, hideLabels };
+         renderPin(entry);
+         entries.set(id, entry);
+         return;
+       }
+ 
+-      if (existing.pin === pin) return;
++      if (existing.pin === pin) {
++        if (existing.hideLabels !== hideLabels) renderPin(existing);
++        return;
++      }
+ 
+       const previous = existing.pin;
+       existing.pin = pin;
+@@ -113,8 +129,16 @@
+         existing.marker.setLngLat([pin.Longitude, pin.Latitude]);
+       }
+ 
+-      // Everything the marker is drawn from: a new upload is a new IconUrl, and must replace the old image.
+-      if (previous.ImagePath !== pin.ImagePath || previous.Title !== pin.Title || (previous.IconUrl ?? null) !== (pin.IconUrl ?? null)) {
++      // Everything the marker is drawn from: a new upload is a new IconUrl, and a status/priority change can change only
++      // the recoloured pin (PinIconUrl / IconStyle); either must replace the old image.
++      if (
++        existing.hideLabels !== hideLabels ||
++        previous.ImagePath !== pin.ImagePath ||
++        previous.Title !== pin.Title ||
++        (previous.IconUrl ?? null) !== (pin.IconUrl ?? null) ||
++        (previous.PinIconUrl ?? null) !== (pin.PinIconUrl ?? null) ||
++        (previous.IconStyle ?? null) !== (pin.IconStyle ?? null)
++      ) {
+         renderPin(existing);
+       }
+     });
+@@ -125,7 +149,7 @@
+         entries.delete(id);
+       }
+     });
+-  }, [map, pins, isMapReady]);
++  }, [map, pins, isMapReady, hideLabels]);
+ 
+   return null;
+ };
+--- a/src/components/maps/pin-marker.tsx
++++ b/src/components/maps/pin-marker.tsx
+@@ -10,13 +10,16 @@
+   imagePath?: string;
+   /** The department's uploaded icon for the pin (its unit, call or POI type, or a person's role); wins over `imagePath`. */
+   iconUrl?: string | null;
++  /** The built-in pin recoloured to the call's priority or the unit's/person's status; wins over `imagePath`, not over `iconUrl`. */
++  pinIconUrl?: string | null;
+   title: string;
++  hideLabel?: boolean;
+   size?: number;
+   markerRef?: Mapbox.PointAnnotation | null;
+   onPress?: () => void;
+ }
+ 
+-const PinMarker: React.FC<PinMarkerProps> = ({ imagePath, iconUrl, title, size = 32, onPress }) => {
++const PinMarker: React.FC<PinMarkerProps> = ({ imagePath, iconUrl, pinIconUrl, title, hideLabel = false, size = 32, onPress }) => {
+   const { colorScheme } = useColorScheme();
+ 
+   // Convert imagePath to lowercase and clean it up
+@@ -36,14 +39,19 @@
+ 
+   const icon = MAP_ICONS[iconName as keyof typeof MAP_ICONS] || MAP_ICONS['flag'];
+   const bundledIcon = <Image fadeDuration={0} source={icon.uri} style={[styles.image, { width: size, height: size }]} />;
++  // The status/priority-coloured pin has the bundled pin's shape, so it is drawn in the same box and fit, untinted;
++  // absent or failing to load, the bundled icon shows.
++  const pinIcon = <TypeIcon iconUrl={pinIconUrl} size={size} contentFit="cover" style={styles.pinImage} fallback={bundledIcon} />;
+ 
+   return (
+-    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
+-      {/* An uploaded type/role icon shows in the bundled icon's footprint; absent or failing to load, the bundled icon shows. */}
+-      <TypeIcon iconUrl={iconUrl} size={size} fallback={bundledIcon} />
+-      <Text style={[styles.title, { color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }]} numberOfLines={2}>
+-        {title}
+-      </Text>
++    <TouchableOpacity accessibilityLabel={title} style={styles.container} onPress={onPress} activeOpacity={0.7}>
++      {/* An uploaded type/role icon shows in the bundled icon's footprint; absent or failing to load, the status pin (then the bundled icon) shows. */}
++      <TypeIcon iconUrl={iconUrl} size={size} fallback={pinIcon} />
++      {hideLabel ? null : (
++        <Text style={[styles.title, { color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }]} numberOfLines={2}>
++          {title}
++        </Text>
++      )}
+     </TouchableOpacity>
+   );
+ };
+@@ -57,6 +65,9 @@
+     overflow: 'visible',
+     resizeMode: 'cover',
+   },
++  pinImage: {
++    overflow: 'visible',
++  },
+   title: {
+     marginTop: 2,
+     overflow: 'visible',
+--- a/src/components/maps/pin-marker.web.tsx
++++ b/src/components/maps/pin-marker.web.tsx
+@@ -8,17 +8,24 @@
+   imagePath?: string;
+   /** The department's uploaded icon for the pin (its unit, call or POI type, or a person's role); wins over `imagePath`. */
+   iconUrl?: string | null;
++  /** The built-in pin recoloured to the call's priority or the unit's/person's status; wins over `imagePath`, not over `iconUrl`. */
++  pinIconUrl?: string | null;
+   title: string;
++  hideLabel?: boolean;
+   size?: number;
+   onPress?: () => void;
+ }
+ 
+-const PinMarker: React.FC<PinMarkerProps> = ({ imagePath, iconUrl: uploadedIcon, title, size = 32, onPress }) => {
++const PinMarker: React.FC<PinMarkerProps> = ({ imagePath, iconUrl: uploadedIcon, pinIconUrl: statusPinIcon, title, hideLabel = false, size = 32, onPress }) => {
+   const { colorScheme } = useColorScheme();
+-  // The upload that failed to load, so the bundled icon shows instead; a new upload (a new URL) is tried afresh.
++  // The upload that failed to load, so the status pin (or the bundled icon) shows instead; a new upload (a new URL) is tried afresh.
+   const [failedUploadUrl, setFailedUploadUrl] = useState<string | null>(null);
++  // Likewise the status/priority pin that failed to load, so the bundled icon shows instead.
++  const [failedPinUrl, setFailedPinUrl] = useState<string | null>(null);
+   const uploadedIconUrl = getTypeIconUrl(uploadedIcon);
+   const showUpload = uploadedIconUrl !== null && uploadedIconUrl !== failedUploadUrl;
++  const pinIconUrl = getTypeIconUrl(statusPinIcon);
++  const showPin = !showUpload && pinIconUrl !== null && pinIconUrl !== failedPinUrl;
+ 
+   // Convert imagePath to lowercase and clean it up
+   // Remove any path separators and file extensions
+@@ -72,6 +79,19 @@
+             objectFit: 'contain',
+           }}
+         />
++      ) : showPin ? (
++        // The status/priority-coloured pin has the bundled pin's shape: same box and fit as the bundled icon, untinted.
++        <img
++          key={pinIconUrl}
++          src={pinIconUrl}
++          alt={title}
++          onError={() => setFailedPinUrl(pinIconUrl)}
++          style={{
++            width: size,
++            height: size,
++            objectFit: 'cover',
++          }}
++        />
+       ) : (
+         <img
+           src={iconUrl}
+@@ -83,24 +103,26 @@
+           }}
+         />
+       )}
+-      <div
+-        style={{
+-          marginTop: 2,
+-          fontSize: 10,
+-          fontWeight: 600,
+-          textAlign: 'center',
+-          color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
+-          maxWidth: 100,
+-          overflow: 'hidden',
+-          textOverflow: 'ellipsis',
+-          display: '-webkit-box',
+-          WebkitLineClamp: 2,
+-          WebkitBoxOrient: 'vertical',
+-          textShadow: colorScheme === 'dark' ? '0 0 3px rgba(0,0,0,0.8), 0 0 5px rgba(0,0,0,0.6)' : '0 0 3px rgba(255,255,255,0.8), 0 0 5px rgba(255,255,255,0.6)',
+-        }}
+-      >
+-        {title}
+-      </div>
++      {hideLabel ? null : (
++        <div
++          style={{
++            marginTop: 2,
++            fontSize: 10,
++            fontWeight: 600,
++            textAlign: 'center',
++            color: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
++            maxWidth: 100,
++            overflow: 'hidden',
++            textOverflow: 'ellipsis',
++            display: '-webkit-box',
++            WebkitLineClamp: 2,
++            WebkitBoxOrient: 'vertical',
++            textShadow: colorScheme === 'dark' ? '0 0 3px rgba(0,0,0,0.8), 0 0 5px rgba(0,0,0,0.6)' : '0 0 3px rgba(255,255,255,0.8), 0 0 5px rgba(255,255,255,0.6)',
++          }}
++        >
++          {title}
++        </div>
++      )}
+     </div>
+   );
+ };
+--- a/src/components/ui/text/index.web.tsx
++++ b/src/components/ui/text/index.web.tsx
+@@ -1,14 +1,30 @@
+ import type { VariantProps } from '@gluestack-ui/utils/nativewind-utils';
+ import React from 'react';
+-import { Platform } from 'react-native';
++import type { TextProps as NativeTextProps } from 'react-native';
++
++import { toDomProps } from '@/components/ui/utils/dom-props';
+ 
+ import { textStyle } from './styles';
+ 
+-type ITextProps = React.ComponentProps<'span'> & VariantProps<typeof textStyle> & { testID?: string };
++type ITextProps = Omit<React.ComponentProps<'span'>, 'style'> &
++  VariantProps<typeof textStyle> &
++  Pick<NativeTextProps, 'onPress' | 'accessibilityRole' | 'accessibilityLabel' | 'accessibilityHint' | 'accessibilityState' | 'accessibilityValue'> & {
++    style?: React.CSSProperties | NativeTextProps['style'];
++    numberOfLines?: number;
++    ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
++    testID?: string;
++  };
+ 
+ const Text = React.forwardRef<React.ElementRef<'span'>, ITextProps>(
+-  ({ className, isTruncated, bold, underline, strikeThrough, size = 'md', sub, italic, highlight, testID, ...props }: { className?: string } & ITextProps, ref) => {
+-    const testProps = Platform.OS === 'web' && testID ? { 'data-testid': testID } : testID ? { testID } : {};
++  ({ className, isTruncated, bold, underline, strikeThrough, size = 'md', sub, italic, highlight, numberOfLines, ellipsizeMode: _ellipsizeMode, testID, style, ...props }: { className?: string } & ITextProps, ref) => {
++    const lineClampStyle: React.CSSProperties | undefined = numberOfLines
++      ? {
++          display: '-webkit-box',
++          WebkitBoxOrient: 'vertical',
++          WebkitLineClamp: numberOfLines,
++          overflow: 'hidden',
++        }
++      : undefined;
+ 
+     return (
+       <span
+@@ -23,8 +39,7 @@
+           highlight,
+           class: className,
+         })}
+-        {...testProps}
+-        {...props}
++        {...toDomProps({ ...props, testID, style: [lineClampStyle, style] })}
+         ref={ref}
+       />
+     );
+--- /dev/null
++++ b/src/components/ui/utils/__tests__/dom-props.test.ts
+@@ -0,0 +1,31 @@
++import { toDomProps } from '../dom-props';
++describe('Native text properties on the browser DOM', () => {
++  it('flattens style arrays, removes native-only attributes and preserves accessibility', () => {
++    const press = jest.fn();
++    const props = toDomProps({
++      numberOfLines: 2,
++      onLayout: jest.fn(),
++      onPress: press,
++      testID: 'label',
++      accessibilityLabel: 'Status',
++      accessibilityState: { disabled: true },
++      style: [{ fontSize: 14 }, { fontSize: 18, color: 'red' }],
++    });
++    expect(props).toEqual(expect.objectContaining({ 'data-testid': 'label', 'aria-label': 'Status', 'aria-disabled': true, style: { fontSize: 18, color: 'red' }, onClick: press }));
++    expect(props).not.toHaveProperty('numberOfLines');
++    expect(props).not.toHaveProperty('onLayout');
++    expect(props).not.toHaveProperty('onPress');
++  });
++  it('keeps a native press keyboard-accessible while preserving explicit browser handlers', () => {
++    const props = toDomProps({ onPress: jest.fn() });
++    const click = jest.fn();
++    const preventDefault = jest.fn();
++    (props.onKeyDown as (event: unknown) => void)({ key: 'Enter', preventDefault, currentTarget: { click } });
++    (props.onKeyDown as (event: unknown) => void)({ key: ' ', preventDefault, currentTarget: { click } });
++    (props.onKeyDown as (event: unknown) => void)({ key: 'Escape', preventDefault, currentTarget: { click } });
++    expect(click).toHaveBeenCalledTimes(2);
++    expect(preventDefault).toHaveBeenCalledTimes(2);
++    const explicit = jest.fn();
++    expect(toDomProps({ onPress: jest.fn(), onClick: explicit }).onClick).toBe(explicit);
++  });
++});
+--- /dev/null
++++ b/src/components/ui/utils/dom-props.ts
+@@ -0,0 +1,107 @@
++import { type StyleProp, StyleSheet, type TextStyle } from 'react-native';
++
++// Browser Text receives React Native props from shared app components.
++const nativeOnlyProps = new Set([
++  'testID',
++  'onPress',
++  'onLongPress',
++  'numberOfLines',
++  'ellipsizeMode',
++  'adjustsFontSizeToFit',
++  'allowFontScaling',
++  'maxFontSizeMultiplier',
++  'minimumFontScale',
++  'suppressHighlighting',
++  'selectable',
++  'selectionColor',
++  'textBreakStrategy',
++  'lineBreakStrategyIOS',
++  'dataDetectorType',
++  'onTextLayout',
++  'onLayout',
++  'nativeID',
++  'hitSlop',
++  'collapsable',
++  'needsOffscreenAlphaCompositing',
++  'accessible',
++  'accessibilityRole',
++  'accessibilityLabel',
++  'accessibilityHint',
++  'accessibilityState',
++  'accessibilityValue',
++  'accessibilityActions',
++  'onAccessibilityAction',
++  'importantForAccessibility',
++  'accessibilityLiveRegion',
++  'accessibilityElementsHidden',
++  'onStartShouldSetResponder',
++  'onMoveShouldSetResponder',
++  'onResponderGrant',
++  'onResponderMove',
++  'onResponderRelease',
++  'onResponderTerminate',
++  'onResponderTerminationRequest',
++]);
++
++const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
++
++/** Flatten native styles and preserve equivalent DOM actions and accessibility. */
++export function toDomProps<T extends object>(props: T): Record<string, unknown> {
++  const native = props as Record<string, unknown>;
++  const dom: Record<string, unknown> = {};
++  for (const [name, value] of Object.entries(native)) {
++    if (!nativeOnlyProps.has(name)) {
++      dom[name] = name === 'style' ? StyleSheet.flatten(value as StyleProp<TextStyle>) : value;
++    }
++  }
++
++  const setDefault = (name: string, value: unknown) => {
++    if (value !== undefined && dom[name] === undefined) dom[name] = value;
++  };
++  setDefault('data-testid', native.testID);
++  setDefault('id', native.nativeID);
++  setDefault('aria-label', native.accessibilityLabel);
++  setDefault('aria-description', native.accessibilityHint);
++  const role = native.accessibilityRole;
++  if (typeof role === 'string' && role !== 'text') {
++    const roleAliases: Record<string, string> = {
++      header: 'heading',
++      image: 'img',
++      imagebutton: 'button',
++      keyboardkey: 'button',
++      none: 'presentation',
++      adjustable: 'slider',
++      summary: 'region',
++    };
++    setDefault('role', roleAliases[role] ?? role);
++  }
++  if (isRecord(native.accessibilityState)) {
++    for (const state of ['disabled', 'selected', 'checked', 'busy', 'expanded']) {
++      setDefault(`aria-${state}`, native.accessibilityState[state]);
++    }
++  }
++  if (isRecord(native.accessibilityValue)) {
++    for (const value of ['min', 'max', 'now', 'text']) {
++      setDefault(`aria-value${value}`, native.accessibilityValue[value]);
++    }
++  }
++  if (native.accessibilityLiveRegion !== undefined) {
++    setDefault('aria-live', native.accessibilityLiveRegion === 'none' ? 'off' : native.accessibilityLiveRegion);
++  }
++  if (native.accessibilityElementsHidden === true || native.importantForAccessibility === 'no-hide-descendants') {
++    setDefault('aria-hidden', true);
++  }
++
++  if (typeof native.onPress === 'function' && dom.onClick === undefined) {
++    dom.onClick = native.onPress;
++    setDefault('role', 'button');
++    setDefault('tabIndex', 0);
++    setDefault('onKeyDown', (event: { key: string; preventDefault: () => void; currentTarget: { click: () => void } }) => {
++      if (event.key === 'Enter' || (event.key === ' ' && dom.role !== 'link')) {
++        event.preventDefault();
++        event.currentTarget.click();
++      }
++    });
++  }
++  return dom;
++}
+--- a/src/components/units/unit-alert-acknowledge-sheet.tsx
++++ b/src/components/units/unit-alert-acknowledge-sheet.tsx
+@@ -2,6 +2,7 @@
+ import { useColorScheme } from 'nativewind';
+ import React, { useCallback, useEffect, useRef, useState } from 'react';
+ import { useTranslation } from 'react-i18next';
++import { ScrollView, useWindowDimensions } from 'react-native';
+ 
+ import { CustomBottomSheet } from '@/components/ui/bottom-sheet';
+ import { Box } from '@/components/ui/box';
+@@ -51,6 +52,7 @@
+  */
+ export const UnitAlertAcknowledgeSheet: React.FC<UnitAlertAcknowledgeSheetProps> = ({ isOpen, onClose, unit, alert, acknowledgement, acknowledgementState, noteRequirement }) => {
+   const { t } = useTranslation();
++  const { height: viewportHeight } = useWindowDimensions();
+   const { colorScheme } = useColorScheme();
+   const isDark = colorScheme === 'dark';
+   const showToast = useToastStore((state) => state.showToast);
+@@ -161,83 +163,85 @@
+     acknowledgementState === 'muted' ? (acknowledgement?.MutedUntilUtc ? t('unitAlerts.mutedUntil', { time: formatTime(acknowledgement.MutedUntilUtc) }) : t('unitAlerts.mutedUntilStatusChange')) : null;
+ 
+   return (
+-    <CustomBottomSheet isOpen={isOpen} onClose={onClose} isLoading={isSubmitting} testID="unit-alert-acknowledge-sheet">
+-      <VStack className="w-full flex-1 p-4" space="md">
+-        <Text className="text-center text-lg font-semibold">{t('unitAlerts.sheetTitle')}</Text>
+-
+-        <VStack space="xs">
+-          <Text className={`text-base font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{unit.Name}</Text>
+-          <Text className="text-sm font-semibold" style={{ color: levelColor }}>
+-            {t('unitAlerts.inStatusFor', { status: unit.CurrentStatus || t('common.unknown'), elapsed: formatElapsed(alert.secondsInStatus) })}
+-          </Text>
+-        </VStack>
+-
+-        {isCovered ? (
+-          <Box className={`rounded p-3 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`} testID="unit-alert-current-acknowledgement">
+-            <HStack space="sm" className="items-center">
+-              {acknowledgementState === 'muted' ? <BellOffIcon size={16} color={levelColor} /> : <CheckCircleIcon size={16} color={levelColor} />}
+-              <Text className={`text-sm font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{seenBy}</Text>
++    <CustomBottomSheet isOpen={isOpen} onClose={onClose} isLoading={isSubmitting} testID="unit-alert-acknowledge-sheet" snapPoints={[90]} minHeight="min-h-0">
++      <ScrollView style={{ width: '100%', maxHeight: viewportHeight * 0.75 }}>
++        <VStack className="w-full p-4" space="md">
++          <Text className="text-center text-lg font-semibold">{t('unitAlerts.sheetTitle')}</Text>
++
++          <VStack space="xs">
++            <Text className={`text-base font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{unit.Name}</Text>
++            <Text className="text-sm font-semibold" style={{ color: levelColor }}>
++              {t('unitAlerts.inStatusFor', { status: unit.CurrentStatus || t('common.unknown'), elapsed: formatElapsed(alert.secondsInStatus) })}
++            </Text>
++          </VStack>
++
++          {isCovered ? (
++            <Box className={`rounded p-3 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`} testID="unit-alert-current-acknowledgement">
++              <HStack space="sm" className="items-center">
++                {acknowledgementState === 'muted' ? <BellOffIcon size={16} color={levelColor} /> : <CheckCircleIcon size={16} color={levelColor} />}
++                <Text className={`text-sm font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{seenBy}</Text>
++              </HStack>
++              {muteDescription ? <Text className={`mt-1 text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{muteDescription}</Text> : null}
++              {acknowledgement?.Note ? <Text className={`mt-1 text-sm ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{acknowledgement.Note}</Text> : null}
++              <Button variant="outline" action="negative" size="xs" className="mt-2 self-start" onPress={handleClear} disabled={isSubmitting} testID="unit-alert-clear-button">
++                <ButtonText>{t('unitAlerts.clear')}</ButtonText>
++              </Button>
++            </Box>
++          ) : null}
++
++          <FormControl>
++            <FormControlLabel>
++              <FormControlLabelText>{noteRequired ? t('unitAlerts.noteRequired') : t('unitAlerts.note')}</FormControlLabelText>
++            </FormControlLabel>
++            <Textarea>
++              <TextareaInput
++                placeholder={t('unitAlerts.notePlaceholder')}
++                value={note}
++                onChangeText={setNote}
++                maxLength={MAX_ACKNOWLEDGEMENT_NOTE_LENGTH}
++                numberOfLines={3}
++                testID="unit-alert-note-input"
++                accessibilityLabel={noteRequired ? t('unitAlerts.noteRequired') : t('unitAlerts.note')}
++              />
++            </Textarea>
++            {noteMissing ? (
++              <Text className={`mt-1 text-xs ${isDark ? 'text-amber-400' : 'text-amber-700'}`} testID="unit-alert-note-required-hint">
++                {t('unitAlerts.noteRequiredHint')}
++              </Text>
++            ) : null}
++          </FormControl>
++
++          <VStack space="xs">
++            <Text className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t('unitAlerts.muteFor')}</Text>
++            <HStack space="sm" className="flex-wrap">
++              {MUTE_OPTIONS.map((minutes) => (
++                <Button
++                  key={minutes}
++                  size="xs"
++                  variant={muteMinutes === minutes ? 'solid' : 'outline'}
++                  onPress={() => setMuteMinutes(minutes)}
++                  testID={`unit-alert-mute-option-${minutes}`}
++                  accessibilityState={{ selected: muteMinutes === minutes }}
++                >
++                  <ButtonText>{minutes === 0 ? t('unitAlerts.muteUntilStatusChange') : t('unitAlerts.muteMinutes', { count: minutes })}</ButtonText>
++                </Button>
++              ))}
+             </HStack>
+-            {muteDescription ? <Text className={`mt-1 text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{muteDescription}</Text> : null}
+-            {acknowledgement?.Note ? <Text className={`mt-1 text-sm ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{acknowledgement.Note}</Text> : null}
+-            <Button variant="outline" action="negative" size="xs" className="mt-2 self-start" onPress={handleClear} disabled={isSubmitting} testID="unit-alert-clear-button">
+-              <ButtonText>{t('unitAlerts.clear')}</ButtonText>
++          </VStack>
++
++          <HStack space="md" className="pt-4">
++            <Button variant="outline" className="flex-1" onPress={onClose} disabled={isSubmitting}>
++              <ButtonText>{t('common.cancel')}</ButtonText>
+             </Button>
+-          </Box>
+-        ) : null}
+-
+-        <FormControl>
+-          <FormControlLabel>
+-            <FormControlLabelText>{noteRequired ? t('unitAlerts.noteRequired') : t('unitAlerts.note')}</FormControlLabelText>
+-          </FormControlLabel>
+-          <Textarea>
+-            <TextareaInput
+-              placeholder={t('unitAlerts.notePlaceholder')}
+-              value={note}
+-              onChangeText={setNote}
+-              maxLength={MAX_ACKNOWLEDGEMENT_NOTE_LENGTH}
+-              numberOfLines={3}
+-              testID="unit-alert-note-input"
+-              accessibilityLabel={noteRequired ? t('unitAlerts.noteRequired') : t('unitAlerts.note')}
+-            />
+-          </Textarea>
+-          {noteMissing ? (
+-            <Text className={`mt-1 text-xs ${isDark ? 'text-amber-400' : 'text-amber-700'}`} testID="unit-alert-note-required-hint">
+-              {t('unitAlerts.noteRequiredHint')}
+-            </Text>
+-          ) : null}
+-        </FormControl>
+-
+-        <VStack space="xs">
+-          <Text className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{t('unitAlerts.muteFor')}</Text>
+-          <HStack space="sm" className="flex-wrap">
+-            {MUTE_OPTIONS.map((minutes) => (
+-              <Button
+-                key={minutes}
+-                size="xs"
+-                variant={muteMinutes === minutes ? 'solid' : 'outline'}
+-                onPress={() => setMuteMinutes(minutes)}
+-                testID={`unit-alert-mute-option-${minutes}`}
+-                accessibilityState={{ selected: muteMinutes === minutes }}
+-              >
+-                <ButtonText>{minutes === 0 ? t('unitAlerts.muteUntilStatusChange') : t('unitAlerts.muteMinutes', { count: minutes })}</ButtonText>
+-              </Button>
+-            ))}
++            <Button variant="outline" className="flex-1" onPress={handleMute} disabled={isSubmitting || noteMissing} testID="unit-alert-mute-button">
++              <ButtonText>{t('unitAlerts.mute')}</ButtonText>
++            </Button>
++            <Button className="flex-1" onPress={handleAcknowledge} disabled={isSubmitting || noteMissing} testID="unit-alert-acknowledge-button">
++              <ButtonText>{t('unitAlerts.acknowledge')}</ButtonText>
++            </Button>
+           </HStack>
+         </VStack>
+-
+-        <HStack space="md" className="pt-4">
+-          <Button variant="outline" className="flex-1" onPress={onClose} disabled={isSubmitting}>
+-            <ButtonText>{t('common.cancel')}</ButtonText>
+-          </Button>
+-          <Button variant="outline" className="flex-1" onPress={handleMute} disabled={isSubmitting || noteMissing} testID="unit-alert-mute-button">
+-            <ButtonText>{t('unitAlerts.mute')}</ButtonText>
+-          </Button>
+-          <Button className="flex-1" onPress={handleAcknowledge} disabled={isSubmitting || noteMissing} testID="unit-alert-acknowledge-button">
+-            <ButtonText>{t('unitAlerts.acknowledge')}</ButtonText>
+-          </Button>
+-        </HStack>
+-      </VStack>
++      </ScrollView>
+     </CustomBottomSheet>
+   );
+ };
+--- a/src/components/widgets/MapWidget.tsx
++++ b/src/components/widgets/MapWidget.tsx
+@@ -1,5 +1,5 @@
+ import Mapbox from '@rnmapbox/maps';
+-import React, { useCallback, useEffect, useRef, useState } from 'react';
++import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+ import { StyleSheet } from 'react-native';
+ 
+ import { getMapDataAndMarkers, getMapLayers } from '@/api/mapping/mapping';
+@@ -9,11 +9,14 @@
+ import { useMapLiveLocations } from '@/hooks/use-map-live-locations';
+ import { useMapSignalRUpdates } from '@/hooks/use-map-signalr-updates';
+ import { logger } from '@/lib/logging';
++import { getDepartmentMapCenter } from '@/lib/map-center';
+ import { useDepartmentMapStyle } from '@/lib/map-style';
++import { pinBounds, validCoordinates, visibleMapPins, widgetZoom } from '@/lib/widget-map-settings';
+ import { type MapMakerInfoData } from '@/models/v4/mapping/getMapDataAndMarkersData';
+ import { useCoreStore } from '@/stores/app/core-store';
+ import useAuthStore from '@/stores/auth/store';
+ import { useMapStore } from '@/stores/mapping/map-store';
++import { useWidgetSettingsStore } from '@/stores/widget-settings/store';
+ 
+ import MapPins from '../maps/map-pins';
+ import { WidgetContainer } from './WidgetContainer';
+@@ -42,7 +45,10 @@
+   const [isMapReady, setIsMapReady] = useState(false);
+   const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
+   const cameraRef = useRef<Mapbox.Camera>(null);
+-  const hasCenteredRef = useRef(false);
++  const appliedCamera = useRef<string | null>(null);
++  const settings = useWidgetSettingsStore((state) => state.map);
++  const visiblePins = useMemo(() => visibleMapPins(mapPins, settings), [mapPins, settings]);
++  const cameraKey = JSON.stringify(settings);
+ 
+   // Get auth and core store states
+   const accessToken = useAuthStore((state) => state.accessToken);
+@@ -107,20 +113,23 @@
+     loadInitialData();
+   }, [isMapReady, isAuthenticated, isInitialized, hasLoadedInitialData, setMapData, applySnapshot]);
+ 
+-  // Center on the first pin ONCE. Pins change on every SignalR refresh and every realtime position
+-  // update; re-centering each time would yank the camera (and any pan/zoom) around all day long.
++  // Apply saved framing once per configuration change, preserving later operator pans and live updates.
+   useEffect(() => {
+-    if (hasCenteredRef.current) return;
+-    if (isMapReady && mapPins.length > 0 && cameraRef.current) {
+-      hasCenteredRef.current = true;
+-      const firstPin = mapPins[0];
+-      cameraRef.current.setCamera({
+-        centerCoordinate: [firstPin.Longitude, firstPin.Latitude],
+-        zoomLevel: 12,
+-        animationDuration: 1000,
+-      });
++    if (!isMapReady || appliedCamera.current === cameraKey) return;
++    if (!cameraRef.current) return;
++    if (settings.showAllMarkers && visiblePins.length === 0) return;
++    const department = getDepartmentMapCenter();
++    const center: [number, number] = validCoordinates(settings.latitude, settings.longitude) ? [settings.longitude, settings.latitude] : [department.longitude, department.latitude];
++    const zoom = widgetZoom(settings.zoomLevel);
++    if (settings.showAllMarkers && visiblePins.length > 1) {
++      const [sw, ne] = pinBounds(visiblePins);
++      cameraRef.current.fitBounds(ne, sw, 40, 0);
++    } else {
++      const position: [number, number] = settings.showAllMarkers && visiblePins.length === 1 ? [visiblePins[0].Longitude, visiblePins[0].Latitude] : center;
++      cameraRef.current.setCamera({ centerCoordinate: position, zoomLevel: zoom, animationDuration: 0 });
+     }
+-  }, [isMapReady, mapPins]);
++    appliedCamera.current = cameraKey;
++  }, [isMapReady, cameraKey, settings, visiblePins]);
+ 
+   return (
+     <WidgetContainer title="Map" onRemove={onRemove} isEditMode={isEditMode} testID="map-widget" width={containerWidth} height={containerHeight}>
+@@ -132,7 +141,7 @@
+         )}
+         <Mapbox.MapView styleURL={mapStyle} style={styles.map} onDidFinishLoadingMap={() => setIsMapReady(true)}>
+           <Mapbox.Camera ref={cameraRef} zoomLevel={10} animationDuration={0} />
+-          <MapPins pins={mapPins} />
++          <MapPins pins={visiblePins} hideLabels={settings.hideLabels} />
+         </Mapbox.MapView>
+       </Box>
+     </WidgetContainer>
+--- a/src/components/widgets/MapWidget.web.tsx
++++ b/src/components/widgets/MapWidget.web.tsx
+@@ -1,5 +1,5 @@
+ import mapboxgl from 'mapbox-gl';
+-import React, { useCallback, useEffect, useRef, useState } from 'react';
++import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+ 
+ import { getMapDataAndMarkers, getMapLayers } from '@/api/mapping/mapping';
+ import { Box } from '@/components/ui/box';
+@@ -10,9 +10,12 @@
+ import { getDepartmentMapCenter } from '@/lib/map-center';
+ import { useDepartmentMapStyle } from '@/lib/map-style';
+ import { getMapboxAccessToken, onMapboxAccessTokenChange } from '@/lib/mapbox-token';
++import { pinBounds, validCoordinates, visibleMapPins, widgetZoom } from '@/lib/widget-map-settings';
+ import { type MapMakerInfoData } from '@/models/v4/mapping/getMapDataAndMarkersData';
+ import { useCoreStore } from '@/stores/app/core-store';
+ import useAuthStore from '@/stores/auth/store';
++import { useMapStore } from '@/stores/mapping/map-store';
++import { useWidgetSettingsStore } from '@/stores/widget-settings/store';
+ 
+ import MapPins from '../maps/map-pins.web';
+ import { WidgetContainer } from './WidgetContainer';
+@@ -32,7 +35,10 @@
+   const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
+   const mapContainer = useRef<HTMLDivElement>(null);
+   const map = useRef<mapboxgl.Map | null>(null);
+-  const hasCenteredRef = useRef(false);
++  const appliedCamera = useRef<string | null>(null);
++  const settings = useWidgetSettingsStore((state) => state.map);
++  const visiblePins = useMemo(() => visibleMapPins(mapPins, settings), [mapPins, settings]);
++  const cameraKey = JSON.stringify(settings);
+ 
+   // The department's day/night base map. It changes when config lands as well as when the theme
+   // flips, so construction reads it through a ref and a separate effect restyles the live map
+@@ -66,6 +72,8 @@
+   // Use SignalR updates to refresh map pins
+   useMapSignalRUpdates(handleMarkersUpdate);
+ 
++  const setMapData = useMapStore((state) => state.setMapData);
++
+   // Initialize map
+   useEffect(() => {
+     if (map.current) return; // initialize map only once
+@@ -108,7 +116,7 @@
+       // Reset loaded flag when map is cleaned up
+       setHasLoadedInitialData(false);
+       // A rebuilt map starts on the fallback centre again, so let it re-centre once
+-      hasCenteredRef.current = false;
++      appliedCamera.current = null;
+     };
+   }, [isInitialized]);
+ 
+@@ -144,6 +152,7 @@
+             context: { markerCount: mapDataResult.Data.MapMakerInfos.length },
+           });
+           setMapPins(applySnapshot(mapDataResult.Data.MapMakerInfos, fetchStartedAt));
++          setMapData(mapDataResult.Data);
+           setHasLoadedInitialData(true);
+         }
+ 
+@@ -163,23 +172,25 @@
+     };
+ 
+     loadInitialData();
+-  }, [isMapReady, isAuthenticated, isInitialized, hasLoadedInitialData, applySnapshot]);
+-
+-  // Center on the first pin once. Every SignalR-driven refresh hands back a fresh array even when
+-  // the pins are unchanged, so re-running this per update meant a 1000ms WebGL fly animation on
+-  // every department event -- and a board that never stopped moving.
+-  useEffect(() => {
+-    if (hasCenteredRef.current) return;
+-    if (!map.current || !isMapReady || mapPins.length === 0) return;
+-
+-    hasCenteredRef.current = true;
+-    const firstPin = mapPins[0];
+-    map.current.flyTo({
+-      center: [firstPin.Longitude, firstPin.Latitude],
+-      zoom: 12,
+-      duration: 1000,
+-    });
+-  }, [mapPins, isMapReady]);
++  }, [isMapReady, isAuthenticated, isInitialized, hasLoadedInitialData, applySnapshot, setMapData]);
++
++  // Apply saved framing once per configuration change, preserving later operator pans and live updates.
++  useEffect(() => {
++    if (!isMapReady || appliedCamera.current === cameraKey) return;
++    if (!map.current) return;
++    if (settings.showAllMarkers && visiblePins.length === 0) return;
++    const department = getDepartmentMapCenter();
++    const center: [number, number] = validCoordinates(settings.latitude, settings.longitude) ? [settings.longitude, settings.latitude] : [department.longitude, department.latitude];
++    const zoom = widgetZoom(settings.zoomLevel);
++    if (settings.showAllMarkers && visiblePins.length > 1) {
++      const [sw, ne] = pinBounds(visiblePins);
++      map.current.fitBounds([sw, ne], { padding: 40, maxZoom: zoom, duration: 0 });
++    } else {
++      const position: [number, number] = settings.showAllMarkers && visiblePins.length === 1 ? [visiblePins[0].Longitude, visiblePins[0].Latitude] : center;
++      map.current.jumpTo({ center: position, zoom });
++    }
++    appliedCamera.current = cameraKey;
++  }, [isMapReady, cameraKey, settings, visiblePins]);
+ 
+   return (
+     <WidgetContainer title="Map" onRemove={onRemove} isEditMode={isEditMode} testID="map-widget" width={containerWidth} height={containerHeight}>
+@@ -190,7 +201,7 @@
+           </Box>
+         )}
+         <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
+-        <MapPins map={map.current} pins={mapPins} isMapReady={isMapReady} />
++        <MapPins map={map.current} pins={visiblePins} hideLabels={settings.hideLabels} isMapReady={isMapReady} />
+       </Box>
+     </WidgetContainer>
+   );
+--- a/src/components/widgets/TimeWidget.tsx
++++ b/src/components/widgets/TimeWidget.tsx
+@@ -3,6 +3,7 @@
+ 
+ import { Text } from '@/components/ui/text';
+ import { VStack } from '@/components/ui/vstack';
++import { useWidgetSettingsStore } from '@/stores/widget-settings/store';
+ 
+ import { WidgetContainer } from './WidgetContainer';
+ 
+@@ -18,6 +19,7 @@
+ export const TimeWidget: React.FC<TimeWidgetProps> = ({ onRemove, isEditMode, width = 1, height = 1, containerWidth, containerHeight }) => {
+   const { colorScheme } = useColorScheme();
+   const isDark = colorScheme === 'dark';
++  const settings = useWidgetSettingsStore((state) => state.time);
+   const [time, setTime] = useState(new Date());
+ 
+   useEffect(() => {
+@@ -32,7 +34,8 @@
+     return date.toLocaleTimeString('en-US', {
+       hour: '2-digit',
+       minute: '2-digit',
+-      second: '2-digit',
++      second: settings.showSeconds ? '2-digit' : undefined,
++      hour12: !settings.format24Hour,
+     });
+   };
+ 
+--- a/src/components/widgets/WeatherWidget.tsx
++++ b/src/components/widgets/WeatherWidget.tsx
+@@ -11,6 +11,7 @@
+ import { Spinner } from '@/components/ui/spinner';
+ import { Text } from '@/components/ui/text';
+ import { VStack } from '@/components/ui/vstack';
++import { validCoordinates } from '@/lib/widget-map-settings';
+ import { useCoreStore } from '@/stores/app/core-store';
+ import { useLocationStore } from '@/stores/app/location-store';
+ import { useMapStore } from '@/stores/mapping/map-store';
+@@ -29,6 +30,8 @@
+ }
+ 
+ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ onRemove, isEditMode, width = 2, height = 2, containerWidth, containerHeight, metadata }) => {
++  const metadataLat = metadata?.lat;
++  const metadataLon = metadata?.lon;
+   const { colorScheme } = useColorScheme();
+   const isDark = colorScheme === 'dark';
+   const config = useCoreStore((state) => state.config);
+@@ -37,139 +40,66 @@
+   const setLocation = useLocationStore((state) => state.setLocation);
+   const mapData = useMapStore((state) => state.mapData);
+   const fetchMapData = useMapStore((state) => state.fetchMapData);
+-  const units = useWidgetSettingsStore((state) => state.weather.units);
++  const weatherSettings = useWidgetSettingsStore((state) => state.weather);
++  const units = weatherSettings.units;
+   const [weatherData, setWeatherData] = useState<WeatherOutlook | null>(null);
+   const [isLoading, setIsLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
+ 
+   useEffect(() => {
++    let cancelled = false;
+     const fetchWeather = async () => {
++      setIsLoading(true);
++      setError(null);
++      setWeatherData(null);
+       const apiKey = config?.OpenWeatherApiKey;
+-      let lat: number | undefined;
+-      let lon: number | undefined;
+-
+-      console.log('WeatherWidget - API Key:', apiKey ? 'Present' : 'Missing');
+-
+       if (!apiKey) {
++        setError('API key not configured');
+         setIsLoading(false);
+-        setError('API key not configured');
+         return;
+       }
+-
+-      // Priority 1: Widget metadata (lat/lon if set and non-zero)
+-      if (metadata?.lat && metadata?.lon && metadata.lat !== 0 && metadata.lon !== 0) {
+-        lat = metadata.lat;
+-        lon = metadata.lon;
+-        console.log('WeatherWidget - Using widget metadata:', { lat, lon });
+-      }
+-      // Priority 2: CenterLat and CenterLon from map data
+-      else if (mapData?.CenterLat && mapData?.CenterLon) {
+-        const mapLat = parseFloat(mapData.CenterLat);
+-        const mapLon = parseFloat(mapData.CenterLon);
+-        if (!isNaN(mapLat) && !isNaN(mapLon) && mapLat !== 0 && mapLon !== 0) {
+-          lat = mapLat;
+-          lon = mapLon;
+-          console.log('WeatherWidget - Using map center:', { lat, lon });
++      try {
++        let coordinates: [number, number] | undefined;
++        if (validCoordinates(weatherSettings.latitude, weatherSettings.longitude)) {
++          coordinates = [weatherSettings.latitude, weatherSettings.longitude];
++        } else if (validCoordinates(metadataLat, metadataLon)) {
++          coordinates = [metadataLat!, metadataLon!];
++        } else {
++          // Prefer the department map centre before requesting a device location.
++          if (!mapData) await fetchMapData();
++          if (cancelled) return;
++          const center = useMapStore.getState().mapData;
++          const numericCoordinate = (value: unknown) => (typeof value === 'number' ? value : typeof value === 'string' && value.trim() ? Number(value) : NaN);
++          const mapLat = numericCoordinate(center?.CenterLat);
++          const mapLon = numericCoordinate(center?.CenterLon);
++          if (validCoordinates(mapLat, mapLon)) coordinates = [mapLat, mapLon];
++          else if (validCoordinates(latitude, longitude)) coordinates = [latitude!, longitude!];
+         }
+-      }
+-      // Priority 3: Location store (if already set)
+-      else if (latitude && longitude && latitude !== 0 && longitude !== 0) {
+-        lat = latitude;
+-        lon = longitude;
+-        console.log('WeatherWidget - Using location store:', { lat, lon });
+-      }
+-
+-      // Priority 4: Request browser/device location
+-      if (!lat || !lon) {
+-        try {
+-          console.log('WeatherWidget - Requesting location permissions...');
++        if (!coordinates) {
+           const { status } = await Location.requestForegroundPermissionsAsync();
+-
+-          if (status !== 'granted') {
+-            // Try to fetch map data as fallback
+-            if (!mapData) {
+-              console.log('WeatherWidget - Fetching map data as fallback...');
+-              await fetchMapData();
+-              const newMapData = useMapStore.getState().mapData;
+-              if (newMapData?.CenterLat && newMapData?.CenterLon) {
+-                const mapLat = parseFloat(newMapData.CenterLat);
+-                const mapLon = parseFloat(newMapData.CenterLon);
+-                if (!isNaN(mapLat) && !isNaN(mapLon) && mapLat !== 0 && mapLon !== 0) {
+-                  lat = mapLat;
+-                  lon = mapLon;
+-                  console.log('WeatherWidget - Using map center from fetch:', { lat, lon });
+-                }
+-              }
+-            }
+-
+-            if (!lat || !lon) {
+-              setIsLoading(false);
+-              setError('Location permission denied');
+-              return;
+-            }
+-          } else {
+-            console.log('WeatherWidget - Getting current position...');
+-            const location = await Location.getCurrentPositionAsync({
+-              accuracy: Location.Accuracy.Balanced,
+-            });
+-
+-            setLocation(location);
+-            lat = location.coords.latitude;
+-            lon = location.coords.longitude;
+-            console.log('WeatherWidget - Location obtained:', { lat, lon });
+-          }
+-        } catch (err) {
+-          console.error('WeatherWidget - Error getting location:', err);
+-          // Try to fetch map data as final fallback
+-          if (!mapData) {
+-            console.log('WeatherWidget - Fetching map data as final fallback...');
+-            try {
+-              await fetchMapData();
+-              const newMapData = useMapStore.getState().mapData;
+-              if (newMapData?.CenterLat && newMapData?.CenterLon) {
+-                const mapLat = parseFloat(newMapData.CenterLat);
+-                const mapLon = parseFloat(newMapData.CenterLon);
+-                if (!isNaN(mapLat) && !isNaN(mapLon) && mapLat !== 0 && mapLon !== 0) {
+-                  lat = mapLat;
+-                  lon = mapLon;
+-                  console.log('WeatherWidget - Using map center from error fallback:', { lat, lon });
+-                }
+-              }
+-            } catch (mapErr) {
+-              console.error('WeatherWidget - Error fetching map data:', mapErr);
+-            }
+-          }
+-
+-          if (!lat || !lon) {
+-            setIsLoading(false);
+-            setError('Unable to get location');
+-            return;
+-          }
++          if (cancelled) return;
++          if (status !== 'granted') throw new Error('Location permission denied');
++          const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
++          if (cancelled) return;
++          if (!validCoordinates(location.coords.latitude, location.coords.longitude)) throw new Error('Unable to get location');
++          coordinates = [location.coords.latitude, location.coords.longitude];
++          setLocation(location);
+         }
+-      }
+-
+-      try {
+-        setIsLoading(true);
+-        console.log('WeatherWidget - Fetching weather data...');
+-        const data = await getWeatherOutlook(apiKey, lat!, lon!, units);
+-        if (data) {
+-          console.log('WeatherWidget - Data loaded successfully:', data.location);
+-          setWeatherData(data);
+-          setError(null);
+-        } else {
+-          console.log('WeatherWidget - No data returned');
+-          setError('Failed to load');
+-        }
+-      } catch (err) {
+-        console.error('WeatherWidget - Error fetching weather:', err);
+-        setError(`Failed to load: ${err instanceof Error ? err.message : 'Unknown error'}`);
++        const data = await getWeatherOutlook(apiKey, coordinates[0], coordinates[1], units);
++        if (cancelled) return;
++        if (!data) throw new Error('Failed to load weather');
++        setWeatherData(data);
++      } catch (failure) {
++        if (!cancelled) setError(failure instanceof Error ? failure.message : 'Failed to load weather');
+       } finally {
+-        setIsLoading(false);
++        if (!cancelled) setIsLoading(false);
+       }
+     };
+-
+-    fetchWeather();
+-  }, [config?.OpenWeatherApiKey, latitude, longitude, setLocation, metadata, mapData, fetchMapData, units]);
++    void fetchWeather();
++    return () => {
++      cancelled = true;
++    };
++  }, [config?.OpenWeatherApiKey, weatherSettings.latitude, weatherSettings.longitude, metadataLat, metadataLon, mapData, fetchMapData, latitude, longitude, setLocation, units]);
+ 
+   const getWeatherIcon = (condition: string, size: number = 48) => {
+     const iconColor = isDark ? '#FCD34D' : '#F59E0B';
+--- a/src/components/widgets/__tests__/MapWidget.test.tsx
++++ b/src/components/widgets/__tests__/MapWidget.test.tsx
+@@ -12,6 +12,11 @@
+ const mockMapViewStyleURL = jest.fn();
+ let mockCoreConfig: Record<string, unknown> | null = null;
+ let mockColorScheme = 'light';
++
++jest.mock('@/stores/widget-settings/store', () => ({
++  useWidgetSettingsStore: (select: (state: unknown) => unknown) =>
++    select({ map: { zoomLevel: 12, showAllMarkers: true, hideLabels: false, showCalls: true, showLinkedCalls: true, showUnits: true, showStations: true, showPersonnel: true, latitude: 0, longitude: 0 } }),
++}));
+ 
+ jest.mock('@rnmapbox/maps', () => {
+   const ReactActual = jest.requireActual('react');
+@@ -64,7 +69,7 @@
+ }));
+ 
+ jest.mock('@/stores/app/core-store', () => ({
+-  useCoreStore: (selector: (state: unknown) => unknown) => selector({ isInitialized: true, config: mockCoreConfig }),
++  useCoreStore: Object.assign((selector: (state: unknown) => unknown) => selector({ isInitialized: true, config: mockCoreConfig }), { getState: () => ({ config: mockCoreConfig }) }),
+ }));
+ 
+ jest.mock('@/stores/auth/store', () => ({
+--- a/src/components/widgets/__tests__/MapWidget.web.test.tsx
++++ b/src/components/widgets/__tests__/MapWidget.web.test.tsx
+@@ -4,8 +4,9 @@
+ import { render } from '@testing-library/react-native';
+ import React from 'react';
+ 
++import { FALLBACK_MAP_CENTER } from '@/lib/map-center';
++
+ import { MapWidget } from '../MapWidget.web';
+-import { FALLBACK_MAP_CENTER } from '@/lib/map-center';
+ 
+ const DEPARTMENT_CENTER = { MapCenterLatitude: 50.8698, MapCenterLongitude: 3.8102, MapCenterZoomLevel: 14 };
+ 
+@@ -15,6 +16,12 @@
+ const mockSetStyle = jest.fn();
+ const mockRemove = jest.fn();
+ let mockColorScheme = 'light';
++
++jest.mock('@/stores/widget-settings/store', () => ({
++  useWidgetSettingsStore: (select: (state: unknown) => unknown) =>
++    select({ map: { zoomLevel: 12, showAllMarkers: true, hideLabels: false, showCalls: true, showLinkedCalls: true, showUnits: true, showStations: true, showPersonnel: true, latitude: 0, longitude: 0 } }),
++}));
++jest.mock('@/stores/mapping/map-store', () => ({ useMapStore: (select: (state: unknown) => unknown) => select({ setMapData: jest.fn() }) }));
+ 
+ jest.mock('mapbox-gl', () => ({
+   __esModule: true,
+--- /dev/null
++++ b/src/components/widgets/__tests__/TimeWidget.test.tsx
+@@ -0,0 +1,26 @@
++import { act, render, screen } from '@testing-library/react-native';
++import React from 'react';
++
++import { TimeWidget } from '../TimeWidget';
++
++let mockSettings = { format24Hour: true, showSeconds: false };
++jest.mock('@/stores/widget-settings/store', () => ({ useWidgetSettingsStore: (select: (state: unknown) => unknown) => select({ time: mockSettings }) }));
++jest.mock('nativewind', () => ({ styled: (component: unknown) => component, useColorScheme: () => ({ colorScheme: 'light' }) }));
++
++describe('Time widget saved preferences', () => {
++  beforeEach(() => {
++    jest.useFakeTimers();
++    jest.setSystemTime(new Date(2026, 10, 3, 17, 5, 9));
++  });
++  afterEach(() => jest.useRealTimers());
++  it('uses 24-hour time without seconds and responds to a settings change', () => {
++    const view = render(<TimeWidget />);
++    expect(screen.getByText('17:05')).toBeTruthy();
++    mockSettings = { format24Hour: false, showSeconds: true };
++    view.rerender(<TimeWidget />);
++    expect(screen.getByText('05:05:09 PM')).toBeTruthy();
++    act(() => jest.advanceTimersByTime(1000));
++    expect(screen.getByText('05:05:10 PM')).toBeTruthy();
++    view.unmount();
++  });
++});
+--- /dev/null
++++ b/src/components/widgets/__tests__/WeatherWidget.test.tsx
+@@ -0,0 +1,59 @@
++import { act, render, screen, waitFor } from '@testing-library/react-native';
++import * as Location from 'expo-location';
++import React from 'react';
++
++import { getWeatherOutlook } from '@/api/weather/weather';
++
++import { WeatherWidget } from '../WeatherWidget';
++
++let mockSettings = { units: 'metric', latitude: 0, longitude: -78 };
++const mockMap = { mapData: { CenterLat: 41.85, CenterLon: -87.69 }, fetchMapData: jest.fn() };
++const mockCore = { config: { OpenWeatherApiKey: 'unit-test-provider-key' } };
++const mockLocation = { latitude: null, longitude: null, setLocation: jest.fn() };
++jest.mock('@/stores/widget-settings/store', () => ({ useWidgetSettingsStore: (select: (state: unknown) => unknown) => select({ weather: mockSettings }) }));
++jest.mock('@/stores/app/core-store', () => ({ useCoreStore: (select: (state: unknown) => unknown) => select(mockCore) }));
++jest.mock('@/stores/app/location-store', () => ({ useLocationStore: (select: (state: unknown) => unknown) => select(mockLocation) }));
++jest.mock('@/stores/mapping/map-store', () => ({ useMapStore: Object.assign((select: (state: unknown) => unknown) => select(mockMap), { getState: () => mockMap }) }));
++jest.mock('@/api/weather/weather', () => ({ getWeatherOutlook: jest.fn() }));
++jest.mock('expo-location', () => ({ requestForegroundPermissionsAsync: jest.fn(), getCurrentPositionAsync: jest.fn(), Accuracy: { Balanced: 3 } }));
++jest.mock('nativewind', () => ({ styled: (component: unknown) => component, useColorScheme: () => ({ colorScheme: 'light' }) }));
++const outlook = { location: 'Test location', current: { temperature: 18, condition: 'Clouds', humidity: 55, windSpeed: 4, icon: '03d' }, forecast: [] };
++
++describe('Weather widget saved location and units', () => {
++  beforeEach(() => {
++    jest.clearAllMocks();
++    mockSettings = { units: 'metric', latitude: 0, longitude: -78 };
++    (getWeatherOutlook as jest.Mock).mockResolvedValue(outlook);
++  });
++  it('uses saved coordinates even on the equator without requesting device location', async () => {
++    const view = render(<WeatherWidget />);
++    await waitFor(() => expect(getWeatherOutlook).toHaveBeenCalledWith('unit-test-provider-key', 0, -78, 'metric'));
++    expect(Location.requestForegroundPermissionsAsync).not.toHaveBeenCalled();
++    expect(screen.getByText('18°C')).toBeTruthy();
++    view.unmount();
++  });
++  it('uses the numeric department map centre when saved coordinates are unset', async () => {
++    mockSettings = { ...mockSettings, latitude: 0, longitude: 0 };
++    const view = render(<WeatherWidget />);
++    await waitFor(() => expect(getWeatherOutlook).toHaveBeenCalledWith('unit-test-provider-key', 41.85, -87.69, 'metric'));
++    expect(Location.requestForegroundPermissionsAsync).not.toHaveBeenCalled();
++    view.unmount();
++  });
++  it('does not overwrite the latest forecast with an obsolete response', async () => {
++    let resolveOld: (value: typeof outlook) => void = () => {};
++    (getWeatherOutlook as jest.Mock).mockImplementationOnce(
++      () =>
++        new Promise((resolve) => {
++          resolveOld = resolve;
++        })
++    );
++    const view = render(<WeatherWidget />);
++    await waitFor(() => expect(getWeatherOutlook).toHaveBeenCalledTimes(1));
++    mockSettings = { ...mockSettings, latitude: 1 };
++    view.rerender(<WeatherWidget />);
++    await screen.findByText('Weather - Test location');
++    await act(async () => resolveOld({ ...outlook, location: 'Obsolete location' }));
++    expect(screen.queryByText('Weather - Obsolete location')).toBeNull();
++    view.unmount();
++  });
++});
+--- /dev/null
++++ b/src/hooks/__tests__/use-app-initialization.test.tsx
+@@ -0,0 +1,37 @@
++import { renderHook } from '@testing-library/react-native';
++
++import { useCommittedInitialization } from '../use-app-initialization';
++
++describe('Committed app initialization', () => {
++  it('starts signed-in initialization after commit, once while pending', () => {
++    const inFlight = { current: false };
++    let rendering = false;
++    const initialize = jest.fn(async () => {
++      expect(rendering).toBe(false);
++      inFlight.current = true;
++    });
++    const view = renderHook(
++      ({ initialized }) => {
++        rendering = true;
++        useCommittedInitialization(true, initialized, inFlight, initialize);
++        rendering = false;
++      },
++      { initialProps: { initialized: false } }
++    );
++    expect(initialize).toHaveBeenCalledTimes(1);
++    view.rerender({ initialized: false });
++    expect(initialize).toHaveBeenCalledTimes(1);
++    view.rerender({ initialized: true });
++    expect(initialize).toHaveBeenCalledTimes(1);
++    view.unmount();
++  });
++  it('waits until authentication is hydrated and signed in', () => {
++    const initialize = jest.fn(async () => {});
++    const inFlight = { current: false };
++    const view = renderHook(({ signedIn }) => useCommittedInitialization(signedIn, false, inFlight, initialize), { initialProps: { signedIn: false } });
++    expect(initialize).not.toHaveBeenCalled();
++    view.rerender({ signedIn: true });
++    expect(initialize).toHaveBeenCalledTimes(1);
++    view.unmount();
++  });
++});
+--- /dev/null
++++ b/src/hooks/use-app-initialization.ts
+@@ -0,0 +1,7 @@
++import { type MutableRefObject, useEffect } from 'react';
++
++export const useCommittedInitialization = (signedIn: boolean, initialized: boolean, inFlight: MutableRefObject<boolean>, initialize: () => Promise<void>): void => {
++  useEffect(() => {
++    if (signedIn && !initialized && !inFlight.current) void initialize();
++  }, [signedIn, initialized, inFlight, initialize]);
++};
+--- /dev/null
++++ b/src/lib/__tests__/widget-map-settings.test.ts
+@@ -0,0 +1,35 @@
++import { pinBounds, validCoordinates, visibleMapPins } from '@/lib/widget-map-settings';
++import { MapMakerInfoData } from '@/models/v4/mapping/getMapDataAndMarkersData';
++import { type MapWidgetSettings } from '@/stores/widget-settings/store';
++
++const settings: MapWidgetSettings = { zoomLevel: 12, showAllMarkers: true, hideLabels: false, showCalls: true, showLinkedCalls: true, showStations: true, showUnits: true, showPersonnel: true, latitude: 0, longitude: 0 };
++const pin = (Type: number, linked = false) => Object.assign(new MapMakerInfoData(), { Type, Latitude: 41.8, Longitude: -87.6, IsLinkedCall: linked });
++
++describe('saved map visibility', () => {
++  it('independently filters calls, linked calls, units, stations and personnel', () => {
++    const pins = [pin(0), pin(0, true), pin(1), pin(2), pin(3), pin(4), pin(5)];
++    expect(visibleMapPins(pins, { ...settings, showCalls: false, showLinkedCalls: false, showUnits: false, showStations: false, showPersonnel: false })).toEqual([pins[5], pins[6]]);
++    expect(visibleMapPins(pins, { ...settings, showCalls: false })).toContain(pins[1]);
++    expect(visibleMapPins(pins, { ...settings, showLinkedCalls: false })).not.toContain(pins[1]);
++  });
++  it('rejects corrupt coordinates while retaining locations on the equator or prime meridian', () => {
++    expect(validCoordinates(0, -78)).toBe(true);
++    expect(validCoordinates(52, 0)).toBe(true);
++    for (const pair of [
++      [0, 0],
++      [NaN, 1],
++      [1, Infinity],
++      [null, 1],
++      [91, 0],
++      [0, 181],
++    ])
++      expect(validCoordinates(...(pair as [unknown, unknown]))).toBe(false);
++  });
++  it('fits only the visible coordinates', () => {
++    const pins = [pin(0), { ...pin(1), Latitude: 42, Longitude: -88 }];
++    expect(pinBounds(pins)).toEqual([
++      [-88, 41.8],
++      [-87.6, 42],
++    ]);
++  });
++});
+--- /dev/null
++++ b/src/lib/widget-map-settings.ts
+@@ -0,0 +1,35 @@
++import { type MapMakerInfoData } from '@/models/v4/mapping/getMapDataAndMarkersData';
++import { type MapWidgetSettings } from '@/stores/widget-settings/store';
++
++export const validCoordinates = (latitude: unknown, longitude: unknown): latitude is number =>
++  typeof latitude === 'number' &&
++  typeof longitude === 'number' &&
++  Number.isFinite(latitude) &&
++  Number.isFinite(longitude) &&
++  Math.abs(latitude) <= 90 &&
++  Math.abs(longitude) <= 180 &&
++  !(latitude === 0 && longitude === 0);
++
++export const visibleMapPins = (pins: MapMakerInfoData[], settings: MapWidgetSettings): MapMakerInfoData[] =>
++  pins.filter((pin) => {
++    if (!validCoordinates(pin.Latitude, pin.Longitude)) return false;
++    switch (pin.Type) {
++      case 0:
++        return pin.IsLinkedCall ? settings.showLinkedCalls : settings.showCalls;
++      case 1:
++        return settings.showUnits;
++      case 2:
++        return settings.showStations;
++      case 3:
++        return settings.showPersonnel;
++      default:
++        return true;
++    }
++  });
++
++export const pinBounds = (pins: MapMakerInfoData[]): [[number, number], [number, number]] => [
++  [Math.min(...pins.map((pin) => pin.Longitude)), Math.min(...pins.map((pin) => pin.Latitude))],
++  [Math.max(...pins.map((pin) => pin.Longitude)), Math.max(...pins.map((pin) => pin.Latitude))],
++];
++
++export const widgetZoom = (zoom: number): number => (Number.isFinite(zoom) ? Math.max(0, Math.min(22, zoom)) : 12);
+--- a/src/models/v4/mapping/getMapDataAndMarkersData.ts
++++ b/src/models/v4/mapping/getMapDataAndMarkersData.ts
+@@ -15,11 +15,28 @@
+   public InfoWindowContent: string = '';
+   public Color: string = '';
+   public Type: number = 0;
++  /** True when this call links to another call; absent on older servers. */
++  public IsLinkedCall?: boolean = false;
+   /**
+    * The department's uploaded icon for the pin (absolute URL): the unit type for unit pins (Type 1), the call type for
+    * call pins (Type 0), the POI type for POI pins (Type 4), and for personnel pins (Type 3) the icon of the first role the
+-   * person holds, in the department's role order, that has one. Wins over the bundled icon when present; null otherwise
+-   * or from older servers.
++   * person holds, in the department's role order, that has one. For call, unit and personnel pins it is the upload made
++   * for the current priority/status when there is one, otherwise the type's/role's own upload with a status-badge style
++   * query appended, so it changes when the status does. Wins over every other icon when present; null otherwise or from
++   * older servers.
+    */
+   public IconUrl?: string | null = null;
++  /**
++   * The built-in pin recoloured to the call's priority or the unit's/person's status (absolute URL, same 32 x 37 shape and
++   * bottom-tip anchor as the bundled pins). Drawn in place of the bundled `ImagePath` pin, untinted, when there is no
++   * upload. Null when the priority/status has no meaning, always null for stations, POIs and hydrants, and absent from
++   * older servers.
++   */
++  public PinIconUrl?: string | null = null;
++  /**
++   * The style key `PinIconUrl` was drawn in: a status (`available`, `dispatched`, `responding`, `onscene`, `transporting`,
++   * `returning`, `staging`, `delayed`, `unavailable`) or a priority (`low`, `medium`, `high`, `emergency`). Null as for
++   * `PinIconUrl`.
++   */
++  public IconStyle?: string | null = null;
+ }
+--- /dev/null
++++ b/src/models/v4/weatherAlerts/__tests__/wire-values.test.ts
+@@ -0,0 +1,7 @@
++import { WeatherAlertCertainty, WeatherAlertSourceType, WeatherAlertStatus, WeatherAlertUrgency } from '../weatherAlertEnums';
++it('keeps weather lifecycle, urgency, certainty and source values aligned with Core', () => {
++  expect([0, 1, 2, 3].map((value) => WeatherAlertStatus[value])).toEqual(['Active', 'Updated', 'Expired', 'Cancelled']);
++  expect([0, 1, 2, 3, 4].map((value) => WeatherAlertUrgency[value])).toEqual(['Immediate', 'Expected', 'Future', 'Past', 'Unknown']);
++  expect([0, 1, 2, 3, 4].map((value) => WeatherAlertCertainty[value])).toEqual(['Observed', 'Likely', 'Possible', 'Unlikely', 'Unknown']);
++  expect([0, 1, 2].map((value) => WeatherAlertSourceType[value])).toEqual(['NWS', 'EnvironmentCanada', 'MeteoAlarm']);
++});
+--- a/src/models/v4/weatherAlerts/weatherAlertEnums.ts
++++ b/src/models/v4/weatherAlerts/weatherAlertEnums.ts
+@@ -18,35 +18,32 @@
+ }
+ 
+ export enum WeatherAlertUrgency {
+-  Unknown = 0,
+-  Immediate = 1,
+-  Expected = 2,
+-  Future = 3,
+-  Past = 4,
++  Immediate = 0,
++  Expected = 1,
++  Future = 2,
++  Past = 3,
++  Unknown = 4,
+ }
+ 
+ export enum WeatherAlertCertainty {
+-  Unknown = 0,
+-  Observed = 1,
+-  Likely = 2,
+-  Possible = 3,
+-  Unlikely = 4,
++  Observed = 0,
++  Likely = 1,
++  Possible = 2,
++  Unlikely = 3,
++  Unknown = 4,
+ }
+ 
+ export enum WeatherAlertStatus {
+-  Unknown = 0,
+-  Actual = 1,
+-  Exercise = 2,
+-  System = 3,
+-  Test = 4,
+-  Draft = 5,
++  Active = 0,
++  Updated = 1,
++  Expired = 2,
++  Cancelled = 3,
+ }
+ 
+ export enum WeatherAlertSourceType {
+-  Unknown = 0,
+-  NWS = 1,
+-  EnvironmentCanada = 2,
+-  MeteoAlarm = 3,
++  NWS = 0,
++  EnvironmentCanada = 1,
++  MeteoAlarm = 2,
+ }
+ 
+ export const SEVERITY_COLORS: Record<WeatherAlertSeverity, string> = {

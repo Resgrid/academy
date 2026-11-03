@@ -43,7 +43,9 @@ def main():
                DO_NOT_TRACK='1', CI='1', BROWSER='none')
     env.update(BIGBOARD_BASE_API_URL=args.api_origin.rstrip('/'), BIGBOARD_API_VERSION='v4',
                BIGBOARD_RESGRID_API_URL='/api/v4', BIGBOARD_MAINTENANCE_MODE='false')
-    for key in ('LOGGING_KEY', 'APP_KEY', 'SENTRY_DSN', 'COUNTLY_APP_KEY', 'COUNTLY_SERVER_URL'):
+    # Match the isolated Core default selector, not a production selector inherited from the shell.
+    env['BIGBOARD_APP_KEY'] = 'BigBoardKey'
+    for key in ('LOGGING_KEY', 'SENTRY_DSN', 'COUNTLY_APP_KEY', 'COUNTLY_SERVER_URL'):
         env['BIGBOARD_' + key] = ''
     node = shutil.which('node')
     assert node, 'Node.js is required.'

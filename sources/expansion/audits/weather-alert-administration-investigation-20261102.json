@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-11-03T02:56:20.360124+00:00",
+  "qualified_video": false,
+  "normal_ui_successes": [
+    "Weather Alerts index with no active department alerts.",
+    "Saved disabled global weather-alert policy with Moderate display severity, all auto-message severities unchecked, Extreme18to6hours, other windows0to24, fictional excluded event and call integration unchecked. Fresh-page readback confirmed retained values."
+  ],
+  "normal_ui_failure": {
+    "operation": "Add one inactive National Weather Service source",
+    "name": "TRAINING ONLY - Illinois weather review",
+    "area_filter": "IL",
+    "poll_interval_minutes": 15,
+    "api_key_present": false,
+    "insert_occurred": true,
+    "source_id": "68009979-1321-4412-8364-631121fb802e",
+    "save_alert": "Failed to save source. Please try again.",
+    "fresh_settings_error": "InvalidCastException: Invalid cast from 'System.String' to 'System.Guid'. DataException parsing column0 weatheralertsourceid.",
+    "root_cause_boundary": "PostgreSQL source identifier materialization into Guid model in WeatherAlertSourceRepository.GetSourcesByDepartmentIdAsync. No repaired binary or schema change has been deployed."
+  },
+  "restoration": {
+    "exact_failed_new_row_privately_backed_up": true,
+    "private_backup_sha256": "ba1c5cb2ee1900bfa473fbc3c545a62060ec28afdb2338e96e1548e7fc14a344",
+    "exact_json_equality_guard": true,
+    "only_failed_new_row_removed": true,
+    "prior_department_source_count_restored": 0,
+    "saved_disabled_notification_policy_preserved": true,
+    "normal_settings_page_loaded_again": true,
+    "providers_activated": false
+  },
+  "bigboard_forecast_check": {
+    "normal_ui_widget_added": true,
+    "actual_result": "API key not configured",
+    "only_new_weather_widget_removed_through_normal_UI": true,
+    "existing_widgets_preserved": true,
+    "edit_mode_exited": true,
+    "forecast_success_claimed": false
+  },
+  "limits": [
+    "Raw prepared source007is investigation evidence only; it must not be presented as a successfully saved source.",
+    "No new source remains, no live alert was received, no weather auto-message or call note was created.",
+    "Manage Zones and alert workflow are not yet recorded. Guid-backed source and zone readback must be repaired and verified before relying on them.",
+    "A real forecast-provider credential is separately needed for Big Board current/forecast weather."
+  ],
+  "git_mutations": 0,
+  "original_Core_checkout_modified": false
+}

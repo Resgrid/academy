@@ -1,0 +1,68 @@
+{
+  "training_only": true,
+  "department_id": 51,
+  "policy": {
+    "weather_alerts_enabled": false,
+    "minimum_severity": "Moderate",
+    "auto_message_severities_enabled": [],
+    "auto_message_schedule": [
+      {
+        "severity": "Extreme",
+        "enabled": false,
+        "start_hour": 18,
+        "end_hour": 6
+      },
+      {
+        "severity": "Severe",
+        "enabled": false,
+        "start_hour": 0,
+        "end_hour": 24
+      },
+      {
+        "severity": "Moderate",
+        "enabled": false,
+        "start_hour": 0,
+        "end_hour": 24
+      },
+      {
+        "severity": "Minor",
+        "enabled": false,
+        "start_hour": 0,
+        "end_hour": 24
+      },
+      {
+        "severity": "Unknown",
+        "enabled": false,
+        "start_hour": 0,
+        "end_hour": 24
+      }
+    ],
+    "excluded_events": [
+      "TRAINING ONLY - Practice alert"
+    ],
+    "call_integration_enabled": false
+  },
+  "saved_and_reopened": true,
+  "retained_sources": [],
+  "source_creation_failed_and_exact_new_row_restored": true,
+  "replay_steps": [
+    "Weather Alerts > Settings: prepare the retained display, delivery-hour, exclusion and call-context values. Keep global alerts, all severity auto-messages and call integration disabled.",
+    "Save Settings and reopen the page to inspect the retained policy.",
+    "The source creation is blocked by the documented PostgreSQL Guid materialization failure. Do not recreate it until the consistent runtime repair is verified."
+  ],
+  "qualified_video": false,
+  "policy_threshold_roundtrip_recorded_20261102": {
+    "normal_ui": true,
+    "initial": "Moderate",
+    "changed_to": "Severe",
+    "saved_and_reloaded_changed_threshold": true,
+    "restored": "Moderate",
+    "saved_success_message_observed": true,
+    "final_reload_verified": true,
+    "all_severity_auto_messages_remain_disabled": true,
+    "global_alerts_and_call_context_remain_disabled": true,
+    "sources_added_or_activated": false,
+    "raw_manifest": "captures/expansion/core-weather-alert-policy-20261102/manifest.json",
+    "source_proposal": "expansion/plans/core-weather-alert-policy-source-20261102"
+  }
+}

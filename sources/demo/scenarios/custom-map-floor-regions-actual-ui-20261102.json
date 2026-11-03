@@ -1,0 +1,64 @@
+{
+  "map": {
+    "indoormapid": "d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+    "departmentid": 51,
+    "name": "TRAINING ONLY - Community coordination centre",
+    "description": "Fictional floor-plan exercise for community response, SAR, security, contractors and industrial teams. Not a real building or operational plan.",
+    "centerlatitude": 39.7394113,
+    "centerlongitude": -104.9916387,
+    "boundsnelat": 39.7399063,
+    "boundsnelon": -104.9906731,
+    "boundsswlat": 39.7389163,
+    "boundsswlon": -104.9926043,
+    "maptype": 0,
+    "boundsgeojson": "{\"type\":\"Polygon\",\"coordinates\":[[[-104.992604,39.738916],[-104.992604,39.739906],[-104.990673,39.739906],[-104.990673,39.738916],[-104.992604,39.738916]]]}"
+  },
+  "floor": {
+    "indoormapfloorid": "f48970aa-7083-4dce-a74d-be86b88e2cec",
+    "indoormapid": "d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+    "name": "TRAINING ONLY - Ground floor",
+    "floororder": 0,
+    "layertype": 0,
+    "istiled": false,
+    "imagecontenttype": "image/png",
+    "sourcefilesize": 55672,
+    "opacity": 0.8
+  },
+  "zones": [
+    {
+      "indoormapzoneid": "f57fb4a2-0a0f-47ab-9c28-b06683ba26cb",
+      "indoormapfloorid": "f48970aa-7083-4dce-a74d-be86b88e2cec",
+      "name": "Briefing room - training",
+      "description": "Fictional team briefing room for this software exercise.",
+      "zonetype": 0,
+      "pixelgeometry": "[[-104.99245946507183,39.73945344448124],[-104.99245946507183,39.739672070211604],[-104.99190176032602,39.739672070211604],[-104.99190176032602,39.73945344448124]]",
+      "geogeometry": "",
+      "color": "#006f83",
+      "issearchable": true,
+      "isdispatchable": false
+    }
+  ],
+  "training_only": true,
+  "department_id": 51,
+  "recorded_ui": "Core Custom Maps / Layers / Region Editor",
+  "image": "demo/scenarios/assets/community-centre-ground-floor-training-20261102.png",
+  "image_sha256": "bb89a645c923bacd054e17f004de226e5b525d9f8ef3a3cc3c2d49a2422978f0",
+  "replay_steps": [
+    "Use Mapping > Custom Maps > New Custom Map; choose Indoor, the retained fictional name and description.",
+    "Draw the actual intended rectangle and choose its centre through the UI, then Save and verify the new Indoor row. Use the supplied coordinates only as historical fictional observations, not as a real site plan.",
+    "Layers: use floor name TRAINING ONLY - Ground floor, order0, Floor Plan; select the supplied PNG with the normal file chooser and Add Layer.",
+    "Verify Has Image Yes and Tiled No, then open Region Editor and wait for the actual image.",
+    "Draw a rectangle within Briefing room. Name Briefing area - training, Type Room, Color#3388ff, Description Fictional team briefing room for this software exercise., Searchable true, Dispatchable true. Save Region.",
+    "After reload select the actual polygon, not the list label, to reopen saved properties.",
+    "Rename Briefing room - training, Color#006f83, Searchable true, Dispatchable false; Save Region. Reopen polygon and verify teal, saved values and missing Dispatchable badge.",
+    "Return to the intended map Edit and verify the saved type/name/description/bounds; do not Save a duplicate."
+  ],
+  "scope_limits": [
+    "No incident dispatched and no actual dispatch search or indoor tracking demonstrated.",
+    "No tiling, deletion, beacon position, external import, extra floors or real building layout claimed.",
+    "Fresh IDs and timestamps differ on replay.",
+    "The schematic is self-authored fictional training imagery and does not represent the background buildings."
+  ],
+  "recording_quality_note": "Wait for actual page animation opacity1 and complete map/image load before screenshots. Final bounds capture021 replaces fading019; accepted rendered master is take02. Source pixels are unchanged.",
+  "qualified_video": "expansion/rendered/core-custom-map-floor-regions-take-02/qualification.json"
+}

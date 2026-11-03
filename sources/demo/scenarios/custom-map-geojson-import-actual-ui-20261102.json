@@ -1,0 +1,77 @@
+{
+  "map_id": "d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+  "floor": {
+    "indoormapfloorid": "8e7a7607-f6e8-4e0c-a87f-95fef2df5a26",
+    "indoormapid": "d15a22c9-6e52-4069-a6df-ae8b1d23e3fe",
+    "name": "TRAINING ONLY - GIS import",
+    "floororder": 10,
+    "layertype": 2,
+    "istiled": false,
+    "imagecontenttype": "image/png",
+    "sourcefilesize": 55672,
+    "opacity": 0.8
+  },
+  "zones": [
+    {
+      "indoormapzoneid": "f390b370-8040-49f6-9500-394833f3bfab",
+      "indoormapfloorid": "8e7a7607-f6e8-4e0c-a87f-95fef2df5a26",
+      "name": "Training room - import",
+      "description": "TRAINING ONLY - Fictional software exercise, not a real building region.",
+      "zonetype": 0,
+      "pixelgeometry": "[[-104.99185113,39.7396786],[-104.99129108,39.7396786],[-104.99129108,39.739441],[-104.99185113,39.739441]]",
+      "geogeometry": "",
+      "color": "#d47a00",
+      "issearchable": false,
+      "isdispatchable": false
+    },
+    {
+      "indoormapzoneid": "2d15bb47-4cd2-4661-8bae-d6aae386b99d",
+      "indoormapfloorid": "8e7a7607-f6e8-4e0c-a87f-95fef2df5a26",
+      "name": "Equipment - import",
+      "description": "TRAINING ONLY - Fictional software exercise, not a real building region.",
+      "zonetype": 0,
+      "pixelgeometry": "[[-104.99123315,39.7396786],[-104.9908276,39.7396786],[-104.9908276,39.739441],[-104.99123315,39.739441]]",
+      "geogeometry": "",
+      "color": "#3388ff",
+      "issearchable": false,
+      "isdispatchable": false
+    }
+  ],
+  "training_only": true,
+  "department_id": 51,
+  "source_map_recipe": "demo/scenarios/custom-map-floor-regions-actual-ui-20261102.json",
+  "geojson_file": "demo/scenarios/assets/community-centre-regions-training-20261102.geojson",
+  "floor_image": "demo/scenarios/assets/community-centre-ground-floor-training-20261102.png",
+  "recorded_import": {
+    "count": 1,
+    "source_file_displayed": "geojson-import.json",
+    "type": "GeoJSON",
+    "status": "Complete",
+    "date_displayed": "11/3/2026 12:38 AM",
+    "error": ""
+  },
+  "initial_zone_defaults": {
+    "type": 99,
+    "colour": "#3388ff",
+    "searchable": true,
+    "dispatchable": true
+  },
+  "replay_steps": [
+    "Use the existing fictional custom map and preserve its ground-floor layer and room.",
+    "Create one separate image-backed Data Layer named TRAINING ONLY - GIS import, Order10. Use the supplied schematic image. Verify the new saved row and resolve its fresh ID through the UI.",
+    "Open Import for the intended map. Explicitly select the GIS layer and the supplied GeoJSON file, then Import once.",
+    "Inspect Complete history, then open Region Editor for the target layer and inspect both names and polygons.",
+    "Select each polygon to review properties. For Training room - import: TypeRoom, Color#d47a00, Searchablefalse, Dispatchablefalse. Save and reopen.",
+    "For Equipment - import: TypeRoom, Color#3388ff, Searchablefalse, Dispatchablefalse. Save and reopen.",
+    "Verify both names, geometry and absence of Dispatchable badges; reopen Import History. The new form resets to the first layer, so select the intended target before each subsequent import.",
+    "Do not import again merely to refresh a capture; fresh recordings need their own scenario and duplicate review. Source017is an unsaved form replay cancelled without a duplicate layer."
+  ],
+  "limits": [
+    "GeoJSON polygon import only; no KML/KMZ, line/point, deduplication, live dispatch, automatic sync or failed-import recovery verified.",
+    "The diagram and polygons are fictional and do not describe the real background buildings.",
+    "Fresh IDs and timestamps differ on replay."
+  ],
+  "geojson_file_sha256": "fc4e776e31f7f6ecfc231b59e767ec13b422e53ede7cb676648fc75fed20ea59",
+  "floor_image_sha256": "bb89a645c923bacd054e17f004de226e5b525d9f8ef3a3cc3c2d49a2422978f0",
+  "qualified_video": "expansion/rendered/core-custom-map-geojson-import-take-01/qualification.json"
+}

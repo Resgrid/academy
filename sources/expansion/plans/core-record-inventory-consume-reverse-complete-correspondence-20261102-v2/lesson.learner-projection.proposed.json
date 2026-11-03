@@ -1,0 +1,244 @@
+{
+  "id": "core-record-inventory-consume-reverse",
+  "title": "Record inventory use and reverse an incorrect entry",
+  "app": "Core",
+  "summary": "Consume two training battery packs from a saved Work draft, verify the stock decrease, explicitly reverse the usage, and inspect the retained ledger and evidence history.",
+  "audience": [
+    "Department administrators",
+    "Inventory managers",
+    "Records officers"
+  ],
+  "prerequisites": [
+    "Authorized Records and inventory access in a fictional training department.",
+    "The saved fictional Work draft and ordinary training batteries, Station location and ACADEMY-LOT-A."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Start with the intended saved record",
+      "route": "/User/Records",
+      "capture_refs": [
+        "003-saved-work-draft-and-inventory-usage-action"
+      ],
+      "required_labels": [
+        "Draft",
+        "Work\nDraft",
+        "TRAIN-INV-20261102",
+        "Inventory usage"
+      ],
+      "narration": "Begin on the saved fictional Work draft. Check its External I D, training inventory reference, location and narrative so this stock movement belongs to the intended exercise. This record remains Draft throughout the lesson. Select Inventory usage on the record’s top action bar. Connecting usage to a record keeps the supplies used for an assignment alongside the record that explains the work.",
+      "practice": "Start with the intended saved record",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Verify the source stock before using it",
+      "route": "/User/Records",
+      "capture_refs": [
+        "005-battery-stock-before-consumption"
+      ],
+      "required_labels": [
+        "On hand",
+        "Items",
+        "Academy training batteries",
+        "Filter",
+        "Station",
+        "14.000000",
+        "5.000000"
+      ],
+      "narration": "Check the current baseline in Inventory, under On hand. Choose Academy training batteries in Items and select Filter. The Station row has fourteen packs, while Unit has five and Personnel has zero. These are separate locations. This exercise will consume from Station explicitly, so compare against that row. Recording the starting quantity gives you a concrete balance to verify after saving and after correcting the entry.",
+      "practice": "Verify the source stock before using it",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Read the immediate stock-impact controls",
+      "route": "/User/Records",
+      "capture_refs": [
+        "004-recorded-usage-empty-and-immediate-stock-warning"
+      ],
+      "required_labels": [
+        "Inventory usage",
+        "Recorded usage",
+        "Usage type",
+        "Used",
+        "Existing consumption transaction ID (optional)"
+      ],
+      "narration": "Back in Inventory usage, read the notice above Recorded usage. Saving changes stock immediately, and those changes remain if a draft or amendment is abandoned. A correction requires an explicit reversal. Keep Usage type set to Used for these training batteries. Leave Existing consumption transaction I D blank because we are creating a new consumption. That optional field instead attaches a completed transaction without consuming the same stock again. The controlled-item notice describes a separate independent witness process.",
+      "practice": "Read the immediate stock-impact controls",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Choose the item, location, lot and quantity",
+      "route": "/User/Records",
+      "capture_refs": [
+        "006-two-pack-used-consumption-prepared"
+      ],
+      "required_labels": [
+        "New consumption",
+        "Items",
+        "Academy training batteries (packs)",
+        "Source location",
+        "Station",
+        "Lots",
+        "Academy training batteries · ACADEMY-LOT-A",
+        "Assets",
+        "Amount",
+        "2",
+        "Note",
+        "Save usage"
+      ],
+      "narration": "Under New consumption, select Academy training batteries, with packs as the unit of measure. Choose Station as Source location and Academy Lot A under Lots. Assets stays blank for this ordinary stock item. Enter two as Amount and add a clear training-only Note about the fictional radio exercise. The source help explains the responding-unit and station fallback; choosing Station explicitly makes our intended source unambiguous. Review those fields, then select Save usage once.",
+      "practice": "Choose the item, location, lot and quantity",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Verify both the usage record and reduced stock",
+      "route": "/User/Records",
+      "capture_refs": [
+        "007-saved-two-pack-usage-and-ledger-link",
+        "008-station-balance-reduced-to-twelve"
+      ],
+      "required_labels": [
+        "Usage saved and supporting evidence captured.",
+        "Recorded usage",
+        "Used",
+        "+2 packs",
+        "Ledger entry",
+        "12.000000"
+      ],
+      "narration": "The page returns Usage saved and supporting evidence captured. Recorded usage now contains the batteries, Used, plus two packs, the note and a Ledger entry link. The positive number here describes the amount used. Check On hand again: Station has fallen from fourteen to twelve packs. The Unit row still has five. Compare the saved usage row with the physical stock balance so you can see that this is consumption, rather than a stock increase.",
+      "practice": "Verify both the usage record and reduced stock",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Prepare an explicit full reversal",
+      "route": "/User/Records",
+      "capture_refs": [
+        "007-saved-two-pack-usage-and-ledger-link",
+        "009-explicit-full-reversal-reason-prepared"
+      ],
+      "required_labels": [
+        "Reverse usage",
+        "Reason for correction",
+        "Existing witnessed reversal transaction ID (optional)"
+      ],
+      "narration": "To correct this exercise, expand Reverse usage on the recorded row. The help says this is a full reversal that keeps the original usage in history. Enter a Reason for correction explaining that the two-pack exercise quantity was entered in error and should be restored. Leave the optional witnessed reversal transaction I D blank for this ordinary training item. Select Reverse usage. Correcting an amount or item would require reversing the old usage and then recording its replacement; this lesson demonstrates the reversal.",
+      "practice": "Prepare an explicit full reversal",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Read the correction history and restored balance",
+      "route": "/User/Records",
+      "capture_refs": [
+        "010-saved-positive-and-negative-usage-history",
+        "011-station-stock-restored-to-fourteen"
+      ],
+      "required_labels": [
+        "Reversed",
+        "+2 packs",
+        "-2 packs",
+        "Reverses usage 45dfb3b4-4882-41e7-bb2e-1303b463aed1",
+        "14.000000",
+        "5.000000"
+      ],
+      "narration": "The saved history retains the original plus-two-pack row and marks it Reversed. A second row shows minus two packs, the correction reason and a reference to the original usage. The original entry was not silently overwritten. Return to On hand and verify that Station is back to fourteen packs. Unit still has five and Personnel still has zero. This readback establishes the result of the full reversal in this fictional exercise.",
+      "practice": "Read the correction history and restored balance",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Trace the reversal into the ledger",
+      "route": "/User/Records",
+      "capture_refs": [
+        "010-saved-positive-and-negative-usage-history",
+        "012-reversal-ledger-adjustment-and-record-reference"
+      ],
+      "required_labels": [
+        "Ledger entry",
+        "Adjust",
+        "Academy training batteries",
+        "Station",
+        "2.000000",
+        "Details"
+      ],
+      "narration": "Open the reversal’s Ledger entry link. The movement detail shows Adjust for the training batteries at Station, with a positive quantity of two, the correction reason and a reference to this record. The record’s negative usage correction and the ledger’s stock-restoring quantity describe different sides of the same action. Use the linked ledger detail when reconciling why a balance changed, rather than relying only on a current quantity.",
+      "practice": "Trace the reversal into the ledger",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Inspect the current and superseded evidence",
+      "route": "/User/Records",
+      "capture_refs": [
+        "003-saved-work-draft-and-inventory-usage-action",
+        "013-current-two-entry-inventory-evidence"
+      ],
+      "required_labels": [
+        "Supporting evidence",
+        "2 inventory usage entries",
+        "Current Draft capture",
+        "1 inventory usage entry",
+        "Superseded Draft capture",
+        "Checksum"
+      ],
+      "narration": "Return to the record and open Supporting evidence. The current Draft capture now contains two inventory usage entries. The earlier one-entry Draft capture remains beside it as Superseded. Each has its own captured time, source version and Checksum. The page explains that a correction creates a new capture and keeps the earlier evidence in history. The record is still a draft; no finalization or signature was performed in this example.",
+      "practice": "Inspect the current and superseded evidence",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "10",
+      "title": "Use a traceable supply workflow in your department",
+      "route": "/User/Records",
+      "capture_refs": [
+        "013-current-two-entry-inventory-evidence",
+        "004-recorded-usage-empty-and-immediate-stock-warning"
+      ],
+      "required_labels": [
+        "Inventory usage",
+        "Recorded usage",
+        "Current Draft capture"
+      ],
+      "narration": "Use this same record, verify and correct process for the supplies your department manages. Search-and-rescue teams and security departments can track battery use; wildland contractors and industrial emergency teams can connect their consumables to operational records. Community paramedicine and mental health response teams, fire departments and E M S organizations can use the same permitted inventory controls. For controlled items, follow the independent witness notice shown in the form. Keep the assignment record, stock balance and retained correction history consistent.",
+      "practice": "Use a traceable supply workflow in your department",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Link supply use to the assignment record while preserving a traceable correction and accurate on-hand stock."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Link supply use to the assignment record while preserving a traceable correction and accurate on-hand stock."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Link supply use to the assignment record while preserving a traceable correction and accurate on-hand stock."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Link supply use to the assignment record while preserving a traceable correction and accurate on-hand stock."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Link supply use to the assignment record while preserving a traceable correction and accurate on-hand stock."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Link supply use to the assignment record while preserving a traceable correction and accurate on-hand stock."
+    }
+  ],
+  "scope_limits": [
+    "This exercise saves ordinary training-item consumption and a full explicit reversal on a Draft Work record. Controlled-item independent witness approval, attaching existing transactions, replacement consumption, finalization and downloading an evidence manifest are separate paths and are not claimed as executed."
+  ]
+}

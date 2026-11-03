@@ -1,0 +1,74 @@
+{
+  "date": "2026-11-02",
+  "fictional_only": true,
+  "department_id": 51,
+  "normal_ui_only": true,
+  "account": "Kelly Severide",
+  "record": {
+    "id": "83ee6c84-2a0e-4d72-87c3-1ff21ae8cf04",
+    "draft_reference": "D-SK62A",
+    "definition": "Work",
+    "external_id": "TRAIN-INV-20261102",
+    "start_department_local": "2026-11-02T14:00",
+    "end_department_local": "2026-11-02T14:30",
+    "location": "TRAINING ONLY - Community base",
+    "narrative": "TRAINING ONLY - Fictional stock-use and correction exercise. Demonstrate record-linked training battery consumption and reversal; no real incident or patient information.",
+    "participant": "Matthew Casey",
+    "state": "Draft"
+  },
+  "item": {
+    "id": "e13e06d8-e603-42bc-9ef8-4843ed017d3e",
+    "name": "Academy training batteries",
+    "unit_of_measure": "packs",
+    "lot": "ACADEMY-LOT-A",
+    "source_location": "Station",
+    "usage_type": "Used"
+  },
+  "consumption": {
+    "quantity": 2,
+    "note": "TRAINING ONLY - Two packs used for fictional radio exercise",
+    "usage_id": "45dfb3b4-4882-41e7-bb2e-1303b463aed1",
+    "transaction_id": "bc576804-32f7-4c93-857e-0f08b575b23c",
+    "saved_result": "Usage saved and supporting evidence captured.",
+    "recorded_usage_amount": "+2 packs",
+    "station_stock_before": 14,
+    "station_stock_after": 12
+  },
+  "reversal": {
+    "reason": "TRAINING ONLY - Exercise quantity entered in error; restore the two packs",
+    "existing_witnessed_transaction_id": null,
+    "transaction_id": "f3ce2722-087b-4c66-95cd-5cfdce36f05f",
+    "original_usage_retained": true,
+    "original_marked_reversed": true,
+    "recorded_usage_amount": "-2 packs",
+    "ledger_movement": "Adjust",
+    "ledger_quantity": 2,
+    "station_stock_restored": 14,
+    "unit_stock_unchanged": 5,
+    "personnel_stock_unchanged": 0
+  },
+  "evidence": {
+    "current_artifact_id": "f44269f1-4c57-4a58-92c5-ca216d1e335c",
+    "current_entries": 2,
+    "current_label": "Current Draft capture",
+    "current_checksum": "b4f1abebaed6f4d5bafe82d3b6b19efde0342d942712a2a025d00bf8af16215a",
+    "superseded_artifact_id": "54f4869d-1b53-44ff-8c41-314628657c7a",
+    "superseded_entries": 1,
+    "superseded_label": "Superseded Draft capture"
+  },
+  "replay": [
+    "Create and save a separate Work draft with the above fictional inputs; obtain its new record ID/reference from the saved page.",
+    "Verify the current stock for Academy training batteries in Inventory. The recorded fixture begins with Station14, Unit5 and Personnel0.",
+    "From the saved draft open Inventory usage; retain Used, choose the batteries, Station and ACADEMY-LOT-A, enter2and the note, then Save usage once.",
+    "Verify the positive usage row, evidence-saved message and actual station on-hand decrease to12.",
+    "Expand Reverse usage on that row, enter the reason, leave the optional witnessed transaction blank for this ordinary test item, and submit the reversal once.",
+    "Verify both retained usage entries, original Reversed label, negative correction amount and restored station on-hand14.",
+    "Open the reversal ledger link and then the record's Supporting evidence; inspect the current two-entry capture and retained superseded one-entry capture."
+  ],
+  "limitations": [
+    "The record remains Draft; no finalization, signature or abandonment is claimed.",
+    "Controlled-item witness approval and attaching a pre-existing consumption/reversal transaction are distinct paths and were not executed.",
+    "The displayed quantities are fictional test stock; no real inventory or patient information is involved.",
+    "The new record, transaction and artifact IDs will differ on a fresh replay; select objects by their fictional names and read back the saved IDs."
+  ]
+}

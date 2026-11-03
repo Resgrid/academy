@@ -1,0 +1,250 @@
+{
+  "id": "core-custom-map-floor-regions",
+  "title": "Create an indoor map, upload a floor plan and manage room regions",
+  "app": "Core",
+  "summary": "Save an indoor custom map and its bounds, upload a fictional floor plan, draw a named room, and verify a saved colour and dispatch-availability change.",
+  "audience": [
+    "Department administrators",
+    "Mapping administrators",
+    "Site and operations supervisors"
+  ],
+  "prerequisites": [
+    "Authorized custom-map administration in your department.",
+    "An appropriate floor-plan image and accurate site bounds; use the supplied fictional image for this exercise."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find custom maps and start an indoor map",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "001-custom-maps-list-and-type-filters",
+        "002-prepared-indoor-map-type-name-and-description"
+      ],
+      "required_labels": [
+        "Custom Maps",
+        "New Custom Map",
+        "Map Type",
+        "Indoor",
+        "Name",
+        "Description"
+      ],
+      "narration": "From Mapping, open Custom Maps and select New Custom Map. The list separates Indoor, Outdoor, Event and Custom maps. Choose Indoor for this exercise. Enter a recognizable Name and Description so administrators can identify the intended site. Here we use a fictional community coordination centre. A custom map gives your team a place to keep a floor-plan image and named areas together.",
+      "practice": "Find custom maps and start an indoor map",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Draw the site bounds and save the map",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "003-full-bounds-map-and-rectangle-control",
+        "005-prepared-rectangle-bounds-before-saving",
+        "006-saved-indoor-custom-map-row-and-layers-action"
+      ],
+      "required_labels": [
+        "Draw Bounds",
+        "Draw Rectangle",
+        "Save",
+        "Custom Maps",
+        "Layers"
+      ],
+      "narration": "Scroll to Draw Bounds. Use the Draw Rectangle tool, choose one corner and then the opposite corner. The completed blue rectangle shows the extent prepared for the map. The page also explains that clicking the map sets its centre. Use accurate boundaries for your own site; this software exercise uses a fictional schematic. Select Save, then check the returned row for the intended name and Indoor type.",
+      "practice": "Draw the site bounds and save the map",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Prepare a floor layer and select its image",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "006-saved-indoor-custom-map-row-and-layers-action",
+        "007-add-floor-layer-name-order-type-and-image-options",
+        "008-ground-floor-image-selected-before-add-layer"
+      ],
+      "required_labels": [
+        "Add Layer",
+        "Layer Name",
+        "Order",
+        "Type",
+        "Layer Image",
+        "Floor Plan"
+      ],
+      "narration": "Select Layers on the saved map. Give the layer a clear Layer Name, keep Order at zero for this first floor, and choose Floor Plan as its Type. Under Layer Image, use Choose File to select the training floor-plan image. The page notes that images larger than two thousand forty-eight pixels are automatically tiled. Our smaller image keeps this example focused on an ordinary floor-plan upload.",
+      "practice": "Prepare a floor layer and select its image",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Verify the saved floor and rendered plan",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "008-ground-floor-image-selected-before-add-layer",
+        "009-saved-ground-floor-image-row",
+        "010-uploaded-floor-plan-rendered-in-region-editor"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - Ground floor",
+        "Has Image",
+        "Tiled",
+        "Region Editor",
+        "Regions",
+        "Region Properties"
+      ],
+      "narration": "Select Add Layer. Check the saved row rather than assuming the file was accepted. It shows the ground floor, FloorPlan, Yes under Has Image, and No under Tiled. Open Region Editor. Wait for the actual floor image to render and zoom until the rooms are readable. The schematic contains a briefing room, training room, equipment store and other fictional team spaces.",
+      "practice": "Verify the saved floor and rendered plan",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Draw a room and complete its properties",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "011-region-editor-rectangle-tool-and-floor-image",
+        "012-prepared-room-region-name-type-search-and-dispatch-controls"
+      ],
+      "required_labels": [
+        "Draw Rectangle",
+        "Region Properties",
+        "Name",
+        "Type",
+        "Room",
+        "Color",
+        "Description",
+        "Save Region"
+      ],
+      "narration": "Use Draw Rectangle in Region Editor to outline the briefing room. When the shape is complete, Region Properties opens beside the plan. Enter Briefing area, followed by training, as the Name. Keep Room as the Type, review Color, and add a short Description. A useful name connects the drawn boundary to an area people can recognize. The shape is still prepared until you select Save Region.",
+      "practice": "Draw a room and complete its properties",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Save and reopen the room availability settings",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "012-prepared-room-region-name-type-search-and-dispatch-controls",
+        "014-reopened-persisted-room-properties-and-boundary"
+      ],
+      "required_labels": [
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region",
+        "Briefing area - training",
+        "Room"
+      ],
+      "narration": "This first room has Searchable in dispatch and Dispatchable checked. Review those two choices deliberately, then select Save Region. After the page reloads, the room appears under Regions with a Dispatchable badge. Select its boundary on the plan to reopen the saved properties. Verify the name, Room type and both checked options. This lesson verifies those saved settings; it does not dispatch an incident or test a dispatch search.",
+      "practice": "Save and reopen the room availability settings",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Change the name, colour and dispatch availability",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "015-prepared-name-colour-and-dispatch-availability-update"
+      ],
+      "required_labels": [
+        "Name",
+        "Color",
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region"
+      ],
+      "narration": "With the saved room selected, change its name to Briefing room, followed by training. Choose the teal Color shown in the form. Leave Searchable in dispatch checked and clear Dispatchable, then select Save Region. These changes affect the same saved region. Before saving, the list can still display the previous name and badge, so use the returned view to check what actually persisted.",
+      "practice": "Change the name, colour and dispatch availability",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Verify the updated room and its boundary",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "016-reloaded-renamed-room-without-dispatchable-badge",
+        "017-reopened-teal-room-and-saved-availability-options"
+      ],
+      "required_labels": [
+        "Regions",
+        "Briefing room - training",
+        "Room",
+        "Color",
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region"
+      ],
+      "narration": "After reload, the boundary is teal, the list has the new Briefing room name, and the Dispatchable badge is gone. Select the boundary again. Region Properties now shows the saved teal Color, Searchable in dispatch checked, and Dispatchable unchecked. The floor image and boundary remain in place. This readback confirms the change beyond the form on which you prepared it.",
+      "practice": "Verify the updated room and its boundary",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Reopen the map and check its stored extent",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "006-saved-indoor-custom-map-row-and-layers-action",
+        "020-fully-loaded-reopened-indoor-map-details",
+        "021-fully-loaded-reopened-geographic-bounds",
+        "017-reopened-teal-room-and-saved-availability-options"
+      ],
+      "required_labels": [
+        "Edit Custom Map",
+        "Indoor",
+        "Name",
+        "Description",
+        "Draw Bounds",
+        "Edit Layers"
+      ],
+      "narration": "Return to the map list and open Edit for the intended map. The Indoor type, Name and Description are retained. Scroll to Draw Bounds to see the stored rectangle on the background map. Check that extent against your own permitted site plan before relying on it. In this recording the floor image is a fictional schematic, and does not represent the real buildings shown on the background map.",
+      "practice": "Reopen the map and check its stored extent",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "10",
+      "title": "Use named areas across department types",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "017-reopened-teal-room-and-saved-availability-options"
+      ],
+      "required_labels": [
+        "Briefing room - training",
+        "Room",
+        "Region Properties"
+      ],
+      "narration": "The same workflow can support community paramedicine and mental health response teams, search-and-rescue organizations, security companies, wildland contractors, industrial emergency teams, fire and E M S departments. Keep an appropriate site image, name useful areas, and verify the saved region settings after each change. A floor plan and room boundary provide shared location context; they do not by themselves establish live indoor personnel tracking. Select the boundary to review Region Properties before the next update.",
+      "practice": "Use named areas across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Give staff a recognizable named area on a permitted site plan, then verify its saved boundaries and availability settings."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Give staff a recognizable named area on a permitted site plan, then verify its saved boundaries and availability settings."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Give staff a recognizable named area on a permitted site plan, then verify its saved boundaries and availability settings."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Give staff a recognizable named area on a permitted site plan, then verify its saved boundaries and availability settings."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Give staff a recognizable named area on a permitted site plan, then verify its saved boundaries and availability settings."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Give staff a recognizable named area on a permitted site plan, then verify its saved boundaries and availability settings."
+    }
+  ],
+  "scope_limits": [
+    "Actual indoor-map creation, geographic rectangle, image upload/render, room creation, saved searchable/dispatchable booleans, rename/colour/dispatchability update and map/room readbacks. No automatic indoor tracking, beacon positioning, live dispatch, dispatch search execution, image tiling, deletion or external floor-plan import is demonstrated. The schematic is fictional and does not describe the real background buildings."
+  ]
+}

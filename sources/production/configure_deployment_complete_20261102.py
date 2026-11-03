@@ -1,0 +1,63 @@
+"""Create strictly pinned setup/roster correspondence inputs; no review is inferred."""
+from pathlib import Path
+import hashlib
+import json
+
+S=Path(__file__).resolve().parents[1]
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+name='core-deployment-setup-roster'
+base=S/'expansion/plans/core-deployment-setup-roster-source-20261102-v2'
+cfg=dict(name=name,source_folder=base.name,
+    source_sha256=sha(base/'lesson.candidate.json'),
+    captures_sha256=sha(base/'captures.reviewed.json'),
+    audio_sha256=sha(S/'expansion/audio'/f'{name}.m4a'),
+    captions_sha256=sha(S/'expansion/audio'/f'{name}.actual.corrected.srt'),
+    qa_sha256=sha(S/'expansion/audio'/f'{name}.actual.qa.json'),
+    cues=80,additional_labels={},scene_apps={},supporting_applications=[],
+    context_notes=['The deployment is Planned. No successful status transition is inferred.',
+                   'Screen015 is later menu-navigation footage; screen002 is the actual pre-create list.',
+                   'Free-text equipment is not an inventory issue. Seat/certification remain blank.',
+                   'All selected original screens were personally inspected; actual encoded review remains separate.'],
+    spans=[['01',1,1,15],['01',2,8,2],['02',9,17,3],['03',18,27,3],
+           ['04',28,34,4],['04',35,37,5],['05',38,38,5],['05',39,46,23],['05',47,47,26],
+           ['06',48,49,6],['06',50,53,7],['07',54,60,7],['07',61,63,8],
+           ['08',64,64,8],['08',65,72,9],['09',73,80,9]],
+    refs={
+      1:{'Deployments':'Deployments'},
+      2:{},3:{},4:{},5:{},6:{},7:{'New Deployment':'New Deployment'},8:{},
+      9:{'Name *':'Name'},10:{'Finance mode':'Finance mode'},
+      11:{'Operational only':'Operational only'},12:{'Operational only keeps time and expenses for the record; cost recovery feeds a reimbursement claim; billable feeds a customer invoice.':'Cost recovery'},
+      13:{'Operational only':'Operational only'},14:{'Contact':'Contact','Community Centre (fictional)':'Community Centre'},
+      15:{'Call ID':'Call I D'},16:{},17:{'Notes':'Notes'},
+      18:{'Window':'Window'},19:{'Window':'fourth'},20:{'Jurisdiction':'Jurisdiction','Home country':'home','Host country':'host'},
+      21:{'United States':'United States'},22:{'Time zone':'Time zone','Currency':'Currency'},
+      23:{'Time zone':'accounting time zone'},24:{'Time zone':'department’s time zone'},
+      25:{'Time zone':'Central Time','Currency':'U S D'},26:{'Out of province / state':'Out of province or state','Travel via air':'Travel via air'},27:{},
+      28:{'Agency identifiers':'Agency identifiers'},29:{'Incident #':'Incident number','Service request #':'Service request number','Resource order #':'Resource order number','Request #':'Request'},
+      30:{'Cost code':'Cost code','Point of hire':'Point of hire'},31:{},32:{'Agency identifiers':'fields'},33:{},
+      34:{'Save':'Save'},35:{'Saved.':'Saved','Planned':'Planned'},
+      36:{'Window':'window','Contact':'contact','Jurisdiction':'jurisdiction','Currency':'currency'},37:{},
+      38:{'Edit':'Edit'},39:{'Window':'Window'},40:{'Window':'fourth'},41:{'Max days':'Max days','3':'three'},
+      42:{'Max days':'maximum-days value'},43:{'Max days':'deployment window'},44:{'Window':'explicit end'},45:{},46:{},47:{'Cancel':'Cancel'},
+      48:{'Roster':'Roster','TRAINING ONLY - Community van 20261028':'training community van'},
+      49:{'Call sign':'Call sign','CS-VAN-1':'C S van one','Add unit':'Add unit'},
+      50:{'CS-VAN-1':'call sign'},51:{'Crew':'Crew','0':'zero'},52:{'Add unit':'Adding a unit'},53:{'Unit':'unit'},
+      54:{'Personnel':'Personnel','Matthew Casey':'Matthew Casey','Member':'Member'},55:{'Unit':'Unit'},
+      56:{'Seat':'Seat','Certification':'Certification'},57:{'Seat':'seat','Certification':'certification'},58:{'Certification':'expirations'},
+      59:{'Seat even when a requirement fails':'Seat even when a requirement fails'},60:{'Add member':'Add member'},
+      61:{'Matthew Casey':'Casey','Unit':'unit'},62:{'Crew':'Crew','1':'one'},63:{'Matthew Casey':'personnel assignment'},
+      64:{'Equipment':'Equipment','Demo radio kit':'Demo radio kit','Unit':'unit','Add equipment':'Add equipment'},
+      65:{'Demo radio kit':'kit'},66:{'Issued':'Issued'},67:{'Issued':'no inventory issue'},
+      68:{'Roster':'roster'},69:{'Unit':'unit','Call sign':'call sign','Matthew Casey':'Casey'},70:{'Demo radio kit':'named kit'},
+      71:{},72:{},73:{},74:{},75:{},76:{},77:{'Contact':'contacts','Unit':'unit','Equipment':'equipment'},
+      78:{},79:{'Crew':'people behind the unit count'},80:{'Window':'window'}
+    })
+out=S/'production/deployment_complete_inputs_20261102.json'
+assert not out.exists()
+out.write_text(json.dumps({'setup':cfg},indent=2,ensure_ascii=False)+'\n')
+template=(S/'production/prepare_compensation_static_complete_20261102.py').read_text()
+template=template.replace("CONFIG_FILE=S/'production/compensation_static_complete_inputs_20261102.json'", "CONFIG_FILE=S/'production/deployment_complete_inputs_20261102.json'")
+template=template.replace('1a121260516198301157f3879f76a1003ece42767daa3355e5b61e5fb24ace61',sha(out))
+dest=S/'production/prepare_deployment_complete_20261102.py'
+assert not dest.exists();dest.write_text(template)
+print(json.dumps({'config':out.name,'sha256':sha(out),'review_flags_written':False}))

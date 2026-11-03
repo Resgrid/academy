@@ -1,0 +1,253 @@
+{
+  "id": "core-map-visualizations-saved-review",
+  "title": "Filter, save and reopen a map visualization",
+  "app": "Core",
+  "summary": "Choose a call-demand template, review its date and display settings, filter Investigation calls, save a private view, and verify its retained settings and location completeness.",
+  "audience": [
+    "Department administrators",
+    "Operations and planning supervisors",
+    "Department analysts"
+  ],
+  "prerequisites": [
+    "Authorized access to Map Visualizations and a separate fictional training department.",
+    "Permitted calls with appropriate types, dates and location data for the question you want to review."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose a library starting point",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "001-library-search-for-calls-by-type",
+        "002-selected-template-date-and-time-controls"
+      ],
+      "required_labels": [
+        "Map Visualizations",
+        "Library",
+        "Calls by type",
+        "Customize"
+      ],
+      "narration": "In Map Visualizations, start on Library and search for Calls by type. Read the matching template description: it shows recent calls as dots coloured by call type. Select that result, then open Customize. The heading changes from the earlier Call hot zones view to Calls by type. Choosing a template gives you a starting configuration that you can inspect before saving your own view.",
+      "practice": "Choose a library starting point",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Review the date and time scope",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "002-selected-template-date-and-time-controls"
+      ],
+      "required_labels": [
+        "Date range",
+        "Last 90 days",
+        "Days of the week",
+        "Hours of the day"
+      ],
+      "narration": "Under When, this template has Date range set to Last ninety days. Days of the week and Hours of the day are shown below it. The page explains that leaving those buttons unselected includes every day and hour, using the department time zone. Keep this time scope for the exercise. Check these controls whenever you compare demand, because a different time window answers a different question.",
+      "practice": "Review the date and time scope",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Choose the call type and observe the changed result",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "003-open-call-type-choices-and-unfiltered-map-summary",
+        "004-investigation-filter-and-recomputed-map-summary"
+      ],
+      "required_labels": [
+        "Call types",
+        "Investigation",
+        "17",
+        "82%",
+        "8",
+        "63%"
+      ],
+      "narration": "Scroll within Customize to Which calls and open Call types. The unfiltered view shows seventeen calls and eighty-two percent with a location. Check Investigation, then close the selector. Its button now reads Investigation, and the result changes to eight calls with sixty-three percent having a location. This shows the effect of the selected filter on the same time window. The other visible selectors remain All in this exercise.",
+      "practice": "Choose the call type and observe the changed result",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Distinguish matching activity from mapped activity",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "005-layer-source-and-unlocated-call-summary"
+      ],
+      "required_labels": [
+        "8",
+        "63%",
+        "Calls with a location",
+        "Investigation",
+        "5"
+      ],
+      "narration": "Compare the filtered summary with the map legend. Eight calls match the filter, while the Investigation legend contains five located entries. The summary rounds that location completeness to sixty-three percent. A map shows where located activity appears; its dots do not account for calls that lack a usable location. Check this measure before treating a sparse map as evidence that little work occurred. These numbers describe the fictional recorded dataset.",
+      "practice": "Distinguish matching activity from mapped activity",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Inspect the actual layer display choices",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "005-layer-source-and-unlocated-call-summary",
+        "006-dots-colour-value-and-size-controls"
+      ],
+      "required_labels": [
+        "Layers",
+        "Data",
+        "Calls",
+        "Show as",
+        "Dots",
+        "Color by",
+        "Call type",
+        "Value",
+        "Count",
+        "Opacity",
+        "Dot size"
+      ],
+      "narration": "In Layers, review the enabled Calls layer. Data is Calls, described as one point per call at the call location. Show as is Dots, Color by is Call type, and Value is Count. Opacity and Dot size are separate display controls below these choices. Keep the shown configuration here. Reading the data source and display choices together helps you explain what the symbols represent, rather than judging only their appearance.",
+      "practice": "Inspect the actual layer display choices",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Name the private view and save it",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "006-dots-colour-value-and-size-controls",
+        "007-private-save-name-description-and-sharing-choice"
+      ],
+      "required_labels": [
+        "Save as new",
+        "Save as a new visualization",
+        "Name",
+        "Description (optional)",
+        "Share with the whole department",
+        "Save"
+      ],
+      "narration": "Select Save as new. In Save as a new visualization, enter the fictional name shown here and a Description that records the purpose, date scope and filter. Leave Share with the whole department unchecked for this private exercise. The choice is visible beside the form, so check it deliberately before saving. This walkthrough saves a view for the current user. Select Save.",
+      "practice": "Name the private view and save it",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Verify the saved library entry",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "008-saved-private-visualization-listed-by-name"
+      ],
+      "required_labels": [
+        "Saved visualizations",
+        "My visualizations",
+        "Only visible to you",
+        "TRAINING ONLY - Investigation demand review"
+      ],
+      "narration": "Open Library and check Saved visualizations. Under My visualizations, the named Investigation demand review appears with its description and Only visible to you label. The same saved name is now the page heading. These are returned application results after the save, rather than the unsaved form. Confirm the intended entry and visibility label before using the view again.",
+      "practice": "Verify the saved library entry",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Reopen and verify the retained settings",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "009-reopened-private-view-retains-ninety-day-range",
+        "010-reopened-investigation-filter-and-other-call-filters",
+        "011-reopened-retained-data-and-dot-display-controls"
+      ],
+      "required_labels": [
+        "Customize",
+        "Date range",
+        "Last 90 days",
+        "Call types",
+        "Investigation",
+        "Data",
+        "Dots",
+        "Call type",
+        "Count"
+      ],
+      "narration": "Open the saved visualization in a fresh page and return to Customize. Date range still reads Last ninety days. Scroll to Call types and check that Investigation is retained. Then inspect the layer again: Calls, Dots, Call type and Count remain selected. This reopening check verifies the stored configuration beyond the form where it was prepared. It does not depend on remembering the settings from the earlier screen.",
+      "practice": "Reopen and verify the retained settings",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Read the saved map and its supporting summary",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "012-saved-view-expanded-map-and-investigation-legend",
+        "013-filtered-totals-location-coverage-and-time-summary"
+      ],
+      "required_labels": [
+        "Investigation",
+        "5",
+        "8",
+        "63%",
+        "When calls come in",
+        "Most common call types"
+      ],
+      "narration": "With the side panel closed, read the saved map and Investigation legend together. Scroll below it to see the eight-call total, location percentage, When calls come in grid, and Most common call types summary. The latter still shows Investigation and eight. Response-time cards contain dashes in this view, and the page explains their data and layer requirements. A dash is not a measured zero-minute response. Use the displayed results for the question this view actually answers.",
+      "practice": "Read the saved map and its supporting summary",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "10",
+      "title": "Use repeatable views across department types",
+      "route": "/User/MapVisualizations",
+      "capture_refs": [
+        "013-filtered-totals-location-coverage-and-time-summary",
+        "006-dots-colour-value-and-size-controls",
+        "008-saved-private-visualization-listed-by-name"
+      ],
+      "required_labels": [
+        "When calls come in",
+        "Most common call types",
+        "Calls with a location"
+      ],
+      "narration": "The same process can support community paramedicine and mental health response planning, search-and-rescue activity reviews, security service demand, wildland contractor workload, industrial emergency response, and fire and E M S departments. Choose the permitted call types and time scope relevant to your team. Inspect the display settings, check location completeness, save the intended visibility, and reopen the result. A useful planning view is one whose filters and data limitations you can explain.",
+      "practice": "Use repeatable views across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Save a repeatable filtered view for a permitted planning question, check how much of the matching activity has locations, and verify the settings after reopening."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Save a repeatable filtered view for a permitted planning question, check how much of the matching activity has locations, and verify the settings after reopening."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Save a repeatable filtered view for a permitted planning question, check how much of the matching activity has locations, and verify the settings after reopening."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Save a repeatable filtered view for a permitted planning question, check how much of the matching activity has locations, and verify the settings after reopening."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Save a repeatable filtered view for a permitted planning question, check how much of the matching activity has locations, and verify the settings after reopening."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Save a repeatable filtered view for a permitted planning question, check how much of the matching activity has locations, and verify the settings after reopening."
+    }
+  ],
+  "scope_limits": [
+    "One Calls by type template, last90days, Investigation call filter, Calls/Dots/Call type/Count display and a private saved visualization were actually selected, saved and reopened through the normal UI. This dated training dataset has17unfilteredcalls,82percentlocationcompleteness,8filteredcalls,63percentlocationcompleteness and5locatedInvestigationentries in the legend. No shared-department visibility test, saved update, CSV download, copied-link delivery, response-time result, coverage/routing guarantee, extra layer, tracking or deletion is demonstrated. Normal Mapping entry showed503and was rejected before capture; the independent Map Visualizations workflow shown here completed successfully."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-map-visualizations-saved-review-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-map-visualizations-saved-review-source-20261102/lesson.candidate.json",
+    "sha256": "051e82af51a7641f40733baada06ad5ef6406d1670c8d69f66fb1affaf4b4971"
+  }
+}

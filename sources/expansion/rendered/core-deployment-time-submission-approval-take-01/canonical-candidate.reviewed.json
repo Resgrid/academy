@@ -1,0 +1,231 @@
+{
+  "id": "core-deployment-time-submission-approval",
+  "title": "Submit a deployment time report and verify independent approval",
+  "app": "Core",
+  "summary": "Submit a saved daily time report, inspect the submitter restriction, approve it as a different manager, and verify locked entries and retained expenses.",
+  "audience": [
+    "Department administrators",
+    "Deployment managers",
+    "Time-report approvers"
+  ],
+  "prerequisites": [
+    "Authorized deployment access and two separate permitted training accounts.",
+    "An existing fictional deployment with a saved draft daily time report and an attached training receipt."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review the intended draft report",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "004-saved-draft-report-with-submit-action"
+      ],
+      "required_labels": [
+        "Daily Time Report #2",
+        "Draft",
+        "Incident #",
+        "Resource order #",
+        "Request #",
+        "Cost code",
+        "Point of hire"
+      ],
+      "narration": "Begin on the saved Daily Time Report number two for the fictional community support deployment. The report is Draft. Check the crew, incident reference, resource order, request number, cost code and point of hire so you are reviewing the intended assignment. Its notes distinguish personnel travel and coordination from separately recorded resource time. This lesson starts with those saved entries and a training expense already present, then follows submission and independent approval.",
+      "practice": "Review the intended draft report",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Submit and verify the saved state",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "004-saved-draft-report-with-submit-action",
+        "005-saved-submitted-report-and-submission-time"
+      ],
+      "required_labels": [
+        "Actions",
+        "Save",
+        "Save and submit",
+        "Saved.",
+        "Submitted",
+        "11/02/2026 16:39:55"
+      ],
+      "narration": "In Actions, Save and Save and submit are separate choices. Select Save and submit and accept its confirmation for this training report. The returned page shows Saved, the Submitted badge and a submission time. Approved still has a dash. Verify that saved state before handing the report to a reviewer. Submission records that handoff; it does not mean that a different person has already approved the time.",
+      "practice": "Submit and verify the saved state",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Distinguish submission from approval",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "005-saved-submitted-report-and-submission-time"
+      ],
+      "required_labels": [
+        "Submitted",
+        "Save",
+        "Approved"
+      ],
+      "narration": "Notice that Save remains available on this Submitted report. The header fields are still editable at this stage in the recorded example. The submission timestamp and the empty Approved value make the distinction visible. Review the report’s state and the controls actually offered on your screen instead of treating submission as a final lock. The approved-state readback later in this walkthrough will show the different result.",
+      "practice": "Distinguish submission from approval",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Read the submitter’s review restriction",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "006-submitter-requires-another-approver-notice"
+      ],
+      "required_labels": [
+        "Review",
+        "You submitted this time report or have hours on it, so another approver must approve it."
+      ],
+      "narration": "Scroll to Review while signed in as the submitter, Wallace Boden. The notice says that you submitted this time report or have hours on it, so another approver must approve it. Approve is not offered to this account here. Follow that separation of duties by having a different authorized approver review the report. This is a visible restriction in the local training exercise, not an approval that was completed by the submitter.",
+      "practice": "Read the submitter’s review restriction",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Review as a separate authorized manager",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "007-independent-manager-approve-review-control"
+      ],
+      "required_labels": [
+        "Kelly Severide",
+        "Review",
+        "Approve",
+        "Subject",
+        "Entry type",
+        "Start",
+        "End",
+        "Paid break (min)",
+        "Unpaid break (min)",
+        "Km"
+      ],
+      "narration": "The same report is now open under the separate authorized Kelly Severide account. Review the time-entry subjects, entry types, start and end times, breaks and distance, along with the supporting expense. This account is offered Approve in Review. After checking the intended report, select Approve and accept its confirmation. Use an authorized reviewer who is independent of the submitted report, rather than changing the report merely to bypass the notice.",
+      "practice": "Review as a separate authorized manager",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Verify the approved state and both review times",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "008-saved-approved-report-with-both-review-times"
+      ],
+      "required_labels": [
+        "Saved.",
+        "Approved",
+        "Submitted",
+        "11/02/2026 16:39:55",
+        "11/02/2026 16:45:06",
+        "Actions"
+      ],
+      "narration": "The saved result now shows Approved. Actions lists both the earlier submission time and the later approval time. The Save and Save and submit buttons are no longer present in that panel. The report’s reference fields are greyed out. Check these visible results after approval so the report’s state agrees with the action you intended to take. A timestamped approved report is a different result from an unsaved review screen.",
+      "practice": "Verify the approved state and both review times",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Inspect the locked entries and retained expense",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "009-approved-entry-controls-locked",
+        "010-approved-report-retains-fuel-receipt-and-expense"
+      ],
+      "required_labels": [
+        "Subject",
+        "Entry type",
+        "Start",
+        "End",
+        "Signatures",
+        "Expenses",
+        "Fuel",
+        "TRAINING ONLY - Fuel receipt demo",
+        "24.50 USD"
+      ],
+      "narration": "Scroll through the approved report. The existing entry controls are disabled and Add entry is no longer offered. Under Expenses, the saved Fuel row still contains the training receipt description, twenty-four dollars and fifty cents in U S currency, and its attachment icon. The expense-entry form is no longer shown here. The signature fields remain blank. This exercise verifies approval and retained supporting detail; it does not create a contractor or customer signature.",
+      "practice": "Inspect the locked entries and retained expense",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Check who submitted and who approved",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "008-saved-approved-report-with-both-review-times",
+        "011-approved-report-index-with-distinct-submit-and-approve-users"
+      ],
+      "required_labels": [
+        "Back to deployment",
+        "Status",
+        "Submitted",
+        "Approved",
+        "Wallace Boden · 11/02/2026 16:39:55",
+        "Kelly Severide · 11/02/2026 16:45:06",
+        "Invoice"
+      ],
+      "narration": "Use Back to deployment and review the report row in the Time reports section. Status is Approved. Submitted names Wallace Boden with the submission time, and Approved names Kelly Severide with the later approval time. This index provides a second readback of the separate users. Invoice is blank in this operational-only exercise. Report approval does not, by itself, establish that an invoice, payment or payroll action has occurred.",
+      "practice": "Check who submitted and who approved",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Apply independent review across department types",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "011-approved-report-index-with-distinct-submit-and-approve-users"
+      ],
+      "required_labels": [
+        "Status",
+        "Submitted",
+        "Approved",
+        "Personnel hours",
+        "Expenses"
+      ],
+      "narration": "Use this process wherever your department needs a checked deployment time record. Wildland contractors and industrial emergency teams can review crew duty and resource time. Search-and-rescue, security, community paramedicine and mental health teams can review appropriate deployment activity, as can fire and E M S organizations. Confirm the assignment, submit the report, have a different permitted reviewer approve it, and verify the saved state and supporting detail. Keep that time-report approval separate from the deployment’s own status.",
+      "practice": "Apply independent review across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Separate preparation from independent approval when reviewing crew duty, travel and deployment expenses."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Separate preparation from independent approval when reviewing crew duty, travel and deployment expenses."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Separate preparation from independent approval when reviewing crew duty, travel and deployment expenses."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Separate preparation from independent approval when reviewing crew duty, travel and deployment expenses."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Separate preparation from independent approval when reviewing crew duty, travel and deployment expenses."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Separate preparation from independent approval when reviewing crew duty, travel and deployment expenses."
+    }
+  ],
+  "scope_limits": [
+    "Demonstrates saved Draft to Submitted to Approved time-report states and the distinct submitter/approver, locked time-entry controls and retained expense. The deployment is operational-only and currently Demobilizing; this lesson does not demonstrate a deployment-status transition, signature, PDF export, invoice, payment or payroll operation."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-deployment-time-submission-approval-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-deployment-time-submission-approval-source-20261102/lesson.candidate.json",
+    "sha256": "90e5975d91b51dcbb3426f34bce3631e1dec6e7dd0c7b99c2341a79ebd729884"
+  }
+}

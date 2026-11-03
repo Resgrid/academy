@@ -1,0 +1,198 @@
+{
+  "id": "core-deployment-status-lifecycle",
+  "title": "Change deployment status and retain completed history",
+  "app": "Core",
+  "summary": "Verify each saved Planned, Standby, Active, Demobilizing and Completed state, then find and reopen the completed deployment through Show all.",
+  "audience": [
+    "Department administrators",
+    "Deployment managers",
+    "Operations supervisors"
+  ],
+  "prerequisites": [
+    "Authorized deployment management in the fictional training department.",
+    "A separate operational-only deployment created for this status exercise; deployment setup is covered in its own lesson."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Check the intended saved planned deployment",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "003-saved-planned-deployment-overview"
+      ],
+      "required_labels": [
+        "Planned",
+        "Operational only",
+        "TRAIN-STATUS-20261102",
+        "Summary"
+      ],
+      "narration": "Open the saved community support status exercise and check its incident reference. Its badge reads Planned, and its finance mode is Operational only. This separate fictional deployment has no rostered resources, time reports or expenses. Keeping it separate makes each status result easy to verify without changing the earlier training deployment. The badge on the left shows the stored operational state; the dropdown in Summary prepares a possible next change.",
+      "practice": "Check the intended saved planned deployment",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Move from Planned to Standby",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "004-standby-selected-with-change-status-control",
+        "005-saved-standby-deployment-badge"
+      ],
+      "required_labels": [
+        "Planned",
+        "Standby",
+        "Change status",
+        "Saved."
+      ],
+      "narration": "In Summary, choose Standby and select Change status. Confirm the change when prompted. Before saving, the dropdown can say Standby while the deployment badge still says Planned. After the page returns, verify Saved and the Standby badge. This difference is important when a supervisor checks whether an assignment is ready or merely has an unsaved selection. Use the saved badge as the readback of the operation you just performed.",
+      "practice": "Move from Planned to Standby",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Save and verify Active",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "006-active-selected-with-change-status-control",
+        "007-saved-active-deployment-badge"
+      ],
+      "required_labels": [
+        "Standby",
+        "Active",
+        "Change status",
+        "Saved."
+      ],
+      "narration": "For the next stage, choose Active in the same dropdown and select Change status. Confirm the intended transition, then read the returned badge. It now says Active. The dropdown may already display the next available choice after a save, so read it separately from the current badge. This exercise changes the deployment’s operational stage; it does not dispatch a call or automatically demonstrate changes to individual unit or personnel statuses.",
+      "practice": "Save and verify Active",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Save and verify Demobilizing",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "008-demobilizing-selected-with-change-status-control",
+        "009-saved-demobilizing-deployment-badge"
+      ],
+      "required_labels": [
+        "Active",
+        "Demobilizing",
+        "Change status",
+        "Saved."
+      ],
+      "narration": "When the fictional assignment is winding down, choose Demobilizing and select Change status. Confirm it and verify the saved Demobilizing badge. The same page retains the deployment reference, window and notes. Those details help you keep the status change attached to the intended assignment. Time-report submission, independent approval and equipment handover are separate operations demonstrated in the other deployment lessons; a status label does not establish that those tasks were completed.",
+      "practice": "Save and verify Demobilizing",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Save the Completed state",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "010-completed-selected-with-change-status-control",
+        "011-saved-completed-deployment-with-no-next-status-control"
+      ],
+      "required_labels": [
+        "Demobilizing",
+        "Completed",
+        "Change status",
+        "Saved."
+      ],
+      "narration": "Choose Completed and select Change status for this empty training exercise. Confirm the transition and verify the returned Completed badge. Compare that badge with the earlier prepared dropdown so you can distinguish selection from a saved result. In this completed view, the next-status dropdown and Change status button are no longer offered. The Summary still shows zero resources, time reports, personnel hours and expenses for this separate exercise.",
+      "practice": "Save the Completed state",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Find completed history with Show all",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "011-saved-completed-deployment-with-no-next-status-control",
+        "012-current-list-excludes-completed-exercise",
+        "013-show-all-retains-completed-exercise-row"
+      ],
+      "required_labels": [
+        "Deployments",
+        "Show all",
+        "Completed",
+        "TRAINING ONLY - Community support status lifecycle"
+      ],
+      "narration": "Return to Deployments. The current list no longer includes the completed status exercise. Select Show all. The completed exercise now appears with its Completed badge and Operational only finance mode. The other active and demobilizing training deployments remain separate rows. Use this view when you need retained history rather than assuming that an assignment disappeared or was deleted when it left the current list.",
+      "practice": "Find completed history with Show all",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Reopen and verify the retained deployment",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "013-show-all-retains-completed-exercise-row",
+        "015-fully-loaded-reopened-completed-deployment"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - Community support status lifecycle",
+        "Completed",
+        "TRAIN-STATUS-20261102",
+        "Operational only"
+      ],
+      "narration": "Open the completed exercise from the retained list. The fully loaded detail page still shows Completed, the same incident reference, the window, contact and training notes. Operational only is retained. Reopening provides another check that the result persisted beyond the page on which you changed it. This demonstration follows the forward status sequence that was actually available and saved; it does not demonstrate a backward transition or a cancellation.",
+      "practice": "Reopen and verify the retained deployment",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Keep operational stages useful for your department",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "015-fully-loaded-reopened-completed-deployment"
+      ],
+      "required_labels": [
+        "Completed",
+        "Summary",
+        "Operational only"
+      ],
+      "narration": "Use deployment stages to keep assignments understandable for your own department. Community paramedicine and mental health teams can track a temporary support assignment; search-and-rescue and security departments can track an operation; wildland contractors and industrial emergency teams can track a crew deployment. Fire and E M S organizations can use the same controls. Check the intended assignment, select its next stage, save, and verify the badge and retained history. Review time, equipment and finance through their separate workflows.",
+      "practice": "Keep operational stages useful for your department",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Keep a planned assignment’s operational stage current and retain its completed history."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Keep a planned assignment’s operational stage current and retain its completed history."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Keep a planned assignment’s operational stage current and retain its completed history."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Keep a planned assignment’s operational stage current and retain its completed history."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Keep a planned assignment’s operational stage current and retain its completed history."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Keep a planned assignment’s operational stage current and retain its completed history."
+    }
+  ],
+  "scope_limits": [
+    "Demonstrates the saved Planned→Standby→Active→Demobilizing→Completed sequence on a new, empty operational-only exercise and retained completed history. No cancellation, backward transition, time-report approval, resource allocation, invoice, payment or automatic resource-status effect is claimed."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-deployment-status-lifecycle-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-deployment-status-lifecycle-source-20261102/lesson.candidate.json",
+    "sha256": "9eeb3fa1c59d609ae8113f21a480879508bedfb84147c64d8c29d7633c0a0d3e"
+  }
+}

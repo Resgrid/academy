@@ -1,0 +1,112 @@
+Browser tab: 3, Title: "Resgrid | Assistant Settings", URL: "http://127.0.0.1:18967/User/ChatbotSettings".
+1 AXWebArea Resgrid | Assistant Settings, URL: 127.0.0.1:18967/User/ChatbotSettings
+	2 container wrapper
+		3 container
+			4 image
+			5 link Description: Wallace Boden, Value: 127.0.0.1:18967/User/ChatbotSettings#
+			6 content list side-menu
+				7 link Description:  Home, Value: 127.0.0.1:18967/User/Home/Dashboard
+				8 link Description:  Calls, Value: 127.0.0.1:18967/User/Dispatch/Dashboard
+				9 link Description:  Personnel, Value: 127.0.0.1:18967/User/Personnel
+				10 link Description:  Units, Value: 127.0.0.1:18967/User/Units
+				11 link Description:  Contacts, Value: 127.0.0.1:18967/User/Contacts
+				12 link Description:  Mapping, Value: 127.0.0.1:18967/User/Mapping
+				13 link Description:  Shifts, Value: 127.0.0.1:18967/User/Shifts
+				14 link (collapsed) Description: Records, Value: 127.0.0.1:18967/User/ChatbotSettings#, Secondary Actions: Expand
+				15 link Description:  Reports, Value: 127.0.0.1:18967/User/Reports
+				16 link Description:  Documents, Value: 127.0.0.1:18967/User/Documents
+				17 link Description:  Calendar, Value: 127.0.0.1:18967/User/Calendar
+				18 link Description:  Notes, Value: 127.0.0.1:18967/User/Notes
+				19 link Description:  Trainings, Value: 127.0.0.1:18967/User/Trainings
+				20 link Description:  Inventory, Value: 127.0.0.1:18967/User/Inventory
+				21 link (collapsed) Description: Readiness, Value: 127.0.0.1:18967/User/ChatbotSettings#, Secondary Actions: Expand
+				22 link (collapsed) Description: Workforce & Business Ops, Value: 127.0.0.1:18967/User/ChatbotSettings#, Secondary Actions: Expand
+		23 container page-wrapper
+			24 container
+				25 content list
+					26 link Description:  0, Value: 127.0.0.1:18967/User/ChatbotSettings#
+					27 link Description:  4, Value: 127.0.0.1:18967/User/ChatbotSettings#
+				28 combo box (collapsed) Search, Secondary Actions: Expand
+					29 container
+						30 container Description: Search, ID: autocomplete-0-label
+							31 button Search
+								32 image
+						33 search text field (settable) Search, ID: autocomplete-0-input
+				34 content list
+					35 link Description: Firehouse 51 — Training Department , Value: 127.0.0.1:18967/User/ChatbotSettings#
+					36 link Description: Help , Value: 127.0.0.1:18967/User/ChatbotSettings#
+					37 link (collapsed) Description: Language, Value: 127.0.0.1:18967/User/ChatbotSettings#, ID: languageDropdown, Secondary Actions: Expand
+					38 button Log out
+			39 container
+				40 heading Assistant Settings, Value: 2
+					41 text Assistant Settings
+				42 content list
+					43 link Description: Home, Value: 127.0.0.1:18967/User/Home/Dashboard
+					44 container
+						45 text / 
+						46 link Description: Department Settings, Value: 127.0.0.1:18967/User/Department/Settings
+					47 container
+						48 text /  Assistant
+			49 container
+				50 heading Assistant Configuration, Value: 5
+					51 text Assistant Configuration
+				52 text Enable Assistant
+				53 checkbox (settable, integer) Value: 0, ID: IsEnabled
+				54 text Allow members of this department to interact with the assistant. Allowed Platforms
+				55 text field (settable) Value: *, ID: AllowedPlatforms
+				56 text Comma-separated platform names this department allows, or * for all. Valid names: SmsTwilio, SmsSignalWire, Discord, Slack, Telegram, WhatsApp, MicrosoftTeams, Signal, WebChat, Line, Viber, GoogleChat. Allow Dispatch via Assistant
+				57 checkbox (settable, integer) Value: 0, ID: AllowDispatchViaChatbot
+				58 text Allow authorized users to create or dispatch calls through the assistant. Confirm Status Changes
+				59 checkbox (settable, integer) Value: 0, ID: RequireConfirmationForStatusChange
+				60 text Require an explicit confirmation before destructive or status-changing actions. Confirm Phone Linking
+				61 checkbox (settable, integer) Value: 1, ID: RequireLinkingConfirmation
+				62 text Require a one-time 'Reply YES' confirmation before linking an SMS number to a matching account. Proactive Notifications
+				63 checkbox (settable, integer) Value: 0, ID: ProactiveNotificationsEnabled
+				64 text Allow the assistant to push proactive notifications (calls, reminders) to linked users. Messages / User / Minute
+				65 stepper (settable) MessagesPerUserPerMinute
+				66 text Per-user rate limit. Leave blank to use the system default. Messages / Dept / Minute
+				67 stepper (settable) MessagesPerDepartmentPerMinute
+				68 text Per-department rate limit. Leave blank to use the system default.
+				69 heading Your own AI provider (bring your own key), Value: 5
+					70 text Your own AI provider (bring your own key)
+				71 text With Enhanced AI, your department can connect its own subscription with an AI provider such as OpenAI, Anthropic, Google Gemini, Azure OpenAI or Mistral, or with a model server you run. The chatbot then sends this department's messages to that provider under your agreement with them. Leave these fields empty to use Resgrid's own AI, which never sends your data to cloud AI providers. Your Enhanced AI add-on could not be confirmed right now, so the chatbot uses Resgrid's own AI. Please try again later.
+				72 text Provider
+				73 container
+					74 pop up button (disabled, collapsed, settable) Provider, Value: Choose a provider, ID: llm-provider, Secondary Actions: Expand
+						75 menu
+							76 (disabled) Choose a provider
+							77 (disabled) OpenAI
+							78 (disabled) Anthropic (Claude)
+							79 (disabled) Google Gemini
+							80 (disabled) Microsoft Azure OpenAI
+							81 (disabled) Mistral AI
+							82 (disabled) xAI (Grok)
+							83 (disabled) DeepSeek
+							84 (disabled) Groq
+							85 (disabled) Together AI
+							86 (disabled) Fireworks AI
+							87 (disabled) OpenRouter
+							88 (disabled) Perplexity
+							89 (disabled) Cohere
+							90 (disabled) Other OpenAI-compatible endpoint
+					91 text Choosing a provider fills in its endpoint. For Azure OpenAI, replace {resource} and {deployment} with your own values.
+				92 text LLM Endpoint
+				93 container
+					94 text field (disabled) LLM Endpoint, ID: LlmApiEndpoint
+					95 text The full request URL. It must use https and a public address.
+				96 text LLM Model
+				97 container
+					98 text field (disabled) LLM Model, ID: LlmModelName
+					99 text Enter the model name exactly as your provider lists it.
+				100 text LLM API Key
+				101 container
+					102 text field (disabled) LLM API Key
+					103 text No key stored. The key is encrypted at rest and never displayed.
+				104 button Save
+				105 link Description: Cancel, Value: 127.0.0.1:18967/User/Department/Settings
+			106 container
+				107 button Chat
+				108 text Copyright
+				109 text  Resgrid, LLC © 2026 All Rights Reserved.  Version 3.0.0.0
+
+The focused UI element is 1 AXWebArea Resgrid | Assistant Settings, URL: 127.0.0.1:18967/User/ChatbotSettings

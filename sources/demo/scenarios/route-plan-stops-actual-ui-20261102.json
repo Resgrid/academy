@@ -1,0 +1,73 @@
+{
+  "training_only": true,
+  "department_id": 51,
+  "recorded_ui": "Core Routes",
+  "historical_plan_id": "0383ecbd-5334-47ed-bde3-55d1337f9408",
+  "name": "TRAINING ONLY - Community supply loop",
+  "description": "Fictional department route exercise. No real service stops or navigation instructions.",
+  "plan": {
+    "unit": null,
+    "unit_choice": "-- Assign at start time --",
+    "status": "Draft",
+    "route_color": "#3388ff",
+    "routing_profile": "Driving",
+    "avoid": [],
+    "geofence_radius_m": 100,
+    "use_station_as_start": true,
+    "use_station_as_end": true,
+    "start_station": "Firehouse 51",
+    "end_station": "Firehouse 51",
+    "optimize_stop_order": false
+  },
+  "stops": [
+    {
+      "name": "TRAINING ONLY - Supply point A",
+      "notes": "TRAINING ONLY - Pick up fictional supplies. The map point is for software practice, not a real warehouse destination.",
+      "order": 1,
+      "latitude": 41.854635,
+      "longitude": -87.698364,
+      "contact_name": "Training Warehouse (fictional)",
+      "dwell_minutes": 10,
+      "contact_number": "312-555-0110",
+      "arrival_radius_m": null,
+      "type": "Manual",
+      "priority": "Normal",
+      "address": "Chicago, IL",
+      "planned_arrival": null,
+      "planned_departure": null
+    },
+    {
+      "name": "TRAINING ONLY - Community point B",
+      "notes": "TRAINING ONLY - Deliver fictional outreach supplies. No real service visit is scheduled.",
+      "order": 2,
+      "latitude": 41.853879,
+      "longitude": -87.695618,
+      "contact_name": "Community Centre (fictional)",
+      "dwell_minutes": 15,
+      "contact_number": "312-555-0111",
+      "arrival_radius_m": 75,
+      "type": "Manual",
+      "priority": "Normal",
+      "address": "Chicago, IL",
+      "planned_arrival": null,
+      "planned_departure": null
+    }
+  ],
+  "replay_steps": [
+    "Open Calls, then Routes and New Route. Use the retained name, description and plan settings.",
+    "Apply the hash-reviewed numeric form support if the source script still matches its recorded baseline. It changes only two optional number values in pending-stop JSON.",
+    "Add Supply point A: enter the name/type/priority/address, use the ordinary map picker for a verified point, and inspect its read-only coordinates. Do not inject coordinates or remove read-only attributes.",
+    "Use the retained dwell, inherited radius, contact and note for A, then Add Stop. Add B with its own map location, dwell, explicit radius, contact and note.",
+    "Review both client rows, then Create Route once. Confirm the saved Draft row with two stops.",
+    "View, then Edit: verify the retained fields and stations. Move B up, reopen and verify; move A back up, reopen and verify pickup before delivery.",
+    "Open Directions. Compare its actual Stop Summary timing/contact/note rows and any directions warning. Resolve road-guidance issues before operational use."
+  ],
+  "runtime_support": "demo/core-support/routes-new-numeric-stops-20261102/README.md",
+  "runtime_support_before_sha256": "74a06da865ce6a243d46e96d2ca8ab36f5c637e4742e282f39db12359d131a80",
+  "runtime_support_after_sha256": "2d50b0cc0bc475f88da85bd19f4edad453d9495f0c671cbd0fc85b77c6bb8ad7",
+  "scope_limits": [
+    "The route was created through normal UI; these are replay inputs, not an automated journey or generated road geometry.",
+    "The actual Directions page reports Could not retrieve driving directions; no drivable route, ETA, optimization, unit assignment or execution is claimed.",
+    "Re-record with actual verified points and fresh returned values. Coordinates and service names here describe fictional software practice, not real destinations."
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "id": "core-route-plan-stops",
+  "title": "Create a route plan, add stops and verify saved details",
+  "app": "Core",
+  "summary": "Prepare a draft route, set station endpoints, add two located stops with dwell times and contacts, verify the saved plan, and check persistent stop order and the Directions summary.",
+  "audience": [
+    "Department administrators",
+    "Operations supervisors",
+    "Route and logistics coordinators"
+  ],
+  "prerequisites": [
+    "Authorized Routes access and a separate fictional training department.",
+    "An existing station and permitted contacts; verified locations for an actual operational plan."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find Routes from Calls",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "027-calls-dashboard-routes-entry",
+        "001-routes-list-and-new-route-action"
+      ],
+      "required_labels": [
+        "Calls",
+        "Routes",
+        "New Route"
+      ],
+      "narration": "From Calls, select Routes in the top action bar. The Routes page lists saved plans and provides New Route beside In Progress and Archived Routes. Begin with New Route for this fictional community supply exercise. A named plan gives administrators one place to prepare the stop sequence and the information needed at each location. Use a separate training department when practicing this process.",
+      "practice": "Find Routes from Calls",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Name the plan and choose its initial state",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "003-prepared-route-name-unassigned-unit-and-draft-status"
+      ],
+      "required_labels": [
+        "Name",
+        "Description",
+        "Unit",
+        "-- Assign at start time --",
+        "Status",
+        "Draft"
+      ],
+      "narration": "Enter a recognizable Name and a Description that explains the purpose. Here the name is Community supply loop, clearly marked training only. Keep Unit at Assign at start time, and keep Status at Draft while preparing the plan. These are separate fields on Route Details. Check the department and the plan name before making changes so the exercise stays with the intended team.",
+      "practice": "Name the plan and choose its initial state",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Set the profile, radius and station endpoints",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "004-routing-profile-radius-and-station-endpoints"
+      ],
+      "required_labels": [
+        "Route Profile",
+        "Driving",
+        "Geofence Radius (m)",
+        "100",
+        "Use Station as Start",
+        "Use Station as End",
+        "Start station",
+        "End station",
+        "Firehouse 51",
+        "Optimize Stop Order",
+        "Add Stop"
+      ],
+      "narration": "Review Route Profile, the Avoid checkboxes and Geofence Radius. This example keeps Driving, leaves the Avoid choices clear, and sets the route radius to one hundred metres. Check Use Station as Start and Use Station as End, then select Firehouse fifty-one in both station selectors. Optimize Stop Order stays unchecked so we can review the sequence ourselves. The stop list is still empty. Select Add Stop.",
+      "practice": "Set the profile, radius and station endpoints",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Choose a manual stop and its map location",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "013-corrected-run-first-stop-name-type-and-map-coordinates"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - Supply point A",
+        "Manual",
+        "Normal",
+        "Location",
+        "41.854635",
+        "-87.698364"
+      ],
+      "narration": "In Add Stop, enter Supply point A as the training Name, choose Manual as Type, and keep Normal Priority. The location area says to click the map to set a location. Use the map controls to find the intended area, then select a point and review the latitude and longitude below it. The Address here is Chicago, Illinois. These are fictional exercise points, so the names do not identify real service destinations.",
+      "practice": "Choose a manual stop and its map location",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Add dwell time, a contact and clear instructions",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "014-corrected-run-first-stop-details-and-add-action"
+      ],
+      "required_labels": [
+        "Planned Arrival",
+        "Planned Departure",
+        "Est. Dwell (min)",
+        "10",
+        "Arrival radius (m)",
+        "Select Contact",
+        "Training Warehouse (fictional)",
+        "312-555-0110",
+        "Notes",
+        "Add Stop"
+      ],
+      "narration": "Scroll within the stop form. Leave Planned Arrival and Planned Departure empty for this exercise, and enter ten for estimated dwell in minutes. Leave Arrival radius blank; the help says a blank uses the route radius. Select Training Warehouse from Select Contact. The contact name and number fill the fields below. Review both, then add the training pickup instruction in Notes. Select Add Stop to place this prepared stop in the new route.",
+      "practice": "Add dwell time, a contact and clear instructions",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Prepare a second stop with its own radius",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "015-corrected-run-second-stop-name-and-coordinates",
+        "016-corrected-run-second-stop-details-and-add-action"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - Community point B",
+        "41.853879",
+        "-87.695618",
+        "15",
+        "75",
+        "Community Centre (fictional)",
+        "312-555-0111",
+        "Notes",
+        "Add Stop"
+      ],
+      "narration": "Open Add Stop again and name the second Manual stop Community point B. Select its own location on the map and check the displayed coordinates. In the lower form, enter fifteen minutes dwell and seventy-five metres for Arrival radius. This explicitly supplies a stop-specific radius instead of leaving the field blank. Choose the fictional Community Centre contact, review its filled name and number, and add the outreach-supplies note. Select Add Stop.",
+      "practice": "Prepare a second stop with its own radius",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Review the sequence and create the route",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "017-corrected-run-two-stop-sequence-before-save",
+        "018-corrected-run-create-route-control",
+        "019-saved-route-list-draft-two-stops-and-actions"
+      ],
+      "required_labels": [
+        "Stops (2)",
+        "TRAINING ONLY - Supply point A",
+        "TRAINING ONLY - Community point B",
+        "Create Route",
+        "Draft",
+        "2",
+        "driving"
+      ],
+      "narration": "Review Stops: the count is now two, with Supply point A first and Community point B second. Check their names, Manual type, address and Normal priority before saving the whole plan. Scroll to Create Route and select it. The returned Routes list now contains Community supply loop with Draft status, two stops and the driving profile. This saved row confirms that the plan was created beyond the temporary stop form.",
+      "practice": "Review the sequence and create the route",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Reopen the stored configuration",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "019-saved-route-list-draft-two-stops-and-actions",
+        "020-saved-route-view-two-location-pins-and-draft-details",
+        "021-reopened-draft-route-name-unit-and-status",
+        "022-reopened-route-options-and-two-saved-stop-rows"
+      ],
+      "required_labels": [
+        "View",
+        "Route Map",
+        "Draft",
+        "100 m",
+        "Edit",
+        "Edit Route Plan",
+        "Firehouse 51",
+        "Stops (2)"
+      ],
+      "narration": "Select View for the saved plan and inspect its two location pins and the Details panel. The plan still shows Draft, driving and a one-hundred-metre geofence. Select Edit and check the stored Name, Description, Unit and Status. Scroll down to verify both Firehouse fifty-one endpoint selections and the two saved stop rows. Reopening checks what Resgrid retained, rather than relying on the earlier unsaved selections.",
+      "practice": "Reopen the stored configuration",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Change stop order and verify it after reopening",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "022-reopened-route-options-and-two-saved-stop-rows",
+        "023-saved-stop-order-community-point-first",
+        "024-fresh-readback-retains-community-point-first",
+        "025-fresh-readback-pickup-before-delivery-restored"
+      ],
+      "required_labels": [
+        "Stops (2)",
+        "TRAINING ONLY - Community point B",
+        "TRAINING ONLY - Supply point A"
+      ],
+      "narration": "Use the up arrow beside Community point B in the saved stop list. It moves to the first row. Reopen the editor and confirm that this changed order remains. These saved-list ordering actions persist as you use them. For the supply example, restore pickup before delivery by moving Supply point A back up. Reopen once more and verify Supply point A first and Community point B second. Check the actual sequence after every adjustment.",
+      "practice": "Change stop order and verify it after reopening",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "10",
+      "title": "Verify saved details and read the directions status",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "019-saved-route-list-draft-two-stops-and-actions",
+        "026-directions-warning-and-saved-stop-summary"
+      ],
+      "required_labels": [
+        "Directions",
+        "Turn-by-Turn Directions",
+        "Could not retrieve driving directions.",
+        "Stop Summary",
+        "Dwell (min)",
+        "10",
+        "15",
+        "Training Warehouse (fictional)",
+        "Community Centre (fictional)"
+      ],
+      "narration": "Open Directions from the saved route row and review Stop Summary. Supply point A retains ten minutes dwell, the Training Warehouse contact and its pickup note. Community point B retains fifteen minutes, its Community Centre contact and the delivery note. Above the summary, this example displays Could not retrieve driving directions, with guidance to review the stop addresses or coordinates. Resolve that warning before relying on the plan for road guidance. Saved stops alone do not confirm a drivable route.",
+      "practice": "Verify saved details and read the directions status",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "11",
+      "title": "Apply the plan review across department types",
+      "route": "/User/Routes",
+      "capture_refs": [
+        "026-directions-warning-and-saved-stop-summary"
+      ],
+      "required_labels": [
+        "Stop Summary",
+        "Stop Name",
+        "Address",
+        "Dwell (min)",
+        "Contact",
+        "Notes"
+      ],
+      "narration": "The same preparation pattern can organize supply stops for search and rescue, planned security service visits, wildland contractor support, industrial emergency logistics, or community paramedicine and mental health outreach. Fire and E M S teams can use it too. Choose appropriate locations and contacts for your work, allow time at each stop, verify the saved order, and check the Directions result before operational use. A useful plan makes its intended stops and supporting details easy for the next person to review.",
+      "practice": "Apply the plan review across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Prepare a clearly named multi-stop service or logistics plan and verify its saved locations, sequence, contact details and directions status before operational use."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Prepare a clearly named multi-stop service or logistics plan and verify its saved locations, sequence, contact details and directions status before operational use."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Prepare a clearly named multi-stop service or logistics plan and verify its saved locations, sequence, contact details and directions status before operational use."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Prepare a clearly named multi-stop service or logistics plan and verify its saved locations, sequence, contact details and directions status before operational use."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Prepare a clearly named multi-stop service or logistics plan and verify its saved locations, sequence, contact details and directions status before operational use."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Prepare a clearly named multi-stop service or logistics plan and verify its saved locations, sequence, contact details and directions status before operational use."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; actual speech generation, listening, complete correspondence, encoded-frame review and playback qualification remain required.",
+    "One fictional Draft route was created by the normal UI after applying the retained two-field numeric JSON static-script correction to the isolated recording stack. It has two Manual/Normal Chicago map-selected stops, Driving profile, route radius 100 m, Firehouse 51 as both explicit station endpoints, no assigned unit, no avoid flags and no optimized order. Stop A has 10 minutes dwell, inherited radius and Training Warehouse contact; B has 15 minutes dwell, 75 m radius and Community Centre contact. The saved stop order was changed, reopened, restored to pickup-before-delivery and reopened again. Directions visibly retains both dwell/contact/note rows but reports Could not retrieve driving directions. No generated road geometry, successful geocoding, travel estimate, optimized result, route start, unit assignment, live tracking, stop completion or archival is demonstrated. The Route Detail side summary has an observed numbering discrepancy (2/3 while map and editor show 1/2); this lesson does not describe that side numbering as authoritative."
+  ]
+}

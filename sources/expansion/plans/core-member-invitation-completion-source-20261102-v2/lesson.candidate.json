@@ -1,0 +1,193 @@
+{
+  "id": "core-member-invitation-completion",
+  "title": "Invite a member and verify their completed registration",
+  "app": "Core",
+  "summary": "Save a department invitation, inspect the delivered training email, register a fictional member, and verify completion and the new personnel row.",
+  "audience": [
+    "Department administrators",
+    "Personnel managers",
+    "New department members"
+  ],
+  "prerequisites": [
+    "Authorized personnel administration in an isolated fictional training department.",
+    "A fictional recipient and a controlled training mailbox for following the invitation exercise."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Open department invitations",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "001-personnel-list-and-member-actions",
+        "002-empty-invitation-history-and-send-form"
+      ],
+      "required_labels": [
+        "Personnel",
+        "Manage Invites",
+        "Invites",
+        "Sent On",
+        "Completed On"
+      ],
+      "narration": "From Personnel, select Manage Invites. The Invites page separates the invitation history from the Send Invites form. Its history has Email Address, Sent On and Completed On columns. This walkthrough invites a fictional new member, Derrick Gibson, and verifies the result from both sides. An invitation is useful when a new team member should complete their own account details instead of an administrator entering every credential through Add a Person.",
+      "practice": "Open department invitations",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Prepare and save the intended invitation",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "003-fictional-training-invitation-prepared",
+        "004-saved-training-invitation-pending"
+      ],
+      "required_labels": [
+        "Email Addresses",
+        "Send Invites",
+        "Pending"
+      ],
+      "narration": "Enter the intended recipient in Email Addresses. The help explains that multiple addresses can be separated by commas. This exercise uses a single fictional training address. Review the destination and select Send Invites. The saved row then shows the address, a Sent On time and Pending under Completed On. Check that row for the intended recipient. Pending is an invitation state; it does not establish that the recipient has finished joining the department.",
+      "practice": "Prepare and save the intended invitation",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Check pending status and actual email delivery",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "004-saved-training-invitation-pending",
+        "022-local-mailpit-inbox-received-training-invitation",
+        "030-received-invitation-safe-upper-email-view"
+      ],
+      "required_labels": [
+        "Pending",
+        "Resend Invite",
+        "Completed On"
+      ],
+      "narration": "While the invitation is pending, the row offers Resend Invite. If delivery needs another attempt, review the intended address and confirm that the recipient actually receives the invitation. Here the controlled local Mailpit inbox contains the Resgrid invitation for the training department. Opening that email shows the inviting administrator, the department and a Set up account button. This mailbox is our local recording tool; your members use their own mailbox. Follow Set up account to the registration form. The invitation link itself is private and is not shown in this lesson.",
+      "practice": "Check pending status and actual email delivery",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Complete the member’s registration form",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "024-invitation-registration-prepared-passwords-masked-code-redacted"
+      ],
+      "required_labels": [
+        "Derrick",
+        "Gibson",
+        "Username",
+        "Register",
+        "terms of use",
+        "privacy policy"
+      ],
+      "narration": "The form identifies the department the recipient is joining. Enter the member’s own name, a unique Username, and matching password fields. Our fictional example is Derrick Gibson, and the passwords remain masked. The displayed password requirement is at least eight characters, including a digit, an uppercase letter and a lowercase letter. Review the terms of use and privacy policy notice before Register, because signing up accepts those terms. The notice also describes existing-account linking, but this exercise creates a new fictional account. Select Register after that review.",
+      "practice": "Complete the member’s registration form",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Verify the signed-in member workspace",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "025-registered-invited-member-signed-in-dashboard"
+      ],
+      "required_labels": [
+        "Derrick Gibson",
+        "Home",
+        "Firehouse 51 — Training Department"
+      ],
+      "narration": "The returned workspace is signed in as Derrick Gibson. Check the name at the upper left and the intended department in the header. That visible signed-in result is stronger evidence than assuming the Register button worked. The new member now has a department workspace in this local exercise. Operational status and staffing controls are separate from accepting the invitation; no responding status or staffing change is performed here.",
+      "practice": "Verify the signed-in member workspace",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Verify completion as the administrator",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "027-saved-invitation-completion-time-after-registration"
+      ],
+      "required_labels": [
+        "Invites",
+        "Sent On",
+        "Completed On",
+        "11/02/2026 17:15:56"
+      ],
+      "narration": "Return to Manage Invites under the administrator account. The same recipient now has an actual Completed On date and time rather than Pending. Sent On remains a separate value. Compare those two columns when checking whether an invitation was merely sent or was completed. In this recorded example, completion is saved at seventeen fifteen and fifty-six seconds on the displayed date. This administrative readback confirms the completed invitation independently of the member’s signed-in page.",
+      "practice": "Verify completion as the administrator",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Find the resulting member in Personnel",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "028-registered-invited-member-normal-personnel-row"
+      ],
+      "required_labels": [
+        "Personnel",
+        "Search:",
+        "Derrick Gibson",
+        "Normal",
+        "Roles",
+        "Staffing",
+        "Status"
+      ],
+      "narration": "Open Personnel and use Search to find Derrick Gibson. The saved row shows Normal under State, Available under Staffing and Standing By under Status. Roles is still blank for this newly invited member. Review the department group and operational role the person needs as part of your own onboarding process. The member-access walkthrough demonstrates those separate controls. This invitation exercise verifies membership without granting a department administrator role or assigning an operational role.",
+      "practice": "Find the resulting member in Personnel",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Use invitation readbacks across department types",
+      "route": "/User/Department/Invites",
+      "capture_refs": [
+        "028-registered-invited-member-normal-personnel-row"
+      ],
+      "required_labels": [
+        "Derrick Gibson",
+        "Normal",
+        "Manage Invites"
+      ],
+      "narration": "Use the same invitation and verification process for community paramedicine and mental health response teams, search-and-rescue organizations, security departments, wildland contractors and industrial emergency teams, as well as fire and E M S departments. Send to the intended recipient, verify delivery, let the member complete the form, and check the completed invitation and personnel row. Those readbacks help administrators distinguish an outstanding invitation from a member who has actually joined.",
+      "practice": "Use invitation readbacks across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Let a new team member supply their own account information, then verify both invitation completion and the resulting department membership."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Let a new team member supply their own account information, then verify both invitation completion and the resulting department membership."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Let a new team member supply their own account information, then verify both invitation completion and the resulting department membership."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Let a new team member supply their own account information, then verify both invitation completion and the resulting department membership."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Let a new team member supply their own account information, then verify both invitation completion and the resulting department membership."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Let a new team member supply their own account information, then verify both invitation completion and the resulting department membership."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; actual speech generation, listening, complete correspondence, encoded-frame review and playback qualification remain required.",
+    "Demonstrates invitation creation, local Mailpit receipt, a specifically approved fictional new-account registration, signed-in member workspace, saved Completed On and Normal personnel row. Existing-account linking, invitation deletion, administrator grants, group/role assignment and MFA are separate paths. Access-code-bearing original email captures are quarantined in ignored private storage and are excluded."
+  ]
+}

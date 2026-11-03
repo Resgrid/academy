@@ -192,3 +192,6 @@ original repositories were clean. The original Core development checkout contain
 an unrelated pre-existing tracked `MEMORY.md` edit, so it correctly fails the clean
 source guard. The integrated recipes did not modify or discard that edit; use the
 managed expansion clone.
+
+
+If mapping or address lookup returns 503 after restarting the web container, run `python3 recover_api_loopback.py --stack-name <your-academy-stack>` to compare the actual web/proxy network namespaces. If they differ, add `--execute` to restart only that proxy. The helper preserves application containers and database volumes; verify the actual Resgrid map afterward.

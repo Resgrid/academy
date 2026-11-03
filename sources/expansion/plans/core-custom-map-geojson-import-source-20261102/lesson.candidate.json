@@ -1,0 +1,226 @@
+{
+  "id": "core-custom-map-geojson-import",
+  "title": "Import GeoJSON regions and review their saved settings",
+  "app": "Core",
+  "summary": "Choose a separate target layer, import two fictional GeoJSON polygons, verify completion and actual boundaries, and review each imported region’s type, colour and availability.",
+  "audience": [
+    "Department administrators",
+    "Mapping administrators",
+    "GIS and site-data coordinators"
+  ],
+  "prerequisites": [
+    "An existing permitted custom map with appropriate geographic bounds; the indoor-map lesson creates the fictional example.",
+    "The supplied fictional GeoJSON and floor-plan image for this exercise, or an appropriate export from your mapping system."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Prepare a separate layer for the imported data",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "016-fully-rendered-custom-map-row-and-import-action",
+        "017-fully-rendered-prepared-layer-image-replay-no-save",
+        "002-saved-gis-target-layer-and-preserved-ground-floor"
+      ],
+      "required_labels": [
+        "Custom Maps",
+        "Layers",
+        "Add Layer",
+        "Layer Name",
+        "Order",
+        "Data Layer",
+        "Layer Image",
+        "TRAINING ONLY - GIS import"
+      ],
+      "narration": "Start with the intended Custom Map and open Layers. For this exercise, prepare a separate layer named G I S import, set Order to ten, and choose Data Layer as its Type. Select the fictional floor-plan image under Layer Image so the imported shapes will have readable context. Select Add Layer and verify the saved DataLayer row. The earlier ground-floor layer remains listed separately.",
+      "practice": "Prepare a separate layer for the imported data",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Choose the target and the source file",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "016-fully-rendered-custom-map-row-and-import-action",
+        "003-import-target-layer-and-supported-file-formats",
+        "004-geojson-file-selected-for-separate-target-layer"
+      ],
+      "required_labels": [
+        "Import",
+        "Import Geospatial Data",
+        "Target Layer",
+        "TRAINING ONLY - GIS import",
+        "File"
+      ],
+      "narration": "Return to Custom Maps and choose Import for the intended map. Set Target Layer to the G I S import layer. The page lists GeoJSON, K M L and K M Z as supported formats; this walkthrough uses GeoJSON only. Use Choose File to select the supplied fictional export containing two named polygons. Check the target and selected file together, then select Import once.",
+      "practice": "Choose the target and the source file",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Check the completed import history",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "005-complete-geojson-import-history-entry"
+      ],
+      "required_labels": [
+        "Import History",
+        "geojson-import.json",
+        "GeoJSON",
+        "Complete",
+        "Error"
+      ],
+      "narration": "Read Import History after the upload finishes. This recorded run has a GeoJSON row with Complete status, a date and a blank Error column. The history uses the generic name geojson-import dot json for this run. Completion confirms that processing finished; the next step is to inspect the actual regions. The form above the history is ready for another upload, so its current target selection is a separate form value.",
+      "practice": "Check the completed import history",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Inspect the resulting named polygons",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "002-saved-gis-target-layer-and-preserved-ground-floor",
+        "006-imported-polygons-and-two-named-regions"
+      ],
+      "required_labels": [
+        "TRAINING ONLY - GIS import",
+        "Region Editor",
+        "Regions",
+        "Training room - import",
+        "Equipment - import"
+      ],
+      "narration": "Open Region Editor for the G I S import layer, and wait for the image and shapes to load. Both Training room, followed by import, and Equipment, followed by import, appear in Regions. Their blue polygons sit over the corresponding fictional spaces on the plan. Compare the names and boundaries with the source file and intended layer. This visual check establishes more than the Complete history entry alone.",
+      "practice": "Inspect the resulting named polygons",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Review the imported defaults",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "007-imported-region-default-type-and-availability-controls"
+      ],
+      "required_labels": [
+        "Region Properties",
+        "Training room - import",
+        "Custom",
+        "Color",
+        "Description",
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region"
+      ],
+      "narration": "Select the training-room boundary to open Region Properties. Its imported Name and Description are present. In this recorded example, the initial Type is Custom, the Color is blue, and both Searchable in dispatch and Dispatchable are checked. Review these application settings after an import rather than assuming every property in an outside file became the intended Resgrid setting. The form shows what this region actually contains.",
+      "practice": "Review the imported defaults",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Save the reviewed training-room settings",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "008-prepared-post-import-review-and-local-availability-restriction",
+        "009-reopened-imported-room-with-saved-type-colour-and-flags"
+      ],
+      "required_labels": [
+        "Room",
+        "Color",
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region"
+      ],
+      "narration": "Change Type to Room and choose the amber Color shown here. Clear Searchable in dispatch and Dispatchable for this local review exercise, then select Save Region. Reopen the boundary after reload. The shape is amber, the list says Room, and the form retains both unchecked options. The original name remains. This distinguishes the prepared changes from the saved region that the application now returns.",
+      "practice": "Save the reviewed training-room settings",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Review the second imported region",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "010-review-second-imported-region-before-save",
+        "011-both-imported-regions-retained-after-review",
+        "012-reopened-equipment-room-with-saved-local-flags"
+      ],
+      "required_labels": [
+        "Equipment - import",
+        "Room",
+        "Searchable in dispatch",
+        "Dispatchable",
+        "Save Region"
+      ],
+      "narration": "Repeat the review for Equipment. Set its Type to Room and clear both availability options, then select Save Region. Reload and select that boundary again. Its name, Room type, blue Color and unchecked options are retained. Both imported regions are still listed, and neither has a Dispatchable badge in this final view. Reviewing one imported shape does not replace checking the others.",
+      "practice": "Review the second imported region",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Retain history and check each new upload target",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "013-reopened-complete-import-history-and-new-form-target"
+      ],
+      "required_labels": [
+        "Import History",
+        "geojson-import.json",
+        "Complete",
+        "Target Layer"
+      ],
+      "narration": "Return to Import History. The original completed run remains available after the region edits. The new-upload form now shows the ground-floor layer, which is the first choice in its list. For a subsequent file, deliberately select the intended Target Layer again before importing. Use the history to review the completed run and the form to prepare the next operation; they show different parts of the workflow.",
+      "practice": "Retain history and check each new upload target",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Use checked mapping exports across department types",
+      "route": "/User/CustomMaps",
+      "capture_refs": [
+        "011-both-imported-regions-retained-after-review",
+        "012-reopened-equipment-room-with-saved-local-flags"
+      ],
+      "required_labels": [
+        "Regions",
+        "Training room - import",
+        "Equipment - import",
+        "Region Properties"
+      ],
+      "narration": "This process can help security companies, search-and-rescue teams, wildland contractors and industrial emergency teams bring permitted site areas into Resgrid. Community paramedicine, mental health response, fire and E M S departments can use the same checks for appropriate coordination locations. Choose the correct file and target layer, inspect the imported geometry, review each region’s application settings, save, and reopen the result before relying on it.",
+      "practice": "Use checked mapping exports across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Bring permitted named site areas into a chosen map layer and verify the resulting geometry and region settings before relying on them."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Bring permitted named site areas into a chosen map layer and verify the resulting geometry and region settings before relying on them."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Bring permitted named site areas into a chosen map layer and verify the resulting geometry and region settings before relying on them."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Bring permitted named site areas into a chosen map layer and verify the resulting geometry and region settings before relying on them."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Bring permitted named site areas into a chosen map layer and verify the resulting geometry and region settings before relying on them."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Bring permitted named site areas into a chosen map layer and verify the resulting geometry and region settings before relying on them."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; actual speech generation, listening, complete correspondence, encoded-frame review and playback qualification remain required.",
+    "One actual GeoJSON file with two polygons was imported once into a separate image-backed Data Layer. Actual Complete history and both imported names/boundaries/defaults were inspected; both regions were changed to Room with Searchable and Dispatchable false, and the training room colour changed to amber. No KML/KMZ processing, point/line import, failed import recovery, deduplication, dispatch execution, background sync or external provider integration is demonstrated. Source017is an honest prepared-field replay cancelled without creating a duplicate layer."
+  ]
+}

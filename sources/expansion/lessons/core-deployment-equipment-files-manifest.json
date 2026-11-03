@@ -1,0 +1,169 @@
+{
+  "id": "core-deployment-equipment-files-manifest",
+  "title": "Return deployment equipment and retain a handover file",
+  "app": "Core",
+  "summary": "Return a free-text equipment assignment, upload a fictional handover note, and inspect the current unit and personnel manifest.",
+  "audience": [
+    "Deployment coordinators",
+    "Department administrators",
+    "Resource supervisors"
+  ],
+  "prerequisites": [
+    "Authorized deployment-management access in the fictional training department.",
+    "A saved van/member roster and the Demo radio kit free-text equipment entry."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Inspect the equipment before returning it",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "010-equipment-return-arrow-and-saved-roster"
+      ],
+      "required_labels": [
+        "Roster",
+        "Equipment",
+        "Demo radio kit",
+        "Issued",
+        "Return"
+      ],
+      "narration": "Open Roster on the deployment and find Demo radio kit under Equipment. Read its Unit association and Issued column before changing the roster. This exercise added the kit as a free-text equipment entry, and Issued is a dash. At the right end of that row is the curved-arrow Return button. Identify the intended item first, because the action belongs to that specific equipment row.",
+      "practice": "Inspect the equipment before returning it",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Return the entry and verify the remaining roster",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "010-equipment-return-arrow-and-saved-roster",
+        "029-returned-equipment-no-longer-rostered"
+      ],
+      "required_labels": [
+        "Return",
+        "No equipment rostered.",
+        "Matthew Casey",
+        "CS-VAN-1",
+        "Crew"
+      ],
+      "narration": "Select the Return arrow for Demo radio kit. The returned roster now says No equipment rostered. The van is still present with call sign C S van one and a Crew count of one, and Matthew Casey is still assigned to it. Returning the equipment entry did not remove the unit or its person. This action changes the deployment equipment assignment; no inventory stock issue or stock return was performed for this free-text example.",
+      "practice": "Return the entry and verify the remaining roster",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Prepare a handover attachment",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "030-deployment-handover-file-prepared"
+      ],
+      "required_labels": [
+        "Files",
+        "Other",
+        "Name",
+        "Upload"
+      ],
+      "narration": "Open Files to keep supporting material with this deployment. The existing receipt already appears as a Receipt file. In the upload row, keep Other as the type for the demonstration handover note. Enter a recognizable Name, then use Choose File to select the prepared fictional handover text file. Review the type, name and selected file before choosing Upload. Use the appropriate file category for the document you are actually retaining.",
+      "practice": "Prepare a handover attachment",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Verify the saved file row",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "031-saved-handover-and-receipt-file-rows"
+      ],
+      "required_labels": [
+        "Saved.",
+        "TRAINING ONLY - Community support handover",
+        "Other",
+        "deployment-handover-20261102.txt",
+        "Added",
+        "Receipt"
+      ],
+      "narration": "After Upload, verify the Saved message and the new row. It shows the community support handover name, Other as its Type, the text filename and the Added information for Kelly Severide. The earlier Receipt remains as a separate row. Check the filename as well as the display name so the record points to the intended supporting file. This is a fictional software exercise, and these attachments contain no real incident or patient information.",
+      "practice": "Verify the saved file row",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Open and inspect the current manifest",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "031-saved-handover-and-receipt-file-rows",
+        "032-current-html-manifest-unit-and-member"
+      ],
+      "required_labels": [
+        "View manifest",
+        "Units",
+        "Personnel",
+        "Matthew Casey",
+        "CS-VAN-1",
+        "CS-1",
+        "Crew",
+        "Seat",
+        "Certification"
+      ],
+      "narration": "Select View manifest. Resgrid opens an H T M L deployment manifest in a separate tab. Read its deployment name, Planned status, agency references and window. Under Units, the van has call sign C S van one and one crew member. Under Personnel, Casey is associated with that unit and has call sign C S one. Seat and Certification are blank for this assignment. Verify the actual people and assignments behind a summary count before using the manifest for coordination.",
+      "practice": "Open and inspect the current manifest",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Keep the handover useful across department types",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "032-current-html-manifest-unit-and-member",
+        "031-saved-handover-and-receipt-file-rows"
+      ],
+      "required_labels": [
+        "Units",
+        "Personnel",
+        "Window"
+      ],
+      "narration": "This same process helps departments hand over a clear picture of their assignment. Community paramedicine and mental health response teams, search-and-rescue teams, security departments, wildland contractors and industrial emergency teams can retain their own supporting documents and review the current resources. Fire and E M S departments use these same controls. Keep the roster current, attach the right fictional or authorized documentation, and check the manifest’s unit and personnel details against the work being coordinated.",
+      "practice": "Keep the handover useful across department types",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": true,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Keep the current resource roster and deployment handover documentation useful to the next supervisor."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Keep the current resource roster and deployment handover documentation useful to the next supervisor."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Keep the current resource roster and deployment handover documentation useful to the next supervisor."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Keep the current resource roster and deployment handover documentation useful to the next supervisor."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Keep the current resource roster and deployment handover documentation useful to the next supervisor."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Keep the current resource roster and deployment handover documentation useful to the next supervisor."
+    }
+  ],
+  "scope_limits": [
+    "This lesson executes the free-text equipment roster return and attachment upload, and opens the HTML manifest. It does not claim an inventory stock return, successful handover-file download, PDF export, deployment completion or external-order closeout."
+  ],
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/core-deployment-equipment-files-manifest-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/core-deployment-equipment-files-manifest-source-20261102/lesson.candidate.json",
+    "sha256": "0301845213ce991741c5d94b3d37efdd2cb36a78b2a4c2ef030064e1a4748422"
+  }
+}

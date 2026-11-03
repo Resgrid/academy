@@ -1,0 +1,27 @@
+using System;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using GeoJSON.Net.Feature;
+using Resgrid.Model;
+using Resgrid.Repositories.NoSqlRepository;
+var shape = """{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-87.65,41.88]},"properties":{"name":"TRAINING ONLY","shape":"Marker","color":"#0080ff","text":"Staging"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-87.66,41.87],[-87.64,41.87],[-87.64,41.89],[-87.66,41.89],[-87.66,41.87]],[[-87.655,41.875],[-87.655,41.885],[-87.645,41.885],[-87.645,41.875],[-87.655,41.875]]]},"properties":{"name":"Zone","shape":"Rectangle","color":"#0080ff"}}]}""";
+var fc=JsonConvert.DeserializeObject<FeatureCollection>(shape);
+var layer=new MapLayer{DepartmentId=51,Name="TRAINING ONLY",Color="#0080ff",PgId="17",IsOnByDefault=true,IsSearchable=false,Data=new MapLayerData()};
+layer.Data.Hydrate(fc);
+var encoded=MapLayersDocRepository.SerializeDocument(layer);
+var restored=MapLayersDocRepository.DeserializeDocument(encoded);
+void Check(bool value,string name){if(!value)throw new Exception(name);Console.WriteLine("PASS "+name);}
+Check(restored.PgId=="17","PostgreSQL numeric ID preserved");
+Check(restored.DepartmentId==51 && restored.Name==layer.Name && restored.Color==layer.Color,"metadata preserved");
+Check(restored.IsOnByDefault && !restored.IsSearchable,"visibility and destination booleans preserved");
+Check(restored.Data.Features.Count==2,"all features restored");
+var actual=JToken.Parse(JsonConvert.SerializeObject(restored.Data.Convert()));
+var expected=JToken.Parse(JsonConvert.SerializeObject(layer.Data.Convert()));
+Check(JToken.DeepEquals(actual,expected),"exact geometry coordinates rings properties and text preserved");
+Check(actual["features"][1]["geometry"]["coordinates"].Count()==2,"polygon hole preserved");
+var second=MapLayersDocRepository.DeserializeDocument(MapLayersDocRepository.SerializeDocument(restored));
+Check(JToken.DeepEquals(actual,JToken.Parse(JsonConvert.SerializeObject(second.Data.Convert()))),"second edit/save round trip preserved");
+var bad=JObject.Parse(encoded);bad.Remove("featureCollection");bool rejected=false;try{MapLayersDocRepository.DeserializeDocument(bad.ToString());}catch(InvalidOperationException){rejected=true;}
+Check(rejected,"legacy coordinate loss reported without invented geometry");
+Console.WriteLine("8 meaningful storage round-trip checks passed");

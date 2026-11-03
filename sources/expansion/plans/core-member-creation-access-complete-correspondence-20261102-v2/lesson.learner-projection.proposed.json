@@ -1,0 +1,240 @@
+{
+  "id": "core-member-creation-access",
+  "title": "Create a member and manage their department access",
+  "app": "Core",
+  "summary": "Create a fictional member with a group and personnel role, verify the saved profile, and save and clear its disabled department state.",
+  "audience": [
+    "Department administrators",
+    "Personnel managers",
+    "Group administrators"
+  ],
+  "prerequisites": [
+    "Authorized personnel administration in a fictional training department.",
+    "An existing training group and personnel role; generated passwords kept in ignored local files."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose direct member creation",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "001-personnel-list-and-member-actions"
+      ],
+      "required_labels": [
+        "Personnel",
+        "Add a Person",
+        "Manage Invites",
+        "Manage Roles"
+      ],
+      "narration": "Open Personnel to manage the people in your department. The top actions include Add a Person, Manage Invites and Manage Roles. This walkthrough uses Add a Person to create a fictional member directly. Peter Mills will join a community coordination group with a community response navigator role. Choosing the member’s group, operational role and department access deliberately helps the roster reflect the work that person is expected to do.",
+      "practice": "Choose direct member creation",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Enter unique account credentials",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "031-wide-unsaved-account-credentials-replay"
+      ],
+      "required_labels": [
+        "Account Information",
+        "Username",
+        "The User Name must be unique",
+        "New Password",
+        "Confirm Password"
+      ],
+      "narration": "Under Account Information, enter a unique Username. Enter a New Password and the matching Confirm Password. The help here requires at least eight characters, including a digit, an uppercase letter and a lowercase letter. The example keeps both password fields masked. Review the actual requirements on your form and use a separate credential for the member. The username identifies the account; the profile details below identify the person on the department roster.",
+      "practice": "Enter unique account credentials",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Complete the member’s identity",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "019-unsaved-identity-entry-replay-after-successful-creation"
+      ],
+      "required_labels": [
+        "User Details",
+        "ID Number",
+        "First Name",
+        "Last Name",
+        "Email Address",
+        "Email Addresses must be unique"
+      ],
+      "narration": "In User Details, enter the member’s I D Number, First Name, Last Name and Email Address. This fictional example uses Peter Mills and a training-only identification number. The email help says Email Addresses must be unique. Use the intended person’s correct details in your own department so that the saved profile and roster are recognizable. These identity fields are separate from the group and role selections that follow.",
+      "practice": "Complete the member’s identity",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Choose a group and operational role",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "032-wide-unsaved-group-and-role-replay"
+      ],
+      "required_labels": [
+        "Group Details",
+        "Group",
+        "TRAINING ONLY - Community coordination 20261028",
+        "Is Group Admin?",
+        "Roles",
+        "×TRAINING ONLY - Community response navigator"
+      ],
+      "narration": "Under Group Details, choose the community coordination training group. Leave Is Group Admin unchecked for this example. Under Roles, select the community response navigator training role. The selected role appears as a chip in the field. Group membership, group administration and a personnel role have separate controls. Assign the operational role the member needs, then decide separately whether the person should administer the group. This exercise keeps that administration checkbox clear.",
+      "practice": "Choose a group and operational role",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Review account notification and password-change choices",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "033-wide-unsaved-notification-and-add-person-replay"
+      ],
+      "required_labels": [
+        "Notify User?",
+        "Require Password Change",
+        "Add Person"
+      ],
+      "narration": "At the bottom, review Notify User and Require Password Change. The first note says to uncheck Notify User if you do not want Resgrid to notify the person of this account creation. It is unchecked for our local training example. Require Password Change is a separate first-login choice, and remains unchecked here. Review those choices before selecting Add Person. This lesson creates the account without demonstrating a notification delivery or a first-login password change.",
+      "practice": "Review account notification and password-change choices",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Verify the saved personnel row",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "011-saved-member-filtered-role-and-normal-state"
+      ],
+      "required_labels": [
+        "Personnel",
+        "Search:",
+        "Peter Mills",
+        "TRAINING ONLY - Community response navigator",
+        "Normal",
+        "Edit"
+      ],
+      "narration": "After Add Person, the saved Personnel list can be filtered with Search. Search for Peter Mills and check the matching row. It shows the community response navigator role and a Normal state. Staffing is Available and Status is Standing By in this exercise. Read those separate columns instead of assuming that a normal account state describes the person’s current operational availability. Select Edit on this row to review the saved profile.",
+      "practice": "Verify the saved personnel row",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Review and change the profile time zone",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "012-reopened-saved-member-identity-and-time-zone",
+        "013-central-time-zone-selection-prepared",
+        "014-normal-user-disable-checked-hide-clear-and-save"
+      ],
+      "required_labels": [
+        "Edit Peter Mills Profile",
+        "Time Zone",
+        "(GMT-10:00) Hawaii",
+        "(GMT-06:00) Central Time (US & Canada)"
+      ],
+      "narration": "The reopened profile contains the saved identity fields. Review Time Zone as well. In this example the initial selection is Hawaii, which does not match the intended Chicago training context. Change it to Central Time, U S and Canada. Selecting the option prepares a change; it is not saved yet. Continue to the bottom of the profile, where the same Save action will store this time-zone change together with the department settings we review next.",
+      "practice": "Review and change the profile time zone",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Save a disabled department state",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "014-normal-user-disable-checked-hide-clear-and-save",
+        "015-saved-normal-disabled-member-state"
+      ],
+      "required_labels": [
+        "Department Settings",
+        "Normal User",
+        "Department Admin",
+        "Disable User",
+        "Hide User",
+        "Save",
+        "Normal, Disabled"
+      ],
+      "narration": "Under Department Settings, keep User Type set to Normal User rather than selecting Department Admin. Check Disable User and leave Hide User clear, then select Save. Back in Personnel, Peter’s saved State now reads Normal, Disabled. The row still shows Available under Staffing and Standing By under Status. That visible result is why account-state controls and operational staffing or status should be reviewed separately. This recording verifies the saved disabled state, without attempting a sign-in as Peter.",
+      "practice": "Save a disabled department state",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Clear the disabled state and verify it",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "015-saved-normal-disabled-member-state",
+        "017-disable-clear-normal-user-ready-to-restore",
+        "018-restored-normal-member-and-role-retained"
+      ],
+      "required_labels": [
+        "Normal User",
+        "Disable User",
+        "Hide User",
+        "Save",
+        "Peter Mills",
+        "Normal"
+      ],
+      "narration": "Reopen Edit for the same member. Keep Normal User selected, clear Disable User, leave Hide User unchecked, and select Save. Search for Peter again. The saved State now reads Normal, and the community response navigator role remains on the row. This readback confirms the department-state change was stored. Use the same review-and-save approach when an authorized administrator needs to change a member’s department access, and check the result on the intended person.",
+      "practice": "Clear the disabled state and verify it",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "10",
+      "title": "Confirm the retained profile and apply the pattern",
+      "route": "/User/Personnel",
+      "capture_refs": [
+        "020-reopened-training-group-and-role-persisted"
+      ],
+      "required_labels": [
+        "Time Zone",
+        "(GMT-06:00) Central Time (US & Canada)",
+        "Group",
+        "TRAINING ONLY - Community coordination 20261028",
+        "Is Group Admin?",
+        "Roles",
+        "×TRAINING ONLY - Community response navigator"
+      ],
+      "narration": "Reopening the profile also confirms that Central Time, the community coordination group and the navigator role were retained. Is Group Admin remains clear. The same member setup applies beyond fire and E M S. Community paramedicine and mental health teams can organize coordinators; search-and-rescue and security departments can organize field personnel; wildland contractors and industrial emergency teams can organize their crews. Use your own group and role names, review the access settings, save, and verify the resulting member profile.",
+      "practice": "Confirm the retained profile and apply the pattern",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Give a new team member an appropriate operational group and role, then verify saved profile and department-access settings."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Give a new team member an appropriate operational group and role, then verify saved profile and department-access settings."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Give a new team member an appropriate operational group and role, then verify saved profile and department-access settings."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Give a new team member an appropriate operational group and role, then verify saved profile and department-access settings."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Give a new team member an appropriate operational group and role, then verify saved profile and department-access settings."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Give a new team member an appropriate operational group and role, then verify saved profile and department-access settings."
+    }
+  ],
+  "scope_limits": [
+    "Demonstrates successful direct member creation, persisted group and personnel role, a saved time-zone change, and saved Disable User/clear readbacks. No invitation completion, member sign-in, password-change execution, hidden-member effect, or administrator privilege grant is claimed. Source 019 replays the identity fields without submitting a duplicate account.",
+    "Sources031–033 replay the prepared fields in a readable landscape browser; no duplicate was submitted. Original successful member creation and saved state changes are independently retained."
+  ]
+}

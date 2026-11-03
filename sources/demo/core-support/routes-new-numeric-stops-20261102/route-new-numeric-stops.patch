@@ -1,0 +1,13 @@
+--- a/Web/Resgrid.Web/wwwroot/js/app/internal/routes/resgrid.routes.new.js
++++ b/Web/Resgrid.Web/wwwroot/js/app/internal/routes/resgrid.routes.new.js
+@@ -452,8 +452,8 @@
+             callId:           callId,
+             plannedArrival:   $('#stopPlannedArrival').val(),
+             plannedDeparture: $('#stopPlannedDeparture').val(),
+-            dwellMinutes:     $('#stopDwellMinutes').val() || null,
+-            geofenceRadius:   $('#stopGeofenceRadius').val() || null,
++            dwellMinutes:     $('#stopDwellMinutes').val() === '' ? null : parseInt($('#stopDwellMinutes').val(), 10),
++            geofenceRadius:   $('#stopGeofenceRadius').val() === '' ? null : parseInt($('#stopGeofenceRadius').val(), 10),
+             contactName:      $('#stopContactName').val(),
+             contactNumber:    $('#stopContactNumber').val(),
+             contactId:        $('#stopContactId').val() || null,

@@ -1,0 +1,233 @@
+{
+  "id": "core-deployment-time-expenses",
+  "title": "Record deployment duty and travel time and attach an expense",
+  "app": "Core",
+  "summary": "Create a crew-scoped daily draft, separate personnel and resource time, save and verify the hours, and attach a nonbillable expense receipt.",
+  "audience": [
+    "Deployment coordinators",
+    "Department administrators",
+    "Resource supervisors"
+  ],
+  "prerequisites": [
+    "Authorized deployment time-entry access in the fictional training department.",
+    "The saved community support deployment with its van, Matthew Casey and Demo radio kit roster."
+  ],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose the report date and crew scope",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "013-new-time-report-date-and-crew-scope"
+      ],
+      "required_labels": [
+        "Time reports",
+        "New time report",
+        "2026-11-02",
+        "Crew: TRAINING ONLY - Community van 20261028"
+      ],
+      "narration": "Open Time reports on the saved deployment. Choose November second as the report date and select Crew, with the training community van. The help explains that there is one report per day for each crew or person, and that entries are prefilled from the roster. Select New time report. A crew scope keeps this exercise focused on the van, its assigned person and its equipment. Choose the scope that matches the work you need to document.",
+      "practice": "Choose the report date and crew scope",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "02",
+      "title": "Inspect the prefilled draft and time zone",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "016-readable-prefilled-subject-entry-and-start-columns"
+      ],
+      "required_labels": [
+        "Draft",
+        "Subject",
+        "Entry type",
+        "Start",
+        "America/Chicago",
+        "Matthew Casey",
+        "Demo radio kit"
+      ],
+      "narration": "The daily report opens as Draft. Read the Time entries heading: times use the department time zone, America slash Chicago in this exercise. The Subject column is prefilled with Matthew Casey, the training van and Demo radio kit. Each row initially uses Deployment as Entry type, with an eight o’clock Start. These are starting values from the roster, so check them against the actual exercise before saving. Use the horizontal table scrollbar to reach the remaining columns.",
+      "practice": "Inspect the prefilled draft and time zone",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "03",
+      "title": "Separate personnel duty from travel",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "017-duty-resource-and-added-travel-rows-prepared"
+      ],
+      "required_labels": [
+        "Subject",
+        "Entry type",
+        "Start",
+        "Add entry",
+        "Matthew Casey",
+        "Deployment",
+        "Travel"
+      ],
+      "narration": "Prepare Casey’s Deployment row with a nine-thirty Start. Set the van and radio kit rows to nine o’clock. Use Add entry to create another row, then explicitly choose Casey as Subject and Travel as Entry type. Set that travel Start to nine o’clock. Inspect the new row rather than assuming Add entry selected the intended person or activity. This makes travel and coordination separate entries while keeping vehicle and equipment usage on their own subjects.",
+      "practice": "Separate personnel duty from travel",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "04",
+      "title": "Enter end times, breaks and distance",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "018-end-times-breaks-distance-and-row-notes-prepared"
+      ],
+      "required_labels": [
+        "End",
+        "Paid break (min)",
+        "Unpaid break (min)",
+        "Km",
+        "10",
+        "30",
+        "12.5",
+        "Fictional coordination"
+      ],
+      "narration": "Scroll the table right to End, Paid break, Unpaid break, kilometres and Notes. End the coordination, van and radio entries at one in the afternoon. End Casey’s travel at nine-thirty. Enter a ten-minute paid break and a thirty-minute unpaid break on the coordination row. Keep the other breaks at zero. Enter twelve point five kilometres on the van row and add a short note to each row. The notes distinguish fictional coordination, vehicle use, radio use and travel.",
+      "practice": "Enter end times, breaks and distance",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "05",
+      "title": "Save the draft and verify calculated hours",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "019-time-report-save-submit-and-operational-flags",
+        "020-saved-report-readable-subjects-and-starts",
+        "021-saved-duty-travel-and-resource-hours"
+      ],
+      "required_labels": [
+        "Save",
+        "Save and submit",
+        "Draft",
+        "3.00h",
+        "4.00h",
+        "0.50h"
+      ],
+      "narration": "Use Save in Actions to retain this draft. Save and submit is a separate control; this exercise uses Save. Review both sides of the returned table. Casey’s coordination shows three hours: nine-thirty to one, less the thirty-minute unpaid break. The paid break is not subtracted from that displayed total. Travel shows half an hour, while the van and radio each show four hours. Read the saved subject choices as well as the numbers so each total stays attached to the correct resource.",
+      "practice": "Save the draft and verify calculated hours",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "06",
+      "title": "Check the deployment summary",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "022-saved-draft-list-and-three-point-five-personnel-hours"
+      ],
+      "required_labels": [
+        "Time reports",
+        "Personnel hours",
+        "3.5",
+        "Draft",
+        "Open"
+      ],
+      "narration": "Return to the deployment’s Time reports tab. Its Summary now shows three point five Personnel hours, representing Casey’s three hours of coordination and half an hour of travel. Vehicle and equipment hours are recorded separately; they are not extra people in that personnel total. The report list shows the dated crew report as Draft. Use Open to return to that report. A saved draft and a submitted or approved report are different states, so verify the displayed Status before treating it as ready for a later review.",
+      "practice": "Check the deployment summary",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "07",
+      "title": "Prepare a fictional fuel expense and receipt",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "024-fuel-expense-currency-receipt-and-billing-flags"
+      ],
+      "required_labels": [
+        "Expenses",
+        "Date",
+        "Type",
+        "Fuel",
+        "Amount",
+        "24.50",
+        "Currency",
+        "USD",
+        "Description",
+        "City",
+        "Receipt",
+        "Pre-approved",
+        "Billable",
+        "Add expense"
+      ],
+      "narration": "In the report’s Expenses section, enter November second, choose Fuel, and enter twenty-four dollars and fifty cents in U S D. Add the training fuel description and Chicago as City. At Receipt, use Choose File to select the fictional receipt image. This fixture clearly says that no purchase or payment occurred. Leave Pre-approved unchecked and clear Billable for this operational-only exercise. Check those choices before selecting Add expense, because the form is preparing a new expense, not changing an existing one.",
+      "practice": "Prepare a fictional fuel expense and receipt",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "08",
+      "title": "Verify the saved expense and its report link",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "025-saved-report-expense-with-receipt-link",
+        "027-saved-expense-total-not-billable-and-time-report-link"
+      ],
+      "required_labels": [
+        "Fuel",
+        "24.50 USD",
+        "Not billable",
+        "Receipt",
+        "#2",
+        "Total"
+      ],
+      "narration": "After Add expense, the report lists Fuel, its training description and the saved amount. Return to the deployment’s Expenses tab for another readback. The row shows November second, Chicago, twenty-four dollars and fifty cents, and Not billable. Its Time report link is number two, tying this expense to the daily report. Total is also twenty-four dollars and fifty cents. The Receipt column offers the attachment; the downloaded file in this exercise matches the uploaded test receipt.",
+      "practice": "Verify the saved expense and its report link",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    },
+    {
+      "id": "09",
+      "title": "Keep operational time and expense records useful",
+      "route": "/User/Deployments",
+      "capture_refs": [
+        "027-saved-expense-total-not-billable-and-time-report-link"
+      ],
+      "required_labels": [
+        "Personnel hours",
+        "3.5",
+        "Expenses",
+        "24.50 USD",
+        "Time report"
+      ],
+      "narration": "Use this process for the people, vehicles and equipment in your own department. Community paramedicine and mental health response teams, search-and-rescue teams, security companies, wildland contractors and industrial emergency teams can document assignment time and expenses alongside fire and E M S departments. Choose the right report scope, verify the time zone, and inspect saved hours and expense links. This example ends with a draft and a fictional nonbillable expense; later submission and approval require their own completed review.",
+      "practice": "Keep operational time and expense records useful",
+      "capture_intent": "Show each actual control and distinguish prepared, validated, saved and executed states."
+    }
+  ],
+  "candidate_only": true,
+  "export_ready": false,
+  "publication_approved": false,
+  "source_files": [],
+  "sector_examples": [
+    {
+      "sector": "Community paramedicine and mental health response",
+      "scenario": "Record who worked, which resources were used and what was spent on a named assignment."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Record who worked, which resources were used and what was spent on a named assignment."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Record who worked, which resources were used and what was spent on a named assignment."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Record who worked, which resources were used and what was spent on a named assignment."
+    },
+    {
+      "sector": "Industrial emergency response",
+      "scenario": "Record who worked, which resources were used and what was spent on a named assignment."
+    },
+    {
+      "sector": "Fire/EMS",
+      "scenario": "Record who worked, which resources were used and what was spent on a named assignment."
+    }
+  ],
+  "scope_limits": [
+    "Source proposal only; actual speech generation, listening, complete correspondence, encoded-frame review and playback qualification remain required.",
+    "This exercise saves a Draft daily time report and a nonbillable fictional expense. It does not submit, approve, sign, invoice or export a PDF. The deployment remains Planned and Operational only."
+  ]
+}

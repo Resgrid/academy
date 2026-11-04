@@ -1,0 +1,128 @@
+{
+  "id": "app-dispatch-omni-maps",
+  "title": "Omni Dispatch: use maps, saved sites and weather alerts",
+  "app": "Dispatch",
+  "summary": "Filter map layers, open a saved destination, find an indoor room and review a fictional alert.",
+  "audience": [
+    "Dispatchers",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "Omni Dispatch and an account in a training department with permission for the screens shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice shift coordination with fictional units and incidents."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate a fictional outreach standby and partner handoff."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a training exercise to coordinate a search team and assembly point."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Coordinate a site handoff at a practice dispatch desk."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review staging and crew coordination in a fictional deployment."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Coordinate a fictional industrial response and review its location."
+    }
+  ],
+  "scope_limits": [
+    "The weather alert is a fictional fixture. The lesson reviews the settings without saving a policy change."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Filter the department map",
+      "route": "/map",
+      "capture_refs": [
+        "001-map-overview",
+        "002-map-layer-switches",
+        "003-filtered-map-layers"
+      ],
+      "required_labels": [
+        "Map",
+        "Points of interest"
+      ],
+      "capture_intent": "Filter the department map",
+      "narration": "Open Map in Omni Dispatch to see the department map. Use the layers button in the lower left to choose what appears. Calls, Units, Stations and Points of interest are separate switches. Department layers are listed below them. Turn off Points of interest to reduce clutter, then turn it back on before looking for a saved site.",
+      "practice": "Filter the department map in a fictional training department."
+    },
+    {
+      "id": "02",
+      "title": "Find a saved destination",
+      "route": "/pois",
+      "capture_refs": [
+        "013-restored-poi-list",
+        "014-poi-destinations-filter",
+        "015-poi-detail"
+      ],
+      "required_labels": [
+        "POIs",
+        "Destinations",
+        "Academy Staging Point"
+      ],
+      "capture_intent": "Find a saved destination",
+      "narration": "Open POIs from the main menu. Select Destinations to focus on points the department has designated for that purpose. Open Academy Staging Point and check its address, coordinates and description. A search and rescue team could use a trail assembly point. A wildland team could use a staging site, and a security team could use a named access gate.",
+      "practice": "Find a saved destination in a fictional training department."
+    },
+    {
+      "id": "03",
+      "title": "Read a floor plan and find a room",
+      "route": "/maps",
+      "capture_refs": [
+        "004-custom-map-list",
+        "006-ground-floor-image",
+        "007-indoor-search-result",
+        "008-room-details-on-floor"
+      ],
+      "required_labels": [
+        "Custom Maps",
+        "TRAINING ONLY - Ground floor",
+        "Indoor",
+        "Briefing room - training"
+      ],
+      "capture_intent": "Read a floor plan and find a room",
+      "narration": "Open Custom Maps and select the community coordination centre. Select Ground floor to see the saved floor image. The floor options also include imported geography for this training site. Check the floor name before using any room reference. From the Custom Maps list, open the search box and select Indoor. Search for Briefing, then open Briefing room - training. Dispatch takes you to the saved floor and shows the room description. A community outreach team can use a room name for a staff handoff, and an industrial team can use one to distinguish assembly locations in the same building.",
+      "practice": "Read a floor plan and find a room in a fictional training department."
+    },
+    {
+      "id": "04",
+      "title": "Review a weather alert and the policy controls",
+      "route": "/weather-alerts",
+      "capture_refs": [
+        "009-weather-alert-list",
+        "010-severe-alert-filter",
+        "011-weather-alert-details",
+        "012-weather-alert-policy-controls"
+      ],
+      "required_labels": [
+        "Weather Alerts",
+        "Severe",
+        "Affected Area",
+        "Weather Alert Settings",
+        "Show alerts on calls in the affected area"
+      ],
+      "capture_intent": "Review a weather alert and the policy controls",
+      "narration": "Open Weather Alerts. Select Severe to narrow the list, then open the fictional exercise alert. Check Effective, Expires and Affected Area before using an alert for an outdoor standby or crew briefing. The details also show the sender, description and instructions. Back in the alert list, open Weather Alert Settings. The threshold for showing alerts is separate from the threshold for sending a message. There is also a control for showing alerts on calls in the affected area. Review these controls with your department before changing the saved policy.",
+      "practice": "Review a weather alert and the policy controls in a fictional training department."
+    }
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-dispatch-omni-maps-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/omni-dispatch-maps-source-20261103/lesson.candidate.json",
+    "sha256": "3da5c3ee52e37d4a78489647f65e9e2bdcb3f5735150d7dee339fdae5398d6fc"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "id": "app-dispatch-omni-operations",
+  "title": "Omni Dispatch: review incident command, check-ins and deployments",
+  "app": "Dispatch",
+  "summary": "Review an approved crew report, check command assignments and accountability, and locate call-linked Records forms.",
+  "audience": [
+    "Dispatchers",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "Omni Dispatch and an account in a training department with permission for the screens shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice shift coordination with fictional units and incidents."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate a fictional outreach standby and partner handoff."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a training exercise to coordinate a search team and assembly point."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Coordinate a site handoff at a practice dispatch desk."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review staging and crew coordination in a fictional deployment."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Coordinate a fictional industrial response and review its location."
+    }
+  ],
+  "scope_limits": [
+    "The Records section shows the form chooser and queue. It does not submit a record or change a check-in."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Review deployment status and approved crew time",
+      "route": "/operations",
+      "capture_refs": [
+        "001-open-deployments",
+        "002-deployment-detail",
+        "003-deployment-day-approved-report",
+        "004-approved-crew-report"
+      ],
+      "required_labels": [
+        "Deployments",
+        "Open",
+        "TRAINING ONLY - Community support deployment",
+        "Reports this day"
+      ],
+      "capture_intent": "Review deployment status and approved crew time",
+      "narration": "Open Deployments in Omni Dispatch. The Open filter gives you the deployments that are still in progress. Select Community support deployment and check its status and assigned resource counts. A wildland contractor could use this view to confirm which deployment a crew is working under. Use Previous day to move to the day you are reviewing. This exercise has a crew report on November second. Reports this day shows that the entry is Approved and totals eleven and a half hours. Open the report to check the individual entries and their time ranges and breaks. The fields in this approved report are read-only.",
+      "practice": "Review deployment status and approved crew time in a fictional training department."
+    },
+    {
+      "id": "02",
+      "title": "Review command assignments and check-ins",
+      "route": "/call/51001",
+      "capture_refs": [
+        "006-incident-command-summary",
+        "007-command-resource-details",
+        "011-command-accountability",
+        "010-incident-check-in-status"
+      ],
+      "required_labels": [
+        "Command",
+        "Squad 3",
+        "Accountability (PAR)",
+        "Objectives",
+        "Check-In"
+      ],
+      "capture_intent": "Review command assignments and check-ins",
+      "narration": "On the Dispatch Console, open the warehouse exercise and select Command. The command summary names the commander and shows the structure. In this example, Squad Three is in Search Division. Use View Squad Three to see the lane assignment and its requirements warning. A search and rescue dispatcher could use the same view to confirm which group a search team is working with. Check Accountability to see the current check-in indicators. Objectives shows the progress of the assigned benchmark. The separate Check-In tab shows the timer and last check-in for a tracked entry. Confirm the entry before using the check-in action.",
+      "practice": "Review command assignments and check-ins in a fictional training department."
+    },
+    {
+      "id": "03",
+      "title": "Find call-linked forms and the Records queue",
+      "route": "/call/51001",
+      "capture_refs": [
+        "008-call-records-tab",
+        "009-dispatch-record-form-choices",
+        "005-records-workspace"
+      ],
+      "required_labels": [
+        "New Record",
+        "Callback",
+        "DRAFTS"
+      ],
+      "capture_intent": "Find call-linked forms and the Records queue",
+      "narration": "For documentation tied to the call, open its Records tab and select New Record. The form list shows the choices available to Dispatch. This training department shows Callback and Run. The department Records workspace also groups items under Assigned to you, Drafts and Returned to you. Use the call tab when you need the context of a particular incident, and the workspace to review your queue.",
+      "practice": "Find call-linked forms and the Records queue in a fictional training department."
+    }
+  ]
+}

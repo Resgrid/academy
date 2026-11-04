@@ -1,0 +1,131 @@
+{
+  "id": "app-dispatch-omni-call-lifecycle",
+  "title": "Omni Dispatch: create, release, update and close a call",
+  "app": "Dispatch",
+  "summary": "Save a pending call, dispatch a recipient, record a handoff and verify the closed status.",
+  "audience": [
+    "Dispatchers",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "Omni Dispatch and an account in a training department with permission for the screens shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice shift coordination with fictional units and incidents."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate a fictional outreach standby and partner handoff."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a training exercise to coordinate a search team and assembly point."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Coordinate a site handoff at a practice dispatch desk."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review staging and crew coordination in a fictional deployment."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Coordinate a fictional industrial response and review its location."
+    }
+  ],
+  "scope_limits": [
+    "The exercise uses a fictional community standby and leaves the closeout notification off."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Enter the call and confirm the location",
+      "route": "/call/new",
+      "capture_refs": [
+        "001-call-details",
+        "002-call-location"
+      ],
+      "required_labels": [
+        "New Call",
+        "GPS Coordinates"
+      ],
+      "capture_intent": "Enter the call and confirm the location",
+      "narration": "In Omni Dispatch, open New Call for a community outreach standby. Enter a name your team will recognize and use Nature to describe what responders need to know. This exercise uses Medical and Routine. Choose the type and priority your department uses for this work. On the location section, select GPS and enter the latitude and longitude. Check the map against your intended site. A search team can use coordinates for a trail rendezvous, and an industrial response team can use them for an access gate.",
+      "practice": "Enter the call and confirm the location in a fictional training department."
+    },
+    {
+      "id": "02",
+      "title": "Save to the pending queue and dispatch",
+      "route": "/call/new",
+      "capture_refs": [
+        "003-contact-picker",
+        "005-pending-selected",
+        "006-pending-queue-readback",
+        "008-fixed-picker-and-selected-recipient",
+        "009-active-call-readback",
+        "010-active-call-detail"
+      ],
+      "required_labels": [
+        "Select Contact",
+        "Save Pending Call",
+        "Pending Calls",
+        "Dispatch",
+        "Select Dispatch Recipients",
+        "Done (1 selected)",
+        "Call Details"
+      ],
+      "capture_intent": "Save to the pending queue and dispatch",
+      "narration": "Use the contact picker if an existing department contact belongs on the call. Here we select Academy Community Partners. Check Save as pending and select Save Pending Call. The call now has a number in Pending Calls, where dispatch can find it again when it is ready for release. Open the pending call and start dispatch. In the recipient picker, select the intended recipient. Here we choose Wallace Boden. Check the selection count on Done before confirming. Back in the console, find the same call number under Active Calls and open Details.",
+      "practice": "Save to the pending queue and dispatch in a fictional training department."
+    },
+    {
+      "id": "03",
+      "title": "Record the handoff and update the incident",
+      "route": "/call/51019",
+      "capture_refs": [
+        "011-enter-call-note",
+        "012-saved-call-note",
+        "013-call-actions",
+        "014-edit-call-details",
+        "015-close-call-confirmation"
+      ],
+      "required_labels": [
+        "Call Notes",
+        "Edit Call"
+      ],
+      "capture_intent": "Record the handoff and update the incident",
+      "narration": "Select Notes and enter an update that will make sense to the next dispatcher. Save it, then verify that the entry appears on the call. A security desk could record when site staff completed a handoff, and a wildland contractor could record where the relief crew should report. Use Call actions and Edit Call to update the incident description. Verify the revised wording on the call.",
+      "practice": "Record the handoff and update the incident in a fictional training department."
+    },
+    {
+      "id": "04",
+      "title": "Close the call and confirm the saved status",
+      "route": "/call/51019",
+      "capture_refs": [
+        "015-close-call-confirmation",
+        "016-closed-call-no-longer-active",
+        "017-closed-status-in-location-history"
+      ],
+      "required_labels": [
+        "Close Call",
+        "Notify everyone on the call",
+        "History",
+        "Previous calls at this location"
+      ],
+      "capture_intent": "Close the call and confirm the saved status",
+      "narration": "When the exercise is over, choose Close Call, confirm the reason and enter a closeout note. Review Notify everyone who was dispatched before confirming. In this training exercise we leave it off. Back in the console, search for the call and verify that it has left the active queue. In this exercise we can also open History on a nearby call. Match the original call number and read its Closed status under Previous calls at this location.",
+      "practice": "Close the call and confirm the saved status in a fictional training department."
+    }
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-dispatch-omni-call-lifecycle-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/omni-dispatch-call-lifecycle-source-20261103/lesson.candidate.json",
+    "sha256": "7d60b501efaf7b0645264c1ee0a2cf0dbd35c1ce65309bb40ff6f2dadebea4c5"
+  }
+}

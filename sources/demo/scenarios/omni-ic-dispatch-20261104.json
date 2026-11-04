@@ -1,0 +1,37 @@
+{
+  "fictional_training_only": true,
+  "department": "Firehouse 51 — Training Department",
+  "ic_call": {
+    "name": "TRAINING ONLY - IC command coordination",
+    "priority": "Routine",
+    "type": "Investigation",
+    "gps_coordinates": "41.8520,-87.6350",
+    "recipient": "Wallace Boden (fictional training user)",
+    "initial_nature": "Fictional coordination exercise. No operational response is requested.",
+    "revised_nature": "Fictional coordination exercise. Briefing moved to the marked staging point.",
+    "attachment": "academy-ic-briefing-20261104.txt",
+    "attachment_recording_name": "academy-ic-briefing.txt",
+    "offline_note": "TRAINING ONLY - Offline briefing confirmed at staging."
+  },
+  "shared_device": {
+    "labels": ["Academy IC handoff desk", "Academy Dispatch handoff desk"],
+    "training_setting": "Enable shared-device mode in an isolated API serving only the fictional training department.",
+    "verified": ["server session recognized", "manual lock", "return to sign-in after ending shift"]
+  },
+  "dispatch_record": {
+    "definition_key": "academy-dispatch-coordination-20261104",
+    "name": "TRAINING ONLY - Dispatch coordination note",
+    "category": "Academy software exercises",
+    "published_version": 1,
+    "lifecycle": "QuickEntry",
+    "numbering": {"Prefix": "DSPN", "SequenceWidth": 4},
+    "surface": {"Dispatch": true, "LaunchContexts": ["call"], "AllowOffline": false, "AllowAttachments": true},
+    "fields": [
+      {"Key": "summary", "Label": "Summary", "Type": "ShortText", "Required": true},
+      {"Key": "notes", "Label": "Notes", "Type": "LongText", "Required": false}
+    ],
+    "summary": "TRAINING ONLY - Dispatch coordination handoff",
+    "notes": "Fictional coordination exercise. Rehearsal briefing location confirmed at staging.",
+    "expected": "Draft after Save and send, then Finalized and present in the original call's Records tab."
+  }
+}

@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Omni IC and Dispatch walkthroughs</title><style>body{font:17px system-ui;background:#141c29;color:#f5f7fa;margin:2rem auto;max-width:65rem;padding:0 1rem}video{display:block;width:100%;max-height:68vh;background:#101722;object-fit:contain}a{color:#afd0ff}section{margin:2.5rem 0}</style><main><h1>Omni IC and Dispatch walkthroughs</h1><p>Review copies from the fictional Firehouse 51 department. Recorded Resgrid screens and local neural narration.</p>
+<section id="map-context"><h2>Maps, indoor references and weather alerts</h2><button data-seek="6.052">Beginning</button> <button data-seek="67.72500000000001">Middle</button> <button data-seek="122.441">End</button><video controls preload="metadata" playsinline src="map-context.mp4"><track kind="captions" src="map-context.vtt" srclang="en" label="English"></video></section>
+<section id="call-media"><h2>Create and revise a call and attach a file</h2><button data-seek="6.968999999999999">Beginning</button> <button data-seek="67.277">Middle</button> <button data-seek="124.559">End</button><video controls preload="metadata" playsinline src="call-media.mp4"><track kind="captions" src="call-media.vtt" srclang="en" label="English"></video></section>
+<section id="deployments"><h2>Review deployment reports and save a crew draft</h2><button data-seek="7.8229999999999995">Beginning</button> <button data-seek="54.428000000000004">Middle</button> <button data-seek="96.337">End</button><video controls preload="metadata" playsinline src="deployments.mp4"><track kind="captions" src="deployments.vtt" srclang="en" label="English"></video></section>
+<section id="shared-handoff"><h2>Lock a shared device and end the shift</h2><button data-seek="5.125">Beginning</button> <button data-seek="33.801">Middle</button> <button data-seek="62.2">End</button><video controls preload="metadata" playsinline src="shared-handoff.mp4"><track kind="captions" src="shared-handoff.vtt" srclang="en" label="English"></video></section>
+<section id="offline-recovery"><h2>Recover a queued call note after reconnecting</h2><button data-seek="4.059">Beginning</button> <button data-seek="32.905">Middle</button> <button data-seek="56.196000000000005">End</button><video controls preload="metadata" playsinline src="offline-recovery.mp4"><track kind="captions" src="offline-recovery.vtt" srclang="en" label="English"></video></section>
+<section id="communications"><h2>Find chat, preview alert sounds and check device audio</h2><button data-seek="5.957">Beginning</button> <button data-seek="37.504000000000005">Middle</button> <button data-seek="66.671">End</button><video controls preload="metadata" playsinline src="communications.mp4"><track kind="captions" src="communications.vtt" srclang="en" label="English"></video></section>
+<section id="dispatch-records"><h2>Dispatch: save and finalize a call-linked record</h2><button data-seek="4.356999999999999">Beginning</button> <button data-seek="37.587">Middle</button> <button data-seek="68.737">End</button><video controls preload="metadata" playsinline src="dispatch-records.mp4"><track kind="captions" src="dispatch-records.vtt" srclang="en" label="English"></video></section>
+<section id="dispatch-archive"><h2>Dispatch: filter archived calls and review location history</h2><button data-seek="5.701">Beginning</button> <button data-seek="27.34">Middle</button> <button data-seek="49.448">End</button><video controls preload="metadata" playsinline src="dispatch-archive.mp4"><track kind="captions" src="dispatch-archive.vtt" srclang="en" label="English"></video></section>
+<section id="dispatch-shared-desk"><h2>Dispatch: lock a shared desk and end the shift</h2><button data-seek="5.252999999999999">Beginning</button> <button data-seek="25.535999999999998">Middle</button> <button data-seek="48.391000000000005">End</button><video controls preload="metadata" playsinline src="dispatch-shared-desk.mp4"><track kind="captions" src="dispatch-shared-desk.vtt" srclang="en" label="English"></video></section>
+</main><script>
+for (const video of document.querySelectorAll('video')) {
+  const cue = video.textTracks[0];
+  const status = document.createElement('output');
+  status.hidden = true;
+  video.after(status);
+  const observe = () => {
+    status.value = JSON.stringify({
+      time: video.currentTime, duration: video.duration, paused: video.paused,
+      ready: video.readyState, error: video.error?.code ?? null,
+      captions: cue.mode, active: Array.from(cue.activeCues ?? []).map(item => item.text)
+    });
+  };
+  video.addEventListener('timeupdate', observe);
+  video.addEventListener('seeked', observe);
+  cue.addEventListener('cuechange', observe);
+}
+for (const button of document.querySelectorAll('[data-seek]')) {
+  button.addEventListener('click', () => {
+    const section = button.closest('section');
+    const video = section.querySelector('video');
+    section.scrollIntoView({block:'start'});
+    for (const other of document.querySelectorAll('video')) if (other !== video) other.pause();
+    video.textTracks[0].mode = 'showing';
+    video.currentTime = Number(button.dataset.seek);
+    video.play();
+  });
+}
+</script>

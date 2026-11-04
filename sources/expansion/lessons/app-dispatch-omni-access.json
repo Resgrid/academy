@@ -1,0 +1,120 @@
+{
+  "id": "app-dispatch-omni-access",
+  "title": "Omni Dispatch: sign in and set up a shared workstation",
+  "app": "Dispatch",
+  "summary": "Confirm the server, find the dispatch queues, and verify the saved shared-device label.",
+  "audience": [
+    "Dispatchers",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "Omni Dispatch and an account in a training department with permission for the screens shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice shift coordination with fictional units and incidents."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate a fictional outreach standby and partner handoff."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a training exercise to coordinate a search team and assembly point."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Coordinate a site handoff at a practice dispatch desk."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review staging and crew coordination in a fictional deployment."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Coordinate a fictional industrial response and review its location."
+    }
+  ],
+  "scope_limits": [
+    "The lesson shows the sign-in choices and security overview in a fictional department."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Choose a server and sign in",
+      "route": "/",
+      "capture_refs": [
+        "001-sign-in-entry",
+        "002-server-picker"
+      ],
+      "required_labels": [
+        "Resgrid Dispatch",
+        "Server URL",
+        "Sign in with SSO"
+      ],
+      "capture_intent": "Choose a server and sign in",
+      "narration": "Start on the Resgrid Dispatch sign-in screen. Before entering your credentials, check the server shown above Username. This exercise uses the Academy training department. Use the server your department provided when you sign in for a real shift. If you need to change the connection, select Change Server URL. The Server URL field takes the address of the Resgrid API. The note below the field explains the format. Use Save to apply a change or Cancel to keep the current connection. On the sign-in screen, Sign in with SSO is available for departments that have set up single sign-on.",
+      "practice": "Choose a server and sign in in a fictional training department."
+    },
+    {
+      "id": "02",
+      "title": "Confirm the console and account",
+      "route": "/",
+      "capture_refs": [
+        "004-signed-in-console",
+        "005-account-and-preferences"
+      ],
+      "required_labels": [
+        "Dispatch Console",
+        "Settings"
+      ],
+      "capture_intent": "Confirm the console and account",
+      "narration": "After you sign in, confirm that you are on the Dispatch Console. Active Calls, Pending Calls, and Scheduled Calls describe different stages of work. The resource lists show who and what is available. Use the menu to reach Settings, where you can confirm the signed-in account and find the workstation controls.",
+      "practice": "Confirm the console and account in a fictional training department."
+    },
+    {
+      "id": "03",
+      "title": "Set up and verify a shared workstation",
+      "route": "/settings",
+      "capture_refs": [
+        "005-account-and-preferences",
+        "006-configure-shared-workstation",
+        "007-saved-workstation-readback"
+      ],
+      "required_labels": [
+        "Shared device",
+        "This is a shared device",
+        "Academy Dispatch Desk",
+        "Save",
+        "Cancel"
+      ],
+      "capture_intent": "Set up and verify a shared workstation",
+      "narration": "Under Account, open Shared device for a workstation that several people use. Turn on This is a shared device and enter a short label that makes the station easy to recognize. Here we use Academy Dispatch Desk. The form says the setting takes effect the next time someone signs in. Select Save to return to Settings. Open Shared device again and confirm that the label and switch were saved. A recognizable label helps people distinguish this workstation from their own devices. Each person signs in for their shift and uses their own verification when the app asks. Cancel closes this readback without changing the saved setting.",
+      "practice": "Set up and verify a shared workstation in a fictional training department."
+    },
+    {
+      "id": "04",
+      "title": "Check sign-in and security",
+      "route": "/settings/account-security",
+      "capture_refs": [
+        "008-sign-in-security"
+      ],
+      "required_labels": [
+        "Sign-in and security",
+        "Authenticator app"
+      ],
+      "capture_intent": "Check sign-in and security",
+      "narration": "Back in Account, open Sign-in and security. This screen shows whether an authenticator app is set up, which passkeys exist for this app, and recent verifications. Check those details before relying on a shared workstation for a handoff. If your department requires another verification method, follow its setup process before the next shift.",
+      "practice": "Check sign-in and security in a fictional training department."
+    }
+  ],
+  "export_ready": true,
+  "publication_mode": "video",
+  "evidence_file": "expansion/rendered/app-dispatch-omni-access-take-01/evidence.reviewed.json",
+  "production_source": {
+    "file": "expansion/plans/omni-dispatch-access-source-20261103/lesson.candidate.json",
+    "sha256": "e0b0d96af395e413a7fc9132f2979fa9df8c8b0513d2fb2ad8abd2bfeb536454"
+  }
+}

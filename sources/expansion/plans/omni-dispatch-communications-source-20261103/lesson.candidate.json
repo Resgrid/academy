@@ -1,0 +1,98 @@
+{
+  "id": "app-dispatch-omni-communications",
+  "title": "Omni Dispatch: use contacts, chat and device preferences",
+  "app": "Dispatch",
+  "summary": "Find a contact, inspect a conversation, draft a message and review Assistant and navigation preferences.",
+  "audience": [
+    "Dispatchers",
+    "Department administrators"
+  ],
+  "prerequisites": [
+    "Omni Dispatch and an account in a training department with permission for the screens shown."
+  ],
+  "sector_examples": [
+    {
+      "sector": "Fire / EMS",
+      "scenario": "Practice shift coordination with fictional units and incidents."
+    },
+    {
+      "sector": "Community response",
+      "scenario": "Coordinate a fictional outreach standby and partner handoff."
+    },
+    {
+      "sector": "Search and rescue",
+      "scenario": "Use a training exercise to coordinate a search team and assembly point."
+    },
+    {
+      "sector": "Security",
+      "scenario": "Coordinate a site handoff at a practice dispatch desk."
+    },
+    {
+      "sector": "Wildland",
+      "scenario": "Review staging and crew coordination in a fictional deployment."
+    },
+    {
+      "sector": "Industrial",
+      "scenario": "Coordinate a fictional industrial response and review its location."
+    }
+  ],
+  "scope_limits": [
+    "The chat draft stays unsent and the Assistant prompt stays empty."
+  ],
+  "source_files": [],
+  "scenes": [
+    {
+      "id": "01",
+      "title": "Find a partner in Contacts",
+      "route": "/contacts",
+      "capture_refs": [
+        "001-contact-directory",
+        "002-contact-detail"
+      ],
+      "required_labels": [
+        "Contacts",
+        "Contact Information",
+        "Location Information"
+      ],
+      "capture_intent": "Find a partner in Contacts",
+      "narration": "Open Contacts in Omni Dispatch when you need to look up a partner. Use the directory filter to narrow the list and open Academy Logistics Desk. Contact Information shows the saved email and office phone. Location Information shows the coordinates this department recorded for the partner. A search and rescue dispatcher could use the same directory to look up an equipment coordinator.",
+      "practice": "Find a partner in Contacts in a fictional training department."
+    },
+    {
+      "id": "02",
+      "title": "Choose the conversation and prepare a message",
+      "route": "/chat",
+      "capture_refs": [
+        "003-chat-directory",
+        "009-incident-conversation-list",
+        "004-chat-thread",
+        "005-chat-composer"
+      ],
+      "required_labels": [
+        "Chat",
+        "TRAINING — Academy readiness"
+      ],
+      "capture_intent": "Choose the conversation and prepare a message",
+      "narration": "Open Chat and check the section you are in. Direct Messages, Channels and Incidents organize conversations by audience. Select Academy readiness under Channels to review its existing message. A community outreach team can use a shared channel to coordinate the staff handoff for a standby. Check the channel name above the conversation before typing a message. The composer has an Urgent switch and a Send button. In this exercise the equipment handoff stays unsent. A security dispatcher can use the same check before sharing a shift update.",
+      "practice": "Choose the conversation and prepare a message in a fictional training department."
+    },
+    {
+      "id": "03",
+      "title": "Find Assistant and choose a navigation app",
+      "route": "/chatbot",
+      "capture_refs": [
+        "006-assistant-entry",
+        "007-device-settings",
+        "008-navigation-app-options"
+      ],
+      "required_labels": [
+        "Assistant",
+        "Navigation App",
+        "Google Maps"
+      ],
+      "capture_intent": "Find Assistant and choose a navigation app",
+      "narration": "Open Assistant from the menu to reach the prompt field or start a new session. This screen shows where a department with Assistant configured can enter a question. For example, an industrial response coordinator could ask for help organizing a fictional exercise checklist. We leave the prompt blank here. In Settings, look under Preferences for Navigation App. The selector shows Device default, Google Maps and Waze on this workstation. The choice controls what opens when you start navigation from a call, destination or map pin. Review the choice before a shift where your team relies on those links.",
+      "practice": "Find Assistant and choose a navigation app in a fictional training department."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Academy follow-up walkthroughs</title><style>body{font:17px system-ui;background:#141c29;color:#f5f7fa;margin:2rem auto;max-width:65rem;padding:0 1rem}video{display:block;width:100%;max-height:68vh;background:#101722;object-fit:contain}a{color:#afd0ff}section{margin:2.5rem 0}</style><main><h1>Academy follow-up walkthroughs</h1><p>Review copies from the fictional Firehouse 51 department. Recorded Resgrid screens and local neural narration.</p>
+<section id="historical-call"><h2>Create a historical call in Core and find it in Omni Dispatch</h2><button data-seek="5.710999999999999">Beginning</button> <button data-seek="48.976">Middle</button> <button data-seek="89.105">End</button><video controls preload="metadata" playsinline src="historical-call.mp4"><track kind="captions" src="historical-call.vtt" srclang="en" label="English"></video></section>
+<section id="callback-record"><h2>Create and finalize a built-in Callback record</h2><button data-seek="2.949">Beginning</button> <button data-seek="37.717">Middle</button> <button data-seek="67.70700000000001">End</button><video controls preload="metadata" playsinline src="callback-record.mp4"><track kind="captions" src="callback-record.vtt" srclang="en" label="English"></video></section>
+<section id="live-chat"><h2>Send and acknowledge a training chat message</h2><button data-seek="5.7749999999999995">Beginning</button> <button data-seek="39.452000000000005">Middle</button> <button data-seek="75.083">End</button><video controls preload="metadata" playsinline src="live-chat.mp4"><track kind="captions" src="live-chat.vtt" srclang="en" label="English"></video></section>
+</main><script>
+for (const video of document.querySelectorAll('video')) {
+  const cue = video.textTracks[0];
+  const status = document.createElement('output');
+  status.hidden = true;
+  video.after(status);
+  const observe = () => {
+    status.value = JSON.stringify({
+      time: video.currentTime, duration: video.duration, paused: video.paused,
+      ready: video.readyState, error: video.error?.code ?? null,
+      captions: cue.mode, active: Array.from(cue.activeCues ?? []).map(item => item.text)
+    });
+  };
+  video.addEventListener('timeupdate', observe);
+  video.addEventListener('seeked', observe);
+  cue.addEventListener('cuechange', observe);
+}
+for (const button of document.querySelectorAll('[data-seek]')) {
+  button.addEventListener('click', () => {
+    const section = button.closest('section');
+    const video = section.querySelector('video');
+    section.scrollIntoView({block:'start'});
+    for (const other of document.querySelectorAll('video')) if (other !== video) other.pause();
+    video.textTracks[0].mode = 'showing';
+    video.currentTime = Number(button.dataset.seek);
+    video.play();
+  });
+}
+</script>
